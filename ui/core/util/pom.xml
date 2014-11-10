@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>dwoss-ui-core</artifactId>
+        <groupId>eu.ggnet.dwoss</groupId>
+        <version>1</version>
+    </parent>
+
+    <artifactId>dwoss-ui-core-util</artifactId>
+    <name>DwOss • Ui • Core • Util</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>eu.ggnet.lucidcalc</groupId>
+            <artifactId>lucidcalc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-lib-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.metawidget.modules</groupId>
+            <artifactId>metawidget-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.swinglabs.swingx</groupId>
+            <artifactId>swingx-all</artifactId>
+        </dependency>
+        <!-- Javasist  -->
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-core-hibernate</artifactId>
+            <scope>provided</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-RunClient - select</actionName>
+        <displayName>RunClient with Selector</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <select>true</select>
+        </properties>
+    </action>
+</actions>

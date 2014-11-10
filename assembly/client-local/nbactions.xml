@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-RunClient GG-Net (retrax)</actionName>
+        <displayName>RunClient GG-Net (retrax)</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-ggnet</activatedProfile>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient GG-Net (obsidian)</actionName>
+        <displayName>RunClient GG-Net (obsidian)</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-ggnet</activatedProfile>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+        <properties>
+            <persistence.host>obsidian.ahrensburg.gg-net.de</persistence.host>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient ELUS (retrax)</actionName>
+        <displayName>RunClient ELUS (retrax)</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-elus</activatedProfile>
+            <activatedProfile>client-elus</activatedProfile>
+        </activatedProfiles>
+        <properties>
+            <persistence.redtape.schema>elus_redtape</persistence.redtape.schema>
+            <persistence.report.schema>elus_report</persistence.report.schema>
+            <persistence.stock.schema>elus_stock</persistence.stock.schema>
+        </properties>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient ELUS (obsidian)</actionName>
+        <displayName>RunClient ELUS (obsidian)</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <persistence.redtape.schema>elus_redtape</persistence.redtape.schema>
+            <persistence.report.schema>elus_report</persistence.report.schema>
+            <persistence.stock.schema>elus_stock</persistence.stock.schema>
+            <persistence.host>obsidian.ahrensburg.gg-net.de</persistence.host>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>server-elus</activatedProfile>
+            <activatedProfile>client-elus</activatedProfile>
+        </activatedProfiles>
+    </action>
+</actions>

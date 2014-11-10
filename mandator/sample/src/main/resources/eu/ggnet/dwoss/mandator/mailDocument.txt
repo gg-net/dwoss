@@ -1,0 +1,8 @@
+Diese Mail wurde automatisch erstellt.
+
+Sehr geehrte(r) $parameter.name,
+
+im Anhang befindet sich Ihr(e) $parameter.documentType
+
+Mit freundlichen Grüßen
+Ihr Example Team

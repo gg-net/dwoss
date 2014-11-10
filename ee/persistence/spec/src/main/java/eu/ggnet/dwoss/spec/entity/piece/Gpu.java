@@ -1,0 +1,260 @@
+package eu.ggnet.dwoss.spec.entity.piece;
+
+import java.io.Serializable;
+import java.util.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.xml.bind.annotation.*;
+
+import eu.ggnet.dwoss.util.INoteModel;
+
+import static eu.ggnet.dwoss.spec.entity.piece.Gpu.Series.*;
+
+/**
+ *
+ * @author bastian.venz
+ */
+@Entity
+@NamedQuery(name = "Gpu.bySeriesModel", query = "select d from Gpu d where d.series = ?1 and d.model = ?2")
+public class Gpu implements Serializable {
+
+    /**
+     * A enum class with the names of the factory of the graphics card.
+     */
+    public static enum Manufacturer implements INoteModel {
+
+        /**
+         * Manufacturer AMD.
+         */
+        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9)),
+        /**
+         * Manufacturer Intel.
+         */
+        INTEL("Intel", Arrays.asList(INTEL_GRAPHICS)),
+        /**
+         * Manufacturer nVidia.
+         */
+        NVIDIA("nVidia", Arrays.asList(GEFORCE_ULP, GEFORCE_8000, GEFORCE_9000, GEFORCE_100, GEFORCE_200, GEFORCE_300, GEFORCE_400,
+                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600)),
+        /**
+         * Manufacturer Apple.
+         */
+        APPLE("Apple", Arrays.asList(APPLE_A));
+
+        private final List<Series> series;
+
+        private String note;
+
+        private Manufacturer(String note, List<Series> series) {
+            this.note = note;
+            this.series = series;
+        }
+
+        public List<Series> getSeries() {
+            return series;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+    }
+
+    /**
+     * A enum class with the types of a graphics card.
+     */
+    @XmlType(name = "GpuType")
+    public enum Type {
+
+        MOBILE, DESKTOP
+    }
+
+    @XmlType(name = "GpuSeries")
+    public enum Series implements eu.ggnet.dwoss.util.INoteModel {
+
+        GEFORCE_100("GeForce 100 Series"),
+        GEFORCE_200("GeForce 200 Series"),
+        GEFORCE_300("GeForce 300 Series"),
+        GEFORCE_400("GeForce 400 Series"),
+        GEFORCE_500("GeForce 500 Series"),
+        GEFORCE_600("GeForce 600 Series"),
+        RADEON_HD_4000("Radeon HD 4000 Series"),
+        RADEON_HD_5000("Radeon HD 5000 Series"),
+        RADEON_HD_6000("Radeon HD 6000 Series"),
+        INTEL_GRAPHICS("Graphics Series"),
+        GEFORCE_8000("GeForce 8000 Series"),
+        GEFORCE_9000("GeForce 9000 Series"),
+        RADEON_HD_7000("Radeon HD 7000 Series"),
+        RADEON_HD_3000("Radeon HD 3000 Series"),
+        GEFORCE_ULP("ULP"),
+        QUADRO_2000("Quadro 2000"),
+        GEFORCE_700("GeForce 700 Series"),
+        APPLE_A("A Series"),
+        RADEON_HD_8000("Radeon HD 8000 Series"),
+        QUADRO_600("Quadro 600"),
+        GEFORCE_800("GeForce 800 Series"),
+        R7("Radeon R7"),
+        R9("Radeon R9");
+
+        String note;
+
+        private Series(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+
+        public Manufacturer getManufacturer() {
+            for (Manufacturer manufacturer : Manufacturer.values()) {
+                if ( manufacturer.getSeries().contains(this) ) return manufacturer;
+            }
+            throw new RuntimeException(this + " has no Manufacturer assoziated !");
+        }
+    }
+
+    @XmlTransient
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @XmlTransient
+    @Version
+    private short optLock;
+
+    /**
+     * The model (productModel, productNumber of the Manufacturer).
+     */
+    @XmlAttribute
+    @NotNull
+    @Pattern(regexp = "(\\S.*\\S){1,250}")
+    private String model;
+
+    /**
+     * An optional Name, which may be use in replacement of Series + Model.
+     */
+    @XmlAttribute
+    private String name;
+
+    /**
+     * The type of the graphics card.
+     */
+    @XmlElement(name = "type")
+    @XmlElementWrapper
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Type> types = EnumSet.noneOf(Type.class);
+
+    @XmlAttribute
+    @NotNull
+    private Series series;
+
+    @XmlAttribute
+    @Column(columnDefinition = "DECIMAL(7,2)")
+    private Double economicValue;
+
+    public Gpu() {
+    }
+
+    public Gpu(Gpu.Series series, Set<Gpu.Type> types, String model) {
+        this.series = series;
+        this.types = types;
+        this.model = model;
+    }
+
+    public Gpu(Type type, Series series, String model) {
+        this.model = model;
+        this.series = series;
+        this.types = EnumSet.of(type);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Manufacturer getManufacturer() {
+        return series.getManufacturer();
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Series getSeries() {
+        return series;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
+    }
+
+    public void addType(Type type) {
+        types.add(type);
+    }
+
+    public void removeType(Type type) {
+        types.remove(type);
+    }
+
+    public Set<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<Type> types) {
+        this.types = types;
+    }
+
+    public Double getEconomicValue() {
+        return economicValue;
+    }
+
+    public void setEconomicValue(Double economicValue) {
+        this.economicValue = economicValue;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final Gpu other = (Gpu)obj;
+        if ( this.id != other.id ) return false;
+        return true;
+    }
+
+    public boolean equalsContent(Gpu other) {
+        if ( other == null ) return false;
+        if ( (this.model == null) ? (other.model != null) : !this.model.equals(other.model) ) return false;
+        if ( (this.name == null) ? (other.name != null) : !this.name.equals(other.name) ) return false;
+        if ( this.types != other.types && (this.types == null || !this.types.equals(other.types)) ) return false;
+        if ( this.series != other.series ) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + (int)(this.id ^ (this.id >>> 32));
+        return hash;
+    }
+
+    @Override
+    public String toString() {
+        return "Gpu{" + "id=" + id + ", model=" + model + ", name=" + name + ", types=" + types + ", series=" + series + ", economicValue=" + economicValue + '}';
+    }
+}

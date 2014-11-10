@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" fx:id="rootAnchor" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.rights.RightsManagmentController">
+    <children>
+        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns:fx="http://javafx.com/fxml">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+                <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" />
+<ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="700.0" vgrow="ALWAYS" />
+                <RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="50.0" prefHeight="50.0" valignment="BOTTOM" vgrow="NEVER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+            </rowConstraints>
+            <children>
+                <TitledPane alignment="CENTER" animated="false" collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Rechte" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <SplitPane dividerPositions="0.5" focusTraversable="true" layoutX="220.0" layoutY="100.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <items>
+                                        <AnchorPane>
+                                            <children>
+                                                <ListView fx:id="activeRights" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            </children>
+                                        </AnchorPane>
+                                        <AnchorPane>
+                                            <children>
+                                                <ListView fx:id="deactiveRights" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            </children>
+                                        </AnchorPane>
+                                    </items>
+                                </SplitPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane alignment="CENTER" animated="false" collapsible="false" graphicTextGap="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Operator" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.valignment="BASELINE" GridPane.vgrow="ALWAYS" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <ListView fx:id="userlist" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane alignment="CENTER" animated="false" collapsible="false" contentDisplay="LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Persona" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+                    <content>
+                        <AnchorPane>
+                            <children>
+                                <SplitPane dividerPositions="0.5" focusTraversable="true" layoutX="220.0" layoutY="100.0" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <items>
+                                        <AnchorPane>
+                                            <children>
+                                                <ListView fx:id="activePersonas" AnchorPane.bottomAnchor="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            </children>
+                                        </AnchorPane>
+                                        <AnchorPane>
+                                            <children>
+                                                <ListView fx:id="deactivePersonas" AnchorPane.bottomAnchor="-0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                            </children>
+                                        </AnchorPane>
+                                    </items>
+                                </SplitPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <FlowPane alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.valignment="BOTTOM">
+                    <children><Button fx:id="addNewPersonaButton" mnemonicParsing="false" onAction="#handleAddNewPersonaButton" text="Neue Persona Hinzufügen">
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></Button><Button fx:id="addNewOperatorButton" mnemonicParsing="false" onAction="#handleAddNewOperatorButton" text="Neuen Operator Erstellen">
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></Button><StackPane>
+<children><Button fx:id="removePersonaButton" mnemonicParsing="false" onAction="#handleRemovePersonaButton" text="Persona Entfernen">
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></Button><Button fx:id="addPersonaButton" mnemonicParsing="false" onAction="#handleAddPersonaButton" text="Persona Hinzufügen">
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></Button><Button fx:id="removeRightButton" mnemonicParsing="false" onAction="#handleRemoveRightButton" text="Recht Entfernen">
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></Button>
+                        <Button fx:id="addRightButton" mnemonicParsing="false" onAction="#handleAddRightButton" text="Recht Hinzufügen" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="1" GridPane.valignment="CENTER">
+                            <FlowPane.margin>
+                                <Insets bottom="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+</children>
+<FlowPane.margin>
+<Insets bottom="10.0" right="10.0" />
+</FlowPane.margin></StackPane>
+                        <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButton" text="Speichern" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                            <GridPane.margin>
+                                <Insets bottom="10.0" right="10.0" />
+                            </GridPane.margin>
+                            <FlowPane.margin>
+                                <Insets bottom="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+                        <Button fx:id="cancleButton" mnemonicParsing="false" onAction="#handleCancleButton" text="Abbrechen">
+                            <FlowPane.margin>
+                                <Insets bottom="10.0" right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
+                    </children>
+                </FlowPane><TitledPane alignment="CENTER" blendMode="SRC_OVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Alle Rechte" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER" xmlns:fx="http://javafx.com/fxml">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+<children><ListView fx:id="allRights" focusTraversable="false" layoutX="-6.0" layoutY="78.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+</children></AnchorPane>
+  </content>
+</TitledPane>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>

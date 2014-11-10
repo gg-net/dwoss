@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CustomerReport2_subreport1" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="manufacturerNames" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Gerät"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="accessories" class="java.lang.String">
+		<fieldDescription><![CDATA[accessories]]></fieldDescription>
+	</field>
+	<field name="comment" class="java.lang.String">
+		<fieldDescription><![CDATA[comment]]></fieldDescription>
+	</field>
+	<field name="conditionLevelDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[conditionLevelDescription]]></fieldDescription>
+	</field>
+	<field name="customerPrice" class="java.lang.Double">
+		<fieldDescription><![CDATA[customerPrice]]></fieldDescription>
+	</field>
+	<field name="mfgDate" class="java.util.Date">
+		<fieldDescription><![CDATA[mfgDate]]></fieldDescription>
+	</field>
+	<field name="refurbishedId" class="java.lang.String">
+		<fieldDescription><![CDATA[refurbishedId]]></fieldDescription>
+	</field>
+	<field name="retailerPrice" class="java.lang.Double">
+		<fieldDescription><![CDATA[retailerPrice]]></fieldDescription>
+	</field>
+	<field name="roundedTaxedCustomerPrice" class="java.lang.Double">
+		<fieldDescription><![CDATA[roundedTaxedCustomerPrice]]></fieldDescription>
+	</field>
+	<field name="serial" class="java.lang.String">
+		<fieldDescription><![CDATA[serial]]></fieldDescription>
+	</field>
+	<field name="warranty" class="java.lang.String">
+		<fieldDescription><![CDATA[warranty]]></fieldDescription>
+	</field>
+	<pageHeader>
+		<band splitType="Prevent"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Prevent">
+			<rectangle radius="10">
+				<reportElement x="0" y="20" width="555" height="30" backcolor="#EDEDED"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="15" y="20" width="50" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Sopo-Nr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="69" y="20" width="59" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[optischer Zustand]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="132" y="20" width="203" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Bemerkung]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="20" width="80" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Preis inkl. MwSt.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="339" y="20" width="96" height="30" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Zubehör]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="3" width="198" height="20" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Einzelstückbeschreibung:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="290" y="3" width="250" height="20" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[Boolean.valueOf(($V{PAGE_NUMBER}.intValue() > 1))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{manufacturerNames} + " (" + $V{PAGE_NUMBER} +")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<line>
+				<reportElement mode="Opaque" x="15" y="0" width="525" height="1">
+					<printWhenExpression><![CDATA[Boolean.valueOf($V{COLUMN_COUNT}.intValue() > 1)]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="15" y="0" width="50" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{refurbishedId}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="440" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{roundedTaxedCustomerPrice}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="69" y="0" width="59" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{conditionLevelDescription}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="132" y="0" width="203" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{comment}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="339" y="0" width="96" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{accessories}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+</jasperReport>

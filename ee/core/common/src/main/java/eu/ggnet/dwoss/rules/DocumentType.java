@@ -1,0 +1,293 @@
+package eu.ggnet.dwoss.rules;
+
+import java.util.EnumSet;
+
+/**
+ * The possible Types of Documents.
+ * Hint on notation: A short notation is used. A CreditMemo can only exist if a Invoice exits means a Dossier can only have an active Document of type
+ * CreditMemo if
+ * the dossier has an active Document of type Invoice.
+ * Hint: Only on this component to have type safty in the Mandator.
+ */
+public enum DocumentType {
+
+    /**
+     * Represents an order.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>Invoice</li>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>There may exist only one active Order.</li>
+     * </ul>
+     * Workflow on Create/Update if a Position of type Unit exists:
+     * <ul>
+     * <li>Request a referencing stock.LogicTransaction</li>
+     * <li>Check if the stock.LogicTransaction has the StockUnit:
+     * <ul>
+     * <li>If it doesn't, check if the StockUnit is available:
+     * <ul>
+     * <li>If not, <b>FAIL</b></li>
+     * <li>Else add it to the stock.LogicTransaction</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * </li>
+     * <li>Create or update a SopoAuftrag:
+     * <ul>
+     * <li>Add all SopoUnits referenced by {@link Position} of type {@link Position.Type#UNIT}</li>
+     * <li>Add all SopoProductBatches for {@link Position} of type {@link Position.Type#PRODUCT_BATCH}</li>
+     * <li>Add a SopoProductBatches of SopoProduct.DUMMY for {@link Position} of type {@link Position.Type#SERVICE}</li>
+     * </ul>
+     * </li>
+     * </ul>
+     */
+    ORDER("Bestellung"), /**
+     * Represents an invoice.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>Order</li>
+     * <li>None</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>CreditMemo</li>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>There may exist only one active Invoice.</li>
+     * <li>After the creation of an Invoice the Order must not be changed.</li>
+     * <li>If {@link Document#closed} is true, only changes of {@link Document#changesAllowed(de.dw.redtape.entity.Document)} are allowed</li>
+     * </ul>
+     * Workflow on Create/Update if a Position of type Unit exists: see {@link Type#ORDER}
+     * <p/>
+     * Workflow on Rollout of StockUnits (close of last week):
+     * <ul>
+     * <li>Set {@link Document#closed} to ture</li>
+     * </ul>
+     */
+    INVOICE("Rechnung", "RS"), /**
+     * Represents a complaint.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>Invoice</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>annulation Invoice</li>
+     * <li>CreditMemo</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>A complaint can only exist if a Invoice exits.</li>
+     * <li>The weight of all complaint can only be as much as the weight of the Invoice.</li>
+     * <li>After the creation of a complaint the Invoice must not be changed.</li>
+     * <li>If the Dossier, was closed, reopen it.</li>
+     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * </ul>
+     * Workflow on Create/Update: No Changes on Stock/Sopo<br />
+     * Hint: On the closing Operation, if the Invoice is still open, keep it that way and do not report.
+     */
+    COMPLAINT("Reklamation"), /**
+     * Represents a annulation invoice.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>Invoice</li>
+     * <li>Complaint</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>The weight of all AnulationInvoice can only be as much as the negative weight of the Invoice.</li>
+     * <li>After the creation of a AnulationInvoice the Invoice must not be changed.</li>
+     * <li>If the Dossier, was closed, reopen it.</li>
+     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * </ul>
+     * Workflow on Create/Update if a Position of type Unit exists:
+     * <ul>
+     * <li>Validate if a Position of the Type Unit exists on the Invoice</li>
+     * <li>Check existence of a referenced stock.LogicTransaction and containing the referenced StockUnit:
+     * <ul>
+     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction and sopo.Auftrag</li>
+     * <li>Else &rArr; RollIn a StockUnit</li>
+     * </ul>
+     * </li>
+     * <li>Create a new Dossier with Document of {@link Type#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor.alphaAccount.creditMemoCustomer and add
+     * the Unit</li>
+     * <li>Add a Comment to this Document, containing the arranger, the cause and the Identifier of the CreditMemo</li>
+     * <li>Add a Comment to the UniqueUnit, containing the arranger, the cause and the Identifier of the CreditMemo</li>
+     * </ul>
+     */
+    ANNULATION_INVOICE("Stornorechnung", "SR"), /**
+     * Represents a partial or full credit memo to an invoice.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>Invoice</li>
+     * <li>Complaint</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>The weight of all CreditMemos can only be as much as the weight of the Invoice.</li>
+     * <li>After the creation of a CreditMemo the Invoice must not be changed.</li>
+     * <li>If the Document, was closed, reopen it.</li>
+     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * </ul>
+     * Workflow on Create/Update if a Position of type Unit exists:
+     * <ul>
+     * <li>Validate if a Position of the Type Unit exists on the Invoice</li>
+     * <li>Check existence of a referenced stock.LogicTransaction and containing the referenced StockUnit:
+     * <ul>
+     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction and sopo.Auftrag</li>
+     * <li>Else &rArr; RollIn a StockUnit</li>
+     * </ul>
+     * </li>
+     * <li>Create a new Dossier with Document of {@link Type#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor.alphaAccount.creditMemoCustomer and add
+     * the Unit</li>
+     * <li>Add a Comment to this Document, containing the arranger, the cause and the Identifier of the CreditMemo</li>
+     * <li>Add a Comment to the UniqueUnit, containing the arranger, the cause and the Identifier of the CreditMemo</li>
+     * </ul>
+     */
+    CREDIT_MEMO("Gutschrift", "GS"), /**
+     * Represents a Blocker, that cannot change any state.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>A Blocker can only exist on a SystemCustomer.</li>
+     * </ul>
+     */
+    BLOCK("Blocker"), /**
+     * Represents an Returns to a commission contractor.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>There may exist only one active Returns.</li>
+     * <li>The Contractor of the Unit must be equivalent to the Customer.</li>
+     * <li>Allowed Position Types are Unit, Comment</li>
+     * </ul>
+     * Allowed Constraint Values: CANCELED and PICKED_UP.
+     * <p />
+     * Workflow on Create or Update if a Position of type Unit exists:
+     * <ul>
+     * <li>Request a referencing stock.LogicTransaction</li>
+     * <li>Check if the stock.LogicTransaction has the StockUnit:
+     * <ul>
+     * <li>If it doesn't, check if the StockUnit is available:
+     * <ul>
+     * <li>If not, <b>FAIL</b></li>
+     * <li>Else add it to the stock.LogicTransaction</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * </li>
+     * </ul>
+     */
+    RETURNS("Rückläufer"), /**
+     * Represents a Capital Asset for GG-Net.
+     * <p/>
+     * Predecessors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Successors:
+     * <ul>
+     * <li>None</li>
+     * </ul>
+     * Constraints:
+     * <ul>
+     * <li>There may exist only one active Capital Asset.</li>
+     * <li>It can only exist on the Company Customer (KID=34)</li>
+     * <li>Allowed Position Types are Unit, Comment</li>
+     * </ul>
+     * Allowed Constraint Values: CANCELED and PICKED_UP.
+     * <p />
+     * Workflow on Create or Update if a Position of type Unit exists:
+     * <ul>
+     * <li>Request a referencing stock.LogicTransaction</li>
+     * <li>Check if the stock.LogicTransaction has the StockUnit:
+     * <ul>
+     * <li>If it doesn't, check if the StockUnit is available:
+     * <ul>
+     * <li>If not, <b>FAIL</b></li>
+     * <li>Else add it to the stock.LogicTransaction</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * </li>
+     * </ul>
+     */
+    CAPITAL_ASSET("Anlagevermögen", "AN");
+
+    private final String name;
+
+    /**
+     * the MatchCode (eg Invoice = SR, CreditMemo = GS).
+     */
+    private final String matchCode;
+
+    private DocumentType(String name, String matchCode) {
+        this.name = name;
+        this.matchCode = matchCode;
+    }
+
+    private DocumentType(String name) {
+        this(name, null);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns the MatchCode (e.g. Invoice = SR, CreditMemo = GS)
+     *
+     * @return the MatchCode, may be null.
+     */
+    public String getMatchCode() {
+        return matchCode;
+    }
+
+    /**
+     * Returns true if type is repayment.
+     * <p>
+     * @param type the type to check
+     * @return true if type is repayment.
+     */
+    public static boolean isRepayment(DocumentType type) {
+        return EnumSet.of(CREDIT_MEMO, ANNULATION_INVOICE).contains(type);
+    }
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-RunClient</actionName>
+        <displayName>RunClient GG-Net</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-ggnet</activatedProfile>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient ELUS</actionName>
+        <displayName>RunClient ELUS</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <persistence.redtape.schema>elus_redtape</persistence.redtape.schema>
+            <persistence.report.schema>elus_report</persistence.report.schema>
+            <persistence.stock.schema>elus_stock</persistence.stock.schema>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>server-elus</activatedProfile>
+            <activatedProfile>client-elus</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient Sample</actionName>
+        <displayName>RunClient Sample</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-sample</activatedProfile>
+            <activatedProfile>client-sample</activatedProfile>
+        </activatedProfiles>
+    </action>
+</actions>
+ 

@@ -1,0 +1,79 @@
+package eu.ggnet.dwoss.receipt.unit.chain;
+
+import java.util.*;
+
+import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
+
+import eu.ggnet.dwoss.rules.TradeName;
+
+import eu.ggnet.dwoss.spec.SpecAgent;
+
+/**
+ *
+ * @author oliver.guenther
+ */
+public abstract class Chains {
+
+    protected Chains() {
+    }
+
+    public static Chains getInstance(TradeName manufacturer) {
+        switch (manufacturer) {
+            case ACER:
+                return new AcerChains();
+            case APPLE:
+                return new AppleChains();
+            case HP:
+                return new HpChains();
+            case LENOVO:
+                return new LenovoChains();
+            default:
+                return new AutoChains();
+        }
+    }
+
+    /**
+     * Executes a chain.
+     * <p/>
+     * @param <T>   the type of the chain
+     * @param chain the chain to execute
+     * @param value the value to start execution on
+     * @return the first invalid result or the last result, all with merged optionals.
+     */
+    public static <T> ChainLink.Result<T> execute(List<ChainLink<T>> chain, T value) {
+        Objects.requireNonNull(chain, "Chain must not be null");
+        if ( chain.isEmpty() ) throw new IllegalStateException("The Chain is empty, not allowed");
+        ChainLink.Result<T> result = new ChainLink.Result<>(value, ValidationStatus.ERROR, "Validation Chain is empty");
+        ChainLink.Optional optional = new ChainLink.Optional(null, null);
+        for (ChainLink<T> link : chain) {
+            result = link.execute(result.getValue());
+            optional = optional.merge(result.getOptional());
+            if ( !result.isValid() ) return result.withOptional(optional);
+        }
+        return result.withOptional(optional);
+    }
+
+    /**
+     * Returns the new RefurbhisId Validation an Modification Chain.
+     * <p/>
+     * @param contractor    the contractor.
+     * @param unitSupporter the unit supporter
+     * @param isEdit        if true, this chain is in edit mode.
+     * @return the new RefurbhisId Validation an Modification Chain.
+     */
+    public abstract List<ChainLink<String>> newRefubishIdChain(TradeName contractor, UnitSupporter unitSupporter, boolean isEdit);
+
+    /**
+     * Returns the new SerialChain.
+     * <p/>
+     * @param unitSupporter   the unitSupporter
+     * @param editRefurbishId the refurbishId of an edited unit, or null for creation.
+     * @return the new SerialChain.
+     */
+    public abstract List<ChainLink<String>> newSerialChain(UnitSupporter unitSupporter, String editRefurbishId);
+
+    public abstract List<ChainLink<String>> newPartNoChain(SpecAgent specAgent, Set<TradeName> allowedBrands);
+
+    public abstract List<ChainLink<Date>> newMfgDateChain();
+}

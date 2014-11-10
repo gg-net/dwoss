@@ -1,0 +1,453 @@
+package eu.ggnet.dwoss.report.eao;
+
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.TradeName;
+
+import java.text.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.*;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.*;
+
+import eu.ggnet.dwoss.report.assist.Reports;
+import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+
+
+import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.report.entity.ReportLine;
+
+import com.mysema.query.jpa.impl.JPAQuery;
+
+import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
+import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.report.entity.QReportLine.reportLine;
+
+/**
+ * Entity Access Object for ReportLine.
+ * <p>
+ * @author pascal.perau
+ */
+@Stateless
+public class ReportLineEao extends AbstractEao<ReportLine> {
+
+    /**
+     * Represents a Stepsize, normally for a Allgorithm of Dates.
+     */
+    public enum Step {
+
+        /**
+         * A Stepsize of a Day.
+         */
+        DAY {
+
+                    @Override
+                    public Date truncate(Date date) {
+                        return DateUtils.truncate(date, Calendar.DATE);
+                    }
+
+                    @Override
+                    public Date prepareEnd(Date date) {
+                        return DateUtils.addDays(DateUtils.truncate(date, Calendar.DATE), 1);
+                    }
+
+                    @Override
+                    public Date incement(Date date) {
+                        return DateUtils.addDays(date, 1);
+                    }
+
+                    @Override
+                    public String format(Date date) {
+                        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+                    }
+
+                },
+        WEEK {
+
+                    @Override
+                    public Date truncate(Date date) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(date);
+                        while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                            cal.add(Calendar.DATE, -1);
+                        }
+                        return DateUtils.truncate(cal.getTime(), Calendar.DATE);
+                    }
+
+                    @Override
+                    public Date prepareEnd(Date date) {
+                        return DateUtils.addDays(truncate(date), 1);
+                    }
+
+                    @Override
+                    public Date incement(Date date) {
+                        return DateUtils.addWeeks(date, 1);
+                    }
+
+                    @Override
+                    public String format(Date date) {
+                        return new SimpleDateFormat("yyyy'KW'ww").format(date);
+                    }
+
+                },
+        /**
+         * A Stepsize of a Month.
+         */
+        MONTH {
+
+                    @Override
+                    public Date truncate(Date date) {
+                        return DateUtils.truncate(date, Calendar.MONTH);
+                    }
+
+                    @Override
+                    public Date prepareEnd(Date date) {
+                        return DateUtils.addDays(DateUtils.truncate(date, Calendar.MONTH), 1);
+                    }
+
+                    @Override
+                    public Date incement(Date actual) {
+                        return DateUtils.addMonths(actual, 1);
+                    }
+
+                    @Override
+                    public String format(Date date) {
+                        return new SimpleDateFormat("MMMM").format(date);
+                    }
+
+                };
+
+        /**
+         * Prepares the start by truncating it to the selected Level.
+         * <p>
+         * @param start the start to be prepared.
+         * @return the prepared start.
+         */
+        public abstract Date truncate(Date start);
+
+        /**
+         * Prepares the end by creating a slightly past element.
+         * This allows the usage of something.before(preparedEnd) to inclued the end.
+         * <p>
+         * @param end the end to be prepared
+         * @return the prepared end
+         */
+        public abstract Date prepareEnd(Date end);
+
+        /**
+         * Incements the date by the selected type.
+         * <p>
+         * @param date the date to be incremented
+         * @return the incremented date
+         */
+        public abstract Date incement(Date date);
+
+        /**
+         * Format the date in a readable version of the step size.
+         * e.g. 2014-01-01, step = Month, something like January make sence. step = Week, something like 2014KW01
+         * <p>
+         * @param date the date to formate
+         * @return a useful string representation.
+         */
+        public abstract String format(Date date);
+
+    }
+
+    private static final Logger L = LoggerFactory.getLogger(ReportLineEao.class);
+
+    @Inject
+    @Reports
+    private EntityManager em;
+
+    @Override
+    public EntityManager getEntityManager() {
+        return em;
+    }
+
+    public ReportLineEao(EntityManager em) {
+        this();
+        this.em = em;
+    }
+
+    public ReportLineEao() {
+        super(ReportLine.class);
+    }
+
+    public List<SimpleReportLine> findAllSimple() {
+        return em.createQuery("SELECT r FROM SimpleReportLine r", SimpleReportLine.class).getResultList();
+    }
+
+    /**
+     * Returns all ReportLines, limited by first and max ordered by reportDate descending.
+     * <p>
+     * @param firstResult the first result to return
+     * @param maxResults  the maximum results to return
+     * @return all ReportLines, limited by first and max ordered by reportDate descending.
+     */
+    public List<ReportLine> findAllReverse(int firstResult, int maxResults) {
+        return em.createNamedQuery("ReportLine.allReverse", ReportLine.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+    }
+
+    /**
+     * Returns all ReportLines ordered by reportDate descending.
+     * <p>
+     * @return all ReportLines ordered by reportDate descending.
+     */
+    public List<ReportLine> findAllReverse() {
+        return em.createNamedQuery("ReportLine.allReverse", ReportLine.class).getResultList();
+    }
+
+    public Date findLastReported() {
+        return em.createNamedQuery("ReportLine.lastReported", Date.class).getSingleResult();
+    }
+
+    public List<ReportLine> findByUniqueUnitId(long id) {
+        return em.createNamedQuery("ReportLine.byUniqueUnitId", ReportLine.class).setParameter(1, id).getResultList();
+    }
+
+    /**
+     * Returns all lines matching the refurbishId.
+     * <p>
+     * @param id the refurbishId
+     * @return all lines matching the refurbishId.
+     */
+    public List<ReportLine> findByRefurbishId(String id) {
+        return em.createNamedQuery("ReportLine.byRefurbishId", ReportLine.class).setParameter(1, id).getResultList();
+    }
+
+    public List<ReportLine> findBetweenDates(Date start, Date end) {
+        return em.createNamedQuery("ReportLine.betweenDates", ReportLine.class).setParameter(1, start).setParameter(2, end).getResultList();
+    }
+
+    /**
+     * Returns all Reportlines, which are not jet in a Report of the contractor and have a reporting date between (including) from and till.
+     * <p/>
+     * If the contractor is null the Query unreportedFromTillAll will be executed.
+     * <p/>
+     * @param type        the contractor as filter
+     * @param till        the date as upper border
+     * @param from        the date as lower border
+     * @param includeOnly selects positionTypes which should only be included.
+     * @return the matching report lines.
+     */
+    public List<ReportLine> findUnreported(TradeName type, Date from, Date till, PositionType... includeOnly) {
+        L.info("findUnreported(type={},from={},till={},includeOnly={})", type, from, till, includeOnly);
+        Objects.requireNonNull(type, "The Type must not be null");
+        List<PositionType> positionTypes = new ArrayList<>();
+        List<TradeName> contractors = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        cal.set(2001, 01, 01);
+        if ( includeOnly != null && includeOnly.length > 0 ) positionTypes = Arrays.asList(includeOnly);
+        contractors.add(type);
+        TypedQuery<ReportLine> query;
+        if ( positionTypes.isEmpty() && contractors.isEmpty() ) {
+            L.debug("Using Query ReportLine.unreported");
+            query = em.createNamedQuery("ReportLine.unreported", ReportLine.class);
+        } else if ( positionTypes.isEmpty() ) {
+            L.debug("Using Query ReportLine.unreportedbyContractors");
+            query = em.createNamedQuery("ReportLine.unreportedbyContractors", ReportLine.class).setParameter("contractors", contractors);
+        } else if ( contractors.isEmpty() ) {
+            L.debug("Using Query ReportLine.unreportedbyPositionTypes");
+            query = em.createNamedQuery("ReportLine.unreportedbyPositionTypes", ReportLine.class).setParameter("positionTypes", positionTypes);
+        } else {
+            L.debug("Using Query ReportLine.unreportedbyContractorsPositionTypes");
+            query = em.createNamedQuery("ReportLine.unreportedbyContractorsPositionTypes", ReportLine.class).setParameter("contractors", contractors).setParameter("positionTypes", positionTypes);
+        }
+        query.setParameter("from", (from == null ? cal.getTime() : from));
+        query.setParameter("till", till);
+        query.setParameter("type", type);
+        return query.getResultList();
+    }
+
+    public List<ReportLine> findUnreportedUnits(TradeName type, Date from, Date till) {
+        return findUnreported(type, from, till, PositionType.UNIT, PositionType.UNIT_ANNEX);
+    }
+
+    /**
+     * Returns a collection with {@link PositionType#UNIT} or {@link PositionType#UNIT_ANNEX} with the same uniqueUnitId and dossierId.
+     * <p>
+     * @param uniqueUnitId the uniqueUnitId
+     * @param dossierId    the dossierId
+     * @return a collection with {@link PositionType#UNIT} or {@link PositionType#UNIT_ANNEX} with the same uniqueUnitId and dossierId.
+     */
+    public List<ReportLine> findUnitsAlike(long uniqueUnitId, long dossierId) {
+        return new JPAQuery(em).from(reportLine)
+                .where(reportLine.positionType.in(Arrays.asList(UNIT, UNIT_ANNEX)), reportLine.uniqueUnitId.eq(uniqueUnitId), reportLine.dossierId.eq(dossierId)
+                ).list(reportLine);
+    }
+
+    public List<ReportLine> findReportedUnitsbyRefurbishId(Collection<String> refurbishId) {
+        return new JPAQuery(em).from(reportLine)
+                .where(reportLine.positionType.in(Arrays.asList(UNIT, UNIT_ANNEX)), reportLine.refurbishId.in(refurbishId), reportLine.reports.isNotEmpty())
+                .list(reportLine);
+    }
+
+    /**
+     * This Method returns all unreported Warranties.
+     * <p>
+     * @return all unreported warranties.
+     */
+    public List<ReportLine> findUnreportedWarrentys() {
+        // This works in mysql, but fails in hsqldb.
+//        return new JPAQuery(em).from(reportLine)
+//                .where(reportLine.positionType.eq(PRODUCT_BATCH),
+//                        reportLine.singleReferences.containsKey(WARRANTY),
+//                        reportLine.reports.isEmpty()).list(reportLine);
+        return new JPAQuery(em)
+                .from(reportLine)
+                .where(reportLine.positionType.eq(PRODUCT_BATCH),
+                        reportLine.reports.isEmpty())
+                .list(reportLine)
+                .stream()
+                .filter(l -> l.getReference(WARRANTY) != null)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all ReportLines, which are at the given Customer id from to till the given Dates
+     * <p/>
+     * @param type the customer Id which the ReportLines must be have
+     * @param till the date as upper border
+     * @param from the date as lower border
+     * @return the matching report lines.
+     */
+    public List<ReportLine> findbyDocumentTypeFromTill(DocumentType type, Date from, Date till) {
+        return new JPAQuery(em).from(reportLine).where(reportLine.documentType.eq(type),
+                reportLine.reportingDate.between(from, till)).list(reportLine);
+    }
+
+    /**
+     * Returns all reportlines matching the productId, the contractor and have no contractor part no set.
+     * <p>
+     * @param productId  the product id
+     * @param contractor the contractor
+     * @return all reportlines matching the productId, the contractor and have no contractor part no set.
+     */
+    public List<ReportLine> findByProductIdMissingContractorPartNo(long productId, TradeName contractor) {
+        return em.createNamedQuery("ReportLine.byProductIdMissingContractorPartNo", ReportLine.class)
+                .setParameter(1, productId).setParameter(2, contractor).getResultList();
+    }
+
+    public List<ReportLine> findMissingContractorPartNo(TradeName contractor) {
+        return new JPAQuery(em).from(reportLine)
+                .where(reportLine.positionType.eq(UNIT)
+                        .and(reportLine.contractorPartNo.isNull())
+                        .and(reportLine.contractor.eq(contractor)))
+                .list(reportLine);
+    }
+
+    /**
+     * Generates a list of {@link DailyRevenue} that hold report data for INVOICES - ANNULATION_INVOICES in a date range containing daily summed prices
+     * for specific {@link PositionType}s.
+     * <p>
+     * @param posTypes the {@link PositionType} that is searched for
+     * @param start    the starting date range for the collected data
+     * @param end      the end date range for the collected data
+     * @return a list of {@link DailyRevenue} that hold report data for INVOICES - ANNULATION_INVOICES in a date range containing daily summed prices
+     *         for specific {@link PositionType}s
+     */
+    public List<Set<DailyRevenue>> findRevenueDataByPositionTypesAndDate(List<PositionType> posTypes, Date start, Date end) {
+        try {
+            L.info("Attempt to find revenue report data with posType={}, start={}, end={}", posTypes, start, end);
+
+            List<Integer> posTypeOrdinals = new ArrayList<>();
+            for (PositionType positionType : posTypes) {
+                posTypeOrdinals.add(positionType.ordinal());
+            }
+            Query q = em.createNativeQuery("SELECT reportingDate, documentTypeName, sum(price), salesChannelName"
+                    + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
+                    + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentTypeName, rl.salesChannelName");
+            q.setParameter("positions", posTypeOrdinals);
+            q.setParameter("start", start);
+            q.setParameter("end", end);
+            List<Object[]> data = q.getResultList();
+            List<DailyRevenue> reportData = new ArrayList<>();
+            for (Object[] object : data) {
+                reportData.add(new DailyRevenue((Date)object[0], (String)object[1], (double)object[2], (String)object[3]));
+            }
+
+            Map<Date, Set<DailyRevenue>> revReports = new HashMap<>();
+            for (DailyRevenue revenueReportCarrier : reportData) {
+                Date d = DateUtils.truncate(revenueReportCarrier.getReportingDate(), Calendar.DATE);
+                Set<DailyRevenue> neededSet = revReports.get(d);
+                if ( neededSet == null ) {
+                    neededSet = new HashSet<>();
+                    neededSet.add(revenueReportCarrier);
+                    revReports.put(d, neededSet);
+                } else {
+                    neededSet.add(revenueReportCarrier);
+                }
+            }
+
+            return new ArrayList<>(revReports.values());
+        } catch (Exception e) {
+            L.error(ExceptionUtils.getStackTrace(e));
+            return null;
+        }
+    }
+
+    /**
+     * Returns the revenue in a range with the supplied Stepsize.
+     * A step size of day will return daily revenues, while a stepsize of month returns monthly revenues.
+     * For each stepsize the earliest possible day is used as identifier. e.g.: January 2012 it would be 2012-01-01.
+     * <p>
+     * @param posTypes the positiontypes to include
+     * @param start    the start
+     * @param end      the end
+     * @param step     the stepsize.
+     * @return the Revenue by Date in the stepsize.
+     */
+    public NavigableMap<Date, Revenue> revenueByPositionTypesAndDate(List<PositionType> posTypes, Date start, Date end, Step step) {
+        L.debug("Attempt to find revenue report data with posType={}, start={}, end={}, {}", posTypes, start, end, step);
+        TypedQuery<RevenueHolder> q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDate", RevenueHolder.class);
+        q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
+
+        NavigableMap<Date, Revenue> result = prepare(start, end, step);
+        for (RevenueHolder holder : q.getResultList()) {
+            Revenue revenueStep = result.get(step.truncate(holder.getReportingDate()));
+            // Highly unlikely case, but if it happens a detail message might help.
+            if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
+                        + ":reportingDate=" + DateFormats.ISO.format(holder.getReportingDate())
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
+                        + ",keys=" + nice(result.keySet(), step)
+                );
+            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getSum());
+        }
+        return result;
+    }
+
+    public List<ReportLine> findBySerialAndPositionTypeAndDossierId(String serial, PositionType positionType, long dossierId) {
+        return em.createNamedQuery("ReportLine.bySerialAndPositionTypeAndDossierId", ReportLine.class)
+                .setParameter(1, serial)
+                .setParameter(2, positionType)
+                .setParameter(3, dossierId)
+                .getResultList();
+    }
+
+    private NavigableMap<Date, Revenue> prepare(Date start, Date end, Step step) {
+        NavigableMap<Date, Revenue> result = new TreeMap<>();
+        Date actual = step.truncate(start);
+        end = step.prepareEnd(end);
+        while (actual.before(end)) {
+            result.put(actual, new Revenue());
+            actual = step.incement(actual);
+        }
+        return result;
+    }
+
+    private List<String> nice(Set<Date> dates, Step step) {
+        List<String> result = new ArrayList<>();
+        for (Date date : dates) {
+            result.add(step.format(date) + "(" + DateFormats.ISO.format(date) + ")");
+        }
+        return result;
+    }
+
+}

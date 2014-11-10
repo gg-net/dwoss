@@ -1,0 +1,188 @@
+Aalen
+Ahlen
+Arnsberg
+Aschaffenburg
+Augsburg
+Baden-Baden
+Bad Homburg (vor der Höhe)
+Bad Salzuflen
+Bamberg
+Bayreuth
+Bergheim
+Bergisch Gladbach
+Bergkamen
+Berlin
+Bielefeld
+Bocholt
+Bochum
+Bonn
+Bottrop
+Brandenburg (Havel)
+Braunschweig
+Bremen
+Bremerhaven
+Castrop-Rauxel
+Celle
+Chemnitz
+Cottbus (Chóśebuz)
+Cuxhaven
+Darmstadt
+Delmenhorst
+Dessau (-Roßlau)
+Detmold
+Dinslaken
+Dormagen
+Dorsten
+Dortmund
+Dresden
+Duisburg
+Düren
+Düsseldorf
+Emden
+Erftstadt
+Erfurt
+Erlangen
+Eschweiler
+Essen
+Esslingen (am Neckar)
+Euskirchen
+Flensburg
+Frankfurt (am Main)
+Frankfurt (Oder)
+Frechen
+Freiburg (im Breisgau)
+Friedrichshafen
+Fulda
+Fürth
+Garbsen
+Gelsenkirchen
+Gera
+Gießen
+Gladbeck
+Göppingen
+Görlitz
+Göttingen
+Greifswald
+Grevenbroich
+Gummersbach
+Gütersloh
+Hagen
+Halle (Saale)
+Hamburg
+Hameln
+Hamm
+Hanau
+Hannover
+Hattingen
+Heidelberg
+Heilbronn
+Herford
+Herne
+Herten
+Hilden
+Hildesheim
+Hürth
+Ibbenbüren
+Ingolstadt
+Iserlohn
+Jena
+Kaiserslautern
+Karlsruhe
+Kassel
+Kempten (Allgäu)
+Kerpen
+Kiel
+Koblenz
+Köln
+Konstanz
+Krefeld
+Landshut
+Langenfeld (Rheinland)
+Langenhagen
+Leipzig
+Leverkusen
+Lingen (Ems)
+Lippstadt
+Lübeck
+Lüdenscheid
+Ludwigsburg
+Ludwigshafen (am Rhein)
+Lüneburg
+Lünen
+Magdeburg
+Mainz
+Mannheim
+Marburg
+Marl
+Meerbusch
+Menden (Sauerland)
+Minden
+Moers
+Mönchengladbach
+Mülheim (an der Ruhr)
+München
+Münster
+Neubrandenburg
+Neumünster
+Neuss
+Neustadt (an der Weinstraße)
+Neu-Ulm
+Neuwied
+Norderstedt
+Nordhorn
+Nürnberg
+Oberhausen
+Offenbach (am Main)
+Offenburg
+Oldenburg (Oldenburg)
+Osnabrück
+Paderborn
+Passau
+Pforzheim
+Plauen
+Potsdam
+Pulheim
+Ratingen
+Recklinghausen
+Regensburg
+Remscheid
+Reutlingen
+Rheine
+Rosenheim
+Rostock
+Rüsselsheim
+Saarbrücken
+Salzgitter
+Sankt Augustin
+Schwäbisch Gmünd
+Schweinfurt
+Schwerin
+Siegen
+Sindelfingen
+Solingen
+Speyer
+Stolberg (Rheinland)
+Stralsund
+Stuttgart
+Trier
+Troisdorf
+Tübingen
+Ulm
+Unna
+Velbert
+Viersen
+Villingen-Schwenningen
+Waiblingen
+Weimar
+Wesel
+Wetzlar
+Wiesbaden
+Wilhelmshaven
+Willich
+Witten
+Wolfenbüttel
+Wolfsburg
+Worms
+Wuppertal
+Würzburg
+Zwickau

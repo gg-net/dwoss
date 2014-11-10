@@ -1,0 +1,131 @@
+package eu.ggnet.dwoss.receipt.reporting;
+
+import eu.ggnet.lucidcalc.CSheet;
+import eu.ggnet.lucidcalc.CCalcDocument;
+import eu.ggnet.lucidcalc.LucidCalc;
+import eu.ggnet.lucidcalc.SBlock;
+import eu.ggnet.lucidcalc.TempCalcDocument;
+import eu.ggnet.lucidcalc.STableModelList;
+import eu.ggnet.lucidcalc.CBorder;
+import eu.ggnet.lucidcalc.CFormat;
+import eu.ggnet.lucidcalc.STableColumn;
+import eu.ggnet.lucidcalc.STable;
+
+import java.awt.Color;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+
+import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+
+import eu.ggnet.dwoss.rules.TradeName;
+
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
+import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
+
+import eu.ggnet.dwoss.util.FileJacket;
+
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.*;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
+import static eu.ggnet.lucidcalc.CFormat.Representation.*;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.*;
+
+/**
+ * Generates Refurbishment Reports.
+ * <p/>
+ * @author oliver.guenther
+ */
+@Stateless
+
+public class RefurbishmentReporterOperation implements RefurbishmentReporter {
+
+    private final static CFormat EURO_FORMAT = new CFormat(NORMAL, Color.BLACK, Color.WHITE, RIGHT, MIDDLE, CURRENCY_EURO, new CBorder(Color.LIGHT_GRAY, CBorder.LineStyle.HAIR));
+
+    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
+
+    @Inject
+    @UniqueUnits
+    private EntityManager uuem;
+
+    @Inject
+    private MonitorFactory monitorFactory;
+
+    /**
+     * Generates the report between two dates for the contractor.
+     *
+     * @param contractor the contractor to report about.
+     * @param start      the starting date
+     * @param end        the end date
+     * @return an XLS document as FileJacket
+     */
+    @Override
+    public FileJacket toXls(TradeName contractor, Date start, Date end) {
+        double singleRefurbishPrice = 0.; // TODO: Init me from contractor
+        double singleRefillPrice = 0.; // TODO: Init me from contractor.
+        double refurbishedPriceSum = 0.;
+        double refilledPriceSum = 0.;
+        SubMonitor m = monitorFactory.newSubMonitor("Refurbishment Abrechnung", 100);
+        m.message("Loading Units");
+        List<Object[]> refurbishedSopoUnits = new ArrayList<>();
+        List<Object[]> refilledSopoUnits = new ArrayList<>();
+        List<UniqueUnit> units = new UniqueUnitEao(uuem).findBetweenInputDatesAndContractor(start, end, contractor);
+        m.worked(10);
+        m.setWorkRemaining(units.size() + 10);
+        for (UniqueUnit uu : units) {
+            if ( uu.getInternalComments().contains(StaticInternalComment.REFILLED) ) {
+                refilledSopoUnits.add(new Object[]{uu.getIdentifier(Identifier.SERIAL), ProductFormater.toName(uu.getProduct())});
+                refilledPriceSum += singleRefillPrice;
+            } else if ( uu.getInternalComments().contains(StaticInternalComment.RECOVERT) ) {
+                refurbishedSopoUnits.add(new Object[]{uu.getIdentifier(Identifier.SERIAL), ProductFormater.toName(uu.getProduct())});
+                refurbishedPriceSum += singleRefurbishPrice;
+            }
+        }
+
+        double tax = (refilledPriceSum + refurbishedPriceSum) * GlobalConfig.TAX;
+
+        CSheet summary = new CSheet("Summery", 5, 30, 15, 15, 15);
+        SBlock headerAndDate = new SBlock();
+        SBlock data = new SBlock();
+        SBlock prices = new SBlock();
+        headerAndDate.setFormat(new CFormat(BOLD, Color.BLACK, Color.WHITE, LEFT, new CBorder(Color.LIGHT_GRAY, CBorder.LineStyle.HAIR)));
+        headerAndDate.add("Report über recoverte und wiederaufgefüllte Geräte");
+        headerAndDate.add("Reportzeitraum:", DATE_FORMAT.format(start) + " - " + DATE_FORMAT.format(end));
+        summary.addBelow(1, 1, headerAndDate);
+        data.add("", "Anzahl", "Einzelpreis", "Summe");
+        data.add("Recoverte Geräte", refurbishedSopoUnits.size(), singleRefurbishPrice, EURO_FORMAT, refurbishedPriceSum, EURO_FORMAT);
+        data.add("Wiederaufgefüllte Geräte", refilledSopoUnits.size(), singleRefillPrice, EURO_FORMAT, refilledPriceSum, EURO_FORMAT);
+        summary.addBelow(1, 1, data);
+        prices.add("", "", "netto", refilledPriceSum + refurbishedPriceSum, EURO_FORMAT);
+        prices.add("", "", "Mwst", tax, EURO_FORMAT);
+        prices.add("", "", "Mwst", refilledPriceSum + refurbishedPriceSum + tax, EURO_FORMAT);
+        summary.addBelow(1, 1, prices);
+
+        STable refurbishedTable = new STable();
+        refurbishedTable.setHeadlineFormat(new CFormat(BOLD, Color.BLACK, Color.YELLOW, RIGHT, new CBorder(Color.BLACK)));
+        refurbishedTable.add(new STableColumn("Seriennummer", 22)).add(new STableColumn("Bezeichnnung", 40));
+        refurbishedTable.setModel(new STableModelList(refurbishedSopoUnits));
+
+        STable refilledTable = new STable(refurbishedTable);
+        refilledTable.setModel(new STableModelList(refilledSopoUnits));
+
+        CCalcDocument cdoc = new TempCalcDocument("RefurbishedReport_" + contractor);
+        cdoc.add(summary);
+        cdoc.add(new CSheet("Refurbished", refurbishedTable));
+        cdoc.add(new CSheet("Aufgefüllt", refilledTable));
+
+        File file = LucidCalc.createWriter(LucidCalc.Backend.XLS).write(cdoc);
+        FileJacket result = new FileJacket("RefurbishedReport_" + contractor, ".xls", file);
+        m.finish();
+        return result;
+    }
+}

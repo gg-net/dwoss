@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>eu.ggnet.dwoss</groupId>
+        <artifactId>dwoss</artifactId>
+        <version>1</version>
+    </parent>
+
+    <name>DwOss • Assembly</name>
+    <artifactId>dwoss-assembly</artifactId>
+    <packaging>pom</packaging>
+
+    <profiles>
+        <profile>
+            <id>server-ggnet</id>
+            <properties>
+                <mandator.name>GG-Net GmbH</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-mandator-ggnet</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ee-pro-priceestimator</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ee-pro-sopo</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ee-persistence-repair</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>client-ggnet</id>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ui-persistence-repair</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ui-pro-sopo</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-ui-pro-priceestimator</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>server-elus</id>
+            <properties>
+                <mandator.name>ELUS</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dw-mandator-elus</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>client-elus</id>
+        </profile>
+        <profile>
+            <id>server-sample</id>
+            <properties>
+                <mandator.name>Example GmbH</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dwoss-mandator-sample</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dwoss-mandator-sample-service</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>client-sample</id>
+        </profile>
+    </profiles>
+    <modules>
+        <module>entityhelpers</module>
+        <module>server</module>
+        <module>client-local</module>
+        <module>client-remote</module>
+        <module>client-sample</module>
+    </modules>
+
+</project>

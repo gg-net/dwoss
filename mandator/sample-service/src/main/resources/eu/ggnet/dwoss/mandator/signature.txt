@@ -1,0 +1,10 @@
+
+---
+Example GmbH
+Test Street 7
+99999 Testcity
+
+Telefon: 1-800-555-0199
+Telefax: 1-800-555-0199
+E-Mail: test@example.de
+Internet: http://www.example.de
