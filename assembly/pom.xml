@@ -5,8 +5,12 @@
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
         <artifactId>dwoss</artifactId>
-        <version>1</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <dw.version>1</dw.version>
+    </properties>
 
     <name>DwOss • Assembly</name>
     <artifactId>dwoss-assembly</artifactId>
@@ -20,24 +24,24 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-mandator-ggnet</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>dw-ee-pro-priceestimator</artifactId>
-                    <version>${project.version}</version>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ee-pro-price</artifactId>
+                    <version>${dw.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ee-pro-sopo</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ee-persistence-repair</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -45,19 +49,19 @@
             <id>client-ggnet</id>
             <dependencies>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-persistence-repair</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-pro-sopo</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>dw-ui-pro-priceestimator</artifactId>
-                    <version>${project.version}</version>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ui-pro-price</artifactId>
+                    <version>${dw.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -68,7 +72,7 @@
             </properties>
             <dependencies>
                 <dependency>
-                    <groupId>${project.groupId}</groupId>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-mandator-elus</artifactId>
                     <version>${project.version}</version>
                 </dependency>

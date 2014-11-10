@@ -55,6 +55,7 @@ public class Client {
         "dwoss-ee-persistence-uniqueunit-" + VERSION,
         "dwoss-ee-persistence-spec-" + VERSION,
         "dwoss-ee-persistence-stock-" + VERSION,
+        "dwoss-mandator-sample -" + VERSION,
         "dwoss-mandator-sample-service -" + VERSION,
         "dw-ee-pro-sopo-" + VERSION,
         "dw-ee-pro-priceestimator-" + VERSION,

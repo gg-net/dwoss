@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.ggnet.dwoss</groupId>
     <artifactId>dwoss</artifactId>
-    <version>1</version>
+    <version>1.0-SNAPSHOT</version>
     <name>DwOss</name>
     <description>Deutsche Warenwirtschaft Open Source</description>
     <packaging>pom</packaging>

@@ -13,12 +13,12 @@ import javafx.stage.Stage;
 
 import org.openide.util.Lookup;
 
+import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
-import eu.ggnet.dwoss.common.ExceptionUtil;
-import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Server;
 import eu.ggnet.saft.runtime.SwingClient;

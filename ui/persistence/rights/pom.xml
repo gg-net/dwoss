@@ -6,7 +6,7 @@
     <parent>
 	<artifactId>dwoss-ui-persistence</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
-        <version>1</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>dwoss-ui-persistence-rights</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-rights</artifactId>
-            <version>1</version>
+            <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>

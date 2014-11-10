@@ -10,7 +10,7 @@ import eu.ggnet.saft.core.Server;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import eu.ggnet.dwoss.assembly.sample.NullAccessCos;
-import eu.ggnet.dwoss.assembly.sample.ServerConnCosSample;
+import eu.ggnet.dwoss.assembly.sample.SampleServer;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +34,7 @@ public class TestLookup {
     @Test
     public void testLookUp() {
         assertEquals(1, Lookup.getDefault().lookupAll(Server.class).size());
-        assertTrue(Lookup.getDefault().lookup(Server.class) instanceof ServerConnCosSample);
+        assertTrue(Lookup.getDefault().lookup(Server.class) instanceof SampleServer);
 
         assertEquals(1, Lookup.getDefault().lookupAll(Guardian.class).size());
         assertTrue(Lookup.getDefault().lookup(Guardian.class) instanceof NullAccessCos);
