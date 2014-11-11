@@ -8,7 +8,8 @@
     <name>DwOss</name>
     <description>Deutsche Warenwirtschaft Open Source</description>
     <packaging>pom</packaging>
-
+    <url>https://github.com/gg-net/dwoss</url>
+    
     <profiles>
         <profile>
             <id>integration</id>
@@ -117,6 +118,9 @@
                 <role>CEO</role>
                 <role>Java Developer</role>
             </roles>
+            <properties>
+                <picUrl>http://www.gravatar.com/avatar/3c1bd584372253fa2bf7e3882252e224</picUrl>
+            </properties>
         </developer>
         <developer>
             <id>pascal.perau</id>
@@ -127,6 +131,9 @@
             <roles>
                 <role>Java Developer</role>
             </roles>
+            <properties>
+                <picUrl>http://www.gravatar.com/avatar/82f7068b923f8f30af9bc0b79fb3bec3</picUrl>
+            </properties>
         </developer>
         <developer>
             <id>bastian.venz</id>
@@ -137,19 +144,35 @@
             <roles>
                 <role>Java Developer</role>
             </roles>
+            <properties>
+                <picUrl>http://www.gravatar.com/avatar/5dca0ab174ce333765f90a952a10c835</picUrl>
+            </properties>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/gg-net/dwoss.git</connection>
-        <developerConnection>scm:git:https://github.com/gg-net/dwoss.git</developerConnection>
+        <url>https://github.com/gg-net/dwoss</url>
+        <connection>scm:git:git@github.com:gg-net/dwoss.git</connection>
+        <developerConnection>scm:git:git@github.com:gg-net/dwoss.git</developerConnection>
     </scm>
 
     <ciManagement>
         <system>Bamboo</system>
         <url>http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS</url>
     </ciManagement>
-
+    
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS</url>
+    </issueManagement>
+    
+    <licenses>
+        <license> 
+            <name>GNU General Public License Version 3 (GPL v3)</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+    
     <build>
         <plugins>
             <plugin>
@@ -167,7 +190,7 @@
                         <version>5.6.6</version>
                     </docletArtifact>
                     <!--Might Remove Xdoclint if all javadocs are clean -->
-                    <additionalparam>-attributes -types -enumerations -enumconstants -Xdoclint:none</additionalparam>
+                    <additionalparam>-attributes -types -enumerations -enumconstants -Xdoclint:none -link https://docs.oracle.com/javase/8/docs/api/</additionalparam>
                     <!-- Describing the tags of umlgraph removes them as warning. -->
                     <tags>
                         <tag>
@@ -238,9 +261,8 @@
                         <goals>
                             <goal>site</goal>
                         </goals>
-                        <!-- select the Maven phase in which the plugin will be executed --> 
-                        <phase>site</phase>
-                        
+                        <!--select the Maven phase in which the plugin will be executed-->  
+                        <phase>site</phase>                        
                     </execution>
                 </executions>
             </plugin>
@@ -365,7 +387,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.7</version>		
+                <configuration>
+                    <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
             </plugin> 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
