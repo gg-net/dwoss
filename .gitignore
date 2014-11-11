@@ -46,3 +46,6 @@ hs_err_pid*
 /assembly/client-local/target/
 /assembly/client-remote/target/
 /assembly/client-sample/target/
+/assembly/target/
+/ui/extended/target/
+/ui/persistence/target/
