@@ -216,9 +216,35 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin> 
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.10</version>
+                <configuration>
+                    <!-- Plugin configuration ges here -->
+
+                    <server>github</server>
+
+                    <!-- The commit message -->
+                    <message>Building site for my project</message>
+                    <!-- The location where the site is uploaded -->
+                    <path>${site.path}</path>
+                    <!-- Use merge or override the content -->
+                    <merge>true</merge>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <!-- select the Maven phase in which the plugin will be executed --> 
+                        <phase>site</phase>
+                        
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -333,7 +359,43 @@
             </plugins>
         </pluginManagement>
     </build>
-
+    
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version> 
+                <configuration>
+                    <show>private</show>
+                    <javadocVersion>1.8</javadocVersion>
+                    <!--Might Remove Xdoclint if all javadocs are clean -->
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+                <reportSets>
+                    <reportSet><!-- by default, id = "default" -->
+                        <reports><!-- select non-aggregate reports -->
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+                        <id>aggregate</id>
+                        <inherited>false</inherited><!-- don't run aggregate in child modules -->
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+    
     <repositories>
         <!-- We are using some of the netbeans api as libraries -->
         <repository>
