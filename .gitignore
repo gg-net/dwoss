@@ -49,3 +49,13 @@ hs_err_pid*
 /assembly/target/
 /ui/extended/target/
 /ui/persistence/target/
+/ee/core/target/
+/ee/extended/target/
+/ee/persistence/target/
+/ee/target/
+/incubator/saft/target/
+/incubator/target/
+/lib/target/
+/mandator/target/
+/ui/core/target/
+/ui/target/
