@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@
 package eu.ggnet.saft.core;
 
 import java.awt.*;
-import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
@@ -27,7 +26,6 @@ import javax.ejb.*;
 import javax.naming.*;
 import javax.swing.JOptionPane;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.openide.util.Lookup;
 import org.slf4j.*;
 
@@ -43,48 +41,9 @@ import static java.util.stream.Collectors.joining;
 //HINT: Name is not perfekt, but we stick with it for now. Alternatives are Lookup, Service, ServiceBus , Valet ...
 public class Client {
 
-    static {
-        try (InputStream is = Objects.requireNonNull(loadProperties()).openStream()) {
-            Properties p = new Properties();
-            p.load(is);
-            VERSION = p.getProperty("version");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private final static Logger L = LoggerFactory.getLogger(Client.class);
 
-    private final static String VERSION;
-
-    public final static String[] FIXED_JAVA_EE_MODULE_NAMES = {
-        "dwoss-ee-core-common-" + VERSION,
-        "dwoss-ee-persistence-customer-" + VERSION,
-        "dwoss-ee-extended-misc-" + VERSION,
-        "dwoss-ee-extended-receipt-" + VERSION,
-        "dwoss-ee-extended-redtape-" + VERSION,
-        "dwoss-ee-persistence-redtape-" + VERSION,
-        "dwoss-ee-persistence-report-" + VERSION,
-        "dwoss-ee-persistence-rights-" + VERSION,
-        "dwoss-ee-extended-price-" + VERSION,
-        "dwoss-ee-core-progress-" + VERSION,
-        "dwoss-ee-persistence-uniqueunit-" + VERSION,
-        "dwoss-ee-persistence-spec-" + VERSION,
-        "dwoss-ee-persistence-stock-" + VERSION,
-        "dwoss-mandator-sample -" + VERSION,
-        "dwoss-mandator-sample-service -" + VERSION,
-        "dw-ee-pro-sopo-" + VERSION,
-        "dw-ee-pro-priceestimator-" + VERSION,
-        "dw-core-mandator-ggnet-" + VERSION,
-        "dw-core-mandator-elus-" + VERSION,
-        "dw-ee-persistence-repair-" + VERSION,
-        "dw-pro-components-mandator-service-ggnet-" + VERSION,
-        "dw-pro-components-mandator-service-elus-" + VERSION
-    };
-
     private final static NavigableSet<String> DYNAMIC_JAVA_EE_MODULE_NAMES = new TreeSet<>();
-
-    private final static String[] EJB_SUFFIXES = {"Operation", "Wrapper", "Bean"};
 
     private final static WorkspaceService workspace = new WorkspaceService();
 
@@ -95,8 +54,6 @@ public class Client {
     private static final NavigableMap<String, NavigableSet<String>> CLIENT_JNDI_NAME_CACHE = new TreeMap<>();
 
     private static TrayIcon sampleStubTrayIcon;
-
-    private static boolean developerAnnoyed = false;
 
     /**
      * Request a context.
@@ -165,7 +122,7 @@ public class Client {
     }
 
     /**
-     * Allows to ask the Client, if it can find an implementation of the supplied somethere.
+     * Allows to ask the Client, if it can find an implementation of the supplied anywhere.
      * If the Class is not found in the first place but the Client is a Locale Client, it will try the old way.
      * <p>
      * @param <T>
@@ -175,10 +132,7 @@ public class Client {
     public static <T> boolean hasFound(Class<T> clazz) {
         // Allows the hasFound in a sample environment. A key without a value just means a optional service missing.
         if ( sampleStubs.containsKey(clazz.getName()) ) return sampleStubs.get(clazz.getName()) != null;
-        boolean containsKey = CLIENT_JNDI_NAME_CACHE.containsKey(clazz.getName());
-        if ( containsKey == true ) return true; // For now, only return if positive.
-        // In the negative case, start a fallback search.
-        return (remoteLookupFallback(clazz, context(clazz.getName()), new ArrayList<>()) != null);
+        return CLIENT_JNDI_NAME_CACHE.containsKey(clazz.getName());
     }
 
     /**
@@ -330,8 +284,6 @@ public class Client {
                 }
             }
         }
-        T result = remoteLookupFallback(clazz, context, errors);
-        if ( result != null ) return result;
         throw new IllegalArgumentException("No Candidate for " + clazz.getSimpleName() + " was found, tried:\n"
                 + errors.stream().collect(joining("\n "))
                 + "\nUsing Cache:\n"
@@ -344,72 +296,6 @@ public class Client {
 
     static URL loadWarningIcon() {
         return Client.class.getResource("warning-icon.png");
-    }
-
-    /**
-     * This Method is a Fallback on the Local client because it is possible, for unknown reason, that the Progress and Common Project is not in the JNDI Name
-     * tree.
-     * <p>
-     * @param <T>
-     * @param clazz
-     * @param context
-     * @param errors
-     * @return
-     */
-    private static <T> T remoteLookupFallback(Class<T> clazz, Context context, List<String> errors) {
-        String name = clazz.getSimpleName();
-        List<String> nameVariations = new ArrayList<>();
-        if ( clazz.getAnnotation(Remote.class) == null ) {
-            nameVariations.add(name);
-        } else { // The Remote Name Variations
-            for (String suffix : EJB_SUFFIXES) {
-                if ( name.endsWith(suffix + "Remote") ) nameVariations.add(name);
-            }
-            if ( nameVariations.isEmpty() ) { // If the first does not match
-                for (String opname : EJB_SUFFIXES) {
-                    nameVariations.add((name.endsWith("Remote") ? name.substring(0, name.length() - 6) : name) + opname + "Remote");
-                    nameVariations.add((name.endsWith("Remote") ? name.substring(0, name.length() - 6) : name) + opname);
-                }
-            }
-        }
-        List<String> jndiNames = new ArrayList<>(nameVariations);
-        for (String projectNamespace : FIXED_JAVA_EE_MODULE_NAMES) {
-            for (String nameVariation : nameVariations) {
-                jndiNames.add("java:global/" + projectNamespace + "/" + nameVariation);
-            }
-        }
-        for (String jndiName : jndiNames) {
-            try {
-                // TODO: If this exception never happens, get ride of the requireNonNull(),
-                Object result = Objects.requireNonNull(context.lookup(jndiName), "Lookup of " + jndiName + ", returned null, renable null handling.");
-//                if ( result == null ) {
-//                    errors.add(jndiName + "=no result");
-//                    continue;
-//                }
-                L.warn("Succesful Fallback Lookup is used for {} ", clazz.getName());
-                // Special Developer handling
-                annoyDeveloper(clazz.getName());
-                // Closing the Context afterwards.
-                context.close();
-                return (T)result;
-            } catch (NamingException ex) {
-                errors.add("NamingException(jndiName=" + jndiName + ", message=" + ex.getMessage() + ")");
-            } catch (ClassCastException ex) {
-                errors.add("ClassCastException:" + ex.getMessage());
-            }
-        }
-        return null;
-    }
-
-    private static void annoyDeveloper(String name) {
-        if ( developerAnnoyed ) return;
-        developerAnnoyed = true;
-        List<String> devs = Arrays.asList("oliver.guenther", "bastian.venz", "pascal.perau");
-        if ( !devs.contains(SystemUtils.USER_NAME) ) return;
-        final String msg = "Found via Fallback, but not via Cache, Lookup:" + name + "\n"
-                + "Cache:\n"
-                + CLIENT_JNDI_NAME_CACHE.entrySet().stream().map(e -> " - " + e.getKey() + " : " + e.getValue()).collect(joining("\n"));
-        EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(null, msg, "Fallback Lookup in use", JOptionPane.ERROR_MESSAGE));
     }
 
     private static boolean hasBeanAnnotation(Class<?> clazz) {
