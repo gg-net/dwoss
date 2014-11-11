@@ -65,7 +65,7 @@ public class SampleServer implements Server {
         ConfigurationProvider config = Lookup.getDefault().lookup(ConfigurationProvider.class);
         if ( config != null ) c.putAll(config.openejbAddToEmbeddedSampleConfiguration());
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
+        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
         containerProperties = c;
     }
 

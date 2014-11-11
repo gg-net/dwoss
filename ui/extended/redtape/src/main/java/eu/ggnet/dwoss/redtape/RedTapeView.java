@@ -126,6 +126,7 @@ public class RedTapeView extends javax.swing.JFrame {
 
         setTitle("Kunden und Aufträge");
         documentList.setModel(new DefaultListModel());
+        documentList.setCellRenderer(new DocumentStringRenderer());
         searchResultList.setModel(new DefaultListModel());
         searchResultList.setCellRenderer(new TupleHtmlRenderer());
 
