@@ -8,8 +8,14 @@
     <name>DwOss</name>
     <description>Deutsche Warenwirtschaft Open Source</description>
     <packaging>pom</packaging>
+
     <url>https://github.com/gg-net/dwoss</url>
-    
+
+    <organization>
+        <name>GG-Net GmbH</name>
+        <url>http://gg-net.de</url>
+    </organization>
+
     <profiles>
         <profile>
             <id>integration</id>
