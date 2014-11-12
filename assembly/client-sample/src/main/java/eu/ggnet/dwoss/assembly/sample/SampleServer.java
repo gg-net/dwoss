@@ -82,6 +82,7 @@ public class SampleServer implements Server {
         if ( config != null ) c.putAll(config.openejbAddToEmbeddedSampleConfiguration());
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
         c.putAll(SystemConfig.OPENEJB_LOG_WARN);
+        c.putAll(SystemConfig.OPENEJB_XBEAN_FINDER);
         containerProperties = c;
     }
 

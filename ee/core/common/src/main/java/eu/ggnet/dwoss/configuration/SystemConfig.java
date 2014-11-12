@@ -46,6 +46,12 @@ public class SystemConfig {
 
         o = new HashMap<>();
 
+        o.put("xbean.finder.use.get-resources", "true");
+
+        OPENEJB_XBEAN_FINDER = o;
+
+        o = new HashMap<>();
+
         o.put("log4j.rootLogger", "TRACE,socket,console");
         o.put("log4j.category.OpenEJB", "info");
         o.put("log4j.category.OpenEJB.options", "info");
@@ -128,4 +134,9 @@ public class SystemConfig {
      * Supplys different logging schema including a socket connection, syslog and local files.
      */
     public final static Map<String, String> OPENEJB_LOG_PRODUCTIVE;
+
+    /**
+     * Needed for MANIFEST.MF classpath inspection.
+     */
+    public final static Map<String, String> OPENEJB_XBEAN_FINDER;
 }
