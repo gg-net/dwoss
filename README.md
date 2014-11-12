@@ -6,10 +6,27 @@ Dies ist die Open Source Version der Deutschen Warenwirtschaft der Firma [GG-Net
 Die Software steht unter der GNU General Public License v3. Copyright [GG-Net GmbH](http://gg-net.de) - Oliver Günther.
 
 Es handelt sich bei dieser Software um eine interne Entwicklung der [GG-Net GmbH](http://gg-net.de) zur Abbildung der
-Geschäftsporzesse des IT-Gebrauchtwarenhandels. Die Software befindet sich im täglichen Einsatz
-und wird aktiv weiter entwickelt.
+Geschäftsprozesse des IT-Gebrauchtwarenhandels. Die Software befindet sich im täglichen Einsatz und wird aktiv weiter entwickelt. Dabei hat Sie mehrere Schwerpunkte:
 
-Aktuell gibt es noch keine einfach zu nutzenden Beispiel-Version (jar/exe). (ClassLoading issues)
+**Geschäftsprozess IT-Gebrauchtwarenhandel**
+In erster Hinsicht wird diese Software dazu verwendet den [Acer Sonderposten](http://acersonderposten.de) und dessen Prozesse abzubilden und dadurch zu unterstützen. Aus diesem Geschäftszweig kommen auch die meisten Anforderungen zur Weiterentwicklung. Ein weiterer Einsatz findet bei [oneado](https://oneado.de) statt.
+
+**Entwicklung Auszubildende**
+Die GG-Net GmbH bildet natürlich auch, wie viele gut Softwarehäuser in Deutschland, Entwickler selber aus. Um diese an die Arbeit in Teams und größeren Projekten zu gewöhnen, steigen Sie als erstes in diese Projekt mit ein. Über Prüfung, Entwicklung und Wartung von Tests sowie Verbesserung von Dokumentation, werden Sie nach und nach an produktive Komponenten herangeführt.
+
+**Entwicklung Junior Developer**
+Junior Developer werden an Hand dieser Platform weiterentwickelt. Sie können hier Architekturschwächen analysieren, Changeprozesse durchführen und sich mit mehr als nur Feature Implementation auseinander setzten. Auch interne Prozesse von anderen Abteilungen untersuchen Sie und evaluieren,planen und integrieren Diese.
+
+**Experimentierplattform Senior Developer und Architekten**
+Senior Developer verwenden die Software um neue Bibliotheken und Frameworks an mehr als nur Beispielen zu untersuchen und zu bewerten. Die Größe des Projektes sowie die Modularität lässt oft und schnell Lücken in interessanten Bibliotheken offenbar werden.
+
+**Trainingsplatform DevOps**
+Um einer solchen Software und den Entwicklern dahinter einen hohes Maß an Experimentierfreudigkeit zu erlauben ist eine optimale Abstimmung der Teams praktisch unabdingbar. Dadurch ist DevOps bei GG-Net stark etabliert und greift bis zum "internen" Kunden (Verkauf,Marketing,Finanz und Logistik). Multiple Deployments am Tag sind nichts ungewöhnliches und erlauben schnelle Bugfixes. Neben der üblichen kontinuierlichen Verbesserung der Prozesse findet auch hier die Ausbildung und Unterweisung neuer Techniker sowie deren Experimente mit neuen Ansätzen statt.
+
+Getting Started
+---------------
+
+Aktuell gibt es noch keine einfach zu nutzende Beispiel-Version (jar/exe). (ClassLoading issues)
 
 Um die Software mit Beispieldaten im Einsatz zu sehen, ist folgendes notwendig:
  
@@ -23,9 +40,9 @@ Checkout and Build (mvn clean install)
  3. https://github.com/gg-net/dwoss.git
 
 In das Verzeichniss dwoss/assembly/client-sample wechseln und folgendes ausführen:
-
+```
 mvn jfx:run -Pserver-sample,client-sample
-
+```
 Nach kurz Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit
 autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
 
