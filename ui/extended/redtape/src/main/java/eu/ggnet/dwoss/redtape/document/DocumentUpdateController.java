@@ -32,6 +32,7 @@ import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.dwoss.util.interactiveresult.Result;
 import eu.ggnet.saft.core.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
@@ -65,14 +66,18 @@ public class DocumentUpdateController {
      * @param refurbishId the refurbishId if a type is unit.
      * @param forceAdd    passed to the unit creation to force conditioned behaviour
      *                    ({@link DocumentUpdateController#createUnitPostion(long, java.lang.String, boolean force)})
-     * @throws de.dw.util.UserInfoException
+     * @throws eu.ggnet.dwoss.util.UserInfoException
      */
     public void addPosition(long dossierId, PositionType type, String refurbishId, boolean forceAdd) throws UserInfoException {
         switch (type) {
             case UNIT:
-                document.appendAll(lookup(UnitOverseer.class)
-                        .createUnitPosition(refurbishId, document.getId())
-                        .request(new SwingInteraction(view)));
+                List<Position> result = lookup(UnitOverseer.class)
+                        .createUnitPosition(refurbishId, document.getId()).request(new SwingInteraction(view));
+                for (Position p : result) {
+                    if ( p.getType() == UNIT ) lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
+                }
+                document.appendAll(result);
+
                 break;
             case SERVICE:
                 document.append(createServicePosition());

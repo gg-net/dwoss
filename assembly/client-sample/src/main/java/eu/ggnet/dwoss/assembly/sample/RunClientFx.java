@@ -132,7 +132,7 @@ public class RunClientFx extends Application {
 
     private void showSuscribtion() {
         Stage dialog = new Stage();
-        dialog.setTitle("Optionale Registrierung");
+        dialog.setTitle("Willkommen in der Testversion der DWOSS");
         try {
             dialog.getIcons().add(new Image(loadAppImage().openStream()));
         } catch (IOException ex) {
@@ -140,15 +140,21 @@ public class RunClientFx extends Application {
         }
         dialog.setAlwaysOnTop(true);
         dialog.setWidth(250);
+
+        Label infoText = new Label(""
+                + "Vielen Dank für ihr Interesse an  der Deutschen Warenwirtschaft Open Source Software (DWOSS).\n\n"
+                + "Dies ist eine Testversion, die bei jedem Start neue Testdaten generiert. "
+                + "Änderungen und von ihnen erstellte Daten gehen beim beenden der Applikation verloren.\n\n"
+                + "Bei Fragen, Anregunden oder weiterführende Informationen für Unterstützung seitens der GG-Net GmbH "
+                + "füllen sie gern die in diesem Fenter abgebildete Form aus und Schicken diese per Knopfdruck ab.");
+        infoText.setWrapText(true);        
+        
         TextField emailField = new TextField();
         emailField.setPromptText("Email");
-        //    emailField.setPrefWidth(125);
         TextField nameField = new TextField();
         nameField.setPromptText("Ihr Name");
-        //      nameField.setPrefWidth(125);
         TextArea messageField = new TextArea();
         messageField.setPromptText("Optionale Nachricht");
-//        messageField.setPrefWidth(240);
         Button send = new Button("Senden");
         send.setOnAction((eh) -> {
             sendPost(nameField.getText(), emailField.getText(), messageField.getText());
@@ -161,11 +167,11 @@ public class RunClientFx extends Application {
         GridPane p = new GridPane();
         p.setHgap(5);
         p.setVgap(5);
-        p.add(nameField, 0, 0);
-        p.add(emailField, 1, 0);
-        p.add(messageField, 0, 1, 2, 1);
-        p.add(new FlowPane(5, 0, send, cancel), 0, 2, 2, 1);
-
+        p.add(infoText, 0, 0, 2, 1);
+        p.add(nameField, 0, 1);
+        p.add(emailField, 1, 1);
+        p.add(messageField, 0, 2, 2, 1);
+        p.add(new FlowPane(5, 0, send, cancel), 0, 3, 2, 1);
         Scene scene = new Scene(p);
         dialog.setScene(scene);
         dialog.showAndWait();
