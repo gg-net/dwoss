@@ -16,15 +16,32 @@
  */
 package eu.ggnet.dwoss.misc;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
+import javafx.fxml.*;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 
+import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.rules.*;
+
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.saft.core.Client.lookup;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  *
@@ -38,9 +55,65 @@ public class ResolveRepaymentController implements Initializable {
     @FXML
     private TextField sopoField;
 
+    private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        List<SimpleReportLine> repaymentLines = lookup(ResolveRepayment.class).getRepaymentLines(ACER);
 
+        TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
+        id.setCellValueFactory(new PropertyValueFactory("id"));
+        TableColumn<SimpleReportLine, String> refurbishId = new TableColumn<>("RefurbishId");
+        refurbishId.setCellValueFactory(new PropertyValueFactory("refurbishId"));
+        refurbishId.setMinWidth(110);
+        TableColumn<SimpleReportLine, Date> reportingDate = new TableColumn<>("Reported");
+        reportingDate.setCellValueFactory(new PropertyValueFactory("reportingDate"));
+        reportingDate.setMinWidth(110);
+        TableColumn<SimpleReportLine, Long> unqiueUnitId = new TableColumn<>("UniqueUnit Id");
+        unqiueUnitId.setCellValueFactory(new PropertyValueFactory("uniqueUnitId"));
+        TableColumn<SimpleReportLine, TradeName> contractor = new TableColumn<>("contractor");
+        contractor.setCellValueFactory(new PropertyValueFactory("contractor"));
+        TableColumn<SimpleReportLine, String> partNo = new TableColumn<>("PartNo");
+        partNo.setCellValueFactory(new PropertyValueFactory("partNo"));
+        partNo.setMinWidth(110);
+        TableColumn<SimpleReportLine, String> productName = new TableColumn<>("productName");
+        productName.setCellValueFactory(new PropertyValueFactory("productName"));
+        TableColumn<SimpleReportLine, Double> amount = new TableColumn<>("amount");
+        amount.setCellValueFactory(new PropertyValueFactory("amount"));
+        TableColumn<SimpleReportLine, Double> price = new TableColumn<>("price");
+        price.setCellValueFactory(new PropertyValueFactory("price"));
+        TableColumn<SimpleReportLine, Double> purchasePrice = new TableColumn<>("purchasePrice");
+        purchasePrice.setCellValueFactory(new PropertyValueFactory("purchasePrice"));
+        TableColumn<SimpleReportLine, Double> contractorReferencePrice = new TableColumn<>("Ref.Price");
+        contractorReferencePrice.setCellValueFactory(new PropertyValueFactory("contractorReferencePrice"));
+        TableColumn<SimpleReportLine, DocumentType> documentType = new TableColumn<>("documentType");
+        documentType.setCellValueFactory(new PropertyValueFactory("documentType"));
+        TableColumn<SimpleReportLine, PositionType> positionType = new TableColumn<>("positionType");
+        positionType.setCellValueFactory(new PropertyValueFactory("positionType"));
+
+        reportLineTable.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor, amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
+        reportLineTable.setItems(FXCollections.observableList(repaymentLines));
+        reportLineTable.getSelectionModel().setSelectionMode(MULTIPLE);
+        reportLineTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                double ref = 0;
+                for (SimpleReportLine srl : reportLineTable.getSelectionModel().getSelectedItems()) {
+                    ref += srl.getContractorReferencePrice();
+                }
+                referencePriceProperty.set(ref);
+            }
+        });
+        reportLineTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
+                    String refurbishId1 = reportLineTable.getSelectionModel().getSelectedItem().getRefurbishId();
+                    sopoField.setText(refurbishId1);
+                }
+            }
+        });
     }
 
     @FXML
@@ -49,6 +122,12 @@ public class ResolveRepaymentController implements Initializable {
 
     @FXML
     public void handleCancelButtonAction() {
+        try {
+            GridPane page = (GridPane)FXMLLoader.load(ResolveRepaymentController.loadFxml());
+            page.getScene().getWindow().hide();
+        } catch (IOException ex) {
+            ExceptionUtil.show(null, ex);
+        }
     }
 
     public static URL loadFxml() {

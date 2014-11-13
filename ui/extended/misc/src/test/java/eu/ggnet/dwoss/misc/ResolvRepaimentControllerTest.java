@@ -18,11 +18,17 @@ package eu.ggnet.dwoss.misc;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.util.*;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.misc.op.ResolveRepayment;
+import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.core.Client;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -40,6 +46,18 @@ public class ResolvRepaimentControllerTest {
     @Test
     public void testJavaFxFxml() throws IOException {
         if ( GraphicsEnvironment.isHeadless() ) return;
+        Client.addSampleStub(ResolveRepayment.class, new ResolveRepayment() {
+
+            @Override
+            public List<SimpleReportLine> getRepaymentLines(TradeName contractor) {
+                return Collections.EMPTY_LIST;
+            }
+
+            @Override
+            public void resolveSopo(String sopo) {
+
+            }
+        });
         new JFXPanel(); // Implizit start of JavaFx.
         FXMLLoader loader = new FXMLLoader(ResolveRepaymentController.loadFxml());
         loader.load();
