@@ -73,7 +73,6 @@ public class PrepareSimpleTransferMenuItem extends MenuItem implements Accessabl
                     throw new UserInfoException("SopoNr ist auf einer Transaction");
                 if ( stockUnit.getStock().equals(stock) )
                     throw new UserInfoException("Gerät ist schon in diesem Lager");
-                final List<StockUnit> stockUnits = Arrays.asList(stockUnit);
                 String msg = "";
                 msg += "SopoNr " + stockUnit.getRefurbishId() + " - " + stockUnit.getName() + " von " + stockUnit.getStock().getName() + "\n";
                 if ( YES_OPTION != showConfirmDialog(lookup(Workspace.class).getMainFrame(), msg, "Umfuhr(en) auslösen ?", YES_NO_OPTION, QUESTION_MESSAGE) )
@@ -82,7 +81,7 @@ public class PrepareSimpleTransferMenuItem extends MenuItem implements Accessabl
                 new SwingWorker<Void, Object>() {
                     @Override
                     protected Void doInBackground() throws Exception {
-                        lookup(StockTransactionProcessor.class).perpareTransfer(stockUnits, stock.getId(), Lookup.getDefault().lookup(Guardian.class).getUsername(),
+                        lookup(StockTransactionProcessor.class).perpareTransfer(Arrays.asList(stockUnit), stock.getId(), Lookup.getDefault().lookup(Guardian.class).getUsername(),
                                 "Umfuhr direkt durch Nutzer erzeugt");
                         return null;
                     }
