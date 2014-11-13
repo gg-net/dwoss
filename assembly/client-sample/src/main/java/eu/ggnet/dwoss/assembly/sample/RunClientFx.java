@@ -164,6 +164,7 @@ public class RunClientFx extends Application {
         p.add(nameField, 0, 0);
         p.add(emailField, 1, 0);
         p.add(messageField, 0, 1, 2, 1);
+        p.add(new FlowPane(5, 0, send, cancel), 0, 2, 2, 1);
 
         Scene scene = new Scene(p);
         dialog.setScene(scene);
