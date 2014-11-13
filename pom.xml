@@ -246,32 +246,6 @@
                     </execution>
                 </executions>
             </plugin> 
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.10</version>
-                <configuration>
-                    <!-- Plugin configuration ges here -->
-
-                    <server>github</server>
-
-                    <!-- The commit message -->
-                    <message>Building site for my project</message>
-                    <!-- The location where the site is uploaded -->
-                    <path>${site.path}</path>
-                    <!-- Use merge or override the content -->
-                    <merge>true</merge>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <!--select the Maven phase in which the plugin will be executed-->  
-                        <phase>site</phase>                        
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
