@@ -44,7 +44,7 @@ public class Gpu implements Serializable {
         /**
          * Manufacturer AMD.
          */
-        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9)),
+        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9, R4, R5)),
         /**
          * Manufacturer Intel.
          */
@@ -112,7 +112,9 @@ public class Gpu implements Serializable {
         QUADRO_600("Quadro 600"),
         GEFORCE_800("GeForce 800 Series"),
         R7("Radeon R7"),
-        R9("Radeon R9");
+        R9("Radeon R9"),
+        R4("Radeon R4"),
+        R5("Radeon R5");
 
         String note;
 

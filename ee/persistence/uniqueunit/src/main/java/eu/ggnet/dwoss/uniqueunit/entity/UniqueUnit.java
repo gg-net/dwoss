@@ -126,7 +126,9 @@ public class UniqueUnit implements Serializable, EagerAble {
         MANUAL("Bedienungsanleitung"),
         ALTERNATIVE_BOXED("Alternativverpackung"),
         CRUNCHCOVER("Crunchcover"),
-        ALTERNATIVE_PLUGIN_AC_ADAPTER("Alternativsteckernetzteil");
+        ALTERNATIVE_PLUGIN_AC_ADAPTER("Alternativsteckernetzteil"),
+        MS_OFFICE_365_PERSONAL("Microsoft Office 365 Peronal inkl."),
+        MS_OFFICE_HOME_AND_STUDENT_2013("Microsoft Office Home and Student 2013 inkl.");
 
         private final String note;
 
