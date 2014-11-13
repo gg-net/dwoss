@@ -19,14 +19,10 @@ package eu.ggnet.dwoss.misc;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-
-import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 
@@ -44,7 +40,7 @@ public class ResolveRepaymentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
- 
+
     }
 
     @FXML

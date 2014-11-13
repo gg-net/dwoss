@@ -118,7 +118,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
     @Inject
     @Stocks
     private EntityManager stockEm;
-    
+
     @Inject
     private ImageFinder imageFinder;
 

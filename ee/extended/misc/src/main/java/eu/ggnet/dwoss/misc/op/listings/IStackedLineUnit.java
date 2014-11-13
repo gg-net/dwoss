@@ -24,24 +24,24 @@ import java.util.Date;
 // TODO: Combine ISimpleLine, IStackedLine and IStackedLineUnit in a correct hirachy
 public interface IStackedLineUnit {
 
-	String getWarranty();
+    String getWarranty();
 
-	String getRefurbishedId();
+    String getRefurbishedId();
 
-	double getRetailerPrice();
+    double getRetailerPrice();
 
-	double getCustomerPrice();
+    double getCustomerPrice();
 
-	double getRoundedTaxedCustomerPrice();
+    double getRoundedTaxedCustomerPrice();
 
-        public String getAccessories();
+    public String getAccessories();
 
-	public String getComment();
+    public String getComment();
 
-	public String getConditionLevelDescription();
+    public String getConditionLevelDescription();
 
-	public Date getMfgDate();
+    public Date getMfgDate();
 
-	public String getSerial();
+    public String getSerial();
 
 }

@@ -387,7 +387,7 @@ public class RightsManagmentController implements Initializable {
         Stage stage = (Stage)userlist.getScene().getWindow();
         stage.close();
     }
-    
+
     public static URL loadFxml() {
         return RightsManagmentController.class.getResource("RightsManagmentView.fxml");
     }

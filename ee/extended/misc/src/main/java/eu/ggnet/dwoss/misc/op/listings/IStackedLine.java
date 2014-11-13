@@ -28,43 +28,43 @@ import eu.ggnet.dwoss.rules.TradeName;
 // TODO: Combine ISimpleLine, IStackedLine and IStackedLineUnit in a correct hirachy
 public interface IStackedLine extends Comparable<IStackedLine> {
 
-	boolean isNew();
+    boolean isNew();
 
-	String getWarranty();
+    String getWarranty();
 
-	String getName();
+    String getName();
 
-	int getAmount();
+    int getAmount();
 
-	double getRetailerPrice();
+    double getRetailerPrice();
 
-	double getCustomerPrice();
+    double getCustomerPrice();
 
-	double getRoundedTaxedCustomerPrice();
+    double getRoundedTaxedCustomerPrice();
 
-	String getCustomerPriceLabel();
+    String getCustomerPriceLabel();
 
-	String getDescription();
+    String getDescription();
 
-	String getManufacturerName();
+    String getManufacturerName();
 
-	String getManufacturerPartNo();
+    String getManufacturerPartNo();
 
-	String getComment();
+    String getComment();
 
-	String getCommodityGroupName();
+    String getCommodityGroupName();
 
-        ProductGroup getGroup();
-        
-        TradeName getBrand();
-        
-	URL getImageUrl();
+    ProductGroup getGroup();
 
-	/**
-	 * Returns optional Details about Units, may be null
-	 *
-	 * @return optional Details about Units, may be null
-	 */
-	List<IStackedLineUnit> getUnits();
+    TradeName getBrand();
+
+    URL getImageUrl();
+
+    /**
+     * Returns optional Details about Units, may be null
+     *
+     * @return optional Details about Units, may be null
+     */
+    List<IStackedLineUnit> getUnits();
 
 }

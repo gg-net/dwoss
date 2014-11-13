@@ -18,28 +18,36 @@ package eu.ggnet.dwoss.misc.op;
 
 import java.util.*;
 
+import javax.ejb.Stateless;
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
 import javax.naming.NamingException;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.*;
 
 import eu.ggnet.dwoss.configuration.SystemConfig;
 import eu.ggnet.dwoss.report.assist.ReportPu;
+import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
+import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.rules.PositionType;
 
-/**
- *
- * @author bastian.venz
- */
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.rules.TradeName.AMAZON;
+
+import static org.fest.assertions.api.Assertions.*;
 
 public class ResolveRepaymentBeanIT {
 
     private EJBContainer container;
 
     @Inject
-    ResolveRepayment bean;
+    private ResolveRepayment bean;
+
+    @Inject
+    private ResolveRepaymentBeanITHelper helper;
 
     @Before
     public void setUp() throws NamingException {
@@ -58,7 +66,30 @@ public class ResolveRepaymentBeanIT {
 
     @Test
     public void testGetRepaymentLines() {
-        List<SimpleReportLine> repaymentLines = bean.getRepaymentLines(ACER);
-        System.out.println(repaymentLines);
+        int amount = 50;
+        helper.generateLines(amount);
+
+        List<SimpleReportLine> repaymentLines = bean.getRepaymentLines(AMAZON);
+        assertThat(repaymentLines).isNotEmpty().hasSize(amount);
+    }
+
+    @Stateless
+    public static class ResolveRepaymentBeanITHelper {
+
+        @Inject
+        private ReportLineGenerator generator;
+
+        @Inject
+        ReportLineEao eao;
+
+        public void generateLines(int amount) {
+            for (int i = 0; i < amount; i++) {
+                ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(AMAZON), DateUtils.addDays(new Date(), 10), 25);
+                makeReportLine.setPositionType(PositionType.UNIT);
+                makeReportLine.setDocumentType(ANNULATION_INVOICE);
+                eao.getEntityManager().persist(makeReportLine);
+            }
+
+        }
     }
 }

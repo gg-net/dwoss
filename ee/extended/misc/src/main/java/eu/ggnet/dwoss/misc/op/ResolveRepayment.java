@@ -35,5 +35,5 @@ public interface ResolveRepayment {
     List<SimpleReportLine> getRepaymentLines(TradeName contractor);
 
     void resolveSopo(String sopo);
-    
+
 }

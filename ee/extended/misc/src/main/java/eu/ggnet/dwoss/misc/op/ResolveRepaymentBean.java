@@ -44,9 +44,8 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     private static final Date endhisYear;
 
     static {
-        startThisYear = DateUtils.round(new Date(), Calendar.YEAR);
-        Date date = DateUtils.addMilliseconds(startThisYear, -1);
-        endhisYear = DateUtils.addYears(date, 1);
+        startThisYear = DateUtils.round(DateUtils.setMonths(new Date(), 1), Calendar.YEAR);
+        endhisYear = DateUtils.addYears(DateUtils.addMilliseconds(startThisYear, -1), 1);
     }
 
     @Inject

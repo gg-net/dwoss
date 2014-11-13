@@ -47,7 +47,7 @@ public class StackedLineUnit implements IStackedLineUnit, Comparable<IStackedLin
     private Date mfgDate;
 
     private String serial;
-    
+
     private Date warrentyTill;
 
     @Override

@@ -43,25 +43,29 @@
                     </GridPane.margin>
                 </SplitPane>
                 <FlowPane alignment="CENTER_RIGHT" columnHalignment="LEFT" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="1">
-                    <children><StackPane>
-<children>
-                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButton" text="Hinzufügen">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddButton" text="Hinzufügen">
+                                    <FlowPane.margin>
+                                        <Insets left="15.0" right="15.0" />
+                                    </FlowPane.margin>
+                                </Button>
+                                <Button fx:id="removeButton" mnemonicParsing="false" onAction="#handleRemoveButton" text="Entfernen" />
+                            </children>
                             <FlowPane.margin>
-                                <Insets left="15.0" right="15.0" />
+                                <Insets right="10.0" />
                             </FlowPane.margin>
-                        </Button><Button fx:id="removeButton" mnemonicParsing="false" onAction="#handleRemoveButton" text="Entfernen" />
-</children>
-<FlowPane.margin>
-<Insets right="10.0" />
-</FlowPane.margin></StackPane>
+                        </StackPane>
                         <Button mnemonicParsing="false" onAction="#onConfirm" text="OK">
-<FlowPane.margin>
-<Insets right="10.0" />
-</FlowPane.margin></Button>
+                            <FlowPane.margin>
+                                <Insets right="10.0" />
+                            </FlowPane.margin>
+                        </Button>
                         <Button mnemonicParsing="false" onAction="#onCancel" text="Abbrechen">
-<FlowPane.margin>
-<Insets right="10.0" />
-</FlowPane.margin>
+                            <FlowPane.margin>
+                                <Insets right="10.0" />
+                            </FlowPane.margin>
                         </Button>
                     </children>
                 </FlowPane>

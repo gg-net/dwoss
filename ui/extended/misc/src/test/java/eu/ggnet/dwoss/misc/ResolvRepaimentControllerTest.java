@@ -31,7 +31,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
  * @author bastian.venz
  */
 public class ResolvRepaimentControllerTest {
-        @Test
+
+    @Test
     public void testResource() {
         assertThat(ResolveRepaymentController.loadFxml()).isNotNull();
     }

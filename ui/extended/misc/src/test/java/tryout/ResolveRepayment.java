@@ -16,7 +16,6 @@
  */
 package tryout;
 
-
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +44,8 @@ public class ResolveRepayment {
 
             @Override
             public void run() {
-                try {Stage stage = new Stage();
+                try {
+                    Stage stage = new Stage();
                     stage.setTitle("Resolve Repayment");
                     GridPane page = (GridPane)FXMLLoader.load(ResolveRepaymentController.loadFxml());
                     Scene scene = new Scene(page, Color.ALICEBLUE);
