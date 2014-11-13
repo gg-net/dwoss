@@ -57,10 +57,10 @@ autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdat
 Projekt Resourcen
 -----------------
 
-Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS)
-Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
-Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
-Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
+- Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
+- Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
+- Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
+- Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
 
 English version
 ===============
