@@ -21,11 +21,15 @@ import java.awt.Toolkit;
 import java.io.*;
 import java.net.*;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.application.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import org.openide.util.Lookup;
 
@@ -55,6 +59,10 @@ import static eu.ggnet.saft.core.Client.lookup;
 public class RunClientFx extends Application {
 
     private SwingClient swingClient;
+
+    static URL loadAppImage() {
+        return RunClientFx.class.getResource("projectavatar.png");
+    }
 
     public static void main(String[] args) throws NotFoundException, InterruptedException {
         launch(args);
@@ -86,39 +94,7 @@ public class RunClientFx extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Stage dialog = new Stage();
-        dialog.setTitle("Optionale Registrierung");
-        dialog.setAlwaysOnTop(true);
-        dialog.setWidth(250);
-        TextField emailField = new TextField();
-        emailField.setPromptText("Email");
-        //    emailField.setPrefWidth(125);
-        TextField nameField = new TextField();
-        nameField.setPromptText("Ihr Name");
-        //      nameField.setPrefWidth(125);
-        TextArea messageField = new TextArea();
-        messageField.setPromptText("Optionale Nachricht");
-//        messageField.setPrefWidth(240);
-        Button send = new Button("Senden");
-        send.setOnAction((eh) -> {
-            sendPost(nameField.getText(), emailField.getText(), messageField.getText());
-            dialog.close();
-        });
-
-        Button cancel = new Button("Überspringen");
-        cancel.setOnAction((e) -> dialog.close());
-
-        GridPane p = new GridPane();
-        p.setHgap(5);
-        p.setVgap(5);
-        p.add(nameField, 0, 0);
-        p.add(emailField, 1, 0);
-        p.add(messageField, 0, 1, 2, 1);
-        p.add(new FlowPane(5, 0, send, cancel), 0, 2, 2, 1);
-
-        Scene scene = new Scene(p);
-        dialog.setScene(scene);
-        dialog.showAndWait();
+        showSuscribtion();
 
         EventQueue.invokeLater(() -> {
             swingClient.show("(Sample) - Mandant:" + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
@@ -152,5 +128,45 @@ public class RunClientFx extends Application {
             ExceptionUtil.show(null, ex);
         }
 
+    }
+
+    private void showSuscribtion() {
+        Stage dialog = new Stage();
+        dialog.setTitle("Optionale Registrierung");
+        try {
+            dialog.getIcons().add(new Image(loadAppImage().openStream()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        dialog.setAlwaysOnTop(true);
+        dialog.setWidth(250);
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email");
+        //    emailField.setPrefWidth(125);
+        TextField nameField = new TextField();
+        nameField.setPromptText("Ihr Name");
+        //      nameField.setPrefWidth(125);
+        TextArea messageField = new TextArea();
+        messageField.setPromptText("Optionale Nachricht");
+//        messageField.setPrefWidth(240);
+        Button send = new Button("Senden");
+        send.setOnAction((eh) -> {
+            sendPost(nameField.getText(), emailField.getText(), messageField.getText());
+            dialog.close();
+        });
+
+        Button cancel = new Button("Überspringen");
+        cancel.setOnAction((e) -> dialog.close());
+
+        GridPane p = new GridPane();
+        p.setHgap(5);
+        p.setVgap(5);
+        p.add(nameField, 0, 0);
+        p.add(emailField, 1, 0);
+        p.add(messageField, 0, 1, 2, 1);
+
+        Scene scene = new Scene(p);
+        dialog.setScene(scene);
+        dialog.showAndWait();
     }
 }
