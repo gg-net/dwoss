@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.misc.op.listings;
 import java.io.Serializable;
 import java.util.*;
 
+import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
@@ -34,6 +35,7 @@ import lombok.Data;
  * @author oliver.guenther
  */
 @Remote
+@Local
 public interface SalesListingProducer {
 
     /**
