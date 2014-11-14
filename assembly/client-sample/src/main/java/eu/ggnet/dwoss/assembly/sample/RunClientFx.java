@@ -53,18 +53,25 @@ import static eu.ggnet.saft.core.Client.lookup;
  */
 public class RunClientFx extends Application {
 
+    private final static String H = "Sample Client: ";
+
     private SwingClient swingClient;
+
+    private static boolean main = false;
 
     static URL loadAppImage() {
         return RunClientFx.class.getResource("projectavatar.png");
     }
 
     public static void main(String[] args) throws NotFoundException, InterruptedException {
+        System.out.println(H + "main()");
+        main = true;
         launch(args);
     }
 
     @Override
     public void init() throws Exception {
+        System.out.println(H + "init()" + (main ? " through main()" : " trought other lifecycle"));
         Platform.setImplicitExit(false);
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class);
@@ -74,6 +81,7 @@ public class RunClientFx extends Application {
             @Override
             protected void close() {
                 Lookup.getDefault().lookup(Server.class).shutdown();
+                System.exit(0); // The good old destroyer. Sample just don't gets down.
             }
         };
         EventQueue.invokeLater(() -> {
@@ -84,11 +92,13 @@ public class RunClientFx extends Application {
 
     @Override
     public void stop() throws Exception {
+        System.out.println(H + "stop()");
         // can't use that now cause of the different lifecycles.
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        System.out.println(H + "start()");
 //        showSuscribtion();
         FXMLLoader loader = new FXMLLoader(SubscribtionController.loadFxml());
         Pane root = (Pane)loader.load();

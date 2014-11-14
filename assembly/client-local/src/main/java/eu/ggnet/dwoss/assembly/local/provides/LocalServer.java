@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.local;
+package eu.ggnet.dwoss.assembly.local.provides;
 
 import eu.ggnet.saft.core.Server;
 
@@ -28,6 +28,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.ConfigurationProvider;
 import eu.ggnet.dwoss.configuration.SystemConfig;
+
+
+import eu.ggnet.dwoss.assembly.local.UnClosableContext;
 import eu.ggnet.dwoss.customer.assist.CustomerPu;
 import eu.ggnet.dwoss.redtape.assist.RedTapePu;
 import eu.ggnet.dwoss.report.assist.ReportPu;
@@ -38,13 +41,13 @@ import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.util.dialog.Alert;
 
 @ServiceProvider(service = Server.class)
-public class ServerConnCosLocal implements Server {
+public class LocalServer implements Server {
 
     private EJBContainer container;
 
     private boolean isInitialized = false;
 
-    public ServerConnCosLocal() {
+    public LocalServer() {
     }
 
     @Override
@@ -69,8 +72,7 @@ public class ServerConnCosLocal implements Server {
             c.putAll(config.openejbEmbeddedLocalConfiguration());
         }
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        c.putAll(SystemConfig.OPENEJB_XBEAN_FINDER);
+        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
         container = EJBContainer.createEJBContainer(c);
         try {
             container.getContext().bind("inject", this);

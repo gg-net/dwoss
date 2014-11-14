@@ -30,7 +30,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.saft.core.Client;
 
-import eu.ggnet.dwoss.common.AbstractAccessCos;
+import eu.ggnet.dwoss.common.AbstractGuardian;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
@@ -90,7 +90,7 @@ public class RedTape {
             }
 
         });
-        Client.addSampleStub(Guardian.class, new AbstractAccessCos() {
+        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
                 setRights(new Operator(user, 1, Arrays.asList(AtomicRight.values())));
