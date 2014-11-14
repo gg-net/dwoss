@@ -34,9 +34,17 @@ Um einer solchen Software und den Entwicklern dahinter einen hohes Maß an Exper
 Getting Started
 ---------------
 
-Aktuell gibt es noch keine einfach zu nutzende Beispiel-Version (jar/exe). (ClassLoading issues)
+Der einfachste Weg um einen ersten Eindruck zu bekommen, ist den Beispiel-Client zu verweden. Dieser benötigt keine Installation und arbeitet Lokal mit generierten Beispieldaten.
 
-Um die Software mit Beispieldaten im Einsatz zu sehen, ist folgendes notwendig:
+- Installieren Sie [Java 8](http://java.com).
+- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS-MASTER/latest/artifact/shared/DW-OSS-Zip/dwoss-client-sample-1.0-SNAPSHOT-bin.zip)
+- Im Fenster: Doppelclick auf die client.jar
+- In der Konsole: java -jar client.jar
+
+Nach kurz Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit
+autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
+
+Um den Beispiel-Client selber zu bauen, ist folgendes notwendig:
  
 - JDK 8_u25 (Zen Java Plugin benötigt sehr neue Version)
 - Maven 3.x
@@ -51,11 +59,13 @@ In das Verzeichniss dwoss/assembly/client-sample wechseln und folgendes ausführ
 ```
 mvn jfx:run -Pserver-sample,client-sample
 ```
-Nach kurz Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit
-autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
-
 Projekt Resourcen
 -----------------
+
+Die meisten Information werden in der Java Dokumentation verarbeitet.
+**[Project und Java Dokumentation](http://deutschewarenwirtschaft.de/site/apidocs/index.html)**
+
+Weitere relevante Systeme:
 
 - Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
 - Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
@@ -70,7 +80,15 @@ It is licensed unter the GNU General Public License v3. Copyright [GG-Net GmbH](
 
 The software is an internal project of the [GG-Net GmbH](http://gg-net.de) used to implement all processes of a 'Used IT-Goods Sales Operation'. It is still in use and actively developed.
 
-For the moment there is no sample version ready to use. (some classloading issues)
+To get a first view on the application, use the sample client. This client starts a local server in the background and generates sample data. Please be patient, the startup takes some seconds.
+
+- Install [Java 8](http://java.com).
+- Download and Extract [Sample-Client](http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS-MASTER/latest/artifact/shared/DW-OSS-Zip/dwoss-client-sample-1.0-SNAPSHOT-bin.zip)
+- In windows: Doppelclick auf die client.jar
+- On the console: java -jar client.jar
+
+An optional registration dialog should open. After completing it, the application is running in a local sample mode.
+You can login with any user, but the user "test", any password, has all rights.
 
 To get started you'll need:
 
@@ -87,5 +105,17 @@ Switch to dwoss/assembly/client-sample and call:
 
 mvn jfx:run -Pserver-sample,client-sample
 
-An optional registration dialog should open. After completing it, the application is running in a local sample mode.
-You can login with any user, but the user "test", any password, has all rights.
+
+
+Project Resources
+-----------------
+
+Most of the Project information are merged into the javadoc.
+**[Project und Java Documentation](http://deutschewarenwirtschaft.de/site/apidocs/index.html)**
+
+Also sources of information:
+
+- Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
+- Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
+- Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
+- Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
