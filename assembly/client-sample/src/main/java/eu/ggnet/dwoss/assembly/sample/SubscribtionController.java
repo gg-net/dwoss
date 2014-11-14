@@ -88,7 +88,8 @@ public class SubscribtionController implements Initializable {
                 + "Dies ist eine Testversion, die bei jedem Start neue Testdaten generiert. "
                 + "Änderungen und von ihnen erstellte Daten gehen beim beenden der Applikation verloren.\n\n"
                 + "Bei Fragen, Anregunden oder weiterführende Informationen für Unterstützung seitens der GG-Net GmbH "
-                + "füllen sie gern die in diesem Fenter abgebildete Form aus und Schicken diese per Knopfdruck ab.");
+                + "füllen Sie gern die in diesem Fenter abgebildete Form aus und Schicken diese per Knopfdruck ab.\n\n"
+                + "Schließen Sie dieses Fenster oder senden Sie uns Ihre Anregungen und Fragen um DWOSS zu starten.");
 
         try {
             dwossLogo.setImage(new Image(loadDwossLogo().openStream()));
