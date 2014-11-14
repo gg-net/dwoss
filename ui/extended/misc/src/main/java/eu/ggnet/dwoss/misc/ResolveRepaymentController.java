@@ -34,10 +34,13 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import eu.ggnet.dwoss.common.AbstractAccessCos;
 import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -57,9 +60,10 @@ public class ResolveRepaymentController implements Initializable {
 
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
+    private TradeName contractor;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<SimpleReportLine> repaymentLines = lookup(ResolveRepayment.class).getRepaymentLines(ACER);
 
         TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
         id.setCellValueFactory(new PropertyValueFactory("id"));
@@ -91,8 +95,9 @@ public class ResolveRepaymentController implements Initializable {
         TableColumn<SimpleReportLine, PositionType> positionType = new TableColumn<>("positionType");
         positionType.setCellValueFactory(new PropertyValueFactory("positionType"));
 
-        reportLineTable.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor, amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
-        reportLineTable.setItems(FXCollections.observableList(repaymentLines));
+        reportLineTable.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor,
+                amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
+
         reportLineTable.getSelectionModel().setSelectionMode(MULTIPLE);
         reportLineTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -116,8 +121,25 @@ public class ResolveRepaymentController implements Initializable {
         });
     }
 
+    public void setContractor(TradeName contractor) {
+        this.contractor = contractor;
+        List<SimpleReportLine> repaymentLines = lookup(ResolveRepayment.class).getRepaymentLines(contractor);
+        reportLineTable.setItems(FXCollections.observableList(repaymentLines));
+    }
+
     @FXML
     public void handleResolveButtonAction() {
+        if ( sopoField.getText().isEmpty() ) {
+            sopoField.setText(" IDENTIFIER EINGEBEN!!!!!");
+            return;
+        }
+        new Thread(() -> {
+            try {
+                lookup(ResolveRepayment.class).resolveSopo(sopoField.getText(), contractor, lookup(AbstractAccessCos.class).getUsername());
+            } catch (UserInfoException ex) {
+                ExceptionUtil.show(null, ex);
+            }
+        }).run();
     }
 
     @FXML

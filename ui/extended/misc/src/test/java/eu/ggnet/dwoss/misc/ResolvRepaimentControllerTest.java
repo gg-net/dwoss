@@ -28,6 +28,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Client;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -54,8 +55,7 @@ public class ResolvRepaimentControllerTest {
             }
 
             @Override
-            public void resolveSopo(String sopo) {
-
+            public void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException {
             }
         });
         new JFXPanel(); // Implizit start of JavaFx.

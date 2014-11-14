@@ -35,7 +35,6 @@ import org.slf4j.*;
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 
-
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
@@ -445,6 +444,17 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                 .setParameter(2, positionType)
                 .setParameter(3, dossierId)
                 .getResultList();
+    }
+
+    /**
+     * This method search for a single Report line which is identify by Serial or Refurbish id.
+     * <p>
+     * @param key Serial or Refurbish id.
+     * @return return a found ReportLine.
+     */
+    public ReportLine findSingleReportLineByIdentifiers(String key) {
+        return new JPAQuery(em).from(reportLine)
+                .where(reportLine.refurbishId.eq(key), reportLine.serial.eq(key)).singleResult(reportLine);
     }
 
     private NavigableMap<Date, Revenue> prepare(Date start, Date end, Step step) {

@@ -23,6 +23,7 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.util.UserInfoException;
 
 /**
  *
@@ -34,6 +35,6 @@ public interface ResolveRepayment {
 
     List<SimpleReportLine> getRepaymentLines(TradeName contractor);
 
-    void resolveSopo(String sopo);
+    void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException;
 
 }

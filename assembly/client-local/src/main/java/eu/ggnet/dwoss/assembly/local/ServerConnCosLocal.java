@@ -69,7 +69,7 @@ public class ServerConnCosLocal implements Server {
             c.putAll(config.openejbEmbeddedLocalConfiguration());
         }
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
+        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
         c.putAll(SystemConfig.OPENEJB_XBEAN_FINDER);
         container = EJBContainer.createEJBContainer(c);
         try {

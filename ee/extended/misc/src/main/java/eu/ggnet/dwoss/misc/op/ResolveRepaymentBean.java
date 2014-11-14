@@ -16,21 +16,44 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.validation.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.redtape.entity.Document.Condition;
+import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.eao.StockEao;
+import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  *
@@ -51,6 +74,18 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     @Inject
     private ReportLineEao reportLineEao;
 
+    @Inject
+    private StockAgent stockAgent;
+
+    @Inject
+    private StockTransactionEmo stEmo;
+
+    @Inject
+    private Event<UnitHistory> history;
+
+    @Inject
+    private ReportAgent reportAgent;
+
     @Override
     public List<SimpleReportLine> getRepaymentLines(TradeName contractor) {
         List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(contractor, startThisYear, endhisYear);
@@ -64,7 +99,26 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     }
 
     @Override
-    public void resolveSopo(String sopo) {
+    public void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException {
+        //search with refurbishid and serial number.
+        ReportLine line = reportLineEao.findSingleReportLineByIdentifiers(identifier.trim());
+        System.out.println("foud: " + line);
+        if ( line == null ) throw new UserInfoException("Es konnte keine ReportLine mit diesem Identifier gefunden werden");
+        if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.");
+
+        // Rolling out
+        StockUnit stockUnit = stockAgent.findStockUnitByRefurbishIdEager(line.getRefurbishId());
+        List<StockTransaction> stockTransactions = new ArrayList<>();
+        StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolve Repayment");
+        st.addUnit(stockUnit);
+        history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolve Repayment", arranger));
+        if ( !stockTransactions.isEmpty() ) stEmo.completeRollOut(arranger, stockTransactions);
+
+        
+        Report report = reportAgent.findOrCreateReport(contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear),
+                contractor, startThisYear, endhisYear);
+        report.add(line);
+        reportLineEao.getEntityManager().merge(report);
 
     }
 
