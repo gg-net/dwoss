@@ -69,7 +69,7 @@ public class SubscribtionController implements Initializable {
     Stage stage;
 
     static URL loadDwossLogo() {
-        return SubscribtionController.class.getResource("projectavatar.png");
+        return SubscribtionController.class.getResource("dwosslogo.png");
     }
 
     static URL loadGgnetLogo() {
@@ -82,7 +82,6 @@ public class SubscribtionController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        introduction.setWrapText(true);
         introduction.setText(""
                 + "Vielen Dank für ihr Interesse an  der Deutschen Warenwirtschaft Open Source Software (DWOSS).\n\n"
                 + "Dies ist eine Testversion, die bei jedem Start neue Testdaten generiert. "
