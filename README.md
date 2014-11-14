@@ -41,8 +41,7 @@ Der einfachste Weg um einen ersten Eindruck zu bekommen, ist den Beispiel-Client
 - Im Fenster: Doppelclick auf die client.jar
 - In der Konsole: java -jar client.jar
 
-Nach kurz Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit
-autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
+Nach kurzer Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
 
 Um den Beispiel-Client selber zu bauen, ist folgendes notwendig:
  
