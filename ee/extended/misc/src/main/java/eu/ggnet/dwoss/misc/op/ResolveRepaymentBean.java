@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -94,27 +95,40 @@ public class ResolveRepaymentBean implements ResolveRepayment {
                     return l.getDocumentType() == ANNULATION_INVOICE || l.getDocumentType() == CREDIT_MEMO;
                 }).map((l) -> {
                     return new SimpleReportLine(l.getReportingDate(), l.getRefurbishId(), l.getUniqueUnitId(), l.getContractor(), l.getPartNo(),
-                            l.getProductName(), l.getAmount(), l.getPrice(), l.getPurchasePrice(), l.getContractorReferencePrice(), l.getDocumentType(), l.getPositionType());
+                            l.getProductName(), l.getAmount(), l.getPrice(), l.getPurchasePrice(), l.getContractorReferencePrice(),
+                            l.getDocumentType(), l.getPositionType(), l.getSerial());
                 }).collect(Collectors.toList());
     }
 
     @Override
     public void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException {
         //search with refurbishid and serial number.
-        ReportLine line = reportLineEao.findSingleReportLineByIdentifiers(identifier.trim());
+        List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
+
+        List<SimpleReportLine> repaymentLines = getRepaymentLines(contractor);
+        System.out.println(repaymentLines.size());
+        ReportLine line = null;
+        for (SimpleReportLine reportLine : reportLines) {
+            System.out.println("reportLine:" + reportLine);
+            if ( repaymentLines.contains(reportLine) ) {
+                System.out.println("line:" + line);
+                line = reportLineEao.findById(reportLine.getId());
+            }
+        }
+
         System.out.println("foud: " + line);
         if ( line == null ) throw new UserInfoException("Es konnte keine ReportLine mit diesem Identifier gefunden werden");
         if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.");
 
         // Rolling out
         StockUnit stockUnit = stockAgent.findStockUnitByRefurbishIdEager(line.getRefurbishId());
+        if ( stockUnit == null ) throw new UserInfoException("Es exestiert keine Stock Unit zu dem Gerät");
         List<StockTransaction> stockTransactions = new ArrayList<>();
         StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolve Repayment");
         st.addUnit(stockUnit);
         history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolve Repayment", arranger));
         if ( !stockTransactions.isEmpty() ) stEmo.completeRollOut(arranger, stockTransactions);
 
-        
         Report report = reportAgent.findOrCreateReport(contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear),
                 contractor, startThisYear, endhisYear);
         report.add(line);

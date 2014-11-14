@@ -50,7 +50,8 @@ public class SimpleReportLine implements Serializable {
     }
 
     @Builder
-    public SimpleReportLine(Date reportingDate, String refurbishId, long uniqueUnitId, TradeName contractor, String partNo, String productName, double amount, double price, double purchasePrice, double contractorReferencePrice, DocumentType documentType, PositionType positionType) {
+    public SimpleReportLine(Date reportingDate, String refurbishId, long uniqueUnitId, TradeName contractor, String partNo, String productName, double amount,
+                            double price, double purchasePrice, double contractorReferencePrice, DocumentType documentType, PositionType positionType, String serial) {
         this.reportingDate = reportingDate;
         this.refurbishId = refurbishId;
         this.uniqueUnitId = uniqueUnitId;
@@ -90,6 +91,10 @@ public class SimpleReportLine implements Serializable {
     @Getter
     @Setter
     private String partNo;
+
+    @Getter
+    @Setter
+    private String serial;
 
     @Setter
     @Getter

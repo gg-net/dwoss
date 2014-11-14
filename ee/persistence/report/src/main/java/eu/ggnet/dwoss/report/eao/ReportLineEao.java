@@ -44,6 +44,9 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.report.entity.QReportLine.reportLine;
+import static eu.ggnet.dwoss.report.entity.partial.QSimpleReportLine.simpleReportLine;
+import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
 
 /**
  * Entity Access Object for ReportLine.
@@ -452,9 +455,9 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @param key Serial or Refurbish id.
      * @return return a found ReportLine.
      */
-    public ReportLine findSingleReportLineByIdentifiers(String key) {
-        return new JPAQuery(em).from(reportLine)
-                .where(reportLine.refurbishId.eq(key), reportLine.serial.eq(key)).singleResult(reportLine);
+    public List<SimpleReportLine> findReportLinesByIdentifiers(String key) {
+        return new JPAQuery(em).from(simpleReportLine)
+                .where(simpleReportLine.refurbishId.eq(key).or(simpleReportLine.serial.eq(key))).list(simpleReportLine);
     }
 
     private NavigableMap<Date, Revenue> prepare(Date start, Date end, Step step) {
