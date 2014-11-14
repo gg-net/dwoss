@@ -37,7 +37,7 @@ public class SpecPu {
 
     public final static String DATASOURCE = "specDataSource";
 
-    public final static String DATASOURCE_UNMANAGED = "speckDataSourceUnmanaged";
+    public final static String DATASOURCE_UNMANAGED = "specDataSourceUnmanaged";
 
     public final static OpenEjbEmbeddedPersistenceConfiguration OPENEJB_CONFIG = OpenEjbEmbeddedPersistenceConfiguration.builder()
             .persistenceUnit(NAME).dataSourceManaged(DATASOURCE).dataSourceUnmanaged(DATASOURCE_UNMANAGED).build();
