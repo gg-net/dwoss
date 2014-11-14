@@ -32,34 +32,19 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode
-public class StackedLine implements IStackedLine {
+public class StackedLine implements Comparable<StackedLine>{
 
     private boolean used = true;
-
-    // Unused
-    private String warranty;
 
     private String name;
 
     private int amount;
-
-    // removeable, unused
-    private double retailerPrice;
-
-    // removeable, only used in processing
-    private double customerPrice;
-
-    // removeable, only used in processing
-    private double roundedTaxedCustomerPrice;
 
     private String description;
 
     private String manufacturerName;
 
     private String manufacturerPartNo;
-
-    // removeable, unused
-    private String comment;
 
     private String commodityGroupName;
 
@@ -71,20 +56,19 @@ public class StackedLine implements IStackedLine {
 
     private String customerPriceLabel;
 
-    private List<IStackedLineUnit> units;
+    private List<StackedLineUnit> units;
 
-    @Override
     public boolean isNew() {
         return !used;
     }
 
-    public void add(IStackedLineUnit u) {
+    public void add(StackedLineUnit u) {
         if ( units == null ) units = new ArrayList<>();
         units.add(u);
     }
 
     @Override
-    public int compareTo(IStackedLine other) {
+    public int compareTo(StackedLine other) {
         if ( other == null ) return 1;
         if ( !this.getManufacturerName().equals(other.getManufacturerName()) ) return this.getManufacturerName().compareTo(other.getManufacturerName());
         if ( !this.getCommodityGroupName().equals(other.getCommodityGroupName()) ) return this.getCommodityGroupName().compareTo(other.getCommodityGroupName());
