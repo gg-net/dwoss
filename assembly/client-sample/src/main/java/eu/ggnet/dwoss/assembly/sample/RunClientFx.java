@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@ public class RunClientFx extends Application {
             @Override
             protected void close() {
                 Lookup.getDefault().lookup(Server.class).shutdown();
-                System.exit(0); // The good old destroyer. Sample just don't gets down.
+                Platform.exit();
             }
         };
         EventQueue.invokeLater(() -> {
