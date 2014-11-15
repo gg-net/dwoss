@@ -55,6 +55,7 @@ public class RunClientFx extends Application {
             @Override
             protected void close() {
                 Lookup.getDefault().lookup(Server.class).shutdown();
+                Platform.exit();
             }
         };
         EventQueue.invokeLater(() -> {
