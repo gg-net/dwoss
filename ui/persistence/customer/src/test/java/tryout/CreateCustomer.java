@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import eu.ggnet.saft.core.Client;
 
-import eu.ggnet.dwoss.common.AbstractAccessCos;
+import eu.ggnet.dwoss.common.AbstractGuardian;
 
 
 import eu.ggnet.dwoss.customer.CustomerCreateController;
@@ -38,7 +38,7 @@ public class CreateCustomer {
 
     @Test
     public void tryout() {
-        Client.addSampleStub(Guardian.class, new AbstractAccessCos() {
+        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
             }

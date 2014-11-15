@@ -1,3 +1,19 @@
+/* 
+ * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.ggnet.dwoss.spec.entity.piece;
 
 import java.io.Serializable;
@@ -28,7 +44,7 @@ public class Gpu implements Serializable {
         /**
          * Manufacturer AMD.
          */
-        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9)),
+        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9, R4, R5)),
         /**
          * Manufacturer Intel.
          */
@@ -96,7 +112,9 @@ public class Gpu implements Serializable {
         QUADRO_600("Quadro 600"),
         GEFORCE_800("GeForce 800 Series"),
         R7("Radeon R7"),
-        R9("Radeon R9");
+        R9("Radeon R9"),
+        R4("Radeon R4"),
+        R5("Radeon R5");
 
         String note;
 

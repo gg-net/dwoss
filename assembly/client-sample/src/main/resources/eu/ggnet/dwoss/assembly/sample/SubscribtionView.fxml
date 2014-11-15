@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="582.0" prefWidth="456.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.assembly.sample.SubscribtionController">
+   <children>
+      <VBox prefHeight="582.0" prefWidth="456.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <Label fx:id="introduction" prefHeight="246.0" prefWidth="446.0" text="Label" wrapText="true">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Label>
+            <HBox prefHeight="25.0" prefWidth="372.0">
+               <children>
+                  <TextField fx:id="name" layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="215.0" promptText="Ihr Name">
+                     <HBox.margin>
+                        <Insets right="3.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="mail" layoutX="206.0" layoutY="14.0" prefHeight="25.0" prefWidth="186.0" promptText="Email" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="3.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <TextArea fx:id="message" prefHeight="237.0" prefWidth="372.0" promptText="Optionale Nachricht" />
+            <HBox>
+               <children>
+                  <ProgressBar fx:id="progress" layoutX="14.0" layoutY="286.0" prefHeight="18.0" prefWidth="357.0" progress="0.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets right="5.0" top="3.0" />
+                     </HBox.margin>
+                  </ProgressBar>
+                  <Button fx:id="sendMessageButton" layoutX="293.0" layoutY="282.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Senden" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="93.0" prefWidth="366.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="dwossLogo" fitHeight="94.0" fitWidth="155.0" layoutX="235.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="ggnetLogo" fitHeight="93.0" fitWidth="255.0" layoutX="14.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

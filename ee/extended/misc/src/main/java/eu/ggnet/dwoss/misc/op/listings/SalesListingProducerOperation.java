@@ -1,3 +1,19 @@
+/* 
+ * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.ggnet.dwoss.misc.op.listings;
 
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration;
@@ -290,7 +306,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
      * @return XLS files for units in a specific sales channel.
      */
     private Map<TradeName, Collection<FileJacket>> generateXlsListings(SalesChannel channel) {
-        SubMonitor m = monitorFactory.newSubMonitor("Listen für " + channel.getName() + "erstellen", 100);
+        SubMonitor m = monitorFactory.newSubMonitor("Listen für " + channel.getName() + " erstellen", 100);
         m.start();
         List<StockUnit> stockUnits = new StockUnitEao(stockEm).findByNoLogicTransactionAndPresentStock();
         List<UniqueUnit> uniqueUnits = new UniqueUnitEao(uuEm).findByIds(toUniqueUnitIds(stockUnits));
@@ -407,14 +423,14 @@ public class SalesListingProducerOperation implements SalesListingProducer {
             StackedLine line = new StackedLine();
             line.setBrand(p.getTradeName());
             line.setGroup(p.getGroup());
-            line.setComment("");
             line.setCommodityGroupName(p.getGroup().getNote());
             line.setDescription(p.getDescription());
             line.setManufacturerName(p.getTradeName().getName());
             line.setManufacturerPartNo(p.getPartNo());
             line.setName(p.getName());
             line.setImageUrl(imageFinder.findImageUrl(p.getImageId()));
-            short priceChange = 0;
+            boolean priceChanged = false;
+            double customerPrice = 0;
             for (UniqueUnit uu : entry.getValue()) {
                 StackedLineUnit elem = new StackedLineUnit();
                 elem.setAccessories(UniqueUnitFormater.toSingleLineAccessories(uu));
@@ -426,20 +442,25 @@ public class SalesListingProducerOperation implements SalesListingProducer {
                 elem.setWarranty(uu.getWarranty().getName());
                 if ( uu.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) )
                     elem.setWarrentyTill(uu.getWarrentyValid());
-                double price = uu.getPrice(priceType);
-                elem.setCustomerPrice(price);
-                elem.setRoundedTaxedCustomerPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.02));
+
+                double uuPrice = uu.getPrice(priceType);
+                elem.setCustomerPrice(uuPrice);
+                elem.setRoundedTaxedCustomerPrice(MathUtil.roundedApply(uuPrice, GlobalConfig.TAX, 0.02));
+
                 // For the "ab € XXX" handler
-                if ( line.getCustomerPrice() < price ) {
-                    line.setCustomerPrice(price);
-                    priceChange++;
+                if ( customerPrice == 0 ) {
+                    customerPrice = uuPrice;
+                } else if ( customerPrice > uuPrice ) {
+                    customerPrice = uuPrice;
+                    priceChanged = true;
+                } else if ( customerPrice < uuPrice ) {
+                    priceChanged = true;
                 }
+
                 line.add(elem);
             }
             line.setAmount(line.getUnits().size());
-            line.setRoundedTaxedCustomerPrice(MathUtil.roundedApply(line.getCustomerPrice(), GlobalConfig.TAX, 0.02));
-            if ( priceChange > 1 ) line.setCustomerPriceLabel("ab € " + df.format(line.getRoundedTaxedCustomerPrice()));
-            else line.setCustomerPriceLabel("€ " + df.format(line.getRoundedTaxedCustomerPrice()));
+            line.setCustomerPriceLabel((priceChanged ? "ab €" : "€") + df.format(MathUtil.roundedApply(customerPrice, GlobalConfig.TAX, 0.02)));
             stackedLines.add(line);
         }
         L.info("Created {} Lines for the Lists", stackedLines.size());

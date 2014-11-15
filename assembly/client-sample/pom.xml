@@ -19,8 +19,11 @@
                 <configuration>
                     <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
                     <jfxMainAppJarName>client.jar</jfxMainAppJarName>
+                    <!--<identifier>${project.build.finalName}</identifier>-->
+                    <!--<nativeReleaseVersion>${project.version}</nativeReleaseVersion>-->
+                    <!--<needMenu>true</needMenu>-->     
                     <!--<preLoader>de.dw.javafx.DwPreloader</preLoader>  // Preloader nur in remote-->
-                    <allPermissions>true</allPermissions>
+                    <!--<allPermissions>true</allPermissions>-->
                 </configuration>
                 <executions>
                     <execution>
@@ -78,22 +81,6 @@
                 <configuration>
                     <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.ning.maven.plugins</groupId>
-                <artifactId>maven-duplicate-finder-plugin</artifactId>
-                <version>1.0.7</version>
-                <configuration>
-                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>

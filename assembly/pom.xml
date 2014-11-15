@@ -74,7 +74,7 @@
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-mandator-elus</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
             </dependencies>
         </profile>
@@ -103,8 +103,92 @@
             <id>client-sample</id>
         </profile>
     </profiles>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.ning.maven.plugins</groupId>
+                <artifactId>maven-duplicate-finder-plugin</artifactId>
+                <version>1.0.9</version>
+                <configuration>
+                    <failBuildInCaseOfConflict>false</failBuildInCaseOfConflict>
+                    <exception>
+                        <!-- Mostly is org-netbeans-api-annotations-common copy this classes -->
+                        <conflictingDependencies>
+                            <dependency>
+                                <groupId>com.google.code.findbugs</groupId>
+                                <artifactId>jsr305</artifactId>
+                                <version>1.3.9</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.netbeans.api</groupId>
+                                <artifactId>org-netbeans-api-annotations-common</artifactId>
+                                <version>RELEASE80</version>
+                            </dependency>
+                        </conflictingDependencies>
+                        <classes>
+                            <!-- JSR 305 has a static class named Checker in there more, but we don't notifyd any errors -->
+                            <class>javax.annotation.Nonnull</class>
+                            <class>javax.annotation.meta.TypeQualifier</class>
+                            <class>javax.annotation.meta.TypeQualifierNickname</class>
+                            <class>javax.annotation.meta.When</class>
+                        </classes>
+                    </exception>
+                    <exception>
+                        <!-- Mostly is commons-beanutils copy this classes -->
+                        <conflictingDependencies>
+                            <dependency>
+                                <groupId>commons-beanutils</groupId>
+                                <artifactId>commons-beanutils</artifactId>
+                                <version>1.8.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>commons-collections</groupId>
+                                <artifactId>commons-collections</artifactId>
+                                <version>2.1</version>
+                            </dependency>
+                        </conflictingDependencies>
+                        <classes>
+                            <class>org.apache.commons.collections.ArrayStack</class>
+                            <class>org.apache.commons.collections.Buffer</class>
+                            <class>org.apache.commons.collections.BufferUnderflowException</class>
+                            <class>org.apache.commons.collections.FastHashMap</class>
+                        </classes>
+                    </exception>
+                    <exception>
+                        <!-- Mostly is openejb-core copy this classes -->
+                        <conflictingDependencies>
+                            <dependency>
+                                <groupId>org.apache.openejb</groupId>
+                                <artifactId>javaee-api</artifactId>
+                                <version>6.0-6</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.apache.openejb</groupId>
+                                <artifactId>openejb-core</artifactId>
+                                <version>4.7.0</version>
+                            </dependency>
+                        </conflictingDependencies>
+                        <classes>
+                            <class>javax.xml.ws.EndpointReference</class>
+                            <class>javax.xml.ws.WebServiceFeature</class>
+                            <class>javax.xml.ws.wsaddressing.W3CEndpointReference</class>
+                        </classes>
+                    </exception> 
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
     <modules>
-        <module>entityhelpers</module>
         <module>server</module>
         <module>client-local</module>
         <module>client-remote</module>
