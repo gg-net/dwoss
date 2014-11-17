@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.mandator;
 
-import java.io.File;
-
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.PaymentCondition;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;

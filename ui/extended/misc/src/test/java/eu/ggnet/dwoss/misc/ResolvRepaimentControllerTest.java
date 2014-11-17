@@ -26,6 +26,7 @@ import javafx.fxml.FXMLLoader;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -50,12 +51,12 @@ public class ResolvRepaimentControllerTest {
         Client.addSampleStub(ResolveRepayment.class, new ResolveRepayment() {
 
             @Override
-            public List<SimpleReportLine> getRepaymentLines(TradeName contractor) {
+            public List<ReportLine> getRepaymentLines(TradeName contractor) {
                 return Collections.EMPTY_LIST;
             }
 
             @Override
-            public void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException {
+            public void resolveUnit(String identifier, TradeName contractor, String arranger) throws UserInfoException {
             }
         });
         new JFXPanel(); // Implizit start of JavaFx.

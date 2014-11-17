@@ -18,23 +18,19 @@ package eu.ggnet.dwoss.misc.op;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.validation.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.event.UnitHistory;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.entity.Document.Condition;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.redtape.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.Report;
@@ -42,19 +38,12 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.eao.StockEao;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
-import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  *
@@ -87,46 +76,56 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     @Inject
     private ReportAgent reportAgent;
 
+    @Inject
+    private RedTapeAgent redTapeAgent;
+
+    @Inject
+    private RepaymentCustomers repaymentCustomers;
+
     @Override
-    public List<SimpleReportLine> getRepaymentLines(TradeName contractor) {
+    public List<ReportLine> getRepaymentLines(TradeName contractor) {
         List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(contractor, startThisYear, endhisYear);
         return findUnreportedUnits.stream()
                 .filter((l) -> {
                     return l.getDocumentType() == ANNULATION_INVOICE || l.getDocumentType() == CREDIT_MEMO;
-                }).map((l) -> {
-                    return new SimpleReportLine(l.getReportingDate(), l.getRefurbishId(), l.getUniqueUnitId(), l.getContractor(), l.getPartNo(),
-                            l.getProductName(), l.getAmount(), l.getPrice(), l.getPurchasePrice(), l.getContractorReferencePrice(),
-                            l.getDocumentType(), l.getPositionType(), l.getSerial());
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public void resolveSopo(String identifier, TradeName contractor, String arranger) throws UserInfoException {
+    public void resolveUnit(String identifier, TradeName contractor, String arranger) throws UserInfoException {
         //search with refurbishid and serial number.
         List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
 
-        List<SimpleReportLine> repaymentLines = getRepaymentLines(contractor);
+        List<ReportLine> repaymentLines = getRepaymentLines(contractor);
         System.out.println(repaymentLines.size());
         ReportLine line = null;
+
+        List<Long> repaymentIds = repaymentLines.stream().map((l) -> l.getId()).collect(Collectors.toList());
+
         for (SimpleReportLine reportLine : reportLines) {
-            System.out.println("reportLine:" + reportLine);
-            if ( repaymentLines.contains(reportLine) ) {
-                System.out.println("line:" + line);
+            if ( repaymentIds.contains(reportLine.getId()) ) {
                 line = reportLineEao.findById(reportLine.getId());
             }
         }
 
-        System.out.println("foud: " + line);
         if ( line == null ) throw new UserInfoException("Es konnte keine ReportLine mit diesem Identifier gefunden werden");
-        if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.");
-
+        if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
         // Rolling out
         StockUnit stockUnit = stockAgent.findStockUnitByRefurbishIdEager(line.getRefurbishId());
         if ( stockUnit == null ) throw new UserInfoException("Es exestiert keine Stock Unit zu dem Gerät");
+        if ( stockUnit.isInTransaction() ) throw new UserInfoException("Unit is in einer StockTransaction. ID:" + stockUnit.getTransaction().getId());
+
+        long dossierId = stockUnit.getLogicTransaction().getDossierId();
+        Dossier dossier = redTapeAgent.findById(Dossier.class, dossierId);
+
+        if ( repaymentCustomers.get(contractor) == null || !repaymentCustomers.get(contractor).isPresent()
+                || repaymentCustomers.get(contractor).get() == dossier.getCustomerId() )
+            throw new UserInfoException("Unit is nicht auf einem Auftrag eines Repayment Customers. DossierId:" + dossier.getId());
+
         List<StockTransaction> stockTransactions = new ArrayList<>();
-        StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolve Repayment");
+        StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolved Repayment");
         st.addUnit(stockUnit);
-        history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolve Repayment", arranger));
+        history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
         if ( !stockTransactions.isEmpty() ) stEmo.completeRollOut(arranger, stockTransactions);
 
         Report report = reportAgent.findOrCreateReport(contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear),

@@ -27,6 +27,10 @@ import org.apache.commons.lang.time.DateUtils;
 import org.junit.*;
 
 import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.redtape.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.report.assist.ReportPu;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
@@ -49,6 +53,18 @@ public class ResolveRepaymentBeanIT {
     @Inject
     private ResolveRepaymentBeanITHelper helper;
 
+    @Inject
+    private CustomerGeneratorOperation customerGenerator;
+
+//    @Inject
+//    private ReceiptGeneratorOperation receiptGenerator;
+
+    @Inject
+    private RedTapeGeneratorOperation redTapeGenerator;
+
+    @Inject
+    private RedTapeAgent redTapeAgent;
+
     @Before
     public void setUp() throws NamingException {
         Map<String, Object> c = new HashMap<>();
@@ -69,8 +85,20 @@ public class ResolveRepaymentBeanIT {
         int amount = 50;
         helper.generateLines(amount);
 
-        List<SimpleReportLine> repaymentLines = bean.getRepaymentLines(AMAZON);
+        List<ReportLine> repaymentLines = bean.getRepaymentLines(AMAZON);
         assertThat(repaymentLines).isNotEmpty().hasSize(amount);
+    }
+
+    @Test
+    public void testResolve() {
+        assertThat(customerGenerator.makeCustomers(10)).isNotEmpty();
+//        assertThat(receiptGenerator.makeUniqueUnits(200, true, true)).isNotEmpty();
+        assertThat(redTapeGenerator.makeSalesDossiers(30)).isNotEmpty();
+        
+        Dossier dossier = redTapeAgent.findAll(Dossier.class).get(0);
+        assertThat(dossier).isNotNull();
+        
+
     }
 
     @Stateless
