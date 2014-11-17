@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.*;
 
 import javax.ejb.Stateless;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.mail.util.ByteArrayDataSource;
 import javax.persistence.EntityManager;
@@ -56,6 +57,7 @@ import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
+import eu.ggnet.dwoss.mandator.api.service.DocumentService;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.MailDocumentParameter;
 import eu.ggnet.dwoss.mandator.api.value.partial.MandatorMailAttachment;
@@ -65,7 +67,6 @@ import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.entity.Document.Flag;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
 
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
@@ -87,6 +88,9 @@ import static java.awt.Color.*;
  */
 @Stateless
 public class DocumentSupporterOperation implements DocumentSupporter {
+
+    @Inject
+    private Instance<DocumentService> documentService;
 
     /**
      * Contains all Paramters which a Template may support, see also {@link FreeDocumentTemplateParameter}.
@@ -348,8 +352,13 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             reportParameter.put(parameter.name(), mandator.getDocumentIntermix().getFreeTexts(parameter, viewType, document.getType()));
         }
 
-        if ( document.getType() == DocumentType.ORDER ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getOrderText());
-        if ( document.getType() == DocumentType.INVOICE ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getInvoiceText(0));
+        if ( documentService.isAmbiguous() || documentService.isUnsatisfied() ) {
+            //default
+            if ( document.getType() == DocumentType.ORDER ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getOrderText());
+            if ( document.getType() == DocumentType.INVOICE ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getInvoiceText(0));
+        } else {
+            reportParameter.put(PAYMENT_TEXT, documentService.get().paymentInstructionText(document.getType(), dossier.getPaymentMethod()));
+        }
 
         // Depending dates in PERFORMANCE_ON, like a CreditMemo depends on the date of the invoice.
         List<Document> invoices = dossier.getActiveDocuments(DocumentType.INVOICE);
