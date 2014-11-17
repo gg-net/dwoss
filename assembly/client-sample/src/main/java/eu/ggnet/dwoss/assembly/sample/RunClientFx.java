@@ -82,6 +82,7 @@ public class RunClientFx extends Application {
             protected void close() {
                 Lookup.getDefault().lookup(Server.class).shutdown();
                 Platform.exit();
+                System.exit(0);
             }
         };
         EventQueue.invokeLater(() -> {
