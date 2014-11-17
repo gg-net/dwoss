@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.misc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -63,12 +63,17 @@ public class MiscActionFactory implements ActionFactory {
 
         String s = "Listings";
         actions.add(new MetaAction(s, new AllSalesListingAction()));
-
+        
+        
         if ( hasFound(ListingService.class) ) {
-            List<ListingActionConfiguration> actionConfigs = lookup(ListingService.class).listingActionConfigurations();
+            Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = lookup(ListingService.class).listingActionConfigurations().stream()
+                    .collect(Collectors.groupingBy(ListingActionConfiguration::getLocation));
             if ( actionConfigs != null && !actionConfigs.isEmpty() ) {
-                for (ListingActionConfiguration listingActionConfiguration : actionConfigs) {
-                    actions.add(new MetaAction(s, new SalesListingCreateAction(listingActionConfiguration)));
+                for (List<ListingActionConfiguration> listingActionConfigurations : actionConfigs.values()) {
+                    actions.add(new MetaAction(s, null));
+                    for (ListingActionConfiguration listingActionConfiguration : listingActionConfigurations) {
+                        actions.add(new MetaAction(s, new SalesListingCreateAction(listingActionConfiguration)));
+                    }
                 }
             }
         } else {
