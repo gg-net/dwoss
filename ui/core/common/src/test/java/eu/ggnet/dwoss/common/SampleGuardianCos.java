@@ -1,6 +1,5 @@
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
@@ -10,7 +9,7 @@ import eu.ggnet.dwoss.rights.api.Operator;
  *
  * @author oliver.guenther
  */
-public class SampleAccessCos extends AbstractGuardian implements Guardian {
+public class SampleGuardianCos extends AbstractGuardian implements Guardian {
 
     @Override
     public void login(String user, char[] pass) throws AuthenticationException {
@@ -19,7 +18,6 @@ public class SampleAccessCos extends AbstractGuardian implements Guardian {
 
     /**
      *
-     * @param sopoRights the value of sopoRights
      */
     @Override
     protected void setRights(Operator dto) {
