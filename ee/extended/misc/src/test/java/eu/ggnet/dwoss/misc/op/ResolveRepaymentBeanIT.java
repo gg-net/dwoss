@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import javax.naming.NamingException;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.fest.assertions.core.Condition;
 import org.junit.*;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
@@ -55,9 +56,9 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.StockPu;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -66,9 +67,9 @@ import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.AMAZON;
 import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 
 import static org.fest.assertions.api.Assertions.*;
-import static org.junit.Assert.assertTrue;
 
 public class ResolveRepaymentBeanIT {
 
@@ -147,19 +148,27 @@ public class ResolveRepaymentBeanIT {
 
     @Test
     public void testResolve() throws UserInfoException {
-        List<Stock> allStocks = stockGenerator.makeStocksAndLocations(2); // We need two stocks at least.
+        List<Stock> allStocks = stockGenerator.makeStocksAndLocations(2);
         assertThat(allStocks).isNotEmpty().hasSize(2);
         Stock activeStock = allStocks.get(0);
         assertThat(customerGenerator.makeCustomers(10)).isNotEmpty();
         assertThat(receiptGenerator.makeUniqueUnits(200, true, true)).isNotEmpty();
         assertThat(redTapeGenerator.makeSalesDossiers(30)).isNotEmpty();
         TradeName tradeName = ACER;
-
-        List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(4, true, true);
+        assertThat(tradeName).is(new Condition<TradeName>() {
+            @Override
+            public boolean matches(TradeName t) {
+                return t.isManufacturer();
+            }
+        });
+        long customerId = customerGenerator.makeCustomer();
+        List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(1, true, true);
         UniqueUnit uu = uus.get(0);
+        helper.changeContractors(uu.getId(), tradeName);
+        String refurbishId = uu.getIdentifier(REFURBISHED_ID);
 
-        Dossier dos = redTapeWorker.create(repaymentCustomers.get(tradeName).get(), true, "Me");
-        Document doc = dos.getActiveDocuments(DocumentType.BLOCK).get(0);
+        Dossier dos = redTapeWorker.create(customerId, true, "Me");
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0); // order oder direct invoice
 
         //Create Positions
         doc.append(Position.builder()
@@ -173,20 +182,17 @@ public class ResolveRepaymentBeanIT {
                 .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
                 .description(uu.getProduct().getDescription())
                 .bookingAccount(-1)
+                .refurbishedId(refurbishId)
                 .build());
 
         //add units to LogicTransaction
         unitOverseer.lockStockUnit(dos.getId(), uu.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
-
-        doc = redTapeWorker.update(doc, null, "JUnit");
 
         doc.add(Document.Condition.PAID);
         doc.add(Document.Condition.PICKED_UP);
         doc.setType(DocumentType.INVOICE);
 
         doc = redTapeWorker.update(doc, null, "JUnit");
-
-        redTapeCloser.executeManual("JUnitTest");
 
         doc = redTapeAgent.findByIdEager(Document.class, doc.getId());
         doc.setType(ANNULATION_INVOICE);
@@ -204,38 +210,44 @@ public class ResolveRepaymentBeanIT {
         Report report = new Report("Test", tradeName, new Date(), new Date());
         List<ReportLine> reportLines = reportLineEao.findAll();
         List<Storeable> arrayList = new ArrayList<>();
-        for (ReportLine line : reportLines) {
-            if ( line.getDocumentType() == INVOICE ) arrayList.add(line.toStorable());
-        }
+        reportLines.stream().filter((line) -> (line.getDocumentType() == INVOICE)).forEach((line) -> {
+            arrayList.add(line.toStorable());
+        });
         report = reportAgent.store(report, arrayList);
         assertThat(report).isNotNull();
         assertThat(report.getLines()).isNotEmpty();
         List<ReportLine> notReported = report.getLines().stream().filter((l) -> reportLines.contains(l)).collect(Collectors.toList());
 
-        ReportLine lineToUniqueUnit = null;
-        for (ReportLine notReported1 : notReported) {
-            if ( notReported1.getUniqueUnitId() == uu.getId() ) lineToUniqueUnit = notReported1;
-        }
+        ReportLine lineToUniqueUnit = notReported.stream().filter((line) -> line.getUniqueUnitId() == uu.getId()).collect(Collectors.toList()).get(0);
+        assertThat(lineToUniqueUnit).isNotNull();
 
         List<ReportLine> repaymentLines = bean.getRepaymentLines(lineToUniqueUnit.getContractor());
-        assertThat(repaymentLines).isNotEmpty();
-        for (ReportLine repaymentLine : repaymentLines) {
-            assertThat(repaymentLine.getRefurbishId()).isIn(
-                    positions.stream().map((p) -> p.getRefurbishedId()).collect(Collectors.toList()));
-        }
+        ReportLine repaymentLine = repaymentLines.stream().filter((l) -> l.getRefurbishId().equals(refurbishId)).collect(Collectors.toList()).get(0);
 
-        ReportLine repaymentLine = repaymentLines.get(0);
-        bean.resolveUnit(repaymentLine.getRefurbishId(), tradeName, "JUnit");
+        assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNotEmpty();
+        //Resolving of the Unit.
+        bean.resolveUnit(refurbishId, tradeName, "JUnit");
 
         List<Report> reports = reportAgent.findAll(Report.class);
         assertThat(reports).hasSize(2);
         Report repaymentReport = null;
-        if ( reports.get(0).getId() == report.getId() ) repaymentReport = reports.get(1);
-        else repaymentReport = reports.get(0);
+        // Try to get Report with the Name that is generated in a Static method inside the ResolveRepaymentBean.
+        if ( reports.get(0).getName().equals(ResolveRepaymentBean.getReportName(tradeName)) ) repaymentReport = reports.get(0);
+        else repaymentReport = reports.get(1);
+
+        repaymentReport = reportAgent.findByIdEager(Report.class, repaymentReport.getId());
 
         assertThat(repaymentReport.getLines()).hasSize(1);
         assertThat(repaymentLines).contains(repaymentLine);
 
+        List<Dossier> findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
+        assertThat(findDossiersOpenByCustomerIdEager).isNotEmpty();
+        Dossier repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
+        List<Document> activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
+        assertThat(activeDocuments).isNotEmpty();
+        assertThat(activeDocuments.get(0).getPositions(UNIT)).isNotEmpty();
+
+        assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNullOrEmpty();
     }
 
     @Stateless
@@ -259,17 +271,9 @@ public class ResolveRepaymentBeanIT {
             }
         }
 
-        public void changeContractors(Position p, TradeName name) {
-            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, p.getId());
+        public void changeContractors(int uniqueUnitID, TradeName name) {
+            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, uniqueUnitID);
             uu.setContractor(name);
-            System.out.println("-.-.-.-.-.-.---." + p.getUniqueUnitId());
-        }
-
-        public void printUUInfo(int id) {
-
-            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, id);
-            System.out.println(uu);
-
         }
     }
 }

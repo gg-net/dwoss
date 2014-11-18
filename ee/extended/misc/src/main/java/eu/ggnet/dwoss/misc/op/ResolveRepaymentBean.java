@@ -97,7 +97,6 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
 
         List<ReportLine> repaymentLines = getRepaymentLines(contractor);
-        System.out.println(repaymentLines.size());
         ReportLine line = null;
 
         List<Long> repaymentIds = repaymentLines.stream().map((l) -> l.getId()).collect(Collectors.toList());
@@ -119,20 +118,31 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         Dossier dossier = redTapeAgent.findById(Dossier.class, dossierId);
 
         if ( repaymentCustomers.get(contractor) == null || !repaymentCustomers.get(contractor).isPresent()
-                || repaymentCustomers.get(contractor).get() == dossier.getCustomerId() )
+                || !repaymentCustomers.get(contractor).get().equals(dossier.getCustomerId()) ) {
             throw new UserInfoException("Unit is nicht auf einem Auftrag eines Repayment Customers. DossierId:" + dossier.getId());
+        }
 
         List<StockTransaction> stockTransactions = new ArrayList<>();
         StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolved Repayment");
         st.addUnit(stockUnit);
+        stockTransactions.add(st);
         history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
-        if ( !stockTransactions.isEmpty() ) stEmo.completeRollOut(arranger, stockTransactions);
+        stEmo.completeRollOut(arranger, stockTransactions);
 
-        Report report = reportAgent.findOrCreateReport(contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear),
+        Report report = reportAgent.findOrCreateReport(getReportName(contractor),
                 contractor, startThisYear, endhisYear);
         report.add(line);
-        reportLineEao.getEntityManager().merge(report);
 
+    }
+
+    /**
+     * This Returns the Name of a Report,based on contractor and year.
+     * <p>
+     * @param contractor
+     * @return
+     */
+    public static String getReportName(TradeName contractor) {
+        return contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear);
     }
 
 }
