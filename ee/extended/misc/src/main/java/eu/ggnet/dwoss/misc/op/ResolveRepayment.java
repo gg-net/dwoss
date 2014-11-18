@@ -35,6 +35,6 @@ public interface ResolveRepayment {
 
     List<ReportLine> getRepaymentLines(TradeName contractor);
 
-    void resolveUnit(String identifier, TradeName contractor, String arranger) throws UserInfoException;
+    void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException;
 
 }

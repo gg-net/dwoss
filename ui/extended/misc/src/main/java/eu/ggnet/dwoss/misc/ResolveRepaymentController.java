@@ -55,6 +55,9 @@ public class ResolveRepaymentController implements Initializable {
     @FXML
     private TextField sopoField;
 
+    @FXML
+    private TextArea commentField;
+
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
     private TradeName contractor;
@@ -127,7 +130,7 @@ public class ResolveRepaymentController implements Initializable {
         }
         new Thread(() -> {
             try {
-                lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername());
+                lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
                 JOptionPane.showMessageDialog(null, "Repayment Resolved");
             } catch (UserInfoException ex) {
                 EventQueue.invokeLater(() -> ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex));

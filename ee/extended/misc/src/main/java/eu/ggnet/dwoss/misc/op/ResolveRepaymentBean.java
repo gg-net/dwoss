@@ -92,7 +92,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     }
 
     @Override
-    public void resolveUnit(String identifier, TradeName contractor, String arranger) throws UserInfoException {
+    public void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
         //search with refurbishid and serial number.
         List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
 
@@ -131,6 +131,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
 
         Report report = reportAgent.findOrCreateReport(getReportName(contractor),
                 contractor, startThisYear, endhisYear);
+        line.setComment(comment);
         report.add(line);
 
     }

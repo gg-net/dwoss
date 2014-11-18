@@ -226,7 +226,7 @@ public class ResolveRepaymentBeanIT {
 
         assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNotEmpty();
         //Resolving of the Unit.
-        bean.resolveUnit(refurbishId, tradeName, "JUnit");
+        bean.resolveUnit(refurbishId, tradeName, "JUnit", "JUnit");
 
         List<Report> reports = reportAgent.findAll(Report.class);
         assertThat(reports).hasSize(2);

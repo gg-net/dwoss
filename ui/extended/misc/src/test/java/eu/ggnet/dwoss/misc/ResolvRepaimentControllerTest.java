@@ -56,7 +56,7 @@ public class ResolvRepaimentControllerTest {
             }
 
             @Override
-            public void resolveUnit(String identifier, TradeName contractor, String arranger) throws UserInfoException {
+            public void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
             }
         });
         new JFXPanel(); // Implizit start of JavaFx.

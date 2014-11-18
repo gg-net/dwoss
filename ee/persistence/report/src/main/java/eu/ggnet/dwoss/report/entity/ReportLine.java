@@ -534,6 +534,14 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Transient
     private transient BooleanProperty addedToReportProperty;
 
+    @Getter
+    @Setter
+    @Column(length = 65536)
+    @Lob
+    @UiLarge
+    private String comment;
+    
+    
     @Builder
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ReportLine(String name, String description, long dossierId, String dossierIdentifier, long documentId, String documentIdentifier,
