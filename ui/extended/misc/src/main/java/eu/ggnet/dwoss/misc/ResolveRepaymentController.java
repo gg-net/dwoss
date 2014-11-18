@@ -32,13 +32,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.dwoss.common.AbstractAccessCos;
 import eu.ggnet.dwoss.common.ExceptionUtil;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -127,7 +127,7 @@ public class ResolveRepaymentController implements Initializable {
         }
         new Thread(() -> {
             try {
-                lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(AbstractAccessCos.class).getUsername());
+                lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername());
                 JOptionPane.showMessageDialog(null, "Repayment Resolved");
             } catch (UserInfoException ex) {
                 EventQueue.invokeLater(() -> ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex));
