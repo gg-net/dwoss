@@ -25,9 +25,13 @@ import lombok.Data;
 public class MovementSubline {
 
     private final int amount;
+
     private final String description;
+
     private final String refurbishId;
+
     private final String stock;
+
     private final boolean wrappedToShip;
 
 }

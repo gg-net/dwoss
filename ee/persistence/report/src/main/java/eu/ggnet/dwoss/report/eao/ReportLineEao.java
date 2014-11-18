@@ -35,7 +35,6 @@ import org.slf4j.*;
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 
-
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
@@ -45,6 +44,9 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.report.entity.QReportLine.reportLine;
+import static eu.ggnet.dwoss.report.entity.partial.QSimpleReportLine.simpleReportLine;
+import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
 
 /**
  * Entity Access Object for ReportLine.
@@ -445,6 +447,17 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                 .setParameter(2, positionType)
                 .setParameter(3, dossierId)
                 .getResultList();
+    }
+
+    /**
+     * This method search for a single Report line which is identify by Serial or Refurbish id.
+     * <p>
+     * @param key Serial or Refurbish id.
+     * @return return a found ReportLine.
+     */
+    public List<SimpleReportLine> findReportLinesByIdentifiers(String key) {
+        return new JPAQuery(em).from(simpleReportLine)
+                .where(simpleReportLine.refurbishId.eq(key).or(simpleReportLine.serial.eq(key))).list(simpleReportLine);
     }
 
     private NavigableMap<Date, Revenue> prepare(Date start, Date end, Step step) {

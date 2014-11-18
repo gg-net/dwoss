@@ -32,7 +32,8 @@ import eu.ggnet.dwoss.util.UserInfoException;
 public interface SalesChannelHandler {
 
     /**
-     * Returns all units, which are in a stock. Units which are on a transaction, are not displayed.
+     * Returns all units, which are in a stock. Units which are on a
+     * transaction, are not displayed.
      * <p/>
      * @return all units, which are in a stock
      */

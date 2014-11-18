@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.util.HtmlDialog;
  * @author bastian.venz
  */
 public class AboutDialog extends JDialog {
-    
+
     static final URL LOGO_IMAGE = AboutDialog.class.getResource("about.png");
 
     /** Creates new form AboutDialog */

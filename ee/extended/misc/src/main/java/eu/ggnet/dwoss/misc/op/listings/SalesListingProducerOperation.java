@@ -116,11 +116,11 @@ public class SalesListingProducerOperation implements SalesListingProducer {
     private final static CFormat EURO = new CFormat(CFormat.Representation.CURRENCY_EURO);
 
     @Inject
-    private ImageFinder imageFinder;
-
-    @Inject
     @Stocks
     private EntityManager stockEm;
+
+    @Inject
+    private ImageFinder imageFinder;
 
     @Inject
     @UniqueUnits

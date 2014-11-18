@@ -282,5 +282,17 @@ public interface ReportAgent extends RemoteAgent {
      * @return the discovered and attached ReportLines.
      */
     public Set<ReportLine> attachDanglingComplaints(TradeName type, Date till);
+    
+    /**
+     * This method search a Report where all parameters are equal to one in the Database, if no is existing in the database a new one will be created and
+     * returned.
+     * <p>
+     * @param name       is the name of the Report
+     * @param contractor is the contractor of the Report as {@link TradeName}.
+     * @param starting   is the Date where the report is starting
+     * @param end        is the Date where the report is ending.
+     * @return the founded or the new created Report.
+     */
+     public Report findOrCreateReport(String name, TradeName contractor, Date starting, Date end);
 
 }

@@ -192,8 +192,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Unused, can be reassigned.
      */
-    @Deprecated
-    UNUSED_5("Unused 5, Kann umbenannt und neu verwendet werden."),
+    RESOLVE_REPAYMENT("Gutschriften/Stornorechnung auflösen"),
     /**
      * Allows to create a UniqueUnitHistory that is only a comment.
      */

@@ -18,7 +18,7 @@
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
-<RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+                <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
                 <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
@@ -75,27 +75,27 @@
                         <Insets left="15.0" right="15.0" top="5.0" />
                     </GridPane.margin>
                 </ListView>
-                        <Button fx:id="setPasswordButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onSetPassword" text="Neues Passwort Setzen" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.rowSpan="1">
-                            <FlowPane.margin>
-                                <Insets left="5.0" />
-                            </FlowPane.margin>
-                        </Button>
-                        <PasswordField fx:id="newPasswordField" alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="4" GridPane.rowSpan="1">
-                            <FlowPane.margin>
-                                <Insets left="15.0" right="15.0" />
-                            </FlowPane.margin>
-<GridPane.margin>
-<Insets left="15.0" />
-</GridPane.margin>
-                        </PasswordField>
-                        <Label fx:id="passwordLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="3" GridPane.rowSpan="1">
-                            <GridPane.margin>
-                                <Insets left="15.0" />
-                            </GridPane.margin>
-                            <FlowPane.margin>
-                                <Insets left="15.0" />
-                            </FlowPane.margin>
-                        </Label>
+                <Button fx:id="setPasswordButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onSetPassword" text="Neues Passwort Setzen" GridPane.columnIndex="0" GridPane.columnSpan="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.rowSpan="1">
+                    <FlowPane.margin>
+                        <Insets left="5.0" />
+                    </FlowPane.margin>
+                </Button>
+                <PasswordField fx:id="newPasswordField" alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="4" GridPane.rowSpan="1">
+                    <FlowPane.margin>
+                        <Insets left="15.0" right="15.0" />
+                    </FlowPane.margin>
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                </PasswordField>
+                <Label fx:id="passwordLabel" text="Label" GridPane.columnIndex="1" GridPane.columnSpan="1" GridPane.rowIndex="3" GridPane.rowSpan="1">
+                    <GridPane.margin>
+                        <Insets left="15.0" />
+                    </GridPane.margin>
+                    <FlowPane.margin>
+                        <Insets left="15.0" />
+                    </FlowPane.margin>
+                </Label>
             </children>
         </GridPane>
     </children>

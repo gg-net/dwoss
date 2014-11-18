@@ -151,7 +151,7 @@ public class OperatorManagmentController implements Initializable {
             throw new RuntimeException();
         }
     }
-    
+
     public static URL loadFxml() {
         return OperatorManagmentController.class.getResource("OperatorManagmentView.fxml");
     }

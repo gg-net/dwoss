@@ -37,7 +37,10 @@ import java.util.*;
 
 import javax.enterprise.inject.Produces;
 
+import org.apache.commons.io.FileUtils;
+
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
+import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.rules.TradeName.*;
 
@@ -107,6 +110,9 @@ public class Sample {
 
     @Produces
     public final static FinancialAccounting FINANCIAL_ACCOUNTING = new FinancialAccounting(99999, false);
+
+    @Produces
+    public final static ImageFinder IMAGE_FINDER = new ImageFinder(FileUtils.getTempDirectoryPath());
 
     static URL loadMailDocument() {
         return Sample.class.getResource("mailDocument.txt");
