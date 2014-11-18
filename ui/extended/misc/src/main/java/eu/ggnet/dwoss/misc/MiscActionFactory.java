@@ -63,8 +63,7 @@ public class MiscActionFactory implements ActionFactory {
 
         String s = "Listings";
         actions.add(new MetaAction(s, new AllSalesListingAction()));
-        
-        
+
         if ( hasFound(ListingService.class) ) {
             Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = lookup(ListingService.class).listingActionConfigurations().stream()
                     .collect(Collectors.groupingBy(ListingActionConfiguration::getLocation));
@@ -97,6 +96,7 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Artikelstamm", "Bilder Ids", new ImportImageIdsAction()));
         actions.add(new MetaAction("Geschäftsführung", "Allgemeine Reporte", new UnitQualityReportAction()));
         actions.add(new MetaAction("Geschäftsführung", new OpenSalesChannelManagerAction()));
+        actions.add(new MetaAction("Geschäftsführung", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));
         actions.add(new MetaAction("Hilfe", new ShowMandatorAction()));
         actions.add(new MetaAction("Hilfe", new JndiTreeInspectAction()));
