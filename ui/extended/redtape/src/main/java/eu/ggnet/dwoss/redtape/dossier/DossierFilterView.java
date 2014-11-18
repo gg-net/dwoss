@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.dossier;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -92,6 +93,15 @@ public class DossierFilterView extends javax.swing.JFrame {
             directivNames.put(directive.getName(), directive);
         }
         directiveFilter = new ComboBoxController<>(directiveComboBox, directivNames.keySet());
+        directiveComboBox.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                setToolTipText(value.toString());
+                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
 
         for (DocumentType type : DocumentType.values()) {
             documentTypeNames.put(type.getName(), type);

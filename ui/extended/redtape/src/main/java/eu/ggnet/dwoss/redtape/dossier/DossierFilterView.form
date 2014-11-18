@@ -68,7 +68,6 @@
                   <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.SoftBevelBorderInfo">
                     <BevelBorder/>
                   </Border>
-                  <Color PropertyName="color" blue="0" green="0" id="black" palette="1" red="0" type="palette"/>
                 </TitledBorder>
               </Border>
             </Property>

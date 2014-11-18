@@ -25,14 +25,11 @@ import lombok.Data;
  * @author oliver.guenther
  */
 @Data
-public class StackedLineUnit implements IStackedLineUnit, Comparable<IStackedLineUnit> {
+public class StackedLineUnit implements Comparable<StackedLineUnit> {
 
     private String warranty;
 
     private String refurbishedId;
-
-    // remove, unused
-    private double retailerPrice;
 
     private double customerPrice;
 
@@ -47,11 +44,11 @@ public class StackedLineUnit implements IStackedLineUnit, Comparable<IStackedLin
     private Date mfgDate;
 
     private String serial;
-
+    
     private Date warrentyTill;
 
     @Override
-    public int compareTo(IStackedLineUnit other) {
+    public int compareTo(StackedLineUnit other) {
         if ( other == null ) return 1;
         if ( !this.getConditionLevelDescription().equals(other.getConditionLevelDescription()) )
             return this.getConditionLevelDescription().compareTo(other.getConditionLevelDescription());

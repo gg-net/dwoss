@@ -31,7 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.assembly.remote.cos.ServerConnCosRemote;
+import eu.ggnet.dwoss.assembly.remote.provides.RemoteServer;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
 
@@ -149,7 +149,7 @@ public class RunClientFx extends Application {
             return;
         }
         // Setting the URL for Remote Connections.
-        ServerConnCosRemote.URL = url;
+        RemoteServer.URL = url;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

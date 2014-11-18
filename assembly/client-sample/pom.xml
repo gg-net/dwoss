@@ -19,12 +19,11 @@
                 <configuration>
                     <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
                     <jfxMainAppJarName>client.jar</jfxMainAppJarName>
-                    <identifier>${project.build.finalName}</identifier>
-                    <nativeReleaseVersion>${project.version}</nativeReleaseVersion>
-                    <vendor>GG-Net GmbH</vendor>
-                    <needMenu>true</needMenu>     
+                    <!--<identifier>${project.build.finalName}</identifier>-->
+                    <!--<nativeReleaseVersion>${project.version}</nativeReleaseVersion>-->
+                    <!--<needMenu>true</needMenu>-->     
                     <!--<preLoader>de.dw.javafx.DwPreloader</preLoader>  // Preloader nur in remote-->
-                    <allPermissions>true</allPermissions>
+                    <!--<allPermissions>true</allPermissions>-->
                 </configuration>
                 <executions>
                     <execution>

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  *
  * @author oliver.guenther
  */
-public class AccessCosTest {
+public class GuardianTest {
 
     private static class TestListener implements UserChangeListener {
 
@@ -34,7 +34,7 @@ public class AccessCosTest {
 
     @Test
     public void testAuthentication() {
-        SampleAccessCos access = new SampleAccessCos();
+        SampleGuardianCos access = new SampleGuardianCos();
         Operator operator = new Operator("test1", 1, Arrays.asList(AtomicRight.values()));
         TestListener listener = new TestListener();
         access.addUserChangeListener(listener);
@@ -64,6 +64,16 @@ public class AccessCosTest {
         assertFalse("Successfull authenticated, but ad2 is removed, should be disabled", ad2.isEnabled());
 
         assertEquals("User should be equal", operator.getUsername(), listener.lastUser);
+    }
+    
+    @Test
+    public void testHasRight() {
+        SampleGuardianCos access = new SampleGuardianCos();
+        Operator operator = new Operator("test1", 1, Arrays.asList(AtomicRight.CREATE_ANNULATION_INVOICE));
+        
+        access.setRights(operator);
+        
+        assertTrue("Right is not present.", access.hasRight(AtomicRight.CREATE_ANNULATION_INVOICE));
     }
 
 }
