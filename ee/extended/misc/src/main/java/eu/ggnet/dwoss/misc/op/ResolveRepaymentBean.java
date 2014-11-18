@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -27,7 +28,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.event.UnitHistory;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
@@ -76,7 +76,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
     @Inject
     private ReportAgent reportAgent;
 
-    @Inject
+    @EJB
     private RedTapeAgent redTapeAgent;
 
     @Inject

@@ -17,7 +17,9 @@
 package eu.ggnet.dwoss.misc.op;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
@@ -26,22 +28,47 @@ import javax.naming.NamingException;
 import org.apache.commons.lang.time.DateUtils;
 import org.junit.*;
 
+import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.customer.assist.CustomerPu;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.assist.RedTapePu;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
+import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
+import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.assist.ReportPu;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
+import eu.ggnet.dwoss.rules.*;
 
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.rules.DocumentType.*;
+
+import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.assist.StockPu;
+import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
+import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.UserInfoException;
+
+import static eu.ggnet.dwoss.rules.PositionType.UNIT;
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.AMAZON;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
 
 import static org.fest.assertions.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
 public class ResolveRepaymentBeanIT {
 
@@ -56,19 +83,48 @@ public class ResolveRepaymentBeanIT {
     @Inject
     private CustomerGeneratorOperation customerGenerator;
 
-//    @Inject
-//    private ReceiptGeneratorOperation receiptGenerator;
+    @Inject
+    private ReceiptGeneratorOperation receiptGenerator;
 
     @Inject
     private RedTapeGeneratorOperation redTapeGenerator;
 
     @Inject
+    private StockGeneratorOperation stockGenerator;
+
+    @Inject
+    private ReportLineEao reportLineEao;
+
+    @Inject
+    private ReportAgent reportAgent;
+
+    @EJB
     private RedTapeAgent redTapeAgent;
+
+    @EJB
+    private RedTapeWorker redTapeWorker;
+
+    @EJB
+    private RedTapeCloser redTapeCloser;
+
+    @Inject
+    private RepaymentCustomers repaymentCustomers;
+
+    @EJB
+    private UnitOverseer unitOverseer;
+
+    @EJB
+    private StockAgent stockAgent;
 
     @Before
     public void setUp() throws NamingException {
         Map<String, Object> c = new HashMap<>();
         c.putAll(ReportPu.CMP_IN_MEMORY);
+        c.putAll(RedTapePu.CMP_IN_MEMORY);
+        c.putAll(StockPu.CMP_IN_MEMORY);
+        c.putAll(CustomerPu.CMP_IN_MEMORY);
+        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
+        c.putAll(SpecPu.CMP_IN_MEMORY);
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
         c.putAll(SystemConfig.OPENEJB_LOG_WARN);
         container = EJBContainer.createEJBContainer(c);
@@ -90,14 +146,95 @@ public class ResolveRepaymentBeanIT {
     }
 
     @Test
-    public void testResolve() {
+    public void testResolve() throws UserInfoException {
+        List<Stock> allStocks = stockGenerator.makeStocksAndLocations(2); // We need two stocks at least.
+        assertThat(allStocks).isNotEmpty().hasSize(2);
+        Stock activeStock = allStocks.get(0);
         assertThat(customerGenerator.makeCustomers(10)).isNotEmpty();
-//        assertThat(receiptGenerator.makeUniqueUnits(200, true, true)).isNotEmpty();
+        assertThat(receiptGenerator.makeUniqueUnits(200, true, true)).isNotEmpty();
         assertThat(redTapeGenerator.makeSalesDossiers(30)).isNotEmpty();
-        
-        Dossier dossier = redTapeAgent.findAll(Dossier.class).get(0);
-        assertThat(dossier).isNotNull();
-        
+        TradeName tradeName = ACER;
+
+        List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(4, true, true);
+        UniqueUnit uu = uus.get(0);
+
+        Dossier dos = redTapeWorker.create(repaymentCustomers.get(tradeName).get(), true, "Me");
+        Document doc = dos.getActiveDocuments(DocumentType.BLOCK).get(0);
+
+        //Create Positions
+        doc.append(Position.builder()
+                .type(UNIT)
+                .amount(1)
+                .uniqueUnitId(uu.getId())
+                .uniqueUnitProductId(uu.getProduct().getId())
+                .price(uu.getPrice(CUSTOMER))
+                .tax(GlobalConfig.TAX)
+                .afterTaxPrice(MathUtil.roundedApply(uu.getPrice(CUSTOMER), GlobalConfig.TAX, 0.))
+                .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
+                .description(uu.getProduct().getDescription())
+                .bookingAccount(-1)
+                .build());
+
+        //add units to LogicTransaction
+        unitOverseer.lockStockUnit(dos.getId(), uu.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
+
+        doc = redTapeWorker.update(doc, null, "JUnit");
+
+        doc.add(Document.Condition.PAID);
+        doc.add(Document.Condition.PICKED_UP);
+        doc.setType(DocumentType.INVOICE);
+
+        doc = redTapeWorker.update(doc, null, "JUnit");
+
+        redTapeCloser.executeManual("JUnitTest");
+
+        doc = redTapeAgent.findByIdEager(Document.class, doc.getId());
+        doc.setType(ANNULATION_INVOICE);
+        ArrayList<Position> positions = new ArrayList<>();
+        for (Position value : doc.getPositions().values()) {
+            if ( value.getType() == UNIT ) positions.add(value);
+            value.setPrice(value.getPrice() * -1);
+            value.setAfterTaxPrice(value.getAfterTaxPrice() * -1);
+
+        }
+        doc = redTapeWorker.update(doc, activeStock.getId(), "JUnit Test");
+
+        redTapeCloser.executeManual("JUnitTest");
+
+        Report report = new Report("Test", tradeName, new Date(), new Date());
+        List<ReportLine> reportLines = reportLineEao.findAll();
+        List<Storeable> arrayList = new ArrayList<>();
+        for (ReportLine line : reportLines) {
+            if ( line.getDocumentType() == INVOICE ) arrayList.add(line.toStorable());
+        }
+        report = reportAgent.store(report, arrayList);
+        assertThat(report).isNotNull();
+        assertThat(report.getLines()).isNotEmpty();
+        List<ReportLine> notReported = report.getLines().stream().filter((l) -> reportLines.contains(l)).collect(Collectors.toList());
+
+        ReportLine lineToUniqueUnit = null;
+        for (ReportLine notReported1 : notReported) {
+            if ( notReported1.getUniqueUnitId() == uu.getId() ) lineToUniqueUnit = notReported1;
+        }
+
+        List<ReportLine> repaymentLines = bean.getRepaymentLines(lineToUniqueUnit.getContractor());
+        assertThat(repaymentLines).isNotEmpty();
+        for (ReportLine repaymentLine : repaymentLines) {
+            assertThat(repaymentLine.getRefurbishId()).isIn(
+                    positions.stream().map((p) -> p.getRefurbishedId()).collect(Collectors.toList()));
+        }
+
+        ReportLine repaymentLine = repaymentLines.get(0);
+        bean.resolveUnit(repaymentLine.getRefurbishId(), tradeName, "JUnit");
+
+        List<Report> reports = reportAgent.findAll(Report.class);
+        assertThat(reports).hasSize(2);
+        Report repaymentReport = null;
+        if ( reports.get(0).getId() == report.getId() ) repaymentReport = reports.get(1);
+        else repaymentReport = reports.get(0);
+
+        assertThat(repaymentReport.getLines()).hasSize(1);
+        assertThat(repaymentLines).contains(repaymentLine);
 
     }
 
@@ -110,6 +247,9 @@ public class ResolveRepaymentBeanIT {
         @Inject
         ReportLineEao eao;
 
+        @Inject
+        private UniqueUnitAgent uniqueUnitAgent;
+
         public void generateLines(int amount) {
             for (int i = 0; i < amount; i++) {
                 ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(AMAZON), DateUtils.addDays(new Date(), 10), 25);
@@ -117,6 +257,18 @@ public class ResolveRepaymentBeanIT {
                 makeReportLine.setDocumentType(ANNULATION_INVOICE);
                 eao.getEntityManager().persist(makeReportLine);
             }
+        }
+
+        public void changeContractors(Position p, TradeName name) {
+            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, p.getId());
+            uu.setContractor(name);
+            System.out.println("-.-.-.-.-.-.---." + p.getUniqueUnitId());
+        }
+
+        public void printUUInfo(int id) {
+
+            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, id);
+            System.out.println(uu);
 
         }
     }

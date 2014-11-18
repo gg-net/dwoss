@@ -38,7 +38,6 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 
-
 import eu.ggnet.statemachine.StateTransition;
 
 import eu.ggnet.dwoss.stock.StockAgent;
@@ -54,32 +53,34 @@ import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
 
 import static eu.ggnet.dwoss.rules.CustomerFlag.SYSTEM_CUSTOMER;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.util.stream.Collectors.toList;
 
 /**
  *
- * @author oliver.guenther
+ * @aimport static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+ * uthor oliver.guenther
  */
 @Stateless
 public class RedTapeGeneratorOperation {
-
+    
     private final static Random R = new Random();
-
+    
     @EJB
     private RedTapeWorker redTapeWorker;
-
+    
     @EJB
     private UniqueUnitAgent uniqueUnitAgent;
-
+    
     @EJB
     private StockAgent stockAgent;
-
+    
     @Inject
     private MonitorFactory monitorFactory;
-
+    
     @Inject
     private CustomerService customerService;
-
+    
     @Inject
     private PostLedger postLedger;
 
@@ -94,14 +95,14 @@ public class RedTapeGeneratorOperation {
         SubMonitor m = monitorFactory.newSubMonitor("Erzeuge " + amount + " Dossiers", amount);
         m.start();
         if ( amount < 1 ) return Collections.EMPTY_LIST;
-
+        
         List<CustomerMetaData> customers = customerService.allAsCustomerMetaData()
                 .stream().filter(c -> !c.getFlags().contains(SYSTEM_CUSTOMER)).collect(toList());
         if ( customers.isEmpty() ) throw new RuntimeException("No Customers found, obviously there are non in the database");
-
+        
         List<UniqueUnit> freeUniqueUnits = uniqueUnitAgent.findAllEager(UniqueUnit.class);
         List<Product> products = uniqueUnitAgent.findAllEager(Product.class);
-
+        
         List<Dossier> dossiers = new ArrayList<>();
         for (int i = 0; i <= amount; i++) {
             CustomerMetaData customer = customers.get(R.nextInt(customers.size()));
@@ -134,6 +135,7 @@ public class RedTapeGeneratorOperation {
                             .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
                             .name(UniqueUnitFormater.toPositionName(uu))
                             .bookingAccount(-1)
+                            .refurbishedId(uu.getIdentifier(REFURBISHED_ID))
                             .build();
                     doc.append(pos);
                     continue;
@@ -185,7 +187,7 @@ public class RedTapeGeneratorOperation {
                         break;
                 }
             }
-
+            
             if ( dos.isDispatch() ) { // add the shipping costs.
                 double price = (R.nextInt(10) + 1) * 10;
                 doc.append(Position.builder()
@@ -202,7 +204,7 @@ public class RedTapeGeneratorOperation {
             // Break, if what we build is wrong.
             ValidationUtil.validate(doc);
             doc = redTapeWorker.update(doc, null, "JUnit");
-
+            
             for (int j = 0; j <= R.nextInt(4); j++) {
                 CustomerDocument cd = new CustomerDocument(customer.getFlags(), doc, customer.getShippingCondition(), customer.getPaymentMethod());
                 List<StateTransition<CustomerDocument>> transitions = redTapeWorker.getPossibleTransitions(cd);
