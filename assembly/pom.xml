@@ -74,7 +74,7 @@
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-mandator-elus</artifactId>
-                    <version>${project.version}</version>
+                    <version>${dw.version}</version>
                 </dependency>
             </dependencies>
         </profile>

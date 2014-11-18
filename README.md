@@ -5,6 +5,9 @@ Deutsche Warenwirtschaft Open Source
 Dies ist die Open Source Version der Deutschen Warenwirtschaft der Firma [GG-Net GmbH](http://gg-net.de).
 Die Software steht unter der GNU General Public License v3. Copyright [GG-Net GmbH](http://gg-net.de) - Oliver Günther.
 
+Einleitung
+----------
+
 Es handelt sich bei dieser Software um eine interne Entwicklung der [GG-Net GmbH](http://gg-net.de) zur Abbildung der
 Geschäftsprozesse des IT-Gebrauchtwarenhandels. Die Software befindet sich im täglichen Einsatz und wird aktiv weiter entwickelt. Dabei hat Sie mehrere Schwerpunkte:
 
@@ -50,6 +53,14 @@ mvn jfx:run -Pserver-sample,client-sample
 ```
 Nach kurz Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit
 autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
+
+Projekt Resourcen
+-----------------
+
+- Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
+- Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
+- Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
+- Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
 
 English version
 ===============

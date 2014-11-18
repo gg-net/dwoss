@@ -231,7 +231,7 @@ public class Display implements Serializable {
         _12_1(12.1, WSXGA),
         _37(37, WUXGA),
         _42(42, WUXGA),
-        _7(7, WSVGA),
+        _7(7, WXGA),
         _23_6(23.6, FULL_HD),
         _20(20, UXGA),
         _8(8, WXGA),
