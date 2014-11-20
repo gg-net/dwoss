@@ -1,37 +1,37 @@
 Deutsche Warenwirtschaft Open Source
 ====================================
 
-Most of the Development and User Documentation starts here. We are trying to put all information into 
+Most of the Development and User Documentation starts here. We are trying to put all information into
 the java code as javadoc or referencing html files.
 
 Overview
 --------
 
 The software is a classic client server application. The server part is based on the Java EE 6 Specs and uses multiple
-data sources. The client is a fat Swing Client, which is constantly merged to JavaFX. The connection is made through 
+data sources. The client is a fat Swing Client, which is constantly merged to JavaFX. The connection is made through
 classic remote interfaces.
 
 The application has two working modes. Either the server part (dwoss-server) is deployed in an EE 6 Server including
 the full hibernate persistence layer and the client connects via jndi naming and remote interfaces.
-Or both components are run together on the client with a embedded EE 6 Server. 
+Or both components are run together on the client with a embedded EE 6 Server.
 The typical deployment is the [Tomee Server](http://tomee.apache.org).
 
 Architecture
 ------------
 
-In the core the application has a simple layer model. 
+In the core the application has a simple layer model.
 
 1. Library
 2. EE (for the Server), UI (for the Client)
 	1. Core
 		- Non Persistence Projects
-	2. Persistence 
+	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
 		- Only one data source per project.
-	2. Extended 
+	2. Extended
 		- Projects that use more than one persistence source
 
-There are also some more rules to consider, which we were not yet able to represent. 
+There are also some more rules to consider, which we were not yet able to represent.
 See [DWOSS-27](http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS-27) for more details.
 
 ### Default Naming ###
@@ -52,7 +52,7 @@ See [DWOSS-27](http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS-27) for mo
    so it's recommended that the developer watches out for this also.
 
 #### Typical Packages, Classes and Methods with their Nature ####
- 
+
 Here are typical names of packages, classes and method, which imply some nature. Most of these are not self invented
 but seen in other projects and reused.
 
@@ -76,7 +76,7 @@ but seen in other projects and reused.
 #### Local and Remote Service Names ####
 
 The main communication protocol between client and server are the Java EE Remote Service interfaces. A service, which is
-intended for remote usage has always a remote interface which name represents its intention alone. 
+intended for remote usage has always a remote interface which name represents its intention alone.
 
 _e.g._ UnitOverviewer, WorkflowManager, ReportExporter.
 
@@ -103,4 +103,5 @@ Things we know, but haven't written down yet.
  - Choice of multiple data sources
  - JDBC Exception on MySQL DBs but not on HSQLDBs
  - toString, xxxFormater and getName
+ - Sample Client Zip with launch4j and win32 jre8
 

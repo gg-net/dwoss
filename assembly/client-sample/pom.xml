@@ -10,20 +10,22 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-client-sample</artifactId>
     <name>DwOss • Assembly • Sample Client</name>
-    
+
+    <properties>
+        <main.class>eu.ggnet.dwoss.assembly.sample.RunClientFx</main.class>
+        <!-- Yes we know this is a worst case solution, but we only use it in the bamboo build. -->
+        <jre8.wind32>/usr/local/jre8_u25.win32</jre8.wind32> <!-- used in the dep.xml -->
+    </properties>
+
     <build>
+        <finalName>sample-client</finalName>
         <plugins>
+            <!-- Called via install lifecycle -->
             <plugin>
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
-                    <jfxMainAppJarName>client.jar</jfxMainAppJarName>
-                    <!--<identifier>${project.build.finalName}</identifier>-->
-                    <!--<nativeReleaseVersion>${project.version}</nativeReleaseVersion>-->
-                    <!--<needMenu>true</needMenu>-->     
-                    <!--<preLoader>de.dw.javafx.DwPreloader</preLoader>  // Preloader nur in remote-->
-                    <!--<allPermissions>true</allPermissions>-->
+                    <mainClass>${main.class}</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -35,15 +37,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Called via install lifecycle -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <finalName>client</finalName>
+                    <!--<finalName>client</finalName>-->
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
+                            <mainClass>${main.class}</mainClass>
                         </manifest>
                         <manifestEntries>
                             <SplashScreen-Image>splash.png</SplashScreen-Image>
@@ -51,36 +54,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.1</version>
-                <executions>
-                    <execution>
-                        <id>l4j-clui</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <jar>${project.build.directory}/client.jar</jar>
-                            <outfile>${project.build.directory}/client.exe</outfile>
-                            <chdir>.</chdir>
-                            <priority>normal</priority>
-                            <downloadUrl>http://java.com/download</downloadUrl>
-                            <supportUrl></supportUrl>
-                            <stayAlive>false</stayAlive>
-                            <restartOnCrash>false</restartOnCrash>
-                            <jre>
-                                <!--<path>C:\Program Files\Java\jre1.8.0_25</path>-->
-                                <minVersion>1.8.0</minVersion>
-                            </jre>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- Called via install lifecycle -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -97,6 +71,52 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Only used in the bamboo build. copyies windows jre into runtime -->
+            <!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <configuration>
+                    <target name="copy windows jre32 to target">
+                        <copy todir="${project.build.directory}\runtime">
+                            <fileset dir="${jre8.wind32}">
+                                <include name="**/*.*"/>
+                            </fileset>
+                        </copy>
+                    </target>
+                </configuration>
+            </plugin>-->
+            <!-- Only used in the bamboo build. Make sure the jre is in runtime -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.1</version>
+                <configuration>
+                    <dontWrapJar>false</dontWrapJar>
+                    <headerType>gui</headerType>
+                    <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                    <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
+                    <chdir>.</chdir>
+                    <priority>normal</priority>
+                    <downloadUrl>http://java.com/download</downloadUrl>
+                    <supportUrl></supportUrl>
+                    <stayAlive>false</stayAlive>
+                    <restartOnCrash>false</restartOnCrash>
+                    <jre>
+                        <path>runtime</path> <!-- If the ant copy fails, thie exec will not work. For testing remove this -->
+                        <minVersion>1.8.0</minVersion>
+                    </jre>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/dep.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -109,14 +129,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>eu.ggnet.dwoss.assembly.sample.RunClientFx</mainClass>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <descriptor>src/assembly/dep.xml</descriptor>
+                    <mainClass>${main.class}</mainClass>
                 </configuration>
             </plugin>
         </plugins>
