@@ -36,10 +36,14 @@ Getting Started
 
 Der einfachste Weg um einen ersten Eindruck zu bekommen, ist den Beispiel-Client zu verweden. Dieser benötigt keine Installation und arbeitet Lokal mit generierten Beispieldaten.
 
+Unter Windows:
+- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/artifact/DWOSS-MASTER/shared/build-latest/DW-OSS-Zip/sample-client-bin.zip)
+- Starten sie die sample-client.exe (Das JRE ist enthalten)
+
+Unter Linux und MacOS müssen Sie noch folgende Schritte zusätzlich durchführen:
 - Installieren Sie [Java 8](http://java.com).
-- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS-MASTER/latest/artifact/shared/DW-OSS-Zip/dwoss-client-sample-1.0-SNAPSHOT-bin.zip)
-- Im Fenster: Doppelclick auf die client.jar
-- In der Konsole: java -jar client.jar
+- Im Fenster: Doppelclick auf die sample-client.jar
+- In der Konsole: java -jar sample-client.jar
 
 Nach kurzer Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
 
