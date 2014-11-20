@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,14 +25,12 @@ import javafx.stage.Stage;
 
 import org.openide.util.Lookup;
 
+import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
-
 import eu.ggnet.dwoss.util.MetawidgetConfig;
-
-import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Server;
 import eu.ggnet.saft.runtime.SwingClient;
@@ -63,6 +61,8 @@ public class RunClientFx extends Application {
             @Override
             protected void close() {
                 Lookup.getDefault().lookup(Server.class).shutdown();
+                Platform.exit();
+                System.exit(0); // Again, not perfect.
             }
         };
         EventQueue.invokeLater(new Runnable() {
