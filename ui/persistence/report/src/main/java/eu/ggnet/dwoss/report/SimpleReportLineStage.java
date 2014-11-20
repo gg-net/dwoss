@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,30 +16,11 @@
  */
 package eu.ggnet.dwoss.report;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.SalesChannel;
-
+import java.awt.EventQueue;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.*;
-
-import org.metawidget.swing.SwingMetawidget;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-
-
-import eu.ggnet.dwoss.util.MetawidgetConfig;
 
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -59,6 +40,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import org.metawidget.swing.SwingMetawidget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
+import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.Workspace;
 
 import static eu.ggnet.saft.core.Client.*;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -192,18 +185,28 @@ public class SimpleReportLineStage {
         stage.setScene(new Scene(mainPane));
     }
 
-    public void openDetailView(long reportLineId) {
-        ReportLine rl = lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
-        SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class, TradeName.class, SalesChannel.class, DocumentType.class, PositionType.class, ReportLine.WorkflowStatus.class);
-        mw.setReadOnly(true);
-        mw.setToInspect(rl);
-        JDialog dialog = new JDialog(lookup(Workspace.class).getMainFrame(), "Details für Reportline(" + rl.getId() + ")");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.getContentPane().add(mw);
-        dialog.pack();
-        dialog.setSize(dialog.getSize().width, dialog.getSize().height + 50);
-        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(lookup(Workspace.class).getMainFrame()));
-        dialog.setVisible(true);
+    public void openDetailView(final long reportLineId) {
+        CompletableFuture
+                .supplyAsync(() -> {
+                    ReportLine rl = lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
+                    SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class, TradeName.class, SalesChannel.class, DocumentType.class, PositionType.class, ReportLine.WorkflowStatus.class);
+                    mw.setReadOnly(true);
+                    mw.setToInspect(rl);
+                    return mw;
+                })
+                .handle((mw, u) -> {
+                    EventQueue.invokeLater(() -> {
+                        if ( u != null ) u.printStackTrace(); // FIXME !!!!
+                        JDialog dialog = new JDialog(lookup(Workspace.class).getMainFrame(), "Details für Reportline");
+                        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                        dialog.getContentPane().add(mw);
+                        dialog.pack();
+                        dialog.setSize(dialog.getSize().width, dialog.getSize().height + 50);
+                        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(lookup(Workspace.class).getMainFrame()));
+                        dialog.setVisible(true);
+                    });
+                    return null;
+                });
     }
 
     public void load(final ReportAgent.SearchParameter search) {
