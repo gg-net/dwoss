@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.util.TupleHtmlRenderer;
-import eu.ggnet.dwoss.util.HtmlDialog;
-
 import java.awt.*;
 import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
@@ -26,6 +23,7 @@ import java.beans.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -44,14 +42,13 @@ import org.openide.util.Lookup;
 import org.slf4j.*;
 
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.redtape.dossiertable.DossierTableView;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.renderer.*;
 import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.util.Tuple2;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.*;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -168,10 +165,12 @@ public class RedTapeView extends javax.swing.JFrame {
                 positionsFxList.setCellFactory(new PositionListCell.Factory());
                 positionsFxList.setItems(positions);
                 ContextMenu contextMenu = new ContextMenu();
-                new Thread(() -> {
-                    List<Stock> findAll = lookup(StockAgent.class).findAll(Stock.class);
-                    contextMenu.getItems().addAll(PrepareSimpleTransferMenuItem.asFxMenuItems(positionsFxList.getSelectionModel(), findAll));
-                }).start();
+                CompletableFuture.supplyAsync(() -> lookup(StockAgent.class).findAll(Stock.class)).handle((l, t) -> {
+                    Platform.runLater(() -> {
+                        contextMenu.getItems().addAll(PrepareSimpleTransferMenuItem.asFxMenuItems(positionsFxList.getSelectionModel(), l));
+                    });
+                    return null;
+                });
                 positionsFxList.setContextMenu(contextMenu);
                 positionsFxList.setOnMouseClicked((evt) -> {
                     if ( positionsFxList.getSelectionModel().isEmpty() ) return;
