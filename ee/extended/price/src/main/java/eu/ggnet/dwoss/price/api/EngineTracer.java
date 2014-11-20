@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,6 +86,11 @@ public class EngineTracer implements Serializable {
         return status;
     }
 
+    /**
+     * Return all messages as on result.
+     * <p>
+     * @return all messages as on result.
+     */
     public String collectMessages() {
         StringBuilder sb = new StringBuilder(clazz);
         if ( method != null ) sb.append(".").append(method);
