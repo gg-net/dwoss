@@ -71,21 +71,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Only used in the bamboo build. copyies windows jre into runtime -->
-            <!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <configuration>
-                    <target name="copy windows jre32 to target">
-                        <copy todir="${project.build.directory}\runtime">
-                            <fileset dir="${jre8.wind32}">
-                                <include name="**/*.*"/>
-                            </fileset>
-                        </copy>
-                    </target>
-                </configuration>
-            </plugin>-->
             <!-- Only used in the bamboo build. Make sure the jre is in runtime -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
