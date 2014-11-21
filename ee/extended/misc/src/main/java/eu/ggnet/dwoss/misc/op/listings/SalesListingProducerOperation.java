@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,36 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.ggnet.dwoss.misc.op.listings;
-
-import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration;
-import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.mandator.api.service.ListingService;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.mandator.api.service.ListingConfiguration;
-import eu.ggnet.dwoss.util.TempUtil;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.dwoss.util.ImageFinder;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceHistory;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.STableColumn;
 
 import java.awt.Color;
 import java.io.*;
@@ -67,17 +37,23 @@ import org.apache.commons.mail.*;
 import org.slf4j.*;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.lucidcalc.CFormat.Representation;
-
+import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
-
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.CFormat.Representation;
 
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
 import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.*;
@@ -456,11 +432,12 @@ public class SalesListingProducerOperation implements SalesListingProducer {
                 } else if ( customerPrice < uuPrice ) {
                     priceChanged = true;
                 }
-
+                elem.normaize();
                 line.add(elem);
             }
             line.setAmount(line.getUnits().size());
             line.setCustomerPriceLabel((priceChanged ? "ab €" : "€") + df.format(MathUtil.roundedApply(customerPrice, GlobalConfig.TAX, 0.02)));
+            line.normaize();
             stackedLines.add(line);
         }
         L.info("Created {} Lines for the Lists", stackedLines.size());
@@ -469,10 +446,18 @@ public class SalesListingProducerOperation implements SalesListingProducer {
 
         Set<ListingConfiguration> configs = new HashSet<>();
         if ( listingService.isAmbiguous() || listingService.isUnsatisfied() ) {
-            for (TradeName tradeName : TradeName.values()) {
+            for (TradeName brand : TradeName.values()) {
                 for (ProductGroup value : ProductGroup.values()) {
-                    configs.add(new ListingConfiguration(null, null, null, null, null,
-                            "Geräteliste", tradeName.getName() + " " + value.getName(), tradeName, null, EnumSet.of(value)));
+                    configs.add(ListingConfiguration.builder()
+                            .filePrefix("Geräteliste ")
+                            .name(brand.getName() + " " + value.getName())
+                            .brand(brand)
+                            .groups(EnumSet.of(value))
+                            .headLeft("Beispieltext Links\nZeile 2")
+                            .headCenter("Beispieltext Mitte\nZeile 2")
+                            .headRight("Beispieltext Rechts\nZeile 2")
+                            .footer("Fusszeilentext")
+                            .build());
                 }
             }
         } else {

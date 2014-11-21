@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,11 +20,14 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
+import javax.validation.constraints.NotNull;
+
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Builder;
 
 import static java.util.EnumSet.noneOf;
 
@@ -36,8 +39,10 @@ import static java.util.EnumSet.noneOf;
 @AllArgsConstructor
 public class ListingConfiguration implements Serializable {
 
+    @NotNull
     private String jasperTemplateFile;
 
+    @NotNull
     private String jasperTempleteUnitsFile;
 
     private URL logoLeft;
@@ -56,27 +61,47 @@ public class ListingConfiguration implements Serializable {
 
     private Set<ProductGroup> groups;
 
-    public ListingConfiguration(String jasperTemplateFile,
-                                String jasperTempleteUnitsFile,
+    private String headLeft;
+
+    private String headCenter;
+
+    private String headRight;
+
+    private String footer;
+
+    @Builder
+    public ListingConfiguration(String name,
                                 URL logoLeft, URL logoRight,
                                 String orderLink, String filePrefix,
-                                TradeName brand, Set<TradeName> supplementBrands) {
-        this.jasperTemplateFile = jasperTemplateFile;
-        this.jasperTempleteUnitsFile = jasperTempleteUnitsFile;
+                                TradeName brand,
+                                Set<TradeName> supplementBrands,
+                                Set<ProductGroup> groups,
+                                String headLeft,
+                                String headCenter,
+                                String headRight,
+                                String footer) {
+        this.name = name;
         this.logoLeft = logoLeft;
         this.logoRight = logoRight;
         this.orderLink = orderLink;
         this.filePrefix = filePrefix;
         this.brand = brand;
         this.supplementBrands = supplementBrands;
+        this.groups = groups;
+        this.headLeft = headLeft;
+        this.headRight = headRight;
+        this.headCenter = headCenter;
+        this.footer = footer;
     }
 
     public ListingConfiguration copyWith(String name, Set<ProductGroup> groups) {
-        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand, supplementBrands, groups);
+        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand,
+                supplementBrands, groups, headLeft, headCenter, headRight, footer);
     }
 
     public ListingConfiguration copyWith(TradeName brand, URL logoLeft, String orderLink) {
-        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand, noneOf(TradeName.class), groups);
+        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand,
+                noneOf(TradeName.class), groups, headLeft, headCenter, headRight, footer);
     }
 
     public Set<TradeName> getAllBrands() {
@@ -93,6 +118,10 @@ public class ListingConfiguration implements Serializable {
         reportParameter.put("TITLE", name);
         reportParameter.put("ORDERLINK", orderLink);
         reportParameter.put("REPORT_LOCALE", Locale.GERMANY);
+        reportParameter.put("HEAD_LEFT", headLeft);
+        reportParameter.put("HEAD_CENTER", headCenter);
+        reportParameter.put("HEAD_RIGHT", headRight);
+        reportParameter.put("FOOTER", footer);
         return reportParameter;
     }
 

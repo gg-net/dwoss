@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ public class StackedLineUnit implements Comparable<StackedLineUnit> {
     private Date mfgDate;
 
     private String serial;
-    
+
     private Date warrentyTill;
 
     @Override
@@ -54,5 +54,12 @@ public class StackedLineUnit implements Comparable<StackedLineUnit> {
             return this.getConditionLevelDescription().compareTo(other.getConditionLevelDescription());
         if ( this.getCustomerPrice() != other.getCustomerPrice() ) return (int)(this.getCustomerPrice() - other.getCustomerPrice());
         return 0;
+    }
+
+    public void normaize() {
+        if ( warranty != null ) warranty = warranty.replaceAll("&", "&amp;");
+        if ( accessories != null ) accessories = accessories.replaceAll("&", "&amp;");
+        if ( comment != null ) comment = comment.replaceAll("&", "&amp;");
+        if ( conditionLevelDescription != null ) conditionLevelDescription = conditionLevelDescription.replaceAll("&", "&amp;");
     }
 }

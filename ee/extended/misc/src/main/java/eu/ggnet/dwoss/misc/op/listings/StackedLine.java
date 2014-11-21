@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode
-public class StackedLine implements Comparable<StackedLine>{
+public class StackedLine implements Comparable<StackedLine> {
 
     private boolean used = true;
 
@@ -76,4 +76,12 @@ public class StackedLine implements Comparable<StackedLine>{
         if ( !this.getManufacturerPartNo().equals(other.getManufacturerPartNo()) ) return this.getManufacturerPartNo().compareTo(other.getManufacturerPartNo());
         return 0;
     }
+
+    public void normaize() {
+        if ( description != null ) description = description.replaceAll("&", "&amp;");
+        if ( manufacturerName != null ) manufacturerName = manufacturerName.replaceAll("&", "&amp;");
+        if ( manufacturerPartNo != null ) manufacturerPartNo = manufacturerPartNo.replaceAll("&", "&amp;");
+        if ( commodityGroupName != null ) commodityGroupName = commodityGroupName.replaceAll("&", "&amp;");
+    }
+
 }
