@@ -41,5 +41,18 @@
             <activatedProfile>client-sample</activatedProfile>
         </activatedProfiles>
     </action>
+    <action>
+        <actionName>CUSTOM-Assemble Sample</actionName>
+        <displayName>Assemble Sample (Win32)</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>install</goal>
+            <goal>launch4j:launch4j</goal>
+            <goal>assembly:single</goal>
+        </goals>
+        <activatedProfiles>
+            <activatedProfile>server-sample</activatedProfile>
+            <activatedProfile>client-sample</activatedProfile>
+        </activatedProfiles>
+    </action>
 </actions>
- 

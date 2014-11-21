@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,24 +18,34 @@ package eu.ggnet.dwoss.spec.eao;
 
 import java.util.*;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 /**
  * Entity Access Object for the ProductSpec.
  *
  * @author oliver.guenther
  */
+@Stateless
 public class ProductSpecEao extends AbstractEao<ProductSpec> {
 
+    @Inject
+    @Specs
     private EntityManager em;
 
     public ProductSpecEao(EntityManager em) {
         super(ProductSpec.class);
         this.em = em;
+    }
+
+    public ProductSpecEao() {
+        super(ProductSpec.class);
     }
 
     @Override

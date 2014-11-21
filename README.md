@@ -1,5 +1,9 @@
 Deutsche Warenwirtschaft Open Source
 ====================================
+
+_Bei Fragen, nicht lange google, direkt an uns wenden. If there are questions, don't google too long, just ask us._
+- Oliver Günther: **oliver.guenther@gg-net.de**
+
 (English version below)
 
 Dies ist die Open Source Version der Deutschen Warenwirtschaft der Firma [GG-Net GmbH](http://gg-net.de).
@@ -36,10 +40,16 @@ Getting Started
 
 Der einfachste Weg um einen ersten Eindruck zu bekommen, ist den Beispiel-Client zu verweden. Dieser benötigt keine Installation und arbeitet Lokal mit generierten Beispieldaten.
 
+Unter Windows:
+- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/artifact/DWOSS-MASTER/shared/build-latest/DW-OSS-Zip/sample-client-bin.zip)
+- Starten sie die sample-client.exe (Das JRE ist enthalten)
+
+(Sollte der Download nich funktionieren, versuchen Sie es später noch einmal. Der Client wir automatisch aktualisiert)
+
+Unter Linux und MacOS müssen Sie noch folgende Schritte zusätzlich durchführen:
 - Installieren Sie [Java 8](http://java.com).
-- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS-MASTER/latest/artifact/shared/DW-OSS-Zip/dwoss-client-sample-1.0-SNAPSHOT-bin.zip)
-- Im Fenster: Doppelclick auf die client.jar
-- In der Konsole: java -jar client.jar
+- Im Fenster: Doppelclick auf die sample-client.jar
+- In der Konsole: java -jar sample-client.jar
 
 Nach kurzer Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
 
@@ -81,10 +91,17 @@ The software is an internal project of the [GG-Net GmbH](http://gg-net.de) used 
 
 To get a first view on the application, use the sample client. This client starts a local server in the background and generates sample data. Please be patient, the startup takes some seconds.
 
+MS Windows:
+- Download and Extract [Sample-Client](http://devcon.ahrensburg.gg-net.de/bamboo/artifact/DWOSS-MASTER/shared/build-latest/DW-OSS-Zip/sample-client-bin.zip)
+- Start the sample-client.exe (The JRE is enclosed)
+
+(If the download is not available, please try again later. The client is rebuild as part of our automaticbamboo build 
+infrastructure)
+
+For Linux and MacOS, you need to do:
 - Install [Java 8](http://java.com).
-- Download and Extract [Sample-Client](http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS-MASTER/latest/artifact/shared/DW-OSS-Zip/dwoss-client-sample-1.0-SNAPSHOT-bin.zip)
-- In windows: Doppelclick auf die client.jar
-- On the console: java -jar client.jar
+- In a window: Coubleclick on sample-client.jar
+- On the console: java -jar sample-client.jar
 
 An optional registration dialog should open. After completing it, the application is running in a local sample mode.
 You can login with any user, but the user "test", any password, has all rights.
@@ -103,8 +120,6 @@ Checkout and Build (mvn clean install)
 Switch to dwoss/assembly/client-sample and call:
 
 mvn jfx:run -Pserver-sample,client-sample
-
-
 
 Project Resources
 -----------------
