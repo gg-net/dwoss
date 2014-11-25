@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.report.eao;
 
 import java.util.Date;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -41,5 +40,7 @@ public class RevenueHolder {
     private double sum;
 
     private SalesChannel salesChannel;
+
+    private TradeName contractor;
 
 }

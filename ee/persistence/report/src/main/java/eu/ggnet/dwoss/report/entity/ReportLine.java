@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.report.entity;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.SalesChannel;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -35,14 +29,18 @@ import javafx.beans.value.ObservableValue;
 import org.apache.commons.lang3.StringUtils;
 import org.metawidget.inspector.annotation.*;
 
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
-import lombok.*;
 import lombok.experimental.Builder;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
 import static eu.ggnet.dwoss.rules.PositionType.*;
+
+import lombok.*;
+
+import static eu.ggnet.dwoss.rules.DocumentType.*;
 
 /**
  * This is a Line of a report. It could be represent any type of Position.
@@ -84,9 +82,9 @@ import static eu.ggnet.dwoss.rules.PositionType.*;
     @NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
     @NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
     @NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
-    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, sum(rl.price), rl.salesChannel)"
+    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, sum(rl.price), rl.salesChannel, rl.contractor)"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
-                + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel")
+                + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
 
 })
 @NoArgsConstructor
@@ -540,8 +538,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Lob
     @UiLarge
     private String comment;
-    
-    
+
     @Builder
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ReportLine(String name, String description, long dossierId, String dossierIdentifier, long documentId, String documentIdentifier,

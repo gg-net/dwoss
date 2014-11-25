@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,10 @@
  */
 package eu.ggnet.dwoss.report.eao;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.SalesChannel;
-
 import java.util.*;
 import java.util.Map.Entry;
+
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 
@@ -39,16 +38,19 @@ public class Revenue {
 
         private final DocumentType type;
 
+        private final TradeName contractor;
+
         /**
          * Creates or reuses an Instance of Key.
          * <p>
-         * @param c the channel
-         * @param t the documentType
+         * @param c          the channel
+         * @param t          the documentType
+         * @param contractor the contractor
          * @return a instance of Key and caches the instance.
          */
-        public static Key valueOf(SalesChannel c, DocumentType t) {
+        public static Key valueOf(SalesChannel c, DocumentType t, TradeName contractor) {
             // TODO: Implent Cache :-)
-            return new Key(c, t);
+            return new Key(c, t, contractor);
         }
 
     }
@@ -58,13 +60,15 @@ public class Revenue {
     {
         for (SalesChannel channel : SalesChannel.values()) {
             for (DocumentType type : DocumentType.values()) {
-                details.put(new Key(channel, type), 0.);
+                for (TradeName contractor : TradeName.values()) {
+                    details.put(new Key(channel, type, contractor), 0.);
+                }
             }
         }
     }
 
-    public void addTo(SalesChannel channel, DocumentType type, double amount) {
-        Key k = new Key(channel, type);
+    public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double amount) {
+        Key k = new Key(channel, type, contractor);
         details.put(k, details.get(k) + amount);
     }
 
@@ -80,6 +84,28 @@ public class Revenue {
             if ( entry.getKey().getType() == type ) sum += entry.getValue();
         }
         return sum;
+    }
+
+    public double getSum(DocumentType type, TradeName contractor) {
+        double sum = 0;
+        for (Entry<Key, Double> entry : details.entrySet()) {
+            if ( entry.getKey().getType() == type && entry.getKey().getContractor() == contractor ) sum += entry.getValue();
+        }
+        return sum;
+    }
+
+    public double sumBy(SalesChannel channel, DocumentType type) {
+        return details.entrySet().stream()
+                .filter(e -> e.getKey().getChannel() == channel && e.getKey().getType() == type)
+                .mapToDouble(e -> e.getValue())
+                .sum();
+    }
+
+    public double getSum(TradeName contractor) {
+        return details.entrySet().stream()
+                .filter(e -> e.getKey().getContractor() == contractor)
+                .mapToDouble(e -> e.getValue())
+                .sum();
     }
 
 }

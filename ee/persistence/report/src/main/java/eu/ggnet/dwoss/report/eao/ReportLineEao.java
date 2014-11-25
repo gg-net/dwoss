@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,8 +45,6 @@ import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRAN
 import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.report.entity.QReportLine.reportLine;
 import static eu.ggnet.dwoss.report.entity.partial.QSimpleReportLine.simpleReportLine;
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
 
 /**
  * Entity Access Object for ReportLine.
@@ -436,7 +434,7 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                         + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
                         + ",keys=" + nice(result.keySet(), step)
                 );
-            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getSum());
+            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), holder.getSum());
         }
         return result;
     }
