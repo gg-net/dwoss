@@ -27,7 +27,6 @@ import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.RevenueReportSum;
 import eu.ggnet.dwoss.report.eao.*;
-import eu.ggnet.dwoss.report.eao.ReportLineEao.Step;
 import eu.ggnet.dwoss.report.eao.Revenue.Key;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.FileJacket;
@@ -114,6 +113,7 @@ public class RevenueReporterOperation implements RevenueReporter {
         template.add(new STableColumn("Storno Endkunde", 18, new CFormat(RIGHT, CURRENCY_EURO)));
         template.add(new STableColumn("Storno Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
         template.add(new STableColumn("Umsatz Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
+        template.add(new STableColumn("Ertrag Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
 
         STable all = new STable(template);
         all.setModel(new STableModelList(buildSumModel(step, revenue)));
@@ -141,11 +141,12 @@ public class RevenueReporterOperation implements RevenueReporter {
                 r.sumBy(SalesChannel.RETAILER, DocumentType.INVOICE),
                 r.sumBy(SalesChannel.CUSTOMER, DocumentType.INVOICE),
                 r.sumBy(SalesChannel.UNKNOWN, DocumentType.INVOICE),
-                r.getSum(INVOICE),
+                r.sumBy(INVOICE),
                 r.sumBy(SalesChannel.RETAILER, DocumentType.ANNULATION_INVOICE),
                 r.sumBy(SalesChannel.CUSTOMER, DocumentType.ANNULATION_INVOICE),
-                r.getSum(DocumentType.ANNULATION_INVOICE),
-                r.getSum()
+                r.sumBy(DocumentType.ANNULATION_INVOICE),
+                r.sum(),
+                r.sumMargin()
             });
         }
         return rows;
@@ -157,14 +158,15 @@ public class RevenueReporterOperation implements RevenueReporter {
             Revenue r = e.getValue();
             rows.add(new Object[]{
                 step.format(e.getKey()),
-                r.getDetails().get(Key.valueOf(SalesChannel.RETAILER, DocumentType.INVOICE, contractor)),
-                r.getDetails().get(Key.valueOf(SalesChannel.CUSTOMER, DocumentType.INVOICE, contractor)),
-                r.getDetails().get(Key.valueOf(SalesChannel.UNKNOWN, DocumentType.INVOICE, contractor)),
-                r.getSum(INVOICE, contractor),
-                r.getDetails().get(Key.valueOf(SalesChannel.RETAILER, DocumentType.ANNULATION_INVOICE, contractor)),
-                r.getDetails().get(Key.valueOf(SalesChannel.CUSTOMER, DocumentType.ANNULATION_INVOICE, contractor)),
-                r.getSum(DocumentType.ANNULATION_INVOICE, contractor),
-                r.getSum(contractor)
+                r.getDetails().get(Key.valueOf(SalesChannel.RETAILER, DocumentType.INVOICE, contractor)).revenue,
+                r.getDetails().get(Key.valueOf(SalesChannel.CUSTOMER, DocumentType.INVOICE, contractor)).revenue,
+                r.getDetails().get(Key.valueOf(SalesChannel.UNKNOWN, DocumentType.INVOICE, contractor)).revenue,
+                r.sumBy(INVOICE, contractor),
+                r.getDetails().get(Key.valueOf(SalesChannel.RETAILER, DocumentType.ANNULATION_INVOICE, contractor)).revenue,
+                r.getDetails().get(Key.valueOf(SalesChannel.CUSTOMER, DocumentType.ANNULATION_INVOICE, contractor)).revenue,
+                r.sumBy(DocumentType.ANNULATION_INVOICE, contractor),
+                r.sumBy(contractor),
+                r.sumMarginBy(contractor)
             });
         }
         return rows;

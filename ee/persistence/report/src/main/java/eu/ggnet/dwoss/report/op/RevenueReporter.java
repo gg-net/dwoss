@@ -22,7 +22,7 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.RevenueReportSum;
-import eu.ggnet.dwoss.report.eao.ReportLineEao.Step;
+import eu.ggnet.dwoss.rules.Step;
 
 import eu.ggnet.dwoss.rules.PositionType;
 

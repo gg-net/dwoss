@@ -37,10 +37,12 @@ public class RevenueHolder {
 
     private DocumentType documentType;
 
-    private double sum;
-
     private SalesChannel salesChannel;
 
     private TradeName contractor;
+
+    private double price;
+
+    private double purchasePrice;
 
 }

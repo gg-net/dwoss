@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.entity;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.INoteModel;
-
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
@@ -31,6 +23,8 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -64,7 +58,10 @@ import static javax.persistence.CascadeType.*;
     @NamedQuery(name = "UniqueUnit.findByIds", query = "SELECT u FROM UniqueUnit u WHERE u.id IN (:idList)"),
     @NamedQuery(name = "UniqueUnit.byProductPartNo", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo = ?1"),
     @NamedQuery(name = "UniqueUnit.byProductPartNosInputDate", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo in (?1) AND u.inputDate >= ?2 AND u.inputDate <= ?3"),
-    @NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1")
+    @NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1"),
+    @NamedQuery(name = "UniqueUnit.countByInputDateContractor",
+                query = "select new eu.ggnet.dwoss.uniqueunit.eao.CountHolder(u.inputDate, u.product.tradeName, u.contractor, count(u.id)) "
+                + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
 })
 public class UniqueUnit implements Serializable, EagerAble {
 
@@ -189,12 +186,12 @@ public class UniqueUnit implements Serializable, EagerAble {
                 case TABLET_SMARTPHONE:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, USB_KABEL, KEYBOARD_DOCK, VGA_NETWORK_ADAPTER, HEADSET, MANUAL,
                             MICRO_USB_TO_USB_ADAPTER, PORTFOLIO_CASE, SDCARD_16GB, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, USB_MICRO_HDMI_ADAPTER, SIM_OPENER,
-                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, CRUNCHCOVER, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, MS_OFFICE_365_PERSONAL, 
+                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, CRUNCHCOVER, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, MS_OFFICE_365_PERSONAL,
                             MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS);
                 case NOTEBOOK:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
                             VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
-                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL, 
+                            PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
                             MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS);
                 default:
             }

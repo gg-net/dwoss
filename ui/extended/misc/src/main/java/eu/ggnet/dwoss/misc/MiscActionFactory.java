@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,29 +21,25 @@ import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.ActionFactory;
-
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.mandator.api.service.ListingService;
 import eu.ggnet.dwoss.misc.action.*;
-
-import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
-import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.action.imageid.ExportImageIdsAction;
 import eu.ggnet.dwoss.misc.action.imageid.ImportImageIdsAction;
+import eu.ggnet.dwoss.misc.action.listings.AllSalesListingAction;
+import eu.ggnet.dwoss.misc.action.listings.SalesListingCreateAction;
 import eu.ggnet.dwoss.misc.action.movement.MovementAction;
 import eu.ggnet.dwoss.misc.help.AboutAction;
 import eu.ggnet.dwoss.misc.help.ShowMandatorAction;
+import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
+import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
-
 import eu.ggnet.dwoss.rules.SalesChannel;
-
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.misc.action.listings.AllSalesListingAction;
-import eu.ggnet.dwoss.misc.action.listings.SalesListingCreateAction;
+import eu.ggnet.saft.core.ActionFactory;
 
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -95,6 +91,7 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Artikelstamm", "Bilder Ids", new ExportImageIdsAction(SalesChannel.CUSTOMER)));
         actions.add(new MetaAction("Artikelstamm", "Bilder Ids", new ImportImageIdsAction()));
         actions.add(new MetaAction("Geschäftsführung", "Allgemeine Reporte", new UnitQualityReportAction()));
+        actions.add(new MetaAction("Geschäftsführung", "Allgemeine Reporte", new ExportInputReportAction()));
         actions.add(new MetaAction("Geschäftsführung", new OpenSalesChannelManagerAction()));
         actions.add(new MetaAction("Geschäftsführung", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));

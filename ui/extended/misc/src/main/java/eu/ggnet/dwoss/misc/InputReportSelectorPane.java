@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,39 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report;
+package eu.ggnet.dwoss.misc;
 
 import java.time.*;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import eu.ggnet.saft.core.Client;
-
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.rules.Step;
-import eu.ggnet.dwoss.rules.TradeName;
 
 import javafx.beans.property.*;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
+import eu.ggnet.dwoss.rules.Step;
+
 /**
  * Shows a selector pane for the Revenue Report.
  * <p>
  * @author oliver.guenther
  */
-public class RevenueReportSelectorPane extends GridPane {
+public class InputReportSelectorPane extends GridPane {
 
     private final ObjectProperty<Step> step = new SimpleObjectProperty<>();
-
-    private final StringProperty contractor = new SimpleStringProperty();
 
     private final ObjectProperty<LocalDate> start;
 
     private final ObjectProperty<LocalDate> end;
 
-    public RevenueReportSelectorPane() {
+    public InputReportSelectorPane() {
         setAlignment(Pos.CENTER);
         setHgap(10);
         setVgap(10);
@@ -58,40 +51,19 @@ public class RevenueReportSelectorPane extends GridPane {
 
         addRow(0, new Label("Step:"), stepChoice);
 
-        ChoiceBox<String> contractorChoice = new ChoiceBox<>();
-        contractorChoice.getItems().addAll(Client.lookup(MandatorSupporter.class).loadContractors()
-                .all().stream().map(TradeName::name).collect(Collectors.toList()));
-        contractorChoice.getItems().add("ALL");
-
-        contractor.bind(contractorChoice.getSelectionModel().selectedItemProperty());
-        contractorChoice.getSelectionModel().select("ALL");
-        // Not yet implemented.
-        contractorChoice.setDisable(true);
-
-        addRow(1, new Label("Contractor:"), contractorChoice);
-
         DatePicker startPicker = new DatePicker(LocalDate.of(2014, 01, 01));
         start = startPicker.valueProperty();
 
         DatePicker endPicker = new DatePicker(LocalDate.of(2014, 12, 31));
         end = endPicker.valueProperty();
 
-        addRow(2, new Label("Start:"), startPicker);
-        addRow(3, new Label("End:"), endPicker);
+        addRow(1, new Label("Start:"), startPicker);
+        addRow(2, new Label("End:"), endPicker);
 
     }
 
     public Step getStep() {
         return step.get();
-    }
-
-    public Set<TradeName> getContractors() {
-        try {
-            return EnumSet.of(TradeName.valueOf(contractor.get()));
-        } catch (IllegalArgumentException e) {
-            // Name does not match
-            return Client.lookup(MandatorSupporter.class).loadContractors().all();
-        }
     }
 
     public Date getStart() {
@@ -104,7 +76,7 @@ public class RevenueReportSelectorPane extends GridPane {
 
     @Override
     public String toString() {
-        return "RevenueReportSelectorPane{" + "step=" + getStep() + ",contractors=" + getContractors() + ",start=" + start.get() + ",end=" + end.get() + '}';
+        return "RevenueReportSelectorPane{" + "step=" + getStep() + ",start=" + start.get() + ",end=" + end.get() + '}';
     }
 
 }

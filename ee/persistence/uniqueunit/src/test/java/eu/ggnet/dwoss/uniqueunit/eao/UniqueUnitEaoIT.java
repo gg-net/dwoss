@@ -1,21 +1,22 @@
 package eu.ggnet.dwoss.uniqueunit.eao;
 
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-
-import java.text.*;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.persistence.*;
 
 import org.junit.*;
 
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
+import static eu.ggnet.dwoss.rules.Step.WEEK;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static java.time.ZoneId.systemDefault;
 import static org.junit.Assert.*;
 
 /**
@@ -32,32 +33,23 @@ public class UniqueUnitEaoIT {
 
     private Product product;
 
-    private UniqueUnitEao unitEao;
-
     private final static String REFURBISHID_62325 = "62325";
 
-    private final static Date _2012_12_01_;
+    private final static Date BEFORE = Date.from(LocalDate.of(2012, 11, 1).atStartOfDay(systemDefault()).toInstant());
 
-    private final static Date _2012_12_10_;
+    private final static Date _2012_12_02_ = Date.from(LocalDate.of(2012, 12, 2).atStartOfDay(systemDefault()).toInstant());
 
-    private final static Date _2012_12_20_;
+    private final static Date _2012_12_10_ = Date.from(LocalDate.of(2012, 12, 10).atStartOfDay(systemDefault()).toInstant());
+
+    private final static Date _2012_12_20_ = Date.from(LocalDate.of(2012, 12, 12).atStartOfDay(systemDefault()).toInstant());
+
+    private final static Date AFTER = Date.from(LocalDate.of(2012, 12, 31).atStartOfDay(systemDefault()).toInstant());
 
     private final static String PARTNO_1 = "AA.BBBBB.CCC";
 
     private final static String PARTNO_2 = "AA.BBBBB.DDD";
 
     private final static String PARTNO_3 = "AA.BBBBB.EEE";
-
-    static {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            _2012_12_01_ = df.parse("2012-12-01");
-            _2012_12_10_ = df.parse("2012-12-10");
-            _2012_12_20_ = df.parse("2012-12-20");
-        } catch (ParseException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
 
     @Before
     public void setUp() {
@@ -78,7 +70,7 @@ public class UniqueUnitEaoIT {
         unit_62325.setContractor(TradeName.AMAZON);
         unit_62325.setCondition(UniqueUnit.Condition.ALMOST_NEW);
         unit_62325.setProduct(product);
-        unit_62325.setInputDate(_2012_12_01_);
+        unit_62325.setInputDate(_2012_12_02_);
         em.persist(unit_62325);
 
         UniqueUnit u2 = new UniqueUnit();
@@ -122,11 +114,26 @@ public class UniqueUnitEaoIT {
         emf.close();
     }
 
+    @Ignore // Possible that hsqldb does not handle these queries well.
+    @Test
+    public void testCount() {
+        em.getTransaction().begin();
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
+        NavigableMap<Date, BrandContractorCount> counted = unitEao.countByInputDateContractor(BEFORE, AFTER, WEEK);
+        for (Entry<Date, BrandContractorCount> e : counted.entrySet()) {
+            System.out.println(e.getKey());
+            System.out.println(e.getValue());
+            System.out.println("----");
+        }
+
+        em.getTransaction().commit();
+    }
+
     @Test
     public void testFindByProductPartNosInputDate() {
         em.getTransaction().begin();
-        unitEao = new UniqueUnitEao(em);
-        List<UniqueUnit> uus = unitEao.findByProductPartNosInputDate(Arrays.asList(PARTNO_1, PARTNO_2), _2012_12_01_, _2012_12_10_);
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
+        List<UniqueUnit> uus = unitEao.findByProductPartNosInputDate(Arrays.asList(PARTNO_1, PARTNO_2), _2012_12_02_, _2012_12_10_);
         assertFalse(uus.isEmpty());
         assertEquals(3, uus.size());
         em.getTransaction().commit();
@@ -135,7 +142,7 @@ public class UniqueUnitEaoIT {
     @Test
     public void testFindByProductPartNo() {
         em.getTransaction().begin();
-        unitEao = new UniqueUnitEao(em);
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
         List<UniqueUnit> uus = unitEao.findByProductPartNo(PARTNO_1);
         assertFalse(uus.isEmpty());
         assertEquals(2, uus.size());
@@ -145,7 +152,7 @@ public class UniqueUnitEaoIT {
     @Test
     public void testFindIdentifier() {
         em.getTransaction().begin();
-        unitEao = new UniqueUnitEao(em);
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
         assertNotNull(unitEao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, REFURBISHID_62325));
         assertNull(unitEao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, "65475"));
         assertEquals(unit_62325, unitEao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, REFURBISHID_62325));
@@ -155,7 +162,7 @@ public class UniqueUnitEaoIT {
     @Test
     public void testFindPartIdentifier() {
         em.getTransaction().begin();
-        unitEao = new UniqueUnitEao(em);
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
         assertTrue(unitEao.findByPartialIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, "632*").isEmpty());
         assertTrue(unitEao.findByPartialIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, "623*").contains(unit_62325));
         em.getTransaction().commit();
@@ -164,7 +171,7 @@ public class UniqueUnitEaoIT {
     @Test
     public void testFindIdentifiers() {
         em.getTransaction().begin();
-        unitEao = new UniqueUnitEao(em);
+        UniqueUnitEao unitEao = new UniqueUnitEao(em);
         assertEquals(2, unitEao.findByIdentifiers(REFURBISHED_ID, new TreeSet<>(Arrays.asList("99999", "99998"))).size());
         assertTrue(unitEao.findByIdentifiers(REFURBISHED_ID, Arrays.asList(REFURBISHID_62325)).contains(unit_62325));
         em.getTransaction().commit();

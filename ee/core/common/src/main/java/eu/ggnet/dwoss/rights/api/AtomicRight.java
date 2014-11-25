@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -96,8 +96,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Unused, can be reassigned.
      */
-    @Deprecated
-    UNUSED_2("Unused 2, kann neu verwendet werden"),
+    EXPORT_INPUT_REPORT("Report nach Aufnahmedatum exportieren"),
     /**
      * Unused, can be reassigned.
      */

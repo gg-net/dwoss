@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
 import eu.ggnet.dwoss.util.MapBuilder;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.DESKTOP;
@@ -90,7 +89,6 @@ public class UniqueUnitGenerator {
             uu.setWarranty(WARRANTY_TILL_DATE);
             uu.setWarrentyValid(new Date((long)(System.currentTimeMillis() + Math.random() * 21600000000L)));
         }
-
         return uu;
     }
 

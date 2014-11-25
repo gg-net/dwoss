@@ -19,13 +19,13 @@ import org.junit.*;
 
 import eu.ggnet.dwoss.report.assist.ReportPu;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
-import eu.ggnet.dwoss.report.eao.ReportLineEao.Step;
+import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 
 
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.report.eao.ReportLineEao.Step.DAY;
+import static eu.ggnet.dwoss.rules.Step.DAY;
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -354,28 +354,28 @@ public class ReportLineEaoIT {
         em.getTransaction().begin();
         NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), DAY);
         for (Entry<Date, Revenue> e : result.entrySet()) {
-            assertEquals(100.0, e.getValue().getSum(INVOICE), 0.0001);
-//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().getSum(INVOICE) + " A:" + e.getValue().getSum(ANNULATION_INVOICE) + " S:" + e.getValue().getSum());
+            assertEquals(100.0, e.getValue().sumBy(INVOICE), 0.0001);
+//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
         }
         result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), Step.MONTH);
         assertEquals(1, result.size());
-        assertEquals(500.0, result.firstEntry().getValue().getSum(INVOICE), 0.0001);
-        assertEquals(-50.0, result.firstEntry().getValue().getSum(ANNULATION_INVOICE), 0.0001);
-        assertEquals(450.0, result.firstEntry().getValue().getSum(), 0.0001);
+        assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
+        assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
+        assertEquals(450.0, result.firstEntry().getValue().sum(), 0.0001);
 
 //        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), DAY);
 //        for (Entry<Date, Revenue> e : result.entrySet()) {
-//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().getSum(INVOICE) + " A:" + e.getValue().getSum(ANNULATION_INVOICE) + " S:" + e.getValue().getSum());
+//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
 //        }
         System.out.println(" -- ");
         result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), Step.MONTH);
         assertEquals(2, result.size());
-        assertEquals(500.0, result.firstEntry().getValue().getSum(INVOICE), 0.0001);
-        assertEquals(-50.0, result.firstEntry().getValue().getSum(ANNULATION_INVOICE), 0.0001);
-        assertEquals(450.0, result.firstEntry().getValue().getSum(), 0.0001);
-        assertEquals(100.0, result.lastEntry().getValue().getSum(INVOICE), 0.0001);
-        assertEquals(0.0, result.lastEntry().getValue().getSum(ANNULATION_INVOICE), 0.0001);
-        assertEquals(100.0, result.lastEntry().getValue().getSum(), 0.0001);
+        assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
+        assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
+        assertEquals(450.0, result.firstEntry().getValue().sum(), 0.0001);
+        assertEquals(100.0, result.lastEntry().getValue().sumBy(INVOICE), 0.0001);
+        assertEquals(0.0, result.lastEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
+        assertEquals(100.0, result.lastEntry().getValue().sum(), 0.0001);
 
         for (Step step : Step.values()) {
             // Shortcut to test all steps.

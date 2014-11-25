@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,45 +18,36 @@ package eu.ggnet.dwoss.uniqueunit.op;
 
 import java.awt.Color;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.joda.time.LocalDate;
 
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
-import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitSupport;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
 import lombok.Data;
 
-import static java.awt.Color.BLACK;
-import static java.awt.Color.WHITE;
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
+import static java.awt.Color.*;
+
+import java.util.*;
+
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.lucidcalc.*;
 
 /**
  *
@@ -90,10 +81,14 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
     private static final String MONTH_PATTERN = "yyyy-MM";
 
     @Inject
-    private UniqueUnitSupport unitSupport;
+    @UniqueUnits
+    private EntityManager em;
 
     @Inject
     private MonitorFactory monitorFactory;
+
+    @Inject
+    private Contractors contractors;
 
     // TODO: Document Me
     @Override
@@ -106,7 +101,7 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
         LocalDate current = new LocalDate(start.getTime());
         LocalDate endDate = new LocalDate(end.getTime());
 
-        List<UniqueUnit> units = new UniqueUnitEao(unitSupport.getEntityManager()).findBetweenInputDatesAndContractor(start, end, contractor);
+        List<UniqueUnit> units = new UniqueUnitEao(em).findBetweenInputDatesAndContractor(start, end, contractor);
         m.worked(5, "Sorting Data");
 
         Set<String> months = new HashSet<>();
@@ -164,4 +159,77 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
         m.finish();
         return new FileJacket("Aufnahme_nach_Qualität_" + contractor + "_" + DateFormats.ISO.format(start) + "_" + DateFormats.ISO.format(end), ".xls", file);
     }
+
+    @Override
+    public FileJacket unitInputAsXls(Date start, Date end, Step step) {
+        String name = "Aufnahmemengereport";
+        SubMonitor m = monitorFactory.newSubMonitor(name);
+        m.start();
+
+        UniqueUnitEao eao = new UniqueUnitEao(em);
+        NavigableSet<TradeName> usedManufacturers = eao.findUsedManufactuers();
+        NavigableMap<Date, BrandContractorCount> revenue = eao.countByInputDateContractor(start, end, step);
+
+        STable template = new STable();
+        template.setTableFormat(new CFormat(BLACK, WHITE, new CBorder(BLACK)));
+        template.setHeadlineFormat(new CFormat(BOLD_ITALIC, WHITE, BLUE, CENTER, new CBorder(BLACK)));
+        template.add(new STableColumn(step.name(), 12));
+        for (TradeName manufacturer : usedManufacturers) {
+            template.add(new STableColumn(manufacturer.getName(), 15, new CFormat(RIGHT)));
+        }
+        template.add(new STableColumn("Summe", 18, new CFormat(RIGHT)));
+
+        STable all = new STable(template);
+        all.setModel(new STableModelList(buildSumModel(step, usedManufacturers, revenue)));
+
+        CCalcDocument cdoc = new TempCalcDocument(name);
+        cdoc.add(new CSheet("Input_All", all));
+
+        for (TradeName contractor : contractors.all()) {
+            STable simple = new STable(template);
+            simple.setModel(new STableModelList(buildContractorModel(step, contractor, usedManufacturers, revenue)));
+            cdoc.add(new CSheet("Input_" + contractor, simple));
+        }
+
+        FileJacket result = new FileJacket(name, ".xls", new JExcelLucidCalcWriter().write(cdoc));
+        m.finish();
+        return result;
+    }
+
+    private List<Object[]> buildSumModel(Step step, NavigableSet<TradeName> usedManufacturers, NavigableMap<Date, BrandContractorCount> revenue) {
+        List<Object[]> rows = new ArrayList<>();
+        for (Entry<Date, BrandContractorCount> e : revenue.entrySet()) {
+            BrandContractorCount r = e.getValue();
+
+            Object[] row = new Object[usedManufacturers.size() + 2];
+            row[0] = step.format(e.getKey());
+            int count = 1;
+            for (TradeName manufacturer : usedManufacturers) {
+                row[count] = r.countByManufacturer(manufacturer);
+                count++;
+            }
+            row[count] = r.count();
+            rows.add(row);
+        }
+        return rows;
+    }
+
+    private List<Object[]> buildContractorModel(Step step, TradeName contractor, NavigableSet<TradeName> usedManufacturers, NavigableMap<Date, BrandContractorCount> revenue) {
+        List<Object[]> rows = new ArrayList<>();
+        for (Entry<Date, BrandContractorCount> e : revenue.entrySet()) {
+            BrandContractorCount r = e.getValue();
+
+            Object[] row = new Object[usedManufacturers.size() + 2];
+            row[0] = step.format(e.getKey());
+            int count = 1;
+            for (TradeName manufacturer : usedManufacturers) {
+                row[count] = r.countByContractorManufacturer(contractor, manufacturer);
+                count++;
+            }
+            row[count] = r.countByContractor(contractor);
+            rows.add(row);
+        }
+        return rows;
+    }
+
 }

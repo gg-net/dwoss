@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ import java.util.Date;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 
@@ -32,4 +33,6 @@ public interface UniqueUnitReporter {
 
     // TODO: Document Me
     FileJacket quality(Date start, Date end, TradeName contractor);
+
+    FileJacket unitInputAsXls(Date start, Date end, Step step);
 }

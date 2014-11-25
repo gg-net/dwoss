@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ public class ReportActionFactory implements ActionFactory {
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new ShowExistingReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReturnsReportAction()),
-                // Disabled for now.
+                // Disabled for now. Web in Client not yet optimized.
                 //                new MetaAction("Geschäftsführung", "Abschluss Reporte", new RevenueReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new ExportRevenueReportAction()));
     }

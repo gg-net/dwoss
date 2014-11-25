@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,20 +17,23 @@
 package eu.ggnet.dwoss.uniqueunit.eao;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
-
+import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 
+import static eu.ggnet.dwoss.uniqueunit.entity.QProduct.product;
 import static eu.ggnet.dwoss.uniqueunit.entity.QUniqueUnitHistory.uniqueUnitHistory;
 
 /**
@@ -210,4 +213,60 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
                         .or(uniqueUnitHistory.comment.eq("REFURBISHED_ID set to " + refurbishedId)))).singleResult(uniqueUnitHistory);
         return (result == null ? null : result.getUniqueUnit());
     }
+
+    /**
+     * Returns a collection of manufactures, which are used by any product, like product.tradeName.getManufacturer.
+     * <p>
+     * @return a collection of manufactures, which are used by any product, like product.tradeName.getManufacturer.
+     */
+    public NavigableSet<TradeName> findUsedManufactuers() {
+        return new JPAQuery(em).from(product).groupBy(product.tradeName).list(product.tradeName)
+                .stream().map(TradeName::getManufacturer).collect(Collectors.toCollection(() -> new TreeSet<>()));
+    }
+
+    /**
+     * Returns the amount of unique units, split by date, contractor and brand.
+     * <p>
+     * @param start
+     * @param step  the step size.
+     * @param end
+     * @return the amount of unique units, split by date, contractor and brand.
+     */
+    public NavigableMap<Date, BrandContractorCount> countByInputDateContractor(Date start, Date end, Step step) {
+        TypedQuery<CountHolder> q = em.createNamedQuery("UniqueUnit.countByInputDateContractor", CountHolder.class)
+                .setParameter("start", start).setParameter("end", end);
+
+        NavigableMap<Date, BrandContractorCount> result = prepare(start, end, step);
+        for (CountHolder holder : q.getResultList()) {
+            BrandContractorCount count = result.get(step.truncate(holder.getInputDate()));
+            // Highly unlikely case, but if it happens a detail message might help.
+            if ( count == null ) throw new RuntimeException("No prepared BrandContractorCount found for " + step.name()
+                        + ":inputDate=" + DateFormats.ISO.format(holder.getInputDate())
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getInputDate()))
+                        + ",keys=" + nice(result.keySet(), step)
+                );
+            count.addTo(holder.getBrand(), holder.getContractor(), holder.getCount());
+        }
+        return result;
+    }
+
+    private NavigableMap<Date, BrandContractorCount> prepare(Date start, Date end, Step step) {
+        NavigableMap<Date, BrandContractorCount> result = new TreeMap<>();
+        Date actual = step.truncate(start);
+        end = step.prepareEnd(end);
+        while (actual.before(end)) {
+            result.put(actual, new BrandContractorCount());
+            actual = step.incement(actual);
+        }
+        return result;
+    }
+
+    private List<String> nice(Set<Date> dates, Step step) {
+        List<String> result = new ArrayList<>();
+        for (Date date : dates) {
+            result.add(step.format(date) + "(" + DateFormats.ISO.format(date) + ")");
+        }
+        return result;
+    }
+
 }

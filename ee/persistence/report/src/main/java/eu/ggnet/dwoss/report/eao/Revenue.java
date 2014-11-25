@@ -31,6 +31,16 @@ import lombok.*;
 @Value
 public class Revenue {
 
+    @ToString
+    @EqualsAndHashCode
+    public static class RevenueMargin {
+
+        public double revenue;
+
+        public double margin;
+
+    }
+
     @Value
     public static class Key {
 
@@ -55,41 +65,42 @@ public class Revenue {
 
     }
 
-    private final Map<Key, Double> details = new HashMap<>();
+    private final Map<Key, RevenueMargin> details = new HashMap<>();
 
     {
         for (SalesChannel channel : SalesChannel.values()) {
             for (DocumentType type : DocumentType.values()) {
                 for (TradeName contractor : TradeName.values()) {
-                    details.put(new Key(channel, type, contractor), 0.);
+                    details.put(new Key(channel, type, contractor), new RevenueMargin());
                 }
             }
         }
     }
 
-    public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double amount) {
+    public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double revenue, double margin) {
         Key k = new Key(channel, type, contractor);
-        details.put(k, details.get(k) + amount);
+        details.get(k).revenue += revenue;
+        details.get(k).margin += margin;
     }
 
-    public double getSum() {
+    public double sum() {
         double sum = 0;
-        for (Double value : details.values()) sum += value;
+        for (RevenueMargin value : details.values()) sum += value.revenue;
         return sum;
     }
 
-    public double getSum(DocumentType type) {
+    public double sumBy(DocumentType type) {
         double sum = 0;
-        for (Entry<Key, Double> entry : details.entrySet()) {
-            if ( entry.getKey().getType() == type ) sum += entry.getValue();
+        for (Entry<Key, RevenueMargin> entry : details.entrySet()) {
+            if ( entry.getKey().getType() == type ) sum += entry.getValue().revenue;
         }
         return sum;
     }
 
-    public double getSum(DocumentType type, TradeName contractor) {
+    public double sumBy(DocumentType type, TradeName contractor) {
         double sum = 0;
-        for (Entry<Key, Double> entry : details.entrySet()) {
-            if ( entry.getKey().getType() == type && entry.getKey().getContractor() == contractor ) sum += entry.getValue();
+        for (Entry<Key, RevenueMargin> entry : details.entrySet()) {
+            if ( entry.getKey().getType() == type && entry.getKey().getContractor() == contractor ) sum += entry.getValue().revenue;
         }
         return sum;
     }
@@ -97,14 +108,25 @@ public class Revenue {
     public double sumBy(SalesChannel channel, DocumentType type) {
         return details.entrySet().stream()
                 .filter(e -> e.getKey().getChannel() == channel && e.getKey().getType() == type)
-                .mapToDouble(e -> e.getValue())
+                .mapToDouble(e -> e.getValue().revenue)
                 .sum();
     }
 
-    public double getSum(TradeName contractor) {
+    public double sumBy(TradeName contractor) {
         return details.entrySet().stream()
                 .filter(e -> e.getKey().getContractor() == contractor)
-                .mapToDouble(e -> e.getValue())
+                .mapToDouble(e -> e.getValue().revenue)
+                .sum();
+    }
+
+    public double sumMargin() {
+        return details.entrySet().stream().mapToDouble(e -> e.getValue().margin).sum();
+    }
+
+    public double sumMarginBy(TradeName contractor) {
+        return details.entrySet().stream()
+                .filter(e -> e.getKey().getContractor() == contractor)
+                .mapToDouble(e -> e.getValue().margin)
                 .sum();
     }
 
