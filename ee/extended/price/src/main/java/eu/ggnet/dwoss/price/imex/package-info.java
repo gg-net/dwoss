@@ -13,5 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * The Importer and Exporters for Contractor information of Products.
  */
 package eu.ggnet.dwoss.price.imex;

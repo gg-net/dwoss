@@ -13,5 +13,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Price Operations.
+ * Hint: Ready to be moved to core.
  */
 package eu.ggnet.dwoss.price;

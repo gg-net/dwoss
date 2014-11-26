@@ -13,5 +13,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Partial Entity Replacements.
+ * Classes, that have only partial properties of the full Entities.
  */
 package eu.ggnet.dwoss.report.entity.partial;

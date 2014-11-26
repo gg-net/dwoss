@@ -13,5 +13,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Stock Entity classes.
+ * <p>
+ * There are some special cases:
+ * <ul>
+ * <li>{@link StockUnit}</li>
+ * <li>{@link StockTransactionType}</li>
+ * </ul>
+ * </p>
  */
 package eu.ggnet.dwoss.stock.entity;

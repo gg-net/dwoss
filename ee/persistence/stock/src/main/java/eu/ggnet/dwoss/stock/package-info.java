@@ -13,5 +13,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Stock.
+ * The Stock component of the Deutsche Warenwirtschaft.
+ * See:
+ * <ul>
+ * <li>{@link de.dw.stock.entity}</li>
+ * </ul>
  */
 package eu.ggnet.dwoss.stock;

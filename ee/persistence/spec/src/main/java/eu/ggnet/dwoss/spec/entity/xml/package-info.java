@@ -13,5 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * Optional XML Wrapper Classes for Entities.
  */
 package eu.ggnet.dwoss.spec.entity.xml;

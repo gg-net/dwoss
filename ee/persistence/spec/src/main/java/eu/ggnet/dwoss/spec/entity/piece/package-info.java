@@ -13,6 +13,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * PropuctSpecification component Entity classes.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 package eu.ggnet.dwoss.spec.entity.piece;
