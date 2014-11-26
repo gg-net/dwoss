@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
+ */
+/**
  * Mandator Services.
  * A Mandator may implement these Services, but doesn't need to.
  * The Application has always a default fallback if no implementation exists.

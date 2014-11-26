@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
+ */
+/**
  * Receipt Ui Components focusing on ProductSpec and uniqueUnit.Product.
  */
 package eu.ggnet.dwoss.receipt.product;

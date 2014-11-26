@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
+ */
+/**
  * Common rules demanded by GG-Net or Contractors used through the hole application.
  */
 package eu.ggnet.dwoss.rules;

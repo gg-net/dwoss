@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- *
+ */
+/**
  * Miscellaneous Ui Components.
  * Put hear a UI that don't fit somewhere else.
  * Don't use a sub package.
