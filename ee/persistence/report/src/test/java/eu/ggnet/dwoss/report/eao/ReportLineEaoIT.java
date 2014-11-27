@@ -1,13 +1,5 @@
 package eu.ggnet.dwoss.report.eao;
 
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.eao.Revenue;
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
-
 import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
@@ -19,19 +11,21 @@ import org.junit.*;
 
 import eu.ggnet.dwoss.report.assist.ReportPu;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
-import eu.ggnet.dwoss.rules.Step;
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-
-
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.rules.Step.DAY;
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.rules.Step.DAY;
 import static eu.ggnet.dwoss.rules.TradeName.*;
 import static org.apache.commons.lang3.time.DateUtils.*;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
+import static org.apache.commons.lang3.time.DateUtils.parseDate;
 import static org.junit.Assert.*;
 
 /**
@@ -352,12 +346,12 @@ public class ReportLineEaoIT {
 
         // Month and count
         em.getTransaction().begin();
-        NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), DAY);
+        NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), DAY, true);
         for (Entry<Date, Revenue> e : result.entrySet()) {
             assertEquals(100.0, e.getValue().sumBy(INVOICE), 0.0001);
 //            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
         }
-        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), Step.MONTH);
+        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), Step.MONTH, true);
         assertEquals(1, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
@@ -368,7 +362,7 @@ public class ReportLineEaoIT {
 //            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
 //        }
         System.out.println(" -- ");
-        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), Step.MONTH);
+        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), Step.MONTH, true);
         assertEquals(2, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
@@ -382,7 +376,7 @@ public class ReportLineEaoIT {
 //            System.out.println("-----");
 //            System.out.println(step);
 //            System.out.println("-----");
-            result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-01-01", "yyyy-MM-dd"), parseDate("2010-12-31", "yyyy-MM-dd"), step);
+            result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-01-01", "yyyy-MM-dd"), parseDate("2010-12-31", "yyyy-MM-dd"), step, true);
 //            for (Entry<Date, Revenue> e : result.entrySet()) {
 //                System.out.println(step.format(e.getKey()) + "|" + DateFormats.ISO.format(e.getKey()) + " - " + e.getValue());
 //            }

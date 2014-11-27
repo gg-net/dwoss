@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,10 +22,8 @@ import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.RevenueReportSum;
-import eu.ggnet.dwoss.rules.Step;
-
 import eu.ggnet.dwoss.rules.PositionType;
-
+import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.util.FileJacket;
 
 /**
@@ -52,8 +50,9 @@ public interface RevenueReporter {
      * @param start
      * @param end
      * @param step
+     * @param extraReported
      * @return a FileJecket containing an XLS with the step revenue for the range.
      */
-    FileJacket toXls(Date start, Date end, Step step);
+    FileJacket toXls(Date start, Date end, Step step, boolean extraReported);
 
 }

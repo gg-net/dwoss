@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,21 +24,18 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
+import javafx.application.Platform;
+
+import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.report.RevenueReportSelectorPane;
+import eu.ggnet.dwoss.report.op.RevenueReporter;
+import eu.ggnet.dwoss.util.OkCancelStage;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.report.op.RevenueReporter;
-
-import eu.ggnet.dwoss.report.RevenueReportSelectorPane;
-import eu.ggnet.dwoss.common.ExceptionUtil;
-
-import eu.ggnet.dwoss.util.OkCancelStage;
-
-import javafx.application.Platform;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
@@ -64,7 +61,9 @@ public class ExportRevenueReportAction extends AccessableAction {
                 new SwingWorker<File, Object>() {
                     @Override
                     protected File doInBackground() throws Exception {
-                        return lookup(RevenueReporter.class).toXls(selector.getStart(), selector.getEnd(), selector.getStep()).toTemporaryFile();
+                        return lookup(RevenueReporter.class)
+                                .toXls(selector.getStart(), selector.getEnd(), selector.getStep(), selector.isExtraReported())
+                                .toTemporaryFile();
                     }
 
                     @Override

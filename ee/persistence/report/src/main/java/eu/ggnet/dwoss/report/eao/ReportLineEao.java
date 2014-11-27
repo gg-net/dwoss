@@ -287,13 +287,14 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * A step size of day will return daily revenues, while a stepsize of month returns monthly revenues.
      * For each stepsize the earliest possible day is used as identifier. e.g.: January 2012 it would be 2012-01-01.
      * <p>
-     * @param posTypes the positiontypes to include
-     * @param start    the start
-     * @param end      the end
-     * @param step     the stepsize.
+     * @param posTypes      the positiontypes to include
+     * @param start         the start
+     * @param end           the end
+     * @param step          the stepsize.
+     * @param extraReported
      * @return the Revenue by Date in the stepsize.
      */
-    public NavigableMap<Date, Revenue> revenueByPositionTypesAndDate(List<PositionType> posTypes, Date start, Date end, Step step) {
+    public NavigableMap<Date, Revenue> revenueByPositionTypesAndDate(List<PositionType> posTypes, Date start, Date end, Step step, boolean extraReported) {
         L.debug("Attempt to find revenue report data with posType={}, start={}, end={}, {}", posTypes, start, end, step);
         TypedQuery<RevenueHolder> q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDate", RevenueHolder.class);
         q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
@@ -307,9 +308,23 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                         + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
                         + ",keys=" + nice(result.keySet(), step)
                 );
-            double margin = 0;
-            if ( Math.abs(holder.getPurchasePrice()) > .001 ) margin = holder.getPrice() - holder.getPurchasePrice();
-            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), holder.getPrice(), margin);
+            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), holder.getPrice(), 0., 0.);
+        }
+        if ( !extraReported ) return result;
+        q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDateReported", RevenueHolder.class);
+        q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
+        List<RevenueHolder> resultList = q.getResultList();
+        System.out.println("Second run size:" + resultList.size());
+        for (RevenueHolder holder : resultList) {
+            System.out.println("Second run: " + holder);
+            Revenue revenueStep = result.get(step.truncate(holder.getReportingDate()));
+            // Highly unlikely case, but if it happens a detail message might help.
+            if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
+                        + ":reportingDate=" + DateFormats.ISO.format(holder.getReportingDate())
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
+                        + ",keys=" + nice(result.keySet(), step)
+                );
+            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), 0., holder.getPrice(), holder.getPurchasePrice());
         }
         return result;
     }

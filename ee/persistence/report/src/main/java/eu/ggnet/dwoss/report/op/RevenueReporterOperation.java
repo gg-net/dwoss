@@ -93,12 +93,12 @@ public class RevenueReporterOperation implements RevenueReporter {
     }
 
     @Override
-    public FileJacket toXls(Date start, Date end, Step step) {
+    public FileJacket toXls(Date start, Date end, Step step, boolean extraReported) {
         String name = "Umsatzreport";
         SubMonitor m = monitorFactory.newSubMonitor(name);
         m.start();
 
-        NavigableMap<Date, Revenue> revenue = eao.revenueByPositionTypesAndDate(Arrays.asList(UNIT, UNIT_ANNEX), start, end, step);
+        NavigableMap<Date, Revenue> revenue = eao.revenueByPositionTypesAndDate(Arrays.asList(UNIT, UNIT_ANNEX), start, end, step, extraReported);
 
         m.worked(10);
         STable template = new STable();
@@ -113,7 +113,8 @@ public class RevenueReporterOperation implements RevenueReporter {
         template.add(new STableColumn("Storno Endkunde", 18, new CFormat(RIGHT, CURRENCY_EURO)));
         template.add(new STableColumn("Storno Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
         template.add(new STableColumn("Umsatz Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
-        template.add(new STableColumn("Ertrag Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
+        template.add(new STableColumn("Ertrag Reported Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
+        template.add(new STableColumn("Einkauf Reported Summe", 18, new CFormat(RIGHT, CURRENCY_EURO)));
 
         STable all = new STable(template);
         all.setModel(new STableModelList(buildSumModel(step, revenue)));
@@ -146,7 +147,8 @@ public class RevenueReporterOperation implements RevenueReporter {
                 r.sumBy(SalesChannel.CUSTOMER, DocumentType.ANNULATION_INVOICE),
                 r.sumBy(DocumentType.ANNULATION_INVOICE),
                 r.sum(),
-                r.sumMargin()
+                r.sumReportedRevenue(),
+                r.sumReportedPurchasePrice()
             });
         }
         return rows;
@@ -166,7 +168,8 @@ public class RevenueReporterOperation implements RevenueReporter {
                 r.getDetails().get(Key.valueOf(SalesChannel.CUSTOMER, DocumentType.ANNULATION_INVOICE, contractor)).revenue,
                 r.sumBy(DocumentType.ANNULATION_INVOICE, contractor),
                 r.sumBy(contractor),
-                r.sumMarginBy(contractor)
+                r.sumReportedRevenueBy(contractor),
+                r.sumReportedPurchasePriceBy(contractor)
             });
         }
         return rows;

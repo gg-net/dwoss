@@ -82,7 +82,10 @@ import static eu.ggnet.dwoss.rules.DocumentType.*;
     @NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
     @NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
     @NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
-    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
+    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
+                + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
+                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor"),
+    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
                 + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
 

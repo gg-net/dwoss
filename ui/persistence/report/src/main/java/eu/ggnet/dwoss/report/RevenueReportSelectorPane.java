@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,15 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import eu.ggnet.saft.core.Client;
-
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.rules.Step;
-import eu.ggnet.dwoss.rules.TradeName;
-
 import javafx.beans.property.*;
 import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+
+import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.rules.Step;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.core.Client;
 
 /**
  * Shows a selector pane for the Revenue Report.
@@ -45,6 +44,8 @@ public class RevenueReportSelectorPane extends GridPane {
     private final ObjectProperty<LocalDate> start;
 
     private final ObjectProperty<LocalDate> end;
+
+    private final BooleanProperty extraReported = new SimpleBooleanProperty(false);
 
     public RevenueReportSelectorPane() {
         setAlignment(Pos.CENTER);
@@ -70,14 +71,20 @@ public class RevenueReportSelectorPane extends GridPane {
 
         addRow(1, new Label("Contractor:"), contractorChoice);
 
+        CheckBox box = new CheckBox();
+        box.setAllowIndeterminate(false);
+        box.setSelected(false);
+        extraReported.bind(box.selectedProperty());
+        addRow(2, new Label("Show reported extra"), box);
+
         DatePicker startPicker = new DatePicker(LocalDate.of(2014, 01, 01));
         start = startPicker.valueProperty();
 
         DatePicker endPicker = new DatePicker(LocalDate.of(2014, 12, 31));
         end = endPicker.valueProperty();
 
-        addRow(2, new Label("Start:"), startPicker);
-        addRow(3, new Label("End:"), endPicker);
+        addRow(3, new Label("Start:"), startPicker);
+        addRow(4, new Label("End:"), endPicker);
 
     }
 
@@ -92,6 +99,10 @@ public class RevenueReportSelectorPane extends GridPane {
             // Name does not match
             return Client.lookup(MandatorSupporter.class).loadContractors().all();
         }
+    }
+
+    public boolean isExtraReported() {
+        return extraReported.get();
     }
 
     public Date getStart() {

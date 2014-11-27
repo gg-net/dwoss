@@ -37,7 +37,9 @@ public class Revenue {
 
         public double revenue;
 
-        public double margin;
+        public double reportedRevenue;
+
+        public double reportedPurchacePrice;
 
     }
 
@@ -77,10 +79,12 @@ public class Revenue {
         }
     }
 
-    public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double revenue, double margin) {
+    public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double revenue, double reportedPrice, double purchacePrice) {
         Key k = new Key(channel, type, contractor);
-        details.get(k).revenue += revenue;
-        details.get(k).margin += margin;
+        RevenueMargin rm = details.get(k);
+        rm.revenue += revenue;
+        rm.reportedRevenue += reportedPrice;
+        rm.reportedPurchacePrice += purchacePrice;
     }
 
     public double sum() {
@@ -119,14 +123,25 @@ public class Revenue {
                 .sum();
     }
 
-    public double sumMargin() {
-        return details.entrySet().stream().mapToDouble(e -> e.getValue().margin).sum();
+    public double sumReportedRevenue() {
+        return details.entrySet().stream().mapToDouble(e -> e.getValue().reportedRevenue).sum();
     }
 
-    public double sumMarginBy(TradeName contractor) {
+    public double sumReportedRevenueBy(TradeName contractor) {
         return details.entrySet().stream()
                 .filter(e -> e.getKey().getContractor() == contractor)
-                .mapToDouble(e -> e.getValue().margin)
+                .mapToDouble(e -> e.getValue().reportedRevenue)
+                .sum();
+    }
+
+    public double sumReportedPurchasePrice() {
+        return details.entrySet().stream().mapToDouble(e -> e.getValue().reportedPurchacePrice).sum();
+    }
+
+    public double sumReportedPurchasePriceBy(TradeName contractor) {
+        return details.entrySet().stream()
+                .filter(e -> e.getKey().getContractor() == contractor)
+                .mapToDouble(e -> e.getValue().reportedPurchacePrice)
                 .sum();
     }
 
