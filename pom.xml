@@ -186,6 +186,28 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.1</version>
                 <configuration>
+                    <groups>
+                        <group>
+                            <title>Libraries and Core</title>
+                            <packages>eu.ggnet.dwoss.configuration:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - Customer</title>
+                            <packages>eu.ggnet.dwoss.customer*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - RedTape</title>
+                            <packages>eu.ggnet.dwoss.redtape*</packages>
+                        </group>
+                        <group>
+                            <title>Libraries and Core</title>
+                            <packages>eu.ggnet.dwoss.util*</packages>
+                        </group>
+                        <group>
+                            <title>Assembly</title>
+                            <packages>eu.ggnet.dwoss.assembly</packages>
+                        </group>
+                    </groups>
                     <overview>${project.build.directory}/html/overview.html</overview>
                     <show>private</show>
                     <javadocVersion>1.8</javadocVersion>
