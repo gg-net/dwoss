@@ -31,7 +31,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.misc.ResolveRepaymentController;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.api.Authorisation;
@@ -91,7 +91,7 @@ public class ResolveRepaymentAction extends AccessableAction {
                     stage.setScene(scene);
                     stage.show();
                 } catch (Exception ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         });

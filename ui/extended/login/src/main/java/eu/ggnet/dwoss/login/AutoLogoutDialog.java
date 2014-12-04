@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.Workspace;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -177,7 +177,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
             } catch (AuthenticationException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             } catch (Exception ex) {
-                ExceptionUtil.show(this, ex);
+                DwOssCore.show(this, ex);
             }
         }
     }//GEN-LAST:event_loginButtonActionPerformed

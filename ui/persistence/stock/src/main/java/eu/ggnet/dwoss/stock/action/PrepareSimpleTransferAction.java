@@ -35,7 +35,7 @@ import eu.ggnet.saft.core.Workspace;
 
 
 import eu.ggnet.dwoss.stock.StockTransactionCreatorViewCask;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.dialog.Alert;
 
@@ -112,7 +112,7 @@ public class PrepareSimpleTransferAction extends AccessableAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.receipt.reporting.AuditReporter;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -61,7 +61,7 @@ public class AuditReportByRangeAction extends AbstractAction {
                 try {
                     Desktop.getDesktop().open(get().toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

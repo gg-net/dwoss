@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -99,7 +99,7 @@ public class DossierCreateAction extends AbstractAction {
             try {
                 lookup(RedTapeWorker.class).revertCreate(doc);
             } catch (UserInfoException ex) {
-                ExceptionUtil.show(parent, ex);
+                DwOssCore.show(parent, ex);
             }
         }
     }

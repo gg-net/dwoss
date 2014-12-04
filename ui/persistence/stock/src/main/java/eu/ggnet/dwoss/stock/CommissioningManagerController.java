@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.stock.entity.StockUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.rights.op.Authentication;
 
@@ -123,7 +123,7 @@ public class CommissioningManagerController {
                     if ( !valid(su, refurbishId) ) return;
                     model.addUnit(su);
                 } catch (UserInfoException | ExecutionException | InterruptedException e) {
-                    ExceptionUtil.show(view, e);
+                    DwOssCore.show(view, e);
                 } finally {
                     view.unitIdTextField.setEnabled(true);
                     view.unitIdTextField.setText("");

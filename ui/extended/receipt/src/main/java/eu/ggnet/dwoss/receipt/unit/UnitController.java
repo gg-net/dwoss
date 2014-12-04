@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 
@@ -168,7 +168,7 @@ public class UnitController {
                 try {
                     model.getMetaUnit().getRefurbishId().setValue(get());
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(view, ex);
+                    DwOssCore.show(view, ex);
                 } finally {
                     view.updateMetaUnit();
                 }
@@ -202,7 +202,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(view, ex);
+                    DwOssCore.show(view, ex);
                 } finally {
                     view.updateMetaUnit();
                     view.updateProduct();
@@ -226,7 +226,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(view, ex);
+                    DwOssCore.show(view, ex);
                 } finally {
                     view.updateMetaUnit();
                 }
@@ -249,7 +249,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(view, ex);
+                    DwOssCore.show(view, ex);
                 } finally {
                     view.updateMetaUnit();
                 }

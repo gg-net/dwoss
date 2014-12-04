@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.entity.Dossier;
 
 import eu.ggnet.dwoss.redtape.IDossierSelectionHandler;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -127,7 +127,7 @@ public class DossierTableController {
             } catch (CancellationException ex) {
                 L.debug("Worker {} canceled", this);
             } catch (InterruptedException | ExecutionException ex) {
-                ExceptionUtil.show(null, ex);
+                DwOssCore.show(null, ex);
             }
         }
     }

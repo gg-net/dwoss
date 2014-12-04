@@ -28,7 +28,7 @@ import javax.swing.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.saft.core.MainComponent;
 
@@ -64,7 +64,7 @@ public class FileListViewCask extends javax.swing.JPanel implements MainComponen
                 try {
                     Desktop.getDesktop().open(file);
                 } catch (IOException ex) {
-                    ExceptionUtil.show(SwingUtilities.getWindowAncestor(FileListViewCask.this), ex);
+                    DwOssCore.show(SwingUtilities.getWindowAncestor(FileListViewCask.this), ex);
                 }
             }
         });

@@ -24,7 +24,7 @@ import javax.swing.*;
 import eu.ggnet.saft.core.Workspace;
 
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.priv.SearchSingleton;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -54,7 +54,7 @@ public class RecreateSearchIndex extends AbstractAction {
                     get();
                     JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Suchindex neu erzeugt.");
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

@@ -14,5 +14,6 @@
         <module>api</module>
         <module>core</module>
         <module>runtime</module>
+        <module>sample</module>
     </modules>
 </project>

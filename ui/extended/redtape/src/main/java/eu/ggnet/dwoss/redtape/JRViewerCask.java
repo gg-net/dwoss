@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.DocumentSupporter;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -96,7 +96,7 @@ public class JRViewerCask extends JRViewer {
                                 JOptionPane.showMessageDialog(JRViewerCask.this, "Mail wurde versendet");
                                 infoDialog.dispose();
                             } catch (InterruptedException | ExecutionException | HeadlessException ex) {
-                                ExceptionUtil.show(infoDialog, ex);
+                                DwOssCore.show(infoDialog, ex);
                             } finally {
                                 JRViewerCask.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                             }

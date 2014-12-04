@@ -31,7 +31,7 @@ import javax.swing.AbstractListModel;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Workspace;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -58,7 +58,7 @@ public class DirectoryMonitor extends AbstractListModel<File> implements Runnabl
             directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             reloadView();
         } catch (IOException | RuntimeException ex) {
-            ExceptionUtil.show(Client.lookup(Workspace.class).getMainFrame(), ex);
+            DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
             throw new RuntimeException(ex);
         }
     }

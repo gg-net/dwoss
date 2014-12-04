@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
@@ -60,7 +60,7 @@ public class UpdateProductAction extends AccessableAction {
                 new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, lookup(Workspace.class).getMainFrame());
             }
         } catch (UserInfoException ex) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
         }
     }
 }

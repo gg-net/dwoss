@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
 import eu.ggnet.dwoss.stock.entity.StockTransactionType;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.HtmlPanel;
 import eu.ggnet.dwoss.util.OkCancelDialog;
@@ -72,7 +72,7 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

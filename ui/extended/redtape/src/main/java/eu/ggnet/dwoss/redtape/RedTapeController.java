@@ -35,7 +35,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
@@ -353,7 +353,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                 Dossier dos = lookup(RedTapeWorker.class).updateComment(model.getSelectedDossier(), sav.getText());
                 reloadSelectionOnStateChange(dos);
             } catch (UserInfoException ex) {
-                ExceptionUtil.show(view, ex);
+                DwOssCore.show(view, ex);
             }
         }
     }

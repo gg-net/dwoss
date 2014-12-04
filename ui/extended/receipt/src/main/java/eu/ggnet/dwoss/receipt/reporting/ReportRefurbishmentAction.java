@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.receipt.reporting.RefurbishmentReporter;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -63,7 +63,7 @@ public class ReportRefurbishmentAction extends AbstractAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

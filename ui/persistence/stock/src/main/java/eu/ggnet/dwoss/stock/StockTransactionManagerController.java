@@ -38,7 +38,7 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.HtmlDialog;
 
@@ -104,7 +104,7 @@ public class StockTransactionManagerController {
                 } catch (CancellationException ex) {
                     // Ignore
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         };
@@ -130,7 +130,7 @@ public class StockTransactionManagerController {
             JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
             model.remove(transaction);
         } catch (Exception ex) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
         }
     }
 }

@@ -32,7 +32,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
@@ -75,7 +75,7 @@ public class PriceByInputFileAction extends AccessableAction {
                     try {
                         get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                        DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                     }
                 }
             }.execute();

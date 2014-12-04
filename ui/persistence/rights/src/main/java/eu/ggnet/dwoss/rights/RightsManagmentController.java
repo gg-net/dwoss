@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -345,7 +345,7 @@ public class RightsManagmentController implements Initializable {
             resetDeactiveRights();
             resetAllRights();
         } catch (IOException exception) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), exception);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), exception);
         }
     }
 
@@ -366,7 +366,7 @@ public class RightsManagmentController implements Initializable {
             stage.setScene(scene);
             stage.showAndWait();
         } catch (IOException exception) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), exception);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), exception);
         }
     }
 

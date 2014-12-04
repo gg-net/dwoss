@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.report;
 import java.net.URL;
 import java.text.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.*;
@@ -40,6 +41,7 @@ import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.OkCancelStage;
+import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.core.Client;
 
 import lombok.*;
@@ -50,7 +52,21 @@ import static eu.ggnet.dwoss.util.DateFormats.ISO;
  *
  * @author pascal.perau
  */
-public class ReportController implements Initializable {
+public class ReportController implements Initializable, FxController, Consumer<ReportController.In> {
+
+    @Override
+    public void accept(In in) {
+        initReportData(in.reportResult, in.viewmode);
+    }
+
+    @Value
+    public static class In {
+
+        private final ViewReportResult reportResult;
+
+        private final boolean viewmode;
+
+    }
 
     private class TableSummary {
 

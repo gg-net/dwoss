@@ -33,7 +33,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
@@ -65,7 +65,7 @@ public class PriceBlockerAction extends AccessableAction {
             per.setUnitPriceFixed(Change.SET);
             lookup(Importer.class).store(per, "Set directly via PriceBlocker", lookup(Guardian.class).getUsername());
         } catch (UserInfoException ex) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
         }
     }
 

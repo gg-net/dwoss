@@ -30,7 +30,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.report.ReportAgent;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
@@ -73,7 +73,7 @@ public class CreateReportAction extends AccessableAction {
                 controller.initReportData(lookup(ReportAgent.class).prepareReport(selector.getParameter(), selector.loadUnreported()), false);
                 stage.show();
             } catch (IOException ex) {
-                ExceptionUtil.show(dialog, ex);
+                DwOssCore.show(dialog, ex);
             }
         });
     }

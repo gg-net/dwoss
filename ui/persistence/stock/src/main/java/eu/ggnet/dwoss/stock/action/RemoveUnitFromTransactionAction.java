@@ -29,7 +29,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 
 import eu.ggnet.dwoss.stock.StockTransactionCreatorViewCask;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
@@ -58,7 +58,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
                     dialog.getRefurbishIds(), Lookup.getDefault().lookup(Guardian.class).getUsername(), dialog.getComment());
             JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "SopoNr: " + dialog.getRefurbishIds() + " wurde aus Transaktion entfernt.");
         } catch (Exception ex) {
-            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
         }
     }
 }

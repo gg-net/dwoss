@@ -28,7 +28,7 @@ public class UnhandledExceptionCatcher extends EventQueue {
             super.dispatchEvent(newEvent);
         } catch (Exception e) {
             e.printStackTrace();
-            ExceptionUtil.show(null, e);
+            DwOssCore.show(null, e);
         }
     }
 }

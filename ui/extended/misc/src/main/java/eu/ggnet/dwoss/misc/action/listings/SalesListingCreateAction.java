@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -67,7 +67,7 @@ public class SalesListingCreateAction extends AbstractAction {
                         }
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

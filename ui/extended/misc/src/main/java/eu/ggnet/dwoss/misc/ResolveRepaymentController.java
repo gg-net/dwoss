@@ -32,7 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
@@ -133,7 +133,7 @@ public class ResolveRepaymentController implements Initializable {
                 lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
                 JOptionPane.showMessageDialog(null, "Repayment Resolved");
             } catch (UserInfoException ex) {
-                EventQueue.invokeLater(() -> ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex));
+                EventQueue.invokeLater(() -> DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex));
             }
         }).start();
     }

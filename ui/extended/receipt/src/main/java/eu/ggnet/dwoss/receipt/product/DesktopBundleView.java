@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.spec.format.SpecFormater;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.IPreClose;
 
@@ -308,7 +308,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
             productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo1.getValue(), mustBrand, mustGroup1, parent);
             validateAndUpdateDesktop();
         } catch (UserInfoException e) {
-            ExceptionUtil.show(parent, e);
+            DwOssCore.show(parent, e);
         }
     }//GEN-LAST:event_desktopEditButtonActionPerformed
 
@@ -318,7 +318,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
             productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo2.getValue(), mustBrand, mustGroup2, parent);
             validateAndUpdateMonitor();
         } catch (UserInfoException e) {
-            ExceptionUtil.show(parent, e);
+            DwOssCore.show(parent, e);
         }
     }//GEN-LAST:event_monitorEditButtonActionPerformed
 

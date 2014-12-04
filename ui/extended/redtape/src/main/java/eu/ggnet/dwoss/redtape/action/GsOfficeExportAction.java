@@ -31,7 +31,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_GSOFFICE_IN_XML;
@@ -65,7 +65,7 @@ public class GsOfficeExportAction extends AccessableAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

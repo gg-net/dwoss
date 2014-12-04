@@ -25,7 +25,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.rights.RightsManagmentController;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -61,7 +61,7 @@ public class RightsManagmentAction extends AccessableAction {
                     stage.setScene(scene);
                     stage.show();
                 } catch (IOException exception) {
-                    ExceptionUtil.show(mainFrame, exception);
+                    DwOssCore.show(mainFrame, exception);
                 }
             }
 

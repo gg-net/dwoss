@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,9 @@ import java.io.*;
 
 import javax.swing.JFrame;
 
-import eu.ggnet.saft.core.Client;
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-
 import eu.ggnet.dwoss.util.MailTo;
+import eu.ggnet.saft.core.Client;
 
 /**
  *

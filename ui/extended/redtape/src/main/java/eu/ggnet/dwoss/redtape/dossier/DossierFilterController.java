@@ -45,7 +45,7 @@ import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.RedTapeUiUtil;
 
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.PojoFilter;
@@ -198,7 +198,7 @@ public class DossierFilterController {
             } catch (CancellationException ex) {
                 // Do nothing, normal cancel.
             } catch (ExecutionException | InterruptedException ex) {
-                ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
             }
         }
 

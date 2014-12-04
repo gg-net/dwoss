@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.unit;
 
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -775,7 +775,7 @@ public class UnitView extends javax.swing.JDialog {
         try {
             controller.createOrEditPart(partNoField.getText());
         } catch (UserInfoException ex) {
-            ExceptionUtil.show(this, ex);
+            DwOssCore.show(this, ex);
         }
         controller.validateRefurbishedId();
     }//GEN-LAST:event_editProductButtonActionPerformed

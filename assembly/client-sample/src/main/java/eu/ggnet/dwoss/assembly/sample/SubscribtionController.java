@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import lombok.Setter;
 
@@ -131,7 +131,7 @@ public class SubscribtionController implements Initializable {
                 }
             }
         } catch (IOException ex) {
-            ExceptionUtil.show(null, ex);
+            DwOssCore.show(null, ex);
         }
     }
 

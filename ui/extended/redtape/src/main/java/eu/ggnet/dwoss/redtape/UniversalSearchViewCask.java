@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtape;
 import eu.ggnet.dwoss.util.TupleHtmlRenderer;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.Dialog;
 import java.net.URL;
@@ -97,7 +97,7 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
             } catch (CancellationException ex) {
                 // Do nothing, normal cancel.
             } catch (ExecutionException | InterruptedException ex) {
-                ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
             }
         }
     }

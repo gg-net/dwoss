@@ -30,7 +30,7 @@ import eu.ggnet.saft.core.Workspace;
 
 import eu.ggnet.dwoss.redtape.reporting.DirectDebitReporter;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -57,7 +57,7 @@ public class DirectDebitReportAction extends AbstractAction {
                 try {
                     Desktop.getDesktop().open(get());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    ExceptionUtil.show(Client.lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

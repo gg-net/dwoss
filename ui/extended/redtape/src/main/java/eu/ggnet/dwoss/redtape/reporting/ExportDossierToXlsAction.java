@@ -33,7 +33,7 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.dialog.Alert;
 
@@ -66,7 +66,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
                     if ( fj == null ) Alert.builder().title("Fehler").body("Keine Rückgabewerte").build().show();
                     else Desktop.getDesktop().open(fj.toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    ExceptionUtil.show(Client.lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

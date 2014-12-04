@@ -26,7 +26,7 @@ import javax.swing.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.saft.core.ToolbarComponent;
 
@@ -82,7 +82,7 @@ public class OpenDirectoryViewCask extends javax.swing.JPanel implements Toolbar
         try {
             Desktop.getDesktop().open(new File(GlobalConfig.APPLICATION_PATH_OUTPUT));
         } catch (IOException ex) {
-            ExceptionUtil.show(SwingUtilities.getWindowAncestor(this), ex);
+            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
         }
     }//GEN-LAST:event_buttonActionPerformed
 

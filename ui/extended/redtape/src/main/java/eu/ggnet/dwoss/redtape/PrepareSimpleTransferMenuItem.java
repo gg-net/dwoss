@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.stock.entity.StockUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionModel;
@@ -91,12 +91,12 @@ public class PrepareSimpleTransferMenuItem extends MenuItem implements Accessabl
                         try {
                             get();
                         } catch (InterruptedException | ExecutionException ex) {
-                            ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                         }
                     }
                 }.execute();
             } catch (UserInfoException ex) {
-                ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
             }
         });
     }

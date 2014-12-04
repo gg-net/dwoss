@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.common.DetailDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
@@ -85,7 +85,7 @@ public class ContractorImportAction extends AccessableAction {
                             .details(result.getErrors())
                             .showDialog();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

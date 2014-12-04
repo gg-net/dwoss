@@ -29,7 +29,7 @@ import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
 
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -63,7 +63,7 @@ public class MovementAction extends AbstractAction {
                     JasperViewer viewer = new JasperViewer(get(), false);
                     viewer.setVisible(true);
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

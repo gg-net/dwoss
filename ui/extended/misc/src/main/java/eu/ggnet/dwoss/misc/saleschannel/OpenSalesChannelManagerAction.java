@@ -38,7 +38,7 @@ import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.model.SalesChannelLine;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
@@ -98,12 +98,12 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                                 String msg = (get() ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt");
                                 JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), msg);
                             } catch (InterruptedException | ExecutionException ex) {
-                                ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                             }
                         }
                     }.execute();
                 } catch (InterruptedException | ExecutionException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

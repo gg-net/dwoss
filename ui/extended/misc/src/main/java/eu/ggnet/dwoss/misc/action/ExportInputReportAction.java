@@ -26,7 +26,7 @@ import javax.swing.SwingWorker;
 
 import javafx.application.Platform;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.misc.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
 import eu.ggnet.dwoss.util.OkCancelStage;
@@ -66,7 +66,7 @@ public class ExportInputReportAction extends AccessableAction {
                     try {
                         Desktop.getDesktop().open(get());
                     } catch (InterruptedException | ExecutionException | IOException ex) {
-                        ExceptionUtil.show(Client.lookup(Workspace.class).getMainFrame(), ex);
+                        DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
                     }
                 }
             }.execute();

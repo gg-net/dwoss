@@ -29,13 +29,13 @@ import javafx.stage.Stage;
 
 import org.openide.util.Lookup;
 
+import eu.ggnet.dwoss.common.DwFinalExceptionConsumer;
 import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Server;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import javassist.NotFoundException;
@@ -89,6 +89,7 @@ public class RunClientFx extends Application {
             swingClient.init();
         });
         Lookup.getDefault().lookup(Server.class).initialise();
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
     }
 
     @Override

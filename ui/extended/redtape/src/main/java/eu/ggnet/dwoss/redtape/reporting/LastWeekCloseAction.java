@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
 
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
@@ -64,7 +64,7 @@ public class LastWeekCloseAction extends AccessableAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException e) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), e);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), e);
                 }
             }
         }.execute();

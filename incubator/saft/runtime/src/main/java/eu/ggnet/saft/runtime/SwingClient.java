@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,25 +41,25 @@ public class SwingClient {
 
     // Helper for Substance Lafs.
     private static class SlafName {
-        
+
         public SlafName(String name, String className) {
             this.name = name;
             this.className = "org.pushingpixels.substance.api.skin." + className;
         }
-        
+
         String name;
-        
+
         String className;
     }
-    
+
     private static class LafAction implements ActionListener {
-        
+
         private final String className;
-        
+
         public LafAction(String className) {
             this.className = className;
         }
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -71,7 +71,7 @@ public class SwingClient {
             }
         }
     }
-    
+
     private static final SlafName[] substanceLaafs = {
         new SlafName("Autumn", "SubstanceAutumnLookAndFeel"),
         new SlafName("Business", "SubstanceBusinessLookAndFeel"),
@@ -102,17 +102,17 @@ public class SwingClient {
         new SlafName("Sahara", "SubstanceSaharaLookAndFeel"),
         new SlafName("Twilight", "SubstanceTwilightLookAndFeel")
     };
-    
+
     private static final Logger L = LoggerFactory.getLogger(SwingClient.class);
-    
+
     private ClientView view;
-    
+
     private final ScheduledExecutorService es = Executors.newSingleThreadScheduledExecutor((r) -> {
         Thread t = new Thread(r);
         t.setDaemon(true);
         return t;
     });
-    
+
     private int autologout = 0;
 
     /**
@@ -120,7 +120,7 @@ public class SwingClient {
      */
     protected void close() {
     }
-    
+
     public void init() {
         try {
             UIManager.setLookAndFeel(lookup(UserPreferences.class).loadLaf());
@@ -134,7 +134,7 @@ public class SwingClient {
         // Collecting all MetaActions
         Collection<? extends ActionFactory> actionFactories = Lookup.getDefault().lookupAll(ActionFactory.class);
         if ( actionFactories == null || actionFactories.isEmpty() ) throw new IllegalStateException("No ActionFactories found");
-        
+
         List<MetaAction> metaActions = new ArrayList<>();
         for (ActionFactory actionFactory : actionFactories) {
             metaActions.addAll(actionFactory.createMetaActions());
@@ -171,16 +171,16 @@ public class SwingClient {
             if ( (mc instanceof UserChangeListener) && Lookup.getDefault().lookup(Guardian.class) != null )
                 lookup(Guardian.class).addUserChangeListener((UserChangeListener)mc);
         }
-        
+
         enableAccessRestrictions(metaActions);
-        
+
         lookup(Workspace.class).setMainFrame(view);
-        
+
         es.scheduleAtFixedRate(new HiddenMonitorDisplayer(view), 2, 2, TimeUnit.SECONDS);
-        
+
         view.setLocationByPlatform(true);
         lookup(UserPreferences.class).loadLocation(view);
-        
+
         Workspace ws = lookup(Workspace.class);
         ws.setMainFrame(view);
         ws.addShutdownListener(new ActionListener() {
@@ -196,17 +196,20 @@ public class SwingClient {
                 close();
             }
         });
-        
+
         view.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 lookup(Workspace.class).shutdown();
             }
         });
-        
+
         if ( System.getProperty("persistence.host") != null ) view.setTitle(view.getTitle() + " Datenbank:" + System.getProperty("persistence.host"));
+
+        // Autostart Saft. This will be different one day.
+        UiCore.continueSwing(view);
     }
-    
+
     private void ready(String postTitle) {
         AutoLoginLogout all = Lookup.getDefault().lookup(AutoLoginLogout.class);
         if ( all == null ) return;
@@ -216,12 +219,12 @@ public class SwingClient {
         else postTitle = " - " + postTitle;
         view.setTitle(view.getTitle() + postTitle);
     }
-    
+
     private void run(String postTitle) {
         view.setVisible(true);
         ready(postTitle);
     }
-    
+
     public void show(final String postTitle, final Application.Parameters parameters) {
         if ( parameters != null && parameters.getNamed().containsKey("autologout") ) {
             autologout = Integer.parseInt(parameters.getNamed().get("autologout"));
@@ -229,7 +232,7 @@ public class SwingClient {
         }
         run(postTitle);
     }
-    
+
     private SortedMap<Integer, JMenu> buildMenus(Collection<MetaAction> metaActions) {
         Map<String, JMenu> menus = new HashMap<>();
         SortedMap<Integer, JMenu> finalMenus = new TreeMap<>();
@@ -240,14 +243,14 @@ public class SwingClient {
                 List<String> names = metaAction.getMenuNames().subList(0, i + 1);
                 String indexName = names.toString();
                 String leafName = names.get(i);
-                
+
                 if ( !menus.containsKey(indexName) ) { // Gibt es das Menu schon, wenn nicht, lege es an
                     JMenu menu = new JMenu(leafName);
                     menus.put(indexName, menu);
                     if ( parrentMenu == null ) finalMenus.put(index(leafName), menu);
                     else parrentMenu.add(menu);
                 }
-                
+
                 JMenu menu = menus.get(indexName);
                 parrentMenu = menu;
 
@@ -260,7 +263,7 @@ public class SwingClient {
         }
         return finalMenus;
     }
-    
+
     private void enableAccessRestrictions(Collection<MetaAction> metaActions) {
         Guardian accessCos = Lookup.getDefault().lookup(Guardian.class);
         if ( accessCos != null ) {
@@ -296,7 +299,7 @@ public class SwingClient {
                 return new Random().nextInt(9000) + 100;
         }
     }
-    
+
     private JMenu buildLafMenu() {
         String active = UIManager.getLookAndFeel().getClass().getName();
         JMenu lafMenu = new JMenu("Look & Feel");
@@ -324,7 +327,7 @@ public class SwingClient {
         } catch (ClassNotFoundException ex) {
             L.info("Class SkinInfo not found, Substance Lafs are not installed.");
         }
-        
+
         return lafMenu;
     }
 }

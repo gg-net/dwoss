@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.spec.SpecExporter;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
@@ -65,7 +65,7 @@ public class ProductSpecExportAction extends AccessableAction {
                         FileJacket fj = get();
                         fj.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT);
                     } catch (InterruptedException | ExecutionException ex) {
-                        ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                        DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                     }
                 }
             }.execute();

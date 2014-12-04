@@ -37,7 +37,7 @@ import javafx.scene.paint.Color;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.SwingInteraction;
@@ -586,7 +586,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
                 }
             });
         } catch (Exception ex) {
-            ExceptionUtil.show(SwingUtilities.getWindowAncestor(this), ex);
+            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
         }
         unitInputField.setText("");
     }//GEN-LAST:event_addUnitAction
@@ -609,7 +609,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
                 positions.addAll(document.getPositions().values());
             });
         } catch (UserInfoException ex) {
-            ExceptionUtil.show(SwingUtilities.getWindowAncestor(this), ex);
+            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
         }
     }//GEN-LAST:event_addNonUnitPosition
 
@@ -657,7 +657,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
                     positions.clear();
                     positions.addAll(document.getPositions().values());
                 } catch (UserInfoException ex) {
-                    ExceptionUtil.show(null, ex);
+                    DwOssCore.show(null, ex);
                 }
             });
         }

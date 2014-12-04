@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.action;
 
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.Dialog;
 import java.awt.Window;
@@ -89,7 +89,7 @@ public class UpdateDocumentAction extends AbstractAction {
             try {
                 doc = lookup(RedTapeWorker.class).revertCreate(doc);
             } catch (UserInfoException ex) {
-                ExceptionUtil.show(parent, ex);
+                DwOssCore.show(parent, ex);
             }
         }
         redTapeController.reloadSelectionOnStateChange(doc.getDossier());

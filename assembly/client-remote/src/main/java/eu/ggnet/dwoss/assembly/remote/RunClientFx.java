@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,18 +34,16 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.remote.provides.RemoteServer;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
-
+import eu.ggnet.dwoss.common.DwFinalExceptionConsumer;
+import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
-
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.dialog.Alert;
-
-import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -160,6 +158,7 @@ public class RunClientFx extends Application {
                         + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
             }
         });
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
     }
 
     private boolean isReachable(String host) {

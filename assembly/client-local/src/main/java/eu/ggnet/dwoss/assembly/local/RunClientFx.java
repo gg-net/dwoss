@@ -25,14 +25,14 @@ import javafx.stage.Stage;
 
 import org.openide.util.Lookup;
 
+import eu.ggnet.dwoss.common.DwFinalExceptionConsumer;
 import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Server;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -65,13 +65,9 @@ public class RunClientFx extends Application {
                 System.exit(0); // Again, not perfect.
             }
         };
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                swingClient.init();
-            }
-        });
+        EventQueue.invokeLater(() -> swingClient.init());
         Lookup.getDefault().lookup(Server.class).initialise();
+        UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
     }
 
     @Override

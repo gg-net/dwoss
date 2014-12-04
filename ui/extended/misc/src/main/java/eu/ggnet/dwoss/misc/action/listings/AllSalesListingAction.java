@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -60,7 +60,7 @@ public class AllSalesListingAction extends AbstractAction {
                     File f = get().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT);
                     Desktop.getDesktop().open(f);
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    ExceptionUtil.show(lookup(Workspace.class).getMainFrame(), ex);
+                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
                 }
             }
         }.execute();

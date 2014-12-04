@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,13 +18,14 @@ package eu.ggnet.dwoss.report.action;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.report.*;
+import eu.ggnet.dwoss.report.ReportController.In;
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.report.ExistingReportSelectionStage;
-
-import javafx.application.Platform;
-
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
@@ -38,9 +39,15 @@ public class ShowExistingReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Platform.runLater(() -> {
-            ExistingReportSelectionStage stage = new ExistingReportSelectionStage();
-            stage.show();
-        });
+        Ui.call(() -> lookup(ReportAgent.class).findAll(Report.class))
+                .choiceFx(ReportSelectionPane.class)
+                .onOk(r -> new In(lookup(ReportAgent.class).findReportResult(r.selected().getId()), true))
+                .openFxml(ReportController.class)
+                .exec();
+
+//        Platform.runLater(() -> {
+//            ReportSelectionPane stage = new ReportSelectionPane();
+//            stage.show();
+//        });
     }
 }

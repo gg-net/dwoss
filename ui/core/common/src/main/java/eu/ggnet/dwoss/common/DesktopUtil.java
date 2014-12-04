@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -74,7 +74,7 @@ public class DesktopUtil {
                 try {
                     get();
                 } catch (ExecutionException | InterruptedException e) {
-                    ExceptionUtil.show(null, e);
+                    DwOssCore.show(null, e);
                 }
             }
         }.execute();

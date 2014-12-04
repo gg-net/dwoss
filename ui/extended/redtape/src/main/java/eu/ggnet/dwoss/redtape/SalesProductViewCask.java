@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
 
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.common.ExceptionUtil;
+import eu.ggnet.dwoss.common.DwOssCore;
 
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.OkCancelDialog;
@@ -199,7 +199,7 @@ public class SalesProductViewCask extends javax.swing.JPanel {
             redTapeWorker.createSalesProduct(showInputDialog);
             reloadListData();
         } catch (HeadlessException | UserInfoException e) {
-            ExceptionUtil.show(SwingUtilities.getWindowAncestor(this), e);
+            DwOssCore.show(SwingUtilities.getWindowAncestor(this), e);
         }
 
     }//GEN-LAST:event_createButtonActionPerformed
