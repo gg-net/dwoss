@@ -1,10 +1,5 @@
 package eu.ggnet.saft.core;
 
-import eu.ggnet.saft.core.all.UiUtil;
-import eu.ggnet.saft.core.exception.ExceptionUtil;
-import eu.ggnet.saft.core.exception.SwingExceptionDialog;
-import eu.ggnet.saft.core.fx.FxSaft;
-import eu.ggnet.saft.core.swing.SwingSaft;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,20 +8,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+
+import javax.swing.JFrame;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.*;
 import javafx.stage.Stage;
-import javax.swing.JFrame;
+
+import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.core.exception.ExceptionUtil;
+import eu.ggnet.saft.core.exception.SwingExceptionDialog;
+import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.core.swing.SwingSaft;
 
 /**
  *
  * @author oliver.guenther
  */
 public class UiCore {
-
-    public final static java.util.List<String> CLASS_SUFFIXES_FOR_ICONS = Arrays.asList("Controller", "View", "ViewCask");
 
     private final static BooleanProperty backgroundActivity = new SimpleBooleanProperty();
 
@@ -40,7 +41,7 @@ public class UiCore {
                     ExceptionUtil.toMultilineStacktraceMessages(b), ExceptionUtil.toStackStrace(b));
         };
 
-        if (EventQueue.isDispatchThread()) r.run();
+        if ( EventQueue.isDispatchThread() ) r.run();
         else {
             try {
                 EventQueue.invokeAndWait(r);
@@ -61,7 +62,7 @@ public class UiCore {
      * @param mainView
      */
     public static void continueSwing(JFrame mainView) {
-        if (isRunning()) throw new IllegalStateException("UiCore is already initialised and running");
+        if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
         Platform.setImplicitExit(false); // Need this, as we asume many javafx elements opening and closing.
         SwingCore.mainFrame = mainView;
         mainView.addWindowListener(new WindowAdapter() {
@@ -69,7 +70,7 @@ public class UiCore {
             @Override
             public void windowClosing(WindowEvent e) {
                 for (WeakReference<Window> windowRef : SwingCore.ACTIVE_WINDOWS.values()) {
-                    if (windowRef.get() == null) continue;
+                    if ( windowRef.get() == null ) continue;
                     windowRef.get().setVisible(false); // Close all windows.
                     windowRef.get().dispose();
                 }
@@ -90,7 +91,7 @@ public class UiCore {
      * @param builder
      */
     public static <T extends Component> void startSwing(final Callable<T> builder) {
-        if (isRunning()) throw new IllegalStateException("UiCore is already initialised and running");
+        if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
 
         try {
             JFrame panel = SwingSaft.dispatch(() -> {
@@ -104,7 +105,7 @@ public class UiCore {
             });
             continueSwing(panel);
         } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
-            catchException(ex);
+            handle(ex);
         }
     }
 
@@ -117,12 +118,12 @@ public class UiCore {
      * <li>This Stage will always be open or the final to be closed, so implicitExit is ok</li>
      * </ul>
      *
-     * @param <T> type restriction.
+     * @param <T>          type restriction.
      * @param primaryStage the primaryStage for the application, not yet visible.
-     * @param builder the build for the main ui.
+     * @param builder      the build for the main ui.
      */
     public static <T extends Parent> void startJavaFx(final Stage primaryStage, final Callable<T> builder) {
-        if (isRunning()) throw new IllegalStateException("UiCore is already initialised and running");
+        if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
         FxCore.mainStage = primaryStage;
         try {
             FxSaft.dispatch(() -> {
@@ -135,7 +136,7 @@ public class UiCore {
                 return null;
             });
         } catch (ExecutionException | InterruptedException e) {
-            catchException(e);
+            handle(e);
         }
     }
 
@@ -143,8 +144,8 @@ public class UiCore {
      * Registers an extra renderer for an Exception in any stacktrace. HINT: There is no order or hierachy in the engine. So if you register duplicates or have
      * more than one match in a StackTrace, no one knows what might happen.
      *
-     * @param <T> type of the Exception
-     * @param clazz the class of the Exception
+     * @param <T>      type of the Exception
+     * @param clazz    the class of the Exception
      * @param consumer the consumer to handle it.
      */
     public static <T> void registerExceptionConsumer(Class<T> clazz, Consumer<T> consumer) {
@@ -154,16 +155,21 @@ public class UiCore {
     /**
      * Allows to overwrite the default final consumer of all exceptions.
      *
-     * @param <T> type of consumer
+     * @param <T>      type of consumer
      * @param consumer the consumer
      */
     public static <T> void overwriteFinalExceptionConsumer(Consumer<Throwable> consumer) {
-        if (consumer != null) finalConsumer = consumer;
+        if ( consumer != null ) finalConsumer = consumer;
     }
 
-    static void catchException(Throwable b) {
+    /**
+     * Passes the Exception to
+     * <p>
+     * @param b
+     */
+    public static void handle(Throwable b) {
         for (Class<?> clazz : exceptionConsumer.keySet()) {
-            if (ExceptionUtil.containsInStacktrace(clazz, b)) {
+            if ( ExceptionUtil.containsInStacktrace(clazz, b) ) {
                 exceptionConsumer.get(clazz).accept(ExceptionUtil.extractFromStraktrace(clazz, b));
                 return;
             }

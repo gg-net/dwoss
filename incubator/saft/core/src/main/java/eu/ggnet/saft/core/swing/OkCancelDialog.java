@@ -1,8 +1,8 @@
 package eu.ggnet.saft.core.swing;
 
-import eu.ggnet.saft.api.ui.OnOk;
-
 import java.awt.*;
+
+import eu.ggnet.saft.api.ui.OnOk;
 
 /**
  *
@@ -44,10 +44,10 @@ public class OkCancelDialog<T extends Component> extends javax.swing.JDialog {
 
     private void closeWithOk(boolean ok) {
         boolean close = true;
-        if (subContainer instanceof OnOk) {
-            close = ((OnOk) subContainer).onOk();
+        if ( ok && subContainer instanceof OnOk ) {
+            close = ((OnOk)subContainer).onOk();
         }
-        if (close) {
+        if ( close ) {
             this.ok = ok;
             setVisible(false);
         }

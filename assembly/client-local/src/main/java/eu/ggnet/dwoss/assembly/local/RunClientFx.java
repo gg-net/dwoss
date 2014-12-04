@@ -19,19 +19,21 @@ package eu.ggnet.dwoss.assembly.local;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 
+import javax.validation.ConstraintViolationException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.common.DwFinalExceptionConsumer;
-import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
+import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
@@ -68,6 +70,8 @@ public class RunClientFx extends Application {
         EventQueue.invokeLater(() -> swingClient.init());
         Lookup.getDefault().lookup(Server.class).initialise();
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
+        UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
+        UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
     }
 
     @Override

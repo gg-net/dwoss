@@ -92,7 +92,7 @@ public class UiAlert {
                 return null;
             });
         } catch (ExecutionException | InterruptedException | InvocationTargetException ex) {
-            UiCore.catchException(ex);
+            UiCore.handle(ex);
         }
     }
 

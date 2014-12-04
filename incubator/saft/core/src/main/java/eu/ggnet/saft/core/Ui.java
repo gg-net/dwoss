@@ -116,7 +116,7 @@ public class Ui {
             try {
                 ie.call();
             } catch (Exception e) {
-                UiCore.catchException(e);
+                UiCore.handle(e);
             }
         });
     }

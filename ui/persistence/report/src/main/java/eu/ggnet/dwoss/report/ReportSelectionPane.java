@@ -45,7 +45,9 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
     public ReportSelectionPane() {
         Label reportTypeLabel = new Label("Reporttyp:");
         typeBox = new ComboBox<>();
-        typeBox.valueProperty().addListener((ob, ov, newValue) -> filteredReports.setPredicate(report -> report.getType() == newValue));
+        typeBox.valueProperty().addListener((ob, ov, newValue) -> {
+            if ( filteredReports != null ) filteredReports.setPredicate(report -> report.getType() == newValue);
+        });
 
         VBox vbox = new VBox(10.);
         vbox.getChildren().addAll(reportTypeLabel, typeBox);

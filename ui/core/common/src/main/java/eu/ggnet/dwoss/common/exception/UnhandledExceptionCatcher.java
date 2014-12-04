@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.common;
+package eu.ggnet.dwoss.common.exception;
 
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
+
+import eu.ggnet.saft.core.UiCore;
 
 public class UnhandledExceptionCatcher extends EventQueue {
 
@@ -27,8 +29,7 @@ public class UnhandledExceptionCatcher extends EventQueue {
         try {
             super.dispatchEvent(newEvent);
         } catch (Exception e) {
-            e.printStackTrace();
-            DwOssCore.show(null, e);
+            UiCore.handle(e);
         }
     }
 }

@@ -14,38 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.common;
+package eu.ggnet.dwoss.common.exception;
 
-import java.awt.EventQueue;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.Window;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.core.SwingCore;
+import javax.validation.ConstraintViolationException;
 
-import static eu.ggnet.dwoss.common.DwOssCore.getUserInfo;
+import eu.ggnet.dwoss.common.DetailDialog;
+import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.saft.core.swing.SwingSaft;
+
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class DwFinalExceptionConsumer implements Consumer<Throwable> {
+public class ConstraintViolationConsumer implements Consumer<ConstraintViolationException> {
 
     @Override
-    public void accept(Throwable b) {
-        Runnable r = () -> {
-            DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", extractDeepestMessage(b),
-                    getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b));
-        };
-
-        if ( EventQueue.isDispatchThread() ) r.run();
-        else {
-            try {
-                EventQueue.invokeAndWait(r);
-            } catch (InterruptedException | InvocationTargetException e) {
-                // This will never happen.
-            }
-        }
+    public void accept(ConstraintViolationException ex) {
+        SwingSaft.execute(() -> {
+            DetailDialog.show(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null),
+                    "Validationsfehler", "Fehler bei der Validation", ConstraintViolationFormater.toMultiLine(ex.getConstraintViolations(), true), toStackStrace(ex));
+        });
     }
 
 }

@@ -31,7 +31,6 @@ import org.openide.util.Lookup;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.UiAlert.Type;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
@@ -50,30 +49,37 @@ public class DwOssCore {
      *
      * @param parent
      * @param e      the ChildExcpetion
+     * @deprecated use {@link UiCore#handle(java.lang.Throwable) } instead.
      */
-    // Hint: This is like deprecated, everything should go through Saft.
+    @Deprecated
     public static void show(Window parent, Exception e) {
-        if ( containsInStacktrace(UserInfoException.class, e) ) {
-            UserInfoException ex = extractFromStraktrace(UserInfoException.class, e);
-            Alert.title(ex.getHead()).message(ex.getMessage()).parent(parent).show(map(ex.getType()));
-        } else if ( isConnectionClosed(e) ) {
-            Alert.title("Netzwerkfehler")
-                    .message("Netzwerkfehler, die Verbindung wurde getrennt.")
-                    .nl("Bitte die Software neu starten.")
-                    .parent(parent)
-                    .show(Type.ERROR);
-        } else if ( containsInStacktrace(ConstraintViolationException.class, e) ) {
-            dispatch(() -> {
-                DetailDialog.show(parent, "Validationsfehler", "Fehler bei der Validation", extractFormatedViolations(e), toStackStrace(e));
-            });
-        } else {
-            dispatch(() -> {
-                DetailDialog.show(parent, "Systemfehler", extractDeepestMessage(e),
-                        getUserInfo() + '\n' + toMultilineStacktraceMessages(e), getUserInfo() + '\n' + toStackStrace(e));
-            });
-        }
+        UiCore.handle(e);
     }
 
+    // Here for safty reasons, may be removed in 2015
+    /*
+     public static void show(Window parent, Exception e) {
+     if ( containsInStacktrace(UserInfoException.class, e) ) {
+     UserInfoException ex = extractFromStraktrace(UserInfoException.class, e);
+     Alert.title(ex.getHead()).message(ex.getMessage()).parent(parent).show(map(ex.getType()));
+     } else if ( isConnectionClosed(e) ) {
+     Alert.title("Netzwerkfehler")
+     .message("Netzwerkfehler, die Verbindung wurde getrennt.")
+     .nl("Bitte die Software neu starten.")
+     .parent(parent)
+     .show(Type.ERROR);
+     } else if ( containsInStacktrace(ConstraintViolationException.class, e) ) {
+     dispatch(() -> {
+     DetailDialog.show(parent, "Validationsfehler", "Fehler bei der Validation", extractFormatedViolations(e), toStackStrace(e));
+     });
+     } else {
+     dispatch(() -> {
+     DetailDialog.show(parent, "Systemfehler", extractDeepestMessage(e),
+     getUserInfo() + '\n' + toMultilineStacktraceMessages(e), getUserInfo() + '\n' + toStackStrace(e));
+     });
+     }
+     }
+     */
     private static void dispatch(Runnable r) {
         if ( EventQueue.isDispatchThread() ) r.run();
         else {
@@ -103,7 +109,7 @@ public class DwOssCore {
      * @param e the Exception to filter
      * @return the String
      */
-    public static String filterL8E(Exception e) {
+    private static String filterL8E(Exception e) {
         String msg = deepShow(e);
         if ( msg != null ) return "Nutzerfehler: " + msg;
         else return e.toString();
@@ -115,7 +121,7 @@ public class DwOssCore {
         return deepShow(e.getCause());
     }
 
-    public static String fromList(String head, Collection<String> messages) {
+    private static String fromList(String head, Collection<String> messages) {
         StringBuilder sb = new StringBuilder(head);
         sb.append("\n");
         for (String msg : messages) {
@@ -137,7 +143,7 @@ public class DwOssCore {
         return extractDeepestMessage(ex.getCause());
     }
 
-    public static String getUserInfo() {
+    private static String getUserInfo() {
         String windowsUser = System.getProperty("user.name");
         String host = "Konnte Hostname nicht auslesen";
         try {

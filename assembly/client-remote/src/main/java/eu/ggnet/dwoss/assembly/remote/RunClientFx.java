@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Objects;
 
+import javax.validation.ConstraintViolationException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -34,13 +36,13 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.assembly.remote.provides.RemoteServer;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
-import eu.ggnet.dwoss.common.DwFinalExceptionConsumer;
-import eu.ggnet.dwoss.common.UnhandledExceptionCatcher;
+import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.dialog.Alert;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.UiCore;
@@ -159,6 +161,9 @@ public class RunClientFx extends Application {
             }
         });
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
+        UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
+        UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
+
     }
 
     private boolean isReachable(String host) {

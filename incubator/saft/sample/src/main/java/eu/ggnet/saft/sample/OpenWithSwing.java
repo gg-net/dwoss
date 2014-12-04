@@ -1,9 +1,15 @@
 package eu.ggnet.saft.sample;
 
+import java.util.Random;
+
+import javax.swing.*;
+
+import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.sample.aux.*;
-import javax.swing.*;
+
+import lombok.Value;
 
 /**
  * Opening a JavaFX Pane as popup Dialog, blocking the hole application.
@@ -11,6 +17,22 @@ import javax.swing.*;
  * @author oliver.guenther
  */
 public class OpenWithSwing {
+
+    private final static String[] NAMES = {"Hans", "Klaus", "Horst", "Charlotte", "Caroline", "Ivet"};
+
+    private final static Random R = new Random();
+
+    @Value
+    public final static class S implements IdSupplier {
+
+        private final String id;
+
+        @Override
+        public String id() {
+            return id;
+        }
+
+    }
 
     public static void main(String[] args) {
         UiCore.startSwing(() -> {
@@ -69,6 +91,12 @@ public class OpenWithSwing {
             b.addActionListener((e) -> Ui.exec(Ui.openFxml(SimpleFxmlController.class)));
             menu.add(b);
             main.getMenuBar().add(menu);
+
+            b = new JMenuItem("Consumer with Random Id Supplier");
+            b.addActionListener((e) -> {
+                Ui.call(() -> new S(NAMES[R.nextInt(NAMES.length)])).openFx(PaneConsumesIdSupplier.class).exec();
+            });
+            menu.add(b);
 
             menu = new JMenu("JavaFxFrames");
 

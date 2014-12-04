@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.OkCancelStage;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.Client;
 
 import lombok.*;
@@ -52,6 +52,8 @@ import static eu.ggnet.dwoss.util.DateFormats.ISO;
  *
  * @author pascal.perau
  */
+@Frame
+@Title("Report Ansicht : {id}")
 public class ReportController implements Initializable, FxController, Consumer<ReportController.In> {
 
     @Override
@@ -60,11 +62,16 @@ public class ReportController implements Initializable, FxController, Consumer<R
     }
 
     @Value
-    public static class In {
+    public static class In implements IdSupplier {
 
         private final ViewReportResult reportResult;
 
         private final boolean viewmode;
+
+        @Override
+        public String id() {
+            return reportResult.getParameter().getReportName();
+        }
 
     }
 
