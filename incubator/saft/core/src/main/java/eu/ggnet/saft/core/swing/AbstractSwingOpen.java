@@ -17,6 +17,8 @@ import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.OnceCaller;
 import eu.ggnet.saft.core.all.UiUtil;
 
+import static eu.ggnet.saft.core.Client.lookup;
+
 public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
 
     protected static class T2<R> {
@@ -85,6 +87,7 @@ public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
                 w = frame;
             } else {
                 JDialog dialog = new JDialog(parent);
+                dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 dialog.setModalityType(UiUtil.toSwing(modality).orElse(Dialog.ModalityType.MODELESS));  // This is an "application", default no modaltiy at all
                 // Parse the Title somehow usefull.
                 dialog.setTitle(UiUtil.title(creatorClass, localId));
@@ -94,6 +97,7 @@ public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
             w.setIconImages(SwingSaft.loadIcons(creatorClass));
             w.pack();
             w.setLocationRelativeTo(parent);
+            lookup(UserPreferences.class).loadLocation(creatorClass, localId, w);
             w.setVisible(true);
             return w;
         });
@@ -107,6 +111,9 @@ public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
             public void windowClosed(WindowEvent e) {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(key);
+                // Store location.
+                lookup(UserPreferences.class).storeLocation(creatorClass, localId, window);
+
             }
 
         });

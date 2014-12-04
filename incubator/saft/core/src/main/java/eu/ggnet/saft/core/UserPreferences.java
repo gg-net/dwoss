@@ -67,4 +67,15 @@ public interface UserPreferences {
      * @param className the className to store.
      */
     void storeLaf(String className);
+
+    void loadLocation(Class<?> key, String id, Component c);
+
+    /**
+     * Store a screen location under key/id, id may be null.
+     * <p>
+     * @param key the key to store
+     * @param id  the optional id to store even deeper
+     * @param c   the component to get the screen location from
+     */
+    void storeLocation(Class<?> key, String id, Component c);
 }

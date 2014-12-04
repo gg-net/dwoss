@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -43,6 +44,8 @@ public class UserPreferencesJdk implements UserPreferences {
     public final static String WINDOW_WIDTH = "window.width";
 
     public final static String ACTIVE_LAF = "activeLaf";
+
+    private final static Logger L = LoggerFactory.getLogger(UserPreferencesJdk.class);
 
     private boolean reset = false;
 
@@ -103,7 +106,7 @@ public class UserPreferencesJdk implements UserPreferences {
     @Override
     public void storeLocation(Component c) {
         if ( c == null ) return;
-        Preferences p = Preferences.userNodeForPackage(c.getClass());
+        Preferences p = Preferences.userNodeForPackage(c.getClass()).node(c.getClass().getSimpleName());
         p.putInt(WINDOW_X, c.getX());
         p.putInt(WINDOW_Y, c.getY());
         p.putInt(WINDOW_HEIGHT, c.getHeight());
@@ -116,6 +119,49 @@ public class UserPreferencesJdk implements UserPreferences {
     }
 
     /**
+     * Store a screen location under key/id, id may be null.
+     * <p>
+     * @param key the key to store
+     * @param id  the optional id to store even deeper
+     * @param c   the component to get the screen location from
+     */
+    @Override
+    public void storeLocation(Class<?> key, String id, Component c) {
+        if ( key == null || c == null ) return;
+        Preferences p = Preferences.userNodeForPackage(key).node(key.getSimpleName());
+        if ( id != null ) p = p.node(id);
+        p.putInt(WINDOW_X, c.getX());
+        p.putInt(WINDOW_Y, c.getY());
+        p.putInt(WINDOW_HEIGHT, c.getHeight());
+        p.putInt(WINDOW_WIDTH, c.getWidth());
+        try {
+            p.flush();
+            L.debug("Stored: {}", p);
+        } catch (BackingStoreException ex) {
+            L.error("Cound not store Preferences", ex);
+        }
+    }
+
+    @Override
+    public void loadLocation(Class<?> key, String id, Component c) {
+        if ( key == null || c == null ) return;
+        Preferences p = Preferences.userNodeForPackage(key).node(key.getSimpleName());
+        if ( id != null ) p = p.node(id);
+        try {
+            if ( reset ) {
+                p.clear();
+                L.info("Reset on load {} reseted", p);
+            } else {
+                c.setLocation(p.getInt(WINDOW_X, c.getX()), p.getInt(WINDOW_Y, c.getY()));
+                c.setSize(p.getInt(WINDOW_WIDTH, c.getWidth()), p.getInt(WINDOW_HEIGHT, c.getHeight()));
+                L.debug("Loaded: {}", p);
+            }
+        } catch (BackingStoreException ex) {
+            L.error("Cound not load Preferences", ex);
+        }
+    }
+
+    /**
      * Loads the location of a component from the user preferences.
      * <p/>
      * @param c the component.
@@ -123,7 +169,7 @@ public class UserPreferencesJdk implements UserPreferences {
     @Override
     public void loadLocation(Component c) {
         if ( c == null ) return;
-        Preferences p = Preferences.userNodeForPackage(c.getClass());
+        Preferences p = Preferences.userNodeForPackage(c.getClass()).node(c.getClass().getSimpleName());
         try {
             if ( reset ) p.clear();
             else {
@@ -131,7 +177,21 @@ public class UserPreferencesJdk implements UserPreferences {
                 c.setSize(p.getInt(WINDOW_WIDTH, c.getWidth()), p.getInt(WINDOW_HEIGHT, c.getHeight()));
             }
         } catch (BackingStoreException ex) {
-            LoggerFactory.getLogger(UserPreferencesJdk.class).error("Cound not store Preferences", ex);
+            LoggerFactory.getLogger(UserPreferencesJdk.class).error("Cound not load Preferences", ex);
         }
     }
+
+    public static void main(String[] args) throws BackingStoreException {
+        Preferences n = Preferences.userNodeForPackage(UserPreferencesJdk.class);
+        System.out.println(n);
+        n.flush();
+        Preferences n2 = n.node(UserPreferencesJdk.class.getSimpleName());
+        System.out.println(n2);
+        n2.flush();
+        String key = "  fdas  fdsa";
+        Preferences n3 = n2.node(key);
+        System.out.println(n3);
+        n3.flush();
+    }
+
 }
