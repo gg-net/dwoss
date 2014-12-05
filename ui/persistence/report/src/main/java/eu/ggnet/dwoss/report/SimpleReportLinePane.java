@@ -25,21 +25,16 @@ import javax.swing.*;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import org.metawidget.swing.SwingMetawidget;
 import org.slf4j.Logger;
@@ -50,21 +45,22 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.saft.api.ui.Frame;
+import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Workspace;
 
-import static eu.ggnet.saft.core.Client.*;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  *
  * @author oliver.guenther
  */
-public class SimpleReportLineStage {
+@Frame
+@Title("Report Daten")
+public class SimpleReportLinePane extends BorderPane {
 
     private final Logger L = LoggerFactory.getLogger(SimpleReportLine.class);
-
-    private final Stage stage;
 
     private final TableView<SimpleReportLine> table;
 
@@ -78,7 +74,7 @@ public class SimpleReportLineStage {
 
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
-    public SimpleReportLineStage() {
+    public SimpleReportLinePane() {
         model = FXCollections.observableArrayList();
 
         TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
@@ -115,35 +111,24 @@ public class SimpleReportLineStage {
         table.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor, amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
         table.setItems(model);
         table.getSelectionModel().setSelectionMode(MULTIPLE);
-        table.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double ref = 0;
-                for (SimpleReportLine srl : table.getSelectionModel().getSelectedItems()) {
-                    ref += srl.getContractorReferencePrice();
-                }
-                referencePriceProperty.set(ref);
+        table.getSelectionModel().selectedIndexProperty().addListener((ov, o, n) -> {
+            double ref = 0;
+            for (SimpleReportLine srl : table.getSelectionModel().getSelectedItems()) {
+                ref += srl.getContractorReferencePrice();
             }
+            referencePriceProperty.set(ref);
         });
-        table.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
-                    openDetailView(table.getSelectionModel().getSelectedItem().getId());
-                }
+        table.setOnMouseClicked((e) -> {
+            if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
+                openDetailView(table.getSelectionModel().getSelectedItem().getId());
             }
         });
 
         Label searchRefurbishIdLabel = new Label("RefurbishId:");
         final TextField searchRefurbishIdField = new TextField();
         Button searchButton = new Button("Search");
-        EventHandler<ActionEvent> eh = new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                load(new SearchParameter(searchRefurbishIdField.getText()));
-            }
+        EventHandler<ActionEvent> eh = (e) -> {
+            load(new SearchParameter(searchRefurbishIdField.getText()));
         };
 
         searchButton.setOnAction(eh);
@@ -158,10 +143,9 @@ public class SimpleReportLineStage {
         referencePriceLabel.textProperty().bind(referencePriceProperty.asString("%,.2f €"));
         right.getChildren().add(referencePriceLabel);
 
-        BorderPane mainPane = new BorderPane();
-        mainPane.setTop(top);
-        mainPane.setCenter(table);
-        mainPane.setRight(right);
+        setTop(top);
+        setCenter(table);
+        setRight(right);
 
         progressBar = new ProgressBar();
         progressBar.setMinWidth(200);
@@ -178,17 +162,14 @@ public class SimpleReportLineStage {
         lower.setRight(progress);
         lower.setCenter(status);
 
-        mainPane.setBottom(lower);
+        setBottom(lower);
 
-        stage = new Stage();
-        stage.setTitle("Raw Report Data");
-        stage.setScene(new Scene(mainPane));
     }
 
     public void openDetailView(final long reportLineId) {
         CompletableFuture
                 .supplyAsync(() -> {
-                    ReportLine rl = lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
+                    ReportLine rl = Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
                     SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class, TradeName.class, SalesChannel.class, DocumentType.class, PositionType.class, ReportLine.WorkflowStatus.class);
                     mw.setReadOnly(true);
                     mw.setToInspect(rl);
@@ -197,12 +178,12 @@ public class SimpleReportLineStage {
                 .handle((mw, u) -> {
                     EventQueue.invokeLater(() -> {
                         if ( u != null ) u.printStackTrace(); // FIXME !!!!
-                        JDialog dialog = new JDialog(lookup(Workspace.class).getMainFrame(), "Details für Reportline");
+                        JDialog dialog = new JDialog(Client.lookup(Workspace.class).getMainFrame(), "Details für Reportline");
                         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                         dialog.getContentPane().add(mw);
                         dialog.pack();
                         dialog.setSize(dialog.getSize().width, dialog.getSize().height + 50);
-                        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(lookup(Workspace.class).getMainFrame()));
+                        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(Client.lookup(Workspace.class).getMainFrame()));
                         dialog.setVisible(true);
                     });
                     return null;
@@ -214,12 +195,8 @@ public class SimpleReportLineStage {
         Task<Void> task = new Task<Void>() {
 
             private void updateResult(final Collection<SimpleReportLine> partial) {
-                Platform.runLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        model.addAll(partial);
-                    }
+                Platform.runLater(() -> {
+                    model.addAll(partial);
                 });
             }
 
@@ -227,7 +204,7 @@ public class SimpleReportLineStage {
             protected Void call() throws Exception {
                 L.info("Starting Loader");
                 model.clear();
-                final long max = lookup(ReportAgent.class).count(search);
+                final long max = Client.lookup(ReportAgent.class).count(search);
                 updateProgress(0, max);
                 List<SimpleReportLine> partial;
                 int amount = 1;
@@ -247,12 +224,8 @@ public class SimpleReportLineStage {
             }
 
         };
-        task.exceptionProperty().addListener(new ChangeListener<Throwable>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Throwable> observable, Throwable oldValue, Throwable newValue) {
-                throw new RuntimeException("Exception in Task", newValue);
-            }
+        task.exceptionProperty().addListener((ov, o, n) -> {
+            throw new RuntimeException("Exception in Task", n);
         });
         progressIndicator.visibleProperty().bind(task.runningProperty());
         progressBar.visibleProperty().bind(task.runningProperty());
@@ -262,14 +235,6 @@ public class SimpleReportLineStage {
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
-    }
-
-    public void show() {
-        stage.show();
-    }
-
-    public void showAndWait() {
-        stage.showAndWait();
     }
 
 }

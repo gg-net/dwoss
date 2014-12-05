@@ -1,16 +1,12 @@
 package tryout;
 
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
 
-import org.junit.Test;
+import javafx.embed.swing.JFXPanel;
 
-import eu.ggnet.saft.core.Client;
+import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
@@ -19,11 +15,8 @@ import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
-
-import eu.ggnet.dwoss.report.SimpleReportLineStage;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.core.Client;
 
 /**
  *
@@ -188,13 +181,12 @@ public class SimpleReportLine {
         Client.addSampleStub(ReportAgent.class, rastub);
         new JFXPanel();    // To start the platform
 
-        Platform.runLater(() -> {
-            SimpleReportLineStage srl = new SimpleReportLineStage();
-            srl.load(new SearchParameter());
-            srl.showAndWait();
-            complete = true;
-        });
-
+//        Platform.runLater(() -> {
+//            SimpleReportLinePane srl = new SimpleReportLinePane();
+//            srl.load(new SearchParameter());
+//            srl.showAndWait();
+//            complete = true;
+//        });
         while (!complete) {
             Thread.sleep(500);
         }

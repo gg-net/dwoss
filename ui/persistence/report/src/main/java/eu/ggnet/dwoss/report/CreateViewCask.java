@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.report;
 
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
 import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +25,8 @@ import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.Report.ViewMode;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.api.ui.OnOk;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -39,7 +35,7 @@ import eu.ggnet.saft.core.Client;
  * <p/>
  * @author oliver.guenther
  */
-public class CreateViewCask extends javax.swing.JPanel implements IPreClose {
+public class CreateViewCask extends javax.swing.JPanel implements OnOk {
 
     public CreateViewCask() {
         initComponents();
@@ -49,8 +45,7 @@ public class CreateViewCask extends javax.swing.JPanel implements IPreClose {
     }
 
     @Override
-    public boolean pre(CloseType type) {
-        if ( type == CloseType.CANCEL ) return true;
+    public boolean onOk() {
         if ( !StringUtils.isNotBlank(nameTextField.getText()) ) {
             JOptionPane.showMessageDialog(this, "Der Name ist leer.");
             return false;
@@ -247,4 +242,5 @@ public class CreateViewCask extends javax.swing.JPanel implements IPreClose {
         dialog.setVisible(true);
         System.exit(0);
     }
+
 }

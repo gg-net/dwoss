@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
@@ -40,9 +41,9 @@ import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.OkCancelStage;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.*;
 
@@ -71,6 +72,26 @@ public class ReportController implements Initializable, FxController, Consumer<R
         @Override
         public String id() {
             return reportResult.getParameter().getReportName();
+        }
+
+    }
+
+    @Title("Wollen Sie wirklich diesen Report erstellen?")
+    public static class ResultPane extends Pane implements Consumer<ViewReportResult> {
+
+        private Label l;
+
+        public ResultPane() {
+            l = new Label();
+            getChildren().add(l);
+        }
+
+        @Override
+        public void accept(ViewReportResult reportResult) {
+            String infoLine = "Name: " + reportResult.getParameter().getReportName();
+            infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
+            infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
+            l.setText(infoLine);
         }
 
     }
@@ -345,26 +366,44 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleCreateButtonAction() {
-        String infoLine = "Name: " + reportResult.getParameter().getReportName();
-        infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
-        infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
+        Ui.parent(mainPane)
+                .call(() -> reportResult)
+                .choiceFx(ResultPane.class)
+                .onOk(r -> {
+                    Client.lookup(ReportAgent.class).store(
+                            reportResult.getParameter().toNewReport(),
+                            reportResult.getRelevantLines()
+                            .values()
+                            .stream()
+                            .flatMap(Collection::stream)
+                            .map(ReportLine::toStorable)
+                            .collect(Collectors.toList())
+                    );
+                    Platform.runLater(() -> viewmode.set(true));
+                    return null;
+                }).exec();
+        /*
+         String infoLine = "Name: " + reportResult.getParameter().getReportName();
+         infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
+         infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
 
-        Pane pane = new Pane(new Label(infoLine));
-        OkCancelStage<Pane> stage = new OkCancelStage<>("Wollen Sie wirklich diesen Report erstellen?", pane);
-        stage.setWidth(500);
-        stage.showAndWait();
-        if ( stage.isCancel() ) return;
+         Pane pane = new Pane(new Label(infoLine));
+         OkCancelStage<Pane> stage = new OkCancelStage<>("Wollen Sie wirklich diesen Report erstellen?", pane);
+         stage.setWidth(500);
+         stage.showAndWait();
+         if ( stage.isCancel() ) return;
 
-        Client.lookup(ReportAgent.class).store(
-                reportResult.getParameter().toNewReport(),
-                reportResult.getRelevantLines()
-                .values()
-                .stream()
-                .flatMap(Collection::stream)
-                .map(ReportLine::toStorable)
-                .collect(Collectors.toList())
-        );
-        viewmode.set(true);
+         Client.lookup(ReportAgent.class).store(
+         reportResult.getParameter().toNewReport(),
+         reportResult.getRelevantLines()
+         .values()
+         .stream()
+         .flatMap(Collection::stream)
+         .map(ReportLine::toStorable)
+         .collect(Collectors.toList())
+         );
+         viewmode.set(true);
+         */
     }
 
     @FXML

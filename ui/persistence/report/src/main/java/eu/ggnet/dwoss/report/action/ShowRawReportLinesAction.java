@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,9 @@ package eu.ggnet.dwoss.report.action;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.report.SimpleReportLinePane;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
-
-import eu.ggnet.dwoss.report.SimpleReportLineStage;
-
-import javafx.application.Platform;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
 
@@ -34,6 +32,6 @@ public class ShowRawReportLinesAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Platform.runLater(() -> new SimpleReportLineStage().show());
+        Ui.openFx(SimpleReportLinePane.class).exec();
     }
 }
