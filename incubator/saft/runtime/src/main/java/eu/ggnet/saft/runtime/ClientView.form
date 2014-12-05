@@ -34,7 +34,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="progressBar" min="-2" pref="150" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="extraProgressPanel" min="-2" pref="25" max="-2" attributes="0"/>
+              <Component id="extraProgressPanel" pref="25" max="32767" attributes="0"/>
           </Group>
           <Component id="mainPanel" max="32767" attributes="0"/>
       </Group>
