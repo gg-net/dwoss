@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.action.listings;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.core.Workspace;
-
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -48,21 +38,10 @@ public class AllSalesListingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                return lookup(SalesListingProducer.class).generateAllSalesListing();
-            }
+        Ui.exec(
+                Ui.call(() -> lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT))
+                .osOpen()
+        );
 
-            @Override
-            protected void done() {
-                try {
-                    File f = get().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT);
-                    Desktop.getDesktop().open(f);
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
     }
 }

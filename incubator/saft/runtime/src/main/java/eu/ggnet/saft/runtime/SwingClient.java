@@ -17,6 +17,7 @@
 package eu.ggnet.saft.runtime;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -24,6 +25,7 @@ import java.util.concurrent.*;
 import javax.swing.*;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
@@ -208,6 +210,10 @@ public class SwingClient {
 
         // Autostart Saft. This will be different one day.
         UiCore.continueSwing(view);
+        UiCore.backgroundActivityProperty().addListener((ov, o, n) -> {
+            EventQueue.invokeLater(() -> view.extraProgressPanel.setVisible(n));
+            Platform.runLater(() -> view.progressIndicator.setProgress(n ? -1 : 0));
+        });
     }
 
     private void ready(String postTitle) {

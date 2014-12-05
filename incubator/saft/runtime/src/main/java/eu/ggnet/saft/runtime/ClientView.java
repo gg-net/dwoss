@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,18 @@
  */
 package eu.ggnet.saft.runtime;
 
+import java.awt.BorderLayout;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javax.swing.ImageIcon;
+
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.layout.BorderPane;
+
+import eu.ggnet.saft.core.SwingCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  * Client View, Main Frame.
@@ -37,8 +45,22 @@ public class ClientView extends javax.swing.JFrame {
     @SuppressWarnings("LeakingThisInConstructor")
     public ClientView() {
         initComponents();
+        initFxComponents();
         setTitle(loadBundle().getString("ClientView.title")); // NOI18N
         setIconImage(new ImageIcon(loadIcon()).getImage());
+    }
+
+    private void initFxComponents() {
+        try {
+            progressIndicator = new ProgressIndicator();
+            progressIndicator.setProgress(0);
+
+            BorderPane pane = new BorderPane(progressIndicator);
+            JFXPanel wrap = SwingCore.wrap(pane);
+            extraProgressPanel.add(wrap, BorderLayout.CENTER);
+        } catch (InterruptedException ex) {
+            UiCore.handle(ex);
+        }
     }
 
     static URL loadIcon() {
@@ -53,6 +75,7 @@ public class ClientView extends javax.swing.JFrame {
     public void setVisible(boolean b) {
         super.setVisible(b);
         progressBar.setVisible(false);
+        extraProgressPanel.setVisible(false);
     }
 
     /** This method is called from within the constructor to
@@ -68,6 +91,7 @@ public class ClientView extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         toolBar = new javax.swing.JToolBar();
         mainPanel = new javax.swing.JPanel();
+        extraProgressPanel = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -78,17 +102,21 @@ public class ClientView extends javax.swing.JFrame {
         toolBar.setRollover(true);
 
         mainPanel.setLayout(new java.awt.BorderLayout());
+
+        extraProgressPanel.setLayout(new java.awt.BorderLayout());
         setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(messageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(toolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(messageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(extraProgressPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -96,11 +124,12 @@ public class ClientView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(toolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(messageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(messageLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                    .addComponent(extraProgressPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -108,10 +137,14 @@ public class ClientView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    javax.swing.JPanel extraProgressPanel;
     javax.swing.JPanel mainPanel;
     javax.swing.JMenuBar menuBar;
     javax.swing.JLabel messageLabel;
     javax.swing.JProgressBar progressBar;
     javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
+
+    ProgressIndicator progressIndicator;
+
 }

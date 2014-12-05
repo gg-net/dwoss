@@ -168,6 +168,7 @@ public class UiCore {
      * @param b
      */
     public static void handle(Throwable b) {
+        backgroundActivity.set(false); // Cleanup
         for (Class<?> clazz : exceptionConsumer.keySet()) {
             if ( ExceptionUtil.containsInStacktrace(clazz, b) ) {
                 exceptionConsumer.get(clazz).accept(ExceptionUtil.extractFromStraktrace(clazz, b));

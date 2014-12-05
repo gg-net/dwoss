@@ -1,15 +1,15 @@
 package eu.ggnet.saft.sample;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.MainPanel;
-import eu.ggnet.saft.sample.aux.RevenueReportSelectorPane;
-
 import java.util.concurrent.ExecutionException;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.sample.aux.MainPanel;
+import eu.ggnet.saft.sample.aux.RevenueReportSelectorPane;
 
 import static javafx.scene.text.Font.font;
 
@@ -37,8 +37,8 @@ public class SwingPopupJavaFxParentJavaFx {
                 );
             });
 
-            BorderPane p = new BorderPane(l);
-            p.setBottom(b);
+            setCenter(l);
+            setBottom(b);
         }
 
     }

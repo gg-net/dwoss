@@ -45,7 +45,7 @@ public class SwingSaft {
 
         private final static java.util.List<String> ICON_SUFFIXES = Arrays.asList("Icon");
 
-        private final static java.util.List<String> SIZE_SUFFIXES = Arrays.asList("_016", "_024", "_032", "_048", "_064", "_128", "_256", "_512");
+        private final static java.util.List<String> SIZE_SUFFIXES = Arrays.asList("", "_016", "_024", "_032", "_048", "_064", "_128", "_256", "_512");
 
         private final static java.util.List<String> FILES = Arrays.asList(".png", ".jpg", ".gif");
 
