@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,41 +22,41 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
-import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.dwoss.redtape.entity.Position;
-
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-
-import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
+import eu.ggnet.saft.api.ui.OnOk;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.*;
 
+import eu.ggnet.dwoss.util.*;
+
+import static eu.ggnet.saft.core.Client.lookup;
+
 /**
  *
  * @author pascal.perau
  */
-public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose {
+@Title("Position bearbeiten")
+public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Consumer<Position> {
 
     private class CurrencyConverter extends Converter<Double, String> {
 
@@ -123,71 +123,73 @@ public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose 
 
     private Guardian accessCos;
 
-    /** Creates new form PositionUpdateCask
-     * <p>
-     * @param position */
-    public PositionUpdateCask(Position position) {
-        this.position = position;
+    /**
+     * Creates new form PositionUpdateCask.
+     */
+    public PositionUpdateCask() {
         initComponents();
         ((JSpinner.DefaultEditor)postDecimalSpinner.getEditor()).getTextField().setEditable(false);
         ((JSpinner.DefaultEditor)preDecimalSpinner.getEditor()).getTextField().setEditable(false);
-        PostLedger postLedger = Client.lookup(MandatorSupporter.class).loadPostLedger();
+        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
         List bookingAccounts = new ArrayList();
         bookingAccounts.add(postLedger.get(SERVICE).orElse(-1));
         bookingAccounts.add(postLedger.getPossible(SERVICE).orElse(Collections.EMPTY_LIST));
         bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
 
-        if ( position != null ) {
-            this.setPosition(position);
-            this.setPositionName(position.getName());
-            this.setPrice(position.getPrice());
-            this.setDescription(position.getDescription());
-            this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
-            this.setPostDecimal((int)((position.getAmount() % 1) * 100));
-            this.setBookingAccount(position.getBookingAccount());
-
-            this.accessCos = Lookup.getDefault().lookup(Guardian.class);
-
-            if ( position.getDocument() != null && EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO).contains(position.getDocument().getType()) ) {
-                disableComponents(preDecimalSpinner, postDecimalSpinner, nameArea, bookingAccountBox, priceField, afterTaxPriceField, descriptionArea);
-                accessCos.add(priceSumField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
-                accessCos.add(afterTaxSumField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
-                accessCos.add(priceField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
-                accessCos.add(afterTaxPriceField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
-            } else {
-                if ( position.getType() == PRODUCT_BATCH || position.getType() == UNIT ) {
-                    disableComponents(postDecimalSpinner);
-                    accessCos.add(priceField, UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH);
-                    accessCos.add(afterTaxPriceField, UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH);
-                }
-                if ( position.getType() == UNIT ) {
-                    disableComponents(preDecimalSpinner);
-                }
-                if ( position.getType() == COMMENT ) {
-                    disableComponents(priceField, priceSumField, afterTaxPriceField, afterTaxSumField, preDecimalSpinner, postDecimalSpinner);
-                }
-                if ( position.getType() == SHIPPING_COST ) {
-                    disableComponents(nameArea, afterTaxPriceField, afterTaxSumField, preDecimalSpinner, postDecimalSpinner);
-                }
-
-                if ( EnumSet.of(COMMENT, SERVICE, PRODUCT_BATCH).contains(position.getType()) ) {
-                    nameArea.setEditable(true);
-                    if ( position.getType() == SERVICE ) bookingAccountBox.setEnabled(true);
-                }
-            }
-        }
     }
 
     public Position getPosition() {
         return position;
     }
 
-    public void setPosition(Position pos) {
-        Position oldPos = this.position;
-        this.position = pos;
-        firePropertyChange("position", oldPos, pos);
+    @Override
+    public void accept(Position position) {
+        if ( position == null ) return;
+        this.position = position;
+        this.setPositionName(position.getName());
+        this.setPrice(position.getPrice());
+        this.setDescription(position.getDescription());
+        this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
+        this.setPostDecimal((int)((position.getAmount() % 1) * 100));
+        this.setBookingAccount(position.getBookingAccount());
+
+        this.accessCos = lookup(Guardian.class);
+
+        if ( position.getDocument() != null && EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO).contains(position.getDocument().getType()) ) {
+            disableComponents(preDecimalSpinner, postDecimalSpinner, nameArea, bookingAccountBox, priceField, afterTaxPriceField, descriptionArea);
+            accessCos.add(priceSumField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
+            accessCos.add(afterTaxSumField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
+            accessCos.add(priceField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
+            accessCos.add(afterTaxPriceField, UPDATE_POSITION_WITH_EXISTING_DOCUMENT);
+        } else {
+            if ( position.getType() == PRODUCT_BATCH || position.getType() == UNIT ) {
+                disableComponents(postDecimalSpinner);
+                accessCos.add(priceField, UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH);
+                accessCos.add(afterTaxPriceField, UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH);
+            }
+            if ( position.getType() == UNIT ) {
+                disableComponents(preDecimalSpinner);
+            }
+            if ( position.getType() == COMMENT ) {
+                disableComponents(priceField, priceSumField, afterTaxPriceField, afterTaxSumField, preDecimalSpinner, postDecimalSpinner);
+            }
+            if ( position.getType() == SHIPPING_COST ) {
+                disableComponents(nameArea, afterTaxPriceField, afterTaxSumField, preDecimalSpinner, postDecimalSpinner);
+            }
+
+            if ( EnumSet.of(COMMENT, SERVICE, PRODUCT_BATCH).contains(position.getType()) ) {
+                nameArea.setEditable(true);
+                if ( position.getType() == SERVICE ) bookingAccountBox.setEnabled(true);
+            }
+        }
     }
 
+    // I asume, this is no longer used OG.
+//    public void setPosition(Position pos) {
+//        Position oldPos = this.position;
+//        this.position = pos;
+//        firePropertyChange("position", oldPos, pos);
+//    }
     public Converter<Double, String> getTaxedConverter() {
         return taxedConverter;
     }
@@ -208,7 +210,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose 
     /**
      * Set the value of retailerPrice
      *
-     * @param retailerPrice new value of retailerPrice
+     * @param price new value of retailerPrice
      */
     public void setPrice(double price) {
         double oldPrice = this.price;
@@ -259,7 +261,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose 
     /**
      * Set the value of decimal
      *
-     * @param decimal new value of decimal
+     * @param postDecimal new value of decimal
      */
     public void setPostDecimal(int postDecimal) {
         int oldPostDecimal = this.postDecimal;
@@ -331,19 +333,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose 
     }
 
     @Override
-    public boolean pre(CloseType type) {
-        if ( type == CloseType.CANCEL ) {
-            return true;
-        }
-        if ( description == null || description.trim().equals("") ) {
-            JOptionPane.showMessageDialog(this, "Beschreibung darf nich leer sein.");
+    public boolean onOk() {
+        if ( StringUtils.isBlank(description) ) {
+            Alert.show(this, "Beschreibung darf nich leer sein.");
             return false;
         }
-        if ( positionName == null || positionName.trim().equals("") ) {
-            JOptionPane.showMessageDialog(this, "Name darf nich leer sein.");
+        if ( StringUtils.isBlank(positionName) ) {
+            Alert.show(this, "Name darf nich leer sein.");
             return false;
         }
-
         position.setDescription(description);
         position.setName(positionName);
         position.setAmount(amount);
@@ -353,15 +351,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements IPreClose 
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
             position.setAfterTaxPrice(Double.valueOf(afterTaxPriceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Preisformat ist nicht lesbar");
+            Alert.show(this, "Preisformat ist nicht lesbar");
         }
         for (Binding binding : bindingGroup.getBindings()) {
             binding.save();
         }
         if ( position.getPrice() == 0 && position.getType() != PositionType.COMMENT ) {
+            // TODO: We need something like Alert. e.g. Question.ask
             return JOptionPane.showConfirmDialog(this, "Preis ist 0, trotzdem fortfahren?", "Position bearbeiten", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == 0;
         }
-
         for (Component component : this.getComponents()) {
             accessCos.remove(component);
         }

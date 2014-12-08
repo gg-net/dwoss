@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,17 +23,14 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.core.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -85,7 +82,7 @@ public class DocumentUpdateController {
             case PRODUCT_BATCH:
                 SalesProduct pb = createProductBatchPosition(lookup(RedTapeAgent.class).findAll(SalesProduct.class));
                 if ( pb != null ) {
-                    eu.ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(type).setDescription(pb.getDescription()).
+                    Position p = new PositionBuilder().setType(type).setDescription(pb.getDescription()).
                             setName(pb.getName()).setUniqueUnitProductId(pb.getUniqueUnitProductId()).createPosition();
                     p.setPrice((pb.getPrice() == null) ? 0. : pb.getPrice());
                     p.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(p.getType()).orElse(-1));
@@ -107,16 +104,24 @@ public class DocumentUpdateController {
      * @param pos the Position
      * @return the updated Position.
      */
-    public eu.ggnet.dwoss.redtape.entity.Position editPosition(eu.ggnet.dwoss.redtape.entity.Position pos) {
-        PositionUpdateCask productUpdateView = new PositionUpdateCask(pos);
-        OkCancelDialog<PositionUpdateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Position bearbeiten", productUpdateView);
-        dialog.setLocationRelativeTo(view);
-        dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            eu.ggnet.dwoss.redtape.entity.Position result = productUpdateView.getPosition();
-            return result;
+    public Position editPosition(final Position pos) {
+        try {
+            // Hint: Unusual usage, but works if we need a return type and use null for cancel.
+            return Ui.parent(view).call(() -> pos).choiceSwing(PositionUpdateCask.class).onOk(x -> x.getPosition()).call();
+        } catch (Exception ex) {
+            UiCore.handle(ex);
+            return null;
         }
-        return null;
+//
+//        PositionUpdateCask productUpdateView = new PositionUpdateCask(pos);
+//        OkCancelDialog<PositionUpdateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Position bearbeiten", productUpdateView);
+//        dialog.setLocationRelativeTo(view);
+//        dialog.setVisible(true);
+//        if ( dialog.getCloseType() == CloseType.OK ) {
+//            Position result = productUpdateView.getPosition();
+//            return result;
+//        }
+//        return null;
     }
 
     public eu.ggnet.dwoss.redtape.entity.Position createCommentPosition() {
@@ -132,17 +137,25 @@ public class DocumentUpdateController {
         return null;
     }
 
-    public eu.ggnet.dwoss.redtape.entity.Position createServicePosition() {
-        eu.ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(PositionType.SERVICE).createPosition();
-        ServiceViewCask serviceView = new ServiceViewCask(p);
-        OkCancelDialog<ServiceViewCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Diensleistung/Kleinteil hinzufügen", serviceView);
-        dialog.setLocationRelativeTo(view);
-        dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            p = serviceView.getPosition();
-            return p;
+    public Position createServicePosition() {
+        try {
+            // Hint: Unusual usage, but works if we need a return type and use null for cancel.
+            return Ui.parent(view).call(() -> Position.builder().type(PositionType.SERVICE).build())
+                    .choiceSwing(ServiceViewCask.class).onOk(x -> x.getPosition()).call();
+        } catch (Exception ex) {
+            UiCore.handle(ex);
+            return null;
         }
-        return null;
+//        .ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(PositionType.SERVICE).createPosition();
+//        ServiceViewCask serviceView = new ServiceViewCask(p);
+//        OkCancelDialog<ServiceViewCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Diensleistung/Kleinteil hinzufügen", serviceView);
+//        dialog.setLocationRelativeTo(view);
+//        dialog.setVisible(true);
+//        if ( dialog.getCloseType() == CloseType.OK ) {
+//            p = serviceView.getPosition();
+//            return p;
+//        }
+//        return null;
     }
 
     public SalesProduct createProductBatchPosition(List<SalesProduct> products) {

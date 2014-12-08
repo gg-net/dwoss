@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,15 @@
  */
 package eu.ggnet.dwoss.redtape.position;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.IPreClose;
-
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
+import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.api.PositionService;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-
-import eu.ggnet.dwoss.rules.PositionType;
-
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.api.ui.OnOk;
+import eu.ggnet.saft.api.ui.Title;
 
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -39,20 +33,17 @@ import static eu.ggnet.saft.core.Client.lookup;
  *
  * @author pascal.perau
  */
-public class ServiceViewCask extends javax.swing.JPanel implements IPreClose {
+@Title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
+public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consumer<Position> {
 
     private Position position;
 
     private PositionUpdateCask positionView;
 
-    public ServiceViewCask(Position position) {
+    public ServiceViewCask() {
         initComponents();
-
-        if ( position != null ) {
-            this.position = position;
-            positionView = new PositionUpdateCask(position);
-            positionPanel.add(positionView);
-        }
+        positionView = new PositionUpdateCask();
+        positionPanel.add(positionView);
 
         templateList.setCellRenderer(new Tuple2PositionRenderer());
         if ( hasFound(PositionService.class) ) {
@@ -63,6 +54,7 @@ public class ServiceViewCask extends javax.swing.JPanel implements IPreClose {
     }
 
     public Position getPosition() {
+        // TODO: Why not usding position.getPosition() asks OG
         position.setPrice(positionView.getPrice());
         position.setAfterTaxPrice(MathUtil.roundedApply(position.getPrice(), GlobalConfig.TAX, 0.02));
         position.setAmount(positionView.getAmount());
@@ -73,8 +65,15 @@ public class ServiceViewCask extends javax.swing.JPanel implements IPreClose {
     }
 
     @Override
-    public boolean pre(CloseType type) {
-        return positionView.pre(type);
+    public void accept(Position position) {
+        if ( position == null ) return;
+        this.position = position;
+        positionView.accept(position);
+    }
+
+    @Override
+    public boolean onOk() {
+        return positionView.onOk();
     }
 
     /** This method is called from within the constructor to
@@ -155,14 +154,4 @@ public class ServiceViewCask extends javax.swing.JPanel implements IPreClose {
     private javax.swing.JList templateList;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) {
-
-        Position pos = new PositionBuilder().setType(PositionType.SERVICE).setPrice(30.).createPosition();
-
-        ServiceViewCask view = new ServiceViewCask(pos);
-        OkCancelDialog<ServiceViewCask> dialog = new OkCancelDialog<>("Add Service", view);
-        dialog.setVisible(true);
-        System.out.println(view.getPosition());
-        System.exit(0);
-    }
 }

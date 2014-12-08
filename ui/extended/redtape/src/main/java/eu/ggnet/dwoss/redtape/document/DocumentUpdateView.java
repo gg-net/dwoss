@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,10 @@
  */
 package eu.ggnet.dwoss.redtape.document;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
-
 import java.awt.*;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -46,8 +44,9 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
@@ -144,8 +143,12 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             positionsFxList.setItems(positions);
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
                 if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
-                    if ( isChangeAllowed() ) controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
-                    else JOptionPane.showMessageDialog(null, "Änderung an Positionen ist nicht erlaubt.");
+                    if ( isChangeAllowed() ) {
+                        // TODO: We need some handling of a callback in the future. For now we ignore the result.
+                        ForkJoinPool.commonPool().execute(() -> controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem()));
+                    } else {
+                        Alert.show("Änderung an Positionen ist nicht erlaubt.");
+                    }
                 }
             });
 

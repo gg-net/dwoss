@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,12 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
-
-import java.util.List;
+import java.util.*;
 
 import javax.ejb.Stateless;
 
+import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
+import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
@@ -35,13 +35,13 @@ import eu.ggnet.dwoss.util.interactiveresult.Result;
 public class SampleHookServiceBean implements RedTapeHookService {
 
     @Override
-    public Result<List<eu.ggnet.dwoss.redtape.entity.Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
+        return new Result<>(Arrays.asList(p));
     }
 
     @Override
-    public Result<List<eu.ggnet.dwoss.redtape.entity.Position>> addWarrantyForUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Result<List<Position>> addWarrantyForUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
+        return new Result<>(new ArrayList<>());
     }
 
 }
