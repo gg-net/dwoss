@@ -232,7 +232,7 @@ public class ResolveRepaymentBeanIT {
         assertThat(reports).hasSize(2);
         Report repaymentReport = null;
         // Try to get Report with the Name that is generated in a Static method inside the ResolveRepaymentBean.
-        if ( reports.get(0).getName().equals(ResolveRepaymentBean.getReportName(tradeName)) ) repaymentReport = reports.get(0);
+        if ( reports.get(0).getName().equals(ResolveRepaymentBean.toReportName(tradeName)) ) repaymentReport = reports.get(0);
         else repaymentReport = reports.get(1);
 
         repaymentReport = reportAgent.findByIdEager(Report.class, repaymentReport.getId());

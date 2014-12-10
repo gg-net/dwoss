@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,7 @@ import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 
 import eu.ggnet.dwoss.redtape.entity.Position.Key;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 import lombok.experimental.Builder;

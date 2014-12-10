@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.report;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,22 +28,24 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.report.assist.ReportUtil;
+import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.Report.ViewMode;
 import eu.ggnet.dwoss.report.entity.Report.YearSplit;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-
-
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
 
-import lombok.*;
 import lombok.experimental.Builder;
 
-import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
+
+import lombok.*;
+
+import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.entity.Report.ViewMode.DEFAULT;
 import static eu.ggnet.dwoss.report.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
 import static eu.ggnet.dwoss.rules.PositionType.*;
@@ -282,17 +281,5 @@ public interface ReportAgent extends RemoteAgent {
      * @return the discovered and attached ReportLines.
      */
     public Set<ReportLine> attachDanglingComplaints(TradeName type, Date till);
-    
-    /**
-     * This method search a Report where all parameters are equal to one in the Database, if no is existing in the database a new one will be created and
-     * returned.
-     * <p>
-     * @param name       is the name of the Report
-     * @param contractor is the contractor of the Report as {@link TradeName}.
-     * @param starting   is the Date where the report is starting
-     * @param end        is the Date where the report is ending.
-     * @return the founded or the new created Report.
-     */
-     public Report findOrCreateReport(String name, TradeName contractor, Date starting, Date end);
 
 }

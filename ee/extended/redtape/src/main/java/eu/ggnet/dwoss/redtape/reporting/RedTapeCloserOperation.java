@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.reporting;
 
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.stock.eao.StockEao;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.saft.api.progress.IMonitor;
-
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -52,27 +31,35 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.*;
 
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.workflow.RedTapeWorkflow;
-
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-
-
-import eu.ggnet.statemachine.State.Type;
-
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.eao.StockEao;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
-
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-
+import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.redtape.entity.Document.Condition.*;
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;

@@ -20,10 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -31,16 +31,17 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.report.ReportAgent;
+import eu.ggnet.dwoss.redtape.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.emo.ReportEmo;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -54,39 +55,43 @@ import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
  */
 @Stateless
 public class ResolveRepaymentBean implements ResolveRepayment {
-    
+
     private static final Date startThisYear;
-    
+
     private static final Date endhisYear;
-    
+
     static {
         startThisYear = DateUtils.round(DateUtils.setMonths(new Date(), 1), Calendar.YEAR);
         endhisYear = DateUtils.addYears(DateUtils.addMilliseconds(startThisYear, -1), 1);
     }
-    
+
     private static final Logger L = LoggerFactory.getLogger(ResolveRepaymentBean.class);
-    
+
     @Inject
     private ReportLineEao reportLineEao;
-    
+
     @Inject
-    private StockAgent stockAgent;
-    
+    private StockUnitEao stockUnitEao;
+
     @Inject
     private StockTransactionEmo stEmo;
-    
+
+    @Inject
+    @Stocks
+    private EntityManager stockEm;
+
     @Inject
     private Event<UnitHistory> history;
-    
+
     @Inject
-    private ReportAgent reportAgent;
-    
-    @EJB
-    private RedTapeAgent redTapeAgent;
-    
+    private ReportEmo reportEmo;
+
+    @Inject
+    private DossierEao dossierEao;
+
     @Inject
     private RepaymentCustomers repaymentCustomers;
-    
+
     @Override
     public List<ReportLine> getRepaymentLines(TradeName contractor) {
         List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(contractor, startThisYear, endhisYear);
@@ -95,58 +100,80 @@ public class ResolveRepaymentBean implements ResolveRepayment {
                     return l.getDocumentType() == ANNULATION_INVOICE || l.getDocumentType() == CREDIT_MEMO;
                 }).collect(Collectors.toList());
     }
-    
+
     @Override
-    public void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
+    public ResolveResult resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
         //search with refurbishid and serial number.
         List<SimpleReportLine> reportLines = reportLineEao.findReportLinesByIdentifiers(identifier.trim());
-        
+
         List<ReportLine> repaymentLines = getRepaymentLines(contractor);
         ReportLine line = null;
-        
+
         List<Long> repaymentIds = repaymentLines.stream().map((l) -> l.getId()).collect(Collectors.toList());
-        
+
         for (SimpleReportLine reportLine : reportLines) {
             if ( repaymentIds.contains(reportLine.getId()) ) {
                 line = reportLineEao.findById(reportLine.getId());
             }
         }
-        
+
         if ( line == null ) throw new UserInfoException("Es konnte keine ReportLine mit diesem Identifier gefunden werden");
         if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
-        
+
         ReportLine reference = line.getReference(SingleReferenceType.WARRANTY);
 
         // Rolling out
-        StockUnit stockUnit = stockAgent.findStockUnitByRefurbishIdEager(line.getRefurbishId());
-        if ( stockUnit == null ) throw new UserInfoException("Es exestiert keine Stock Unit zu dem Gerät");
-        if ( stockUnit.isInTransaction() ) throw new UserInfoException("Unit is in einer StockTransaction. ID:" + stockUnit.getTransaction().getId());
-        
-        long dossierId = stockUnit.getLogicTransaction().getDossierId();
-        Dossier dossier = redTapeAgent.findById(Dossier.class, dossierId);
-        
-        if ( repaymentCustomers.get(contractor) == null || !repaymentCustomers.get(contractor).isPresent()
-                || !repaymentCustomers.get(contractor).get().equals(dossier.getCustomerId()) ) {
-            throw new UserInfoException("Unit is nicht auf einem Auftrag eines Repayment Customers. DossierId:" + dossier.getId());
+        StockUnit stockUnit = stockUnitEao.findByRefurbishId(line.getRefurbishId());
+        if ( stockUnit != null && stockUnit.isInTransaction() )
+            throw new UserInfoException("Unit is in einer StockTransaction. ID:" + stockUnit.getTransaction().getId());
+
+        ResolveResult msgs = new ResolveResult();
+        if ( stockUnit == null ) {
+            msgs.stockMessage = "Es exestiert keine Stock Unit mehr zu dem Gerät";
+        } else {
+            LogicTransaction lt = stockUnit.getLogicTransaction();
+            long dossierId = lt.getDossierId();
+            Dossier dossier = dossierEao.findById(dossierId);
+
+            if ( !repaymentCustomers.get(contractor).isPresent()
+                    || !repaymentCustomers.get(contractor).get().equals(dossier.getCustomerId()) ) {
+                throw new UserInfoException("Unit is nicht auf einem Auftrag eines Repayment Customers. DossierId:" + dossier.getId());
+            }
+            List<Document> activeDocuments = dossier.getActiveDocuments(DocumentType.BLOCK);
+            if ( activeDocuments.size() != 1 ) {
+                throw new UserInfoException("Der Gutschriftsvorgang " + dossier.toSimpleLine() + " ist fehlerhaft, entweder kein oder zu viele akive Blocker");
+            }
+            Position pos = activeDocuments.get(0).getPositionByUniqueUnitId(stockUnit.getUniqueUnitId());
+            if ( pos == null ) {
+                throw new UserInfoException("Auf Gutschriftsvorgang " + dossier.toSimpleLine() + " ist das Gerät " + stockUnit.toSimple() + " nicht auffindbar");
+            }
+            msgs.redTapeMessage = "Kid: " + dossier.getCustomerId() + ", Vorgang:" + dossier.getIdentifier() + " wurde Gerät entfernt";
+            convertToComment(pos, arranger, comment);
+            lt.remove(stockUnit);
+
+            StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getStock().getId(), arranger, "Resolved Repayment");
+            st.addUnit(stockUnit);
+            msgs.stockMessage = stockUnit.toSimple() + " aus Lager ausgerollt auf StockTransaction(id=" + st.getId() + ")";
+            history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
+            stEmo.completeRollOut(arranger, Arrays.asList(st));
+            stockEm.flush();
+            if ( lt.getUnits().isEmpty() ) {
+                msgs.stockMessage += ", LogicTransaction " + lt.getId() + " ist jetzt leer, wird gelöscht";
+                stockEm.remove(lt);
+            }
+
         }
-        
-        List<StockTransaction> stockTransactions = new ArrayList<>();
-        StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getId(), arranger, "Resolved Repayment");
-        st.addUnit(stockUnit);
-        stockTransactions.add(st);
-        history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
-        stEmo.completeRollOut(arranger, stockTransactions);
-        
-        Report report = reportAgent.findOrCreateReport(getReportName(contractor),
-                contractor, startThisYear, endhisYear);
+        Report report = reportEmo.request(toReportName(contractor), contractor, startThisYear, endhisYear);
         line.setComment(comment);
         report.add(line);
+        msgs.reportMessage = "Repayment Unit " + line.getRefurbishId() + " line " + line.getId() + " resolved in " + report.getName();
         if ( reference != null ) {
             L.info("Warrenty Reference exist. Putted also into the report. ReportLine ID of Warrenty:{}", reference.getId());
             reference.setComment(comment);
             report.add(reference);
+            msgs.reportMessage += ", including warranty " + reference.getId();
         }
-        
+        return msgs;
     }
 
     /**
@@ -155,8 +182,18 @@ public class ResolveRepaymentBean implements ResolveRepayment {
      * @param contractor
      * @return
      */
-    public static String getReportName(TradeName contractor) {
+    public static String toReportName(TradeName contractor) {
         return contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear);
     }
-    
+
+    private void convertToComment(Position position, String arranger, String comment) {
+        position.setType(PositionType.COMMENT);
+        position.setUniqueUnitId(0);
+        position.setUniqueUnitProductId(0);
+        position.setPrice(0);
+        position.setAfterTaxPrice(0);
+        position.setDescription("Entfernt durch Gutschrifstausgleich von " + arranger + ", war: " + position.getName() + ", Kommentar:" + comment);
+        position.setName("Entfernt durch Gutschrifstausgleich von " + arranger);
+    }
+
 }

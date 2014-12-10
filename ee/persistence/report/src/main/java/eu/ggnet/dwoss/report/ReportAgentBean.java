@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.report;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -32,23 +29,19 @@ import org.slf4j.*;
 import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.report.api.MarginCalculator;
 import eu.ggnet.dwoss.report.assist.ReportUtil.PrepareReportPartition;
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
-import eu.ggnet.dwoss.report.entity.Report.YearSplit;
-
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.dwoss.report.assist.Reports;
+import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-
+import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
-import static eu.ggnet.dwoss.report.entity.QReport.report;
 import static eu.ggnet.dwoss.report.entity.Report.ViewMode.*;
-import static eu.ggnet.dwoss.rules.PositionType.*;
 
 /**
  *
@@ -118,26 +111,6 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         }
         reportEm.persist(report);
         return optionalFetchEager(report);
-    }
-
-    /**
-     * This method search a Report where all parameters are equal to one in the Database, if no is existing in the database a new one will be created and
-     * returned.
-     * <p>
-     * @param name       is the name of the Report
-     * @param contractor is the contractor of the Report as {@link TradeName}.
-     * @param starting   is the Date where the report is starting
-     * @param end        is the Date where the report is ending.
-     * @return the founded or the new created Report.
-     */
-    @Override
-    public Report findOrCreateReport(String name, TradeName contractor, Date starting, Date end) {
-        Report singleResult = new JPAQuery(reportEm).from(report).where(report.name.equalsIgnoreCase(name).and(
-                report.startingDate.eq(starting).and(report.endingDate.eq(end).and(report.type.eq(contractor))))).singleResult(report);
-        if ( singleResult != null ) return singleResult;
-        Report report = new Report(name, contractor, starting, end);
-        reportEm.persist(report);
-        return report;
     }
 
     @Override

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,6 @@
  */
 package eu.ggnet.dwoss.report;
 
-import eu.ggnet.lucidcalc.SUtil;
-import eu.ggnet.lucidcalc.SBlock;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.SCell;
-import eu.ggnet.lucidcalc.SFormula;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.LucidCalcWriter;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-
 import java.awt.Color;
 import java.io.File;
 import java.util.*;
@@ -38,15 +23,15 @@ import java.util.*;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
-
 import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.lucidcalc.*;
 
+import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
 import static eu.ggnet.lucidcalc.CFormat.Representation.*;
 import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
 import static eu.ggnet.lucidcalc.SUtil.SR;
-import static eu.ggnet.dwoss.util.DateFormats.ISO;
 
 /**
  *
@@ -91,8 +76,10 @@ public class XlsExporter {
         template.add(new STableColumn("CID", 12));
         template.add(new STableColumn("Firma", 35));
         template.add(new STableColumn("Name", 30));
-        template.add(new STableColumn("Rechnungsadresse", 60));
-        template.add(new STableColumn("Bemerkung", 50));
+        template.add(new STableColumn("Postionstype", 15));
+        template.add(new STableColumn("DocumenType", 15));
+        template.add(new STableColumn("Workflow", 15));
+        template.add(new STableColumn("Bemerkung", 30));
 
         ReportParameter parameter = report.getParameter();
 
@@ -169,11 +156,10 @@ public class XlsExporter {
                 line.getCustomerId(),
                 line.getCustomerCompany(),
                 line.getCustomerName(),
-                line.getInvoiceAddress(),
-                line.getDocumentTypeName()
-                + (line.getWorkflowStatus() == ReportLine.WorkflowStatus.DEFAULT ? "" : ", " + line.getWorkflowStatus())
-                + ", Position:" + line.getPositionTypeName()
-                + ", " + line.getDescription()
+                line.getPositionType().getName(),
+                line.getDocumentType().getName(),
+                line.getWorkflowStatus(),
+                line.getComment()
             };
             newLinesData.add(data);
         }

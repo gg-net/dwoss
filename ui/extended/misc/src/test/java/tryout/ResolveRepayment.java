@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.misc.ResolveRepaymentController;
+import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
 
 /**
  *

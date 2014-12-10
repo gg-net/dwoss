@@ -26,8 +26,8 @@ import javafx.fxml.FXMLLoader;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
+import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Client;
@@ -56,7 +56,8 @@ public class ResolvRepaimentControllerTest {
             }
 
             @Override
-            public void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
+            public ResolveResult resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException {
+                return new ResolveResult();
             }
         });
         new JFXPanel(); // Implizit start of JavaFx.

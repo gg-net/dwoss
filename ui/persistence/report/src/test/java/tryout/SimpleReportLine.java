@@ -170,11 +170,6 @@ public class SimpleReportLine {
             public ViewReportResult prepareReport(ReportParameter p, boolean loadUnreported) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
-            @Override
-            public Report findOrCreateReport(String name, TradeName contractor, Date starting, Date end) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
             //</editor-fold>
 
         };

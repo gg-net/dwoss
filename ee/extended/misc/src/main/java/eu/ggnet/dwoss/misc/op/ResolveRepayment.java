@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.Local;
@@ -25,6 +26,9 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.UserInfoException;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 /**
  *
  * @author bastian.venz
@@ -33,8 +37,20 @@ import eu.ggnet.dwoss.util.UserInfoException;
 @Remote
 public interface ResolveRepayment {
 
+    @ToString
+    @EqualsAndHashCode
+    public static class ResolveResult implements Serializable {
+
+        public String stockMessage;
+
+        public String redTapeMessage;
+
+        public String reportMessage;
+
+    }
+
     List<ReportLine> getRepaymentLines(TradeName contractor);
 
-    void resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException;
+    ResolveResult resolveUnit(String identifier, TradeName contractor, String arranger, String comment) throws UserInfoException;
 
 }

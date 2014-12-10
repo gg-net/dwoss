@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,25 +19,34 @@ package eu.ggnet.dwoss.redtape.eao;
 import java.util.Collection;
 import java.util.List;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.entity.Position;
-
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 /**
  *
  * @author pascal.perau
  */
+@Stateless
 public class DossierEao extends AbstractEao<Dossier> {
 
+    @Inject
+    @RedTapes
     private EntityManager em;
 
     public DossierEao(EntityManager em) {
         super(Dossier.class);
         this.em = em;
+    }
+
+    public DossierEao() {
+        super(Dossier.class);
     }
 
     @Override

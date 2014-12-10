@@ -14,17 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.misc;
+package eu.ggnet.dwoss.misc.repayment;
 
-import java.awt.EventQueue;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Consumer;
 
-import javax.swing.JOptionPane;
-
+import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -32,12 +30,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
+import eu.ggnet.dwoss.misc.op.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.UiAlert.Type;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -47,7 +48,8 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  *
  * @author bastian.venz
  */
-public class ResolveRepaymentController implements Initializable {
+@Title("Resolve Repayment")
+public class ResolveRepaymentController implements Initializable, FxController, Consumer<TradeName> {
 
     @FXML
     private TableView<ReportLine> reportLineTable;
@@ -57,6 +59,9 @@ public class ResolveRepaymentController implements Initializable {
 
     @FXML
     private TextArea commentField;
+
+    @FXML
+    private Button resolveButton;
 
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
@@ -75,8 +80,8 @@ public class ResolveRepaymentController implements Initializable {
         reportingDate.setMinWidth(110);
         TableColumn<ReportLine, Long> unqiueUnitId = new TableColumn<>("UniqueUnit Id");
         unqiueUnitId.setCellValueFactory(new PropertyValueFactory("uniqueUnitId"));
-        TableColumn<ReportLine, TradeName> contractor = new TableColumn<>("contractor");
-        contractor.setCellValueFactory(new PropertyValueFactory("contractor"));
+        TableColumn<ReportLine, TradeName> contractorColumn = new TableColumn<>("contractor");
+        contractorColumn.setCellValueFactory(new PropertyValueFactory("contractor"));
         TableColumn<ReportLine, String> partNo = new TableColumn<>("PartNo");
         partNo.setCellValueFactory(new PropertyValueFactory("partNo"));
         partNo.setMinWidth(110);
@@ -95,18 +100,14 @@ public class ResolveRepaymentController implements Initializable {
         TableColumn<ReportLine, PositionType> positionType = new TableColumn<>("positionType");
         positionType.setCellValueFactory(new PropertyValueFactory("positionType"));
 
-        reportLineTable.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor,
+        reportLineTable.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractorColumn,
                 amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
 
         reportLineTable.getSelectionModel().setSelectionMode(MULTIPLE);
-        reportLineTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double ref = reportLineTable.getSelectionModel().getSelectedItems().stream()
-                        .map((srl) -> srl.getContractorReferencePrice()).reduce(0., (interimResult, elem) -> interimResult + elem);
-                referencePriceProperty.set(ref);
-            }
+        reportLineTable.getSelectionModel().selectedIndexProperty().addListener((ov, o, n) -> {
+            double ref = reportLineTable.getSelectionModel().getSelectedItems().stream()
+                    .map((srl) -> srl.getContractorReferencePrice()).reduce(0., (interimResult, elem) -> interimResult + elem);
+            referencePriceProperty.set(ref);
         });
         reportLineTable.setOnMouseClicked((MouseEvent mouseEvent) -> {
             if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
@@ -116,7 +117,8 @@ public class ResolveRepaymentController implements Initializable {
         });
     }
 
-    public void setContractor(TradeName contractor) {
+    @Override
+    public void accept(TradeName contractor) {
         this.contractor = contractor;
         List<ReportLine> repaymentLines = lookup(ResolveRepayment.class).getRepaymentLines(contractor);
         reportLineTable.setItems(FXCollections.observableList(repaymentLines));
@@ -128,14 +130,32 @@ public class ResolveRepaymentController implements Initializable {
             sopoField.setText(" IDENTIFIER EINGEBEN!!!!!");
             return;
         }
-        new Thread(() -> {
+        resolveButton.setDisable(true);
+        ForkJoinPool.commonPool().execute(() -> {
             try {
-                lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
-                JOptionPane.showMessageDialog(null, "Repayment Resolved");
+                ResolveResult result = lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
+                Alert.title("Repayment resolved")
+                        .parent(sopoField)
+                        .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
+                        .nl("Stock: " + result.stockMessage)
+                        .nl("RedTape: " + result.redTapeMessage)
+                        .nl("Report: " + result.reportMessage)
+                        .show(Type.INFO);
+                reset();
             } catch (UserInfoException ex) {
-                EventQueue.invokeLater(() -> DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex));
+                UiCore.handle(ex);
+            } finally {
+                reset();
             }
-        }).start();
+        });
+    }
+
+    private void reset() {
+        Platform.runLater(() -> {
+            resolveButton.setDisable(false);
+            sopoField.setText("");
+            commentField.setText("");
+        });
     }
 
     @FXML
@@ -144,6 +164,7 @@ public class ResolveRepaymentController implements Initializable {
     }
 
     public static URL loadFxml() {
-        return ResolveRepaymentController.class.getResource("ResolveRepayment.fxml");
+        return ResolveRepaymentController.class.getResource("ResolveRepaymentView.fxml");
     }
+
 }
