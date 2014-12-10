@@ -48,27 +48,23 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.rules.*;
-
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.StockPu;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.UserInfoException;
 
+import static eu.ggnet.dwoss.rules.DocumentType.*;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.AMAZON;
 import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-
 import static org.fest.assertions.api.Assertions.*;
 
 public class ResolveRepaymentBeanIT {
@@ -207,6 +203,14 @@ public class ResolveRepaymentBeanIT {
 
         redTapeCloser.executeManual("JUnitTest");
 
+        // Ensure, that we have a Mirror Dossier on the repaymentcustomers.
+        List<Dossier> findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
+        assertThat(findDossiersOpenByCustomerIdEager).isNotEmpty();
+        Dossier repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
+        List<Document> activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
+        assertThat(activeDocuments).isNotEmpty();
+        assertThat(activeDocuments.get(0).getPositions(UNIT)).isNotEmpty();
+
         Report report = new Report("Test", tradeName, new Date(), new Date());
         List<ReportLine> reportLines = reportLineEao.findAll();
         List<Storeable> arrayList = new ArrayList<>();
@@ -240,12 +244,14 @@ public class ResolveRepaymentBeanIT {
         assertThat(repaymentReport.getLines()).hasSize(1);
         assertThat(repaymentLines).contains(repaymentLine);
 
-        List<Dossier> findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
+        // Ensure, that we the mirror Dossier has be cleared of the unit
+        findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
         assertThat(findDossiersOpenByCustomerIdEager).isNotEmpty();
-        Dossier repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
-        List<Document> activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
+        repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
+        activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
         assertThat(activeDocuments).isNotEmpty();
-        assertThat(activeDocuments.get(0).getPositions(UNIT)).isNotEmpty();
+        assertThat(activeDocuments.get(0).getPositions(UNIT)).isEmpty();
+        assertThat(activeDocuments.get(0).getPositions(PositionType.COMMENT)).isNotEmpty(); // We still should have comments there.
 
         assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNullOrEmpty();
     }
@@ -264,7 +270,7 @@ public class ResolveRepaymentBeanIT {
 
         public void generateLines(int amount) {
             for (int i = 0; i < amount; i++) {
-                ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(AMAZON), DateUtils.addDays(new Date(), 10), 25);
+                ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(AMAZON), DateUtils.addDays(new Date(), -30), 25);
                 makeReportLine.setPositionType(PositionType.UNIT);
                 makeReportLine.setDocumentType(ANNULATION_INVOICE);
                 eao.getEntityManager().persist(makeReportLine);

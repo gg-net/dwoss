@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,7 +25,6 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +47,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
+import static java.time.ZoneId.systemDefault;
 
 /**
  *
@@ -55,15 +55,6 @@ import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
  */
 @Stateless
 public class ResolveRepaymentBean implements ResolveRepayment {
-
-    private static final Date startThisYear;
-
-    private static final Date endhisYear;
-
-    static {
-        startThisYear = DateUtils.round(DateUtils.setMonths(new Date(), 1), Calendar.YEAR);
-        endhisYear = DateUtils.addYears(DateUtils.addMilliseconds(startThisYear, -1), 1);
-    }
 
     private static final Logger L = LoggerFactory.getLogger(ResolveRepaymentBean.class);
 
@@ -94,7 +85,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
 
     @Override
     public List<ReportLine> getRepaymentLines(TradeName contractor) {
-        List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(contractor, startThisYear, endhisYear);
+        List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(contractor, null, new Date()); // All
         return findUnreportedUnits.stream()
                 .filter((l) -> {
                     return l.getDocumentType() == ANNULATION_INVOICE || l.getDocumentType() == CREDIT_MEMO;
@@ -121,7 +112,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
 
         ReportLine reference = line.getReference(SingleReferenceType.WARRANTY);
-
+// TODO:Consider Unid Annex
         // Rolling out
         StockUnit stockUnit = stockUnitEao.findByRefurbishId(line.getRefurbishId());
         if ( stockUnit != null && stockUnit.isInTransaction() )
@@ -163,7 +154,11 @@ public class ResolveRepaymentBean implements ResolveRepayment {
             }
 
         }
-        Report report = reportEmo.request(toReportName(contractor), contractor, startThisYear, endhisYear);
+
+        Date startOfYear = Date.from(LocalDate.of(LocalDate.now().getYear(), 1, 1).atStartOfDay(systemDefault()).toInstant());
+        Date endOfYear = Date.from(LocalDate.of(LocalDate.now().getYear(), 12, 31).atStartOfDay(systemDefault()).toInstant());
+
+        Report report = reportEmo.request(toReportName(contractor), contractor, startOfYear, endOfYear);
         line.setComment(comment);
         report.add(line);
         msgs.reportMessage = "Repayment Unit " + line.getRefurbishId() + " line " + line.getId() + " resolved in " + report.getName();
@@ -183,7 +178,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
      * @return
      */
     public static String toReportName(TradeName contractor) {
-        return contractor.getName() + " Gutschriften " + new SimpleDateFormat("yyyy").format(startThisYear);
+        return contractor.getName() + " Gutschriften " + LocalDate.now().getYear();
     }
 
     private void convertToComment(Position position, String arranger, String comment) {
