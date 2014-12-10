@@ -47,6 +47,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static java.time.ZoneId.systemDefault;
 
 /**
@@ -112,15 +113,18 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         if ( !line.getReports().isEmpty() ) throw new UserInfoException("ReportLine ist schon in einem Report.\nReports:" + line.getReports());
 
         ReportLine reference = line.getReference(SingleReferenceType.WARRANTY);
-// TODO:Consider Unid Annex
-        // Rolling out
-        StockUnit stockUnit = stockUnitEao.findByRefurbishId(line.getRefurbishId());
+
+        // Rolling out the unit if still in Stock.
+        StockUnit stockUnit = line.getPositionType() == UNIT // Saftynet, e.g. unit annex shoud not clear units.
+                ? stockUnitEao.findByRefurbishId(line.getRefurbishId())
+                : null;
         if ( stockUnit != null && stockUnit.isInTransaction() )
             throw new UserInfoException("Unit is in einer StockTransaction. ID:" + stockUnit.getTransaction().getId());
 
         ResolveResult msgs = new ResolveResult();
         if ( stockUnit == null ) {
-            msgs.stockMessage = "Es exestiert keine Stock Unit mehr zu dem Gerät";
+            msgs.stockMessage = "Es existiert keine Stock Unit (mehr) zu dem Gerät";
+            msgs.redTapeMessage = "Keine StockUnit, Kein Vorgang";
         } else {
             LogicTransaction lt = stockUnit.getLogicTransaction();
             long dossierId = lt.getDossierId();
