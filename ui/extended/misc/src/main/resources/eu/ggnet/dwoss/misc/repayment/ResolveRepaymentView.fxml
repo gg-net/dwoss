@@ -14,15 +14,15 @@
     <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="45.0" vgrow="NEVER" />
-        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="100.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="NEVER" />
     </rowConstraints>
     <children>
         <TableView fx:id="reportLineTable" GridPane.columnSpan="3" />
-        <Button fx:id="resolveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleResolveButtonAction" text="Auflösen" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button fx:id="resolveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleResolveButtonAction" prefHeight="25.0" prefWidth="84.0" text="Auflösen" GridPane.columnIndex="2" GridPane.rowIndex="3" />
         <TextField fx:id="sopoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Label text="Sopo Nr." GridPane.rowIndex="1" />
-        <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER" />
         <Label text="Kommentar:" GridPane.rowIndex="2" />
-        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="615.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" />
     </children>
 </GridPane>

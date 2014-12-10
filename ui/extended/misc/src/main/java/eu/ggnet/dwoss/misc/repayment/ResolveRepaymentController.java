@@ -71,7 +71,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
     public void initialize(URL url, ResourceBundle rb) {
 
         TableColumn<ReportLine, Long> id = new TableColumn<>("Id");
-        id.setCellValueFactory(new PropertyValueFactory("id"));
+        id.setCellValueFactory((p) -> new SimpleObjectProperty<>(p.getValue().getId()));
         TableColumn<ReportLine, String> refurbishId = new TableColumn<>("RefurbishId");
         refurbishId.setCellValueFactory(new PropertyValueFactory("refurbishId"));
         refurbishId.setMinWidth(110);
@@ -156,11 +156,6 @@ public class ResolveRepaymentController implements Initializable, FxController, 
             sopoField.setText("");
             commentField.setText("");
         });
-    }
-
-    @FXML
-    public void handleCancelButtonAction() {
-        sopoField.getScene().getWindow().hide();
     }
 
     public static URL loadFxml() {
