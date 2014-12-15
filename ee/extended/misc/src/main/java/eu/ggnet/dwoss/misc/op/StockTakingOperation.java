@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalcReader;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.STableColumn;
-
 import java.io.File;
 import java.util.*;
 
@@ -38,11 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
@@ -53,8 +39,9 @@ import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
 import lombok.Data;
 
@@ -136,24 +123,24 @@ public class StockTakingOperation implements StockTaking {
             StockUnit stu = (uu == null ? null : stockUnitEao.findByUniqueUnitId(uu.getId()));
             if ( stu != null ) found.add(stu);
             if ( uu == null ) {
-                result.add(new Object[]{stockTaking, "Fehler: Gerät exitiert nicht !", Integer.valueOf(refurbishId),
+                result.add(new Object[]{stockTaking, "Fehler: Gerät exitiert nicht !", refurbishId,
                     null, null, null, null, null, null, null, null, null, null, null});
             } else {
                 String partNo = uu.getProduct().getPartNo();
                 String contractorPartNo = uu.getProduct().getAdditionalPartNo(uu.getContractor());
                 String name = ProductFormater.toName(uu.getProduct());
                 if ( stu == null ) {
-                    result.add(new Object[]{stockTaking, "Nicht im Lager", Integer.valueOf(refurbishId),
+                    result.add(new Object[]{stockTaking, "Nicht im Lager", refurbishId,
                         partNo, uu.getSerial(), name, uu.getContractor(), null, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
                 } else {
                     // jetzt schauen was mit st ist
                     String stock = (stu.getStock() == null ? stu.getTransaction().toSimpleLine() : stu.getStock().getName());
                     if ( stu.getLogicTransaction() == null ) {
-                        result.add(new Object[]{stockTaking, "verfügbar", Integer.valueOf(refurbishId),
+                        result.add(new Object[]{stockTaking, "verfügbar", refurbishId,
                             partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), null, null, null, contractorPartNo, null});
                     } else {
                         Dossier dos = dossierEao.findById(stu.getLogicTransaction().getDossierId());
-                        result.add(new Object[]{stockTaking, dos.isClosed() ? "abgeschlossen" : "in transfer", Integer.valueOf(refurbishId),
+                        result.add(new Object[]{stockTaking, dos.isClosed() ? "abgeschlossen" : "in transfer", refurbishId,
                             partNo, uu.getSerial(), name, uu.getContractor(), stock, uu.getSalesChannel(), dos.getCrucialDirective().getName(),
                             dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
                     }
