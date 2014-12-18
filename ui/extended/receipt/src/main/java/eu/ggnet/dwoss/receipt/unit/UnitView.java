@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.unit;
 
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -30,23 +26,20 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UserPreferences;
-
+import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.receipt.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.receipt.UiUtil;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.Survey;
-
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.Warranty;
-
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
-
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UserPreferences;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -240,8 +233,10 @@ public class UnitView extends javax.swing.JDialog {
     }
 
     private void updateValidationStatus(JComponent component, Survey vs, StringBuilder sb) {
-        component.setToolTipText(vs.getMessage());
-        component.setForeground(vs.getStatus().getColor());
+        EventQueue.invokeLater(() -> {
+            component.setToolTipText(vs.getMessage());
+            component.setForeground(vs.getStatus().getColor());
+        });
         sb.append("- ").append(component.getName()).append(": ").append(vs.getStatus()).append(" : ").append(vs.getMessage()).append("\n");
     }
 
