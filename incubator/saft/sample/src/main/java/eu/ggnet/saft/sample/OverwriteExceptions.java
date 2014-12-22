@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.MainPanel;
+import eu.ggnet.saft.sample.support.MainPanel;
 
 /**
  * A Simple Exception handling Example.

@@ -3,8 +3,9 @@ package eu.ggnet.saft.sample;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.fx.FxSaft;
-import eu.ggnet.saft.sample.aux.RevenueReportSelectorPane;
-import eu.ggnet.saft.sample.aux.SimplePane;
+import eu.ggnet.saft.sample.support.RevenueReportSelectorPane;
+import eu.ggnet.saft.sample.support.SimplePane;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;

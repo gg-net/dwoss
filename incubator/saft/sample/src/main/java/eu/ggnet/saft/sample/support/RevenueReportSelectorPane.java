@@ -1,4 +1,4 @@
-package eu.ggnet.saft.sample.aux;
+package eu.ggnet.saft.sample.support;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;

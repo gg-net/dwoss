@@ -3,19 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.saft.sample.aux;
+package eu.ggnet.saft.sample.support;
+
+import javax.swing.*;
+
+import java.awt.BorderLayout;
 
 /**
  *
  * @author oliver.guenther
  */
-public class PanelAsOnceFrame extends javax.swing.JPanel {
+public class MainPanelAddButtons extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelAsOnceFrame
+     * Creates new form MainPanel
      */
-    public PanelAsOnceFrame() {
+    public MainPanelAddButtons() {
         initComponents();
+        add(menuBar, BorderLayout.NORTH);
+    }
+
+    public JProgressBar getProgressBar() {
+        return ProgressBar;
+    }
+
+    public JMenuBar getMenuBar() {
+        return menuBar;
     }
 
     /**
@@ -26,17 +39,21 @@ public class PanelAsOnceFrame extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        menuBar = new javax.swing.JMenuBar();
         jLabel1 = new javax.swing.JLabel();
+        ProgressBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 36)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("A Frame as Main Application");
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 48)); // NOI18N
+        jLabel1.setText("The Main Application");
         add(jLabel1, java.awt.BorderLayout.CENTER);
+        add(ProgressBar, java.awt.BorderLayout.PAGE_END);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JProgressBar ProgressBar;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 }

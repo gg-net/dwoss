@@ -3,23 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.saft.sample.aux;
+package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.core.Ui;
+import javax.swing.JProgressBar;
 
 /**
  *
  * @author oliver.guenther
  */
-public class PanelWithSelfCloser extends javax.swing.JPanel {
-
-    Object closer;
+public class MainPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelWithSelfCloser
+     * Creates new form MainPanel
      */
-    public PanelWithSelfCloser() {
+    public MainPanel() {
         initComponents();
+    }
+
+    public JProgressBar getProgressBar() {
+        return ProgressBar;
     }
 
     /**
@@ -31,35 +33,32 @@ public class PanelWithSelfCloser extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        buttonPanel = new javax.swing.JPanel();
-        closeButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        ProgressBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 24)); // NOI18N
-        jLabel1.setText("I'm a Panel with a Button to close me");
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 48)); // NOI18N
+        jLabel1.setText("The Main Application");
         add(jLabel1, java.awt.BorderLayout.CENTER);
 
-        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Press Me");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        buttonPanel.add(closeButton);
-
-        add(buttonPanel, java.awt.BorderLayout.PAGE_END);
+        add(jButton1, java.awt.BorderLayout.PAGE_END);
+        add(ProgressBar, java.awt.BorderLayout.PAGE_START);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        Ui.closeWindowOf(this);
-    }//GEN-LAST:event_closeButtonActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        System.out.println("Press Me pressed");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel buttonPanel;
-    private javax.swing.JButton closeButton;
+    private javax.swing.JProgressBar ProgressBar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

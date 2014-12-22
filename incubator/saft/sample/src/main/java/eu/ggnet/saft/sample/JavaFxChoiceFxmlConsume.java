@@ -1,8 +1,10 @@
 package eu.ggnet.saft.sample;
 
+import eu.ggnet.saft.sample.support.SimplePane;
+import eu.ggnet.saft.sample.support.SimpleFxmlController;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.*;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 

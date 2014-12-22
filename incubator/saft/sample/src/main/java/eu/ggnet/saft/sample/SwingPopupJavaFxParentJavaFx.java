@@ -8,8 +8,8 @@ import javafx.scene.layout.BorderPane;
 
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.MainPanel;
-import eu.ggnet.saft.sample.aux.RevenueReportSelectorPane;
+import eu.ggnet.saft.sample.support.MainPanel;
+import eu.ggnet.saft.sample.support.RevenueReportSelectorPane;
 
 import static javafx.scene.text.Font.font;
 

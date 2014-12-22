@@ -5,13 +5,16 @@ import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javafx.scene.paint.Color;
 
 /**
  * Core which is used if Saft is in Swing mode.
@@ -46,8 +49,8 @@ public class SwingCore {
     public static JFXPanel wrap(Pane p) throws InterruptedException {
         final JFXPanel fxp = jfxPanel();
         final CountDownLatch cdl = new CountDownLatch(1);
-        if (Platform.isFxApplicationThread()) {
-            fxp.setScene(new Scene(p));
+        if ( Platform.isFxApplicationThread() ) {
+            fxp.setScene(new Scene(p, Color.TRANSPARENT));
             swingParentHelper.put(fxp.getScene(), fxp);
             cdl.countDown();
         } else {
@@ -63,7 +66,7 @@ public class SwingCore {
 
     private static JFXPanel jfxPanel() {
         JFXPanel result;
-        if (startHelper != null) {
+        if ( startHelper != null ) {
             result = startHelper;
             startHelper = null;
         } else {
@@ -73,7 +76,7 @@ public class SwingCore {
     }
 
     public static void ensurePlatformIsRunning() {
-        if (!started) {
+        if ( !started ) {
             startHelper = new JFXPanel();
             started = true;
         }
@@ -87,8 +90,8 @@ public class SwingCore {
      * @return a window.
      */
     public static Optional<Window> windowAncestor(Component c) {
-        if (c == null) return Optional.empty();
-        if (c instanceof Window) return Optional.of((Window) c);
+        if ( c == null ) return Optional.empty();
+        if ( c instanceof Window ) return Optional.of((Window)c);
         return Optional.ofNullable(SwingUtilities.getWindowAncestor(c));
     }
 
@@ -99,7 +102,7 @@ public class SwingCore {
      * @return a window
      */
     public static Optional<Window> windowAncestor(Node p) {
-        if (p == null) return Optional.empty();
+        if ( p == null ) return Optional.empty();
         return windowAncestor(swingParentHelper.get(p.getScene()));
     }
 }

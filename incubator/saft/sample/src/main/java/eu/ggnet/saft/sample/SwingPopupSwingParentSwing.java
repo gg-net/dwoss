@@ -1,10 +1,12 @@
 package eu.ggnet.saft.sample;
 
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.sample.aux.DocumentAdressUpdateView;
-import eu.ggnet.saft.sample.aux.MainPanel;
+import eu.ggnet.saft.sample.support.DocumentAdressUpdateView;
+import eu.ggnet.saft.sample.support.MainPanel;
+
 import java.awt.Dialog;
 import java.awt.Label;
+
 import javax.swing.JDialog;
 
 /**

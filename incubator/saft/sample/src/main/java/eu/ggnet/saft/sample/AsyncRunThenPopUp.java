@@ -3,8 +3,8 @@ package eu.ggnet.saft.sample;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.api.CallableA1;
-import eu.ggnet.saft.sample.aux.DocumentAdressUpdateView;
-import eu.ggnet.saft.sample.aux.MainPanel;
+import eu.ggnet.saft.sample.support.DocumentAdressUpdateView;
+import eu.ggnet.saft.sample.support.MainPanel;
 
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;

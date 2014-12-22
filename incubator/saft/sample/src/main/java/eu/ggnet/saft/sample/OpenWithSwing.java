@@ -1,5 +1,17 @@
 package eu.ggnet.saft.sample;
 
+import eu.ggnet.saft.sample.support.SimplePane;
+import eu.ggnet.saft.sample.support.BasicApplicationController;
+import eu.ggnet.saft.sample.support.PanelWithSelfCloser;
+import eu.ggnet.saft.sample.support.UnitViewer;
+import eu.ggnet.saft.sample.support.MainPanelAddButtons;
+import eu.ggnet.saft.sample.support.PanelAsFrame;
+import eu.ggnet.saft.sample.support.PaneAsFrameWithSelfCloser;
+import eu.ggnet.saft.sample.support.PaneConsumesIdSupplier;
+import eu.ggnet.saft.sample.support.SimpleFxmlController;
+import eu.ggnet.saft.sample.support.PanelOnceDialog;
+import eu.ggnet.saft.sample.support.PaneAsFrame;
+
 import java.util.Random;
 
 import javax.swing.*;
@@ -7,7 +19,6 @@ import javax.swing.*;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.*;
 
 import lombok.Value;
 

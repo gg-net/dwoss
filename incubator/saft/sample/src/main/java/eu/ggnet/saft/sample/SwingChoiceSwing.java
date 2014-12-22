@@ -2,8 +2,8 @@ package eu.ggnet.saft.sample;
 
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.aux.DocumentAdressUpdateView;
-import eu.ggnet.saft.sample.aux.MainPanel;
+import eu.ggnet.saft.sample.support.DocumentAdressUpdateView;
+import eu.ggnet.saft.sample.support.MainPanel;
 
 /**
  * Opens a Swing Panel as Popup Dialog blocking the hole application.

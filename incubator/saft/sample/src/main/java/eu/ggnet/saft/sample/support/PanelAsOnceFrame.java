@@ -3,29 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.saft.sample.aux;
-
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.Frame;
+package eu.ggnet.saft.sample.support;
 
 /**
  *
  * @author oliver.guenther
  */
-@Frame
-public class PanelAsFrame extends javax.swing.JPanel implements ClosedListener {
+public class PanelAsOnceFrame extends javax.swing.JPanel {
 
     /**
-     * Creates new form PanelAsFrame
+     * Creates new form PanelAsOnceFrame
      */
-    public PanelAsFrame() {
+    public PanelAsOnceFrame() {
         initComponents();
-    }
-
-    @Override
-    public void closed() {
-        Alert.show(this + " got closed !");
     }
 
     /**
@@ -40,13 +30,13 @@ public class PanelAsFrame extends javax.swing.JPanel implements ClosedListener {
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 24)); // NOI18N
-        jLabel1.setText("Panel that shoud be a frame with ClosedListener");
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 36)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("A Frame as Main Application");
         add(jLabel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
-
 }
