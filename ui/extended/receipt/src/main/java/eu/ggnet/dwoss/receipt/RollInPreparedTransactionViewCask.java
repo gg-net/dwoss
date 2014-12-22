@@ -14,24 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.util;
+package eu.ggnet.dwoss.receipt;
 
+import java.util.List;
 import java.util.function.Consumer;
+
+import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
+import eu.ggnet.saft.api.ui.Title;
+
+import lombok.Getter;
 
 /**
  *
  * @author oliver.guenther
  */
-public class HtmlPanel extends javax.swing.JPanel implements Consumer<String> {
+@Title("Stock Transactionen einrollen ?")
+public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implements Consumer<List<StockTransaction>> {
+
+    @Getter
+    private List<StockTransaction> stockTransactions;
 
     /** Creates new form HtmlPanel */
-    public HtmlPanel() {
+    public RollInPreparedTransactionViewCask() {
         initComponents();
     }
 
     @Override
-    public void accept(String htmlText) {
-        htmlPane.setText(htmlText);
+    public void accept(List<StockTransaction> sts) {
+        this.stockTransactions = sts;
+        htmlPane.setText(StockTransactionFormater.toHtml(sts));
     }
 
     /** This method is called from within the constructor to

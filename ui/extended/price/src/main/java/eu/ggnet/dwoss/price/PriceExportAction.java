@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,13 @@
  */
 package eu.ggnet.dwoss.price;
 
+import java.awt.event.ActionEvent;
+
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.SwingWorker;
-
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.price.Exporter;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
@@ -48,21 +36,9 @@ public class PriceExportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                return lookup(Exporter.class).toXls();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    Desktop.getDesktop().open(get().toTemporaryFile());
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
+        Ui.exec(
+                Ui.call(() -> lookup(Exporter.class).toXls().toTemporaryFile()).osOpen()
+        );
     }
 
 }

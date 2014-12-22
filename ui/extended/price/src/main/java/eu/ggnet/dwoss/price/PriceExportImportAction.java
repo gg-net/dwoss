@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,14 @@
  */
 package eu.ggnet.dwoss.price;
 
+import java.awt.event.ActionEvent;
+
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
-import java.awt.event.ActionEvent;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.SwingWorker;
-
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.price.Importer;
-
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
@@ -46,21 +37,9 @@ public class PriceExportImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<Object, Object>() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                lookup(Importer.class).direct(lookup(Guardian.class).getUsername());
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
+        Ui.call(() -> {
+            lookup(Importer.class).direct(lookup(Guardian.class).getUsername());
+            return null;
+        }).exec();
     }
 }

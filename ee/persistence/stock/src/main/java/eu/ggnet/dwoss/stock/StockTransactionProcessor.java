@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
-
 import eu.ggnet.dwoss.util.UserInfoException;
 
 /**
@@ -39,8 +38,9 @@ public interface StockTransactionProcessor {
      *
      * @param detachtedTransactions the transactions
      * @param arranger              the arranger
+     * @return returns all stockunitIds which were rolled in.
      */
-    void rollIn(List<StockTransaction> detachtedTransactions, String arranger);
+    List<Integer> rollIn(List<StockTransaction> detachtedTransactions, String arranger);
 
     /**
      * Prepares the transfer of multiple units.

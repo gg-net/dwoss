@@ -4,14 +4,14 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.saft.core.ActionFactory;
+import eu.ggnet.saft.core.Ui;
 
+import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;
 
 /**
@@ -33,6 +33,16 @@ public class TryoutActionFactory implements ActionFactory {
             public void actionPerformed(ActionEvent e) {
                 JOptionPane.showMessageDialog(null, "Ich wurde geklickt");
             }
-        }, true));
+        }, true),
+                new MetaAction("System", new AbstractAction("Saft Progress 4s") {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        Ui.call(() -> {
+                            Thread.sleep(4000);
+                            return null;
+                        }).exec();
+                    }
+                })
+        );
     }
 }

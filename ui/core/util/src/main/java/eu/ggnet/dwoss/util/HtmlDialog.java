@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,9 @@ import org.apache.commons.lang3.StringUtils;
 /**
  *
  * @author oliver.guenther
+ * @deprecated use HtmlPanel and the SAFT
  */
+@Deprecated
 public class HtmlDialog extends javax.swing.JDialog {
 
     public HtmlDialog() {

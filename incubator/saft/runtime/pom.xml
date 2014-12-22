@@ -29,6 +29,11 @@
             <groupId>com.github.insubstantial</groupId>
             <artifactId>substance</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

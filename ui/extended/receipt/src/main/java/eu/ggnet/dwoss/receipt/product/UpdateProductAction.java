@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,16 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
+import eu.ggnet.dwoss.receipt.UiProductSupport;
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.receipt.UiProductSupport;
-
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * Allow the modification of a Product/Part.
@@ -50,6 +46,7 @@ public class UpdateProductAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         try {
             String partNo = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte Artikelnummer des Herstellers eingeben:");
+            if ( partNo == null ) return;
             Product product = lookup(UniqueUnitAgent.class).findProductByPartNo(partNo);
             if ( product == null ) {
                 JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Artikel " + partNo + " existiert nicht, bitte über Aufnahme erfassen",
@@ -60,7 +57,7 @@ public class UpdateProductAction extends AccessableAction {
                 new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, lookup(Workspace.class).getMainFrame());
             }
         } catch (UserInfoException ex) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+            UiCore.handle(ex);
         }
     }
 }

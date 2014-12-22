@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.stock;
 
-import eu.ggnet.dwoss.event.UnitHistory;
-import eu.ggnet.dwoss.event.SalesChannelChange;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,21 +29,19 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.event.SalesChannelChange;
+import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.rules.SalesChannel;
-
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
-
 import eu.ggnet.dwoss.stock.emo.*;
 import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
 import static eu.ggnet.dwoss.stock.entity.StockTransactionParticipationType.*;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.*;
@@ -87,7 +82,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
      * @param arranger              the arranger
      */
     @Override
-    public void rollIn(List<StockTransaction> detachtedTransactions, String arranger) {
+    public List<Integer> rollIn(List<StockTransaction> detachtedTransactions, String arranger) {
         SubMonitor m = monitorFactory.newSubMonitor("RollIn", detachtedTransactions.size() * 2);
         StockTransactionEao stockTransactionEao = new StockTransactionEao(stockEm);
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(stockEm);
@@ -111,6 +106,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
             }
         }
         m.finish();
+        return stockUnits.stream().map(x -> x.getId()).collect(Collectors.toList());
     }
 
     /**
