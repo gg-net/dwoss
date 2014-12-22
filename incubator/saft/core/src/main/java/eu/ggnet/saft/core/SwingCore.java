@@ -51,6 +51,7 @@ public class SwingCore {
         final CountDownLatch cdl = new CountDownLatch(1);
         if ( Platform.isFxApplicationThread() ) {
             fxp.setScene(new Scene(p, Color.TRANSPARENT));
+            fxp.setBackground(new java.awt.Color(0, 0, 0, 0));
             swingParentHelper.put(fxp.getScene(), fxp);
             cdl.countDown();
         } else {
