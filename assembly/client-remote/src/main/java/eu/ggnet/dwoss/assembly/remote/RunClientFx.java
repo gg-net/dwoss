@@ -44,8 +44,7 @@ import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.dialog.Alert;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -150,15 +149,18 @@ public class RunClientFx extends Application {
         }
         // Setting the URL for Remote Connections.
         RemoteServer.URL = url;
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                swingClient = new SwingClient();
-                swingClient.init();
-                swingClient.show(
-                        "(Remote," + provider.getHost() + ":" + provider.getPort() + ") - Mandant:"
-                        + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
-            }
+        EventQueue.invokeLater(() -> {
+            swingClient = new SwingClient() {
+                @Override
+                protected void close() {
+                    Platform.exit();
+                    System.exit(0); // Again, not perfect.
+                }
+            };
+            swingClient.init();
+            swingClient.show(
+                    "(Remote," + provider.getHost() + ":" + provider.getPort() + ") - Mandant:"
+                    + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
         });
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
