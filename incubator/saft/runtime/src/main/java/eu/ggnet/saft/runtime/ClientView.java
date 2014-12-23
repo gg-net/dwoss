@@ -25,7 +25,6 @@ import javax.swing.ImageIcon;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import eu.ggnet.saft.core.SwingCore;
 import eu.ggnet.saft.core.UiCore;
@@ -56,7 +55,6 @@ public class ClientView extends javax.swing.JFrame {
             progressIndicator = new ProgressIndicator();
             progressIndicator.setProgress(0);
             BorderPane pane = new BorderPane(progressIndicator);
-            pane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
             JFXPanel wrap = SwingCore.wrap(pane);
             extraProgressPanel.add(wrap, BorderLayout.CENTER);
         } catch (InterruptedException ex) {
