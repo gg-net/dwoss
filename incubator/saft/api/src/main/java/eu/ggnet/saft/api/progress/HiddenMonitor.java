@@ -87,7 +87,7 @@ public class HiddenMonitor implements IMonitor, Serializable {
 
     @Override
     public IMonitor worked(int workunits, String subMessage) {
-        message(message);
+        message(subMessage);
         worked(workunits);
         return this;
     }

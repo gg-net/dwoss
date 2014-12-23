@@ -1,4 +1,4 @@
-package tryout;
+package tryout.support;
 
 import org.openide.util.lookup.ServiceProvider;
 
