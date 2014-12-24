@@ -9,7 +9,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.*;
 
@@ -56,15 +58,12 @@ public class SwingSaft {
                     .map(s -> clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - s.length()))
                     .findFirst()
                     .orElse(clazz.getSimpleName());
-            Set<String> result = new TreeSet<>();
-            for (String s1 : ICON_SUFFIXES) {
-                for (String s2 : SIZE_SUFFIXES) {
-                    for (String f : FILES) {
-                        result.add(head + s1 + s2 + f);
-                    }
-                }
-            }
-            return result;
+
+            return ICON_SUFFIXES.stream()
+                    .map(e -> head + e)
+                    .flatMap(h -> SIZE_SUFFIXES.stream().map(e -> h + e))
+                    .flatMap(h -> FILES.stream().map(e -> h + e))
+                    .collect(Collectors.toCollection(() -> new TreeSet<String>()));
         }
 
     }
