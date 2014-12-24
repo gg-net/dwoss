@@ -40,7 +40,7 @@ public class SwingCore {
     /**
      * Holds a mapping of all Scenes in JFXPanels. Used to discover parent windows if in a wrapped JFXPanel.
      */
-    private static Map<Scene, JFXPanel> swingParentHelper = new WeakHashMap<>();
+    private static final Map<Scene, JFXPanel> swingParentHelper = new WeakHashMap<>();
 
     public static JFrame mainFrame() {
         return mainFrame;
