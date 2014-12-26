@@ -16,15 +16,17 @@
  */
 package eu.ggnet.saft.sample.search;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Consumer;
 
-import javafx.concurrent.Task;
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 
 import eu.ggnet.saft.api.ui.Title;
+
+import static java.lang.Double.MAX_VALUE;
 
 /**
  *
@@ -37,35 +39,27 @@ public class UnitDetailView extends BorderPane implements Consumer<MicroUnit> {
 
     private final TextArea body;
 
-    private final ProgressBar progressBar;
-    
+    private final ProgressIndicator progressIndicator;
+
     public UnitDetailView() {
         header = new TextField();
+        header.setPrefWidth(MAX_VALUE);
         setTop(header);
         body = new TextArea();
-        setCenter(body);
-        progressBar = new ProgressBar();
-        setBottom(progressBar);
+        progressIndicator = new ProgressIndicator();        
+        setCenter(new StackPane(body,progressIndicator));
     }
 
     @Override
     public void accept(MicroUnit mu) {
         header.setText(mu.shortDescription());
-        Task<Unit> task = new Task<Unit>() {
-
-            @Override
-            protected Unit call() throws Exception {                
-                return VirtualDataSource.findUnit(mu.uniqueUnitId);
-            }
-
-            @Override
-            protected void done() {
-                body.setText(getValue().description);
-            }
-            
-        };
-        progressBar.progressProperty().bind(task.progressProperty());
-        ForkJoinPool.commonPool().execute(task);        
+        ForkJoinPool.commonPool().execute(() -> {
+            Unit unit = VirtualDataSource.findUnit(mu.uniqueUnitId);
+            Platform.runLater(() -> {
+                body.setText(unit.description);
+                progressIndicator.setVisible(false);
+            });
+        });
     }
 
 }

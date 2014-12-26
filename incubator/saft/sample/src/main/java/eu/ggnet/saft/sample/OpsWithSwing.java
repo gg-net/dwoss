@@ -6,9 +6,8 @@ import eu.ggnet.saft.sample.support.PanelAsFrame;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.search.SearchView;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.sample.search.*;
 
 
 /**
@@ -46,6 +45,8 @@ public class OpsWithSwing {
             return main;
         });
 
+        Ops.register(MicroUnit.class, new UnitDetailViewAction());
+        Ops.register(MicroUnit.class, new ExtraUnitDetailViewAction());
         // Ui.openSwing(UnitView.class,"12345").exec();
         // ui.openSwing(UnitView.class,"12345").prepare((UnitView v) -> v.setValue("lannnger String")).exec();
         // JavaFX Pane in Swing Dialog.
