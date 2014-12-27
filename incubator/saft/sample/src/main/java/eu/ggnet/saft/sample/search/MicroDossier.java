@@ -25,16 +25,16 @@ import lombok.ToString;
  * @author oliver.guenther
  */
 @ToString
-public class MicroDossier implements SearchResult,IdSupplier {
-    
-    private final long dossierId;
-    
+public class MicroDossier implements SearchResult, IdSupplier {
+
+    public final long dossierId;
+
     private final String shortDescription;
 
     public MicroDossier(long dossierId, String shortDescription) {
         this.dossierId = dossierId;
-        this.shortDescription = shortDescription;       
-    }    
+        this.shortDescription = shortDescription;
+    }
 
     @Override
     public String shortDescription() {
@@ -45,5 +45,5 @@ public class MicroDossier implements SearchResult,IdSupplier {
     public String id() {
         return "" + dossierId;
     }
-    
+
 }

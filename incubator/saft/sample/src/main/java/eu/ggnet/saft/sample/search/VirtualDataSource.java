@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class VirtualDataSource {
 
-    private final static Map<Integer, Dossier> DOSSIERS = new HashMap<>();
+    private final static Map<Long, Dossier> DOSSIERS = new HashMap<>();
 
     private final static Map<Integer, Unit> UNITS = new HashMap<>();
 
@@ -44,9 +44,9 @@ public class VirtualDataSource {
     );
 
     static {
-        DOSSIERS.put(1, new Dossier("Dossier 1", "Eine lange Beschreibung zu Dossier 1"));
-        DOSSIERS.put(2, new Dossier("Dossier 2", "Eine lange Beschreibung zu Dossier 2"));
-        DOSSIERS.put(3, new Dossier("Dossier 3", "Eine lange Beschreibung zu Dossier 3"));
+        DOSSIERS.put(1l, new Dossier("Dossier 1", "Eine lange Beschreibung zu Dossier 1"));
+        DOSSIERS.put(2l, new Dossier("Dossier 2", "Eine lange Beschreibung zu Dossier 2"));
+        DOSSIERS.put(3l, new Dossier("Dossier 3", "Eine lange Beschreibung zu Dossier 3"));
 
         UNITS.put(1, new Unit("Unit 1", "Viele Details über Unit 1"));
         UNITS.put(2, new Unit("Unit 2", "Viele Details über Unit 2"));
@@ -72,7 +72,7 @@ public class VirtualDataSource {
         return UNITS.get(id);
     }
 
-    public static Dossier findDossier(int id) {
+    public static Dossier findDossier(long id) {
         try {
             Thread.sleep(4000);
         } catch (InterruptedException ex) {

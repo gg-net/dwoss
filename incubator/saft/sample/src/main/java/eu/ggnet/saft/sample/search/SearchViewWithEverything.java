@@ -23,30 +23,41 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
+import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.ops.FxOps;
+import eu.ggnet.saft.core.all.SelectionEnhancer;
+import eu.ggnet.saft.core.ops.*;
 
 /**
  *
  * @author oliver.guenther
  */
 @Title("Search Simulator")
-public class SearchViewWithEverything extends BorderPane {
+public class SearchViewWithEverything extends BorderPane implements ClosedListener {
+
+    private final Selector<SearchResult> selector;
 
     public SearchViewWithEverything() {
-        final ListView<SearchResult> searchResults = new ListView<>();
-        final ObservableList<SearchResult> searchModel = FXCollections.observableArrayList();
-        searchResults.setItems(searchModel);
-        final MultipleSelectionModel<SearchResult> selectionModel = searchResults.getSelectionModel();
-        searchResults.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
-
-        ContextMenu toFxContextMenu = FxOps.contextMenuOf(selectionModel, (SearchResult selected) -> {
+        SelectionEnhancer<SearchResult> enhancer = (SearchResult selected) -> {
             if ( selected instanceof MicroUnitDossier ) {
                 MicroUnitDossier mud = (MicroUnitDossier)selected;
                 return Arrays.asList(new MicroUnit(mud.uniqueUnitId, mud.shortDescription), new MicroDossier(mud.dossierId, mud.shortDescription));
             }
             return new ArrayList<>();
+        };
+
+        selector = Ops.seletor(SearchResult.class, enhancer);
+        final ListView<SearchResult> searchResults = new ListView<>();
+        final ObservableList<SearchResult> searchModel = FXCollections.observableArrayList();
+        searchResults.setItems(searchModel);
+        final MultipleSelectionModel<SearchResult> selectionModel = searchResults.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((ob, o, n) -> {
+            selector.selected(n);
         });
+
+        searchResults.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
+
+        ContextMenu toFxContextMenu = FxOps.contextMenuOf(selectionModel, enhancer);
 
         searchResults.setContextMenu(toFxContextMenu);
 
@@ -58,6 +69,11 @@ public class SearchViewWithEverything extends BorderPane {
         });
 
         setTop(searchButton);
+    }
+
+    @Override
+    public void closed() {
+        selector.clear();
     }
 
 }

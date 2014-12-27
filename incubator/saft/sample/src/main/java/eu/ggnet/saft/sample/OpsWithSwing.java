@@ -37,11 +37,11 @@ public class OpsWithSwing {
             menu = new JMenu("Viewers");
 
             b = new JMenuItem("Reactive Unit Viewer");
-            b.addActionListener((e) -> Ui.exec(Ui.openSwing(PanelAsFrame.class)));
+            b.addActionListener((e) -> Ui.exec(Ui.openFx(UnitDetailSelectivView.class)));
             menu.add(b);
 
             b = new JMenuItem("Reactive Dossier Viewer");
-            b.addActionListener((e) -> Ui.exec(Ui.openFx(SimplePane.class)));
+            b.addActionListener((e) -> Ui.exec(Ui.openFx(DossierDetailSelectivView.class)));
             menu.add(b);
 
             main.getMenuBar().add(menu);
@@ -49,10 +49,10 @@ public class OpsWithSwing {
             return main;
         });
 
-        Ops.register(new UnitDetailViewAction());
-        Ops.register(new ExtraUnitDetailViewAction());
-        Ops.register(new UnitDependentActionFactory());
-        Ops.register(new DossierAction());
+        Ops.registerAction(new UnitDetailViewAction());
+        Ops.registerAction(new ExtraUnitDetailViewAction());
+        Ops.registerActionFactory(new UnitDependentActionFactory());
+        Ops.registerAction(new DossierAction());
 
     }
 }

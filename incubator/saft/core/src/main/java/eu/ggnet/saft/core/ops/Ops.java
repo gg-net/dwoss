@@ -20,8 +20,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,23 +43,80 @@ public class Ops {
 
     private final static Map<Class, List<DescriptiveConsumerFactory>> REGISTERED_ACTION_FACTORIES = new HashMap<>();
 
+    private final static Map<Class, List<Consumer>> REGISTERED_SELECTION_LISTENERS = new HashMap<>();
+
+    private static Class extractSingleType(Class<?> target, Object instance) {
+        for (Type genericInterface : instance.getClass().getGenericInterfaces()) {
+            if ( !genericInterface.toString().contains(target.getName()) ) continue;
+            // This, we know !
+            ParameterizedType pt = (ParameterizedType)genericInterface;
+            Class clazz = (Class)pt.getActualTypeArguments()[0];
+            return clazz;
+        }
+        throw new IllegalArgumentException("Instance does not implement an Interface of type A<B> " + instance);
+    }
+
+    /**
+     * Register a Consumer, to be informed on a specific selection.
+     * <p>
+     * @param <T>      the type to be listening too.
+     * @param listener the listener to register
+     */
+    public static <T> void registerSelectListener(Consumer<T> listener) {
+        Class clazz = extractSingleType(Consumer.class, listener);
+        L.info("Registering key {} with {}", clazz, listener);
+        if ( !REGISTERED_SELECTION_LISTENERS.containsKey(clazz) ) REGISTERED_SELECTION_LISTENERS.put(clazz, new ArrayList<>());
+        REGISTERED_SELECTION_LISTENERS.get(clazz).add(listener);
+    }
+
+    /**
+     * Register a Consumer, to be informed on a specific selection.
+     * <p>
+     * @param <T>      the type to be listening too.
+     * @param listener the listener to register
+     */
+    public static <T> void unregisterSelectListener(Consumer<T> listener) {
+        L.info("Unregistering select listener {}", listener);
+        Class clazz = extractSingleType(Consumer.class, listener);
+        if ( REGISTERED_SELECTION_LISTENERS.containsKey(clazz) ) REGISTERED_SELECTION_LISTENERS.get(clazz).remove(listener);
+    }
+
+    /**
+     * Returns a selector used for the source, to start selections.
+     * Any calls on the selector will go through the registered listeners.
+     * <p>
+     * @param <T>
+     * @param clazz the clazz as key
+     * @return a selector bound to Ops.
+     */
+    public static <T> Selector<T> seletor(Class<T> clazz) {
+        return seletor(clazz, null);
+    }
+
+    /**
+     * Returns a selector used for the source, to start selections.
+     * Any calls on the selector will go through the registered listeners.
+     * <p>
+     * @param <T>
+     * @param clazz    the clazz as key
+     * @param enhancer optional enhancer.
+     * @return a selector bound to Ops.
+     */
+    public static <T> Selector<T> seletor(Class<T> clazz, SelectionEnhancer<T> enhancer) {
+        return new Selector<>(clazz, REGISTERED_SELECTION_LISTENERS, enhancer);
+    }
+
     /**
      * Register a new Action Factory.
      * <p>
      * @param <T>     the type is used as key.
      * @param factory the factory to register.
      */
-    public static <T> void register(DescriptiveConsumerFactory<T> factory) {
-        L.info("Trying to register {}", factory);
-        for (Type genericInterface : factory.getClass().getGenericInterfaces()) {
-            if ( !genericInterface.toString().contains(DescriptiveConsumerFactory.class.getName()) ) continue;
-            // This, we know !
-            ParameterizedType pt = (ParameterizedType)genericInterface;
-            Class clazz = (Class)pt.getActualTypeArguments()[0];
-            L.info("Registering key {} with {}", clazz, factory);
-            if ( !REGISTERED_ACTION_FACTORIES.containsKey(clazz) ) REGISTERED_ACTION_FACTORIES.put(clazz, new ArrayList<>());
-            REGISTERED_ACTION_FACTORIES.get(clazz).add(factory);
-        }
+    public static <T> void registerActionFactory(DescriptiveConsumerFactory<T> factory) {
+        Class clazz = extractSingleType(DescriptiveConsumerFactory.class, factory);
+        L.info("Registering factory, key {} with {}", clazz, factory);
+        if ( !REGISTERED_ACTION_FACTORIES.containsKey(clazz) ) REGISTERED_ACTION_FACTORIES.put(clazz, new ArrayList<>());
+        REGISTERED_ACTION_FACTORIES.get(clazz).add(factory);
     }
 
     /**
@@ -69,19 +125,13 @@ public class Ops {
      * @param <T>      the type as key, what this action is for.
      * @param consumer the consumer as action.
      */
-    public static <T> void register(Consumer<T> consumer) {
-        L.info("Trying to register {}", consumer);
-        for (Type genericInterface : consumer.getClass().getGenericInterfaces()) {
-            if ( !genericInterface.toString().contains(Consumer.class.getName()) ) continue;
-            // This, we know !
-            ParameterizedType pt = (ParameterizedType)genericInterface;
-            Class clazz = (Class)pt.getActualTypeArguments()[0];
-            L.info("Registering key {} with {}", clazz, consumer);
-            DescriptiveConsumer descriptiveConsumer = new DescriptiveConsumer(consumer);
-            if ( consumer.getClass().getAnnotation(DefaultAction.class) != null ) REGISTERED_DEFAULT_ACTIONS.put(clazz, descriptiveConsumer);
-            if ( !REGISTERED_ACTIONS.containsKey(clazz) ) REGISTERED_ACTIONS.put(clazz, new ArrayList<>());
-            REGISTERED_ACTIONS.get(clazz).add(descriptiveConsumer);
-        }
+    public static <T> void registerAction(Consumer<T> consumer) {
+        Class clazz = extractSingleType(Consumer.class, consumer);
+        L.info("Registering action, key {} with {}", clazz, consumer);
+        DescriptiveConsumer descriptiveConsumer = new DescriptiveConsumer(consumer);
+        if ( consumer.getClass().getAnnotation(DefaultAction.class) != null ) REGISTERED_DEFAULT_ACTIONS.put(clazz, descriptiveConsumer);
+        if ( !REGISTERED_ACTIONS.containsKey(clazz) ) REGISTERED_ACTIONS.put(clazz, new ArrayList<>());
+        REGISTERED_ACTIONS.get(clazz).add(descriptiveConsumer);
     }
 
     /**
