@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -65,23 +67,26 @@ public class FxSaft {
      * @param <T> Return type of callable
      * @param callable the callable to dispatch
      * @return the result of the callable
-     * @throws InterruptedException see {@link CountDownLatch#await() }
-     * @throws ExecutionException see {@link FutureTask#get() }
+     * @throws RuntimeException wraps InterruptedException of {@link CountDownLatch#await() } and ExecutionException of {@link FutureTask#get() }
      */
-    public static <T> T dispatch(Callable<T> callable) throws InterruptedException, ExecutionException {
-        FutureTask<T> futureTask = new FutureTask<>(callable);
-        final CountDownLatch cdl = new CountDownLatch(1);
-        if (Platform.isFxApplicationThread()) {
-            futureTask.run();
-            cdl.countDown();
-        } else {
-            Platform.runLater(() -> {
+    public static <T> T dispatch(Callable<T> callable) throws RuntimeException {
+        try {
+            FutureTask<T> futureTask = new FutureTask<>(callable);
+            final CountDownLatch cdl = new CountDownLatch(1);
+            if (Platform.isFxApplicationThread()) {
                 futureTask.run();
                 cdl.countDown();
-            });
+            } else {
+                Platform.runLater(() -> {
+                    futureTask.run();
+                    cdl.countDown();
+                });
+            }
+            cdl.await();
+            return futureTask.get();
+        } catch (InterruptedException | ExecutionException ex) {
+            throw new RuntimeException(ex);
         }
-        cdl.await();
-        return futureTask.get();
     }
 
     public static Window windowAncestor(Node c) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,16 +24,16 @@ package eu.ggnet.saft.api;
 public interface Accessable {
 
     /**
-     * This method implements the Logic wiche represent that the Object should be enabled.d
+     * This method implements the Logic which represent that the Object should be enabled.
      * <p>
      * @param enable should the implementing class enabled?
      */
     void setEnabled(boolean enable);
 
     /**
-     * This is method returns the {@link AtomicRight} wich is needed to enable the implmented Class.
+     * This is method returns the {@link AtomicRight} which is needed to enable the implemented Class.
      * <p>
-     * @return the {@link AtomicRight} wich is needed to enable the implmented Class.
+     * @return the {@link AtomicRight} which is needed to enable the implemented Class.
      */
     Authorisation getNeededRight();
 

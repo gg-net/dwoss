@@ -16,22 +16,29 @@
  */
 package eu.ggnet.saft.sample.search;
 
-import java.util.function.Consumer;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.core.all.DescriptiveConsumer;
+import eu.ggnet.saft.core.all.DescriptiveConsumerFactory;
 
 /**
  *
  * @author oliver.guenther
  */
-@DefaultAction
-@Title("Show Unit Details")
-public class UnitDetailViewAction implements Consumer<MicroUnit> {
+public class UnitDependentActionFactory implements DescriptiveConsumerFactory<MicroUnit> {
 
     @Override
-    public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
+    public List<DescriptiveConsumer<MicroUnit>> of(MicroUnit t) {
+        if ( t.uniqueUnitId != 1 ) return new ArrayList<>();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(UnitDependentActionFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> Alert.show("Umfuhr ausgeführt")));
     }
 
 }

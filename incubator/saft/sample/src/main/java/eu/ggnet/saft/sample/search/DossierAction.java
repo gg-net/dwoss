@@ -14,15 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.api.ui;
+package eu.ggnet.saft.sample.search;
+
+import java.util.function.Consumer;
+
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Alert;
 
 /**
- * A saft form of the ActionListener.
- * 
+ *
  * @author oliver.guenther
  */
-public interface DependendAction<T> {
-    
-    void run(T t);
-    
+@DefaultAction
+@Title("Show Dossier Details")
+public class DossierAction implements Consumer<MicroDossier> {
+
+    @Override
+    public void accept(MicroDossier t) {
+        Alert.show("Showing " + t);
+    }
+
 }

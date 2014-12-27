@@ -14,24 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.sample.search;
+package eu.ggnet.saft.core.all;
 
-import java.util.function.Consumer;
+import java.util.List;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import javax.validation.constraints.NotNull;
 
 /**
- *
+ * A way to generate multiple different instances from one selection.
+ * 
  * @author oliver.guenther
  */
-@DefaultAction
-@Title("Show Unit Details")
-public class UnitDetailViewAction implements Consumer<MicroUnit> {
-
-    @Override
-    public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
-    }
-
+public interface SelectionEnhancer<T> {
+    
+    /**
+     * Filters the the selected value and may return more than one other embedded selected value, must never return null.
+     * 
+     * @param selected
+     * @return the the selected value and may return more than one other embedded selected value, must never return null.
+     */
+    @NotNull
+    List<?> enhance(T selected);
+    
 }

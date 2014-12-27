@@ -26,9 +26,9 @@ import java.util.logging.Logger;
  */
 public class VirtualDataSource {
 
-    private final static Map<Integer,Dossier> DOSSIERS = new HashMap<>();
-    
-    private final static Map<Integer,Unit> UNITS = new HashMap<>();
+    private final static Map<Integer, Dossier> DOSSIERS = new HashMap<>();
+
+    private final static Map<Integer, Unit> UNITS = new HashMap<>();
 
     private final static List<SearchResult> SEARCH = Arrays.asList(
             new MicroUnit(1, "Das ist Gerät 1"),
@@ -37,30 +37,32 @@ public class VirtualDataSource {
             new MicroDossier(1, "Das ist Dossier 1"),
             new MicroDossier(2, "Das ist Dossier 2"),
             new MicroUnit(4, "Das ist Gerät 4"),
-            new MicroDossier(3, "Das ist Dossier 3")
-            );
-    
+            new MicroDossier(3, "Das ist Dossier 3"),
+            new MicroUnitDossier(1, 1, "A Mix of Unit 1 and Dossier 1"),
+            new MicroReport(1, "Report 1"),
+            new MicroReport(2, "Report 2")
+    );
+
     static {
         DOSSIERS.put(1, new Dossier("Dossier 1", "Eine lange Beschreibung zu Dossier 1"));
         DOSSIERS.put(2, new Dossier("Dossier 2", "Eine lange Beschreibung zu Dossier 2"));
         DOSSIERS.put(3, new Dossier("Dossier 3", "Eine lange Beschreibung zu Dossier 3"));
-        
+
         UNITS.put(1, new Unit("Unit 1", "Viele Details über Unit 1"));
         UNITS.put(2, new Unit("Unit 2", "Viele Details über Unit 2"));
         UNITS.put(3, new Unit("Unit 3", "Viele Details über Unit 3"));
         UNITS.put(4, new Unit("Unit 4", "Viele Details über Unit 4"));
     }
-    
-    
+
     /**
      * Returs simulated searchs. The double is a relevance value.
-     * 
-     * @return 
+     * <p>
+     * @return
      */
     public static List<SearchResult> search() {
-       return SEARCH;
+        return SEARCH;
     }
-    
+
     public static Unit findUnit(int id) {
         try {
             Thread.sleep(4000);
@@ -69,7 +71,7 @@ public class VirtualDataSource {
         }
         return UNITS.get(id);
     }
-    
+
     public static Dossier findDossier(int id) {
         try {
             Thread.sleep(4000);
@@ -78,5 +80,5 @@ public class VirtualDataSource {
         }
         return DOSSIERS.get(id);
     }
-    
+
 }

@@ -125,19 +125,15 @@ public class UiCore {
     public static <T extends Parent> void startJavaFx(final Stage primaryStage, final Callable<T> builder) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
         FxCore.mainStage = primaryStage;
-        try {
-            FxSaft.dispatch(() -> {
-                T node = builder.call();
-                primaryStage.setTitle(UiUtil.title(node.getClass()));
-                primaryStage.setScene(new Scene(node));
-                primaryStage.centerOnScreen();
-                primaryStage.sizeToScene();
-                primaryStage.show();
-                return null;
-            });
-        } catch (ExecutionException | InterruptedException e) {
-            handle(e);
-        }
+        FxSaft.dispatch(() -> {
+            T node = builder.call();
+            primaryStage.setTitle(UiUtil.title(node.getClass()));
+            primaryStage.setScene(new Scene(node));
+            primaryStage.centerOnScreen();
+            primaryStage.sizeToScene();
+            primaryStage.show();
+            return null;
+        });
     }
 
     /**

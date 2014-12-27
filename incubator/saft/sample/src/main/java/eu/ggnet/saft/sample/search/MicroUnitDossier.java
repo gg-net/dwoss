@@ -16,22 +16,26 @@
  */
 package eu.ggnet.saft.sample.search;
 
-import java.util.function.Consumer;
-
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 /**
  *
  * @author oliver.guenther
  */
-@DefaultAction
-@Title("Show Unit Details")
-public class UnitDetailViewAction implements Consumer<MicroUnit> {
+@AllArgsConstructor
+@ToString
+public class MicroUnitDossier implements SearchResult {
 
+    public final int uniqueUnitId;
+    
+    public final long dossierId;
+    
+    public final String shortDescription;
+    
     @Override
-    public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
+    public String shortDescription() {
+        return shortDescription;
     }
-
+    
 }

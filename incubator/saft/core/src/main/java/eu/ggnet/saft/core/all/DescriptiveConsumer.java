@@ -14,24 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.sample.search;
+package eu.ggnet.saft.core.all;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
-
 /**
- *
+ * A Wrapper for a consumer, which also holds a title.
+ * <p>
  * @author oliver.guenther
  */
-@DefaultAction
-@Title("Show Unit Details")
-public class UnitDetailViewAction implements Consumer<MicroUnit> {
+public class DescriptiveConsumer<T> {
 
-    @Override
-    public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
+    private final String title;
+
+    private final Consumer<T> consumer;
+
+    public DescriptiveConsumer(String title, Consumer<T> consumer) {
+        this.title = title;
+        this.consumer = consumer;
     }
 
+    /**
+     * Constructor, that tries to extract the title from annotations on the Consumer.
+     * <p>
+     * @param consumer the consumer to wrap.
+     */
+    public DescriptiveConsumer(Consumer<T> consumer) {
+        this(UiUtil.title(consumer.getClass()), consumer);
+    }
+
+    public Consumer<T> consumer() {
+        return consumer;
+    }
+
+    public String title() {
+        return title;
+    }
 }

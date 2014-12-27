@@ -16,24 +16,21 @@
  */
 package eu.ggnet.saft.core.all;
 
-import eu.ggnet.saft.api.ui.DependendAction;
-
-import lombok.AllArgsConstructor;
+import java.util.List;
 
 /**
- * Helper to bind Instance with action.
- * 
+ * A way to create dependent actions on demand.
+ * <p>
  * @author oliver.guenther
+ * @param <T>
  */
-@AllArgsConstructor
-public class DependendActionRunner<T> implements Runnable {
-    
-    private final DependendAction<T> dependendAction;
-    
-    private final T intance;
-    
-    public void run() {
-        dependendAction.run(intance);
-    }
-    
+public interface DescriptiveConsumerFactory<T> {
+
+    /**
+     * Returns a collection with dependent actions, may be empty but never null.
+     * <p>
+     * @param t the instance for which this is dependent.
+     * @return a collection with dependent actions, may be empty but never null.
+     */
+    List<DescriptiveConsumer<T>> of(T t);
 }

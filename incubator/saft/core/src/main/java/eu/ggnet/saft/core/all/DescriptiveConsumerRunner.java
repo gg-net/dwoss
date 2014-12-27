@@ -14,24 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.sample.search;
+package eu.ggnet.saft.core.all;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import lombok.AllArgsConstructor;
 
 /**
- *
+ * Helper to bind Instance with action.
+ * <p>
  * @author oliver.guenther
  */
-@DefaultAction
-@Title("Show Unit Details")
-public class UnitDetailViewAction implements Consumer<MicroUnit> {
+@AllArgsConstructor
+public class DescriptiveConsumerRunner<T> implements Runnable {
+
+    private final DescriptiveConsumer<T> descriptiveConsumer;
+
+    private final T intance;
 
     @Override
-    public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
+    public void run() {
+        descriptiveConsumer.consumer().accept(intance);
+    }
+
+    public String title() {
+        return descriptiveConsumer.title();
+    }
+
+    public Consumer<T> consumer() {
+        return descriptiveConsumer.consumer();
     }
 
 }
