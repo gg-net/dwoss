@@ -78,6 +78,7 @@ public class RunClientFx extends Application {
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class);
         Client.enableCache(MandatorSupporter.class);
+        Lookup.getDefault().lookup(Server.class).initialise(); // Do this here and the logger is up and running on start.
 
         swingClient = new SwingClient() {
             @Override
@@ -90,7 +91,6 @@ public class RunClientFx extends Application {
         EventQueue.invokeLater(() -> {
             swingClient.init();
         });
-        Lookup.getDefault().lookup(Server.class).initialise();
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());

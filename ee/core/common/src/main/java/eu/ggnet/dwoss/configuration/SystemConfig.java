@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -79,6 +79,35 @@ public class SystemConfig {
         o.put("log4j.appender.socket.RemoteHost", "localhost");
 
         OPENEJB_LOG_TESTING = o;
+        o = new HashMap<>();
+
+        o.put("log4j.rootLogger", "TRACE,socket,console");
+//        o.put("log4j.category.OpenEJB", "info");
+//        o.put("log4j.category.OpenEJB.options", "info");
+//        o.put("log4j.category.OpenEJB.server", "info");
+//        o.put("log4j.category.OpenEJB.startup", "info");
+//        o.put("log4j.category.OpenEJB.startup.service", "warn");
+//        o.put("log4j.category.OpenEJB.startup.config", "info");
+//        o.put("log4j.category.OpenEJB.hsql", "info");
+//        o.put("log4j.category.CORBA-Adapter", "info");
+//        o.put("log4j.category.Transaction", "warn");
+//        o.put("log4j.category.org.apache.activemq", "error");
+//        o.put("log4j.category.org.apache.geronimo", "error");
+        o.put("log4j.category.openjpa", "warn");
+        o.put("log4j.category.org.hibernate", "warn");
+        o.put("log4j.category.org.hibernate.internal.SessionFactoryImpl", "error");
+        o.put("log4j.category.org.hibernate.tool.hbm2ddl", "fatal");
+//        o.put("log4j.category.de", "trace");
+
+        o.put("log4j.appender.console", "org.apache.log4j.ConsoleAppender");
+        o.put("log4j.appender.console.layout", "org.apache.log4j.SimpleLayout");
+        o.put("log4j.appender.console.threshold", "ERROR");
+        o.put("log4j.appender.socket", "org.apache.log4j.net.SocketAppender");
+        o.put("log4j.appender.socket.Port", "4445");
+        o.put("log4j.appender.socket.threshold", "TRACE");
+        o.put("log4j.appender.socket.RemoteHost", "localhost");
+
+        OPENEJB_LOG_TESTING_WITHOUT_JPA = o;
 
         o = new HashMap<>();
 
@@ -121,7 +150,7 @@ public class SystemConfig {
     public final static Map<String, String> OPENEJB_LOG_WARN;
 
     /**
-     * Disables classpath discovery, only takes jars with ejb-jar.xml
+     * Disables classpath discovery, only takes jars with ejb-jar.xml.
      */
     public final static Map<String, String> OPENEJB_EJB_XML_DISCOVER;
 
@@ -129,6 +158,11 @@ public class SystemConfig {
      * Supplys different logging schema including a socket connection.
      */
     public final static Map<String, String> OPENEJB_LOG_TESTING;
+
+    /**
+     * Supplys different logging schema including a socket connection.
+     */
+    public final static Map<String, String> OPENEJB_LOG_TESTING_WITHOUT_JPA;
 
     /**
      * Supplys different logging schema including a socket connection, syslog and local files.

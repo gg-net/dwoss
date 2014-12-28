@@ -14,37 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.core.all;
+package eu.ggnet.dwoss.redtape.position;
 
 import java.util.function.Consumer;
 
-import lombok.AllArgsConstructor;
-import lombok.ToString;
+import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 /**
- * Helper to bind Instance with action.
- * <p>
+ *
  * @author oliver.guenther
  */
-@AllArgsConstructor
-@ToString
-public class DescriptiveConsumerRunner<T> implements Runnable {
-
-    private final DescriptiveConsumer<T> descriptiveConsumer;
-
-    private final T intance;
+@DefaultAction
+@Title("Positions Details anzeigen")
+public class PositionViewAction implements Consumer<Position> {
 
     @Override
-    public void run() {
-        descriptiveConsumer.consumer().accept(intance);
-    }
-
-    public String title() {
-        return descriptiveConsumer.title();
-    }
-
-    public Consumer<T> consumer() {
-        return descriptiveConsumer.consumer();
+    public void accept(Position pos) {
+        Ui.call(() -> pos).openFx(PositionViewCask.class).exec();
     }
 
 }

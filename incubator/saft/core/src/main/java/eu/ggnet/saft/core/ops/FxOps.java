@@ -108,6 +108,7 @@ public class FxOps {
                     menu.getItems().remove(progressItem);
                     lastItems.remove(progressItem);
                     bar.prefWidthProperty().unbind();
+                    if ( !dynamicItems.isEmpty() ) menu.getItems().remove(noAction);
                     lastItems.addAll(dynamicItems);
                     menu.getItems().addAll(dynamicItems);
                 });

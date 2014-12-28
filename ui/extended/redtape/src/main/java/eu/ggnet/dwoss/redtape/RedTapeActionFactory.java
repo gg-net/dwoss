@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,10 +18,12 @@ package eu.ggnet.dwoss.redtape;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.redtape.action.*;
+import eu.ggnet.dwoss.redtape.position.PositionViewAction;
 import eu.ggnet.dwoss.redtape.reporting.*;
 import eu.ggnet.saft.core.ActionFactory;
 
@@ -48,4 +50,10 @@ public class RedTapeActionFactory implements ActionFactory {
                 new MetaAction("Geschäftsführung", new GsOfficeExportAction())
         );
     }
+
+    @Override
+    public List<Consumer<?>> createDependentActions() {
+        return Arrays.asList(new PositionViewAction());
+    }
+
 }

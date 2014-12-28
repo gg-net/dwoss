@@ -36,6 +36,7 @@ import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ActionFactory.MetaAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 import eu.ggnet.saft.core.authorisation.UserChangeListener;
+import eu.ggnet.saft.core.ops.Ops;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -136,6 +137,12 @@ public class SwingClient {
         // Collecting all MetaActions
         Collection<? extends ActionFactory> actionFactories = Lookup.getDefault().lookupAll(ActionFactory.class);
         if ( actionFactories == null || actionFactories.isEmpty() ) throw new IllegalStateException("No ActionFactories found");
+
+        // Registering DependentActionFactories in Saft
+        actionFactories.stream().flatMap(a -> a.createDependentActionFactories().stream()).forEach(d -> Ops.registerActionFactory(d));
+
+        // Registering DependentActions in Saft
+        actionFactories.stream().flatMap(a -> a.createDependentActions().stream()).forEach(d -> Ops.registerAction(d));
 
         List<MetaAction> metaActions = new ArrayList<>();
         for (ActionFactory actionFactory : actionFactories) {

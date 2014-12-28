@@ -26,7 +26,7 @@ import javax.swing.*;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.stock.action.RemoveUnitFromTransactionAction;
+import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.saft.core.authorisation.Guardian;
 

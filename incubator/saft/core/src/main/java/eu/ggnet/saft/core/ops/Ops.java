@@ -173,14 +173,17 @@ public class Ops {
                 result.add(new DescriptiveConsumerRunner<>(action, t));
             }
         }
-        if ( enhancer == null ) return result;
-        for (Object other : enhancer.enhance(t)) {
-            for (DescriptiveConsumerFactory<Object> factory : safeNull(REGISTERED_ACTION_FACTORIES.get(other.getClass()))) {
-                for (DescriptiveConsumer<Object> action : factory.of(other)) {
-                    result.add(new DescriptiveConsumerRunner<>(action, t));
+        L.debug("Result before enhance for {} is {}", t, result);
+        if ( enhancer != null ) {
+            for (Object other : enhancer.enhance(t)) {
+                for (DescriptiveConsumerFactory<Object> factory : safeNull(REGISTERED_ACTION_FACTORIES.get(other.getClass()))) {
+                    for (DescriptiveConsumer<Object> action : factory.of(other)) {
+                        result.add(new DescriptiveConsumerRunner<>(action, other));
+                    }
                 }
             }
         }
+        L.debug("Result after enhance for {} is {}", t, result);
         return result;
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,25 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.action;
+package eu.ggnet.dwoss.stock.transactions;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
-import org.openide.util.Lookup;
-
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
-import eu.ggnet.dwoss.stock.StockTransactionCreatorViewCask;
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * Removes a unit from a Transaction.
@@ -48,17 +40,11 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     @Override
     @SuppressWarnings("UseSpecificCatch")
     public void actionPerformed(ActionEvent e) {
-        StockTransactionCreatorViewCask dialog = new StockTransactionCreatorViewCask(lookup(Workspace.class).getMainFrame());
-        dialog.setTitle("Gerät aus Transaktion heraus nehmen");
-        dialog.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-        dialog.setVisible(true);
-        if ( !dialog.isOk() ) return;
-        try {
-            lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(
-                    dialog.getRefurbishIds(), Lookup.getDefault().lookup(Guardian.class).getUsername(), dialog.getComment());
-            JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "SopoNr: " + dialog.getRefurbishIds() + " wurde aus Transaktion entfernt.");
-        } catch (Exception ex) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-        }
+        Ui.choiceFx(RemoveQuestionView.class)
+                .onOk(v -> {
+                    lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), lookup(Guardian.class).getUsername(), v.comment());
+                    Alert.show("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt");
+                    return null;
+                });
     }
 }

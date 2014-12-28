@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<GridPane hgap="5.0" prefHeight="167.0" prefWidth="309.0" vgap="5.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.stock.transactions.CreateSelectionController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" vgrow="NEVER" />
+   </rowConstraints>
+   <children>
+      <Label text="SopoNr(s):" />
+      <TextField fx:id="refurbishIds" GridPane.columnIndex="1" />
+      <Label text="Kommentar:" GridPane.rowIndex="1" />
+      <TextField fx:id="comment" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Label text="Ziel:" GridPane.rowIndex="2" />
+      <ComboBox fx:id="target" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</GridPane>

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,19 +16,19 @@
  */
 package eu.ggnet.saft.core;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Consumer;
 
 import javax.swing.Action;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import eu.ggnet.saft.core.all.DescriptiveConsumerFactory;
+
+import lombok.*;
 
 /**
  * A Factory for Actions.
  * Implementations should be discoverable thought the lookup.
+ * Normally, what this class does, should be done via class inspection. But this is much simpler for now.
  * <p/>
  * @author oliver.guenther
  */
@@ -65,5 +65,15 @@ public interface ActionFactory {
         }
     }
 
-    List<MetaAction> createMetaActions();
+    default List<MetaAction> createMetaActions() {
+        return Collections.EMPTY_LIST;
+    }
+
+    default List<Consumer<?>> createDependentActions() {
+        return Collections.EMPTY_LIST;
+    }
+
+    default List<DescriptiveConsumerFactory<?>> createDependentActionFactories() {
+        return Collections.EMPTY_LIST;
+    }
 }

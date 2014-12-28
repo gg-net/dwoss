@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,10 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.CloseType;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
@@ -36,8 +31,8 @@ import javax.swing.border.SoftBevelBorder;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.common.DwOssCore;
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
@@ -47,25 +42,17 @@ import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-import eu.ggnet.dwoss.redtape.format.PositionFormater;
 import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.format.StockUnitFormater;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -510,21 +497,22 @@ public class RedTapeController implements IDossierSelectionHandler {
         return true;
     }
 
-    /**
-     * Generates a html formated String with detailed information for a {@link Position}.
-     * <p/>
-     * @param p the {@link Position} entity
-     * @return a html formated String with detailed information for a {@link Position}.
-     */
-    public String getDetailedPositionToHtml(Position p) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(PositionFormater.toHtmlDetailed(p)).append("<br />");
-        if ( p.getType() == PositionType.UNIT ) {
-            StockUnit su = lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(p.getUniqueUnitId());
-            UniqueUnit uu = lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, p.getUniqueUnitId());
-            if ( su != null ) sb.append(StockUnitFormater.detailedTransactionToHtml(su));
-            if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu)).append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));
-        }
-        return sb.toString();
-    }
+//    /**
+//     * Generates a html formated String with detailed information for a {@link Position}.
+//     * <p/>
+//     * @param p the {@link Position} entity
+//     * @return a html formated String with detailed information for a {@link Position}.
+//     */
+//    @Deprecated // remove
+//    public String getDetailedPositionToHtml(Position p) {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(PositionFormater.toHtmlDetailed(p)).append("<br />");
+//        if ( p.getType() == PositionType.UNIT ) {
+//            StockUnit su = lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(p.getUniqueUnitId());
+//            UniqueUnit uu = lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, p.getUniqueUnitId());
+//            if ( su != null ) sb.append(StockUnitFormater.detailedTransactionToHtml(su));
+//            if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu)).append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));
+//        }
+//        return sb.toString();
+//    }
 }

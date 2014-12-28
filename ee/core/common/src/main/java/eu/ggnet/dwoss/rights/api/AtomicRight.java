@@ -105,7 +105,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Allows to prepare a Transfer for a single Unit.
      */
-    CREATE_TRANSACTION_FOR_SINGLE_UNIT("Erstelle Umfuhr für ein einzelnes Gerät"),
+    CREATE_TRANSACTION_FOR_SINGLE_UNIT("Erstelle Umfuhr für (ein) einzelne(s) Gerät(e)"),
     /**
      * Allows to Remove a Single Unit from a transaction.
      */

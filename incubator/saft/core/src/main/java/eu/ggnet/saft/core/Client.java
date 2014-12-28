@@ -261,14 +261,15 @@ public class Client {
             L.info("Running Jndi Tree Module Name inspection");
             DYNAMIC_JAVA_EE_MODULE_NAMES.addAll(inspectJndiTreeForModuleNames(context));
             L.info("Jndi Tree inspection complete, the clientJndiNameCache has now a size of {}", CLIENT_JNDI_NAME_CACHE.size());
-            if ( L.isDebugEnabled() ) {
-                L.debug("Final CLIENT_JNDI_NAME_CACHE {}", CLIENT_JNDI_NAME_CACHE);
-                System.out.println("Final CLIENT_JNDI_NAME_CACHE");
-                CLIENT_JNDI_NAME_CACHE.entrySet().forEach(t -> System.out.println(t.getKey() + " - " + t.getValue()));
-                L.debug("Final Projects {}", DYNAMIC_JAVA_EE_MODULE_NAMES);
-                System.out.println("Final DYNAMIC_JAVA_EE_MODULE_NAMES");
-                DYNAMIC_JAVA_EE_MODULE_NAMES.forEach(x -> System.out.println(x));
-            }
+
+            /* Enable only on big problems.
+             L.debug("Final CLIENT_JNDI_NAME_CACHE {}", CLIENT_JNDI_NAME_CACHE);
+             System.out.println("Final CLIENT_JNDI_NAME_CACHE");
+             CLIENT_JNDI_NAME_CACHE.entrySet().forEach(t -> System.out.println(t.getKey() + " - " + t.getValue()));
+             L.debug("Final Projects {}", DYNAMIC_JAVA_EE_MODULE_NAMES);
+             System.out.println("Final DYNAMIC_JAVA_EE_MODULE_NAMES");
+             DYNAMIC_JAVA_EE_MODULE_NAMES.forEach(x -> System.out.println(x));
+             */
         }
         List<String> errors = new ArrayList<>();
         String clazzName = clazz.getName();

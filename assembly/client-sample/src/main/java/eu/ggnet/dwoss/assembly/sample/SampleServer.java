@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,7 +81,7 @@ public class SampleServer implements Server {
         ConfigurationProvider config = Lookup.getDefault().lookup(ConfigurationProvider.class);
         if ( config != null ) c.putAll(config.openejbAddToEmbeddedSampleConfiguration());
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
+        c.putAll(SystemConfig.OPENEJB_LOG_TESTING_WITHOUT_JPA);
         c.putAll(SystemConfig.OPENEJB_XBEAN_FINDER);
         containerProperties = c;
     }

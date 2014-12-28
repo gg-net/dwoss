@@ -14,37 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.core.all;
+package eu.ggnet.dwoss.uniqueunit.api;
 
-import java.util.function.Consumer;
+import eu.ggnet.dwoss.search.api.SearchResult;
+import eu.ggnet.saft.api.ui.IdSupplier;
 
-import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 /**
- * Helper to bind Instance with action.
+ * The smallest representation of a unique unit.
  * <p>
  * @author oliver.guenther
  */
-@AllArgsConstructor
 @ToString
-public class DescriptiveConsumerRunner<T> implements Runnable {
+public class PicoUnit implements SearchResult, IdSupplier {
 
-    private final DescriptiveConsumer<T> descriptiveConsumer;
+    public final int uniqueUnitId;
 
-    private final T intance;
+    public final String shortDescription;
+
+    public PicoUnit(int uniqueUnitId, String shortDescription) {
+        this.uniqueUnitId = uniqueUnitId;
+        this.shortDescription = shortDescription;
+    }
+
+    public String shortDescription() {
+        return shortDescription;
+    }
 
     @Override
-    public void run() {
-        descriptiveConsumer.consumer().accept(intance);
-    }
-
-    public String title() {
-        return descriptiveConsumer.title();
-    }
-
-    public Consumer<T> consumer() {
-        return descriptiveConsumer.consumer();
+    public String id() {
+        return "" + uniqueUnitId;
     }
 
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
-import eu.ggnet.dwoss.redtape.eao.PositionEao;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,28 +29,37 @@ import org.slf4j.*;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.redtape.api.LegacyBridge;
+import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.eao.PositionEao;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
-
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-
 import eu.ggnet.dwoss.rights.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.entity.Operator;
-
-
+import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.stock.format.StockUnitFormater;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
@@ -117,6 +109,13 @@ public class UnitOverseerBean implements UnitOverseer {
     @Inject
     private OperatorEao operatorEao;
 
+    private boolean hasRight(String username, AtomicRight right) {
+        if ( username == null ) return false;
+        Operator operator = operatorEao.findByUsername(username);
+        if ( operator == null ) return false;
+        return operator.getAllActiveRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES);
+    }
+
     /**
      * Find a Unit and its representative and return a html formated String representing it.
      * Ensure to add the html start/end tags manually
@@ -131,12 +130,7 @@ public class UnitOverseerBean implements UnitOverseer {
         UniqueUnit uniqueUnit = uuEao.findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
         // Try Serail if Sopo does not match.
         if ( uniqueUnit == null ) uniqueUnit = uuEao.findByIdentifier(Identifier.SERIAL, refurbishId);
-        boolean viewPrices = false;
-        if ( username != null ) {
-            Operator operator = operatorEao.findByUsername(username);
-            viewPrices = operator.getAllActiveRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES);
-        }
-        if ( uniqueUnit != null ) return toDetailedHtmlUnit(uniqueUnit, viewPrices);
+        if ( uniqueUnit != null ) return toDetailedHtmlUnit(uniqueUnit, hasRight(username, AtomicRight.VIEW_COST_AND_REFERENCE_PRICES));
         // Unique Unit is null, optional fallback to legacy system.
         if ( !bridgeInstance.isUnsatisfied() && !bridgeInstance.get().isUnitIdentifierAvailable(refurbishId) )
             return "<i><u>Informationen aus Legacy System Sopo:</u></i>" + bridgeInstance.get().toDetailedHtmlUnit(refurbishId);
@@ -355,10 +349,10 @@ public class UnitOverseerBean implements UnitOverseer {
 
     private String toHtmlDescription(String refurbishId, String oldRefurbishedId, String status, StockUnit stockUnit, String error) {
         String stockInfo = "";
-        if ( stockUnit.isInStock() ) stockInfo = stockUnit.getStock().getName();
-        else if ( stockUnit.isInTransaction() ) stockInfo = "Transaction(" + stockUnit.getTransaction().getId() + ")"
+        if ( stockUnit.isInTransaction() ) stockInfo = "Transaction(" + stockUnit.getTransaction().getId() + "," + stockUnit.getTransaction().getType() + ")"
                     + (stockUnit.getTransaction().getSource() == null ? "" : " von " + stockUnit.getTransaction().getSource().getName())
                     + (stockUnit.getTransaction().getDestination() == null ? "" : " nach " + stockUnit.getTransaction().getDestination().getName());
+        else if ( stockUnit.isInStock() ) stockInfo = stockUnit.getStock().getName();
         return toHtmlDescription(refurbishId, oldRefurbishedId, status, stockInfo, error);
     }
 

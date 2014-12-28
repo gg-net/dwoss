@@ -14,37 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.core.all;
-
-import java.util.function.Consumer;
-
-import lombok.AllArgsConstructor;
-import lombok.ToString;
+package eu.ggnet.dwoss.search.api;
 
 /**
- * Helper to bind Instance with action.
- * <p>
+ *
  * @author oliver.guenther
  */
-@AllArgsConstructor
-@ToString
-public class DescriptiveConsumerRunner<T> implements Runnable {
-
-    private final DescriptiveConsumer<T> descriptiveConsumer;
-
-    private final T intance;
-
-    @Override
-    public void run() {
-        descriptiveConsumer.consumer().accept(intance);
-    }
-
-    public String title() {
-        return descriptiveConsumer.title();
-    }
-
-    public Consumer<T> consumer() {
-        return descriptiveConsumer.consumer();
-    }
-
+// Hint think about relevanc concept.
+public interface SearchResult {
+    
+    String shortDescription();
+    
 }

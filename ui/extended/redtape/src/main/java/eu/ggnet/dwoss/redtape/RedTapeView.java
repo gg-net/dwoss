@@ -17,13 +17,11 @@
 package eu.ggnet.dwoss.redtape;
 
 import java.awt.*;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.*;
 import java.beans.*;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
@@ -46,13 +44,14 @@ import eu.ggnet.dwoss.redtape.dossiertable.DossierTableView;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.renderer.*;
 import eu.ggnet.dwoss.redtape.state.*;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.all.SelectionEnhancer;
+import eu.ggnet.saft.core.ops.FxOps;
 
+import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.saft.core.Client.lookup;
-import static javafx.scene.input.MouseButton.PRIMARY;
 
 /**
  * The main UI for using RedTape components.
@@ -161,26 +160,26 @@ public class RedTapeView extends javax.swing.JFrame {
                 BorderPane pane = new BorderPane();
                 Scene scene = new Scene(pane, javafx.scene.paint.Color.ALICEBLUE);
                 final ListView<Position> positionsFxList = new ListView<>();
-                positionsFxList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                MultipleSelectionModel<Position> selectionModel = positionsFxList.getSelectionModel();
+                selectionModel.setSelectionMode(SelectionMode.SINGLE);
+                SelectionEnhancer<Position> selectionEnhancer = (selected) -> {
+                    if ( selected.getType() == UNIT ) return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), selected.getName()));
+                    return Collections.EMPTY_LIST;
+                };
                 positionsFxList.setCellFactory(new PositionListCell.Factory());
                 positionsFxList.setItems(positions);
-                ContextMenu contextMenu = new ContextMenu();
-                CompletableFuture.supplyAsync(() -> lookup(StockAgent.class).findAll(Stock.class)).handle((l, t) -> {
-                    Platform.runLater(() -> {
-                        contextMenu.getItems().addAll(PrepareSimpleTransferMenuItem.asFxMenuItems(positionsFxList.getSelectionModel(), l));
-                    });
-                    return null;
-                });
-                positionsFxList.setContextMenu(contextMenu);
-                positionsFxList.setOnMouseClicked((evt) -> {
-                    if ( positionsFxList.getSelectionModel().isEmpty() ) return;
-                    if ( evt.getButton() != PRIMARY ) return;
-                    if ( evt.getClickCount() != 2 ) return;
-                    HtmlDialog d = new HtmlDialog(RedTapeView.this, ModalityType.MODELESS);
-                    d.setText(controller.getDetailedPositionToHtml(positionsFxList.getSelectionModel().getSelectedItem()));
-                    d.setVisible(true);
-                });
-
+                positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer));
+                positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
+                /*
+                 positionsFxList.setOnMouseClicked((evt) -> {
+                 if ( positionsFxList.getSelectionModel().isEmpty() ) return;
+                 if ( evt.getButton() != PRIMARY ) return;
+                 if ( evt.getClickCount() != 2 ) return;
+                 HtmlDialog d = new HtmlDialog(RedTapeView.this, ModalityType.MODELESS);
+                 d.setText(controller.getDetailedPositionToHtml(positionsFxList.getSelectionModel().getSelectedItem()));
+                 d.setVisible(true);
+                 });
+                 */
                 pane.setCenter(positionsFxList);
                 jfxp.setScene(scene);
             }

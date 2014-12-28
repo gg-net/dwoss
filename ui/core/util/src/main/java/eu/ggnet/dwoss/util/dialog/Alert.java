@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,10 @@ import lombok.experimental.Builder;
  * Alert Dialog (like {@link JOptionPane#showMessageDialog(java.awt.Component, java.lang.Object, java.lang.String, int) ).
  * <p>
  * @author oliver.guenther
+ * @deprecated use saft Alert.
  */
 @Builder
+@Deprecated
 public class Alert {
 
     /**
