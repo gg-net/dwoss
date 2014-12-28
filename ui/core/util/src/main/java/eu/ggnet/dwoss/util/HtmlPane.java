@@ -24,7 +24,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 
 /**
- *
+ * Does NOT WORK !!!
+ * <p>
  * @author oliver.guenther
  */
 public class HtmlPane extends BorderPane implements Consumer<String> {
