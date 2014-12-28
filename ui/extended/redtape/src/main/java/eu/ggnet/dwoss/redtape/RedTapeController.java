@@ -30,7 +30,6 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
@@ -47,7 +46,7 @@ import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 import eu.ggnet.statemachine.StateTransition;
@@ -145,34 +144,34 @@ public class RedTapeController implements IDossierSelectionHandler {
                                 for (StateTransition<CustomerDocument> originalStateTransition : transitions) {
                                     RedTapeStateTransition stateTransition = (RedTapeStateTransition)originalStateTransition;
                                     if ( RedTapeStateTransitions.ADD_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled ) {
-                                        Action a = new ModifyShippingCostStateAction(view, RedTapeController.this, cdoc, stateTransition);
+                                        Action a = new ModifyShippingCostStateAction(parent(), RedTapeController.this, cdoc, stateTransition);
                                         stateActions.add(a);
                                     } else if ( RedTapeStateTransitions.REMOVE_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled ) {
-                                        stateActions.add(new RemoveShippingCostStateAction(view, RedTapeController.this, cdoc, stateTransition));
+                                        stateActions.add(new RemoveShippingCostStateAction(parent(), RedTapeController.this, cdoc, stateTransition));
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_CREDIT_MEMO) ) {
-                                        CreditMemoAction creditMemoAction = new CreditMemoAction(view, RedTapeController.this, model.getSelectedDocument(), stateTransition);
+                                        CreditMemoAction creditMemoAction = new CreditMemoAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
                                         lookup(Guardian.class).add(creditMemoAction);
                                         accessDependentActions.add(creditMemoAction);
                                         stateActions.add(creditMemoAction);
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_COMPLAINT) ) {
-                                        ComplaintAction action = new ComplaintAction(view, RedTapeController.this, model.getSelectedDocument(), stateTransition);
+                                        ComplaintAction action = new ComplaintAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
                                         stateActions.add(action);
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_ANNULATION_INVOICE) ) {
-                                        AnnulationInvoiceAction action = new AnnulationInvoiceAction(view, RedTapeController.this, model.getSelectedDocument(), stateTransition);
+                                        AnnulationInvoiceAction action = new AnnulationInvoiceAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
                                         lookup(Guardian.class).add(action);
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else if ( stateTransition.getEnablingRight() != null && stateTransition.getEnablingRight().equals(AtomicRight.CREATE_ANNULATION_INVOICE) ) {
-                                        StateTransitionAction action = new StateTransitionAction(view, RedTapeController.this, cdoc, stateTransition);
+                                        StateTransitionAction action = new StateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition);
                                         lookup(Guardian.class).add(action, AtomicRight.CREATE_ANNULATION_INVOICE);
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else {
-                                        stateActions.add(new StateTransitionAction(view, RedTapeController.this, cdoc, stateTransition));
+                                        stateActions.add(new StateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition));
                                     }
                                 }
                                 if ( model.getSelectedDocument().getType() == DocumentType.BLOCK ) {
-                                    DossierDeleteAction action = new DossierDeleteAction(view, RedTapeController.this, model.getSelectedDossier());
+                                    DossierDeleteAction action = new DossierDeleteAction(parent(), RedTapeController.this, model.getSelectedDossier());
                                     lookup(Guardian.class).add(action);
                                     accessDependentActions.add(action);
                                     stateActions.add(action);
@@ -333,14 +332,14 @@ public class RedTapeController implements IDossierSelectionHandler {
             return;
         }
         StringAreaView sav = new StringAreaView(dossier.getComment());
-        OkCancelDialog<StringAreaView> dialog = new OkCancelDialog<>(view, Dialog.ModalityType.DOCUMENT_MODAL, "Bemerkungen editieren", sav);
+        OkCancelDialog<StringAreaView> dialog = new OkCancelDialog<>(parent(), Dialog.ModalityType.DOCUMENT_MODAL, "Bemerkungen editieren", sav);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             try {
                 Dossier dos = lookup(RedTapeWorker.class).updateComment(model.getSelectedDossier(), sav.getText());
                 reloadSelectionOnStateChange(dos);
             } catch (UserInfoException ex) {
-                DwOssCore.show(view, ex);
+                UiCore.handle(ex);
             }
         }
     }
@@ -353,7 +352,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      */
     public void openDocument(Document document, boolean printAsReservation) {
         JasperPrint print = lookup(DocumentSupporter.class).render(document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT));
-        JDialog d = new JDialog(view, "Dokument drucken/versenden");
+        JDialog d = new JDialog(parent(), "Dokument drucken/versenden");
         d.setSize(800, 1000);
         d.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
         d.setLocationRelativeTo(view);
@@ -373,7 +372,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param dos the {@link Dossier} entity.
      */
     public void openDossierDetailViewer(Dossier dos) {
-        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(RedTapeUiUtil.toHtmlDetailed(dos)).setVisible(true);
+        new HtmlDialog(parent(), Dialog.ModalityType.MODELESS).setText(RedTapeUiUtil.toHtmlDetailed(dos)).setVisible(true);
     }
 
     /**
@@ -382,7 +381,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param doc the {@link Document} entity.
      */
     public void openDocumentViewer(Document doc) {
-        HtmlDialog dialog = new HtmlDialog(view, Dialog.ModalityType.MODELESS);
+        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
         dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "</html>");
         dialog.setVisible(true);
     }
@@ -406,10 +405,10 @@ public class RedTapeController implements IDossierSelectionHandler {
         if ( viewOnlyCustomerIds.contains(model.getPurchaseCustomer().getId()) ) {
             // Don't allow anything here.
         } else if ( model.getPurchaseCustomer().getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
-            view.actionBar.add(new JButton(new DossierCreateAction(view, false, RedTapeController.this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));
         } else {
-            view.actionBar.add(new JButton(new DossierCreateAction(view, false, RedTapeController.this, model.getPurchaseCustomer().getId())));
-            view.actionBar.add(new JButton(new DossierCreateAction(view, true, RedTapeController.this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), true, RedTapeController.this, model.getPurchaseCustomer().getId())));
         }
 
         JToolBar.Separator sep = new JToolBar.Separator();
@@ -418,7 +417,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
         if ( model.getSelectedDocument() != null && !viewOnlyCustomerIds.contains(model.getPurchaseCustomer().getId()) ) {
             Document selDocument = model.getSelectedDocument();
-            UpdateDocumentAction action = new UpdateDocumentAction(view, this, model.getPurchaseCustomer().getId(), model.getSelectedDocument());
+            UpdateDocumentAction action = new UpdateDocumentAction(parent(), this, model.getPurchaseCustomer().getId(), model.getSelectedDocument());
             view.actionBar.add(new JButton(action));
 
             //Deactivate Button if a Update isn't possible or allowed.
@@ -515,4 +514,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 //        }
 //        return sb.toString();
 //    }
+    private Window parent() {
+        return SwingCore.windowAncestor(view).orElse(SwingCore.mainFrame());
+    }
 }

@@ -1,7 +1,9 @@
 package eu.ggnet.saft.core.fx;
 
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Initialiser;
+import java.net.URL;
+import java.util.Objects;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +13,8 @@ import javafx.stage.Window;
 
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.concurrent.*;
-import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.Initialiser;
 
 /**
  *
@@ -25,7 +23,7 @@ import java.util.logging.Logger;
 public class FxSaft {
 
     public static <R extends FxController> URL loadView(Class<R> controllerClazz) {
-        if (!controllerClazz.getSimpleName().endsWith("Controller"))
+        if ( !controllerClazz.getSimpleName().endsWith("Controller") )
             throw new IllegalArgumentException(controllerClazz + " does not end with Controller");
         String head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Controller".length());
         return controllerClazz.getResource(head + "View.fxml");
@@ -35,9 +33,9 @@ public class FxSaft {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(loadView(controllerClazz), "No View for " + controllerClazz));
         loader.load();
         R controller = Objects.requireNonNull(loader.getController(), "No controller based on " + controllerClazz + ". Controller set in Fxml ?");
-        if (parameter != null && controller instanceof Consumer) {
+        if ( parameter != null && controller instanceof Consumer ) {
             try {
-                ((Consumer<T>) controller).accept(parameter);
+                ((Consumer<T>)controller).accept(parameter);
             } catch (ClassCastException e) {
                 LoggerFactory.getLogger(FxSaft.class).warn(controller.getClass() + " implements Consumer, but not of type " + parameter.getClass());
             }
@@ -45,26 +43,25 @@ public class FxSaft {
         return loader;
     }
 
-    public static <T, R extends Pane> R construct(Class<R> panelClazz, T parameter) throws Exception {
-        R panel = panelClazz.getConstructor().newInstance();
-        if (panel instanceof Initialiser) {
-            ((Initialiser) panel).initialise();
+    public static <T, R extends Pane> R construct(Class<R> paneClass, T parameter) throws Exception {
+        R pane = paneClass.getConstructor().newInstance();
+        if ( pane instanceof Initialiser ) {
+            ((Initialiser)pane).initialise();
         }
-        if (parameter != null && panel instanceof Consumer) {
+        if ( parameter != null && pane instanceof Consumer ) {
             try {
-                ((Consumer<T>) panel).accept(parameter);
+                ((Consumer<T>)pane).accept(parameter);
             } catch (ClassCastException e) {
-                LoggerFactory.getLogger(FxSaft.class).warn(panel.getClass() + " implements Consumer, but not of type " + parameter.getClass());
+                LoggerFactory.getLogger(FxSaft.class).warn(pane.getClass() + " implements Consumer, but not of type " + parameter.getClass());
             }
         }
-        return panel;
-
+        return pane;
     }
 
     /**
      * Dispatches the Callable to the Platform Ui Thread.
      *
-     * @param <T> Return type of callable
+     * @param <T>      Return type of callable
      * @param callable the callable to dispatch
      * @return the result of the callable
      * @throws RuntimeException wraps InterruptedException of {@link CountDownLatch#await() } and ExecutionException of {@link FutureTask#get() }
@@ -73,7 +70,7 @@ public class FxSaft {
         try {
             FutureTask<T> futureTask = new FutureTask<>(callable);
             final CountDownLatch cdl = new CountDownLatch(1);
-            if (Platform.isFxApplicationThread()) {
+            if ( Platform.isFxApplicationThread() ) {
                 futureTask.run();
                 cdl.countDown();
             } else {
@@ -90,7 +87,7 @@ public class FxSaft {
     }
 
     public static Window windowAncestor(Node c) {
-        if (c == null) return null;
+        if ( c == null ) return null;
         return c.getScene().getWindow();
     }
 

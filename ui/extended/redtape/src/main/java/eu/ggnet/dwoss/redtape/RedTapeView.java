@@ -248,13 +248,12 @@ public class RedTapeView extends javax.swing.JFrame {
                             customer.getShippingCondition(),
                             customer.getPaymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
-                    String result = "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
-                            + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
-                            + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>";
-                    HtmlDialog view = new HtmlDialog(RedTapeView.this, Dialog.ModalityType.MODELESS);
-                    view.setText(result);
-                    view.pack();
-                    view.setVisible(true);
+                    Ui.parent(jLabel1)
+                            .call(() -> "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
+                                    + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
+                                    + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>")
+                            .openSwing(HtmlPanel.class)
+                            .exec();
                 }
             }
         });
@@ -290,7 +289,7 @@ public class RedTapeView extends javax.swing.JFrame {
     }
 
     static URL loadImage() {
-        return RedTapeView.class.getResource("redtape_icon.png");
+        return RedTapeView.class.getResource("RedTapeIcon.png");
     }
 
     /** This method is called from within the constructor to
