@@ -16,43 +16,62 @@
  */
 package eu.ggnet.dwoss.util;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Does NOT WORK !!!
  * <p>
- * @author oliver.guenther
+ * @a
+ * import static java.util.concurrent.TimeUnit.SECONDS;
+ * uthor oliver.guenther
  */
 public class HtmlPane extends BorderPane implements Consumer<String> {
 
     private WebView webView;
 
     public HtmlPane() {
-        System.out.println("geht los");
-        CountDownLatch cdl = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            System.out.println("geht weiter");
+        dispatch(() -> {
+            setPadding(new Insets(5));
             webView = new WebView();
             setCenter(webView);
-            cdl.countDown();
-            System.out.println("geht gut");
+            return null;
         });
-        try {
-            cdl.await();
-            System.out.println("geht mehr");
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     @Override
     public void accept(String content) {
-        webView.getEngine().loadContent(content);
+        dispatch(() -> {
+            webView.getEngine().loadContent(content);
+            return null;
+        });
+    }
+
+    public static <T> T dispatch(Callable<T> callable) throws RuntimeException {
+        try {
+            FutureTask<T> futureTask = new FutureTask<>(callable);
+            final CountDownLatch cdl = new CountDownLatch(1);
+            if ( Platform.isFxApplicationThread() ) {
+                futureTask.run();
+                cdl.countDown();
+            } else {
+                Platform.runLater(() -> {
+                    futureTask.run();
+                    cdl.countDown();
+                });
+            }
+            cdl.await(5, SECONDS);
+            return futureTask.get();
+        } catch (InterruptedException | ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }

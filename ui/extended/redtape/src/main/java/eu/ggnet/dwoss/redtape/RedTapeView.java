@@ -252,7 +252,7 @@ public class RedTapeView extends javax.swing.JFrame {
                             .call(() -> "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
                                     + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
                                     + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>")
-                            .openSwing(HtmlPanel.class)
+                            .openFx(HtmlPane.class, "StateInfo")
                             .exec();
                 }
             }
