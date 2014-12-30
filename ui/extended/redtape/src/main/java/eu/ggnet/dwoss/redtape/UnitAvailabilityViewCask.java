@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -30,20 +25,17 @@ import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.dwoss.redtape.entity.Position;
-
-import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.redtape.UnitOverseer.UnitShard;
-
+import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.stock.entity.Stock;
-
-import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
-
-import eu.ggnet.saft.core.MainComponent;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.all.SelectionEnhancer;
+import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ops.Ops;
+import eu.ggnet.saft.core.ops.Selector;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -85,11 +77,20 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
 
     private final DefaultListModel<UnitShard> model = new DefaultListModel<>();
 
+    private final Selector<UnitShard> selector; // No clear needed. This Panel is in the MainFrame.
+
     /** Creates new form UnitAvailability */
     public UnitAvailabilityViewCask() {
         initComponents();
         resultList.setModel(model);
         resultList.setCellRenderer(new UnitShardRenderer());
+        SelectionEnhancer<UnitShard> selectionEnhancer = (selected) -> {
+            if ( selected != null && selected.getAvailable() != null )
+                return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), "SopoNr:" + selected.getRefurbishedId()));
+            return Collections.EMPTY_LIST;
+        };
+        selector = Ops.seletor(UnitShard.class, selectionEnhancer);
+
     }
 
     @Override
@@ -149,6 +150,11 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
                 resultListMouseClicked(evt);
             }
         });
+        resultList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                resultListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(resultList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -166,11 +172,9 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         if ( evt.getClickCount() != 2 ) return;
         UnitShard us = resultList.getSelectedValue();
         if ( us == null || us.getAvailable() == null ) return;
-        String re = lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), lookup(Guardian.class).getUsername());
-        HtmlDialog view = new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS);
-        view.setSize(700, 500);
-        view.setText(re);
-        view.setVisible(true);
+        Ui.call(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()))
+                .openFx(HtmlPane.class, us.getRefurbishedId())
+                .exec();
     }//GEN-LAST:event_resultListMouseClicked
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
@@ -183,6 +187,10 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
     private void clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearActionPerformed
         model.clear();
     }//GEN-LAST:event_clearActionPerformed
+
+    private void resultListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resultListValueChanged
+        selector.selected(resultList.getSelectedValue());
+    }//GEN-LAST:event_resultListValueChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -229,6 +237,11 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
 
             @Override
             public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public String toDetailedHtml(int uniqueUnitId, String username) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });

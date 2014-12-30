@@ -48,7 +48,7 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.SelectionEnhancer;
-import eu.ggnet.saft.core.ops.FxOps;
+import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -65,6 +65,8 @@ public class RedTapeView extends javax.swing.JFrame {
     private static RedTapeView instance;
 
     DossierTableView dossierTableView;
+
+    private Selector<Position> selector;
 
     /**
      * Returns a single Instance of this view, initialising and showing it.
@@ -147,43 +149,44 @@ public class RedTapeView extends javax.swing.JFrame {
         documentPopup = new JPopupMenu();
 
         newCustomerButton.setEnabled(Lookup.getDefault().lookup(CustomerCos.class) != null);
-
     }
 
     private void initFxComponents() {
         final JFXPanel jfxp = new JFXPanel();
         positionFxPanel.add(jfxp, BorderLayout.CENTER);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                BorderPane pane = new BorderPane();
-                Scene scene = new Scene(pane, javafx.scene.paint.Color.ALICEBLUE);
-                final ListView<Position> positionsFxList = new ListView<>();
-                MultipleSelectionModel<Position> selectionModel = positionsFxList.getSelectionModel();
-                selectionModel.setSelectionMode(SelectionMode.SINGLE);
-                SelectionEnhancer<Position> selectionEnhancer = (selected) -> {
-                    if ( selected.getType() == UNIT ) return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), selected.getName()));
-                    return Collections.EMPTY_LIST;
-                };
-                positionsFxList.setCellFactory(new PositionListCell.Factory());
-                positionsFxList.setItems(positions);
-                positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer));
-                positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
-                /*
-                 positionsFxList.setOnMouseClicked((evt) -> {
-                 if ( positionsFxList.getSelectionModel().isEmpty() ) return;
-                 if ( evt.getButton() != PRIMARY ) return;
-                 if ( evt.getClickCount() != 2 ) return;
-                 HtmlDialog d = new HtmlDialog(RedTapeView.this, ModalityType.MODELESS);
-                 d.setText(controller.getDetailedPositionToHtml(positionsFxList.getSelectionModel().getSelectedItem()));
-                 d.setVisible(true);
-                 });
-                 */
-                pane.setCenter(positionsFxList);
-                jfxp.setScene(scene);
-            }
+        Platform.runLater(() -> {
 
+            SelectionEnhancer<Position> selectionEnhancer = (selected) -> {
+                if ( selected != null && selected.getType() == UNIT ) return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), selected.getName()));
+                return Collections.EMPTY_LIST;
+            };
+            selector = Ops.seletor(Position.class, selectionEnhancer);
+
+            BorderPane pane = new BorderPane();
+            Scene scene = new Scene(pane, javafx.scene.paint.Color.ALICEBLUE);
+            final ListView<Position> positionsFxList = new ListView<>();
+            MultipleSelectionModel<Position> selectionModel = positionsFxList.getSelectionModel();
+            selectionModel.setSelectionMode(SelectionMode.SINGLE);
+            selectionModel.selectedItemProperty().addListener((ob, o, n) -> {
+                selector.selected(n);
+            });
+            positionsFxList.setCellFactory(new PositionListCell.Factory());
+            positionsFxList.setItems(positions);
+            positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer));
+            positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
+            /*
+             positionsFxList.setOnMouseClicked((evt) -> {
+             if ( positionsFxList.getSelectionModel().isEmpty() ) return;
+             if ( evt.getButton() != PRIMARY ) return;
+             if ( evt.getClickCount() != 2 ) return;
+             HtmlDialog d = new HtmlDialog(RedTapeView.this, ModalityType.MODELESS);
+             d.setText(controller.getDetailedPositionToHtml(positionsFxList.getSelectionModel().getSelectedItem()));
+             d.setVisible(true);
+             });
+             */
+            pane.setCenter(positionsFxList);
+            jfxp.setScene(scene);
         });
     }
 
@@ -645,6 +648,7 @@ public class RedTapeView extends javax.swing.JFrame {
 
     private void formWindowClosed(WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         lookup(UserPreferences.class).storeLocation(this);
+        selector.clear();
         instance = null;
     }//GEN-LAST:event_formWindowClosed
 

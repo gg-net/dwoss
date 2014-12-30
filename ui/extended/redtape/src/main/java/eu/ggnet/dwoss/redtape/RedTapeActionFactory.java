@@ -25,6 +25,7 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.redtape.action.*;
 import eu.ggnet.dwoss.redtape.position.PositionViewAction;
 import eu.ggnet.dwoss.redtape.reporting.*;
+import eu.ggnet.dwoss.redtape.unit.ShowUnitViewAction;
 import eu.ggnet.saft.core.ActionFactory;
 
 /**
@@ -40,6 +41,7 @@ public class RedTapeActionFactory implements ActionFactory {
                 new MetaAction("Kunden und Aufträge", new OpenSearchAction()),
                 new MetaAction("Kunden und Aufträge", new RedTapeSimpleAction(), true),
                 new MetaAction("Kunden und Aufträge", new DossierFilterAction()),
+                new MetaAction("Kunden und Aufträge", new ShowUnitViewAction()),
                 new MetaAction("Artikelstamm", new SalesProductAction()),
                 new MetaAction("Geschäftsführung", "Allgemeine Reporte", new ExportDossierToXlsAction()),
                 new MetaAction("Geschäftsführung", "Allgemeine Reporte", new CreditMemoReportAction()),
