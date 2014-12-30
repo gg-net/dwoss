@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
-
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
@@ -115,6 +114,16 @@ public interface UnitOverseer {
      * @throws UserInfoException if the refurbishId is not available
      */
     Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException;
+
+    /**
+     * Find a Unit and its representative and return a html formated String representing it.
+     * Ensure to add the html start/end tags manually
+     * <p/>
+     * @param uniqueUnitId the uniqueUnitId
+     * @param username
+     * @return a html formated String representing a Unit.
+     */
+    String toDetailedHtml(int uniqueUnitId, String username);
 
     /**
      * Find a Unit and its representative and return a html formated String representing it.
