@@ -16,22 +16,11 @@
  */
 package eu.ggnet.dwoss.report.action;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
-import javax.swing.SwingWorker;
-
-import javafx.application.Platform;
-
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.report.RevenueReportSelectorPane;
 import eu.ggnet.dwoss.report.op.RevenueReporter;
-import eu.ggnet.dwoss.util.OkCancelStage;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
@@ -49,34 +38,12 @@ public class ExportRevenueReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Platform.runLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final RevenueReportSelectorPane selector = new RevenueReportSelectorPane();
-                OkCancelStage<RevenueReportSelectorPane> stage = new OkCancelStage<>("Auswählen", selector);
-                stage.showAndWait();
-                if ( stage.isCancel() ) return;
-
-                new SwingWorker<File, Object>() {
-                    @Override
-                    protected File doInBackground() throws Exception {
-                        return lookup(RevenueReporter.class)
-                                .toXls(selector.getStart(), selector.getEnd(), selector.getStep(), selector.isExtraReported())
-                                .toTemporaryFile();
-                    }
-
-                    @Override
-                    protected void done() {
-                        try {
-                            Desktop.getDesktop().open(get());
-                        } catch (InterruptedException | ExecutionException | IOException ex) {
-                            DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
-                        }
-                    }
-                }.execute();
-            }
-        });
-
+        Ui.exec(
+                Ui.choiceFx(RevenueReportSelectorPane.class)
+                .onOk(p -> lookup(RevenueReporter.class)
+                        .toXls(p.getStart(), p.getEnd(), p.getStep(), p.isExtraReported())
+                        .toTemporaryFile())
+                .osOpen()
+        );
     }
 }
