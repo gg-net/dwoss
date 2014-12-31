@@ -57,7 +57,7 @@ public class PositionViewCask extends BorderPane implements Consumer<Position> {
 
     public PositionViewCask() {
         head = new Label("No Position");
-        head.setFont(font(30));
+        head.setFont(font(20));
         setTop(head);
         webView = FxSaft.dispatch(() -> new WebView());
         progressIndicator = new ProgressIndicator();
