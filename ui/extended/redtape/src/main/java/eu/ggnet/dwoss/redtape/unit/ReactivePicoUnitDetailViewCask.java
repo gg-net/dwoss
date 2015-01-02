@@ -63,6 +63,13 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
 
     @Override
     public void accept(PicoUnit pu) {
+        if ( pu == null ) {
+            Platform.runLater(() -> {
+                head.setText("No UniqueUnit");
+                webView.getEngine().loadContent("");
+            });
+            return;
+        }
         Platform.runLater(() -> {
             progressIndicator.setVisible(true);
             head.setText("(" + pu.id() + ") " + pu.shortDescription);
