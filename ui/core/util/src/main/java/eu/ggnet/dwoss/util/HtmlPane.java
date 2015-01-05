@@ -27,7 +27,7 @@ import javafx.scene.web.WebView;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
- * Does NOT WORK !!!
+ * Html Pane for Strings.
  * <p>
  * @a
  * import static java.util.concurrent.TimeUnit.SECONDS;

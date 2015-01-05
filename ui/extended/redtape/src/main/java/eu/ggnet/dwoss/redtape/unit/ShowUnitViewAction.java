@@ -29,7 +29,7 @@ import eu.ggnet.saft.core.Ui;
 public class ShowUnitViewAction extends AbstractAction {
 
     public ShowUnitViewAction() {
-        super("Reactiver Geräte Ansicht");
+        super("Reactive Geräte Ansicht");
     }
 
     @Override

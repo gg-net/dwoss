@@ -50,9 +50,9 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
         return stockAgent.findAll(Stock.class)
                 .stream()
                 .filter(s -> !s.equals(su.getStock()))
-                .map(s -> {
-                    return new DescriptiveConsumer<PicoUnit>("Umfuhr von " + su.getStock().getName() + " nach " + s.getName(), (PicoUnit t1) -> {
-                        Ui.call(() -> new CreateQuestionModel(su, s, "Umfuhr direkt durch Nutzer erzeugt"))
+                .map(destination -> {
+                    return new DescriptiveConsumer<PicoUnit>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
+                        Ui.call(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"))
                         .choiceFx(CreateQuestionView.class)
                         .onOk(v -> {
                             lookup(StockTransactionProcessor.class).perpareTransfer(

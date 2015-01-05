@@ -38,6 +38,7 @@ public class PicoUnit implements SearchResult, IdSupplier {
         this.shortDescription = shortDescription;
     }
 
+    @Override
     public String shortDescription() {
         return shortDescription;
     }
