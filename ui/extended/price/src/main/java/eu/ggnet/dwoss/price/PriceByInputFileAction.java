@@ -33,6 +33,8 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
@@ -63,7 +65,8 @@ public class PriceByInputFileAction extends AccessableAction {
             new SwingWorker<Object, Object>() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    FileJacket inFile = new FileJacket("in", "xls", new File(fileName));
+                    FileUtil.checkIfExcelFile(dialog.getSelectedFile());
+                    FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
                     FileJacket outFile = lookup(Exporter.class).toXlsByXls(inFile);
                     File f = outFile.toTemporaryFile();
                     Desktop.getDesktop().open(f);
@@ -75,7 +78,7 @@ public class PriceByInputFileAction extends AccessableAction {
                     try {
                         get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                        UiCore.handle(ex);
                     }
                 }
             }.execute();

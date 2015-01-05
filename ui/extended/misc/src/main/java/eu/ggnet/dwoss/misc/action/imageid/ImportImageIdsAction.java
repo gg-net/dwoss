@@ -31,7 +31,8 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
@@ -60,6 +61,7 @@ public class ImportImageIdsAction extends AccessableAction {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
+                FileUtil.checkIfExcelFile(inFile);
                 lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", inFile));
                 return null;
             }
@@ -69,7 +71,7 @@ public class ImportImageIdsAction extends AccessableAction {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                    UiCore.handle(ex);
                 }
             }
         }.execute();

@@ -27,13 +27,13 @@ import javax.swing.*;
 
 import eu.ggnet.saft.core.Workspace;
 
-import eu.ggnet.dwoss.price.imex.ContractorPricePartNoImporter;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.common.DetailDialog;
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
@@ -68,6 +68,7 @@ public class ContractorImportAction extends AccessableAction {
         new SwingWorker<ContractorPricePartNoImporter.ImportResult, Void>() {
             @Override
             protected ContractorPricePartNoImporter.ImportResult doInBackground() throws Exception {
+                FileUtil.checkIfExcelFile(inFile);
                 FileJacket in = new FileJacket("in", ".xls", inFile);
                 String user = lookup(Guardian.class).getUsername();
                 if ( contractor.isManufacturer() ) return lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, in, user);
@@ -85,7 +86,7 @@ public class ContractorImportAction extends AccessableAction {
                             .details(result.getErrors())
                             .showDialog();
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                    UiCore.handle(ex);
                 }
             }
         }.execute();

@@ -19,6 +19,8 @@ package eu.ggnet.dwoss.price;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
@@ -32,6 +34,9 @@ import eu.ggnet.dwoss.price.Importer;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.exception.ExceptionUtil;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
@@ -59,7 +64,8 @@ public class PriceImportAction extends AccessableAction {
             new SwingWorker<Object, Object>() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    FileJacket inFile = new FileJacket("in", "xls", new File(fileName));
+                    FileUtil.checkIfExcelFile(dialog.getSelectedFile());
+                    FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
                     lookup(Importer.class).fromXls(inFile, lookup(Guardian.class).getUsername());
                     return null;
                 }
@@ -69,7 +75,7 @@ public class PriceImportAction extends AccessableAction {
                     try {
                         get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                        UiCore.handle(ex);
                     }
                 }
             }.execute();

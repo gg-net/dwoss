@@ -32,6 +32,8 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.JOptionPane.*;
@@ -69,7 +71,8 @@ public class StockTakingAction extends AbstractAction {
         new SwingWorker<FileJacket, Object>() {
             @Override
             protected FileJacket doInBackground() throws Exception {
-                return lookup(StockTaking.class).fullfillDetails(new FileJacket("in", "xls", inFile), (stock == null ? null : stock.getId()));
+                FileUtil.checkIfExcelFile(inFile);
+                return lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", inFile), (stock == null ? null : stock.getId()));
             }
 
             @Override
@@ -77,7 +80,7 @@ public class StockTakingAction extends AbstractAction {
                 try {
                     Desktop.getDesktop().open(get().toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                    UiCore.handle(ex);
                 }
             }
         }.execute();
