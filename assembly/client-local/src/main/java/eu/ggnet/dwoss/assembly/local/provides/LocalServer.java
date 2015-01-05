@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.local.provides;
 
-import eu.ggnet.saft.core.Server;
-
 import java.util.*;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -26,11 +24,9 @@ import javax.naming.*;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.dwoss.assembly.local.UnClosableContext;
 import eu.ggnet.dwoss.configuration.ConfigurationProvider;
 import eu.ggnet.dwoss.configuration.SystemConfig;
-
-
-import eu.ggnet.dwoss.assembly.local.UnClosableContext;
 import eu.ggnet.dwoss.customer.assist.CustomerPu;
 import eu.ggnet.dwoss.redtape.assist.RedTapePu;
 import eu.ggnet.dwoss.report.assist.ReportPu;
@@ -39,6 +35,7 @@ import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.stock.assist.StockPu;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.util.dialog.Alert;
+import eu.ggnet.saft.core.Server;
 
 @ServiceProvider(service = Server.class)
 public class LocalServer implements Server {
@@ -72,7 +69,7 @@ public class LocalServer implements Server {
             c.putAll(config.openejbEmbeddedLocalConfiguration());
         }
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
+        c.putAll(SystemConfig.OPENEJB_LOG_TESTING_WITHOUT_JPA);
         container = EJBContainer.createEJBContainer(c);
         try {
             container.getContext().bind("inject", this);
