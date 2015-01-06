@@ -184,6 +184,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             String text = new MailDocumentParameter(customer.toTitleNameLine(), doctype).eval(IOUtils.toString(templateReader));
             MultiPartEmail email = mandator.prepareDirectMail();
 
+            email.setCharset("UTF-8");
+            
             email.addTo(customerMailAddress);
             email.setSubject(document.getType().getName() + " | " + document.getDossier().getIdentifier());
             email.setMsg(text + mandator.getDefaultMailSignature());
