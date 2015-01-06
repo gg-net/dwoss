@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.redtape.entity.Position;
 
 import eu.ggnet.dwoss.rules.PositionType;
 
+import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.APPLE;
 
@@ -45,15 +46,10 @@ public class ServicePositionTemplates {
     }
 
     private static void service(List<Position> toAdd, String name, String description, double afterTaxPrice, int bookingAccount) {
-        Position servPosition = new Position();
-        servPosition.setName(name);
-        servPosition.setDescription(description);
-        servPosition.setBookingAccount(bookingAccount);
-        servPosition.setAfterTaxPrice(afterTaxPrice);
-        servPosition.setTax(GlobalConfig.TAX);
-        servPosition.setType(PositionType.SERVICE);
-        servPosition.setPrice(afterTaxPrice / (GlobalConfig.TAX + 1));
-        toAdd.add(servPosition);
+        Position build = Position.builder()
+                .name(name).description(description).bookingAccount(bookingAccount)
+                .afterTaxPrice(afterTaxPrice).tax(GlobalConfig.TAX).type(SERVICE).price(afterTaxPrice / (GlobalConfig.TAX + 1)).build();
+        toAdd.add(build);
     }
 
     static {
