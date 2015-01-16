@@ -166,19 +166,19 @@
         <system>Bamboo</system>
         <url>http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS</url>
     </ciManagement>
-    
+
     <issueManagement>
         <system>JIRA</system>
         <url>http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS</url>
     </issueManagement>
-    
+
     <licenses>
-        <license> 
+        <license>
             <name>GNU General Public License Version 3 (GPL v3)</name>
             <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
         </license>
     </licenses>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -188,24 +188,64 @@
                 <configuration>
                     <groups>
                         <group>
-                            <title>Libraries and Core</title>
-                            <packages>eu.ggnet.dwoss.configuration:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
+                            <title>Common Core + API's (EE/UI)</title>
+                            <packages>eu.ggnet.dwoss.search.api*:eu.ggnet.dwoss.customer.api*:eu.ggnet.dwoss.rights.api*:eu.ggnet.dwoss.uniqueunit.api.*:eu.ggnet.dwoss.common*:eu.ggnet.dwoss.configuration*:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
                         </group>
                         <group>
-                            <title>Persistence - Customer</title>
+                            <title>Persistence - Customer (EE/UI)</title>
                             <packages>eu.ggnet.dwoss.customer*</packages>
                         </group>
                         <group>
-                            <title>Persistence - RedTape</title>
+                            <title>Persistence - Report (EE/UI)</title>
+                            <packages>eu.ggnet.dwoss.report*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - Rights (EE/UI)</title>
+                            <packages>eu.ggnet.dwoss.rights*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - Product Specification (EE)</title>
+                            <packages>eu.ggnet.dwoss.spec*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - UniqueUnit (EE)</title>
+                            <packages>eu.ggnet.dwoss.uniqueunit*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence - Stock (EE/UI)</title>
+                            <packages>eu.ggnet.dwoss.stock*</packages>
+                        </group>
+                        <group>
+                            <title>Persistence/Extended - RedTape (EE/UI)</title>
                             <packages>eu.ggnet.dwoss.redtape*</packages>
                         </group>
                         <group>
-                            <title>Libraries and Core</title>
+                            <title>Extended - Receipt (EE/UI) - The receiptment of single units</title>
+                            <packages>eu.ggnet.dwoss.receipt*</packages>
+                        </group>
+                        <group>
+                            <title>Extended - Misc (EE/UI) - Unsorted Features</title>
+                            <packages>eu.ggnet.dwoss.misc*</packages>
+                        </group>
+                        <group>
+                            <title>Extended - Price (EE/UI) - GG-Net Price Engine Core</title>
+                            <packages>eu.ggnet.dwoss.price*</packages>
+                        </group>
+                        <group>
+                            <title>Extended - Login (UI) - Enables timeconstraint login/logout</title>
+                            <packages>eu.ggnet.dwoss.login*</packages>
+                        </group>
+                        <group>
+                            <title>Utility Libraries (EE/UI)</title>
                             <packages>eu.ggnet.dwoss.util*</packages>
                         </group>
                         <group>
                             <title>Assembly</title>
-                            <packages>eu.ggnet.dwoss.assembly</packages>
+                            <packages>eu.ggnet.dwoss.assembly*</packages>
+                        </group>
+                        <group>
+                            <title>Incubator - Simple Application Framework Toolkit</title>
+                            <packages>eu.ggnet.saft*</packages>
                         </group>
                     </groups>
                     <overview>${project.build.directory}/html/overview.html</overview>
@@ -267,7 +307,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> 
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -383,21 +423,21 @@
             </plugins>
         </pluginManagement>
     </build>
-    
+
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>		
+                <version>2.7</version>
                 <configuration>
                     <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                 </configuration>
-            </plugin> 
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version> 
+                <version>2.10.1</version>
                 <configuration>
                     <show>private</show>
                     <javadocVersion>1.8</javadocVersion>
@@ -422,7 +462,7 @@
             </plugin>
         </plugins>
     </reporting>
-    
+
     <repositories>
         <!-- We are using some of the netbeans api as libraries -->
         <repository>
