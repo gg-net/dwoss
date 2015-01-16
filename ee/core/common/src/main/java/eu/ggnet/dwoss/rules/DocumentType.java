@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -56,13 +56,6 @@ public enum DocumentType {
      * </li>
      * </ul>
      * </li>
-     * <li>Create or update a SopoAuftrag:
-     * <ul>
-     * <li>Add all SopoUnits referenced by {@link Position} of type {@link Position.Type#UNIT}</li>
-     * <li>Add all SopoProductBatches for {@link Position} of type {@link Position.Type#PRODUCT_BATCH}</li>
-     * <li>Add a SopoProductBatches of SopoProduct.DUMMY for {@link Position} of type {@link Position.Type#SERVICE}</li>
-     * </ul>
-     * </li>
      * </ul>
      */
     ORDER("Bestellung"), /**
@@ -82,13 +75,13 @@ public enum DocumentType {
      * <ul>
      * <li>There may exist only one active Invoice.</li>
      * <li>After the creation of an Invoice the Order must not be changed.</li>
-     * <li>If {@link Document#closed} is true, only changes of {@link Document#changesAllowed(de.dw.redtape.entity.Document)} are allowed</li>
+     * <li>If Document.isClosed, only changes of Document.changesAllowed are allowed</li>
      * </ul>
-     * Workflow on Create/Update if a Position of type Unit exists: see {@link Type#ORDER}
+     * Workflow on Create/Update if a Position of type Unit exists: see {@link PositionType#ORDER}
      * <p/>
      * Workflow on Rollout of StockUnits (close of last week):
      * <ul>
-     * <li>Set {@link Document#closed} to ture</li>
+     * <li>Set Document.closed to true</li>
      * </ul>
      */
     INVOICE("Rechnung", "RS"), /**
@@ -109,12 +102,13 @@ public enum DocumentType {
      * <li>The weight of all complaint can only be as much as the weight of the Invoice.</li>
      * <li>After the creation of a complaint the Invoice must not be changed.</li>
      * <li>If the Dossier, was closed, reopen it.</li>
-     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * <li>A once added Position of any Type except {@link PositionType#COMMENT} must not be removed or changed</li>
      * </ul>
-     * Workflow on Create/Update: No Changes on Stock/Sopo<br />
+     * Workflow on Create/Update: No Changes on Stock<br />
      * Hint: On the closing Operation, if the Invoice is still open, keep it that way and do not report.
      */
-    COMPLAINT("Reklamation"), /**
+    COMPLAINT("Reklamation"),
+    /**
      * Represents a annulation invoice.
      * <p/>
      * Predecessors:
@@ -131,19 +125,19 @@ public enum DocumentType {
      * <li>The weight of all AnulationInvoice can only be as much as the negative weight of the Invoice.</li>
      * <li>After the creation of a AnulationInvoice the Invoice must not be changed.</li>
      * <li>If the Dossier, was closed, reopen it.</li>
-     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * <li>A once added Position of any Type except {@link PositionType#COMMENT} must not be removed or changed</li>
      * </ul>
      * Workflow on Create/Update if a Position of type Unit exists:
      * <ul>
      * <li>Validate if a Position of the Type Unit exists on the Invoice</li>
      * <li>Check existence of a referenced stock.LogicTransaction and containing the referenced StockUnit:
      * <ul>
-     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction and sopo.Auftrag</li>
+     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction</li>
      * <li>Else &rArr; RollIn a StockUnit</li>
      * </ul>
      * </li>
-     * <li>Create a new Dossier with Document of {@link Type#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor.alphaAccount.creditMemoCustomer and add
-     * the Unit</li>
+     * <li>Create a new Dossier with Document of {@link DocumentType#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor referencing creditMemoCustomer and
+     * add the Unit</li>
      * <li>Add a Comment to this Document, containing the arranger, the cause and the Identifier of the CreditMemo</li>
      * <li>Add a Comment to the UniqueUnit, containing the arranger, the cause and the Identifier of the CreditMemo</li>
      * </ul>
@@ -165,19 +159,19 @@ public enum DocumentType {
      * <li>The weight of all CreditMemos can only be as much as the weight of the Invoice.</li>
      * <li>After the creation of a CreditMemo the Invoice must not be changed.</li>
      * <li>If the Document, was closed, reopen it.</li>
-     * <li>A once added {@link Position} of any Type except {@link Position.Type#COMMENT} must not be removed or changed</li>
+     * <li>A once added Position of any Type except {@link PositionType#COMMENT} must not be removed or changed</li>
      * </ul>
      * Workflow on Create/Update if a Position of type Unit exists:
      * <ul>
      * <li>Validate if a Position of the Type Unit exists on the Invoice</li>
      * <li>Check existence of a referenced stock.LogicTransaction and containing the referenced StockUnit:
      * <ul>
-     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction and sopo.Auftrag</li>
+     * <li>If exists and has the StockUnit &rArr; Remove StockUnit from stock.LogicTransaction</li>
      * <li>Else &rArr; RollIn a StockUnit</li>
      * </ul>
      * </li>
-     * <li>Create a new Dossier with Document of {@link Type#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor.alphaAccount.creditMemoCustomer and add
-     * the Unit</li>
+     * <li>Create a new Dossier with Document of {@link DocumentType#BLOCK} in the StockUnit &rarr; UniqueUnit.contractor referencing creditMemoCustomer and
+     * add the Unit</li>
      * <li>Add a Comment to this Document, containing the arranger, the cause and the Identifier of the CreditMemo</li>
      * <li>Add a Comment to the UniqueUnit, containing the arranger, the cause and the Identifier of the CreditMemo</li>
      * </ul>

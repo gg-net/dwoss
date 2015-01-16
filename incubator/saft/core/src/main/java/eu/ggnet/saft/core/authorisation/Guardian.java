@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,11 @@
  */
 package eu.ggnet.saft.core.authorisation;
 
-import eu.ggnet.saft.api.Authorisation;
-import eu.ggnet.saft.api.Accessable;
-import eu.ggnet.saft.api.AuthenticationException;
-
 import java.util.Set;
 
 import javax.swing.Action;
 
+import eu.ggnet.saft.api.*;
 
 /**
  * Simple Authentication Interface.
@@ -97,21 +94,21 @@ public interface Guardian {
     /**
      * Add A {@link Accessable}.
      * The {@link Accessable} get called the method {@link Accessable#setEnable(boolean)} with true
-     * when the Rights are setted and the method {@link Accessable#getNeededRights()} return a {@link Set<AtomicRight>} wich has the {@link AtomicRight}
+     * when the Rights are setted and the method {@link Accessable#getNeededRights()} return a {@link Set<Authorisation>} which has the {@link Authorisation}
      * containing.
      * <p>
-     * @param accessable wich should be added in a intern List/Set.
+     * @param accessable which should be added in a intern List/Set.
      */
     public void add(Accessable accessable);
 
     /**
-     * * Add a object wiche has a setEnabled Method, like {@link Action#setEnabled(boolean)}.
-     * It will wrap this in a AccessEnabler which then controll it.
+     * * Add a object which has a setEnabled Method, like {@link Action#setEnabled(boolean)}.
+     * It will wrap this in a AccessEnabler which then control it.
      * <p>
      * @param enableAble
-     * @param atomicRight
+     * @param authorisation
      */
-    public void add(Object enableAble, Authorisation atomicRight);
+    public void add(Object enableAble, Authorisation authorisation);
 
     /**
      * This method remove a {@link Accessable} from an internal list.
@@ -121,10 +118,10 @@ public interface Guardian {
     public void remove(Accessable accessable);
 
     /**
-     * Tis method returns {@link Boolean#TRUE} if the current user have the given {@link AtomicRight}.
+     * This method returns true if the current user have the given {@link Authorisation}.
      * <p>
-     * @param atomicRight the given {@link AtomicRight} wich will be checked.
-     * @return {@link Boolean#TRUE} if the current user have the given {@link AtomicRight}.
+     * @param authorisation the given {@link Authorisation} which will be checked.
+     * @return true if the current user have the given {@link Authorisation}.
      */
-    public boolean hasRight(Authorisation atomicRight);
+    public boolean hasRight(Authorisation authorisation);
 }

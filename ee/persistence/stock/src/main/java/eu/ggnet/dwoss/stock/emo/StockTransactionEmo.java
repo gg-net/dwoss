@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,19 +26,14 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.api.progress.IMonitor;
-
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockTransactionEao;
-
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-
-import eu.ggnet.dwoss.stock.entity.*;
-
+import eu.ggnet.saft.api.progress.IMonitor;
 
 @Stateless
 public class StockTransactionEmo {
@@ -286,7 +281,7 @@ public class StockTransactionEmo {
      * Tries to bring the Transactions(ROLL_OUT or DESTROY) into Status complete and removes all attached Units from the stock.
      * Also removes LogicTransactions if they have become empty.
      * <p/>
-     * @param arranger     the arranger
+     * @param arrangerName the arranger
      * @param transactions the transactions
      * @return List of UniqueUnitIds which where assosiated with the removed stockUnits
      */

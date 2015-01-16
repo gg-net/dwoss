@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,8 +22,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.entity.Document.Flag;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 

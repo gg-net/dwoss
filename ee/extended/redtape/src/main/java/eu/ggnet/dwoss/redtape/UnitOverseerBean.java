@@ -284,7 +284,7 @@ public class UnitOverseerBean implements UnitOverseer {
      * Build and throw an exception for a not available unit.
      * <p>
      * @param refurbishId the refurbished id of the unit
-     * @param unit        the unit
+     * @param us          the unit shard
      * @throws UserInfoException
      */
     private void throwNotAvailable(String refurbishId, UnitShard us) throws UserInfoException {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,10 +23,11 @@ import javax.ejb.*;
 import javax.enterprise.event.Observes;
 
 import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 import eu.ggnet.dwoss.redtape.workflow.RedTapeCreateDossierWorkflow;
-import eu.ggnet.statemachine.State.Type;
-
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Value;
@@ -67,7 +62,7 @@ public interface RedTapeWorker {
     Dossier create(long customerId, boolean dispatch, String arranger);
 
     /**
-     * Deletes a {@link Dossier}, cleaning up the Stock and if the Mandator uses Sopo,the referenced {@link Auftrag}.
+     * Deletes a {@link Dossier}, cleaning up the Stock.
      * <p/>
      * @param dos the Dossier to be deleted.
      */
@@ -111,7 +106,7 @@ public interface RedTapeWorker {
      * <p>
      * @param detached a detached document
      * @return the removed instance
-     * @throws de.dw.util.UserInfoException if a revertCreate is not appropriated
+     * @throws UserInfoException if a revertCreate is not appropriated
      */
     Document revertCreate(Document detached) throws UserInfoException;
 
@@ -128,7 +123,7 @@ public interface RedTapeWorker {
     /**
      * Update changes from a Document by looking up the original from the database.
      * <p/>
-     * A document is not equal if {@link Document#equalsContentCreated the Block.(de.dw.redtape.entity.Document) } is false
+     * A document is not equal if {@link Document#equalsContent(de.dw.redtape.entity.Document) } is false
      * or Document.getDossier.paymentMethod or Document.getDossier.dispatch are different.
      * Every Document manipulation is done by this method and handling all necessary manipulations in the SopoSoft system as well.
      * <p/>
@@ -164,7 +159,7 @@ public interface RedTapeWorker {
     Document update(final Document doc, Integer destination, final String arranger);
 
     /**
-     * Changes the {@link Address} of all active {@link Document} of {@link Type#ORDER} and no Invoices or CreditMemos found from every {@link Dossier}
+     * Changes the {@link Address} of all active {@link Document} of {@link DocumentType#ORDER} and no Invoices or CreditMemos found from every {@link Dossier}
      * containing a specific customer.
      * <p/>
      * If the address does not exist, it will be created.

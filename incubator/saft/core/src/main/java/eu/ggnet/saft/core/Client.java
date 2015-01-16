@@ -43,8 +43,6 @@ public class Client {
 
     private final static Logger L = LoggerFactory.getLogger(Client.class);
 
-    private final static NavigableSet<String> DYNAMIC_JAVA_EE_MODULE_NAMES = new TreeSet<>();
-
     private final static WorkspaceService workspace = new WorkspaceService();
 
     private final static Map<String, Object> sampleStubs = new HashMap<>();
@@ -70,7 +68,7 @@ public class Client {
      * Tries to lookup an implementation of the supplied class/interface.
      * The discovery goes as follows:
      * <ul>
-     * <li>If the clazz is {@link Workspace} or {@link WorspaceModifier} return the static handled instance</li>
+     * <li>If the clazz is {@link Workspace} return the static handled instance</li>
      * <li>If the clazz doesn't have any of the anotations {@link Remote}, {@link Stateful}, {@link Stateless}, {@link Stateful} then
      * use
      * <code>{@link Lookup#getDefault() }.lookup(clazz)</code> and ensure the result is not null.
@@ -258,8 +256,6 @@ public class Client {
             inspectJndiTree(context, "java:module"); // Olli added, Not existing in Local Environment
             L.info("Running Jndi Tree inspection on Suffix: 'java:app'");
             inspectJndiTree(context, "java:app"); // Olli added, Not existing in Local Environment
-            L.info("Running Jndi Tree Module Name inspection");
-            DYNAMIC_JAVA_EE_MODULE_NAMES.addAll(inspectJndiTreeForModuleNames(context));
             L.info("Jndi Tree inspection complete, the clientJndiNameCache has now a size of {}", CLIENT_JNDI_NAME_CACHE.size());
 
             /* Enable only on big problems.

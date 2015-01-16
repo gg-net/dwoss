@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ import javax.ejb.Remote;
  So in the client progess the information is haded over, but for now we live with this solution.
  */
 /**
- * Delegator for the observable part of the {@link MonitorFactory}.
+ * Interface to for a remote client to discover progress.
  * <p/>
  * @author oliver.guenther
  */
@@ -35,24 +35,24 @@ import javax.ejb.Remote;
 public interface ProgressObserver {
 
     /**
-     * See {@link MonitorFactory#getActiveProgressKeys() }.
+     * Returns the keys for all hidden monitors which are not yet finished.
      * <p/>
-     * @return See {@link MonitorFactory#getActiveProgressKeys() }.
+     * @return the keys for all hidden monitors which are not yet finished.
      */
     SortedSet<Integer> getActiveProgressKeys();
 
     /**
-     * See {@link MonitorFactory#getMonitor(int) }.
+     * Returns a snapshot of the selected Monitor.
      * <p/>
-     * @param key the key of the monitor.
-     * @return See {@link MonitorFactory#getMonitor(int) }.
+     * @param key the key
+     * @return a snapshot of the selected Monitor.
      */
     HiddenMonitor getMonitor(int key);
 
     /**
-     * See {@link MonitorFactory#hasProgress() }.
+     * Returns true if some task/operation with progress is running and not yet finished.
      * <p/>
-     * @return See {@link MonitorFactory#hasProgress() }.
+     * @return true if some task/operation with progress is running and not yet finished.
      */
     boolean hasProgress();
 }

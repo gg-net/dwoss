@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,18 +29,18 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
-import lombok.*;
-
 import static eu.ggnet.dwoss.rules.DocumentType.*;
+
+import lombok.*;
 
 /**
  * The Dossier.
  * <p>
  * Rules for a valid Dossier:
  * <ul>
- * <li>Must have at least one active {@link Document} of {@link Document.Type#ORDER} or {@link Document.Type#INVOICE}</li>
- * <li>May have at most one active {@link Document} of {@link Document.Type#ORDER} and one active {@link Document} of {@link Document.Type#INVOICE}</li>
- * <li>May have multiple active {@link Document} of {@link Document.Type#CREDIT_MEMO}</li>
+ * <li>Must have at least one active {@link Document} of {@link DocumentType#ORDER} or {@link DocumentType#INVOICE}</li>
+ * <li>May have at most one active {@link Document} of {@link DocumentType#ORDER} and one active {@link Document} of {@link DocumentType#INVOICE}</li>
+ * <li>May have multiple active {@link Document} of {@link DocumentType#CREDIT_MEMO}</li>
  * </ul>
  * <p>
  * @has 1 - 2 Address
@@ -192,9 +192,10 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     }
 
     /**
-     * Generates a list of all {@link Position#uniqueUnitId}s of {@link Position.Type#UNIT} that are relevant to the recent state of the Dossier. <br />
-     * If active Documents of {@link Type#BLOCK}, {@link Type#RETURNS} or {@link Type#CAPITAL_ASSET} exist, all uniqueUniteIds are taken.<br />
-     * Any of the found positions used in a successor of {@link Type#INVOICE} is substracted from the list.<br />
+     * Generates a list of all {@link Position#uniqueUnitId}s of {@link PositionType#UNIT} that are relevant to the recent state of the Dossier. <br />
+     * If active Documents of {@link DocumentType#BLOCK}, {@link DocumentType#RETURNS} or {@link DocumentType#CAPITAL_ASSET} exist, all uniqueUniteIds are
+     * taken.<br />
+     * Any of the found positions used in a successor of {@link DocumentType#INVOICE} is subtracted from the list.<br />
      * The following cases will always return an empty list:
      * <ul>
      * <li>The Dossier is closed</li>

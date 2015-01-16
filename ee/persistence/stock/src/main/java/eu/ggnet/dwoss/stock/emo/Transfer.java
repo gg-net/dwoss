@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import lombok.Value;
 import lombok.experimental.Builder;
 
 /**
- * Parameter Class for {@link StockTransactionEmo#transfer}.
+ * Parameter Class for {@link StockTransactionEmo#prepare(eu.ggnet.dwoss.stock.emo.Transfer, eu.ggnet.saft.api.progress.IMonitor) }.
  * <p>
  * @author oliver.guenther
  */

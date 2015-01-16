@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -196,7 +196,7 @@ public enum TradeName {
     /**
      * Rule: if we are a brand, the Manufacturer is not null.
      * <p>
-     * @return
+     * @return true if a brand.
      */
     public boolean isBrand() {
         return getManufacturer() != null;
@@ -205,7 +205,7 @@ public enum TradeName {
     /**
      * Rule: If we are a Manufacturer, brands is not Empty (never null).
      * <p>
-     * @return
+     * @return true if is a manufacturer.
      */
     public boolean isManufacturer() {
         return !getBrands().isEmpty();
@@ -220,6 +220,11 @@ public enum TradeName {
         return null;
     }
 
+    /**
+     * Returns all manufacturers.
+     * <p>
+     * @return all manufacturers.
+     */
     public static Set<TradeName> getManufacturers() {
         return Arrays.stream(values()).filter(TradeName::isManufacturer).collect(toSet());
     }

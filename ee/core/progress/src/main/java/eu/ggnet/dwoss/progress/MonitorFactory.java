@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.progress;
 
-import eu.ggnet.saft.api.progress.HiddenMonitor;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,6 +24,8 @@ import javax.ejb.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.api.progress.HiddenMonitor;
 
 /**
  * A Factory for ProgressMonitors to be used in a EJB environment.
@@ -45,7 +45,7 @@ public class MonitorFactory {
      * Creates a new intermediate Submonitor.
      * <p>
      * @param title
-     * @return
+     * @return a new Submonitor.
      */
     public SubMonitor newSubMonitor(String title) {
         return newSubMonitor(title, 100);
@@ -56,7 +56,7 @@ public class MonitorFactory {
      * <p>
      * @param title
      * @param workRemaining
-     * @return
+     * @return a new Submonitor.
      */
     public SubMonitor newSubMonitor(String title, int workRemaining) {
         HiddenMonitor monitor = new HiddenMonitor();

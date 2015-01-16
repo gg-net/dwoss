@@ -29,9 +29,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 /**
  * Html Pane for Strings.
  * <p>
- * @a
- * import static java.util.concurrent.TimeUnit.SECONDS;
- * uthor oliver.guenther
+ * @author oliver.guenther
  */
 public class HtmlPane extends BorderPane implements Consumer<String> {
 

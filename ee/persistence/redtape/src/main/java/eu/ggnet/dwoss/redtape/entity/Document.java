@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
@@ -85,20 +82,20 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
          */
         SENT("versendet"),
         /**
-         * Designated for {@link Type#ANNULATION_INVOICE} and {@link Type#CREDIT_MEMO}.
+         * Designated for {@link DocumentType#ANNULATION_INVOICE} and {@link DocumentType#CREDIT_MEMO}.
          * A CreditMemo/Annulation Invoice was has been balanced, meaning the money was paid to the customer.
          */
         REPAYMENT_BALANCED("Storno Rechnung/Gutschrift Zahlung erledigt"),
         /**
-         * Designated only for {@link Type#COMPLAINT} which has been rejected, if it is completely unacceptable (e.g., Unit dropped).
+         * Designated only for {@link DocumentType#COMPLAINT} which has been rejected, if it is completely unacceptable (e.g., Unit dropped).
          */
         REJECTED("abgelehnt"),
         /**
-         * Designated only for {@link Type#COMPLAINT} which has been withdrawn, if the customer itself tells us that everything is ok now.
+         * Designated only for {@link DocumentType#COMPLAINT} which has been withdrawn, if the customer itself tells us that everything is ok now.
          */
         WITHDRAWN("zurückgezogen"),
         /**
-         * Designated only for {@link Type#COMPLAINT} which has been accepted,
+         * Designated only for {@link DocumentType#COMPLAINT} which has been accepted,
          * if the customer is right and we accept it, moving to a CreditMemo or Annulation Invoice.
          */
         ACCEPTED("angenomen"),
@@ -383,7 +380,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     }
 
     /**
-     * Returns a partial clone of the Document, without some fields (nearly same goes for {@link Document#equalsContent(de.dw.redtape.entity.Document) }.
+     * Returns a partial clone of the Document, without some fields (nearly same goes for {@link Document#equalsContent(Document) }.
      * <p/>
      * The following properties are not cloned:
      * <ul>

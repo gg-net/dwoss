@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.customer.api.AddressService;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -36,40 +24,38 @@ import javax.persistence.EntityManager;
 
 import org.slf4j.*;
 
+import eu.ggnet.dwoss.customer.api.AddressService;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.emo.AddressEmo;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
-
-
-import eu.ggnet.statemachine.State.Type;
-
-import eu.ggnet.statemachine.StateTransition;
-
+import eu.ggnet.dwoss.redtape.state.CustomerDocument;
+import eu.ggnet.dwoss.redtape.state.RedTapeStateMachine;
+import eu.ggnet.dwoss.redtape.workflow.*;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
-
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import eu.ggnet.dwoss.redtape.state.CustomerDocument;
-import eu.ggnet.dwoss.redtape.state.RedTapeStateMachine;
-import eu.ggnet.dwoss.redtape.workflow.*;
+import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
 
 /**
- * This class handles every operation between RedTape, UniqueUnit, Sopo and Stock.<br />
- * <u>For Dossier creation both:</u><br />
- * {@link RedTapeWorkerOperation#create(de.dw.rules.PaymentMethod, boolean, int, java.lang.String)} as well as <br />
- * {@link RedTapeWorkerOperation#update(de.dw.redtape.entity.Document, java.lang.String)} is needed. <br />
+ * This class handles every operation between RedTape, UniqueUnit and Stock.
+ * <u>For Dossier creation both:</u>
+ * {@link RedTapeWorkerOperation#create(long, boolean, java.lang.String) } as well as
+ * {@link RedTapeWorkerOperation#update(eu.ggnet.dwoss.redtape.entity.Document, java.lang.Integer, java.lang.String) } are needed.
  * create() will only handle RedTapeTransactions while update will handle all necessary SopoTransactions.
  * <p/>
  * @author pascal.perau
@@ -220,10 +206,10 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     }
 
     /**
-     * Create a HTML formated String representing the detailed information from a {@link Dossier} and the Sopo data belonging to the Dossier.
+     * Create a HTML formated String representing the detailed information from a {@link Dossier}.
      * <p/>
      * @param dossierId The Dossier
-     * @return a HTML formated String representing the detailed information from a {@link Dossier} and the Sopo data belonging to the Dossier.
+     * @return a HTML formated String representing the detailed information from a {@link Dossier}.
      */
     @Override
     public String toDetailedHtml(long dossierId) {
@@ -239,19 +225,19 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     }
 
     /**
-     * Deletes a {@link Dossier}, cleaning up the Stock and if the Mandator uses Sopo,the referenced {@link Auftrag}.
+     * Deletes a {@link Dossier}, cleaning up the Stock.
      * <p/>
      * @param dos the Dossier to be deleted.
      */
     @Override
     public void delete(Dossier dos) {
-        new LogicTransactionEmo(stockEm).equilibrate(dos.getId(), new ArrayList<Integer>());
+        new LogicTransactionEmo(stockEm).equilibrate(dos.getId(), new ArrayList<>());
         Dossier attachedDossier = new DossierEao(redTapeEm).findById(dos.getId());
         redTapeEm.remove(attachedDossier);
     }
 
     /**
-     * Changes the {@link Address} of all active {@link Document} of {@link Type#ORDER} and no Invoices or CreditMemos found from every {@link Dossier}
+     * Changes the {@link Address} of all active {@link Document} of {@link DocumentType#ORDER} and no Invoices or CreditMemos found from every {@link Dossier}
      * containing a specific customer id.
      * <p/>
      * If one of the addresses does not exist, it will be created.
@@ -302,7 +288,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     /**
      * Update changes from a Document by looking up the original from the database.
      * <p/>
-     * A document is not equal if {@link Document#equalsContentCreated the Block.(de.dw.redtape.entity.Document) } is false
+     * A document is not equal if {@link Document#equalsContent(Document) } is false
      * or Document.getDossier.paymentMethod or Document.getDossier.dispatch are different.
      * Every Document manipulation is done by this method and handling all necessary manipulations in the SopoSoft system as well.
      * <p/>

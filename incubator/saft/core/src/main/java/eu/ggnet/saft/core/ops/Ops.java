@@ -137,9 +137,9 @@ public class Ops {
     /**
      * Returns the default DependendAction wrapped in a runner.
      * <p>
-     * @param <T>
-     * @param t
-     * @return
+     * @param <T> typo of action relevant instance
+     * @param t   action relevant instance
+     * @return the default DependendAction wrapped in a runner.
      */
     public static <T> Optional<DescriptiveConsumerRunner<T>> defaultOf(T t) {
         if ( t == null || !REGISTERED_DEFAULT_ACTIONS.containsKey(t.getClass()) ) return Optional.empty();

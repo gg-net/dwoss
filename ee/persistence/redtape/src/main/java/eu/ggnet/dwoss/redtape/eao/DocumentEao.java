@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,10 +23,8 @@ import javax.persistence.*;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
-
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 /**
@@ -98,6 +96,7 @@ public class DocumentEao extends AbstractEao<Document> {
      * Get the documents where the identifier matches the search.
      * <p/>
      * @param search the searched identifier
+     * @param type   the document type
      * @return the documents where the identifier matches the search.
      */
     public List<Document> findByIdentifierAndType(String search, DocumentType type) {
@@ -108,10 +107,10 @@ public class DocumentEao extends AbstractEao<Document> {
     }
 
     /**
-     * Get the documents where the dossier has the {@link PaymentMethod}, the type matches, and no {@link Document.Condition} PAID is not set.
+     * Get the documents where the dossier has the {@link PaymentMethod}, the type matches, and no {@link Condition} PAID is not set.
      * <p/>
      * @param paymentMethod The paymentMethod
-     * @return documents where the dossier has the {@link PaymentMethod}, the type matches, and no {@link Document.Condition} PAID is not set.
+     * @return documents where the dossier has the {@link PaymentMethod}, the type matches, and no {@link Condition} PAID is not set.
      */
     public List<Document> findOpenInvoiceUnpaidByTypePaymentMethod(PaymentMethod paymentMethod) {
         List<Document> docs = em.createNamedQuery("Document.findOpenInvoiceUnpaidByTypePaymentMethod", Document.class)

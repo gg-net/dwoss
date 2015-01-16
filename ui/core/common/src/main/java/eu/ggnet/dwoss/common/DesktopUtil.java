@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import java.awt.Desktop;
 import java.io.File;
 import java.util.HashMap;
@@ -34,6 +32,7 @@ import static eu.ggnet.dwoss.util.UserInfoException.Type.*;
 /**
  * Util class for Desktop
  */
+@Deprecated
 public class DesktopUtil {
 
     private final static Map<UserInfoException.Type, Integer> mapping;
@@ -50,8 +49,10 @@ public class DesktopUtil {
      * Retuns the JOptionPane value for the UserInfoException Type.
      * <p>
      * @param type the type
-     * @return
+     * @return JOptionPane Type.
+     * @deprecated use saft.Alert.
      */
+    @Deprecated
     public static int toOptionPane(UserInfoException.Type type) {
         return mapping.get(type);
     }
@@ -60,7 +61,9 @@ public class DesktopUtil {
      * A shorter way to use Desktop.open()
      *
      * @param file the file to be opened
+     * @deprecated user saft.Ui.call().osOpen().
      */
+    @Deprecated
     public static void open(final File file) {
         new SwingWorker<Void, Void>() {
             @Override

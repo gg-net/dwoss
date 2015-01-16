@@ -17,7 +17,7 @@
 package eu.ggnet.saft.api;
 
 /**
- * This interface can be implement to make a Class Accessable with a Specific {@link AtomicRight}.
+ * This interface can be implement to make a Class accessible with a Specific {@link Authorisation}.
  * <p>
  * @author Bastian Venz
  */
@@ -31,9 +31,9 @@ public interface Accessable {
     void setEnabled(boolean enable);
 
     /**
-     * This is method returns the {@link AtomicRight} which is needed to enable the implemented Class.
+     * This is method returns the {@link Authorisation} which is needed to enable the implemented Class.
      * <p>
-     * @return the {@link AtomicRight} which is needed to enable the implemented Class.
+     * @return the {@link Authorisation} which is needed to enable the implemented Class.
      */
     Authorisation getNeededRight();
 

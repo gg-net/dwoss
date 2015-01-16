@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,17 @@
  */
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.authorisation.AccessEnabler;
-import eu.ggnet.saft.core.authorisation.UserChangeListener;
-import eu.ggnet.saft.core.authorisation.Guardian;
-
 import java.util.*;
 
 import javax.swing.Action;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.saft.api.Accessable;
 import eu.ggnet.saft.api.Authorisation;
-
+import eu.ggnet.saft.core.authorisation.*;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.
@@ -111,10 +107,10 @@ public abstract class AbstractGuardian implements Guardian {
     /**
      * Add A {@link Accessable}.
      * The {@link Accessable} get called the method {@link Accessable#setEnabled(boolean)} with true
-     * when the Rights are setted and the method {@link Accessable#getNeededRights()} return a {@link Set<AtomicRight>} wich has the {@link AtomicRight}
+     * when the Rights are setted and the method {@link Accessable#getNeededRights()} returns a collection which has the {@link AtomicRight}
      * containing.
      * <p>
-     * @param accessable wich should be added in a intern List/Set.
+     * @param accessable which should be added in a intern List/Set.
      */
     @Override
     public void add(Accessable accessable) {
@@ -127,12 +123,12 @@ public abstract class AbstractGuardian implements Guardian {
     }
 
     /**
-     * * Add a object wiche has a setEnabled Method, like {@link Action#setEnabled(boolean)}.
-     * It will wrap this in a AccessEnabler which then controll it.
-     * It will call the {@link AbstractAccessCos#add(de.dw.cos.access.Accessable) } method with a {@link AccessEnabler} which wraps the Object.
+     * * Add a object which has a setEnabled Method, like {@link Action#setEnabled(boolean)}.
+     * It will wrap this in a AccessEnabler which then control it.
+     * It will call the {@link Guardian#add(Accessable) } method with a {@link AccessEnabler} which wraps the Object.
      * <p>
-     * @param enableAble  is the Object wich has a setEnabled Method
-     * @param atomicRight is the {@link AtomicRight} wiche is needed.
+     * @param enableAble  is the Object which has a setEnabled Method
+     * @param atomicRight is the {@link AtomicRight} which is needed.
      */
     @Override
     public void add(Object enableAble, Authorisation atomicRight) {

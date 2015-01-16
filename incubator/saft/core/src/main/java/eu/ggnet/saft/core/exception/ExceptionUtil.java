@@ -16,8 +16,8 @@ public class ExceptionUtil {
      * @return the simple class name and the message of the deepest throwable.
      */
     public static String extractDeepestMessage(Throwable ex) {
-        if (ex == null) return "";
-        if (ex.getCause() == null) return ex.getClass().getSimpleName() + ": " + ex.getLocalizedMessage();
+        if ( ex == null ) return "";
+        if ( ex.getCause() == null ) return ex.getClass().getSimpleName() + ": " + ex.getLocalizedMessage();
         return extractDeepestMessage(ex.getCause());
     }
 
@@ -28,16 +28,16 @@ public class ExceptionUtil {
      * @return all messages and class names.
      */
     public static String toMultilineStacktraceMessages(Throwable ex) {
-        if (ex == null) return "";
-        if (ex.getCause() == null) return ex.getClass().getSimpleName() + ":" + ex.getLocalizedMessage();
+        if ( ex == null ) return "";
+        if ( ex.getCause() == null ) return ex.getClass().getSimpleName() + ":" + ex.getLocalizedMessage();
         return ex.getClass().getSimpleName() + ":" + ex.getLocalizedMessage() + "\n" + toMultilineStacktraceMessages(ex.getCause());
     }
 
     /**
      * Converts exception stack trace as string
      *
-     * @param ex
-     * @return
+     * @param ex the stack trace
+     * @return {@link Throwable#printStackTrace()} as string.
      */
     public static String toStackStrace(Throwable ex) {
         try (StringWriter sw = new StringWriter()) {
@@ -49,14 +49,14 @@ public class ExceptionUtil {
     }
 
     public static boolean containsInStacktrace(Class<?> clazz, Throwable ex) {
-        if (ex == null) return false;
-        if (ex.getClass().equals(clazz)) return true;
+        if ( ex == null ) return false;
+        if ( ex.getClass().equals(clazz) ) return true;
         return containsInStacktrace(clazz, ex.getCause());
     }
 
     public static <T> T extractFromStraktrace(Class<T> clazz, Throwable ex) {
-        if (ex == null) throw new NullPointerException("No Class in Stacktrace : " + clazz);
-        if (ex.getClass().equals(clazz)) return (T) ex;
+        if ( ex == null ) throw new NullPointerException("No Class in Stacktrace : " + clazz);
+        if ( ex.getClass().equals(clazz) ) return (T)ex;
         return extractFromStraktrace(clazz, ex.getCause());
     }
 }

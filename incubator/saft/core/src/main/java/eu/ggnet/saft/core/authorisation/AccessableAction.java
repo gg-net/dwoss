@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,14 @@
  */
 package eu.ggnet.saft.core.authorisation;
 
-import eu.ggnet.saft.api.Authorisation;
-import eu.ggnet.saft.api.Accessable;
-
 import javax.swing.AbstractAction;
 
+import eu.ggnet.saft.api.Accessable;
+import eu.ggnet.saft.api.Authorisation;
 
 /**
- * This class Implements {@link Accessable} and the {@link AtomicRight} wich is returned {@link Accessable#getNeededRight() } will be setted in the Constructor.
+ * This class Implements {@link Accessable} and the {@link Authorisation} which is returned {@link Accessable#getNeededRight() } will be setted in the
+ * Constructor.
  * <p>
  * @author Bastian Venz
  */

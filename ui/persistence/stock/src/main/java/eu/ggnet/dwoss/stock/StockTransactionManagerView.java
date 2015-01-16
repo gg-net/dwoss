@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,8 +26,8 @@ import javax.swing.*;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
 import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;
@@ -271,9 +271,6 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
         new RemoveUnitFromTransactionAction().actionPerformed(evt);
     }//GEN-LAST:event_removeUnitFromTransactionButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelTransactionButton;
     private javax.swing.JButton closeButton;
