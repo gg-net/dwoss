@@ -189,7 +189,7 @@
                     <groups>
                         <group>
                             <title>Common Core + API's (EE/UI)</title>
-                            <packages>eu.ggnet.dwoss.search.api*:eu.ggnet.dwoss.customer.api*:eu.ggnet.dwoss.rights.api*:eu.ggnet.dwoss.uniqueunit.api.*:eu.ggnet.dwoss.common*:eu.ggnet.dwoss.configuration*:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
+                            <packages>eu.ggnet.dwoss.search.api*:eu.ggnet.dwoss.customer.api*:eu.ggnet.dwoss.rights.api*:eu.ggnet.dwoss.uniqueunit.api*:eu.ggnet.dwoss.common*:eu.ggnet.dwoss.configuration*:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
                         </group>
                         <group>
                             <title>Persistence - Customer (EE/UI)</title>

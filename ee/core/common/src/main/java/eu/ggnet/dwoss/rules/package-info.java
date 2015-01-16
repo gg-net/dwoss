@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,6 @@
  *
  */
 /**
- * Common rules demanded by GG-Net or Contractors used through the hole application.
+ * Common system rules and enums used through the hole application.
  */
 package eu.ggnet.dwoss.rules;

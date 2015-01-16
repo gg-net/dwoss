@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  *
  */
 /**
- * Mandator Services.
+ * Public Mandator Services Interfaces.
  * A Mandator may implement these Services, but doesn't need to.
  * The Application has always a default fallback if no implementation exists.
  */

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- /**
- * These are Mandator values.
+/**
+ * Public Mandator values.
  * The Mandator must produced the values otherwise it will fail.
  */
 package eu.ggnet.dwoss.mandator.api.value;
