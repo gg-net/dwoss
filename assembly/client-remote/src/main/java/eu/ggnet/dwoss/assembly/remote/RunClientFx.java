@@ -43,11 +43,12 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.dialog.Alert;
 import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.UiAlert.Type;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
 
 /**
  * JavaFx entry Point.
@@ -92,13 +93,12 @@ public class RunClientFx extends Application {
         }
         // Otherwise show all paramters, telling, that these are not useful and to use usage.
         if ( !getParameters().getRaw().contains("--select") && !Objects.equals(System.getProperty("select"), "true") ) {
-            Alert.builder()
+            Alert
                     .title("Fehlerhafte Paramter")
-                    .body("Es wurden folgende fehlerhaften Parameter gefunden:\n"
-                            + getParameters().getRaw() + "\n"
-                            + "Für die korrekte Benutzung Usage anschauen")
-                    .build()
-                    .showAsError();
+                    .message("Es wurden folgende fehlerhaften Parameter gefunden:")
+                    .nl(getParameters().getRaw().toString())
+                    .nl("Für die korrekte Benutzung Usage anschauen")
+                    .show(Type.WARNING);
         }
         // If Parameters are empty, silently move to Selector Dialog.
 
@@ -140,11 +140,10 @@ public class RunClientFx extends Application {
             throw new RuntimeException(ex);
         }
         if ( !isReachable(provider.getHost()) ) {
-            Alert.builder()
+            Alert
                     .title("Fehler")
-                    .body("Verbindung zum Server " + provider.getHost() + " nicht möglich. Abbruch.\nBitte noch einmal versuchen und die Technik informieren.")
-                    .build()
-                    .showAsError();
+                    .message("Verbindung zum Server " + provider.getHost() + " nicht möglich. Abbruch.\nBitte noch einmal versuchen und die Technik informieren.")
+                    .show(ERROR);
             return;
         }
         // Setting the URL for Remote Connections.

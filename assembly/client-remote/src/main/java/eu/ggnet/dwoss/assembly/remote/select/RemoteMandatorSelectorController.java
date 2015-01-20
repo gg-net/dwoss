@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,6 @@ package eu.ggnet.dwoss.assembly.remote.select;
 import java.io.IOException;
 import java.net.URL;
 
-import eu.ggnet.dwoss.util.dialog.Alert;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -29,12 +27,13 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import eu.ggnet.saft.core.Alert;
+
+import static eu.ggnet.saft.core.UiAlert.Type.INFO;
 
 public class RemoteMandatorSelectorController {
 
@@ -89,21 +88,21 @@ public class RemoteMandatorSelectorController {
 
     @FXML
     void showUsage(ActionEvent event) {
-        Alert.builder()
+        Alert
                 .title("Usage:")
-                .body("APPLICATION --mandator=MANDATOR --mode=MODE\n"
-                        + "APPLICATION --url=URL\n"
-                        + "APPLICATION --select\n\n"
-                        + "MANDATOR values:\n"
-                        + "  ggnet = GG-Net GmbH\n"
-                        + "  elus = Elbe Logistik & Service GmbH\n"
-                        + "MODE values:\n"
-                        + "  testing = Testing Server on obsidian\n"
-                        + "  productive = Prdoctive Server on retrax\n"
-                        + "URL = Url to ejb server (e.g. " + RemoteMode.GG_NET_PRODUCTIVE.getUrl() + ")\n"
-                        + "--select (Displays Selector Dialog)")
-                .build()
-                .show();
+                .message("APPLICATION --mandator=MANDATOR --mode=MODE")
+                .nl("APPLICATION --url=URL")
+                .nl("APPLICATION --select")
+                .nl()
+                .nl("MANDATOR values:")
+                .nl("  ggnet = GG-Net GmbH")
+                .nl("  elus = Elbe Logistik & Service GmbH")
+                .nl("MODE values:")
+                .nl("  testing = Testing Server on obsidian")
+                .nl("  productive = Prdoctive Server on retrax")
+                .nl("URL = Url to ejb server (e.g. " + RemoteMode.GG_NET_PRODUCTIVE.getUrl() + ")")
+                .nl("--select (Displays Selector Dialog)")
+                .show(INFO);
     }
 
     @FXML

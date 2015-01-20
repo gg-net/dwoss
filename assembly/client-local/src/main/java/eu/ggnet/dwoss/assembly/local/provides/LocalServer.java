@@ -34,8 +34,10 @@ import eu.ggnet.dwoss.rights.assist.RightsPu;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.stock.assist.StockPu;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
-import eu.ggnet.dwoss.util.dialog.Alert;
+import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.Server;
+
+import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
 
 @ServiceProvider(service = Server.class)
 public class LocalServer implements Server {
@@ -54,10 +56,10 @@ public class LocalServer implements Server {
         Map<String, Object> c = new HashMap<>();
         ConfigurationProvider config = Lookup.getDefault().lookup(ConfigurationProvider.class);
         if ( config == null ) {
-            Alert.builder()
+            Alert
                     .title("No Configuration Provider found")
-                    .body("No Configuration Provider found!\nCheck your assembly!\nFalling back to Sample!")
-                    .build().showAsError();
+                    .message("No Configuration Provider found!\nCheck your assembly!\nFalling back to Sample!")
+                    .show(ERROR);
             c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
             c.putAll(CustomerPu.CMP_IN_MEMORY);
             c.putAll(StockPu.CMP_IN_MEMORY);

@@ -1,14 +1,19 @@
 package eu.ggnet.saft.core;
 
-import eu.ggnet.saft.core.swing.SwingSaft;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
-import javafx.scene.Parent;
+
 import javax.swing.*;
-import lombok.*;
+
+import javafx.scene.Parent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.core.swing.SwingSaft;
+
+import lombok.*;
 
 /**
  * Replacement for JOptionPane.
@@ -74,6 +79,11 @@ public class UiAlert {
         return this;
     }
 
+    public UiAlert nl() {
+        this.message += "\n";
+        return this;
+    }
+
     public UiAlert parent(Component swingParent) {
         this.swingParent = swingParent;
         return this;
@@ -97,14 +107,14 @@ public class UiAlert {
     }
 
     private Component discoverRoot() {
-        if (!UiCore.isRunning()) L.warn("UiCore not running, Alert still usable, but not great");
-        if (UiCore.isFx()) {
+        if ( !UiCore.isRunning() ) L.warn("UiCore not running, Alert still usable, but not great");
+        if ( UiCore.isFx() ) {
             L.warn("Root discovery in FxMode not yet implemented");
             return null;
         }
         // In Swing mode.
-        if (swingParent != null) return SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
-        if (javafxParent != null) return SwingCore.windowAncestor(javafxParent).orElse(SwingCore.mainFrame());
+        if ( swingParent != null ) return SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        if ( javafxParent != null ) return SwingCore.windowAncestor(javafxParent).orElse(SwingCore.mainFrame());
         return SwingCore.mainFrame();
     }
 }
