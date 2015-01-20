@@ -25,10 +25,10 @@ import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtape.UnitOverseer.UnitShard;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 import eu.ggnet.saft.core.*;
@@ -84,7 +84,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         initComponents();
         resultList.setModel(model);
         resultList.setCellRenderer(new UnitShardRenderer());
-        SelectionEnhancer<UnitShard> selectionEnhancer = (selected) -> {
+        SelectionEnhancer<UnitShard> selectionEnhancer = (eu.ggnet.dwoss.uniqueunit.api.UnitShard selected) -> {
             if ( selected != null && selected.getAvailable() != null )
                 return Arrays.asList(new PicoUnit(selected.getUniqueUnitId(), "SopoNr:" + selected.getRefurbishedId()));
             return Collections.EMPTY_LIST;
@@ -209,8 +209,8 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
                 data.put("2", new Tuple2<>(new UnitShard("2", 2, "SopoNr.: 2", Boolean.FALSE, 1), "Details zu Unit 2"));
                 data.put("3", new Tuple2<>(new UnitShard("3", 3, "SopoNr.: 3", Boolean.TRUE, 1), "Details zu Unit 3"));
                 data.put("4", new Tuple2<>(new UnitShard("4", 4, "SopoNr.: 4", Boolean.FALSE, 1), "Details zu Unit 4"));
-                data.put("5", new Tuple2<>(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null), "Existiert Nicht"));
-                data.put("6", new Tuple2<>(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE), "Details zu Unit 6"));
+                data.put("5", new Tuple2<>(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null, null), "Existiert Nicht"));
+                data.put("6", new Tuple2<>(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE, null), "Details zu Unit 6"));
             }
 
             @Override
@@ -221,7 +221,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
 
             @Override
             public UnitShard find(String refurbishId) {
-                if ( !data.containsKey(refurbishId) ) return new UnitShard(refurbishId, 0, "SopoNr.: " + refurbishId + " exitiert nicht", null);
+                if ( !data.containsKey(refurbishId) ) return new UnitShard(refurbishId, 0, "SopoNr.: " + refurbishId + " exitiert nicht", null, null);
                 return data.get(refurbishId)._1;
             }
 

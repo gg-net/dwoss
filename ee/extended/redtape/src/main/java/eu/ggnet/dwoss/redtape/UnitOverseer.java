@@ -16,17 +16,15 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import java.io.Serializable;
+import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
+
 import java.util.List;
 
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
-
-import lombok.Data;
 
 /**
  * UnitOverseer, knows correctly about the status of a unit.
@@ -35,58 +33,6 @@ import lombok.Data;
  */
 @Remote
 public interface UnitOverseer {
-
-    /**
-     * Represents some Information of a Unit.
-     */
-    @Data
-    public static class UnitShard implements Serializable {
-
-        private final String refurbishedId;
-
-        private final int uniqueUnitId;
-
-        private final String htmlDescription;
-
-        /**
-         * Status of available.
-         * True == available.
-         * False == not available.
-         * Null == not existent.
-         */
-        private final Boolean available;
-
-        private final Integer stockId;
-
-        public UnitShard(String refurbishedId, int uniqueUnitId, String htmlDescription, Boolean available) {
-            this.refurbishedId = refurbishedId;
-            this.uniqueUnitId = uniqueUnitId;
-            this.htmlDescription = htmlDescription;
-            this.available = available;
-            this.stockId = null;
-        }
-
-        public UnitShard(String refurbishedId, int uniqueUnitId, String htmlDescription, Boolean available, Integer stockId) {
-            this.refurbishedId = refurbishedId;
-            this.uniqueUnitId = uniqueUnitId;
-            this.htmlDescription = htmlDescription;
-            this.available = available;
-            this.stockId = stockId;
-        }
-
-        public UnitShard(String refurbishedId, int uniqueUnitId, String htmlDescription, Boolean available, StockUnit stockunit) {
-            this.refurbishedId = refurbishedId;
-            this.uniqueUnitId = uniqueUnitId;
-            this.htmlDescription = htmlDescription;
-            this.available = available;
-            if ( stockunit.isInStock() ) this.stockId = stockunit.getStock().getId();
-            else this.stockId = null;
-        }
-
-        public boolean isAvailable() {
-            return Boolean.TRUE.equals(available);
-        }
-    }
 
     /**
      * Find an available StockUnit and locks it by add to a LogicTransaction via DossierId.

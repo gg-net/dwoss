@@ -54,6 +54,7 @@ import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.stock.format.StockUnitFormater;
+import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
@@ -336,9 +337,9 @@ public class UnitOverseerBean implements UnitOverseer {
             uu = uuEao.findByRefurbishedIdInHistory(refurbishId);
             if ( uu == null ) {
                 if ( !bridgeInstance.isUnsatisfied() && !bridgeInstance.get().isUnitIdentifierAvailable(refurbishId) ) {
-                    return new UnitShard(refurbishId, 0, toHtmlDescription(refurbishId, null, "Nicht Verfügbar", "", "(Auskunft aus Sopo)"), false);
+                    return new UnitShard(refurbishId, 0, toHtmlDescription(refurbishId, null, "Nicht Verfügbar", "", "(Auskunft aus Sopo)"), false, null);
                 } else {
-                    return new UnitShard(refurbishId, 0, "<html>SopoNr.:<b>" + refurbishId + "<u> existiert nicht.</u><br /><br /></b></html>", null);
+                    return new UnitShard(refurbishId, 0, "<html>SopoNr.:<b>" + refurbishId + "<u> existiert nicht.</u><br /><br /></b></html>", null, null);
                 }
             } else {
                 oldRefurbishedOd = "(Frühere SopoNr: " + refurbishId + ")";
@@ -348,20 +349,22 @@ public class UnitOverseerBean implements UnitOverseer {
 
         StockUnit stockUnit = new StockUnitEao(stockEm).findByUniqueUnitId(uu.getId());
         L.debug("find({}) stockUnit={}", refurbishId, stockUnit);
+        Integer stockId = null;
+        if ( stockUnit != null && stockUnit.isInStock() ) stockId = stockUnit.getStock().getId();
         if ( stockUnit == null ) {
-            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", "", null), false);
+            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", "", null), false, null);
         }
         if ( stockUnit.getLogicTransaction() != null ) {
-            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", stockUnit, null), false, stockUnit);
+            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", stockUnit, null), false, stockId);
         }
         // If the Database is clean, the Unit is available, but we make some safty checks here.
         if ( new DossierEao(redTapeEm).isUnitBlocked(uu.getId()) ) {
             L.warn("find({}) Database Error RedTape sanity check", refurbishId);
-            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", stockUnit, "(Datenbankfehler, RedTape sanity check!)"), false, stockUnit);
+            return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Nicht Verfügbar", stockUnit, "(Datenbankfehler, RedTape sanity check!)"), false, stockId);
         }
 
         // Now we are shure.
-        return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Verfügbar", stockUnit, null), true, stockUnit);
+        return new UnitShard(refurbishId, uu.getId(), toHtmlDescription(refurbishId, oldRefurbishedOd, "Verfügbar", stockUnit, null), true, stockId);
     }
 
     private String toHtmlDescription(String refurbishId, String oldRefurbishedId, String status, StockUnit stockUnit, String error) {
