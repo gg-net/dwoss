@@ -55,7 +55,7 @@ public class RevenueReportSelectorPane extends GridPane {
         ChoiceBox<Step> stepChoice = new ChoiceBox<>();
         stepChoice.getItems().addAll(Step.values());
         step.bind(stepChoice.getSelectionModel().selectedItemProperty());
-        stepChoice.getSelectionModel().select(Step.DAY);
+        stepChoice.getSelectionModel().select(Step.MONTH);
 
         addRow(0, new Label("Step:"), stepChoice);
 
@@ -77,10 +77,10 @@ public class RevenueReportSelectorPane extends GridPane {
         extraReported.bind(box.selectedProperty());
         addRow(2, new Label("Show reported extra"), box);
 
-        DatePicker startPicker = new DatePicker(LocalDate.of(2014, 01, 01));
+        DatePicker startPicker = new DatePicker(LocalDate.of(LocalDate.now().getYear(), 01, 01));
         start = startPicker.valueProperty();
 
-        DatePicker endPicker = new DatePicker(LocalDate.of(2014, 12, 31));
+        DatePicker endPicker = new DatePicker(LocalDate.of(LocalDate.now().getYear(), 12, 31));
         end = endPicker.valueProperty();
 
         addRow(3, new Label("Start:"), startPicker);
