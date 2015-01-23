@@ -132,6 +132,10 @@
         </dependency>
         <dependency>
             <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-cxf-rs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
             <artifactId>openejb-core-hibernate</artifactId>
             <type>pom</type>
         </dependency>

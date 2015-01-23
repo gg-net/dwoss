@@ -523,6 +523,11 @@
                 </exclusions>
             </dependency>
             <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>openejb-cxf-rs</artifactId>
+                <version>4.7.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search</artifactId>
                 <version>4.4.3.Final</version>
@@ -787,6 +792,11 @@
                 <groupId>org.apache.tika</groupId>
                 <artifactId>tika-core</artifactId>
                 <version>1.6</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>3.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

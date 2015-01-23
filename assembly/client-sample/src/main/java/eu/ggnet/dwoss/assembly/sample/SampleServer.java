@@ -78,6 +78,7 @@ public class SampleServer implements Server {
         c.putAll(RedTapePu.CMP_IN_MEMORY);
         c.putAll(ReportPu.CMP_IN_MEMORY);
         c.putAll(RightsPu.CMP_IN_MEMORY);
+        c.put("openejb.embedded.remotable", "true");
         ConfigurationProvider config = Lookup.getDefault().lookup(ConfigurationProvider.class);
         if ( config != null ) c.putAll(config.openejbAddToEmbeddedSampleConfiguration());
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
