@@ -81,7 +81,8 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         MEDIA_STATION("Multimedia Wohnzimmer PC"),
         LTE("LTE (4G)", 30.),
         DUAL_LOAD("Dual Load"),
-        THUNDERBOLT("Thunderbolt");
+        THUNDERBOLT("Thunderbolt"),
+        COVER("Cover");
 
         @Getter
         private final String note;
