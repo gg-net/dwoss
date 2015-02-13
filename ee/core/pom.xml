@@ -13,6 +13,7 @@
     <modules>
         <module>common</module>
         <module>progress</module>
+        <module>api</module>
     </modules>
 
 </project>

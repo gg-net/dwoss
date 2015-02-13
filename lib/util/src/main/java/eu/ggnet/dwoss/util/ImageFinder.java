@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,12 +57,18 @@ public class ImageFinder {
 
     public URL findImageUrl(final int id) {
         if ( path == null || (!path.exists() && !path.isDirectory()) ) return errorUrl;
-        String images[] = path.list((dir, name) -> {
-            if ( name.toLowerCase().endsWith("_" + id + ".jpg") ) return true;
-            if ( name.toLowerCase().endsWith("_" + id + ".gif") ) return true;
-            if ( name.toLowerCase().endsWith("_" + id + ".png") ) return true;
-            return false;
+
+        String images[] = path.list(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if ( name.toLowerCase().endsWith("_" + id + ".jpg") ) return true;
+                if ( name.toLowerCase().endsWith("_" + id + ".gif") ) return true;
+                if ( name.toLowerCase().endsWith("_" + id + ".png") ) return true;
+                return false;
+            }
         });
+
         if ( images == null || images.length == 0 ) return noimageUrl;
         try {
             return new File(path, images[0]).toURI().toURL();
@@ -73,12 +79,19 @@ public class ImageFinder {
 
     public URL findImageUrlByName(final String head) {
         if ( path == null || (!path.exists() && !path.isDirectory()) ) return errorUrl;
-        String images[] = path.list((dir, name) -> {
-            if ( name.equalsIgnoreCase(head + ".jpg") ) return true;
-            if ( name.equalsIgnoreCase(head + ".gif") ) return true;
-            if ( name.equalsIgnoreCase(head + ".png") ) return true;
-            return false;
+
+        String images[] = path.list(new FilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                if ( name.equalsIgnoreCase(head + ".jpg") ) return true;
+                if ( name.equalsIgnoreCase(head + ".gif") ) return true;
+                if ( name.equalsIgnoreCase(head + ".png") ) return true;
+                return false;
+
+            }
         });
+
         if ( images == null || images.length == 0 ) return noimageUrl;
         try {
             return new File(path, images[0]).toURI().toURL();

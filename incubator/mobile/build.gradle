@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.javafxports:javafxmobile-plugin:1.0.0-rc3'
+    }
+}
+apply plugin: 'javafxmobile'
+
+sourceCompatibility = '1.7'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+mainClassName='eu.ggnet.dwoss.mobile.ui.MobileMainApp'
+
+dependencies {
+    compile 'eu.ggnet.dwoss:dwoss-incubator-mobile-ui:1.0-SNAPSHOT'
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+}
+
+jfxmobile {
+    ios {
+        forceLinkClasses = ['ensemble.**.*']
+    }
+    android {
+        androidSdk = file ('/home/oliver.guenther/opt/android')
+        applicationPackage = 'org.javafxports.ensemble'
+        compileSdkVersion = 21
+    }
+}

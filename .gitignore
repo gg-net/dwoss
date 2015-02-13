@@ -61,3 +61,6 @@ hs_err_pid*
 /ui/target/
 /incubator/saft/sample/target/
 /incubator/mobile-ui/target/
+/incubator/mobile/.nb-gradle/private/
+/incubator/mobile/build/
+/ee/core/api/target/
