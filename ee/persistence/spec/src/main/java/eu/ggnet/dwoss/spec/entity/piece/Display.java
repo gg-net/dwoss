@@ -193,7 +193,10 @@ public class Display implements Serializable {
         RETINA_PRO15("Retina Pro15 (2880x1800)"),
         WQHD("WQHD (2560x1440)"),
         RETINA_4("(960x640)"),
-        RETINA_5SC("(1136x640)");
+        RETINA_5SC("(1136x640)"),
+        HVGA("HVGA (480x320)"),
+        IPHONE_6("1334x750"),
+        HD_720P("HD 720p (1280x720)");
 
         private final String note;
 
@@ -239,7 +242,10 @@ public class Display implements Serializable {
         _9_7(9.7, QXGA),
         _19_5(19.5, FULL_HD),
         _3_5(3.5, RETINA_4),
-        _4(4, RETINA_5SC);
+        _4(4, RETINA_5SC),
+        _5_7(5.7,HD_720P),
+        _4_7(4.7, IPHONE_6),
+        _5_5(5.5, IPHONE_6);
 
         private final double size;
 

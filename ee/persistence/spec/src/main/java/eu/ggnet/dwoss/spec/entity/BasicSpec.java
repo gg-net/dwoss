@@ -64,7 +64,8 @@ public class BasicSpec extends ProductSpec {
         PURPPLE_WHITE("lila-weiß"),
         BLUE_WHITE("blau-weiß"),
         RED_SILVER("rot-silber"),
-        RED_WHITE("rot-weiß");
+        RED_WHITE("rot-weiß"),
+        GOLD("gold");
 
         private String note;
 
