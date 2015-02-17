@@ -4,7 +4,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.javafxports:javafxmobile-plugin:1.0.0-rc3'
+        classpath 'org.javafxports:javafxmobile-plugin:1.0.0-b3'
     }
 }
 apply plugin: 'javafxmobile'
@@ -31,6 +31,16 @@ jfxmobile {
     android {
         androidSdk = file ('/home/oliver.guenther/opt/android')
         applicationPackage = 'org.javafxports.ensemble'
-        compileSdkVersion = 21
+        compileSdkVersion = 10  // Not working, seams too low.
+        packagingOptions {
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/spring.schemas'
+            exclude 'META-INF/spring.handlers'
+            exclude 'META-INF/cxf/bus-extensions.txt'
+        }
     }
 }
