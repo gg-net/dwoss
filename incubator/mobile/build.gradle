@@ -31,7 +31,8 @@ jfxmobile {
     android {
         androidSdk = file ('/home/oliver.guenther/opt/android')
         applicationPackage = 'org.javafxports.ensemble'
-        compileSdkVersion = 10  // Not working, seams too low.
+        compileSdkVersion = 21  // 10 Not working, seams too low.
+        targetSdkVersion = 15
         packagingOptions {
             exclude 'META-INF/LICENSE.txt'
             exclude 'META-INF/NOTICE.txt'
