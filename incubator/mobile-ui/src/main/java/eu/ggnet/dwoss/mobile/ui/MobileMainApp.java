@@ -16,13 +16,17 @@
  */
 package eu.ggnet.dwoss.mobile.ui;
 
+import java.net.URL;
+import java.util.Objects;
+import java.util.function.Consumer;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.api.ui.FxController;
 
 /**
  *
@@ -30,11 +34,12 @@ import eu.ggnet.saft.core.fx.FxSaft;
  */
 public class MobileMainApp extends Application {
 
-    private final static String URL = "http://localhost:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/unitOverseer/unit";
+    // First testing round, manual set ip
+    private final static String URL = "http://192.168.1.148:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/unitOverseer/unit";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = FxSaft.constructFxml(UnitAvailabilityController.class, null);
+        FXMLLoader loader = constructFxml(UnitAvailabilityController.class, null);
         UnitAvailabilityController controller = loader.getController();
         controller.url = URL;
         Pane p = loader.getRoot();
@@ -51,4 +56,24 @@ public class MobileMainApp extends Application {
         launch(args);
     }
 
+    public static <R extends FxController> URL loadView(Class<R> controllerClazz) {
+        if ( !controllerClazz.getSimpleName().endsWith("Controller") )
+            throw new IllegalArgumentException(controllerClazz + " does not end with Controller");
+        String head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Controller".length());
+        return controllerClazz.getResource(head + "View.fxml");
+    }
+
+    public static <T, R extends FxController> FXMLLoader constructFxml(Class<R> controllerClazz, T parameter) throws Exception {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(loadView(controllerClazz), "No View for " + controllerClazz));
+        loader.load();
+        R controller = (R)Objects.requireNonNull(loader.getController(), "No controller based on " + controllerClazz + ". Controller set in Fxml ?");
+        if ( parameter != null && controller instanceof Consumer ) {
+            try {
+                ((Consumer<T>)controller).accept(parameter);
+            } catch (ClassCastException e) {
+//                LoggerFactory.getLogger(FxSaft.class).warn(controller.getClass() + " implements Consumer, but not of type " + parameter.getClass());
+            }
+        }
+        return loader;
+    }
 }

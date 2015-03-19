@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ public class ValidationUtil {
         if ( candiate == null ) return;
         Set<ConstraintViolation<Object>> violations = validator.validate(candiate);
         if ( violations.isEmpty() ) return;
-        throw new ValidationException(ConstraintViolationFormater.toMultiLine(new HashSet<>(violations), true));
+        throw new ValidationException(ConstraintViolationFormater.toMultiLine(new HashSet<ConstraintViolation<?>>(violations), true));
     }
 
     /**

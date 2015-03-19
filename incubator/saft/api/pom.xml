@@ -9,6 +9,19 @@
     <artifactId>saft-api</artifactId>
     <packaging>jar</packaging>
     <name>DwOss • Incubator • Saft • Api</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- We need 1.7 for possible mobile usage -->
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <!-- This is only here as long as our Client.lookup needs an EJB Annotation on a Server Class.
         If this restriction is lifted remove and look into ProgressObserver -->

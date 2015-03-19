@@ -45,6 +45,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
                     lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), lookup(Guardian.class).getUsername(), v.comment());
                     Alert.show("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt");
                     return null;
-                });
+                })
+                .exec();
     }
 }
