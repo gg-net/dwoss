@@ -134,7 +134,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
         ForkJoinPool.commonPool().execute(() -> {
             try {
                 ResolveResult result = lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
-                Alert.title("Repayment resolved")
+                eu.ggnet.saft.core.Alert.title("Repayment resolved")
                         .parent(sopoField)
                         .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
                         .nl("Stock: " + result.stockMessage)

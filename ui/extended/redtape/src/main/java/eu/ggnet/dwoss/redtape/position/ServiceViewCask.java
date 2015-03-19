@@ -144,6 +144,7 @@ public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consume
             positionView.setPositionName(position.getName());
             positionView.setDescription(position.getDescription());
             positionView.setPrice(position.getPrice());
+            positionView.setAmount(position.getAmount());
             positionView.bookingAccountBox.getModel().setSelectedItem(position.getBookingAccount());
         }
     }//GEN-LAST:event_templateListMouseClicked
