@@ -18,19 +18,25 @@ package eu.ggnet.dwoss.uniqueunit.api;
 
 import java.io.Serializable;
 
-import lombok.Value;
+import javax.xml.bind.annotation.*;
+
+import lombok.*;
 
 /**
  * Represents some Information of a Unit with possible reference.
  */
-@Value
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UnitShard implements Serializable {
 
-    private final String refurbishedId;
+    private String refurbishedId;
 
-    private final int uniqueUnitId;
+    private int uniqueUnitId;
 
-    private final String htmlDescription;
+    private String htmlDescription;
 
     /**
      * Status of available.
@@ -38,9 +44,9 @@ public class UnitShard implements Serializable {
      * False == not available.
      * Null == not existent.
      */
-    private final Boolean available;
+    private Boolean available;
 
-    private final Integer stockId;
+    private Integer stockId;
 
     public boolean isAvailable() {
         return Boolean.TRUE.equals(available);

@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public class AppleRules {
 
-    private final static Pattern partNoPattern = Pattern.compile("M[A-Z][A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}");
+    private final static Pattern partNoPattern = Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}");
 
     private final static Pattern serialPattern = Pattern.compile("[A-Z0-9]{11,12}");
 
@@ -40,7 +40,7 @@ public class AppleRules {
     public static String validatePartNo(String partNo) {
         if ( partNo == null ) return "PartNo must not be null";
         if ( !partNoPattern.matcher(partNo).matches() ) {
-            return "Apple Artikelnummer " + partNo + " passt nicht auf Apple Pattern M?###?/A or M?###??/A (?=Buchstabe, #=Zahl)";
+            return "Apple Artikelnummer " + partNo + " passt nicht auf Apple Pattern ??###?/? oderr ??###??/? (?=Buchstabe, #=Zahl)";
         }
         return null;
     }

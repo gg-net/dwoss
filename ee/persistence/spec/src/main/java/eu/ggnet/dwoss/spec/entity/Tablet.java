@@ -42,7 +42,7 @@ public class Tablet extends DisplayAbleDesktop {
 
     @Override
     public Set<Extra> getDefaultExtras() {
-        return EnumSet.of(BLUETOOTH, CARD_READER, FINGER_SCANNER, KAMERA, PENSLOT, UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, BATTERY_INTEGRATED, LTE);
+        return EnumSet.of(BLUETOOTH, CARD_READER, FINGER_SCANNER, KAMERA, PENSLOT, UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, BATTERY_INTEGRATED, LTE,COVER);
     }
 
     @Override

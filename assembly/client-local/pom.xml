@@ -47,6 +47,10 @@
             <type>pom</type>
         </dependency>
         <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-cxf-rs</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search</artifactId>
         </dependency>

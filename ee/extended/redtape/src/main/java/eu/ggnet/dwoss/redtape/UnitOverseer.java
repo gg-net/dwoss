@@ -16,13 +16,12 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-
 import java.util.List;
 
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
