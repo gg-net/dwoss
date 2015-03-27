@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.mobile.ui;
 
 import java.util.ArrayList;
 
-import javax.ws.rs.core.MediaType;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +26,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import org.apache.cxf.jaxrs.client.WebClient;
 
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.saft.api.ui.FxController;
@@ -50,7 +48,7 @@ public class UnitAvailabilityController implements FxController {
 
     private ObservableList<UnitShard> searchResult;
 
-    public String url;
+    public RestClient client;
 
     @FXML
     void initialize() {
@@ -61,8 +59,20 @@ public class UnitAvailabilityController implements FxController {
 
             @Override
             public void handle(ActionEvent event) {
-                if ( searchField.getText() != null ) return;
-                UnitShard unit = WebClient.create(url).type(MediaType.APPLICATION_XML).path(searchField.getText()).get(UnitShard.class);
+                System.out.println("searchfield: " + searchField.getText());
+                if ( searchField.getText() == null ) return;
+                //UnitShard unit = WebClient.create(url).type(MediaType.APPLICATION_XML).path(searchField.getText()).get(UnitShard.class);
+                UnitShard unit = null;
+                
+                    System.out.println("CLIENT: " + client);
+                try {
+                    unit = client.getUnit(searchField.getText());
+                    System.out.println("UNIT: " + client.getUnit(searchField.getText()));
+                } catch (Exception e) {
+                    System.out.println("ERROR:");
+                    e.printStackTrace();
+                }
+                
                 searchResult.add(0, unit);
                 System.out.println(searchResult.size());
             }

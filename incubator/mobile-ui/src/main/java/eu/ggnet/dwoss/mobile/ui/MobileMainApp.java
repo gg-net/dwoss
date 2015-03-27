@@ -26,7 +26,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import org.codegist.crest.CRest;
+
 import eu.ggnet.saft.api.ui.FxController;
+
+import static org.codegist.crest.CRest.getInstance;
 
 /**
  *
@@ -35,18 +39,26 @@ import eu.ggnet.saft.api.ui.FxController;
 public class MobileMainApp extends Application {
 
     // First testing round, manual set ip
-    private final static String URL = "http://192.168.1.148:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/unitOverseer/unit";
+    protected final static String URL = "http://192.168.1.154:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = constructFxml(UnitAvailabilityController.class, null);
-        UnitAvailabilityController controller = loader.getController();
-        controller.url = URL;
-        Pane p = loader.getRoot();
-
-        primaryStage.setTitle("Client!");
-        primaryStage.setScene(new Scene(p));
-        primaryStage.show();
+        try {
+            
+            CRest crest = getInstance();
+            RestClient client = crest.build(RestClient.class);
+            
+            FXMLLoader loader = constructFxml(UnitAvailabilityController.class, null);
+            UnitAvailabilityController controller = loader.getController();
+            controller.client = client;
+            Pane p = loader.getRoot();
+            
+            primaryStage.setTitle("Client!");
+            primaryStage.setScene(new Scene(p));
+            primaryStage.show();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**
