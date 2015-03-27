@@ -26,7 +26,7 @@ repositories {
 
 jfxmobile {
     ios {
-        forceLinkClasses = ['ensemble.**.*']
+        forceLinkClasses = ['**.*']
     }
     android {
         androidSdk = file ('/home/oliver.guenther/opt/android')
