@@ -56,7 +56,7 @@ public class Display implements Serializable {
         m.put(ProductGroup.MONITOR, Arrays.asList(_18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _32, _37, _42));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17_3, _18_4));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _7, _7_9, _8, _10_1, _11_6));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6));
         _16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
@@ -243,9 +243,9 @@ public class Display implements Serializable {
         _19_5(19.5, FULL_HD),
         _3_5(3.5, RETINA_4),
         _4(4, RETINA_5SC),
-        _5_7(5.7,HD_720P),
+        _5_7(5.7, HD_720P),
         _4_7(4.7, IPHONE_6),
-        _5_5(5.5, IPHONE_6);
+        _5_5(5.5, FULL_HD);
 
         private final double size;
 
