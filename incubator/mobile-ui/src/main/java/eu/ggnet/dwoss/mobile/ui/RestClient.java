@@ -20,18 +20,16 @@ import org.codegist.crest.annotate.*;
 
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 
-
 /**
  *
  * @author Administrator
  */
 @EndPoint(MobileMainApp.URL)
 @Path("unitOverseer")
-@Consumes("application/json")
+@Consumes("application/xml")
 public interface RestClient {
- 
+
     @Path("unit/{search}")
     public UnitShard getUnit(@PathParam("search") String unit);
-            
-    
+
 }
