@@ -29,7 +29,7 @@ jfxmobile {
         forceLinkClasses = ['**.*']
     }
     android {
-        androidSdk = file ('/home/oliver.guenther/opt/android')
+        androidSdk = file ('/opt/android-sdk')
         applicationPackage = 'org.javafxports.ensemble'
         compileSdkVersion = 21  // 10 Not working, seams too low.
         targetSdkVersion = 15
@@ -39,9 +39,6 @@ jfxmobile {
             exclude 'META-INF/DEPENDENCIES'
             exclude 'META-INF/LICENSE'
             exclude 'META-INF/NOTICE'
-            exclude 'META-INF/spring.schemas'
-            exclude 'META-INF/spring.handlers'
-            exclude 'META-INF/cxf/bus-extensions.txt'
         }
     }
 }

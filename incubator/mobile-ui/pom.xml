@@ -58,10 +58,23 @@
             <artifactId>simple-xml</artifactId>
             <version>2.7.1</version>
         </dependency>
+        <dependency>            
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>4.1.1.4</version>
+            <scope>provided</scope>
+        </dependency>
         <!--        <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.13</version>
-        </dependency>-->
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.javafxports</groupId>
+            <artifactId>jfxdvk</artifactId>
+            <version>8u40-b6-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -149,10 +149,14 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         this.setPositionName(position.getName());
         this.setPrice(position.getPrice());
         this.setDescription(position.getDescription());
+        this.setAmount(position.getAmount());
         this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
         this.setPostDecimal((int)((position.getAmount() % 1) * 100));
         this.setBookingAccount(position.getBookingAccount());
 
+        System.out.println("Pre: " + this.getPreDecimal());
+        System.out.println("Post: " + this.getPostDecimal());
+        
         this.accessCos = lookup(Guardian.class);
 
         if ( position.getDocument() != null && EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO).contains(position.getDocument().getType()) ) {
@@ -489,8 +493,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(Alignment.TRAILING)
@@ -536,8 +539,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
@@ -579,7 +581,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

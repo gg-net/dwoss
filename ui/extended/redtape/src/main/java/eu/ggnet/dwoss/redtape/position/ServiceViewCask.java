@@ -127,25 +127,19 @@ public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consume
 
     private void templateListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_templateListMouseClicked
         if ( evt.getClickCount() == 2 ) {
-            PositionBuilder pb = new PositionBuilder();
             position = (Position)templateList.getSelectedValue();
-            pb.setAfterTaxPrice(position.getAfterTaxPrice());
-            pb.setAmount(position.getAmount());
-            pb.setBookingAccount(position.getBookingAccount());
-            pb.setDescription(position.getDescription());
-            pb.setName(position.getName());
-            pb.setPrice(position.getPrice());
-            pb.setTax(position.getTax());
-            pb.setType(position.getType());
-            pb.setUniqueUnitId(position.getUniqueUnitId());
-            pb.setUniqueUnitProductId(position.getUniqueUnitProductId());
-            position = pb.createPosition();
+            position = Position.builder().afterTaxPrice(position.getAfterTaxPrice()).amount(position.getAmount()).bookingAccount(position.getBookingAccount())
+                    .description(position.getDescription()).name(position.getName()).price(position.getPrice()).tax(position.getTax())
+                    .type(position.getType()).uniqueUnitId(position.getUniqueUnitId()).uniqueUnitProductId(position.getUniqueUnitProductId()).build();
 
-            positionView.setPositionName(position.getName());
-            positionView.setDescription(position.getDescription());
-            positionView.setPrice(position.getPrice());
-            positionView.setAmount(position.getAmount());
-            positionView.bookingAccountBox.getModel().setSelectedItem(position.getBookingAccount());
+            positionView.accept(position);
+//            positionView.setPositionName(position.getName());
+//            positionView.setDescription(position.getDescription());
+//            positionView.setPrice(position.getPrice());
+//            positionView.setAmount(position.getAmount());
+//            positionView.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
+//            positionView.setPostDecimal((int)((position.getAmount() % 1) * 100));
+//            positionView.bookingAccountBox.getModel().setSelectedItem(position.getBookingAccount());
         }
     }//GEN-LAST:event_templateListMouseClicked
 

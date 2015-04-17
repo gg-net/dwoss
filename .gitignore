@@ -64,3 +64,4 @@ hs_err_pid*
 /incubator/mobile/.nb-gradle/private/
 /incubator/mobile/build/
 /ee/core/api/target/
+/incubator/mobile/.nb-gradle/profiles/private/
