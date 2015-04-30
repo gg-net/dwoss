@@ -61,7 +61,7 @@ public class DesktopUtil {
      * A shorter way to use Desktop.open()
      *
      * @param file the file to be opened
-     * @deprecated user saft.Ui.call().osOpen().
+     * @deprecated use saft.Ui.call().osOpen().
      */
     @Deprecated
     public static void open(final File file) {

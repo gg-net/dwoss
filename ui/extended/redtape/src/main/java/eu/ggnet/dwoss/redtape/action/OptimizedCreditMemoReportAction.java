@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.common.DesktopUtil;
 import eu.ggnet.saft.core.Workspace;
 
 import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
 
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
+
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.Action.NAME;
@@ -41,7 +42,7 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
         DateRangeChooserDialog dialog = new DateRangeChooserDialog(lookup(Workspace.class).getMainFrame());
         dialog.setVisible(true);
         if ( dialog.isOk() ) {
-            DesktopUtil.open(lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile());
+            Ui.call(() -> lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile()).osOpen();
         }
     }
 }
