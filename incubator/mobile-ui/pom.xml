@@ -58,7 +58,7 @@
             <artifactId>simple-xml</artifactId>
             <version>2.7.1</version>
         </dependency>
-        <dependency>            
+        <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
             <version>4.1.1.4</version>
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.javafxports</groupId>
             <artifactId>jfxdvk</artifactId>
-            <version>8u40-b6-SNAPSHOT</version>
+            <version>8u40-b5</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
