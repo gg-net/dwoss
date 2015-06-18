@@ -342,7 +342,7 @@ public class UnitController {
     }
 
     private void addClosingAction(Action action) {
-        model.getActions().add(action);
+        model.addAction(action);
         view.addOperationAction(action);
     }
 }
