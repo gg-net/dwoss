@@ -171,8 +171,6 @@ public class UnitModel {
             return true;
         }
     }
-
-    @Getter
     private Set<Action> actions = new HashSet<>();
 
     @NotNull(message = "contractor not set")
@@ -214,5 +212,13 @@ public class UnitModel {
     @Getter
     @Setter
     private boolean editMode;
+
+    public Set<Action> getActions() {
+        return Collections.unmodifiableSet(actions);
+    }
+    
+    public void addAction(Action action){
+        actions.add(action);
+    }
 
 }
