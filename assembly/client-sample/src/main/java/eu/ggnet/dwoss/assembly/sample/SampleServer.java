@@ -43,6 +43,7 @@ import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.stock.assist.StockPu;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.util.Utils;
 import eu.ggnet.saft.core.Server;
 
 @ServiceProvider(service = Server.class)
@@ -79,7 +80,7 @@ public class SampleServer implements Server {
         c.putAll(ReportPu.CMP_IN_MEMORY);
         c.putAll(RightsPu.CMP_IN_MEMORY);
         c.put("openejb.embedded.remotable", "true");
-        c.put("httpejbd.bind", "192.168.1.148");
+        c.put("httpejbd.bind", Utils.externalIpv4Address().getHostAddress());
         ConfigurationProvider config = Lookup.getDefault().lookup(ConfigurationProvider.class);
         if ( config != null ) c.putAll(config.openejbAddToEmbeddedSampleConfiguration());
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);

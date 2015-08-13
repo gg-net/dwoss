@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.mobile.ui;
 
 import java.util.ArrayList;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,9 +25,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-
+import eu.ggnet.dwoss.mobile.ui.queue.QueueElement;
+import eu.ggnet.dwoss.mobile.ui.queue.GetUnitRequest;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.saft.api.ui.FxController;
+
 
 /**
  * FXML Controller class
@@ -48,13 +49,11 @@ public class UnitAvailabilityController implements FxController {
 
     private ObservableList<UnitShard> searchResult;
 
-    public RestClient client;
-
     @FXML
     void initialize() {
         searchResult = FXCollections.observableList(new ArrayList<UnitShard>());
         searchResultView.setItems(searchResult);
-        searchResultView.setCellFactory(new HtmlCell.Factory());
+        searchResultView.setCellFactory(new UnitShardCell.Factory());
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -63,16 +62,18 @@ public class UnitAvailabilityController implements FxController {
                 if ( searchField.getText() == null ) return;
                 //UnitShard unit = WebClient.create(url).type(MediaType.APPLICATION_XML).path(searchField.getText()).get(UnitShard.class);
                 UnitShard unit = null;
-                
-                    System.out.println("CLIENT: " + client);
+
                 try {
-                    unit = client.getUnit(searchField.getText());
-                    System.out.println("UNIT: " + client.getUnit(searchField.getText()));
+                    GetUnitRequest unitRequest = new GetUnitRequest(searchField.getText());
+
+                    QueueElement element = QueueElement.builder().parameter(searchField.getText()).requestObject(unitRequest).build();
+                    element.getRequestObject().execute(MobileMainApp.URL);
+                    unit = unitRequest.execute(MobileMainApp.URL);
                 } catch (Exception e) {
                     System.out.println("ERROR:");
                     e.printStackTrace();
                 }
-                
+
                 searchResult.add(0, unit);
                 System.out.println(searchResult.size());
             }

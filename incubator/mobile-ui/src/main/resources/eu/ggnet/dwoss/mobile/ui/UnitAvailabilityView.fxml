@@ -7,20 +7,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane prefHeight="409.0" prefWidth="409.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.mobile.ui.UnitAvailabilityController">
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.mobile.ui.UnitAvailabilityController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="1.0" />
+      <ColumnConstraints hgrow="NEVER" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="ALWAYS" />
    </rowConstraints>
    <children>
       <Label prefHeight="15.0" prefWidth="50.0" text="UnitId:" />
       <TextField fx:id="searchField" GridPane.columnIndex="1" />
-      <Button fx:id="searchButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Search" GridPane.columnIndex="2" GridPane.hgrow="SOMETIMES" />
+      <Button fx:id="searchButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Search" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" />
       <ListView fx:id="searchResultView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
    </children>
 </GridPane>

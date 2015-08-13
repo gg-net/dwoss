@@ -115,6 +115,7 @@ public class DossierTableModel extends AbstractTableModel {
 
     public void update(Dossier oldDos, Dossier newDos) {
         int index = data.indexOf(oldDos);
+        if(index < 0 ) return; //if oldDos is null or not in the data list. Return if so.
         data.set(index, newDos);
         fireTableChanged(new TableModelEvent(this, index, index, TableModelEvent.ALL_COLUMNS, TableModelEvent.UPDATE));
     }

@@ -26,11 +26,13 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import org.codegist.crest.CRest;
-
 import eu.ggnet.saft.api.ui.FxController;
 
-import static org.codegist.crest.CRest.getInstance;
+import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.view.*;
+
+import javafxports.android.FXActivity;
 
 /**
  *
@@ -39,23 +41,26 @@ import static org.codegist.crest.CRest.getInstance;
 public class MobileMainApp extends Application {
 
     // First testing round, manual set ip
-    protected final static String URL = "http://192.168.1.154:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/";
+    public final static String URL = "http://192.168.1.154:4204/dwoss-ee-extended-redtape-1.0-SNAPSHOT/";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            
-            CRest crest = getInstance();
-            RestClient client = crest.build(RestClient.class);
-            
+
             FXMLLoader loader = constructFxml(UnitAvailabilityController.class, null);
             UnitAvailabilityController controller = loader.getController();
-            controller.client = client;
             Pane p = loader.getRoot();
-            
+
             primaryStage.setTitle("Client!");
             primaryStage.setScene(new Scene(p));
             primaryStage.show();
+            FXActivity context = FXActivity.getInstance();
+            WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+
+            //To Resize the view and lock it on Portrait
+            context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            context.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         } catch (Exception exception) {
             exception.printStackTrace();
         }
