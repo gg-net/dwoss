@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="30" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.7715610000000606"/>
 	<property name="ireport.x" value="74"/>
-	<property name="ireport.y" value="672"/>
+	<property name="ireport.y" value="527"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -161,7 +161,7 @@
 	</variable>
 	<group name="Summary Helper">
 		<groupFooter>
-			<band height="54">
+			<band height="55">
 				<textField evaluationTime="Report" pattern="">
 					<reportElement x="270" y="16" width="118" height="13" uuid="c62cb627-791c-4b62-8c0a-a0cd7ab89f43"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -216,8 +216,8 @@
 						<pen lineWidth="1.0"/>
 					</graphicElement>
 				</line>
-				<textField evaluationTime="Report">
-					<reportElement x="0" y="0" width="269" height="52" forecolor="#404040" uuid="97aeee1c-733a-4076-ac39-894de257f13e"/>
+				<textField isStretchWithOverflow="true" evaluationTime="Report">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="265" height="55" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="97aeee1c-733a-4076-ac39-894de257f13e"/>
 					<textElement markup="html">
 						<font size="7"/>
 					</textElement>
@@ -226,16 +226,6 @@
 			</band>
 		</groupFooter>
 	</group>
-	<background>
-		<band height="772" splitType="Stretch">
-			<line>
-				<reportElement x="-20" y="267" width="10" height="1" forecolor="#C0C0C0" uuid="60169d61-3fec-4794-be84-63987a696440"/>
-			</line>
-			<line>
-				<reportElement x="-20" y="535" width="10" height="1" forecolor="#C0C0C0" uuid="ede123b9-3e5b-4294-b146-901e0e5f4492"/>
-			</line>
-		</band>
-	</background>
 	<title>
 		<band height="316" splitType="Stretch">
 			<textField evaluationTime="Report" pattern="yyyy-MM-dd">
@@ -541,7 +531,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAYMENT_TEXT}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report">
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
 				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="507" height="35" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="c670f019-096a-4895-b396-d643ca7bb7c3"/>
 				<textElement markup="html">
 					<font size="8"/>
