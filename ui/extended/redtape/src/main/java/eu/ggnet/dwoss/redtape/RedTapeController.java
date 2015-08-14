@@ -381,8 +381,9 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param doc the {@link Document} entity.
      */
     public void openDocumentViewer(Document doc) {
-        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
-        dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "</html>");
+        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);        
+        dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />" 
+                + lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()) + "</html>");
         dialog.setVisible(true);
     }
 
