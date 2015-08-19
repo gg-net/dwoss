@@ -48,8 +48,8 @@ import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.eao.StockEao;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.*;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
@@ -63,7 +63,9 @@ import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.redtape.entity.Document.Condition.*;
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
+import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.rules.PaymentMethod.*;
+import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.*;
 import static org.apache.commons.lang3.StringUtils.*;
@@ -89,6 +91,9 @@ public class RedTapeCloserOperation implements RedTapeCloser {
 
     @Inject
     private StockEao stockEao;
+
+    @Inject
+    private StockUnitEao suEao;
 
     @Inject
     private StockTransactionEmo stEmo;
@@ -171,7 +176,10 @@ public class RedTapeCloserOperation implements RedTapeCloser {
         L.info("closing:repoting poluted");
 
         closeRedTape(reportable, m.newChild(10));
-        L.info("closed:redTape");
+        L.info("closed:redTape:reportables");
+
+        closeRedTape(findCloseableBlocker(), m.newChild(10));
+        L.info("closed:redTape:nonreportables");
 
         closeStock(reportable.stream()
                 .map(Document::getDossier)
@@ -437,6 +445,35 @@ public class RedTapeCloserOperation implements RedTapeCloser {
         }
         m.finish();
         return closeable;
+    }
+
+    private Set<Document> findCloseableBlocker() {
+        List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false);
+
+        //all active blockers from open dossiers
+        Set<Document> blocker = openDossiers.stream()
+                .filter(d -> !d.getActiveDocuments(BLOCK).isEmpty())
+                .map(d -> d.getActiveDocuments(BLOCK))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        //directly closable, only comment positions
+        Set<Document> closable = blocker.stream()
+                .filter(d -> d.getPositions().values().stream().allMatch(p -> p.getType() == COMMENT))
+                .collect(Collectors.toSet());
+
+        //documents containing at least one unit type position
+        Set<Document> containsUnit = blocker.stream()
+                .filter(d -> d.getPositions().values().stream().anyMatch(p -> p.getType() == UNIT))
+                .collect(Collectors.toSet());
+
+        //remove all documents where at least one unit is still in stock
+        containsUnit.removeIf(
+                d -> d.getPositions().values().stream().anyMatch(p -> p.getType() == UNIT && suEao.findByRefurbishId(p.getRefurbishedId()) != null));
+
+        closable.addAll(containsUnit);
+
+        return closable;
     }
 
     /**
