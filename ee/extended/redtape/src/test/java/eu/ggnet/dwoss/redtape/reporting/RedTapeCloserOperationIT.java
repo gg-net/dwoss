@@ -203,7 +203,8 @@ public class RedTapeCloserOperationIT {
     @Test
     public void testDayClosing() throws UserInfoException {
         assertFalse(customerGenerator.makeCustomers(10).isEmpty());
-        assertFalse(customerGenerator.makeSpecialCustomers(BLOCK) == null);
+        systemCustomers = customerGenerator.makeSpecialCustomers(BLOCK);
+        assertFalse(systemCustomers == null);
         assertFalse(receiptGenerator.makeUniqueUnits(200, true, true).isEmpty());
         assertFalse(redTapeGenerator.makeSalesDossiers(30).isEmpty());
 
