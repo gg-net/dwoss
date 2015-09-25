@@ -20,18 +20,23 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.saft.core.Workspace;
 
 import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
 
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.*;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.Action.NAME;
 
 public class OptimizedCreditMemoReportAction extends AbstractAction {
+
+    private static final Logger L = LoggerFactory.getLogger(OptimizedCreditMemoReportAction.class);
 
     public OptimizedCreditMemoReportAction() {
         putValue(NAME, "Stornoreport gekürzt");
@@ -41,8 +46,15 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         DateRangeChooserDialog dialog = new DateRangeChooserDialog(lookup(Workspace.class).getMainFrame());
         dialog.setVisible(true);
+        L.debug("Start generating OptimizedCreditMemoReport.");
         if ( dialog.isOk() ) {
-            Ui.call(() -> lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile()).osOpen();
+            try {
+                L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", dialog.getStart(), dialog.getEnd());
+                Ui.call(() -> lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile()).osOpen().call();
+            } catch (Exception ex) {
+                UiCore.handle(ex);
+            }
         }
+        L.debug("Done generating OptimizedCreditMemoReport.");
     }
 }

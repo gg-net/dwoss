@@ -469,7 +469,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
 
         //remove all documents where at least one unit is still in stock
         containsUnit.removeIf(
-                d -> d.getPositions().values().stream().anyMatch(p -> p.getType() == UNIT && suEao.findByRefurbishId(p.getRefurbishedId()) != null));
+                d -> d.getPositions().values().stream().anyMatch(p -> p.getType() == UNIT && suEao.findByUniqueUnitId(p.getUniqueUnitId()) != null));
 
         closable.addAll(containsUnit);
 
