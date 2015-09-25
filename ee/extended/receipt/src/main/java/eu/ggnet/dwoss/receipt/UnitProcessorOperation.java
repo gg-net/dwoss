@@ -64,7 +64,6 @@ import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.emo.DossierEmo;
 
-
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
@@ -341,8 +340,12 @@ public class UnitProcessorOperation implements UnitProcessor {
         long customerId = receiptCustomers.getCustomerId(uniqueUnit.getContractor(), operation);
         Document doc = new DossierEmo(redTapeEm)
                 .requestActiveDocumentBlock((int)customerId, "Blockaddresse KundenId " + customerId, "Erzeugung durch " + operation, arranger);
+        L.debug("requestActiveDocumentBlock = {} with dossier = {}", doc, doc.getDossier());
+        redTapeEm.flush();
         redTapeEm.refresh(doc, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
-        if ( !doc.isActive() ) throw new RuntimeException("The Document(id={}) has changed to inactive while locking, this was very unlikely, inform Administrator");
+        L.debug("Refreshed requestActiveDocumentBlock to = {} with dossier = {}", doc, doc.getDossier());
+        if ( !doc.isActive() )
+            throw new RuntimeException("The Document(id={}) has changed to inactive while locking, this was very unlikely, inform Administrator");
         int directCount = countPositionsDirect(doc);
         if ( doc.getPositions().size() != directCount ) {
             L.warn("Using Workaround for UniqueUnit(id=" + uniqueUnit.getId() + ",refurbishId=" + uniqueUnit.getRefurbishId()
@@ -364,6 +367,7 @@ public class UnitProcessorOperation implements UnitProcessor {
             Dossier oldDossier = new DossierEao(redTapeEm).findById(oldLogicTransaction.getDossierId());
             ReceiptOperation oldOperation = receiptCustomers.getOperation(oldDossier.getCustomerId()).orElse(null);
             Document oldDocument = oldDossier.getActiveDocuments().get(0);
+            redTapeEm.flush();
             redTapeEm.refresh(oldDocument, LockModeType.PESSIMISTIC_FORCE_INCREMENT);
             if ( !oldDocument.isActive() ) throw new RuntimeException(
                         "The Document(id={}) has changed to inactive while locking, this was very unlikely, inform Administrator");
