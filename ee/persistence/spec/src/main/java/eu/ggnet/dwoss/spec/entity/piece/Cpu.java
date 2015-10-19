@@ -104,7 +104,8 @@ public class Cpu implements Serializable {
         TEGRA("Tegra"),
         MT("MT"),
         APPLE_A("A Series"),
-        AMD_G("G Series");
+        AMD_G("G Series"),
+        CORE_M("Core Mobile");
 
         String note;
 

@@ -84,6 +84,7 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_8_64,
                 Os.WINDOWS_8_PROFESSIONAL_32,
                 Os.WINDOWS_8_PROFESSIONAL_64,
+                Os.WINDOWS_8_1_32,
                 Os.WINDOWS_8_1_64);
 
         private Os[] oss;
