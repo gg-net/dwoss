@@ -43,7 +43,8 @@ public class Notebook extends DisplayAbleDesktop {
     @Override
     public Set<Extra> getDefaultExtras() {
         return EnumSet.of(BLUETOOTH, CARD_READER, FINGER_SCANNER, CONVERTABLE, KAMERA, PENSLOT, THREE_D, TOUCH,
-                UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, BATTERY_INTEGRATED, DUAL_DISPLAY_TABLET, LTE, DUAL_LOAD, THUNDERBOLT);
+                UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, BATTERY_INTEGRATED, DUAL_DISPLAY_TABLET, LTE, DUAL_LOAD, THUNDERBOLT, KEYBOARD_BACKGROUND_LIGHT,
+                LIGHTNING, IPS_DISPLAY, WLAN_AC, USB_TYPE_C);
     }
 
     @Override

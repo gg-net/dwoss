@@ -126,7 +126,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         ALTERNATIVE_PLUGIN_AC_ADAPTER("Alternativsteckernetzteil"),
         MS_OFFICE_365_PERSONAL("Microsoft Office 365 Personal inkl."),
         MS_OFFICE_HOME_AND_STUDENT_2013("Microsoft Office Home and Student 2013 inkl."),
-        STYLUS("Stylus / Displaystift");
+        STYLUS("Stylus / Displaystift"),
+        DISPLAYPORT_CABLE("Displayportkabel");
 
         private final String note;
 
@@ -182,7 +183,7 @@ public class UniqueUnit implements Serializable, EagerAble {
                             CABLELES_MOUSE, ANTENNA_ADAPTER, DONGLE, AC_ADAPTER_INC_CABLE, FOOT, WLAN_KINK_ANTENNA, DVI_HDMI_ADAPTOR, ALTERNATIVE_PLUGIN_AC_ADAPTER);
                 case MONITOR:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, AC_ADAPTER_INC_CABLE, VGA_CABLE, DVI_CABLE, HDMI_CABLE, FOOT,
-                            DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, USB_KABEL, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
+                            DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, USB_KABEL, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, DISPLAYPORT_CABLE);
                 case TABLET_SMARTPHONE:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, USB_KABEL, KEYBOARD_DOCK, VGA_NETWORK_ADAPTER, HEADSET, MANUAL,
                             MICRO_USB_TO_USB_ADAPTER, PORTFOLIO_CASE, SDCARD_16GB, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, USB_MICRO_HDMI_ADAPTER, SIM_OPENER,
@@ -192,7 +193,7 @@ public class UniqueUnit implements Serializable, EagerAble {
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
                             VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL);
                 default:
             }
             return EnumSet.allOf(Equipment.class);
@@ -243,13 +244,18 @@ public class UniqueUnit implements Serializable, EagerAble {
         SCRATCHES_ON_TOUCH("Kratzer auf dem Touchpad"),
         SLIGHT_SCRATCHES_ON_DISPLAYCOVER("leichte Kratzer auf dem Displayrahmen"),
         SCRATCHES_ON_THE_BACK("Kratzer auf der Geräterückseite"),
-        USETRACES_ON_THE_BACK("Gebrauchstspuren auf der Geräterückseite"),
+        USETRACES_ON_THE_BACK("Gebrauchsspuren auf der Geräterückseite"),
         SLIGHT_USETRACES_ON_DISPLAYCOVER("leichte Gebrauchsspuren auf dem Displayrahmen"),
         SLIGHT_SCRATCHES_ON_COVER("leichte Kratzer auf dem Deckel"),
         SIGNIFICANT_SCRATCHES_ON_CASE("deutliche Kratzer auf dem Gehäuse"),
         SLIGHT_SCRATCHES_ON_CASE("leichte Kratzer auf dem Gehäuse"),
         SCRATCHES_ON_FOOT("Kratzer auf dem Fuß"),
-        FOREIGN_PARTICLES_BELOW_DISPLAY("Fremdpartikel unter dem Display");
+        FOREIGN_PARTICLES_BELOW_DISPLAY("Fremdpartikel unter dem Display"),
+        SLIGHT_SCRATCHES_ON_CASE_BOTTOM_SIDE("leichte Kratzer auf der Geräteunterseite"),
+        SCRATCHES_ON_DISPLAY_STAND("Kratzer auf dem Displaybein"),
+        SCRATCHES_BELOW_KEYBOARD("Kratzer unterhalb der Tastatur"),
+        REMAINS_OF_GLUE_BOTTOM_SIDE("Klebereste auf der Geräteunterseite"),
+        SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),;
 
         private final String note;
 
@@ -290,7 +296,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         EXTERNAL_GPU_SEEN("Externe Grafikkarte gesehen"),
         HDD_CASE("Festplattenhalterungen gesehen"),
         CHANGED_CONFIGURATION("geänderte Konfiguration"),
-        REFILLED("Komponenten aufgefüllt");
+        REFILLED("Komponenten aufgefüllt"),
+        DONGLE_INSIDE_MOUSE("Dongle in der Maus");
 
         private final String note;
 

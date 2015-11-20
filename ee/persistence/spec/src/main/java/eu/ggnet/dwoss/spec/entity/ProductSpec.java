@@ -82,7 +82,14 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         LTE("LTE (4G)", 30.),
         DUAL_LOAD("Dual Load"),
         THUNDERBOLT("Thunderbolt"),
-        COVER("Cover");
+        COVER("Cover"),
+        GORILLA_GLASS("Gorilla Glass"),
+        KEYBOARD_BACKGROUND_LIGHT("beleuchtete Tastatur"),
+        DUAL_SIM("Dual-SIM"),
+        LIGHTNING("Lightning"),
+        WLAN_AC("WLAN ac"),
+        IPS_DISPLAY("IPS-Display"),
+        USB_TYPE_C("USB Typ-C");
 
         @Getter
         private final String note;

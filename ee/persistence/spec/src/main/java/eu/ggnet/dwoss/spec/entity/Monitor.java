@@ -54,7 +54,7 @@ public class Monitor extends BasicSpec implements DisplayAble {
 
     @Override
     public Set<Extra> getDefaultExtras() {
-        return EnumSet.of(KAMERA, THREE_D, PIVOT, HIGHT_CHANGEABLE, SPEAKERS, TOUCH);
+        return EnumSet.of(KAMERA, THREE_D, PIVOT, HIGHT_CHANGEABLE, SPEAKERS, TOUCH, IPS_DISPLAY);
     }
 
     @Override

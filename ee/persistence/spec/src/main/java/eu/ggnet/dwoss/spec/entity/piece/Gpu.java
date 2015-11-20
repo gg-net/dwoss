@@ -44,7 +44,7 @@ public class Gpu implements Serializable {
         /**
          * Manufacturer AMD.
          */
-        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9, R4, R5)),
+        AMD("AMD", Arrays.asList(RADEON_HD_3000, RADEON_HD_4000, RADEON_HD_5000, RADEON_HD_6000, RADEON_HD_7000, RADEON_HD_8000, R7, R9, R4, R5, R2, R6)),
         /**
          * Manufacturer Intel.
          */
@@ -53,7 +53,7 @@ public class Gpu implements Serializable {
          * Manufacturer nVidia.
          */
         NVIDIA("nVidia", Arrays.asList(GEFORCE_ULP, GEFORCE_8000, GEFORCE_9000, GEFORCE_100, GEFORCE_200, GEFORCE_300, GEFORCE_400,
-                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600)),
+                GEFORCE_500, GEFORCE_600, GEFORCE_700, GEFORCE_800, QUADRO_2000, QUADRO_600, GEFORCE_900)),
         /**
          * Manufacturer Apple.
          */
@@ -114,7 +114,10 @@ public class Gpu implements Serializable {
         R7("Radeon R7"),
         R9("Radeon R9"),
         R4("Radeon R4"),
-        R5("Radeon R5");
+        R5("Radeon R5"),
+        R2("Radeon R2"),
+        R6("Radeon R6"),
+        GEFORCE_900("GeForce 900 Series");
 
         String note;
 

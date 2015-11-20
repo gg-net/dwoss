@@ -279,6 +279,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         miscButton.setActionCommand(Desktop.OsCategory.MISC.toString());
         win7Button.setActionCommand(Desktop.OsCategory.WINDOWS_7.toString());
         win8Button.setActionCommand(Desktop.OsCategory.WINDOWS_8.toString());
+        win10Button.setActionCommand(Desktop.OsCategory.WINDOWS_10.toString());
         osBox.setRenderer(new NamedEnumCellRenderer());
         setOs(Os.WINDOWS_7_HOME_PREMIUM_64);
         if ( productGroup == ProductGroup.NOTEBOOK || productGroup == ProductGroup.TABLET_SMARTPHONE ) {
@@ -425,6 +426,9 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
             case WINDOWS_7:
                 win7Button.setSelected(true);
                 break;
+            case WINDOWS_10:
+                win10Button.setSelected(true);
+                break;
         }
         osBox.setModel(new DefaultComboBoxModel(os.getCategory().getOss()));
         osBox.setSelectedItem(os);
@@ -496,6 +500,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         win8Button = new javax.swing.JRadioButton();
         win7Button = new javax.swing.JRadioButton();
         miscButton = new javax.swing.JRadioButton();
+        win10Button = new javax.swing.JRadioButton();
         basicViewPanel = new javax.swing.JPanel();
         displayViewPanel = new javax.swing.JPanel();
 
@@ -928,6 +933,14 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
             }
         });
 
+        osVersionGroup.add(win10Button);
+        win10Button.setText("Windows 10");
+        win10Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                osCategoryFilter(evt);
+            }
+        });
+
         javax.swing.GroupLayout osPanelLayout = new javax.swing.GroupLayout(osPanel);
         osPanel.setLayout(osPanelLayout);
         osPanelLayout.setHorizontalGroup(
@@ -939,7 +952,9 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
                         .addComponent(win7Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(win8Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(win10Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(miscButton)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -949,10 +964,11 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
                 .addGroup(osPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(win8Button)
                     .addComponent(win7Button)
-                    .addComponent(miscButton))
+                    .addComponent(miscButton)
+                    .addComponent(win10Button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(osBox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         basicViewPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
@@ -1143,6 +1159,7 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
     javax.swing.JPanel osPanel;
     javax.swing.ButtonGroup osVersionGroup;
     javax.swing.JPanel ramPanel;
+    javax.swing.JRadioButton win10Button;
     javax.swing.JRadioButton win7Button;
     javax.swing.JRadioButton win8Button;
     // End of variables declaration//GEN-END:variables

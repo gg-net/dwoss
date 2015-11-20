@@ -814,7 +814,9 @@
                           <Component id="win7Button" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="win8Button" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="win10Button" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="miscButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -829,10 +831,11 @@
                       <Component id="win8Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="win7Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="miscButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="win10Button" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="osBox" min="-2" pref="23" max="-2" attributes="0"/>
-                  <EmptySpace pref="10" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -873,6 +876,17 @@
               <ComponentRef name="osVersionGroup"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Sonstige"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="osCategoryFilter"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="win10Button">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="osVersionGroup"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Windows 10"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="osCategoryFilter"/>

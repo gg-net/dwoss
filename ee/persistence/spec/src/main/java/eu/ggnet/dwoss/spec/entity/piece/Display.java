@@ -53,10 +53,10 @@ public class Display implements Serializable {
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _10_1, _12_1));
         _16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _32, _37, _42));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17_3, _18_4));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6));
+        m.put(ProductGroup.MONITOR, Arrays.asList(_18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42));
+        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17_3, _18_4, _12));
+        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12));
         _16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
@@ -91,7 +91,7 @@ public class Display implements Serializable {
         SIXTEEN_TO_NINE(
                 "16:9",
                 _16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD)),
+                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD)),
         THREE_TO_TWO(
                 "3:2",
                 _3_2,
@@ -196,7 +196,9 @@ public class Display implements Serializable {
         RETINA_5SC("(1136x640)"),
         HVGA("HVGA (480x320)"),
         IPHONE_6("1334x750"),
-        HD_720P("HD 720p (1280x720)");
+        HD_720P("HD 720p (1280x720)"),
+        UHD("UHD (3840x2160)"),
+        RETINA_DISPLAY("Retina Display (2304×1440)");
 
         private final String note;
 
@@ -211,12 +213,12 @@ public class Display implements Serializable {
         _10_1(10.1, FULL_HD),
         _11_6(11.6, FULL_HD),
         _13_3(13.3, WQHD),
-        _14(14, HD),
-        _15(15, XGA),
+        _14(14, FULL_HD),
+        _15(15, UHD),
         _15_4(15.4, RETINA_PRO15),
         _15_6(15.6, FULL_HD),
         _16(16, HD),
-        _17(17, WUXGA),
+        _17(17, UHD),
         _17_3(17.3, FULL_HD),
         _18_4(18.4, FULL_HD),
         _18_5(18.5, FULL_HD),
@@ -227,7 +229,7 @@ public class Display implements Serializable {
         _23(23, FULL_HD),
         _24(24, FULL_HD),
         _26(26, WUXGA),
-        _27(27, WQHD),
+        _27(27, UHD),
         _32(32, WUXGA),
         _14_1(14.1, HD),
         _8_9(8.9, WSVGA),
@@ -245,7 +247,10 @@ public class Display implements Serializable {
         _4(4, RETINA_5SC),
         _5_7(5.7, HD_720P),
         _4_7(4.7, IPHONE_6),
-        _5_5(5.5, FULL_HD);
+        _5_5(5.5, FULL_HD),
+        _5(5, FULL_HD),
+        _28(28, UHD),
+        _12(12, UHD);
 
         private final double size;
 
