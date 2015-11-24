@@ -133,7 +133,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
         List bookingAccounts = new ArrayList();
         bookingAccounts.add(postLedger.get(SERVICE).orElse(-1));
-        bookingAccounts.add(postLedger.getPossible(SERVICE).orElse(Collections.EMPTY_LIST));
+        bookingAccounts.addAll(postLedger.getPossible(SERVICE).orElse(Collections.EMPTY_LIST));
         bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
 
     }
@@ -187,13 +187,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
             }
         }
     }
-
-    // I asume, this is no longer used OG.
-//    public void setPosition(Position pos) {
-//        Position oldPos = this.position;
-//        this.position = pos;
-//        firePropertyChange("position", oldPos, pos);
-//    }
+    
     public Converter<Double, String> getTaxedConverter() {
         return taxedConverter;
     }
