@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.document;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.EnumSet;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.*;
@@ -33,6 +33,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.common.DwOssCore;
@@ -46,8 +47,7 @@ import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.Getter;
@@ -578,19 +578,23 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             JOptionPane.showMessageDialog(this, "Hinzufügen von Sopo Ware nicht erlaubt.", "Abgeschlossenes Dokument", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        try {
-            controller.addPosition(document.getDossier().getId(), PositionType.UNIT, unitInputField.getText().trim(), false);
-            Platform.runLater(new Runnable() {
 
-                @Override
-                public void run() {
-                    positions.clear();
-                    positions.addAll(document.getPositions().values());
-                }
-            });
-        } catch (Exception ex) {
-            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
+        for (String sopo : unitInputField.getText().trim().split("(\\s*,\\s*|\\s+)")) {
+            if ( StringUtils.isBlank(sopo) ) continue;
+            try {
+                controller.addPosition(document.getDossier().getId(), PositionType.UNIT, sopo, false);
+            } catch (Exception ex) {
+                DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
+            }
         }
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                positions.clear();
+                positions.addAll(document.getPositions().values());
+            }
+        });
         unitInputField.setText("");
     }//GEN-LAST:event_addUnitAction
 
