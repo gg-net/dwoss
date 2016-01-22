@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="30" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="507" leftMargin="60" rightMargin="28" topMargin="40" bottomMargin="28" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.7715610000000606"/>
-	<property name="ireport.x" value="74"/>
-	<property name="ireport.y" value="527"/>
+	<property name="ireport.x" value="291"/>
+	<property name="ireport.y" value="528"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -161,7 +161,7 @@
 	</variable>
 	<group name="Summary Helper">
 		<groupFooter>
-			<band height="55">
+			<band height="60">
 				<textField evaluationTime="Report" pattern="">
 					<reportElement x="270" y="16" width="118" height="13" uuid="c62cb627-791c-4b62-8c0a-a0cd7ab89f43"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -184,7 +184,7 @@
 					<textFieldExpression><![CDATA[$V{SUM_TAX}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00 ¤">
-					<reportElement x="407" y="34" width="100" height="15" uuid="f0d15dcf-e4d8-43f5-b33a-98d1a6ebb004"/>
+					<reportElement x="407" y="40" width="100" height="15" uuid="f0d15dcf-e4d8-43f5-b33a-98d1a6ebb004"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
@@ -198,14 +198,14 @@
 					<text><![CDATA[Gesamtbetrag (netto)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="270" y="34" width="118" height="15" uuid="4aba6c41-b399-44d8-907d-fbc78f674c17"/>
+					<reportElement x="270" y="40" width="118" height="15" uuid="4aba6c41-b399-44d8-907d-fbc78f674c17"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Gesamtbetrag (brutto)]]></text>
 				</staticText>
 				<line>
-					<reportElement x="270" y="51" width="237" height="1" uuid="b4d8fca0-54fc-4276-b244-1c3adc595bc0"/>
+					<reportElement x="270" y="57" width="237" height="1" uuid="b4d8fca0-54fc-4276-b244-1c3adc595bc0"/>
 					<graphicElement>
 						<pen lineWidth="2.0" lineStyle="Double"/>
 					</graphicElement>
@@ -217,7 +217,7 @@
 					</graphicElement>
 				</line>
 				<textField isStretchWithOverflow="true" evaluationTime="Report">
-					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="265" height="55" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="97aeee1c-733a-4076-ac39-894de257f13e"/>
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="265" height="60" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="97aeee1c-733a-4076-ac39-894de257f13e"/>
 					<textElement markup="html">
 						<font size="7"/>
 					</textElement>
@@ -492,7 +492,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch">
+		<band height="52" splitType="Stretch">
 			<textField>
 				<reportElement x="407" y="6" width="57" height="20" forecolor="#808080" uuid="720b1218-e0f1-44d3-91c3-73212c7eb716"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
@@ -508,13 +508,13 @@
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="3" width="506" height="1" forecolor="#00009B" uuid="a84274c8-81a5-457b-bf48-3aeab294e3b3"/>
+				<reportElement x="0" y="1" width="506" height="1" forecolor="#00009B" uuid="a84274c8-81a5-457b-bf48-3aeab294e3b3"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</line>
 			<textField evaluationTime="Report">
-				<reportElement x="0" y="4" width="407" height="50" forecolor="#00009B" uuid="ba094132-3404-4c84-ae83-8db7cea6869b"/>
+				<reportElement x="0" y="2" width="407" height="50" forecolor="#00009B" uuid="ba094132-3404-4c84-ae83-8db7cea6869b"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
@@ -525,14 +525,14 @@
 	<summary>
 		<band height="51">
 			<textField>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="507" height="15" uuid="6a7727f9-b79d-4caa-a195-207f3addb0fe"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="36" width="507" height="15" uuid="6a7727f9-b79d-4caa-a195-207f3addb0fe"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAYMENT_TEXT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" evaluationTime="Report">
-				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="507" height="35" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="c670f019-096a-4895-b396-d643ca7bb7c3"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="2" width="507" height="35" isRemoveLineWhenBlank="true" forecolor="#404040" uuid="c670f019-096a-4895-b396-d643ca7bb7c3"/>
 				<textElement markup="html">
 					<font size="8"/>
 				</textElement>

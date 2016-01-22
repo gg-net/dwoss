@@ -121,7 +121,7 @@ public class PriceCoreOperation {
         m.setWorkRemaining(uus.size() + 5);
         for (UniqueUnit uu : uus) {
             m.worked(1, "Calculating RefurbishId(" + uu.getRefurbishId() + ")");
-            pers.add(priceEngine.estimate(uu, productToSpecs.get(uu.getProduct())));
+            pers.add(priceEngine.estimate(uu, productToSpecs.get(uu.getProduct()), stockUnitEao.findByUniqueUnitId(uu.getId()).getStock().getName()));
         }
         m.finish();
         L.info("Finished loadAndCalculate(), estimated {} Units", pers.size());

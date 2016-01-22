@@ -65,14 +65,15 @@ public class PriceEngine {
      *
      * @param uu   the UniqueUnit
      * @param spec the ProductSpec
+     * @param stock the Stock
      * @return a estimated PriceEngineResult.
      */
-    public PriceEngineResult estimate(UniqueUnit uu, ProductSpec spec) {
+    public PriceEngineResult estimate(UniqueUnit uu, ProductSpec spec, String stock) {
         Objects.requireNonNull(uu, "UniqueUnit is null");
         Product p = Objects.requireNonNull(uu.getProduct(), "Product of " + uu + " is null");
         Objects.requireNonNull(spec, "ProductSpec is null");
 
-        PriceEngineResult per = new PriceEngineResult(uu);
+        PriceEngineResult per = new PriceEngineResult(uu, stock);
         TraceCollector log = new TraceCollector();
         per.setTax(GlobalConfig.TAX);
         per.setWarrantyId(uu.getWarranty().ordinal());

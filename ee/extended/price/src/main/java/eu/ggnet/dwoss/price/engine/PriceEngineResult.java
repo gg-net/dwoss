@@ -105,6 +105,8 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
 
     public final static String PROP_WARRENTYVALID = "warrentyValid";
 
+    public final static String PROP_STOCK = "stock";
+
     private String refurbishedId;
 
     private String commodityGroup;
@@ -164,6 +166,8 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
     private double lastCustomerPrice;
 
     private Date warrentyValid;
+    
+    private String stock;
 
     public PriceEngineResult() {
         manufacturerPartPriceFixed = Change.NO_CHANGE;
@@ -222,6 +226,11 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
         this.referencePrice = 0;
         this.lastRetailerPrice = uu.getPrice(PriceType.RETAILER);
         this.lastCustomerPrice = uu.getPrice(PriceType.CUSTOMER);
+    }
+    
+    public PriceEngineResult(UniqueUnit uu, String stock) {
+        this(uu);
+        this.stock = stock;
     }
 
     public void consumeLog(TraceCollector collector) {

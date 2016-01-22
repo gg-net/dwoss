@@ -63,6 +63,8 @@ import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
@@ -101,6 +103,10 @@ public class ExporterOperation implements Exporter {
     @Inject
     @RedTapes
     private EntityManager redTapeEm;
+
+    @Inject
+    @Stocks
+    private EntityManager stockEm;
 
     @Inject
     private PriceCoreOperation priceCore;
@@ -181,6 +187,7 @@ public class ExporterOperation implements Exporter {
         table.add(new STableColumn("Last Retailer", 12, euro).setAction(SUtil.getBeanProperty(PROP_LAST_RETAILER_PRICE)));
         table.add(new STableColumn("Last Customer", 12, euro).setAction(SUtil.getBeanProperty(PROP_LAST_CUSTOMER_PRICE)));
         table.add(new STableColumn("Warrenty Valid", 12, date).setAction(SUtil.getBeanProperty(PROP_WARRENTYVALID)));
+        table.add(new STableColumn("Lager", 12).setAction(SUtil.getBeanProperty(PROP_STOCK)));
         table.setRowFormater((SRowFormater<PriceEngineResult>)(i, p) -> {
             if ( p.isError() ) return new CFormat(RED, null);
             else if ( p.isWarning() ) return new CFormat(new Color(0x80, 0x80, 0), null);
@@ -232,6 +239,7 @@ public class ExporterOperation implements Exporter {
         SubMonitor m = monitorFactory.newSubMonitor("Auswertung über PartNos", partNos.length + 10);
         UniqueUnitEao uniqueUnitEao = new UniqueUnitEao(uuEm);
         ProductSpecEao productSpecEao = new ProductSpecEao(specEm);
+        StockUnitEao suEao = new StockUnitEao(stockEm);
         DocumentEao documentEao = new DocumentEao(redTapeEm);
         List<List<Object>> model = new ArrayList<>();
         for (String partNo : partNos) {
@@ -264,7 +272,10 @@ public class ExporterOperation implements Exporter {
                     line.add(null);
                 }
             }
-            PriceEngineResult per = priceEngine.estimate(uus.get(0), productSpecEao.findByProductId(product.getId()));
+            PriceEngineResult per = priceEngine.estimate(
+                    uus.get(0),
+                    productSpecEao.findByProductId(product.getId()),
+                    suEao.findByUniqueUnitId(uus.get(0).getId()).getStock().getName());
             line.add(per.getCostPrice());
             line.add(per.getRetailerPrice());
             line.add(per.getCustomerPrice());
@@ -323,11 +334,13 @@ public class ExporterOperation implements Exporter {
     public PriceEngineResult onePrice(String refurbishId) {
         final UniqueUnitEao uniqueUnitEao = new UniqueUnitEao(uuEm);
         final ProductSpecEao productSpecEao = new ProductSpecEao(specEm);
+        final StockUnitEao suEao = new StockUnitEao(stockEm);
         L.info("Loading s.getUnit({})", refurbishId);
         UniqueUnit uu = uniqueUnitEao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
         if ( uu == null ) return null;
         ProductSpec spec = productSpecEao.findByProductId(uu.getProduct().getId());
-        return priceEngine.estimate(uu, spec);
+        String stock = suEao.findByUniqueUnitId(uu.getId()).getStock().getName();
+        return priceEngine.estimate(uu, spec, stock);
     }
 
     private Double minPrice(List<UniqueUnit> units, PriceType priceType) {
