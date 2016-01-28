@@ -47,6 +47,7 @@ import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.price.engine.PriceEngine;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 
 import lombok.Data;
 
@@ -121,7 +122,8 @@ public class PriceCoreOperation {
         m.setWorkRemaining(uus.size() + 5);
         for (UniqueUnit uu : uus) {
             m.worked(1, "Calculating RefurbishId(" + uu.getRefurbishId() + ")");
-            pers.add(priceEngine.estimate(uu, productToSpecs.get(uu.getProduct()), stockUnitEao.findByUniqueUnitId(uu.getId()).getStock().getName()));
+            StockUnit su = stockUnitEao.findByUniqueUnitId(uu.getId());
+            pers.add(priceEngine.estimate(uu, productToSpecs.get(uu.getProduct()), su.getStock() != null ? su.getStock().getName() : "kein Lager"));
         }
         m.finish();
         L.info("Finished loadAndCalculate(), estimated {} Units", pers.size());

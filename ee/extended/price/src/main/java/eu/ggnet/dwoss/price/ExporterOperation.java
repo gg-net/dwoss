@@ -116,7 +116,7 @@ public class ExporterOperation implements Exporter {
 
     @Inject
     private PriceEngine priceEngine;
-
+    
     /**
      * Export PriceManagement as Xls.
      * <p/>
@@ -126,7 +126,7 @@ public class ExporterOperation implements Exporter {
     public FileJacket toXls() {
         SubMonitor m = monitorFactory.newSubMonitor("Exporting the PriceManagement II", 100);
         List<PriceEngineResult> pers = priceCore.loadAndCalculate(m.newChild(80));
-
+        
         Collections.sort(pers);
         m.setWorkRemaining(pers.size() + 1);
         m.worked(1);
