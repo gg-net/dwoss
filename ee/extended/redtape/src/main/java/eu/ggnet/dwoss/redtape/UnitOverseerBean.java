@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.redtape;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,7 @@ import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
@@ -156,6 +158,9 @@ public class UnitOverseerBean implements UnitOverseer {
     }
 
     private String toDetailedHtmlUnit(UniqueUnit uniqueUnit, boolean showPrices) {
+        
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyy");
+        
         StockUnit stockUnit = new StockUnitEao(stockEm).findByUniqueUnitId(uniqueUnit.getId());
         List<ReportLine> reportLines = new ReportLineEao(reportEm).findByUniqueUnitId(uniqueUnit.getId());
 
@@ -167,20 +172,30 @@ public class UnitOverseerBean implements UnitOverseer {
             dossiers.add(pos.getDocument().getDossier());
         }
         re += "<hr />";
-        re += "<h2>Vorgänge:</h2><ol>";
+        re += "<b>Vorgänge:</b><ul>";
         if ( dossiers.isEmpty() ) re += "<li>Keine Vorgänge vorhanden</li>";
         for (Dossier dossier : dossiers) {
             re += "<li>";
             re += customerService.asUiCustomer(dossier.getCustomerId()).toNameCompanyLine();
             re += DossierFormater.toHtmlSimpleWithDocument(dossier) + "<br /></li>";
         }
-        re += "</ol>";
+        re += "</ul>";
         re += "<hr />";
-        re += "<h2>Lagerinformationen</h2>";
+        
+        if ( uniqueUnit.getHistory() != null && !uniqueUnit.getHistory().isEmpty() ) {
+            re += "<b>Unit History:</b><ul>";
+            for (UniqueUnitHistory history : new TreeSet<>(uniqueUnit.getHistory())) {
+                re += "<li>" + df.format(history.getOccurence()) + " - " + history.getComment() + "</li>";
+            }
+            re += "</ul>";
+        }
+        re += "<hr />";
+        
+        re += "<b>Lagerinformationen</b>";
         if ( stockUnit == null ) re += "Kein Lagergerät vorhanden<br />";
         else re += StockUnitFormater.toHtml(stockUnit);
         re += "<hr />";
-        re += "<h2>Reporting-Informationen</h2>";
+        re += "<b>Reporting-Informationen</b>";
         if ( reportLines == null || reportLines.isEmpty() ) re += "Keine Reporting-Informationen vorhanden<br />";
         else {
             re += "<table border=\"1\"><tr>";
@@ -202,7 +217,7 @@ public class UnitOverseerBean implements UnitOverseer {
         }
         if ( !showPrices ) return re;
         re += "<hr />";
-        re += "<h2>Preis-Informationen</h2>";
+        re += "<b>Preis-Informationen</b>";
         NumberFormat nf = NumberFormat.getCurrencyInstance(GERMANY);
         re += "<ul><li>Unit Preise:";
         re += uniqueUnit.getPrices().entrySet().stream()

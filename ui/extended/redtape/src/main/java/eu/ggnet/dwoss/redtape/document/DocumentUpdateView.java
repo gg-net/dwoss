@@ -47,7 +47,8 @@ import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.Getter;

@@ -102,9 +102,9 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
         newCpu.setSeries(series.getSelected());
         newCpu.setModel(modelField.getText());
         newCpu.setName(nameField.getText());
-        if ( !coreField.getText().trim().equals("") ) newCpu.setCores(Integer.parseInt(coreField.getText()));
-        if ( !frequencyField.getText().trim().equals("") ) newCpu.setFrequency(Double.parseDouble(frequencyField.getText().replace(",", ".")));
-        if ( !economicValueField.getText().trim().equals("") ) newCpu.setEconomicValue(Double.parseDouble(economicValueField.getText().replace(",", ".")));
+        newCpu.setCores(coreField.getText().trim().equals("") ? null : Integer.parseInt(coreField.getText()));
+        newCpu.setFrequency(frequencyField.getText().trim().equals("") ? null : Double.parseDouble(frequencyField.getText().replace(",", ".")));
+        newCpu.setEconomicValue(economicValueField.getText().trim().equals("") ? null : Double.parseDouble(economicValueField.getText().replace(",", ".")));
         return newCpu;
     }
 
@@ -128,7 +128,6 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
             JOptionPane.showMessageDialog(this, "Frequenz, Kerne oder wirtschaftl. Wert sind keine Zahlen");
             return false;
         }
-
 
         for (Cpu cpu1 : allCpus) {
             if ( cpu1.getModel().equals(testCpu.getModel()) && cpu1.getSeries().equals(testCpu.getSeries()) ) {
