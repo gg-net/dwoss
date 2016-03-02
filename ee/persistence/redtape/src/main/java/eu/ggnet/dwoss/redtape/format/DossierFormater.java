@@ -101,9 +101,9 @@ public class DossierFormater {
 
     public static String toHtmlSimpleWithDocument(Dossier dos) {
         String res = "";
-        res += "<br /><u>Kundennummer:</u> " + dos.getCustomerId() + " " + toHtmlSimple(dos);
-        res += "<br />Dossier.id=" + dos.getId() + "<br />";
-        res += "<b>" + (dos.isClosed() ? "<font color=\"#666600\">Vorgang abgeschlossen" : "<font color=\"#009900\">Vorgang offen") + "</font></b><br /><br />";
+        res += "<br />Kundennummer: " + dos.getCustomerId() + " " + toHtmlSimple(dos);
+//        res += "<br />Dossier.id=" + dos.getId();
+        res += "<br /><b>" + (dos.isClosed() ? "<font color=\"#666600\">Vorgang abgeschlossen" : "<font color=\"#009900\">Vorgang offen") + "</font></b><br /><br />";
         res += "<b>Dokumente:</b><br />";
         if ( !dos.getActiveDocuments().isEmpty() ) {
             res += "<ul type=\"disc\">";

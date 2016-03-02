@@ -100,7 +100,7 @@ public abstract class UniqueUnitFormater {
         String re = "<b>SopoNr: " + unit.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID) + "</b>";
         re += "<p>";
         re += "Seriennummer: " + unit.getIdentifier(UniqueUnit.Identifier.SERIAL) + "<br />";
-        re += "Lieferant:" + unit.getContractor().getName();
+        re += "Lieferant: " + unit.getContractor().getName();
         re += "</p>";
 //        re += "<u>UniqueUnit.id:</u> " + unit.getId();
         re += "<p>";
@@ -111,7 +111,7 @@ public abstract class UniqueUnitFormater {
             re += "<b>" + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + " (" + p.getPartNo() + ")" + "</b>";
 //            re += (p.getEol() == null ? "" : "<u>Artikel End of Life:</u> " + DateFormats.ISO.format(p.getEol()) + "</br>");
 //            re += (p.getGtin() == null ? "" : "<u>GTIN (EAN):</u> " + p.getGtin() + "</br>");
-            re += p.getDescription() + "<br />";
+            re += "<p>" + p.getDescription() + "</p>";
         }
 
         re += "Zubehör: " + UniqueUnitFormater.toSingleLineAccessories(unit) + "<br />";
@@ -120,7 +120,7 @@ public abstract class UniqueUnitFormater {
         re += "Shipment: " + unit.getShipmentLabel() + " (" + unit.getShipmentId() + ")<br />";
         re += "</p>";
 
-        re += "<p><table border=\"1\">"
+        re += "<table border=\"1\">"
                 + "<tr>"
                 + "<th>juristischer Zustand</th><th>optischer Zustand</th><th>Garantie</th><th>Shipment</th><th>Aufgenommen am</th><th>Mfg Date</th>"
                 + "</tr><tr>"
@@ -129,7 +129,7 @@ public abstract class UniqueUnitFormater {
                 + "<td>" + DF.format(unit.getMfgDate()) + "</td>"
                 + "</tr></table>";
 
-        re += "<b>Preisinformationen</b>";
+        re += "<p><b>Preisinformationen</b>";
         re += toHtmlPrices(unit) + "</p>";
         return re;
     }
@@ -320,7 +320,7 @@ public abstract class UniqueUnitFormater {
 
     private static String toWarranty(UniqueUnit uu) {
         if ( uu.getWarranty() == Warranty.WARRANTY_TILL_DATE && uu.getWarrentyValid() != null )
-            return "Restgarantie bis zum " + DateFormats.ISO.format(uu.getWarrentyValid());
+            return "Restgarantie bis zum " + DF.format(uu.getWarrentyValid());
         return "Garantie: " + uu.getWarranty().getName();
     }
 }

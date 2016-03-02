@@ -158,9 +158,9 @@ public class UnitOverseerBean implements UnitOverseer {
     }
 
     private String toDetailedHtmlUnit(UniqueUnit uniqueUnit, boolean showPrices) {
-        
+
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyy");
-        
+
         StockUnit stockUnit = new StockUnitEao(stockEm).findByUniqueUnitId(uniqueUnit.getId());
         List<ReportLine> reportLines = new ReportLineEao(reportEm).findByUniqueUnitId(uniqueUnit.getId());
 
@@ -181,7 +181,7 @@ public class UnitOverseerBean implements UnitOverseer {
         }
         re += "</ul>";
         re += "<hr />";
-        
+
         if ( uniqueUnit.getHistory() != null && !uniqueUnit.getHistory().isEmpty() ) {
             re += "<b>Unit History:</b><ul>";
             for (UniqueUnitHistory history : new TreeSet<>(uniqueUnit.getHistory())) {
@@ -190,10 +190,11 @@ public class UnitOverseerBean implements UnitOverseer {
             re += "</ul>";
         }
         re += "<hr />";
-        
-        re += "<b>Lagerinformationen</b>";
+
+        re += "<p><b>Lagerinformationen</b><br />";
         if ( stockUnit == null ) re += "Kein Lagergerät vorhanden<br />";
         else re += StockUnitFormater.toHtml(stockUnit);
+        re += "</p>";
         re += "<hr />";
         re += "<b>Reporting-Informationen</b>";
         if ( reportLines == null || reportLines.isEmpty() ) re += "Keine Reporting-Informationen vorhanden<br />";
