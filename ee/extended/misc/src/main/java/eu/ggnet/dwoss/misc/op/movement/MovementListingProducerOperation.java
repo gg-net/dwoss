@@ -39,6 +39,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.entity.Document;
@@ -76,6 +77,9 @@ public class MovementListingProducerOperation implements MovementListingProducer
     @Inject
     private MonitorFactory monitorFactory;
 
+    @Inject
+    private ReceiptCustomers receiptCustomers;
+
     @Override
     public JasperPrint generateList(ListType listType, Stock stock) {
         SubMonitor m = monitorFactory.newSubMonitor("Versand und Abholung", 100);
@@ -88,7 +92,9 @@ public class MovementListingProducerOperation implements MovementListingProducer
         m.setWorkRemaining(documents.size() + 2);
         List<MovementLine> lines = new ArrayList<>();
         List<String> dossierids = new ArrayList<>();
+        List<Long> systemCustomers = customerService.allSystemCustomerIds();
         for (Document document : documents) {
+            if ( systemCustomers.contains(document.getDossier().getCustomerId())) continue;
             m.worked(1, "verarbeite " + document.getDossier().getIdentifier());
             LogicTransaction lt = ltEao.findByDossierId(document.getDossier().getId());
             if ( !hasUnitOnStock(lt, stock) ) continue; // Filter by stock

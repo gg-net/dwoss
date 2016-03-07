@@ -35,6 +35,7 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
@@ -117,6 +118,9 @@ public class RedTapeCloserOperation implements RedTapeCloser {
 
     @Inject
     private Instance<WarrantyService> warrantyServiceInstance;
+    
+    @Inject
+    private ReceiptCustomers receiptCustomers;
 
     /**
      * Executes the closing manual.
@@ -448,7 +452,9 @@ public class RedTapeCloserOperation implements RedTapeCloser {
     }
 
     private Set<Document> findCloseableBlocker() {
-        List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false);
+        Collection<Long> receipts = receiptCustomers.getReceiptCustomers().values();
+                List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false)
+                        .stream().filter(d -> !receipts.contains(d.getCustomerId())).collect(Collectors.toList());
 
         //all active blockers from open dossiers
         Set<Document> blocker = openDossiers.stream()

@@ -35,8 +35,7 @@ import eu.ggnet.dwoss.customer.assist.CustomerPu;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
@@ -166,6 +165,8 @@ public class RedTapeCloserOperationIT {
 
     private SpecialSystemCustomers systemCustomers;
 
+    private ReceiptCustomers receiptCustomers;
+
     @Before
     public void setUp() throws NamingException {
         Map<String, Object> c = new HashMap<>();
@@ -203,8 +204,10 @@ public class RedTapeCloserOperationIT {
     @Test
     public void testDayClosing() throws UserInfoException {
         assertFalse(customerGenerator.makeCustomers(10).isEmpty());
+        receiptCustomers = customerGenerator.makeReceiptCustomers(ACER);
         systemCustomers = customerGenerator.makeSpecialCustomers(BLOCK);
         assertFalse(systemCustomers == null);
+        assertFalse(receiptCustomers == null);
         assertFalse(receiptGenerator.makeUniqueUnits(200, true, true).isEmpty());
         assertFalse(redTapeGenerator.makeSalesDossiers(30).isEmpty());
 
@@ -235,7 +238,7 @@ public class RedTapeCloserOperationIT {
         for (Long blockerId : blockerIds) {
             blockerDossiers.add(redTapeAgent.findByIdEager(Dossier.class, blockerId));
         }
-        assertEquals("More/Less Blockers than expected passed closing", 2, blockerDossiers.stream().filter(d -> d.isClosed()).collect(Collectors.toList()).size());
+        assertEquals("More/Less Blockers than expected passed closing", 3, blockerDossiers.stream().filter(d -> d.isClosed()).collect(Collectors.toList()).size());
 
         warnIfStockSizeDidNotChange(stockUnits);
 
@@ -374,6 +377,7 @@ public class RedTapeCloserOperationIT {
      * */
     private List<Dossier> buildBlocker() {
         Long customerId = (Long)systemCustomers.getSpecialCustomers().keySet().toArray()[0];
+        Long receiptId = (Long)receiptCustomers.getReceiptCustomers().values().toArray()[0];
 
         Dossier d1 = redTapeWorker.create(customerId, R.nextBoolean(), "JUNIT");
         d1.getActiveDocuments(BLOCK).get(0).append(Position.builder()
@@ -436,14 +440,24 @@ public class RedTapeCloserOperationIT {
                 .refurbishedId(unit2.getIdentifier(REFURBISHED_ID))
                 .build());
 
+        Dossier d5 = redTapeWorker.create(receiptId, R.nextBoolean(), "JUNIT");
+        d5.getActiveDocuments(BLOCK).get(0).append(Position.builder()
+                .amount(1)
+                .type(PositionType.COMMENT)
+                .name("Comment")
+                .description("Comment")
+                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
+                .build());
+
         redTapeWorker.update(d1.getActiveDocuments(BLOCK).get(0), null, "JUNIT");
         redTapeWorker.update(d2.getActiveDocuments(BLOCK).get(0), null, "JUNIT");
         redTapeWorker.update(d3.getActiveDocuments(BLOCK).get(0), null, "JUNIT");
         redTapeWorker.update(d4.getActiveDocuments(BLOCK).get(0), null, "JUNIT");
+        redTapeWorker.update(d5.getActiveDocuments(BLOCK).get(0), null, "JUNIT");
 
         redTapeCloserOpertaionItBean.deleteStockUnit(stockAgent.findStockUnitByRefurbishIdEager(unit2.getIdentifier(REFURBISHED_ID)).getId());
 
-        return Arrays.asList(d1, d2, d3, d4);
+        return Arrays.asList(d1, d2, d3, d4, d5);
 
     }
 }
