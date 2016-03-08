@@ -89,7 +89,9 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         LIGHTNING("Lightning"),
         WLAN_AC("WLAN ac"),
         IPS_DISPLAY("IPS-Display"),
-        USB_TYPE_C("USB Typ-C");
+        USB_TYPE_C("USB Typ-C"),
+        THREE_SIXTY_DEGREE_TORQUE_HINGE("360° Dual-Torque-Hinge"),
+        BLUE_LIGHT_FILTER("Blaulichtfilter");
 
         @Getter
         private final String note;

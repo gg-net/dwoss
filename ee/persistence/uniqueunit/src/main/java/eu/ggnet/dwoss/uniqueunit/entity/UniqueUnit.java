@@ -127,7 +127,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         MS_OFFICE_365_PERSONAL("Microsoft Office 365 Personal inkl."),
         MS_OFFICE_HOME_AND_STUDENT_2013("Microsoft Office Home and Student 2013 inkl."),
         STYLUS("Stylus / Displaystift"),
-        DISPLAYPORT_CABLE("Displayportkabel");
+        DISPLAYPORT_CABLE("Displayportkabel"),
+        VGA_USB_ADAPTER("VGA-USB Adapter");
 
         private final String note;
 
@@ -171,13 +172,14 @@ public class UniqueUnit implements Serializable, EagerAble {
                             THREE_D_GLASSES, REMOTE, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
                 case ALL_IN_ONE:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, GAME_MOUSE, GAME_KEYBOARD, CABLELES_KEYBOARD, CABLELES_MOUSE, ANTENNA_ADAPTER,
-                            DONGLE, FOOT, DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, REMOTE, AC_ADAPTER_INC_CABLE, WALLHOLDER, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
+                            DONGLE, FOOT, DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, REMOTE, AC_ADAPTER_INC_CABLE, WALLHOLDER, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, 
+                            ALTERNATIBVE_USB_CABLE, USB_KABEL);
                 case DESKTOP_BUNDLE:
                     Set<Equipment> equipments = getEquipments(ProductGroup.DESKTOP);
                     equipments.addAll(getEquipments(ProductGroup.MONITOR));
                     return equipments;
                 case SERVER:
-                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, INSTALL_DISCS, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
+                    return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
                 case DESKTOP:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, GAME_MOUSE, GAME_KEYBOARD, CABLELES_KEYBOARD, MANUAL, ALTERNATIBVE_USB_CABLE,
                             CABLELES_MOUSE, ANTENNA_ADAPTER, DONGLE, AC_ADAPTER_INC_CABLE, FOOT, WLAN_KINK_ANTENNA, DVI_HDMI_ADAPTOR, ALTERNATIVE_PLUGIN_AC_ADAPTER);
@@ -193,7 +195,7 @@ public class UniqueUnit implements Serializable, EagerAble {
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
                             VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER);
                 default:
             }
             return EnumSet.allOf(Equipment.class);
@@ -255,7 +257,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         SCRATCHES_ON_DISPLAY_STAND("Kratzer auf dem Displaybein"),
         SCRATCHES_BELOW_KEYBOARD("Kratzer unterhalb der Tastatur"),
         REMAINS_OF_GLUE_BOTTOM_SIDE("Klebereste auf der Geräteunterseite"),
-        SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),;
+        SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),
+        USETRACES_ON_CASE_BOTTOM_SIDE("Kratzer auf der Geräteunterseite");
 
         private final String note;
 

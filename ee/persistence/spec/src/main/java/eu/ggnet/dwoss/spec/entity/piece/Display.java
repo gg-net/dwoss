@@ -53,8 +53,8 @@ public class Display implements Serializable {
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _10_1, _12_1));
         _16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17_3, _18_4, _12));
+        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42));
+        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28));
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12));
         _16_9 = m;
@@ -64,6 +64,12 @@ public class Display implements Serializable {
         m.put(ProductGroup.ALL_IN_ONE, new ArrayList<>());
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5));
         _3_2 = m;
+        m = new EnumMap<>(ProductGroup.class);
+        m.put(ProductGroup.MONITOR, Arrays.asList(_25,_29, _34));
+        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_25, _29));
+        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_25, _29));
+        m.put(ProductGroup.TABLET_SMARTPHONE, new ArrayList<>());
+        _21_9 = m;
     }
 
     private final static Map<ProductGroup, List<Size>> _4_3;
@@ -73,6 +79,8 @@ public class Display implements Serializable {
     private final static Map<ProductGroup, List<Size>> _16_9;
 
     private final static Map<ProductGroup, List<Size>> _3_2;
+
+    private final static Map<ProductGroup, List<Size>> _21_9;
 
     /**
      * The Ration of a Display.
@@ -95,7 +103,11 @@ public class Display implements Serializable {
         THREE_TO_TWO(
                 "3:2",
                 _3_2,
-                EnumSet.of(RETINA_4));
+                EnumSet.of(RETINA_4)),
+        TWENTY_ONE_TO_NINE(
+                "21:9",
+                _21_9,
+                EnumSet.of(UWHD, UWQHD));
 
         @Getter
         private final String note;
@@ -198,7 +210,9 @@ public class Display implements Serializable {
         IPHONE_6("1334x750"),
         HD_720P("HD 720p (1280x720)"),
         UHD("UHD (3840x2160)"),
-        RETINA_DISPLAY("Retina Display (2304×1440)");
+        RETINA_DISPLAY("Retina Display (2304×1440)"),
+        UWHD("2560 x 1080"),
+        UWQHD("3440 x 1440");
 
         private final String note;
 
@@ -250,7 +264,10 @@ public class Display implements Serializable {
         _5_5(5.5, FULL_HD),
         _5(5, FULL_HD),
         _28(28, UHD),
-        _12(12, UHD);
+        _12(12, UHD),
+        _25(25, UWHD),
+        _29(29, UWHD),
+        _34(34, UWHD);
 
         private final double size;
 

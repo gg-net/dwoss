@@ -85,7 +85,9 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_8_PROFESSIONAL_32,
                 Os.WINDOWS_8_PROFESSIONAL_64,
                 Os.WINDOWS_8_1_32,
-                Os.WINDOWS_8_1_64),
+                Os.WINDOWS_8_1_64,
+                Os.WINDOWS_8_1_PROFESSIONAL_32,
+                Os.WINDOWS_8_1_PROFESSIONAL_64),
         WINDOWS_10(
                 Os.WINDOWS_10_HOME_32,
                 Os.WINDOWS_10_HOME_64,
@@ -241,7 +243,8 @@ public class Desktop extends BasicSpec {
         ROTATING_1500(Type.ROTATING, 1500, "1500GB HDD"),
         ROTATING_2000(Type.ROTATING, 2000, "2000GB HDD"),
         ROTATING_3000(Type.ROTATING, 3000, "3000GB HDD"),
-        SSD_0240(Type.SSD, 240, "240GB SSD");
+        SSD_0240(Type.SSD, 240, "240GB SSD"),
+        SSD_0004(Type.SSD, 4, "4GB SSD");
 
         public static enum Type {
 
@@ -350,7 +353,7 @@ public class Desktop extends BasicSpec {
 
     @Override
     public Set<Extra> getDefaultExtras() {
-        return EnumSet.of(CARD_READER, E_SATA, PS_2, SPEAKERS, USB_3, WLAN_TO_N, WLAN_TO_G, MEDIA_STATION, TV_TUNER, INFRARED_RESCEIVER, DUAL_LOAD, 
+        return EnumSet.of(CARD_READER, E_SATA, PS_2, SPEAKERS, USB_3, WLAN_TO_N, WLAN_TO_G, MEDIA_STATION, TV_TUNER, INFRARED_RESCEIVER, DUAL_LOAD,
                 BLUETOOTH, THUNDERBOLT, LIGHTNING, WLAN_AC, USB_TYPE_C);
     }
 
