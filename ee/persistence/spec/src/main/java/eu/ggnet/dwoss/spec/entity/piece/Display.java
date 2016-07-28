@@ -53,10 +53,10 @@ public class Display implements Serializable {
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _10_1, _12_1));
         _16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12));
+        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1,_4_7,_12_9));
+        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12,_4_7,_27,_12_9));
+        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1,_4_7,_12_9));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12, _4_7,_27,_12_9));
         _16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
@@ -65,7 +65,7 @@ public class Display implements Serializable {
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5));
         _3_2 = m;
         m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_25,_29, _34));
+        m.put(ProductGroup.MONITOR, Arrays.asList(_25, _29, _34));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_25, _29));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_25, _29));
         m.put(ProductGroup.TABLET_SMARTPHONE, new ArrayList<>());
@@ -95,11 +95,11 @@ public class Display implements Serializable {
         SIXTEEN_TO_TEN(
                 "16:10",
                 _16_10,
-                EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15)),
+                EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15, RETINA_DISPLAY)),
         SIXTEEN_TO_NINE(
                 "16:9",
                 _16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD)),
+                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6,IPAD_PRO)),
         THREE_TO_TWO(
                 "3:2",
                 _3_2,
@@ -210,9 +210,11 @@ public class Display implements Serializable {
         IPHONE_6("1334x750"),
         HD_720P("HD 720p (1280x720)"),
         UHD("UHD (3840x2160)"),
-        RETINA_DISPLAY("Retina Display (2304×1440)"),
+        RETINA_DISPLAY("Retina Display (2304x1440)"),
         UWHD("2560 x 1080"),
-        UWQHD("3440 x 1440");
+        UWQHD("3440 x 1440"),
+        APPLE_5K("5120 x 2880"),
+        IPAD_PRO("2732 x 2048");
 
         private final String note;
 
@@ -224,7 +226,7 @@ public class Display implements Serializable {
     @AllArgsConstructor
     public static enum Size implements INoteModel {
 
-        _10_1(10.1, FULL_HD),
+        _10_1(10.1, WUXGA),
         _11_6(11.6, FULL_HD),
         _13_3(13.3, WQHD),
         _14(14, FULL_HD),
@@ -243,7 +245,7 @@ public class Display implements Serializable {
         _23(23, FULL_HD),
         _24(24, FULL_HD),
         _26(26, WUXGA),
-        _27(27, UHD),
+        _27(27, APPLE_5K),
         _32(32, WUXGA),
         _14_1(14.1, HD),
         _8_9(8.9, WSVGA),
@@ -264,10 +266,11 @@ public class Display implements Serializable {
         _5_5(5.5, FULL_HD),
         _5(5, FULL_HD),
         _28(28, UHD),
-        _12(12, UHD),
+        _12(12, RETINA_DISPLAY),
         _25(25, UWHD),
         _29(29, UWHD),
-        _34(34, UWHD);
+        _34(34, UWHD),
+        _12_9(12.9, IPAD_PRO);
 
         private final double size;
 

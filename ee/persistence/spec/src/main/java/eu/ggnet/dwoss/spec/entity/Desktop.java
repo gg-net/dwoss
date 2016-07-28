@@ -46,7 +46,8 @@ public class Desktop extends BasicSpec {
     /**
      * Allowed values for Memory Size.
      */
-    public final static Integer[] MEMORY_SIZES = {0, 512, 1024, 2048, 3072, 4096, 5120, 6144, 7268, 8192, 10240, 12288, 16384, 24576, 32768};
+    public final static Integer[] MEMORY_SIZES = {0, 512, 1024, 2048, 3072, 4096, 5120, 6144, 
+        7268, 8192, 10240, 12288, 16384, 24576, 32768, 65536};
 
     public static enum OsCategory {
 

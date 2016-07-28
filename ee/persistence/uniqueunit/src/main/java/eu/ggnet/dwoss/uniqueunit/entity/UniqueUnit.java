@@ -128,7 +128,9 @@ public class UniqueUnit implements Serializable, EagerAble {
         MS_OFFICE_HOME_AND_STUDENT_2013("Microsoft Office Home and Student 2013 inkl."),
         STYLUS("Stylus / Displaystift"),
         DISPLAYPORT_CABLE("Displayportkabel"),
-        VGA_USB_ADAPTER("VGA-USB Adapter");
+        VGA_USB_ADAPTER("VGA-USB Adapter"),
+        MAGNETIC_CHARGING_CABLE("magnetisches Ladekabel"),
+        SPARE_STRAP("Ersatzarmband");
 
         private final String note;
 
@@ -190,12 +192,12 @@ public class UniqueUnit implements Serializable, EagerAble {
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, USB_KABEL, KEYBOARD_DOCK, VGA_NETWORK_ADAPTER, HEADSET, MANUAL,
                             MICRO_USB_TO_USB_ADAPTER, PORTFOLIO_CASE, SDCARD_16GB, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, USB_MICRO_HDMI_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, CRUNCHCOVER, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS,MAGNETIC_CHARGING_CABLE,SPARE_STRAP);
                 case NOTEBOOK:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
                             VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER,MAGNETIC_CHARGING_CABLE);
                 default:
             }
             return EnumSet.allOf(Equipment.class);
@@ -258,7 +260,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         SCRATCHES_BELOW_KEYBOARD("Kratzer unterhalb der Tastatur"),
         REMAINS_OF_GLUE_BOTTOM_SIDE("Klebereste auf der Geräteunterseite"),
         SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),
-        USETRACES_ON_CASE_BOTTOM_SIDE("Kratzer auf der Geräteunterseite");
+        USETRACES_ON_CASE_BOTTOM_SIDE("Kratzer auf der Geräteunterseite"),
+        USETRACES_DISPLAY("Gebrauchsspuren auf dem Display"),;
 
         private final String note;
 
