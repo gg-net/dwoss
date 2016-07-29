@@ -34,145 +34,155 @@ public enum TradeName {
 
     ONESELF("Your own Company"),
     ACER("Acer") {
-                @Override
-                public TradeName getManufacturer() {
-                    return ACER;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return ACER;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(ACER, PACKARD_BELL, EMACHINES, GATEWAY);
-                }
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(ACER, PACKARD_BELL, EMACHINES, GATEWAY);
+        }
 
-                @Override
-                public PartNoSupport getPartNoSupport() {
-                    return new AcerPartNoSupport();
-                }
+        @Override
+        public PartNoSupport getPartNoSupport() {
+            return new AcerPartNoSupport();
+        }
 
-            },
+    },
     PACKARD_BELL("Packard Bell") {
-                @Override
-                public TradeName getManufacturer() {
-                    return ACER;
-                }
-            },
+        @Override
+        public TradeName getManufacturer() {
+            return ACER;
+        }
+    },
     EMACHINES("eMachines") {
-                @Override
-                public TradeName getManufacturer() {
-                    return ACER;
-                }
-            },
+        @Override
+        public TradeName getManufacturer() {
+            return ACER;
+        }
+    },
     GATEWAY("Gateway") {
-                @Override
-                public TradeName getManufacturer() {
-                    return ACER;
-                }
-            },
+        @Override
+        public TradeName getManufacturer() {
+            return ACER;
+        }
+    },
     OTTO("Otto") {
 
-                @Override
-                public PartNoSupport getPartNoSupport() {
-                    return new OttoPartNoSupport();
-                }
+        @Override
+        public PartNoSupport getPartNoSupport() {
+            return new OttoPartNoSupport();
+        }
 
-            },
+    },
     NULL_NULL_4("004"),
     APPLE("Apple") {
-                @Override
-                public TradeName getManufacturer() {
-                    return APPLE;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return APPLE;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(APPLE);
-                }
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(APPLE);
+        }
 
-                @Override
-                public PartNoSupport getPartNoSupport() {
-                    return new ApplePartNoSupport();
-                }
-            },
+        @Override
+        public PartNoSupport getPartNoSupport() {
+            return new ApplePartNoSupport();
+        }
+    },
     HP("Hewlett-Packard") {
-                @Override
-                public TradeName getManufacturer() {
-                    return HP;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return HP;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(HP);
-                }
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(HP);
+        }
 
-                @Override
-                public PartNoSupport getPartNoSupport() {
-                    return new HpPartNoSupport();
-                }
-            },
+        @Override
+        public PartNoSupport getPartNoSupport() {
+            return new HpPartNoSupport();
+        }
+    },
     FUJITSU("Fujitsu") {
-                @Override
-                public TradeName getManufacturer() {
-                    return FUJITSU;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return FUJITSU;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(FUJITSU);
-                }
-            },
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(FUJITSU);
+        }
+    },
     DELL("Dell") {
-                @Override
-                public TradeName getManufacturer() {
-                    return DELL;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return DELL;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(DELL);
-                }
-            },
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(DELL);
+        }
+    },
     AMAZON("Amazon"),
     EBAY("eBay"),
     SAMSUNG("Samsung") {
-                @Override
-                public TradeName getManufacturer() {
-                    return SAMSUNG;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return SAMSUNG;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(SAMSUNG);
-                }
-            },
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(SAMSUNG);
+        }
+    },
     LG("LG Electronics") {
-                @Override
-                public TradeName getManufacturer() {
-                    return LG;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return LG;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(LG);
-                }
-            },
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(LG);
+        }
+    },
     ALSO("Also"),
     INGRAM_MICRO("Ingram Mirco"),
     LENOVO("Lenovo") {
-                @Override
-                public TradeName getManufacturer() {
-                    return LENOVO;
-                }
+        @Override
+        public TradeName getManufacturer() {
+            return LENOVO;
+        }
 
-                @Override
-                public Set<TradeName> getBrands() {
-                    return EnumSet.of(LENOVO);
-                }
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(LENOVO);
+        }
 
-                @Override
-                public PartNoSupport getPartNoSupport() {
-                    return new LenovoPartNoSupport();
-                }
-            };
+        @Override
+        public PartNoSupport getPartNoSupport() {
+            return new LenovoPartNoSupport();
+        }
+    }, SONOS("Sonos") {
+        @Override
+        public TradeName getManufacturer() {
+            return SONOS;
+        }
+
+        @Override
+        public Set<TradeName> getBrands() {
+            return EnumSet.of(SONOS);
+        }
+    };
 
     @Getter
     private final String name;
