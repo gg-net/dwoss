@@ -51,10 +51,14 @@ import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
+import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+
 /**
  * Allows Scraping of Units.
  *
- * @author oliver.guenther
+ * @a
+import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+uthor oliver.guenther
  */
 @Stateless
 
@@ -168,6 +172,7 @@ public class UnitDestroyerOperation implements UnitDestroyer {
         stockTransactionEmo.completeDestroy(arranger, Arrays.asList(st));
         uu.addHistory(operation + " of Unit via " + st);
         uu.setInternalComment(uu.getInternalComment() + ", " + operation + " of Unit.");
+        uu.setSalesChannel(UNKNOWN);
         L.info("Executed Operation {} for uniqueUnit(id={},refurbishId={}), added to LogicTransaction({}) and Dossier({})",
                 operation, uniqueUnit.getId(), uniqueUnit.getRefurbishId(), lt.getId(), dos.getIdentifier());
     }
