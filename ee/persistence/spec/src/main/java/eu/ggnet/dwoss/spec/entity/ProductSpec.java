@@ -91,6 +91,9 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         IPS_DISPLAY("IPS-Display"),
         USB_TYPE_C("USB Typ-C"),
         THREE_SIXTY_DEGREE_TORQUE_HINGE("360° Dual-Torque-Hinge"),
+        VGA_ADAPTER("VGA-Adapter"),
+        MAGSAFE_POWER_ADAPTER("MagSafe Power Adapter"),
+        REPLACEMENT_STRAP("Ersatzarmband"),
         BLUE_LIGHT_FILTER("Blaulichtfilter");
 
         @Getter

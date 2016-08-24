@@ -53,10 +53,10 @@ public class Display implements Serializable {
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _10_1, _12_1));
         _16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
-        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1,_4_7,_12_9));
-        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12,_4_7,_27,_12_9));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1,_4_7,_12_9));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12, _4_7,_27,_12_9));
+        m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1,_4_7,_12_9,_35, _4_5));
+        m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12,_4_7,_27,_12_9,_35, _4_5));
+        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1,_4_7,_12_9,_35, _4_5));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12, _4_7,_27,_12_9,_35, _4_5));
         _16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
@@ -99,7 +99,7 @@ public class Display implements Serializable {
         SIXTEEN_TO_NINE(
                 "16:9",
                 _16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6,IPAD_PRO)),
+                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6,IPAD_PRO, WVGA)),
         THREE_TO_TWO(
                 "3:2",
                 _3_2,
@@ -214,7 +214,8 @@ public class Display implements Serializable {
         UWHD("2560 x 1080"),
         UWQHD("3440 x 1440"),
         APPLE_5K("5120 x 2880"),
-        IPAD_PRO("2732 x 2048");
+        IPAD_PRO("2732 x 2048"),
+        WVGA("854 x 480");
 
         private final String note;
 
@@ -270,7 +271,9 @@ public class Display implements Serializable {
         _25(25, UWHD),
         _29(29, UWHD),
         _34(34, UWHD),
-        _12_9(12.9, IPAD_PRO);
+        _12_9(12.9, IPAD_PRO),
+        _35(35, UHD),
+        _4_5(4.5, WVGA);
 
         private final double size;
 
