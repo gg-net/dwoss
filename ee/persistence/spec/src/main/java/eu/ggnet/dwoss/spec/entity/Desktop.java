@@ -245,7 +245,8 @@ public class Desktop extends BasicSpec {
         ROTATING_2000(Type.ROTATING, 2000, "2000GB HDD"),
         ROTATING_3000(Type.ROTATING, 3000, "3000GB HDD"),
         SSD_0240(Type.SSD, 240, "240GB SSD"),
-        SSD_0004(Type.SSD, 4, "4GB SSD");
+        SSD_0004(Type.SSD, 4, "4GB SSD"),
+        SSD_0096(Type.SSD, 96, "96GB SSD");
 
         public static enum Type {
 

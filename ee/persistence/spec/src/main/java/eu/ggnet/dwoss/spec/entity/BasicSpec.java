@@ -69,7 +69,9 @@ public class BasicSpec extends ProductSpec {
         PURPLE_BLACK("lila-schwarz"),
         ROSEGOLD("rosegold"),
         GOLD("gold"),
-        APRICOT("apricot");
+        APRICOT("apricot"),
+        BLACK_COPPER("schwarz-kupfer"),
+        BLACK_GREY("schwarz-grau");
 
         private String note;
 
