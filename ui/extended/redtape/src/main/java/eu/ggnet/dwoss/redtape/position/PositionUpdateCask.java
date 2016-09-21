@@ -149,9 +149,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         this.setPostDecimal((int)((position.getAmount() % 1) * 100));
         this.setBookingAccount(position.getBookingAccount());
 
+        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
+        List bookingAccounts = new ArrayList();
+        bookingAccounts.add(postLedger.get(position.getType()).orElse(-1));
+        bookingAccounts.addAll(postLedger.getPossible(position.getType()).orElse(Collections.EMPTY_LIST));
+        bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
+
         System.out.println("Pre: " + this.getPreDecimal());
         System.out.println("Post: " + this.getPostDecimal());
-        
+
         this.accessCos = lookup(Guardian.class);
 
         if ( position.getDocument() != null && EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO).contains(position.getDocument().getType()) ) {
@@ -183,7 +189,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
             }
         }
     }
-    
+
     public Converter<Double, String> getTaxedConverter() {
         return taxedConverter;
     }
