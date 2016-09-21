@@ -168,6 +168,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
             }
             if ( position.getType() == UNIT ) {
                 disableComponents(preDecimalSpinner);
+                bookingAccountBox.setEnabled(true);
             }
             if ( position.getType() == COMMENT ) {
                 disableComponents(priceField, priceSumField, afterTaxPriceField, afterTaxSumField, preDecimalSpinner, postDecimalSpinner);

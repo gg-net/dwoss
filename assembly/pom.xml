@@ -11,7 +11,7 @@
     <properties>
         <dw.version>1</dw.version>
     </properties>
-
+    
     <name>DwOss • Assembly</name>
     <artifactId>dwoss-assembly</artifactId>
     <packaging>pom</packaging>

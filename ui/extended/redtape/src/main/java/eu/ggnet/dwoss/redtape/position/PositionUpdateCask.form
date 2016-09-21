@@ -196,9 +196,6 @@
     <Component class="javax.swing.JTextField" name="priceField">
       <BindingProperties>
         <BindingProperty name="text" source="Form" sourcePath="${price}" target="priceField" targetPath="text" updateStrategy="0" immediately="false">
-          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-            <Connection code="getStringConverter()" type="code"/>
-          </Property>
           <Property name="name" type="java.lang.String" value="priceBinding"/>
         </BindingProperty>
       </BindingProperties>
@@ -211,9 +208,6 @@
     <Component class="javax.swing.JTextField" name="afterTaxPriceField">
       <BindingProperties>
         <BindingProperty name="text" source="Form" sourcePath="${price}" target="afterTaxPriceField" targetPath="text" updateStrategy="0" immediately="false">
-          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-            <Connection code="getTaxedConverter()" type="code"/>
-          </Property>
           <Property name="name" type="java.lang.String" value="afterTaxPriceBinding"/>
         </BindingProperty>
       </BindingProperties>
@@ -283,9 +277,6 @@
       <BindingProperties>
         <BindingProperty name="text" source="Form" sourcePath="${amount * price  }" target="priceSumField" targetPath="text" updateStrategy="0" immediately="false">
           <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-            <Connection code="getStringConverter()" type="code"/>
-          </Property>
           <Property name="name" type="java.lang.String" value="priceSumBinding"/>
         </BindingProperty>
       </BindingProperties>
@@ -294,9 +285,6 @@
       <BindingProperties>
         <BindingProperty name="text" source="Form" sourcePath="${amount *price }" target="afterTaxSumField" targetPath="text" updateStrategy="0" immediately="false">
           <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-          <Property name="converter" type="org.jdesktop.beansbinding.Converter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-            <Connection code="getTaxedConverter()" type="code"/>
-          </Property>
           <Property name="name" type="java.lang.String" value="afterTaxSumBinding"/>
         </BindingProperty>
       </BindingProperties>
