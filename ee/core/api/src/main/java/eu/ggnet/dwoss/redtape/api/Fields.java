@@ -14,29 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.gsoffice;
+package eu.ggnet.dwoss.redtape.api;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
-public class DateAdapter extends XmlAdapter<String, Date> {
+public class Fields {
 
-    private final static DateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+    @XmlElementWrapper(name = "FIELDS")
+    @XmlElement(name = "FIELD")
+    List<Field> fields;
 
-    @Override
-    public Date unmarshal(String date) throws ParseException {
-        return formatter.parse(date);
+    public Fields() {
+        fields = new ArrayList<Field>();
     }
 
-    @Override
-    public String marshal(Date date) {
-        if (date == null) {
-            return "";
-        }
-        return formatter.format(date);
+    public boolean add(Field e) {
+        return fields.add(e);
     }
+
 }

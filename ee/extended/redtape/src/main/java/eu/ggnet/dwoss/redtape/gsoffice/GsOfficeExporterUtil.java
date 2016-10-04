@@ -16,9 +16,11 @@
  */
 package eu.ggnet.dwoss.redtape.gsoffice;
 
+import eu.ggnet.dwoss.redtape.api.RowData;
+import eu.ggnet.dwoss.redtape.api.Row;
+
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.bind.*;
 
@@ -59,6 +61,21 @@ public class GsOfficeExporterUtil {
 
     public void execute(IMonitor monitor) {
         SubMonitor m = SubMonitor.convert(monitor, "Create GS-Office XML Data", customerInvoices.size() + 10);
+        RowData rowData = generateDefaultGSRowData(m);
+        m.message("writting Output");
+        try {
+            JAXBContext context = JAXBContext.newInstance(RowData.class);
+            Marshaller ms = context.createMarshaller();
+            ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            ms.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-1");
+            ms.marshal(rowData, output);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
+        m.finish();
+    }
+
+    private RowData generateDefaultGSRowData(SubMonitor m) {
         RowData rowData = new RowData();
         for (Document doc : customerInvoices.keySet()) {
             Row r = new Row();
@@ -114,16 +131,6 @@ public class GsOfficeExporterUtil {
                 }
             }
         }
-        m.message("writting Output");
-        try {
-            JAXBContext context = JAXBContext.newInstance(RowData.class);
-            Marshaller ms = context.createMarshaller();
-            ms.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            ms.setProperty(Marshaller.JAXB_ENCODING, "ISO-8859-1");
-            ms.marshal(rowData, output);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
-        }
-        m.finish();
+        return rowData;
     }
 }

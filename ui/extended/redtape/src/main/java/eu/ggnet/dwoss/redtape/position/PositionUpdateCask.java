@@ -140,6 +140,13 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     @Override
     public void accept(Position position) {
         if ( position == null ) return;
+        
+        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
+        List bookingAccounts = new ArrayList();
+        bookingAccounts.add(postLedger.get(position.getType()).orElse(-1));
+        bookingAccounts.addAll(postLedger.getPossible(position.getType()).orElse(Collections.EMPTY_LIST));
+        bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
+        
         this.position = position;
         this.setPositionName(position.getName());
         this.setPrice(position.getPrice());
@@ -148,12 +155,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
         this.setPostDecimal((int)((position.getAmount() % 1) * 100));
         this.setBookingAccount(position.getBookingAccount());
-
-        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
-        List bookingAccounts = new ArrayList();
-        bookingAccounts.add(postLedger.get(position.getType()).orElse(-1));
-        bookingAccounts.addAll(postLedger.getPossible(position.getType()).orElse(Collections.EMPTY_LIST));
-        bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
 
         System.out.println("Pre: " + this.getPreDecimal());
         System.out.println("Post: " + this.getPostDecimal());
