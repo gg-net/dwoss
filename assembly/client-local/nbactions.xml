@@ -13,8 +13,8 @@
         </activatedProfiles>
     </action>
     <action>
-        <actionName>CUSTOM-RunClient GG-Net (obsidian)</actionName>
-        <displayName>RunClient GG-Net (obsidian)</displayName>
+        <actionName>CUSTOM-RunClient GG-Net (blackout)</actionName>
+        <displayName>RunClient GG-Net (blackout)</displayName>
         <goals>
             <goal>compile</goal>
             <goal>jfx:run</goal>
@@ -24,7 +24,9 @@
             <activatedProfile>client-ggnet</activatedProfile>
         </activatedProfiles>
         <properties>
-            <persistence.host>obsidian.ahrensburg.gg-net.de</persistence.host>
+            <persistence.host>192.168.3.11</persistence.host>
+            <persistence.user>root</persistence.user>
+            <persistence.pass>acbbaber</persistence.pass>
         </properties>
     </action>
     <action>
@@ -45,8 +47,8 @@
         </properties>
     </action>
     <action>
-        <actionName>CUSTOM-RunClient ELUS (obsidian)</actionName>
-        <displayName>RunClient ELUS (obsidian)</displayName>
+        <actionName>CUSTOM-RunClient ELUS (blackout)</actionName>
+        <displayName>RunClient ELUS (blackout)</displayName>
         <goals>
             <goal>compile</goal>
             <goal>jfx:run</goal>
@@ -55,7 +57,9 @@
             <persistence.redtape.schema>elus_redtape</persistence.redtape.schema>
             <persistence.report.schema>elus_report</persistence.report.schema>
             <persistence.stock.schema>elus_stock</persistence.stock.schema>
-            <persistence.host>obsidian.ahrensburg.gg-net.de</persistence.host>
+            <persistence.host>192.168.3.11</persistence.host>
+            <persistence.user>root</persistence.user>
+            <persistence.pass>acbbaber</persistence.pass>
         </properties>
         <activatedProfiles>
             <activatedProfile>server-elus</activatedProfile>

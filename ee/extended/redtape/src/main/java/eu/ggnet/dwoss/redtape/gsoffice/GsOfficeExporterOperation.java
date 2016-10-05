@@ -30,6 +30,7 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.entity.Document;
@@ -58,6 +59,9 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
 
     @Inject
     private FinancialAccounting accounting;
+    
+    @Inject
+    private RedTapeHookService redTapeHook;
 
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -85,7 +89,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
         }
         m.message("Generating Outfile");
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(out, customerInvoices, accounting);
+            GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(redTapeHook, out, customerInvoices, accounting);
             exporter.execute(m);
             m.finish();
             return new FileJacket("Buchungsaetze Sopo von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());

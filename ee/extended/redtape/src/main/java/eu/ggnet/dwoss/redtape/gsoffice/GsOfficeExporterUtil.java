@@ -22,6 +22,8 @@ import eu.ggnet.dwoss.redtape.api.Row;
 import java.io.OutputStream;
 import java.util.*;
 
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import javax.xml.bind.*;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
@@ -29,6 +31,7 @@ import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
 import eu.ggnet.saft.api.progress.IMonitor;
 
 import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.redtape.api.*;
 
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
@@ -53,6 +56,8 @@ import lombok.*;
 @AllArgsConstructor
 public class GsOfficeExporterUtil {
 
+    private RedTapeHookService redTapeHook;
+
     private OutputStream output;
 
     private Map<Document, UiCustomer> customerInvoices;
@@ -61,7 +66,7 @@ public class GsOfficeExporterUtil {
 
     public void execute(IMonitor monitor) {
         SubMonitor m = SubMonitor.convert(monitor, "Create GS-Office XML Data", customerInvoices.size() + 10);
-        RowData rowData = generateDefaultGSRowData(m);
+        RowData rowData = redTapeHook.generateGSRowData(customerInvoices, accounting, monitor);
         m.message("writting Output");
         try {
             JAXBContext context = JAXBContext.newInstance(RowData.class);

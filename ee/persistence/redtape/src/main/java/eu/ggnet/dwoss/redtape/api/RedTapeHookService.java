@@ -44,7 +44,7 @@ public interface RedTapeHookService {
 
     Result<List<Position>> addWarrantyForUnitPosition(Position p, long documentId) throws UserInfoException;
 
-    default RowData generateGSRowData(Map<Document, UiCustomer> documents, FinancialAccounting accounting, IMonitor m) throws UserInfoException {
+    default RowData generateGSRowData(Map<Document, UiCustomer> documents, FinancialAccounting accounting, IMonitor m){
         RowData rowData = new RowData();
         for (Document doc : documents.keySet()) {
             Row r = new Row();
