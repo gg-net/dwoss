@@ -76,10 +76,10 @@ Die meisten Information werden in der Java Dokumentation verarbeitet.
 
 Weitere relevante Systeme:
 
-- Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
-- Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
-- Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
-- Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
+- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS) 
+- Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
+- Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
+- Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)
 
 English version
 ===============
@@ -129,7 +129,7 @@ Most of the Project information are merged into the javadoc.
 
 Also sources of information:
 
-- Wiki: [GG-Net Confluence](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS) 
-- Blog: [GG-Net Blog](http://overload.ahrensburg.gg-net.de/confluence/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
-- Issue Tracker: [GG-Net Jira](http://overload.ahrensburg.gg-net.de/jira)
-- Build Server: [GG-Net Bamboo](http://devcon.ahrensburg.gg-net.de/bamboo)
+- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS) 
+- Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
+- Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
+- Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)
