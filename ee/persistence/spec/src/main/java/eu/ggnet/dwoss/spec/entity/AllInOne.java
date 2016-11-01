@@ -41,7 +41,9 @@ public class AllInOne extends DisplayAbleDesktop {
 
     @Override
     public Set<Extra> getDefaultExtras() {
-        return EnumSet.of(CARD_READER, E_SATA, PS_2, SPEAKERS, USB_3, WLAN_TO_N, WLAN_TO_G, WLAN_AC, BLUETOOTH, KAMERA, THREE_D, TOUCH, TV_TUNER, THUNDERBOLT, IPS_DISPLAY);
+        return EnumSet.of(
+                CARD_READER, E_SATA, PS_2, SPEAKERS, USB_3, WLAN_TO_N, WLAN_TO_G, WLAN_AC, BLUETOOTH,
+                KAMERA, THREE_D, TOUCH, TV_TUNER, THUNDERBOLT, IPS_DISPLAY, BATTERY_INTEGRATED, KEYBOARD_BACKGROUND_LIGHT);
     }
 
     @Override

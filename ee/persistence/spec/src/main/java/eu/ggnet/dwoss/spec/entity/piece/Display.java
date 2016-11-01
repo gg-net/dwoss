@@ -50,13 +50,13 @@ public class Display implements Serializable {
         m.put(ProductGroup.MONITOR, Arrays.asList(_19, _22, _24));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_12_1, _13_3, _14, _15_4, _17, _17_3));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_17_3));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _10_1, _12_1));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _5, _10_1, _12, _12_1));
         _16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1, _4, _4_7, _12_9, _35, _4_5, _12_5, _23_8));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12, _4, _4_7, _27, _12_9, _35, _4_5, _12_5));
-        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1, _4_7, _12_9, _35, _4, _4_5, _12_5, _23_8));
-        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _7, _7_9, _8, _10_1, _11_6, _12, _4_7, _27, _12_9, _35, _4_5, _12_5));
+        m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1, _4_7, _12_9, _35, _4, _4_5, _12_5, _23_8, _17_3));
+        m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _6, _7, _7_9, _8, _10_1, _11_6, _12, _4_7, _27, _12_9, _35, _4_5, _12_5));
         _16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
@@ -95,11 +95,11 @@ public class Display implements Serializable {
         SIXTEEN_TO_TEN(
                 "16:10",
                 _16_10,
-                EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15, RETINA_DISPLAY)),
+                EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15, RETINA_DISPLAY, WVGA, QHD_1440P)),
         SIXTEEN_TO_NINE(
                 "16:9",
                 _16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6, IPAD_PRO, WVGA, QHD_1440P, _4K)),
+                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, HD_720P, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6, IPAD_PRO, WVGA, QHD_1440P, _4K)),
         THREE_TO_TWO(
                 "3:2",
                 _3_2,
@@ -258,7 +258,7 @@ public class Display implements Serializable {
         _7(7, WXGA),
         _23_6(23.6, FULL_HD),
         _20(20, UXGA),
-        _8(8, WXGA),
+        _8(8, FULL_HD),
         _7_9(7.9, QXGA),
         _9_7(9.7, QXGA),
         _19_5(19.5, FULL_HD),
@@ -277,7 +277,8 @@ public class Display implements Serializable {
         _35(35, UHD),
         _4_5(4.5, WVGA),
         _12_5(12.5, FULL_HD),
-        _23_8(23.8, FULL_HD);
+        _23_8(23.8, FULL_HD),
+        _6(6, FULL_HD);
 
         private final double size;
 
