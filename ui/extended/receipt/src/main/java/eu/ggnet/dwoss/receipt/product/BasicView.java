@@ -16,8 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import java.util.Arrays;
-import java.util.EnumSet;
+import java.util.*;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.UIManager;
@@ -66,7 +65,9 @@ public class BasicView extends AbstractView<BasicSpec> {
 
     @Override
     public void setSpec(BasicSpec basicSpec) {
-        extrasModel.setFiltered(basicSpec.getDefaultExtras());
+        Set<Extra> extras = basicSpec.getDefaultExtras();
+        extras.addAll(basicSpec.getExtras());
+        extrasModel.setFiltered(extras);
         extrasModel.setMarked(basicSpec.getExtras());
         colorBox.setSelectedItem(basicSpec.getColor());
         videoPortModel.setMarked(basicSpec.getVideoPorts());
