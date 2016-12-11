@@ -65,3 +65,5 @@ hs_err_pid*
 /incubator/mobile/build/
 /ee/core/api/target/
 /incubator/mobile/.nb-gradle/profiles/private/
+/incubator/lucidcalc/target/
+/incubator/statemachine/target/

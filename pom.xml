@@ -137,19 +137,6 @@
                 <picUrl>http://www.gravatar.com/avatar/82f7068b923f8f30af9bc0b79fb3bec3</picUrl>
             </properties>
         </developer>
-        <developer>
-            <id>bastian.venz</id>
-            <name>Bastian Venz</name>
-            <email>bastian.venz at gg-net dot de</email>
-            <organization>GG-Net GmbH</organization>
-            <organizationUrl>http://gg-net.de</organizationUrl>
-            <roles>
-                <role>Java Developer</role>
-            </roles>
-            <properties>
-                <picUrl>http://www.gravatar.com/avatar/5dca0ab174ce333765f90a952a10c835</picUrl>
-            </properties>
-        </developer>
     </developers>
 
     <scm>
@@ -160,12 +147,12 @@
 
     <ciManagement>
         <system>Bamboo</system>
-        <url>http://devcon.ahrensburg.gg-net.de/bamboo/browse/DWOSS</url>
+        <url>https://bamboo.cybertron.global/browse/DWOSS</url>
     </ciManagement>
 
     <issueManagement>
         <system>JIRA</system>
-        <url>http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS</url>
+        <url>https://jira.cybertron.global/browse/DWOSS</url>
     </issueManagement>
 
     <licenses>
@@ -490,6 +477,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>1.1.0.Final</version>
+            </dependency>
+            <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-web-api</artifactId>
                 <version>7.0</version>
@@ -707,7 +699,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.14.4</version>
+                <version>1.16.10</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

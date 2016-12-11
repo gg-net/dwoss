@@ -113,9 +113,7 @@ To get started you'll need:
 
 Checkout and Build (mvn clean install)
 
- 1. https://github.com/gg-net/statemachine.git (Needed, till artifacts are deployed to maven central)
- 2. https://github.com/gg-net/lucidcalc.git (Needed, till artifacts are deployed to maven central)
- 3. https://github.com/gg-net/dwoss.git (To Speed things up: mvn clean install -Pdevelopment)
+- https://github.com/gg-net/dwoss.git (To Speed things up: mvn clean install -Pdevelopment)
 
 Switch to dwoss/assembly/client-sample and call:
 
