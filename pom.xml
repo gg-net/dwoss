@@ -757,16 +757,6 @@
                 <version>3.4.2</version>
             </dependency>
             <dependency>
-                <groupId>eu.ggnet.lucidcalc</groupId>
-                <artifactId>lucidcalc</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>eu.ggnet.statemachine</groupId>
-                <artifactId>statemachine-runtime</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
                 <groupId>com.github.insubstantial</groupId>
                 <artifactId>substance</artifactId>
                 <version>7.3</version>
