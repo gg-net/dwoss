@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.rules;
 
-import eu.ggnet.dwoss.rules.AppleRules;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
