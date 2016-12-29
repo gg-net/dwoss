@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.rules;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -26,7 +26,11 @@ import java.util.regex.Pattern;
  */
 public class AppleRules {
 
-    private final static Pattern partNoPattern = Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}");
+//    private final static Pattern partNoPattern = Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}");
+    private final static List<Pattern> partNoPattern = Arrays.asList(
+            Pattern.compile("[A-Z]{2}[A-Z0-9]{3}[A-Z]{1,2}/[A-Z]{1}"),
+            Pattern.compile("[A-Z]{1}[0-9]{1}[A-Z]{2}[0-9]{3}[A-Z0-9]{2}")
+    );
 
     private final static Pattern serialPattern = Pattern.compile("[A-Z0-9]{11,12}");
 
@@ -39,10 +43,12 @@ public class AppleRules {
      */
     public static String validatePartNo(String partNo) {
         if ( partNo == null ) return "PartNo must not be null";
-        if ( !partNoPattern.matcher(partNo).matches() ) {
-            return "Apple Artikelnummer " + partNo + " passt nicht auf Apple Pattern ??###?/? oderr ??###??/? (?=Buchstabe, #=Zahl)";
+        for (Pattern pattern : partNoPattern) {
+            if ( pattern.matcher(partNo).matches() ) {
+                return null;
+            }
         }
-        return null;
+        return "Apple Artikelnummer " + partNo + " passt nicht auf eines der Pattern:" + partNoPattern.stream().map(Pattern::pattern).collect(Collectors.joining(","));
     }
 
     /**
