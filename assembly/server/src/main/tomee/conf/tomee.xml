@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomee>
+    <!-- see http://tomee.apache.org/containers-and-resources.html -->
+
+    <Resource id="My DataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:mydatasource
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="My Unmanaged DataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:mydatasource
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="repairDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:repair
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="repairDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:repair
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="reportDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:report
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="reportDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:report
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="redtapeDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:redtape
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="redtapeDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:redtape
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="uniqueunitDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:uniqueunit
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="uniqueunitDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:uniqueunit
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="specDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:spec
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="specDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:spec
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="stockDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:stock
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="stockDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:stock
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="sopoDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:sopo
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="sopoDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:sopo
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="rightsDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:rights
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="rightsDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:rights
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+    <Resource id="customerDataSource" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:customer
+        UserName sa
+        Password
+        JtaManaged true
+    </Resource>
+
+    <Resource id="customerDataSourceUnmanaged" type="DataSource">
+        JdbcDriver org.hsqldb.jdbcDriver
+        JdbcUrl jdbc:hsqldb:mem:customer
+        UserName sa
+        Password
+        JtaManaged false
+    </Resource>
+
+</tomee>
