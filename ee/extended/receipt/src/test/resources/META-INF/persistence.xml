@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="customer-pu">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>customerDataSource</jta-data-source>
+        <non-jta-data-source>customerDataSourceUnmanaged</non-jta-data-source>
+        <class>eu.ggnet.dwoss.customer.entity.Address</class>
+        <class>eu.ggnet.dwoss.customer.entity.Communication</class>
+        <class>eu.ggnet.dwoss.customer.entity.Company</class>
+        <class>eu.ggnet.dwoss.customer.entity.Contact</class>
+        <class>eu.ggnet.dwoss.customer.entity.Customer</class>
+        <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
+        <properties>
+            <property name="hibernate.search.default.directory_provider" value="ram"/>
+            <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
+            <property name="hibernate.search.default.worker.execution" value="sync"/>
+            <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="redtape-pu">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>redtapeDataSource</jta-data-source>
+        <non-jta-data-source>redtapeDataSourceUnmanaged</non-jta-data-source>
+        <class>eu.ggnet.dwoss.redtape.entity.Address</class>
+        <class>eu.ggnet.dwoss.redtape.entity.Document</class>
+        <class>eu.ggnet.dwoss.redtape.entity.Dossier</class>
+        <class>eu.ggnet.dwoss.redtape.entity.Position</class>
+        <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
+        <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
+    </persistence-unit>
+</persistence>
