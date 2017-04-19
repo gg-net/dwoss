@@ -17,15 +17,5 @@
             <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
         </properties>
     </persistence-unit>
-    <persistence-unit name="redtape-pu">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <jta-data-source>redtapeDataSource</jta-data-source>
-        <non-jta-data-source>redtapeDataSourceUnmanaged</non-jta-data-source>
-        <class>eu.ggnet.dwoss.redtape.entity.Address</class>
-        <class>eu.ggnet.dwoss.redtape.entity.Document</class>
-        <class>eu.ggnet.dwoss.redtape.entity.Dossier</class>
-        <class>eu.ggnet.dwoss.redtape.entity.Position</class>
-        <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
-        <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
-    </persistence-unit>
+${redtape.defaultpu}
 </persistence>

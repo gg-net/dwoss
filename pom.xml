@@ -107,6 +107,21 @@
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.allowConvertToStarImport>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.allowConvertToStarImport>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>
+        <redtape.defaultpu>
+          <![CDATA[   
+            <persistence-unit name="redtape-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>redtapeDataSource</jta-data-source>
+                <non-jta-data-source>redtapeDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.redtape.entity.Address</class>
+                <class>eu.ggnet.dwoss.redtape.entity.Document</class>
+                <class>eu.ggnet.dwoss.redtape.entity.Dossier</class>
+                <class>eu.ggnet.dwoss.redtape.entity.Position</class>
+                <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
+                <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
+            </persistence-unit>
+          ]]>
+        </redtape.defaultpu>
     </properties>
 
     <developers>
@@ -163,6 +178,13 @@
     </licenses>
 
     <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+        
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
