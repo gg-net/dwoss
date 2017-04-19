@@ -472,7 +472,7 @@
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories> 
 
     <dependencyManagement>
         <dependencies>
