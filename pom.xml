@@ -108,7 +108,7 @@
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>
         <redtape.defaultpu>
-          <![CDATA[   
+          <![CDATA[
             <persistence-unit name="redtape-pu">
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>redtapeDataSource</jta-data-source>
@@ -122,6 +122,21 @@
             </persistence-unit>
           ]]>
         </redtape.defaultpu>
+        <customer.defaultpu>
+          <![CDATA[
+            <persistence-unit name="customer-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>customerDataSource</jta-data-source>
+                <non-jta-data-source>customerDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.customer.entity.Address</class>
+                <class>eu.ggnet.dwoss.customer.entity.Communication</class>
+                <class>eu.ggnet.dwoss.customer.entity.Company</class>
+                <class>eu.ggnet.dwoss.customer.entity.Contact</class>
+                <class>eu.ggnet.dwoss.customer.entity.Customer</class>
+                <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
+            </persistence-unit>
+          ]]>
+        </customer.defaultpu>
     </properties>
 
     <developers>
@@ -184,7 +199,7 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-        
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
