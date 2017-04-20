@@ -58,7 +58,7 @@ public class ContainerIT {
         Map<String, Object> c = new HashMap<>();
         c.putAll(CustomerPu.CMP_IN_MEMORY);
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
+        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
         container = EJBContainer.createEJBContainer(c);
         container.getContext().bind("inject", this);
     }

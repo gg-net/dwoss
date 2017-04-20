@@ -137,6 +137,84 @@
             </persistence-unit>
           ]]>
         </customer.defaultpu>
+        <report.defaultpu>
+          <![CDATA[
+            <persistence-unit name="report-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>reportDataSource</jta-data-source>
+                <non-jta-data-source>reportDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.report.entity.Report</class>
+                <class>eu.ggnet.dwoss.report.entity.ReportLine</class>
+                <class>eu.ggnet.dwoss.report.entity.partial.SimpleReportLine</class>
+            </persistence-unit>
+          ]]>
+        </report.defaultpu>
+        <rights.defaultpu>
+          <![CDATA[
+            <persistence-unit name="rights-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>rightsDataSource</jta-data-source>
+                <non-jta-data-source>rightsDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.rights.entity.Operator</class>
+                <class>eu.ggnet.dwoss.rights.entity.Persona</class>
+            </persistence-unit>
+          ]]>
+        </rights.defaultpu>        
+        <spec.defaultpu>
+          <![CDATA[
+            <persistence-unit name="spec-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>specDataSource</jta-data-source>
+                <non-jta-data-source>specDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.spec.entity.AllInOne</class>
+                <class>eu.ggnet.dwoss.spec.entity.BasicSpec</class>
+                <class>eu.ggnet.dwoss.spec.entity.Desktop</class>
+                <class>eu.ggnet.dwoss.spec.entity.DesktopBundle</class>
+                <class>eu.ggnet.dwoss.spec.entity.DisplayAbleDesktop</class>
+                <class>eu.ggnet.dwoss.spec.entity.Monitor</class>
+                <class>eu.ggnet.dwoss.spec.entity.Notebook</class>
+                <class>eu.ggnet.dwoss.spec.entity.ProductFamily</class>
+                <class>eu.ggnet.dwoss.spec.entity.ProductModel</class>
+                <class>eu.ggnet.dwoss.spec.entity.ProductSeries</class>
+                <class>eu.ggnet.dwoss.spec.entity.ProductSpec</class>
+                <class>eu.ggnet.dwoss.spec.entity.Tablet</class>
+                <class>eu.ggnet.dwoss.spec.entity.piece.Cpu</class>
+                <class>eu.ggnet.dwoss.spec.entity.piece.Display</class>
+                <class>eu.ggnet.dwoss.spec.entity.piece.Gpu</class>
+            </persistence-unit>
+          ]]>
+        </spec.defaultpu>
+        <stock.defaultpu>
+          <![CDATA[
+            <persistence-unit name="stock-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>stockDataSource</jta-data-source>
+                <non-jta-data-source>stockDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.stock.entity.LogicTransaction</class>
+                <class>eu.ggnet.dwoss.stock.entity.Shipment</class>
+                <class>eu.ggnet.dwoss.stock.entity.Stock</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockLocation</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockTransaction</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockTransactionParticipation</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockTransactionPosition</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockTransactionStatus</class>
+                <class>eu.ggnet.dwoss.stock.entity.StockUnit</class>
+            </persistence-unit>
+          ]]>
+        </stock.defaultpu>
+        <uniqueunit.defaultpu>
+          <![CDATA[
+            <persistence-unit name="uniqueunit-pu">
+                <provider>org.hibernate.ejb.HibernatePersistence</provider>
+                <jta-data-source>uniqueunitDataSource</jta-data-source>
+                <non-jta-data-source>uniqueunitDataSourceUnmanaged</non-jta-data-source>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.PriceHistory</class>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.Product</class>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</class>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</class>
+            </persistence-unit>
+          ]]>
+        </uniqueunit.defaultpu>
     </properties>
 
     <developers>
