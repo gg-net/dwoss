@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,62 +16,45 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.rules.ReceiptOperation;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.eao.StockTransactionEao;
-import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipationType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.emo.StockLocationDiscoverer;
-import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipation;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-
 import java.sql.*;
-import java.util.*;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.emo.DossierEmo;
-
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.ReceiptOperation;
 import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.*;
+import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.stock.emo.StockLocationDiscoverer;
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
+import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.*;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
 
 /**
  * Receipt Operation for Units.
@@ -178,7 +161,7 @@ public class UnitProcessorOperation implements UnitProcessor {
 
     /**
      * Transfers a UniqueUnits StockUnit to the supplied Stock.
-     *
+     * <p>
      * <ul>
      * <li>Validate, if a StockUnit for the UniqueUnit exists, and this StockUnit is in Stock</li>
      * <li>Transfer StockUnit via {@link StockTransactionType#EXTERNAL_TRANSFER}</li>

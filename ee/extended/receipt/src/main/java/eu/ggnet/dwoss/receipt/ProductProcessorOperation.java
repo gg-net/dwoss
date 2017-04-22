@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.eao.ProductFamilyEao;
-import eu.ggnet.dwoss.spec.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.eao.GpuEao;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.eao.DisplayEao;
-import eu.ggnet.dwoss.spec.eao.CpuEao;
-import eu.ggnet.dwoss.spec.eao.ProductSeriesEao;
-import eu.ggnet.dwoss.spec.entity.DisplayAble;
-import eu.ggnet.dwoss.spec.eao.ProductModelEao;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -45,8 +27,11 @@ import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.assist.Specs;
+import eu.ggnet.dwoss.spec.eao.*;
 import eu.ggnet.dwoss.spec.emo.DisplayEmo;
 import eu.ggnet.dwoss.spec.emo.ProductModelEmo;
+import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
@@ -252,7 +237,7 @@ public class ProductProcessorOperation implements ProductProcessor {
 
     /**
      * Creates a new ProductSpec and the relating Product and SopoProduct.
-     *
+     * <p>
      * The process has multiple steps:
      * <ol>
      * <li>Merge the ProductModel and set it in the Spec</li>
@@ -354,7 +339,7 @@ public class ProductProcessorOperation implements ProductProcessor {
 
     /**
      * Updates an existing ProductSpec and the relating Product and SopoProduct.
-     *
+     * <p>
      * The process has multiple steps:
      * <ol>
      * <li>Validate and throw IllegalArgumentException:

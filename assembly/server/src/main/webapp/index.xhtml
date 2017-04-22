@@ -14,14 +14,7 @@
             <p:messages showSummary="true" />
             <p:layout fullPage="true">
                 <p:layoutUnit id="west" position="west" header="Report Overview">
-                    <ul>
-                        <ui:repeat value="#{overview.status}" var="statusItem">
-                            <li>#{statusItem}</li>
-                        </ui:repeat>
-                    </ul>
-                    <br />
-                    <p:commandButton value="Generiere Sample Daten" action="#{overview.generateSampleData()}" disabled="#{!overview.sample}" 
-                                     style="font-size: small !important; width: 100%;"/>
+                    <p:commandButton value="Generiere Sample Daten" action="#{overview.generateSampleData()}" style="font-size: small !important; width: 100%;"/>
 
                     <p:ajaxStatus>
                         <f:facet name="start">
@@ -53,7 +46,7 @@
                                 <p:ajax event="dateSelect" update="dataButton"/>
                             </p:calendar>
                         </h:panelGrid>
-                        <p:commandButton id="dataButton" value="Generiere Reportdaten" action="#{revenueReportBean.findReportData()}" 
+                        <p:commandButton id="dataButton" value="Generiere Reportdaten" action="#{revenueReportBean.findReportData()}"
                                          disabled="#{!revenueReportBean.isReportDataSet()}" update="reportTable"/>
 
                         <p:dataTable id="reportTable" value="#{revenueReportBean.reportData}" var="revReport">

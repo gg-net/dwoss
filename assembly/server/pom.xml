@@ -15,6 +15,8 @@
     <properties>
         <org-netbeans-modules-projectapi.jsf_2e_language>Facelets</org-netbeans-modules-projectapi.jsf_2e_language>
         <org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>ide</org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.6-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
     </properties>
 
     <build>
@@ -83,51 +85,36 @@
             <artifactId>dwoss-ee-extended-misc</artifactId>
             <version>${project.version}</version>
         </dependency>
+
     </dependencies>
 
     <profiles>
         <profile>
-            <id>DW_Tomee_Embedded_Sample</id>
-            <properties>
-                <dw.isSample>true</dw.isSample>
-            </properties>
+            <id>tomee-1.7.0</id>
+            <!-- For best usage, build with tomee profile. so the logging of the application is redirected to log4j, see log4j.properties -->
+            <dependencies>
+                <dependency>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
-                    <!--                    <plugin>
-                        <groupId>org.wildfly.plugins</groupId>
-                        <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.2.Final</version>
-                    </plugin>-->
-
                     <plugin>
                         <groupId>org.apache.openejb.maven</groupId>
                         <artifactId>tomee-maven-plugin</artifactId>
-                        <version>1.6.0.2</version>
+                        <version>1.7.0</version>
                         <configuration>
                             <finalName>${app.name}</finalName>
-                            <removeTomeeWebapp>true</removeTomeeWebapp>
-                            <tomeeVersion>1.6.0.2</tomeeVersion>
-                            <systemVariables>
-                                <sopo-pu.hibernate.hbm2ddl.auto>create</sopo-pu.hibernate.hbm2ddl.auto>
-                                <sopo-pu.hibernate.jdbc.batch_size>0</sopo-pu.hibernate.jdbc.batch_size>
-                                <spec-pu.hibernate.hbm2ddl.auto>create</spec-pu.hibernate.hbm2ddl.auto>
-                                <spec-pu.hibernate.jdbc.batch_size>0</spec-pu.hibernate.jdbc.batch_size>
-                                <stock-pu.hibernate.hbm2ddl.auto>create</stock-pu.hibernate.hbm2ddl.auto>
-                                <stock-pu.hibernate.jdbc.batch_size>0</stock-pu.hibernate.jdbc.batch_size>
-                                <uniqueunit-pu.hibernate.hbm2ddl.auto>create</uniqueunit-pu.hibernate.hbm2ddl.auto>
-                                <uniqueunit-pu.hibernate.jdbc.batch_size>0</uniqueunit-pu.hibernate.jdbc.batch_size>
-                                <redtape-pu.hibernate.hbm2ddl.auto>create</redtape-pu.hibernate.hbm2ddl.auto>
-                                <redtape-pu.hibernate.jdbc.batch_size>0</redtape-pu.hibernate.jdbc.batch_size>
-                                <repair-pu.hibernate.hbm2ddl.auto>create</repair-pu.hibernate.hbm2ddl.auto>
-                                <repair-pu.hibernate.jdbc.batch_size>0</repair-pu.hibernate.jdbc.batch_size>
-                                <report-pu.hibernate.hbm2ddl.auto>create</report-pu.hibernate.hbm2ddl.auto>
-                                <report-pu.hibernate.jdbc.batch_size>0</report-pu.hibernate.jdbc.batch_size>
-                            </systemVariables>
+                            <tomeeVersion>1.7.0</tomeeVersion>
+                            <tomeeClassifier>plus</tomeeClassifier>
                             <libs>
                                 <lib>org.hibernate:hibernate-validator:4.3.2.Final</lib>
                                 <lib>org.hibernate:hibernate-entitymanager:4.2.15.Final</lib>
                                 <lib>org.hibernate:hibernate-core:4.2.15.Final</lib>
                                 <lib>org.hibernate:hibernate-c3p0:4.2.15.Final</lib>
+                                <lib>org.hibernate:hibernate-search:4.4.3.Final</lib>
+                                <lib>org.hibernate:hibernate-search-engine:4.4.3.Final</lib>
                                 <lib>org.hibernate.common:hibernate-commons-annotations:4.0.4.Final</lib>
                                 <lib>joda-time:joda-time:2.3</lib>
                                 <lib>org.jboss.logging:jboss-logging:3.1.0.GA</lib>
@@ -147,7 +134,5 @@
             </build>
         </profile>
     </profiles>
-
-
 
 </project>

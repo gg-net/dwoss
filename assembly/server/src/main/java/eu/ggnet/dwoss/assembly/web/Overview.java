@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,31 @@
  */
 package eu.ggnet.dwoss.assembly.web;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.EnumSet;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.inject.*;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
-import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.redtape.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGeneratorOperation;
+import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
-
-import lombok.Getter;
+import eu.ggnet.dwoss.stock.eao.StockEao;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 
 /**
  *
@@ -60,37 +67,61 @@ public class Overview implements Serializable {
     @Inject
     private RedTapeGeneratorOperation redTapeGenerator;
 
-    @Getter
-    private boolean sample = false;
+    @Inject
+    private RightsGeneratorOperation rightsGenerator;
 
-    public List<String> getStatus() {
-        return Arrays.asList("Running", "As Sample:" + sample);
-    }
+    @Inject
+    private StockEao stockEao;
+
+    @Inject
+    private CustomerEao customerEao;
+
+    @Inject
+    private UniqueUnitEao uniqueUnitEao;
+
+    @Inject
+    private DossierEao dossierEao;
+
+    @Inject
+    private ReportLineEao reportLineEao;
 
     public void generateSampleData() {
-        if ( !sample ) {
-            LOG.error("Sample data generation in productive environment not allowed");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", "Sample data generation in productive environment not allowed"));
+        if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
+            rightsGenerator.make("admin", EnumSet.allOf(AtomicRight.class));
+            rightsGenerator.make("user", EnumSet.noneOf(AtomicRight.class));
+            stockGenerator.makeStocksAndLocations(2);
+            customerGenerator.makeCustomers(100);
+            receiptGenerator.makeProductSpecs(30, true);
+            receiptGenerator.makeUniqueUnits(200, true, true);
+            redTapeGenerator.makeSalesDossiers(50);
+            reportLineGeneratorRemote.makeReportLines(500);
+            LOG.info("Persistence Data generated");
             return;
         }
-        stockGenerator.makeStocksAndLocations(2);
-        customerGenerator.makeCustomers(100);
-        receiptGenerator.makeProductSpecs(30, true);
-        receiptGenerator.makeUniqueUnits(200, true, true);
-        redTapeGenerator.makeSalesDossiers(50);
-        reportLineGeneratorRemote.makeReportLines(500);
+
+        // We have some errors, lets help the user.
+        if ( stockEao.count() > 0 ) error("Stock is not empty, disabling data generation");
+        if ( customerEao.count() > 0 ) error("Customer is not empty, disabling data generation");
+        if ( uniqueUnitEao.count() > 0 ) error("UniqueUnit is not empty, disabling data generation");
+        if ( dossierEao.count() > 0 ) error("RedTape is not empty, disabling data generation");
+        if ( reportLineEao.count() > 0 ) error("Report is not empty, disabling data generation");
+    }
+
+    private void error(String msg) {
+        LOG.error(msg);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", msg));
     }
 
     @PostConstruct
     public void init() {
-        Properties prop = new Properties();
-        try {
-            prop.load(Overview.class.getClassLoader().getResourceAsStream("dw-web.properties"));
-            sample = Boolean.valueOf(prop.getProperty("isSample"));
-            LOG.info("Sampleclient = " + sample);
-        } catch (IOException ex) {
-            throw new IllegalArgumentException("Failed to load properties.", ex);
-        }
+//        Properties prop = new Properties();
+//        try {
+//            prop.load(Overview.class.getClassLoader().getResourceAsStream("dw-web.properties"));
+//            sample = Boolean.valueOf(prop.getProperty("isSample"));
+//            LOG.info("Sampleclient = " + sample);
+//        } catch (IOException ex) {
+//            throw new IllegalArgumentException("Failed to load properties.", ex);
+//        }
     }
 
 }
