@@ -13,17 +13,6 @@
         <h:body>
             <p:messages showSummary="true" />
             <p:layout fullPage="true">
-                <p:layoutUnit id="west" position="west" header="Report Overview">
-                    <p:commandButton value="Generiere Sample Daten" action="#{overview.generateSampleData()}" style="font-size: small !important; width: 100%;"/>
-
-                    <p:ajaxStatus>
-                        <f:facet name="start">
-                            <p:graphicImage value="#{resource['/images/ajax-loader-bar.gif']}"/>
-                        </f:facet>
-                        <f:facet name="complete"/>
-                    </p:ajaxStatus>
-                </p:layoutUnit>
-
                 <p:layoutUnit id="center" position="center" header="Reporting">
                     <h:form id="authForm">
                         <h:panelGrid columns="2">

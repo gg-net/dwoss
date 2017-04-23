@@ -21,12 +21,6 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
 
     <dependencies>
@@ -85,10 +79,76 @@
             <artifactId>dwoss-ee-extended-misc</artifactId>
             <version>${project.version}</version>
         </dependency>
-
     </dependencies>
 
     <profiles>
+        <profile>
+            <!-- The server combined with the productive gg-net mandator -->
+            <id>server-ggnet</id>
+            <properties>
+                <mandator.name>GG-Net GmbH</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-mandator-ggnet</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ee-pro-price</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ee-pro-sopo</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ee-persistence-repair</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <!-- The server combined with the productive elus mandator -->
+            <id>server-elus</id>
+            <properties>
+                <mandator.name>ELUS</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-mandator-elus</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <!-- The server combined with the testing sample mandator and entity generator -->
+            <id>server-sample</id>
+            <properties>
+                <mandator.name>Example GmbH</mandator.name>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dwoss-mandator-sample</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dwoss-mandator-sample-service</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>dwoss-mandator-sample-tryout</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>tomee-1.7.0</id>
             <!-- For best usage, build with tomee profile. so the logging of the application is redirected to log4j, see log4j.properties -->

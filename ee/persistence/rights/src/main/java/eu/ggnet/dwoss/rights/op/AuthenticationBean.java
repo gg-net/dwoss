@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ public class AuthenticationBean implements Authentication {
      * @param salt     is the Salt that will used to salt the password.
      * @return return the hashed and salted password.
      */
-    private static byte[] hashPassword(char[] password, byte[] salt) {
+    public static byte[] hashPassword(char[] password, byte[] salt) {
         StringBuilder sb = new StringBuilder();
         try {
             byte[] pwBytes = new String(password).getBytes("UTF-8");

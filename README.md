@@ -38,36 +38,21 @@ Um einer solchen Software und den Entwicklern dahinter einen hohes Maß an Exper
 Getting Started
 ---------------
 
-Der einfachste Weg um einen ersten Eindruck zu bekommen, ist den Beispiel-Client zu verweden. Dieser benötigt keine Installation und arbeitet Lokal mit generierten Beispieldaten.
+Der einfachste Weg um einen ersten Eindruck zu bekommen, ist die Sample Implementation. Diese arbeitet mit in Memory Datenbanken und generierten Beispieldaten
 
-Unter Windows:
-- Downloaden und Enpacken Sie den [Beispiel-Client](http://devcon.ahrensburg.gg-net.de/bamboo/artifact/DWOSS-MASTER/shared/build-latest/DW-OSS-Zip/sample-client-bin.zip)
-- Starten sie die sample-client.exe (Das JRE ist enthalten)
-
-(Sollte der Download nich funktionieren, versuchen Sie es später noch einmal. Der Client wir automatisch aktualisiert)
-
-Unter Linux und MacOS müssen Sie noch folgende Schritte zusätzlich durchführen:
-- Installieren Sie [Java 8](http://java.com).
-- Im Fenster: Doppelclick auf die sample-client.jar
-- In der Konsole: java -jar sample-client.jar
-
-Nach kurzer Zeit öffnet sich ein optionaler Registierungsdialog. Im Anschluss sehen Sie die Deutsche Warenwirtschaft mit autogennerierten Beispieldaten im Einsatz. Anmeldung ist mit jeglichen Nutzerdaten möglich, der Nutzer "test", jedes Passwort, hat alle Rechte per Standarteinstellung.
-
-Um den Beispiel-Client selber zu bauen, ist folgendes notwendig:
- 
-- JDK 8_u25 (Zen Java Plugin benötigt sehr neue Version)
+Benötigt wird:
+- JDK 8_u25 oder neuer (Zen Java Plugin benötigt sehr neue Version)
 - Maven 3.x
 
-Checkout and Build (mvn clean install)
+Checkout and Build:
 
- 1. https://github.com/gg-net/statemachine.git (Temporär notwendig, Artifacte werden demnächst in maven central verfügbar sein)
- 2. https://github.com/gg-net/lucidcalc.git (Temporär notwendig, Artifacte werden demnächst in maven central verfügbar sein)
- 3. https://github.com/gg-net/dwoss.git (Für schnelleren build: mvn clean install -Pdevelopment)
+ 1. https://github.com/gg-net/dwoss.git
+ 2. Im Hauptverzeichniss: mvn clean install -Pdevelopment
+ 3. Unter assembly/server: mvn clean install tomee:run -Pserver-sample,tomee-1.7.0
+ 4. Unter assembly/client-remote: mvn clean install jfx:run -Pclient-sample
 
-In das Verzeichniss dwoss/assembly/client-sample wechseln und folgendes ausführen:
-```
-mvn jfx:run -Pserver-sample,client-sample
-```
+User admin/admin hat alle Rechte, User user/user hat minimale Rechte.
+
 Projekt Resourcen
 -----------------
 
@@ -76,7 +61,7 @@ Die meisten Information werden in der Java Dokumentation verarbeitet.
 
 Weitere relevante Systeme:
 
-- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS) 
+- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS)
 - Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
 - Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
 - Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)
@@ -89,36 +74,6 @@ It is licensed unter the GNU General Public License v3. Copyright [GG-Net GmbH](
 
 The software is an internal project of the [GG-Net GmbH](http://gg-net.de) used to implement all processes of a 'Used IT-Goods Sales Operation'. It is still in use and actively developed.
 
-To get a first view on the application, use the sample client. This client starts a local server in the background and generates sample data. Please be patient, the startup takes some seconds.
-
-MS Windows:
-- Download and Extract [Sample-Client](http://devcon.ahrensburg.gg-net.de/bamboo/artifact/DWOSS-MASTER/shared/build-latest/DW-OSS-Zip/sample-client-bin.zip)
-- Start the sample-client.exe (The JRE is enclosed)
-
-(If the download is not available, please try again later. The client is rebuild as part of our automaticbamboo build 
-infrastructure)
-
-For Linux and MacOS, you need to do:
-- Install [Java 8](http://java.com).
-- In a window: Coubleclick on sample-client.jar
-- On the console: java -jar sample-client.jar
-
-An optional registration dialog should open. After completing it, the application is running in a local sample mode.
-You can login with any user, but the user "test", any password, has all rights.
-
-To get started you'll need:
-
-- JDK 8_u25 ((Some lower versions and the zen-java plugin won't work))
-- Maven 3.x
-
-Checkout and Build (mvn clean install)
-
-- https://github.com/gg-net/dwoss.git (To Speed things up: mvn clean install -Pdevelopment)
-
-Switch to dwoss/assembly/client-sample and call:
-
-mvn jfx:run -Pserver-sample,client-sample
-
 Project Resources
 -----------------
 
@@ -127,7 +82,7 @@ Most of the Project information are merged into the javadoc.
 
 Also sources of information:
 
-- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS) 
+- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS)
 - Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
 - Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
 - Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)

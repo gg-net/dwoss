@@ -16,22 +16,21 @@
  */
 package eu.ggnet.dwoss.assembly.remote.provides;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.saft.api.AuthenticationException;
+import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.rights.op.Authentication;
-
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.AuthenticationException;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * Implementation of an IAuthenticator using the GG-Net Imap Server
  */
-// @ServiceProvider(service = Guardian.class)
-public class ImapGuardian extends AbstractGuardian implements Guardian {
+@ServiceProvider(service = Guardian.class)
+public class LookupAuthenticationGuardian extends AbstractGuardian implements Guardian {
 
     @Override
     public void login(String user, char[] pass) throws AuthenticationException {

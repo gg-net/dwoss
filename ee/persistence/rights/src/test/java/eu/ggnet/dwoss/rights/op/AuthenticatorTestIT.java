@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.dwoss.rights.gen;
+package eu.ggnet.dwoss.rights.op;
 
 import java.util.*;
 
+import javax.ejb.EJB;
 import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
 import javax.naming.NamingException;
@@ -18,23 +19,27 @@ import eu.ggnet.dwoss.rights.RightsAgent;
 import eu.ggnet.dwoss.rights.assist.RightsPu;
 import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.util.UserInfoException;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.fail;
 
 /**
  *
  * @author Bastian Venz
  */
-public class RightsGeneratorTestIT {
+public class AuthenticatorTestIT {
 
     private EJBContainer container;
 
     @Inject
-    private RightsGeneratorOperation bean;
+    private RightsAgent agent;
+
+    @EJB
+    private Authentication authentication;
 
     @Inject
-    private RightsAgent agent;
+    private RightsGeneratorOperation rightsGenerator;
 
     @Before
     public void setUp() throws NamingException {
@@ -55,16 +60,20 @@ public class RightsGeneratorTestIT {
      * Test of make method, of class RightsGeneratorOperation.
      */
     @Test
-    public void testMake() {
-        int countOfOperator = 50;
-        int countOfPersona = 5;
-        bean.make(countOfOperator, countOfPersona);
-
+    public void testMakeOperatorAndAuthenticate() {
+        String password = "xxx123yyy";
+        String username = "user";
+        Operator o = rightsGenerator.make(username, password, 0, new ArrayList<>());
         List<Operator> operators = agent.findAll(Operator.class);
-        assertEquals("Not all Operators were Persisted", operators.size(), countOfOperator);
-        List<Persona> personas = agent.findAll(Persona.class);
-        assertEquals("Not all Persona were Persisted", personas.size(), countOfPersona);
 
+        assertThat(operators).describedAs("Operators of database").hasSize(1);
+        assertThat(operators.get(0).getId()).describedAs("OperatorId").isEqualTo(o.getId());
+
+        try {
+            authentication.login(username, password.toCharArray());
+        } catch (UserInfoException ex) {
+            fail("Authentication failed:" + ex.getMessage());
+        }
     }
 
 }

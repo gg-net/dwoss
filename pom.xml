@@ -409,10 +409,23 @@
     </licenses>
 
     <build>
-        <!-- Process only persitence.xml to replace DataSource Inforamtion -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/filter-resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <testResources>
+            <!-- remove after moving the persistence.xmls to the filter-resources -->
             <testResource>
                 <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+            <testResource>
+                <directory>src/test/filter-resources</directory>
                 <filtering>true</filtering>
             </testResource>
         </testResources>

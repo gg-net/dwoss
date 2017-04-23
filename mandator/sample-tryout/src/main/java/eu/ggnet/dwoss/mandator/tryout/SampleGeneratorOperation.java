@@ -14,17 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.web;
+package eu.ggnet.dwoss.mandator.tryout;
 
 import java.io.Serializable;
 import java.util.EnumSet;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,14 +41,16 @@ import eu.ggnet.dwoss.stock.eao.StockEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 
 /**
+ * Sample Genaerator.
+ * If the connected databases are empty this class will generate random entities and persist them.
  *
  * @author oliver.guenther
  */
-@Named
-@ApplicationScoped
-public class Overview implements Serializable {
+@Startup
+@Singleton
+public class SampleGeneratorOperation implements Serializable {
 
-    static final Logger LOG = LoggerFactory.getLogger(Overview.class);
+    static final Logger LOG = LoggerFactory.getLogger(SampleGeneratorOperation.class);
 
     @Inject
     private CustomerGeneratorOperation customerGenerator;
@@ -87,7 +87,8 @@ public class Overview implements Serializable {
 
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
-            rightsGenerator.make("admin", EnumSet.allOf(AtomicRight.class));
+            LOG.info("Generating Persistence Data");
+            rightsGenerator.make("admin", "admin", 123, EnumSet.allOf(AtomicRight.class));
             rightsGenerator.make("user", EnumSet.noneOf(AtomicRight.class));
             stockGenerator.makeStocksAndLocations(2);
             customerGenerator.makeCustomers(100);
@@ -109,19 +110,12 @@ public class Overview implements Serializable {
 
     private void error(String msg) {
         LOG.error(msg);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", msg));
+//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", msg));
     }
 
     @PostConstruct
     public void init() {
-//        Properties prop = new Properties();
-//        try {
-//            prop.load(Overview.class.getClassLoader().getResourceAsStream("dw-web.properties"));
-//            sample = Boolean.valueOf(prop.getProperty("isSample"));
-//            LOG.info("Sampleclient = " + sample);
-//        } catch (IOException ex) {
-//            throw new IllegalArgumentException("Failed to load properties.", ex);
-//        }
+        generateSampleData();
     }
 
 }
