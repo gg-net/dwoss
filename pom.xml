@@ -70,6 +70,7 @@
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         <netbeans.compile.on.save>test</netbeans.compile.on.save>
         <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
+        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>Tomcat</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_deploy_2e_server>
         <org-netbeans-modules-editor-indent.CodeStyle.usedProfile>project</org-netbeans-modules-editor-indent.CodeStyle.usedProfile>
         <org-netbeans-modules-editor-indent.CodeStyle.project.spaces-per-tab>4</org-netbeans-modules-editor-indent.CodeStyle.project.spaces-per-tab>
         <org-netbeans-modules-editor-indent.CodeStyle.project.tab-size>8</org-netbeans-modules-editor-indent.CodeStyle.project.tab-size>
@@ -107,21 +108,6 @@
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.allowConvertToStarImport>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.allowConvertToStarImport>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.preferStaticImports>
         <org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>true</org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.importInnerClasses>
-        <redtape.defaultpu>
-          <![CDATA[
-            <persistence-unit name="redtape-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>redtapeDataSource</jta-data-source>
-                <non-jta-data-source>redtapeDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.redtape.entity.Address</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Document</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Dossier</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Position</class>
-                <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
-                <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
-            </persistence-unit>
-          ]]>
-        </redtape.defaultpu>
         <redtape-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -139,27 +125,6 @@
                 <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
           ]]>
         </redtape-pu.classes>
-        <customer.defaultpu>
-          <![CDATA[
-            <persistence-unit name="customer-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>customerDataSource</jta-data-source>
-                <non-jta-data-source>customerDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.customer.entity.Address</class>
-                <class>eu.ggnet.dwoss.customer.entity.Communication</class>
-                <class>eu.ggnet.dwoss.customer.entity.Company</class>
-                <class>eu.ggnet.dwoss.customer.entity.Contact</class>
-                <class>eu.ggnet.dwoss.customer.entity.Customer</class>
-                <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
-                <properties>
-                    <property name="hibernate.search.default.directory_provider" value="ram" />
-                    <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
-                    <property name="hibernate.search.default.worker.execution" value="sync"/>
-                    <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
-                </properties>
-            </persistence-unit>
-          ]]>
-        </customer.defaultpu>
         <customer-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -187,18 +152,6 @@
                 <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
           ]]>
         </customer-pu.classes>
-        <report.defaultpu>
-          <![CDATA[
-            <persistence-unit name="report-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>reportDataSource</jta-data-source>
-                <non-jta-data-source>reportDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.report.entity.Report</class>
-                <class>eu.ggnet.dwoss.report.entity.ReportLine</class>
-                <class>eu.ggnet.dwoss.report.entity.partial.SimpleReportLine</class>
-            </persistence-unit>
-          ]]>
-        </report.defaultpu>
         <report-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -213,17 +166,6 @@
                 <class>eu.ggnet.dwoss.report.entity.partial.SimpleReportLine</class>
           ]]>
         </report-pu.classes>
-        <rights.defaultpu>
-          <![CDATA[
-            <persistence-unit name="rights-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>rightsDataSource</jta-data-source>
-                <non-jta-data-source>rightsDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.rights.entity.Operator</class>
-                <class>eu.ggnet.dwoss.rights.entity.Persona</class>
-            </persistence-unit>
-          ]]>
-        </rights.defaultpu>
         <rights-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -237,30 +179,6 @@
                 <class>eu.ggnet.dwoss.rights.entity.Persona</class>
           ]]>
         </rights-pu.classes>
-        <spec.defaultpu>
-          <![CDATA[
-            <persistence-unit name="spec-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>specDataSource</jta-data-source>
-                <non-jta-data-source>specDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.spec.entity.AllInOne</class>
-                <class>eu.ggnet.dwoss.spec.entity.BasicSpec</class>
-                <class>eu.ggnet.dwoss.spec.entity.Desktop</class>
-                <class>eu.ggnet.dwoss.spec.entity.DesktopBundle</class>
-                <class>eu.ggnet.dwoss.spec.entity.DisplayAbleDesktop</class>
-                <class>eu.ggnet.dwoss.spec.entity.Monitor</class>
-                <class>eu.ggnet.dwoss.spec.entity.Notebook</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductFamily</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductModel</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductSeries</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductSpec</class>
-                <class>eu.ggnet.dwoss.spec.entity.Tablet</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Cpu</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Display</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Gpu</class>
-            </persistence-unit>
-          ]]>
-        </spec.defaultpu>
         <spec-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -287,24 +205,6 @@
                 <class>eu.ggnet.dwoss.spec.entity.piece.Gpu</class>
           ]]>
         </spec-pu.classes>
-        <stock.defaultpu>
-          <![CDATA[
-            <persistence-unit name="stock-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>stockDataSource</jta-data-source>
-                <non-jta-data-source>stockDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.stock.entity.LogicTransaction</class>
-                <class>eu.ggnet.dwoss.stock.entity.Shipment</class>
-                <class>eu.ggnet.dwoss.stock.entity.Stock</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockLocation</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransaction</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionParticipation</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionPosition</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionStatus</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockUnit</class>
-            </persistence-unit>
-          ]]>
-        </stock.defaultpu>
         <stock-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -325,19 +225,6 @@
                 <class>eu.ggnet.dwoss.stock.entity.StockUnit</class>
           ]]>
         </stock-pu.classes>
-        <uniqueunit.defaultpu>
-          <![CDATA[
-            <persistence-unit name="uniqueunit-pu">
-                <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>uniqueunitDataSource</jta-data-source>
-                <non-jta-data-source>uniqueunitDataSourceUnmanaged</non-jta-data-source>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.PriceHistory</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.Product</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</class>
-            </persistence-unit>
-          ]]>
-        </uniqueunit.defaultpu>
         <uniqueunit-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
@@ -419,10 +306,8 @@
             </resource>
         </resources>
         <testResources>
-            <!-- remove after moving the persistence.xmls to the filter-resources -->
             <testResource>
                 <directory>src/test/resources</directory>
-                <filtering>true</filtering>
             </testResource>
             <testResource>
                 <directory>src/test/filter-resources</directory>
