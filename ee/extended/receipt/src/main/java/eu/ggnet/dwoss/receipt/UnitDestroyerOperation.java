@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-
 import java.util.Arrays;
 
 import javax.ejb.Stateless;
@@ -35,20 +25,20 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.emo.DossierEmo;
-
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.rules.PositionType;
-
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
@@ -57,8 +47,8 @@ import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
  * Allows Scraping of Units.
  *
  * @a
-import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
-uthor oliver.guenther
+ * import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+ * uthor oliver.guenther
  */
 @Stateless
 

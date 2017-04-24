@@ -19,6 +19,8 @@ package eu.ggnet.dwoss.uniqueunit.eao;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.*;
 
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.util.DateFormats;
@@ -39,11 +42,18 @@ import static eu.ggnet.dwoss.uniqueunit.entity.QUniqueUnitHistory.uniqueUnitHist
 /**
  *
  */
+@Stateless
 public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
 
     private final Logger L = LoggerFactory.getLogger(UniqueUnitEao.class);
 
+    @Inject
+    @UniqueUnits
     private EntityManager em;
+
+    public UniqueUnitEao() {
+        super(UniqueUnit.class);
+    }
 
     public UniqueUnitEao(EntityManager em) {
         super(UniqueUnit.class);
@@ -209,8 +219,8 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
     public UniqueUnit findByRefurbishedIdInHistory(String refurbishedId) {
         UniqueUnitHistory result = new JPAQuery(em).from(uniqueUnitHistory).where(
                 uniqueUnitHistory.comment.like("Changed Identifier(type=REFURBISHED_ID) from '" + refurbishedId + "' to%")
-                .or(uniqueUnitHistory.comment.like("Unit changed refurbishedId=" + refurbishedId + " to%")
-                        .or(uniqueUnitHistory.comment.eq("REFURBISHED_ID set to " + refurbishedId)))).singleResult(uniqueUnitHistory);
+                        .or(uniqueUnitHistory.comment.like("Unit changed refurbishedId=" + refurbishedId + " to%")
+                                .or(uniqueUnitHistory.comment.eq("REFURBISHED_ID set to " + refurbishedId)))).singleResult(uniqueUnitHistory);
         return (result == null ? null : result.getUniqueUnit());
     }
 

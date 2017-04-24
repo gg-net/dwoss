@@ -12,7 +12,7 @@ the Java EE 6 Specs and uses multiple data sources. The client is a fat Swing
 Client, which is constantly merged to JavaFX. The connection is made through
 classic remote interfaces.
 
-The application has two working modes. Either the server part (dwoss-server) is 
+The application has two working modes. Either the server part (dwoss-server) is
 deployed in an EE 6 Server including the full hibernate persistence layer and
 the client connects via jndi naming and remote interfaces. Or both components
 are run together on the client with a embedded EE 6 Server.
@@ -60,7 +60,7 @@ See the developed Graph in
 Here are typical names of packages, classes and method, which imply some nature.
 Most of these are not self invented but seen in other projects and reused.
 
- - \*.api | Public API, for now *dwoss-ee-core-common* contains the public API 
+ - \*.api | Public API, for now *dwoss-ee-core-common* contains the public API
    of a multiple projects. May change in the future.
  - \*.entity | Persistent Entities. Entity classes are named like their intention
    (e.g. Person, Order, Customer)
@@ -75,7 +75,7 @@ Most of these are not self invented but seen in other projects and reused.
                   Methods will never fail. Single finds return one instance or null.
                   Multi finds will return a collection.
 		- count\* | Returns amount of entities
- - *.emo | Entity Modification Objects. These classes might change existing 
+ - *.emo | Entity Modification Objects. These classes might change existing
    entity instances or create new ones.
 	- ‹Entity›Emo | Each Emo is a simple to complex modifier of one primary
           entity. Contains one or more queries and partial business logic in
@@ -91,8 +91,8 @@ a remote interface which name represents its intention alone.
 
 _e.g._ UnitOverviewer, WorkflowManager, ReportExporter.
 
-The implementation reuses the interface name and extends it with Operation or Bean. 
-This allows our actual remote discovery through interface usage to work. 
+The implementation reuses the interface name and extends it with Operation or Bean.
+This allows our actual remote discovery through interface usage to work.
 See {@link eu.ggnet.saft.core.Client} for details on how these are discovered on the
 client side.
 
@@ -122,4 +122,6 @@ Things we know, but haven't written down yet.
  - JDBC Exception on MySQL DBs but not on HSQLDBs
  - toString, xxxFormater and getName
  - Sample Client Zip with launch4j and win32 jre8
+ - New Persistence Concept (one persistence.xml for every project and final server-app)
+ - Fadeout of Local and Sample Client
 

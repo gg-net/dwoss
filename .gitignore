@@ -69,3 +69,4 @@ hs_err_pid*
 /incubator/statemachine/target/
 /incubator/statemachine/state-grapher/target/
 /incubator/statemachine/state-runtime/target/
+/mandator/sample-tryout/target/

@@ -139,4 +139,34 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>client-ggnet</id>
+            <dependencies>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ui-persistence-repair</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ui-pro-sopo</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-ui-pro-price</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>client-elus</id>
+        </profile>
+        <profile>
+            <id>client-sample</id>
+        </profile>
+    </profiles>
+
 </project>

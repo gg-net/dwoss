@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.rights.assist.gen;
 
-import java.io.UnsupportedEncodingException;
-import java.security.*;
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -30,6 +28,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.assist.Rights;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.op.AuthenticationBean;
 
 /**
  *
@@ -71,35 +70,43 @@ public class RightsGeneratorOperation {
                 operator.add(persona);
             }
             operator.setSalt(RandomStringUtils.randomAlphanumeric(6).getBytes());
-            operator.setPassword(hashRandomString(RandomStringUtils.randomAlphanumeric(15), operator.getSalt()));
+            operator.setPassword(AuthenticationBean.hashPassword(RandomStringUtils.randomAlphanumeric(15).toCharArray(), operator.getSalt()));
             operator.setQuickLoginKey((int)(Math.random() * 999));
             em.persist(operator);
         }
     }
 
+    /**
+     * Generate a operator with username=password and the supplied active rightis.
+     *
+     * @param username     the username and password
+     * @param activeRights the active rights to use
+     * @return the persisted operator.
+     */
     public Operator make(String username, Collection<AtomicRight> activeRights) {
-        Operator o = new Operator();
-        o.setUsername(username);
-        for (AtomicRight right : activeRights) {
-            o.add(right);
-        }
-        em.persist(o);
-        return o;
+        return make(username, username, 0, activeRights);
     }
 
-    private static byte[] hashRandomString(String password, byte[] salt) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            byte[] bytes = md.digest(password.getBytes("UTF-8"));
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            return sb.toString().getBytes("UTF-8");
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            throw new RuntimeException();
+    /**
+     * Generate a operator with all supplied parameters.
+     *
+     * @param password      the password
+     * @param quickLoginKey a quicklogin key
+     * @param username      the username and password
+     * @param activeRights  the active rights to use
+     * @return the persisted operator.
+     */
+    public Operator make(String username, String password, int quickLoginKey, Collection<AtomicRight> activeRights) {
+        Operator operator = new Operator();
+        operator.setUsername(username);
+        operator.setQuickLoginKey(0);
+        operator.setSalt(RandomStringUtils.randomAlphanumeric(6).getBytes());
+        operator.setPassword(AuthenticationBean.hashPassword(Objects.requireNonNull(password.toCharArray()), operator.getSalt()));
+        for (AtomicRight right : activeRights) {
+            operator.add(right);
         }
+        em.persist(operator);
+        return operator;
     }
 
     private static List<AtomicRight> getRandomRights() {

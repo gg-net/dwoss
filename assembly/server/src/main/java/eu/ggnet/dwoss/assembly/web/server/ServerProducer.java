@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.web.server;
 
-import javax.enterprise.inject.Produces;
-
-import eu.ggnet.dwoss.util.ImageFinder;
-
 /**
  * Contains configuration, which is specific to the Server.
  * <p/>
@@ -27,6 +23,7 @@ import eu.ggnet.dwoss.util.ImageFinder;
  */
 public class ServerProducer {
 
-    @Produces
-    private final static ImageFinder serverImageFinder = new ImageFinder("/remote/megatron/Application/DeutscheWarenwirtschaft/images/");
+    // Disabled cause of duplicate in Sample-Mandator. Finally reenable
+//    @Produces
+//    private final static ImageFinder serverImageFinder = new ImageFinder("/remote/megatron/Application/DeutscheWarenwirtschaft/images/");
 }

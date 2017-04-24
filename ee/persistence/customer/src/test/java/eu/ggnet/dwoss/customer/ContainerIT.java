@@ -1,13 +1,7 @@
 package eu.ggnet.dwoss.customer;
 
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.embeddable.EJBContainer;
 import javax.enterprise.inject.Produces;
@@ -20,6 +14,7 @@ import org.junit.*;
 import eu.ggnet.dwoss.configuration.SystemConfig;
 import eu.ggnet.dwoss.customer.assist.CustomerPu;
 import eu.ggnet.dwoss.customer.assist.Customers;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -58,7 +53,7 @@ public class ContainerIT {
         Map<String, Object> c = new HashMap<>();
         c.putAll(CustomerPu.CMP_IN_MEMORY);
         c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
+        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
         container = EJBContainer.createEJBContainer(c);
         container.getContext().bind("inject", this);
     }
