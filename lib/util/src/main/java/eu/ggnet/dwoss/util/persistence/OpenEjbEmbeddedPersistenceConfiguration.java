@@ -136,7 +136,7 @@ public class OpenEjbEmbeddedPersistenceConfiguration {
     public Map<String, String> asHsqlInMemoryWithSearchRam() {
         Map<String, String> o = asHsqlInMemory();
         o.put(persistenceUnit + ".hibernate.search.default.directory_provider", "ram");
-        o.put(persistenceUnit + "hibernate.search.default.indexmanager", "near-real-time");
+        o.put(persistenceUnit + ".hibernate.search.default.indexmanager", "near-real-time");
         return o;
     }
 
