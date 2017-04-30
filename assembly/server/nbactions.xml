@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-sample-server</actionName>
+            <displayName>sample-server</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+                <goal>tomee:run</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>server-sample</activatedProfile>
+                <activatedProfile>tomee-1.7.0</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>
