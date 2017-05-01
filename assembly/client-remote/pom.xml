@@ -37,13 +37,32 @@
     </build>
 
     <dependencies>
+        <!-- tomee - 1.7
+        Description:
+        - all exlusions: exclusions are in openejb-javaee-api
+        - hibernate-core: classes used in remote client
+        - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
+        -->
         <dependency>
-            <!-- Used in the remote client-->
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-client</artifactId>
+            <version>4.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>4.2.15.Final</version>
             <exclusions>
-                <!-- is in openejb-javaee-api -->
                 <exclusion>
                     <groupId>org.hibernate.javax.persistence</groupId>
                     <artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -55,30 +74,49 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-client</artifactId>
-            <version>4.7.0</version>
-        </dependency>
-        <!-- java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator -->
-        <dependency>
             <groupId>org.apache.geronimo.javamail</groupId>
             <artifactId>geronimo-javamail_1.4_mail</artifactId>
             <version>1.8.2</version>
             <type>jar</type>
         </dependency>
+        <!-- tomee - 7.0
+        Description:
+        - all exlusions: exclusions are in openejb-javaee-api
+        - hibernate-core: classes used in remote client
+        - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
+        -->
+        <!--        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>openejb-client</artifactId>
+            <version>7.0.3</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <exclusions>
-                <!-- is in openejb-javaee-api -->
                 <exclusion>
                     <groupId>javax.validation</groupId>
                     <artifactId>validation-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- Components -->
-        <!-- Backend -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.1.5.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate.javax.persistence</groupId>
+                    <artifactId>hibernate-jpa-2.1-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.geronimo.specs</groupId>
+                    <artifactId>geronimo-jta_1.1_spec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+
+        <!-- components -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>saft-runtime</artifactId>
@@ -133,11 +171,6 @@
             <artifactId>dwoss-ui-persistence-customer</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Needed for SQL Exceptions throw up. -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
     </dependencies>
 
     <profiles>
@@ -159,10 +192,22 @@
                     <artifactId>dw-ui-pro-price</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
+                <!-- Needed for SQL Exceptions throw up. -->
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
             </dependencies>
         </profile>
         <profile>
             <id>client-elus</id>
+            <dependencies>
+                <!-- Needed for SQL Exceptions throw up. -->
+                <dependency>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </dependency>
+            </dependencies>
         </profile>
         <profile>
             <id>client-sample</id>

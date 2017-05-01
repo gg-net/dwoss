@@ -173,4 +173,11 @@ public class SystemConfig {
      * Needed for MANIFEST.MF classpath inspection.
      */
     public final static Map<String, String> OPENEJB_XBEAN_FINDER;
+
+    public final static String DSNAME_SUFFIX = "java:comp/env/";
+
+    public final static String DSNAME_PREFIX_MANAGED = "DataSource";
+
+    public final static String DSNAME_PREFIX_UNMANAGED = "DataSourceUnmanaged";
+
 }

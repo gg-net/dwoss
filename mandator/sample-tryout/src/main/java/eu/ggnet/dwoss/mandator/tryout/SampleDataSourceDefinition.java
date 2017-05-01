@@ -19,6 +19,10 @@ package eu.ggnet.dwoss.mandator.tryout;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
 
+import static eu.ggnet.dwoss.configuration.SystemConfig.*;
+import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSDRIVER_HSQLDB;
+import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PROPERTIES;
+
 /**
  * In memory data sources for the sample tryout.
  *
@@ -27,165 +31,129 @@ import javax.annotation.sql.DataSourceDefinitions;
 @DataSourceDefinitions(
         value = {
             // <editor-fold defaultstate="collapsed" desc="report">
-            @DataSourceDefinition(name = "java:comp/env/reportDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:report",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "report" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/reportDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:report",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "report" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="redtape">
 
-            @DataSourceDefinition(name = "java:comp/env/redtapeDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:redtape",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "redtape" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/redtapeDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:redtape",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "redtape" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="uniqueunit">
-            @DataSourceDefinition(name = "java:comp/env/uniqueunitDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:uniqueunit",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "uniqueunit" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/uniqueunitDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:uniqueunit",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "uniqueunit" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="spec">
-            @DataSourceDefinition(name = "java:comp/env/specDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:spec",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "spec" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/specDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:spec",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "spec" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="stock">
-            @DataSourceDefinition(name = "java:comp/env/stockDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:stock",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "stock" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/stockDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:stock",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "stock" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="rights">
-            @DataSourceDefinition(name = "java:comp/env/rightsDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:rights",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/rightsDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:rights",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="customer">
-            @DataSourceDefinition(name = "java:comp/env/customerDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:customer",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "customer" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/customerDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:customer",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "customer" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // Special datasources
             // <editor-fold defaultstate="collapsed" desc="repair">
-            @DataSourceDefinition(name = "java:comp/env/repairDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:repair",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "repair" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:repair" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/repairDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:repair",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "repair" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:repair" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="sopo">
-            @DataSourceDefinition(name = "java:comp/env/sopoDataSource",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:sopo",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "sopo" + DSNAME_PREFIX_MANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:sopo" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = "java:comp/env/sopoDataSourceUnmanaged",
-                                  className = "org.hsqldb.jdbcDriver",
-                                  user = "sa",
-                                  password = "",
-                                  url = "jdbc:hsqldb:mem:sopo",
+            @DataSourceDefinition(name = DSNAME_SUFFIX + "sopo" + DSNAME_PREFIX_UNMANAGED,
+                                  className = DSDRIVER_HSQLDB,
+                                  url = "jdbc:hsqldb:mem:sopo" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
         // </editor-fold>
@@ -193,5 +161,9 @@ import javax.annotation.sql.DataSourceDefinitions;
         }
 )
 public class SampleDataSourceDefinition {
+
+    public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
+
+    public final static String DSURL_PROPERTIES = ";user=sa;hsqldb.sqllog=2";
 
 }

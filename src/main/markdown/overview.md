@@ -124,4 +124,9 @@ Things we know, but haven't written down yet.
  - Sample Client Zip with launch4j and win32 jre8
  - New Persistence Concept (one persistence.xml for every project and final server-app)
  - Fadeout of Local and Sample Client
+ - Transition to tomee 7 and wildfly
+ - http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
+ - http://stackoverflow.com/questions/39410183/hibernate-5-2-2-no-persistence-provider-for-entitymanager
+ - In Hiberante 5.2 the hibernate-entitymanager is obsolete. everything is in core
+ - HSQLDB user sa and password.
 
