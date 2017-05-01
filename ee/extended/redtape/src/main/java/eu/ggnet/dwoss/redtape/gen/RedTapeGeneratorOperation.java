@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,41 +16,35 @@
  */
 package eu.ggnet.dwoss.redtape.gen;
 
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-
 import java.util.*;
 
-import javax.ejb.*;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
-
-import eu.ggnet.statemachine.StateTransition;
-
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-
-import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
-
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rules.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -58,29 +52,30 @@ import static java.util.stream.Collectors.toList;
 
 /**
  *
- * @aimport static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
- * uthor oliver.guenther
+ * @author oliver.guenther
  */
 @Stateless
 public class RedTapeGeneratorOperation {
-    
+
     private final static Random R = new Random();
-    
+
+    private final static Logger LOG = LoggerFactory.getLogger(RedTapeGeneratorOperation.class);
+
     @EJB
     private RedTapeWorker redTapeWorker;
-    
+
     @EJB
     private UniqueUnitAgent uniqueUnitAgent;
-    
+
     @EJB
     private StockAgent stockAgent;
-    
+
     @Inject
     private MonitorFactory monitorFactory;
-    
+
     @Inject
     private CustomerService customerService;
-    
+
     @Inject
     private PostLedger postLedger;
 
@@ -95,14 +90,14 @@ public class RedTapeGeneratorOperation {
         SubMonitor m = monitorFactory.newSubMonitor("Erzeuge " + amount + " Dossiers", amount);
         m.start();
         if ( amount < 1 ) return Collections.EMPTY_LIST;
-        
+
         List<CustomerMetaData> customers = customerService.allAsCustomerMetaData()
                 .stream().filter(c -> !c.getFlags().contains(SYSTEM_CUSTOMER)).collect(toList());
         if ( customers.isEmpty() ) throw new RuntimeException("No Customers found, obviously there are non in the database");
-        
+
         List<UniqueUnit> freeUniqueUnits = uniqueUnitAgent.findAllEager(UniqueUnit.class);
         List<Product> products = uniqueUnitAgent.findAllEager(Product.class);
-        
+
         List<Dossier> dossiers = new ArrayList<>();
         for (int i = 0; i <= amount; i++) {
             CustomerMetaData customer = customers.get(R.nextInt(customers.size()));
@@ -187,7 +182,7 @@ public class RedTapeGeneratorOperation {
                         break;
                 }
             }
-            
+
             if ( dos.isDispatch() ) { // add the shipping costs.
                 double price = (R.nextInt(10) + 1) * 10;
                 doc.append(Position.builder()
@@ -203,8 +198,9 @@ public class RedTapeGeneratorOperation {
             }
             // Break, if what we build is wrong.
             ValidationUtil.validate(doc);
+            LOG.info("Preupdate: {1}", doc.getId());
             doc = redTapeWorker.update(doc, null, "JUnit");
-            
+
             for (int j = 0; j <= R.nextInt(4); j++) {
                 CustomerDocument cd = new CustomerDocument(customer.getFlags(), doc, customer.getShippingCondition(), customer.getPaymentMethod());
                 List<StateTransition<CustomerDocument>> transitions = redTapeWorker.getPossibleTransitions(cd);

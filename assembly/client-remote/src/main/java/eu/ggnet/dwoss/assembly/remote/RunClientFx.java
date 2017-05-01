@@ -20,8 +20,10 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.*;
+import java.util.Map.Entry;
 import java.util.Objects;
 
+import javax.ejb.Remote;
 import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
@@ -39,12 +41,13 @@ import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.UiAlert.Type;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -72,6 +75,22 @@ public class RunClientFx extends Application {
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
         Client.enableCache(MandatorSupporter.class);
 
+        System.out.println("Parameters");
+        for (String parameter : getParameters().getRaw()) {
+            System.out.println(" - " + parameter);
+        }
+        System.out.println("Properties");
+        for (Entry<Object, Object> entry : System.getProperties().entrySet()) {
+            System.out.println(" - " + entry.getKey() + " = " + entry.getValue());
+        }
+
+        System.out.println("Env");
+        for (Entry<String, String> entry : System.getenv().entrySet()) {
+            System.out.println(" - " + entry.getKey() + " = " + entry.getValue());
+        }
+
+        System.out.println("Test: " + SalesListingProducer.class.getAnnotation(Remote.class));
+
         // Default Mode: GG-Net Productive
         if ( (getParameters().getRaw().isEmpty()
               || (getParameters().getNamed().containsKey("autologout") && getParameters().getNamed().size() == 1))
@@ -91,6 +110,7 @@ public class RunClientFx extends Application {
             startRemoteApplication(RemoteMode.find(getParameters().getNamed().get("mandator"), getParameters().getNamed().get("mode")).getUrl());
             return;
         }
+
         // Otherwise show all paramters, telling, that these are not useful and to use usage.
         if ( !getParameters().getRaw().contains("--select") && !Objects.equals(System.getProperty("select"), "true") ) {
             Alert

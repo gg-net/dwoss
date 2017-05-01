@@ -17,20 +17,12 @@
 package eu.ggnet.dwoss.assembly.web.report;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.model.LazyDataModel;
-import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 /**
  * This class provides methods for RevenueReport generation in DW-Web.
@@ -43,28 +35,27 @@ public class SearchBean implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(SearchBean.class);
 
-    @Inject
-    UniqueUnitEao uniqueUnitEao;
-
-    public List<UniqueUnit> getUnits() {
-        return uniqueUnitEao.findAll();
-    }
-
-    public LazyDataModel<UniqueUnit> getLazyUnitModel() {
-        return new LazyDataModel<UniqueUnit>() {
-
-            {
-                setRowCount(uniqueUnitEao.count());
-            }
-
-            @Override
-            public List<UniqueUnit> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-                LOG.debug("LazyDataModel: first={1}, pageSize={2}, sortField={3}, sortOrder={4}", first, pageSize, sortField, sortOrder);
-                return uniqueUnitEao.findAll(first, pageSize);
-            }
-
-        };
-
-    }
-
+//    @Inject
+//    UniqueUnitEao uniqueUnitEao;
+//
+//    public List<UniqueUnit> getUnits() {
+//        return uniqueUnitEao.findAll();
+//    }
+//
+//    public LazyDataModel<UniqueUnit> getLazyUnitModel() {
+//        return new LazyDataModel<UniqueUnit>() {
+//
+//            {
+//                setRowCount(uniqueUnitEao.count());
+//            }
+//
+//            @Override
+//            public List<UniqueUnit> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+//                LOG.debug("LazyDataModel: first={1}, pageSize={2}, sortField={3}, sortOrder={4}", first, pageSize, sortField, sortOrder);
+//                return uniqueUnitEao.findAll(first, pageSize);
+//            }
+//
+//        };
+//
+//    }
 }

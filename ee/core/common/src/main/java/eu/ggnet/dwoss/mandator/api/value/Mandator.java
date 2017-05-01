@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,8 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -31,8 +32,8 @@ import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
 
+import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Builder;
 
 /**
  *

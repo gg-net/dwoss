@@ -43,7 +43,7 @@
         - hibernate-core: classes used in remote client
         - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
         -->
-        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>openejb-client</artifactId>
             <version>4.7.0</version>
@@ -78,14 +78,14 @@
             <artifactId>geronimo-javamail_1.4_mail</artifactId>
             <version>1.8.2</version>
             <type>jar</type>
-        </dependency>
+        </dependency>-->
         <!-- tomee - 7.0
         Description:
         - all exlusions: exclusions are in openejb-javaee-api
         - hibernate-core: classes used in remote client
         - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
         -->
-        <!--        <dependency>
+        <dependency>
             <groupId>org.apache.tomee</groupId>
             <artifactId>openejb-client</artifactId>
             <version>7.0.3</version>
@@ -93,6 +93,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <version>5.3.5.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.validation</groupId>
@@ -101,9 +102,21 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>jasper-el</artifactId>
+            <version>6.0.53</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.javamail</groupId>
+            <artifactId>geronimo-javamail_1.4_mail</artifactId>
+            <version>1.8.4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.1.5.Final</version>
+            <version>5.0.12.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hibernate.javax.persistence</groupId>
@@ -114,7 +127,7 @@
                     <artifactId>geronimo-jta_1.1_spec</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>-->
+        </dependency>
 
         <!-- components -->
         <dependency>

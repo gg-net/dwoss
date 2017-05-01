@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.misc.op.listings;
 import java.io.Serializable;
 import java.util.*;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
@@ -35,7 +34,6 @@ import lombok.Data;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface SalesListingProducer {
 
     /**

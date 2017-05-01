@@ -162,8 +162,8 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
 )
 public class SampleDataSourceDefinition {
 
-    public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDriver";
+    public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDataSource";
 
-    public final static String DSURL_PROPERTIES = ";user=sa;hsqldb.sqllog=2";
+    public final static String DSURL_PROPERTIES = ";hsqldb.sqllog=0";
 
 }

@@ -54,6 +54,7 @@
     </dependencies>
 
     <modules>
+	<module>web</module>
         <module>core</module>
         <module>persistence</module>
         <module>extended</module>
