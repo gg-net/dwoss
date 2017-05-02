@@ -5,15 +5,19 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:m="http://metawidget.org/faces" >
     <f:view contentType="text/html">
         <h:head>
             <title>Deutsche Warenwirtschaft Server</title>
+            <link rel="stylesheet" type="text/css" href="addressbook.css" media="all"/>
         </h:head>
         <h:body>
-            <ul>
-                <li><h:outputText value="#{server.company}"/></li>
-            </ul>
+            <p style="width: 100%; align-content: center; font-size: xx-large">Deutsche Warenwirtschft Server - <h:outputText value="#{server.companyName}"/></p>
+            <hr />
+            <p style="width: 100%; align-content: center; font-size: xx-large">
+                <m:metawidget value="#{server.mandator}" />
+            </p>
         </h:body>
     </f:view>
 </html>

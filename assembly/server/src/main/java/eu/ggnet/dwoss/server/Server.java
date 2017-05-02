@@ -21,6 +21,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 /**
  *
@@ -33,7 +34,11 @@ public class Server {
     @EJB
     MandatorSupporter mandatorSupport;
 
-    public String getCompany() {
-        return mandatorSupport.loadMandator().getCompany().toSingleLine();
+    public String getCompanyName() {
+        return mandatorSupport.loadMandator().getCompany().getName();
+    }
+
+    public Mandator getMandator() {
+        return mandatorSupport.loadMandator();
     }
 }
