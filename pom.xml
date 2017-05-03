@@ -890,12 +890,12 @@
             <dependency>
                 <groupId>org.metawidget.modules</groupId>
                 <artifactId>metawidget-annotation</artifactId>
-                <version>3.8</version>
+                <version>4.2</version>
             </dependency>
             <dependency>
                 <groupId>org.metawidget.modules</groupId>
                 <artifactId>metawidget-all</artifactId>
-                <version>3.8</version>
+                <version>4.2</version>
             </dependency>
             <dependency>
                 <groupId>org.easytesting</groupId>
