@@ -18,7 +18,7 @@ public class TestBeansXml {
     @Test
     public void testAlternatives() throws ParsingException, ValidityException, IOException {
         // Refactor Safty Net.
-        URL url = ClassLoader.getSystemClassLoader().getResource("META-INF/beans.xml");
+        URL url = ClassLoader.getSystemClassLoader().getResource("beans.xml");
         assertThat(url).isNotNull();
 
         Builder parser = new Builder();
