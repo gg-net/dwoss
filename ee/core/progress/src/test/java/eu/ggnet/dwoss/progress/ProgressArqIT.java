@@ -10,7 +10,7 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.saft.api.progress.ProgressObserver;
+import eu.ggnet.saft.api.progress.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,10 +27,20 @@ public class ProgressArqIT {
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class, "progress.jar")
-                .addClasses(Monitorer.class, MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class)
+                .addClasses(ProgressObserver.class, HiddenMonitor.class, IMonitor.class, Monitorer.class, MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class)
                 .addAsManifestResource("beans.xml");
     }
 
+    // TODO: Dokument
+    /* system.properties
+    tomee.remote.support = true
+tomee.serialization.class.blacklist = -
+        openejb.cdi.activated-on-ejb = true
+        openejb.environment.default = true
+        openejb.system.apps = true
+
+        Sonnst geht das remote deploy nicht
+     */
     @Test
     public void monitor() {
         System.out.println("HUH");
