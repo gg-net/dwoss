@@ -204,11 +204,6 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </dependency>
             </dependencies>
-            <!-- Infos:
-             - customer-pu is created, but I don't know why. And it's mapped somethere
-             - In Hibernate 5.2. the org.hibernate.ejb
-             - Why tomee lazy: http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
-            -->
             <build>
                 <plugins>
                     <plugin>
@@ -216,9 +211,18 @@
                         <artifactId>tomee-maven-plugin</artifactId>
                         <version>7.0.3</version>
                         <configuration>
+                            <systemVariables>
+                                <openejb.system.apps>true</openejb.system.apps>
+                                <tomee.serialization.class.blacklist>-</tomee.serialization.class.blacklist>
+                                <tomee.remote.support>true</tomee.remote.support>
+                            </systemVariables>
                             <finalName>${app.name}</finalName>
                             <tomeeVersion>7.0.3</tomeeVersion>
                             <tomeeClassifier>plus</tomeeClassifier>
+                            <skipCurrentProject>true</skipCurrentProject>
+                            <removeDefaultWebapps>false</removeDefaultWebapps>
+                            <removeTomeeWebapp>false</removeTomeeWebapp>
+
                             <libs>
                                 <lib>org.hibernate:hibernate-entitymanager:5.0.12.Final</lib>
                                 <lib>org.hibernate:hibernate-core:5.0.12.Final</lib>
@@ -231,7 +235,6 @@
                                 <lib>org.apache.lucene:lucene-misc:5.5.4</lib>
                                 <lib>org.apache.lucene:lucene-queries:5.5.4</lib>
                                 <lib>org.apache.lucene:lucene-analyzers-common:5.5.4</lib>
-                                <lib>org.apache.tomcat:jasper-el:6.0.53</lib>
                                 <lib>org.hibernate.common:hibernate-commons-annotations:5.0.1.Final</lib>
                                 <lib>com.fasterxml:classmate:1.3.1</lib>
                                 <lib>org.jboss.logging:jboss-logging:3.3.0.Final</lib>

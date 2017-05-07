@@ -15,8 +15,17 @@
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
+                <!--
+                Die Dokumentation ist grad total schrott:
+                Für direkten Aufruf:
+
+                mvn compile jfx:run -Djfx.runAppParameter="- - url=http://localhost:8080/tomee/ejb"
+                (die beiden minuse ohne freizeichen)
+                Die Url zeigt zum ejb connector vom tomee
+                -->
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
+                <version>8.8.3</version>
                 <configuration>
                     <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
                     <jfxMainAppJarName>client.jar</jfxMainAppJarName>

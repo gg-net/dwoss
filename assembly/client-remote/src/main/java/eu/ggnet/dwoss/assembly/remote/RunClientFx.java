@@ -20,16 +20,12 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.*;
-import java.util.Map.Entry;
 import java.util.Objects;
 
-import javax.ejb.Remote;
 import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -41,7 +37,6 @@ import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
@@ -79,17 +74,6 @@ public class RunClientFx extends Application {
         for (String parameter : getParameters().getRaw()) {
             System.out.println(" - " + parameter);
         }
-        System.out.println("Properties");
-        for (Entry<Object, Object> entry : System.getProperties().entrySet()) {
-            System.out.println(" - " + entry.getKey() + " = " + entry.getValue());
-        }
-
-        System.out.println("Env");
-        for (Entry<String, String> entry : System.getenv().entrySet()) {
-            System.out.println(" - " + entry.getKey() + " = " + entry.getValue());
-        }
-
-        System.out.println("Test: " + SalesListingProducer.class.getAnnotation(Remote.class));
 
         // Default Mode: GG-Net Productive
         if ( (getParameters().getRaw().isEmpty()
@@ -113,12 +97,18 @@ public class RunClientFx extends Application {
 
         // Otherwise show all paramters, telling, that these are not useful and to use usage.
         if ( !getParameters().getRaw().contains("--select") && !Objects.equals(System.getProperty("select"), "true") ) {
+            String usage = "Usage\n\n"
+                    + "--url=[URL to tomee EJb connector]\n\n"
+                    + "Example: http://localhost:8080/tomee/ejb";
+
             Alert
                     .title("Fehlerhafte Paramter")
                     .message("Es wurden folgende fehlerhaften Parameter gefunden:")
-                    .nl(getParameters().getRaw().toString())
+                    .nl("Raw: " + getParameters().getRaw().toString())
+                    .nl("Map: " + getParameters().getNamed())
                     .nl("Für die korrekte Benutzung Usage anschauen")
                     .show(Type.WARNING);
+
         }
         // If Parameters are empty, silently move to Selector Dialog.
 
@@ -129,12 +119,8 @@ public class RunClientFx extends Application {
         primaryStage.setScene(new Scene(pane));
         primaryStage.setTitle("Host Selector");
 
-        primaryStage.showingProperty().not().and(controller.okProperty()).addListener(new ChangeListener<Boolean>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
-                startRemoteApplication(controller.getUrl());
-            }
+        primaryStage.showingProperty().not().and(controller.okProperty()).addListener((ov, oldValue, newValue) -> {
+            startRemoteApplication(controller.getUrl());
         });
         primaryStage.show();
     }
@@ -172,6 +158,7 @@ public class RunClientFx extends Application {
             swingClient = new SwingClient() {
                 @Override
                 protected void close() {
+                    System.out.println("Calling Close");
                     Platform.exit();
                     System.exit(0); // Again, not perfect.
                 }

@@ -1,6 +1,6 @@
 package eu.ggnet.dwoss.progress;
 
-import javax.ejb.EJB;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -21,36 +21,42 @@ public class ProgressArqIT {
     @Inject
     private Monitorer monitorer;
 
-    @EJB
-    private ProgressObserver progressObserver;
+    @Inject
+    private MonitorFactory progressObserver;
 
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class, "progress.jar")
-                .addClasses(ProgressObserver.class, HiddenMonitor.class, IMonitor.class, Monitorer.class, MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class)
+                .addClasses(ProgressObserverOperation.class, ProgressObserver.class, HiddenMonitor.class, IMonitor.class, Monitorer.class, MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class)
+                .addAsManifestResource("ejb-jar.xml")
                 .addAsManifestResource("beans.xml");
     }
 
-    // TODO: Dokument
-    /* system.properties
-    tomee.remote.support = true
-tomee.serialization.class.blacklist = -
-        openejb.cdi.activated-on-ejb = true
-        openejb.environment.default = true
-        openejb.system.apps = true
-
-        Sonnst geht das remote deploy nicht
-     */
     @Test
     public void monitor() {
-        System.out.println("HUH");
         assertNotNull(monitorer);
-        System.out.println("HOHO");
-        System.out.println("M:" + (monitorer.getClass()));
-
         monitorer.doSomething();
         assertNotNull(progressObserver);
         assertFalse(progressObserver.hasProgress());
+    }
+
+    @Stateless
+    public static class Monitorer {
+
+        @Inject
+        private MonitorFactory monitorFactory;
+
+        public void doSomething() {
+            SubMonitor m = monitorFactory.newSubMonitor("The Test Progress", 100);
+            for (int i = 0; i < 100; i++) {
+                m.worked(1, "Done: " + i);
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                }
+            }
+            m.finish();
+        }
     }
 
 }
