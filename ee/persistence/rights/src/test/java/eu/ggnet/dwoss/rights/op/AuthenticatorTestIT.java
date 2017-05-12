@@ -59,7 +59,8 @@ public class AuthenticatorTestIT {
     /**
      * Test of make method, of class RightsGeneratorOperation.
      */
-    @Test
+    @Test // Merge to ArQ
+    @Ignore
     public void testMakeOperatorAndAuthenticate() {
         String password = "xxx123yyy";
         String username = "user";

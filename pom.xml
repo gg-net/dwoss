@@ -19,14 +19,10 @@
     <profiles>
         <profile>
             <id>integration</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.20</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -40,16 +36,16 @@
             </build>
         </profile>
         <profile>
+            <!--Do we need the development profile ?-->
             <id>development</id>
-            <build>
+            <!--            <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>2.20</version>
                     </plugin>
                 </plugins>
-            </build>
+            </build>-->
         </profile>
         <profile>
             <id>tomee-7.0.3</id>
@@ -60,11 +56,6 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </dependency>
             </dependencies>
-            <!-- Infos:
-             - customer-pu is created, but I don't know why. And it's mapped somethere
-             - In Hibernate 5.2. the org.hibernate.ejb is dropped. After switching to tomee7 change org.hibernate.ejb.HibernatePersistence to org.hibernate.jpa.*
-             - Why tomee lazy: http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
-            -->
             <build>
                 <plugins>
                     <plugin>
@@ -369,6 +360,7 @@
 
         <plugins>
             <plugin>
+                <!-- For the the full documentation call: mvn markdown-page-generator:generate javadoc:javadoc -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.10.4</version>
@@ -481,14 +473,15 @@
                     <headerHtmlFile>${project.basedir}/src/main/html/header.html</headerHtmlFile>
                     <footerHtmlFile>${project.basedir}/src/main/html/footer.html</footerHtmlFile>
                 </configuration>
-                <executions>
+                <!-- This calls the generate on every call on compile. But we want it only befor javadoc. May by site.  -->
+                <!--  <executions>
                     <execution>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
             </plugin>
         </plugins>
         <pluginManagement>
@@ -686,6 +679,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>1.1.13.Final</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>

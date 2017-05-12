@@ -219,7 +219,7 @@
                             <finalName>${app.name}</finalName>
                             <tomeeVersion>7.0.3</tomeeVersion>
                             <tomeeClassifier>plus</tomeeClassifier>
-                            <skipCurrentProject>true</skipCurrentProject>
+                            <skipCurrentProject>false</skipCurrentProject>
                             <removeDefaultWebapps>false</removeDefaultWebapps>
                             <removeTomeeWebapp>false</removeTomeeWebapp>
 

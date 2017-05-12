@@ -55,6 +55,7 @@ public class RightsGeneratorTestIT {
      * Test of make method, of class RightsGeneratorOperation.
      */
     @Test
+    @Ignore // Merge to ArQ
     public void testMake() {
         int countOfOperator = 50;
         int countOfPersona = 5;

@@ -10,6 +10,20 @@
     <packaging>pom</packaging>
     <name>DwOss • EE • Extended</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-core-hibernate</artifactId>
+            <scope>test</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openejb</groupId>
+            <artifactId>openejb-cxf-rs</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <modules>
         <module>misc</module>
         <module>price</module>
