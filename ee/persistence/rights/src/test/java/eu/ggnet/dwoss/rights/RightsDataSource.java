@@ -16,8 +16,14 @@
  */
 package eu.ggnet.dwoss.rights;
 
+import java.util.HashMap;
+
+import javax.annotation.ManagedBean;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
+import javax.enterprise.inject.Produces;
+
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 import static eu.ggnet.dwoss.rights.RightsDataSource.DSDRIVER_HSQLDB;
@@ -42,9 +48,22 @@ import static eu.ggnet.dwoss.rights.RightsDataSource.DSURL_PROPERTIES;
             )
         }
 )
+@ManagedBean
 public class RightsDataSource {
 
     public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDataSource";
 
     public final static String DSURL_PROPERTIES = ";hsqldb.sqllog=0";
+
+    @Produces
+    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
+
+    @Produces
+    SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
+
+    @Produces
+    ShippingTerms st = new ShippingTerms(new HashMap<>());
+
+    @Produces
+    PostLedger pl = new PostLedger(new HashMap<>());
 }

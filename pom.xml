@@ -664,7 +664,7 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
+<!--    <pluginRepositories>
         <pluginRepository>
             <id>sonatype.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -675,7 +675,7 @@
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
         </pluginRepository>
-    </pluginRepositories>
+    </pluginRepositories>-->
 
     <dependencyManagement>
         <dependencies>

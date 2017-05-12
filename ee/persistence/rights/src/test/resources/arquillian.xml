@@ -7,12 +7,13 @@
         <property name="deploymentExportPath">target/deployments</property>
     </engine>
     <container qualifier="tomee" default="true">
-        <configuration>
+        <configuration>            
             <property name="groupId">org.apache.tomee</property>
             <property name="artifactId">apache-tomee</property>
             <property name="version">7.0.3</property>
             <property name="type">zip</property>
             <property name="classifier">plus</property>
+            <property name="conf">target/test-classes/tomee</property>
             <property name="additionalLibs">
                 mvn:org.hibernate:hibernate-entitymanager:5.0.12.Final
                 mvn:org.hibernate:hibernate-core:5.0.12.Final
@@ -32,7 +33,6 @@
                 mvn:dom4j:dom4j:1.6.1
                 mvn:antlr:antlr:2.7.7
             </property>
-            <property name="simpleLog">true</property>
         </configuration>
     </container>
 </arquillian>

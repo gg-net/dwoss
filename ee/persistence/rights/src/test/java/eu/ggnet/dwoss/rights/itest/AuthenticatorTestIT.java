@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.dwoss.rights.op;
+package eu.ggnet.dwoss.rights.itest;
 
 import java.util.*;
 
@@ -19,6 +19,7 @@ import eu.ggnet.dwoss.rights.RightsAgent;
 import eu.ggnet.dwoss.rights.assist.RightsPu;
 import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static org.fest.assertions.api.Assertions.assertThat;

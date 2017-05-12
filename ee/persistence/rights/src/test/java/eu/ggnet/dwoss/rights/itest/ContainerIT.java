@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.rights;
+package eu.ggnet.dwoss.rights.itest;
 
 import java.io.File;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import javax.enterprise.inject.Produces;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
@@ -19,10 +20,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.rights.RightsAgent;
+import eu.ggnet.dwoss.rights.RightsDataSource;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
+import static java.lang.Package.getPackage;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
@@ -37,18 +41,6 @@ public class ContainerIT {
     @EJB
     private RightsAgent agent;
 
-    @Produces
-    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
-
-    @Produces
-    SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
-
-    @Produces
-    ShippingTerms st = new ShippingTerms(new HashMap<>());
-
-    @Produces
-    PostLedger pl = new PostLedger(new HashMap<>());
-
     @Deployment
     public static WebArchive createDeployment() {
         File[] libs = Maven.resolver()
@@ -58,7 +50,7 @@ public class ContainerIT {
                 .resolve().withTransitivity().asFile();
 
         return ShrinkWrap.create(WebArchive.class, "rights-container.war")
-                .addPackages(true, "eu.ggnet.dwoss.rights")
+                .addPackages(true, Filters.exclude(getPackage("eu.ggnet.dwoss.rights.itest")), "eu.ggnet.dwoss.rights")
                 .addClass(RightsDataSource.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsLibraries(libs)
