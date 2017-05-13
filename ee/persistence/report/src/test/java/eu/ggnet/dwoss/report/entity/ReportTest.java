@@ -1,8 +1,5 @@
 package eu.ggnet.dwoss.report.entity;
 
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-
 import java.text.ParseException;
 import java.util.*;
 
@@ -13,6 +10,7 @@ import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import static eu.ggnet.dwoss.rules.TradeName.ALSO;
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class ReportTest {
@@ -58,9 +56,11 @@ public class ReportTest {
         report.add(unitAfter);
 
         Report.YearSplit result = report.filterInvoicedSplit();
-        assertFalse("After should not be empty, splitting at " + result.getSplitter(), result.getAfter().isEmpty());
+        assertThat(result.getAfter())
+                .describedAs("Report.after : Split at " + result.getSplitter())
+                .isNotEmpty()
+                .hasSize(1);
         assertFalse("Before should not be empty, splitting at " + result.getSplitter(), result.getBefore().isEmpty());
-        assertEquals("After should be exactly one, splitting at " + result.getSplitter(), 1, result.getAfter().size());
         assertEquals("Before should be exactly one, splitting at " + result.getSplitter(), 1, result.getBefore().size());
         assertEquals(unitAfter, result.getAfter().first());
         assertEquals(unitBefore, result.getBefore().first());

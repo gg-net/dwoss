@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.rights;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -24,7 +25,6 @@ import eu.ggnet.dwoss.rights.assist.Rights;
 import eu.ggnet.dwoss.rights.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
-
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
@@ -34,6 +34,7 @@ import eu.ggnet.dwoss.util.persistence.RemoteAgent;
  * @author Bastian Venz
  */
 @Stateless
+@LocalBean
 public class RightsAgentBean extends AbstractAgentBean implements RightsAgent {
 
     @Inject

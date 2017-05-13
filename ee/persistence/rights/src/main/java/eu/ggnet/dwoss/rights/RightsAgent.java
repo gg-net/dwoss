@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,18 @@
  */
 package eu.ggnet.dwoss.rights;
 
-import javax.ejb.*;
+import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
 /**
+ * Agent for the Right Persistence Layer.
  *
  * @author Bastian Venz
  */
 @Remote
-@Local
 public interface RightsAgent extends RemoteAgent {
 
     /**

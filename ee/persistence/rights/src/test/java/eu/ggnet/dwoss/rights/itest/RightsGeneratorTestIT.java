@@ -5,17 +5,16 @@
  */
 package eu.ggnet.dwoss.rights.itest;
 
-import java.util.*;
+import java.util.List;
 
-import javax.ejb.embeddable.EJBContainer;
+import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
 import eu.ggnet.dwoss.rights.RightsAgent;
-import eu.ggnet.dwoss.rights.assist.RightsPu;
 import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
@@ -26,40 +25,23 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Bastian Venz
  */
-public class RightsGeneratorTestIT {
-
-    private EJBContainer container;
-
-    @Inject
-    private RightsGeneratorOperation bean;
+@RunWith(Arquillian.class)
+public class RightsGeneratorTestIT extends ArquillianProjectArchive {
 
     @Inject
+    private RightsGeneratorOperation generator;
+
+    @EJB
     private RightsAgent agent;
-
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(RightsPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
 
     /**
      * Test of make method, of class RightsGeneratorOperation.
      */
     @Test
-    @Ignore // Merge to ArQ
     public void testMake() {
         int countOfOperator = 50;
         int countOfPersona = 5;
-        bean.make(countOfOperator, countOfPersona);
+        generator.make(countOfOperator, countOfPersona);
 
         List<Operator> operators = agent.findAll(Operator.class);
         assertEquals("Not all Operators were Persisted", operators.size(), countOfOperator);

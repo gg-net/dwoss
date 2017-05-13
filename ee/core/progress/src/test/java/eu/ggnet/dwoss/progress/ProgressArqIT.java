@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.saft.api.progress.*;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
@@ -28,12 +29,14 @@ public class ProgressArqIT {
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class, "progress.jar")
                 .addClasses(ProgressObserverOperation.class, ProgressObserver.class, HiddenMonitor.class, IMonitor.class, Monitorer.class, MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class)
+                .addPackages(true, "org.fest")
                 .addAsManifestResource("ejb-jar.xml")
                 .addAsManifestResource("beans.xml");
     }
 
     @Test
     public void monitor() {
+        assertThat(monitorer).isNotNull().as("monitorer");
         assertNotNull(monitorer);
         monitorer.doSomething();
         assertNotNull(progressObserver);

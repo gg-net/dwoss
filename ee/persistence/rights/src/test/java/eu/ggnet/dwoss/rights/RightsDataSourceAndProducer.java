@@ -26,8 +26,8 @@ import javax.enterprise.inject.Produces;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.*;
-import static eu.ggnet.dwoss.rights.RightsDataSource.DSDRIVER_HSQLDB;
-import static eu.ggnet.dwoss.rights.RightsDataSource.DSURL_PROPERTIES;
+import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSDRIVER_HSQLDB;
+import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSURL_PROPERTIES;
 
 /**
  *
@@ -49,7 +49,7 @@ import static eu.ggnet.dwoss.rights.RightsDataSource.DSURL_PROPERTIES;
         }
 )
 @ManagedBean
-public class RightsDataSource {
+public class RightsDataSourceAndProducer {
 
     public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDataSource";
 
@@ -59,11 +59,11 @@ public class RightsDataSource {
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
 
     @Produces
-    SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
+    public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
 
     @Produces
-    ShippingTerms st = new ShippingTerms(new HashMap<>());
+    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
 
     @Produces
-    PostLedger pl = new PostLedger(new HashMap<>());
+    public static PostLedger pl = new PostLedger(new HashMap<>());
 }

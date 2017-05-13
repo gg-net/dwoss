@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ public interface Authentication {
      * @param username the username of the {@link Operator}.
      * @param password the password of the {@link Operator}.
      * @return {@link Set} of {@link AtomicRight}'s when the {@link Operator} is authorized.
-     * @throws de.dw.util.UserInfoException is thrown when username and/or password is wrong.
+     * @throws UserInfoException is thrown when username and/or password is wrong.
      */
     Operator login(String username, char[] password) throws UserInfoException;
 
