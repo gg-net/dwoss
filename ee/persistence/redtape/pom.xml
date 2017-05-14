@@ -12,32 +12,7 @@
     <name>DwOss • EE • Persistence • RedTape</name>
     <packaging>ejb</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- Config in Master Pom, Enables QueryDSL Classes -->
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${javaee.groupId}</groupId>
-            <artifactId>${javaee.artifactId}</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-common</artifactId>

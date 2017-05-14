@@ -27,10 +27,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core-hibernate</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
-            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -42,7 +46,7 @@
     <modules>
         <module>sample</module>
         <module>sample-service</module>
-	<module>sample-tryout</module>
+        <module>sample-tryout</module>
     </modules>
 
 </project>

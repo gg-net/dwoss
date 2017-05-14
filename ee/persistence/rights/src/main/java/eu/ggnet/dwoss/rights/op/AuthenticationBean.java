@@ -62,17 +62,27 @@ public class AuthenticationBean implements Authentication {
      */
     @Override
     public eu.ggnet.dwoss.rights.api.Operator login(String username, char[] password) throws UserInfoException {
-        //find users by Usernmae
+        L.info("Authentication request(user={})", username);
+        //find users by Username
         List<Operator> result = rightsEm.createNamedQuery("Operator.byUsername", Operator.class).setParameter(1, username).getResultList();
         if ( result.isEmpty() ) throw new UserInfoException("User " + username + " ist noch nicht angelegt");
         Operator op = result.get(0);
         if ( !service.isAmbiguous() && !service.isUnsatisfied() ) {
-            if ( service.get().authenticate(username, password) ) return op.toDto();
+            if ( service.get().authenticate(username, password) ) {
+                eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
+                L.info("Authentication successful: {}", login);
+                return login;
+            }
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
-                    && Arrays.equals(op.getPassword(), hashPassword(password, op.getSalt())) )
-                return op.toDto();
+                    && Arrays.equals(op.getPassword(), hashPassword(password, op.getSalt())) ) {
+                eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
+                L.info("Authentication successful: {}", login);
+                return login;
+            }
+
         }
+        L.info("Authentication denied");
         throw new UserInfoException("Authentifizierung nicht gelungen!");
     }
 

@@ -21,6 +21,9 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rights.assist.Rights;
 import eu.ggnet.dwoss.rights.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.entity.Operator;
@@ -37,6 +40,8 @@ import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 @LocalBean
 public class RightsAgentBean extends AbstractAgentBean implements RightsAgent {
 
+    private final static Logger L = LoggerFactory.getLogger(RightsAgentBean.class);
+
     @Inject
     @Rights
     private EntityManager em;
@@ -48,6 +53,7 @@ public class RightsAgentBean extends AbstractAgentBean implements RightsAgent {
 
     @Override
     public Persona store(Persona p) {
+        L.info("Storing {}", p);
         if ( p.getId() == 0 ) {
             em.persist(p);
             return p;
@@ -57,6 +63,7 @@ public class RightsAgentBean extends AbstractAgentBean implements RightsAgent {
 
     @Override
     public Operator store(Operator o) {
+        L.info("Storing {}", o);
         if ( o.getId() == 0 ) {
             em.persist(o);
             return o;

@@ -12,26 +12,8 @@
     <name>DwOss • EE • Persistence • UniqueUnit</name>
     <packaging>ejb</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- Config in Master Pom -->
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-common</artifactId>

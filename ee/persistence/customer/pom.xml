@@ -11,25 +11,15 @@
     <name>DwOss • EE • Persistence • Customer</name>
     <packaging>ejb</packaging>
 
-    <build>
-        <plugins>
-            <plugin>
-                <!-- Config in Master Pom -->
-                <groupId>com.mysema.maven</groupId>
-                <artifactId>apt-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-apt</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.mysema.querydsl</groupId>
-            <artifactId>querydsl-jpa</artifactId>
+            <groupId>org.metawidget.modules</groupId>
+            <artifactId>metawidget-annotation</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

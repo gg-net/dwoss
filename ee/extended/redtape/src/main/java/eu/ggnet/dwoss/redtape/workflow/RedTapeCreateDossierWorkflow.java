@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,31 +16,25 @@
  */
 package eu.ggnet.dwoss.redtape.workflow;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.customer.api.AddressService;
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Set;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
+import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.rules.CustomerFlag.*;
 import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;

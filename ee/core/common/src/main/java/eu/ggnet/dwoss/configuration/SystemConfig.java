@@ -174,10 +174,34 @@ public class SystemConfig {
      */
     public final static Map<String, String> OPENEJB_XBEAN_FINDER;
 
-    public final static String DSNAME_SUFFIX = "java:comp/env/";
+    /**
+     * Default prefix for all datasources.
+     * A global prefix change might be needed on a container change. Saw that on first experiments with wildfly.
+     */
+    public final static String DSNAME_PREFIX = "java:comp/env/";
 
-    public final static String DSNAME_PREFIX_MANAGED = "DataSource";
+    /**
+     * Default suffix for the managed datasource.
+     * After the switch to tomee 7 oder even wildfly, someone might have a look into this. The tomee 1.7 needs allways both datasources defined.
+     */
+    public final static String DSNAME_SUFFIX_MANAGED = "DataSource";
 
-    public final static String DSNAME_PREFIX_UNMANAGED = "DataSourceUnmanaged";
+    /**
+     * Default suffix for the unmanaged datasource.
+     * After the switch to tomee 7 oder even wildfly, someone might have a look into this. The tomee 1.7 needs allways both datasources defined.
+     */
+    public final static String DSNAME_SUFFIX_UNMANAGED = "DataSourceUnmanaged";
+
+    /**
+     * The jdbc driver of the hsqldb.
+     * Change once, may change again
+     */
+    public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDataSource";
+
+    /**
+     * Default parameters for the hsqldb url.
+     * May be used to activate sqllog on all levels.
+     */
+    public final static String DSURL_PROPERTIES = ";hsqldb.sqllog=0";
 
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.entity.Communication.Type;
-
-import eu.ggnet.dwoss.rules.CustomerFlag;
-
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.expr.BooleanExpression;
@@ -158,11 +156,12 @@ public class CustomerEao extends AbstractEao<Customer> {
     }
 
     /**
-     * This Method search for a Customer by his Id or, Company or First- or Lastname.
-     * First it searchs for the CustomerId when it is possible. If not it search if its 'like' the Company, First- or Lastname.
+     * This Method search for a Customer by his Id or, Company or Firstname or Lastname.
+     * First it searchs for the CustomerId via sql. Second an index search using the fields company, firsname, lastname is executed.
+     * The combiened result is returned.
      * <p/>
-     * @param search
-     * @return
+     * @param search the search parameter
+     * @return the result of the search
      */
     public List<Customer> find(String search) {
         if ( StringUtils.isBlank(search) ) return new ArrayList<>();

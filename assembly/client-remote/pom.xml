@@ -110,7 +110,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <dependency> <!-- Info: not working with 5.4. .... see tests.-->
             <groupId>org.apache.tomcat</groupId>
             <artifactId>jasper-el</artifactId>
             <version>6.0.53</version>

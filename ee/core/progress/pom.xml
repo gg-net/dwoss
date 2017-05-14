@@ -23,16 +23,6 @@
             <artifactId>xom</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomee</groupId>
-            <artifactId>arquillian-tomee-remote</artifactId>
-            <version>7.0.3</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
+    
 </project>

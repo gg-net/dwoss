@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,24 +16,22 @@
  */
 package eu.ggnet.dwoss.customer.op;
 
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
-
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
 /**
@@ -65,11 +63,9 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        List<UiCustomer> customers = new ArrayList<>();
-        for (Customer customer : customerEao.find(search)) {
-            customers.add(asUiCustomer(convert(customer)));
-        }
-        return customers;
+        return customerEao.find(search).stream().map((customer) -> {
+            return asUiCustomer(convert(customer));
+        }).collect(Collectors.toList());
     }
 
     @Override

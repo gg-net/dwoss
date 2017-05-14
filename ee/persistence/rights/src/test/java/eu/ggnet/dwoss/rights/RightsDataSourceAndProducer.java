@@ -26,8 +26,6 @@ import javax.enterprise.inject.Produces;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.*;
-import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSDRIVER_HSQLDB;
-import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSURL_PROPERTIES;
 
 /**
  *
@@ -35,13 +33,13 @@ import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSURL_PROPERTIES
  */
 @DataSourceDefinitions(
         value = {
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -50,10 +48,6 @@ import static eu.ggnet.dwoss.rights.RightsDataSourceAndProducer.DSURL_PROPERTIES
 )
 @ManagedBean
 public class RightsDataSourceAndProducer {
-
-    public final static String DSDRIVER_HSQLDB = "org.hsqldb.jdbc.JDBCDataSource";
-
-    public final static String DSURL_PROPERTIES = ";hsqldb.sqllog=0";
 
     @Produces
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());

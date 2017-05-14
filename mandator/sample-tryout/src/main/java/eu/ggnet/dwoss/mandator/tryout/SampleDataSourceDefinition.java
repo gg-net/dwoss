@@ -31,13 +31,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
 @DataSourceDefinitions(
         value = {
             // <editor-fold defaultstate="collapsed" desc="report">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "report" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "report" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "report" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "report" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -46,13 +46,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="redtape">
 
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "redtape" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "redtape" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -60,13 +60,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="uniqueunit">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "uniqueunit" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "uniqueunit" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "uniqueunit" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "uniqueunit" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -74,13 +74,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="spec">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "spec" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "spec" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "spec" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "spec" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -88,13 +88,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="stock">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "stock" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "stock" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "stock" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "stock" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -102,13 +102,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="rights">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "rights" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -116,13 +116,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="customer">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "customer" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "customer" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "customer" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "customer" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -131,13 +131,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             // </editor-fold>
             // Special datasources
             // <editor-fold defaultstate="collapsed" desc="repair">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "repair" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "repair" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:repair" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "repair" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "repair" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:repair" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
@@ -145,13 +145,13 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ,
             // </editor-fold>
             // <editor-fold defaultstate="collapsed" desc="sopo">
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "sopo" + DSNAME_PREFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "sopo" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:sopo" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_SUFFIX + "sopo" + DSNAME_PREFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "sopo" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
                                   url = "jdbc:hsqldb:mem:sopo" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}

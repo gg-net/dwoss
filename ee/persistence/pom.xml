@@ -10,16 +10,38 @@
     <packaging>pom</packaging>
     <name>DwOss • EE • Persistence</name>
 
+    <properties>
+        <global-resources-path>../..</global-resources-path>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Config in Master Pom, Enables QueryDSL Classes -->
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
-        <!--        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core-hibernate</artifactId>
-            <scope>test</scope>
-            <type>pom</type>
-        </dependency>-->
         <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-cxf-rs</artifactId>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

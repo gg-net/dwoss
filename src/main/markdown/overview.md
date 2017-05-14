@@ -35,7 +35,7 @@ In the core the application has a simple layer model.
 
 There are also some more rules to consider, which we were not yet able to represent.
 See the developed Graph in
- [DWOSS-27](http://overload.ahrensburg.gg-net.de/jira/browse/DWOSS-27) for more details.
+ [DWOSS-27](https://jira.cybertron.global/browse/DWOSS-27) for more details.
 
 ### Default Naming ###
 
@@ -110,6 +110,11 @@ findXXX methodes and supply fetch eager versions.
 	- Operation/View for creating,building,first time usage of something: Create\*
 	- Operation/View for modifying, editing, updating of something: Update\*
 
+Logging in Tests
+----------------
+
+https://confluence.cybertron.global/display/DWOSS/Arquillian+Tomee+Surefire+Failsafe+Output+Problems
+
 Implicite Knowledge
 -------------------
 
@@ -128,6 +133,3 @@ Things we know, but haven't written down yet.
  - http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
  - http://stackoverflow.com/questions/39410183/hibernate-5-2-2-no-persistence-provider-for-entitymanager
  - In Hiberante 5.2 the hibernate-entitymanager is obsolete. everything is in core
- - HSQLDB user sa and password.
- - Remote SalesListingOperation does not work ?!
-

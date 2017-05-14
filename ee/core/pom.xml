@@ -10,6 +10,10 @@
     <packaging>pom</packaging>
     <name>DwOss • EE • Core</name>
 
+    <properties>
+        <global-resources-path>../..</global-resources-path>
+    </properties>
+
     <modules>
         <module>common</module>
         <module>progress</module>

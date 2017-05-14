@@ -21,10 +21,6 @@ import eu.ggnet.dwoss.rights.entity.Persona;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- *
- * @author Bastian Venz
- */
 @RunWith(Arquillian.class)
 public class RightsGeneratorTestIT extends ArquillianProjectArchive {
 

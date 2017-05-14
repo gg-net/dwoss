@@ -59,6 +59,7 @@ public class MonitorFactory {
      * @return a new Submonitor.
      */
     public SubMonitor newSubMonitor(String title, int workRemaining) {
+        L.debug("creating Submonitor {}", title);
         HiddenMonitor monitor = new HiddenMonitor();
         monitor.title(title);
         monitors.put(monitor.hashCode(), monitor);

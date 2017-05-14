@@ -10,7 +10,16 @@
     <packaging>pom</packaging>
     <name>DwOss • EE • Extended</name>
 
+    <properties>
+        <global-resources-path>../..</global-resources-path>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.apache.openejb</groupId>
             <artifactId>openejb-core-hibernate</artifactId>
