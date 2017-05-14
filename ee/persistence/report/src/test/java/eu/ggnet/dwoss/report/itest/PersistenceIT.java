@@ -1,40 +1,36 @@
-package eu.ggnet.dwoss.report;
+package eu.ggnet.dwoss.report.itest;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
+
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 
-import java.util.*;
+import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
 
-import javax.persistence.*;
+@RunWith(Arquillian.class)
+public class PersistenceIT extends ArquillianProjectArchive {
 
-import org.junit.*;
-
-import eu.ggnet.dwoss.report.assist.ReportPu;
-
-import static eu.ggnet.dwoss.rules.TradeName.*;
-
-public class PersistenceIT {
-
-    private EntityManagerFactory emf;
-
+    @Inject
+    @Reports
     private EntityManager em;
 
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(ReportPu.NAME, ReportPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void after() {
-        if ( em != null && em.isOpen() ) em.close();
-        if ( emf != null && emf.isOpen() ) emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    public void testPersistence() {
+    public void testPersistence() throws Exception {
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
@@ -47,18 +43,17 @@ public class PersistenceIT {
         Report report = new Report("TestReport", ONESELF,
                 new Date(Calendar.getInstance().getTimeInMillis() - 100000), new Date());
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(line1);
         em.persist(line2);
         em.persist(line3);
-        em.getTransaction().commit();
 
         report.add(line1);
         report.add(line2);
         report.add(line3);
-        em.getTransaction().begin();
         em.persist(report);
-        em.getTransaction().commit();
 
+        utx.commit();
     }
 }

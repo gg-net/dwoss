@@ -1,16 +1,18 @@
 package eu.ggnet.dwoss.redtape.itest.emo;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.tools.Diagnostic;
+import javax.transaction.UserTransaction;
 
-import org.junit.Ignore;
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.emo.DossierEmo;
 import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 
@@ -20,41 +22,43 @@ import static org.junit.Assert.*;
  *
  * @author pascal.perau
  */
-@Category(Diagnostic.class)
-public class DossierEmoIT {
+@RunWith(Arquillian.class)
+public class DossierEmoIT extends ArquillianProjectArchive {
 
+    @Inject
+    @RedTapes
     private EntityManager em;
 
-    private EntityManagerFactory emf;
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    @Ignore // Arqme
-
-    public void testRequest() {
+    public void testRequest() throws Exception {
         DossierEmo dossierEmo = new DossierEmo(em);
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         Document document = dossierEmo.requestActiveDocumentBlock(1, "Addresse", "Comment", "Test");
         assertNotNull(document);
         Dossier dossier = document.getDossier();
         assertTrue(dossier.getId() > 0);
         assertNotNull(dossier.getActiveDocuments());
         assertFalse(dossier.getActiveDocuments().isEmpty());
-        em.getTransaction().commit();
-
-        em.getTransaction().begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
         Document document2 = dossierEmo.requestActiveDocumentBlock(1, "Addresse", "Comment", "Test");
         assertNotNull(document2);
         Dossier dossier2 = document2.getDossier();
         assertEquals(dossier.getId(), dossier2.getId());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    @Ignore // Arqme
-    public void testRemoveHistory() {
+    public void testRemoveHistory() throws Exception {
         DossierEmo dossierEmo = new DossierEmo(em);
-        em.getTransaction().begin();
-        Document last = dossierEmo.requestActiveDocumentBlock(1, "Addresse", "Comment", "Test");
+        utx.begin();
+        em.joinTransaction();
+        Document last = dossierEmo.requestActiveDocumentBlock(2, "Addresse Zwei", "Comment", "Test");
         last.setActive(false);
         Dossier dossier = last.getDossier();
         for (int i = 0; i < 20; i++) {
@@ -69,20 +73,21 @@ public class DossierEmoIT {
             last = d;
         }
         last.setActive(true);
-        em.getTransaction().commit();
 
-        em.getTransaction().begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
         dossier = new DossierEao(em).findById(dossier.getId());
         assertTrue(dossier.getDocuments().size() > 10);
         dossierEmo.removeHistoryFromBlock(dossier.getId());
-        em.getTransaction().commit();
 
-        em.close();
-        em = emf.createEntityManager();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
 
-        em.getTransaction().begin();
         dossier = new DossierEao(em).findById(dossier.getId());
         assertEquals(1, dossier.getDocuments().size());
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

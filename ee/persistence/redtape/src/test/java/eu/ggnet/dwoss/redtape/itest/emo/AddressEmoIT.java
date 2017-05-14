@@ -1,12 +1,17 @@
 package eu.ggnet.dwoss.redtape.itest.emo;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.redtape.assist.RedTapePu;
+import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.entity.Address;
+import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,35 +20,29 @@ import static org.junit.Assert.assertTrue;
  *
  * @author pascal.perau
  */
-public class AddressEmoIT {
+@RunWith(Arquillian.class)
+public class AddressEmoIT extends ArquillianProjectArchive {
 
+    @Inject
+    @RedTapes
     private EntityManager em;
 
-    private EntityManagerFactory emf;
-
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(RedTapePu.NAME, RedTapePu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    @Ignore // Arqme
+    public void testRequest() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
-    public void testRequest() {
-
-        em.getTransaction().begin();
         Address a1 = new Address("abcd");
         Address a2 = new Address("efgh");
         em.persist(a1);
         em.persist(a2);
-        em.getTransaction().commit();
+
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
 
         AddressEmo adEmo = new AddressEmo(em);
         Address a3 = adEmo.request(a2.getDescription());
@@ -51,6 +50,8 @@ public class AddressEmoIT {
 
         assertTrue(a3.getDescription().equals(a2.getDescription()));
         assertEquals(a4.getDescription(), "ijkl");
+
+        utx.commit();
     }
 
 }

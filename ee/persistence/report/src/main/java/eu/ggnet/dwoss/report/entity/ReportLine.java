@@ -33,14 +33,10 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
-import lombok.experimental.Builder;
-
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static eu.ggnet.dwoss.rules.PositionType.*;
-
 import lombok.*;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.rules.PositionType.*;
 
 /**
  * This is a Line of a report. It could be represent any type of Position.
@@ -71,20 +67,32 @@ import static eu.ggnet.dwoss.rules.DocumentType.*;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "ReportLine.allReverse", query = "SELECT r FROM ReportLine r ORDER BY r.reportingDate DESC, r.refurbishId ASC"),
-    @NamedQuery(name = "ReportLine.byUniqueUnitId", query = "SELECT r FROM ReportLine r WHERE r.uniqueUnitId = ?1"),
-    @NamedQuery(name = "ReportLine.byProductIdMissingContractorPartNo", query = "SELECT r FROM ReportLine r WHERE r.productId = ?1 and r.contractor = ?2 and r.contractorPartNo is null"),
-    @NamedQuery(name = "ReportLine.byRefurbishId", query = "SELECT r FROM ReportLine r WHERE r.refurbishId = ?1"),
-    @NamedQuery(name = "ReportLine.bySerialAndPositionTypeAndDossierId", query = "SELECT r FROM ReportLine r WHERE r.serial = ?1 AND r.positionType = ?2 AND r.dossierId = ?3"),
-    @NamedQuery(name = "ReportLine.lastReported", query = "SELECT MAX(r.reportingDate) FROM ReportLine r"),
-    @NamedQuery(name = "ReportLine.betweenDates", query = "SELECT r FROM ReportLine r WHERE r.reportingDate BETWEEN ?1 AND ?2"),
-    @NamedQuery(name = "ReportLine.unreported", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
-    @NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
-    @NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
-    @NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)"),
+    @NamedQuery(name = "ReportLine.allReverse", query = "SELECT r FROM ReportLine r ORDER BY r.reportingDate DESC, r.refurbishId ASC")
+    ,
+    @NamedQuery(name = "ReportLine.byUniqueUnitId", query = "SELECT r FROM ReportLine r WHERE r.uniqueUnitId = ?1")
+    ,
+    @NamedQuery(name = "ReportLine.byProductIdMissingContractorPartNo", query = "SELECT r FROM ReportLine r WHERE r.productId = ?1 and r.contractor = ?2 and r.contractorPartNo is null")
+    ,
+    @NamedQuery(name = "ReportLine.byRefurbishId", query = "SELECT r FROM ReportLine r WHERE r.refurbishId = ?1")
+    ,
+    @NamedQuery(name = "ReportLine.bySerialAndPositionTypeAndDossierId", query = "SELECT r FROM ReportLine r WHERE r.serial = ?1 AND r.positionType = ?2 AND r.dossierId = ?3")
+    ,
+    @NamedQuery(name = "ReportLine.lastReported", query = "SELECT MAX(r.reportingDate) FROM ReportLine r")
+    ,
+    @NamedQuery(name = "ReportLine.betweenDates", query = "SELECT r FROM ReportLine r WHERE r.reportingDate BETWEEN ?1 AND ?2")
+    ,
+    @NamedQuery(name = "ReportLine.unreported", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+    ,
+    @NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+    ,
+    @NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+    ,
+    @NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+    ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
-                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor"),
+                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
+    ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
                 + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
@@ -153,7 +161,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * <li>CHARGED is a Line if a Complaint has the condition ACCEPTED.</li>
      * <li>DISCHARGED is a Line if a Complaint has one of the conditions WITHDRAWN or REJECTED.</li>
      * </ul>
-     *
+     * <p>
      */
     @AllArgsConstructor
     @Getter

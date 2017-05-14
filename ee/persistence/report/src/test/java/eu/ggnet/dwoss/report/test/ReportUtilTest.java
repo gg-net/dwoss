@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.report.assist.gen;
+package eu.ggnet.dwoss.report.test;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 

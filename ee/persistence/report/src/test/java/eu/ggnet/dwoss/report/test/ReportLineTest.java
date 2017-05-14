@@ -1,8 +1,10 @@
-package eu.ggnet.dwoss.report.entity;
+package eu.ggnet.dwoss.report.test;
 
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 
 import java.util.Date;

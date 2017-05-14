@@ -1,4 +1,7 @@
-package eu.ggnet.dwoss.report.entity;
+package eu.ggnet.dwoss.report.test;
+
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 
 import java.text.ParseException;
 import java.util.*;

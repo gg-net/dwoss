@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.report.ui;
+package eu.ggnet.dwoss.report.tryout;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.rules.ProductGroup;

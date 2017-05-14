@@ -1,21 +1,29 @@
-package eu.ggnet.dwoss.report.eao;
+package eu.ggnet.dwoss.report.itest;
 
 import java.text.ParseException;
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.report.assist.ReportPu;
+import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.eao.Revenue;
+import eu.ggnet.dwoss.report.entity.*;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.DateFormats;
+
+import com.mysema.query.jpa.impl.JPADeleteClause;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
@@ -23,20 +31,24 @@ import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.rules.Step.DAY;
 import static eu.ggnet.dwoss.rules.TradeName.*;
-import static org.apache.commons.lang3.time.DateUtils.*;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ReportLineEaoIT {
+@RunWith(Arquillian.class)
+public class ReportLineEaoIT extends ArquillianProjectArchive {
 
-    private EntityManagerFactory emf;
-
+    @Inject
+    @Reports
     private EntityManager em;
+
+    @Inject
+    private UserTransaction utx;
 
     private final ReportLineGenerator generator = new ReportLineGenerator();
 
@@ -56,42 +68,39 @@ public class ReportLineEaoIT {
         }
     }
 
-    @Before
-    public void setUp() {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(ReportPu.JPA_IN_MEMORY);
-        emf = Persistence.createEntityManagerFactory(ReportPu.NAME, c);
-        em = emf.createEntityManager();
-
-    }
-
     @After
-    public void after() {
-        if ( em != null && em.isOpen() ) em.close();
-        if ( emf != null && emf.isOpen() ) emf.close();
+    public void clearDatabase() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        new JPADeleteClause(em, QReport.report).execute();
+        new JPADeleteClause(em, QReportLine.reportLine).execute();
+        utx.commit();
     }
 
     @Test
-    public void testFindAllSimple() throws ParseException {
-        em.getTransaction().begin();
+    public void testFindAllSimple() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
             ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
             em.persist(l);
         }
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         List<ReportLine> findAll = new ReportLineEao(em).findAll();
         assertEquals(300, findAll.size());
         List<SimpleReportLine> findAll2 = new ReportLineEao(em).findAllSimple();
         assertEquals(300, findAll2.size());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindProductIdMissingContractorPartNo() throws ParseException {
-        em.getTransaction().begin();
+    public void testFindProductIdMissingContractorPartNo() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
         final Random R = new Random();
 
@@ -111,19 +120,21 @@ public class ReportLineEaoIT {
         em.persist(l1);
         em.persist(l2);
 
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         List<ReportLine> missing = new ReportLineEao(em).findByProductIdMissingContractorPartNo(PRODUCT_ID, CONTRACTOR);
         assertEquals(2, missing.size());
         assertTrue(missing.contains(l1));
         assertTrue(missing.contains(l2));
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindLastReported() throws ParseException {
-        em.getTransaction().begin();
+    public void testFindLastReported() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
             ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
@@ -155,17 +166,19 @@ public class ReportLineEaoIT {
             r.add(l);
             em.persist(r);
         }
-        em.getTransaction().commit();
+        utx.commit();
         Date max = DateFormats.ISO.parse("2012-01-20");
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+
         Date d2 = new ReportLineEao(em).findLastReported();
         assertTrue("Date " + d2 + " is not the expected " + max, DateUtils.isSameDay(max, d2));
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindByUniqueUnitId() throws ParseException {
+    public void testFindByUniqueUnitId() throws Exception {
         String ISO = "yyyy-MM-dd";
         Date d1 = DateUtils.parseDate("2010-01-01", ISO);
 
@@ -183,23 +196,28 @@ public class ReportLineEaoIT {
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setReportingDate(d1);
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+
         em.persist(line1);
         em.persist(line2);
         em.persist(line3);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+
         List<ReportLine> rls = new ReportLineEao(em).findByUniqueUnitId(10);
         assertEquals(2, rls.size());
         rls = new ReportLineEao(em).findByUniqueUnitId(1);
         assertTrue(rls.isEmpty());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindUnreported() throws ParseException {
-        em.getTransaction().begin();
+    public void testFindUnreported() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
             ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
@@ -231,18 +249,21 @@ public class ReportLineEaoIT {
             r.add(l);
             em.persist(r);
         }
-        em.getTransaction().commit();
-        em.getTransaction().begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
         List<ReportLine> rls = new ReportLineEao(em).findUnreported(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"));
         assertEquals(600, rls.size());// Units, Comments, ShipmentCost
         rls = new ReportLineEao(em).findUnreported(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"), PositionType.UNIT, PositionType.UNIT_ANNEX);
         assertEquals(300, rls.size());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindUnreportedUnit() throws ParseException {
-        em.getTransaction().begin();
+    public void testFindUnreportedUnit() throws Exception {
+        utx.begin();
+        em.joinTransaction();
 
         for (int i = 0; i < 300; i++) {
             ReportLine l = generator.makeReportLine(Arrays.asList(TradeName.DELL), startEarly, 7, Arrays.asList(PositionType.UNIT), Arrays.asList(DocumentType.INVOICE));
@@ -274,17 +295,18 @@ public class ReportLineEaoIT {
             r.add(l);
             em.persist(r);
         }
-        em.getTransaction().commit();
+        utx.commit();
         ReportLineEao reportLineEao = new ReportLineEao(em);
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         List<ReportLine> rls = reportLineEao.findUnreportedUnits(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"));
         assertEquals(300, rls.size());
-        em.getTransaction().commit();
+        utx.commit();
 
     }
 
     @Test
-    public void testFindFromTillUnreportedUnit() throws ParseException {
+    public void testFindFromTillUnreportedUnit() throws Exception {
         String ISO = "yyyy-MM-dd";
 
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
@@ -312,28 +334,31 @@ public class ReportLineEaoIT {
         Report r = new Report("KW201301", DELL, DateUtils.parseDate("2009-01-01", ISO), DateUtils.parseDate("2009-01-07", ISO));
         r.add(line3);
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(line1);
         em.persist(line2);
         em.persist(line3);
         em.persist(line4);
         em.persist(r);
-        em.getTransaction().commit();
+        utx.commit();
         ReportLineEao reportLineEao = new ReportLineEao(em);
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         List<ReportLine> rls = reportLineEao.findUnreportedUnits(DELL, DateUtils.parseDate("2008-12-31", ISO), DateUtils.parseDate("2010-12-31", ISO));
         assertEquals(2, rls.size());
         rls = reportLineEao.findUnreportedUnits(OTTO, DateUtils.parseDate("2009-12-31", ISO), DateUtils.parseDate("2013-12-31", ISO));
         assertEquals(1, rls.size());
-        em.getTransaction().commit();
+        utx.commit();
 
     }
 
     @Test
-    public void testRevenue() throws ParseException {
+    public void testRevenue() throws Exception {
         ReportLineEao reportLineEao = new ReportLineEao(em);
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(make("2010-06-01", INVOICE, UNIT, 100));
         em.persist(make("2010-06-02", INVOICE, UNIT, 100));
         em.persist(make("2010-06-03", INVOICE, UNIT, 100));
@@ -342,10 +367,11 @@ public class ReportLineEaoIT {
         em.persist(make("2010-06-05", INVOICE, UNIT, 100));
 
         em.persist(make("2010-07-05", INVOICE, UNIT, 100));
-        em.getTransaction().commit();
+        utx.commit();
 
         // Month and count
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), DAY, true);
         for (Entry<Date, Revenue> e : result.entrySet()) {
             assertEquals(100.0, e.getValue().sumBy(INVOICE), 0.0001);
@@ -382,7 +408,7 @@ public class ReportLineEaoIT {
 //            }
         }
 
-        em.getTransaction().commit();
+        utx.commit();
 
     }
 
