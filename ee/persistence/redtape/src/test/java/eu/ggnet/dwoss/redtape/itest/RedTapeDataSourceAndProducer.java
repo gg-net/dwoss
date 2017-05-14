@@ -34,15 +34,15 @@ import static eu.ggnet.dwoss.configuration.SystemConfig.*;
  */
 @DataSourceDefinitions(
         value = {
-            @DataSourceDefinition(name = DSNAME_PREFIX + "customer" + DSNAME_SUFFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
+                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "customer" + DSNAME_SUFFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:customer" + DSURL_PROPERTIES,
+                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
         }
