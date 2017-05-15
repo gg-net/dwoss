@@ -63,7 +63,7 @@ public class DifferentVaildationIT extends ArquillianProjectArchive {
         } catch (Exception ex) {
             // This is correct
             try {
-                em.getTransaction().rollback();
+                utx.rollback();
             } catch (Exception e) {
                 // Ignore
             }

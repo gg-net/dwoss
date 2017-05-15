@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,8 +46,10 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @NamedQueries({
-    @NamedQuery(name = "ProductSpec.byPartNo", query = "select s from ProductSpec s where s.partNo = ?1"),
-    @NamedQuery(name = "ProductSpec.byProductId", query = "select s from ProductSpec s where s.productId = ?1"),
+    @NamedQuery(name = "ProductSpec.byPartNo", query = "select s from ProductSpec s where s.partNo = ?1")
+    ,
+    @NamedQuery(name = "ProductSpec.byProductId", query = "select s from ProductSpec s where s.productId = ?1")
+    ,
     @NamedQuery(name = "ProductSpec.byProductIds", query = "SELECT s FROM ProductSpec s WHERE s.productId IN (?1)")
 })
 @EqualsAndHashCode(of = "id")

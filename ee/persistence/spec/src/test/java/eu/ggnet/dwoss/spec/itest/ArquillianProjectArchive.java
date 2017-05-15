@@ -58,6 +58,7 @@ public class ArquillianProjectArchive {
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
+                .addAsResource(new ClassLoaderAsset("eu/ggnet/dwoss/spec/assist/gen/specs.xml"), "eu/ggnet/dwoss/spec/assist/gen/specs.xml") // Needed for the Specgenerator.
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);
         return war;
