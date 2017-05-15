@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.spec.entity;
+package eu.ggnet.dwoss.spec.test;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -10,6 +10,14 @@ import org.junit.*;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.spec.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.entity.Desktop;
+import eu.ggnet.dwoss.spec.entity.Monitor;
+import eu.ggnet.dwoss.spec.entity.Notebook;
+import eu.ggnet.dwoss.spec.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.entity.ProductModel;
+import eu.ggnet.dwoss.spec.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.dwoss.spec.entity.piece.*;
 
@@ -109,7 +117,7 @@ public class SpecTest {
         notebook.setMemory(4096);
         notebook.setOs(Desktop.Os.WINDOWS_7_STARTER_32);
         notebook.setGpu(new Gpu(Gpu.Type.MOBILE, Gpu.Series.GEFORCE_300, "TestNotebookGPU"));
-        notebook.setCpu(new Cpu(Cpu.Series.CORE_I7, "TestDesktopCPU", Cpu.Type.DESKTOP, Double.valueOf(2.4), Integer.valueOf(4)));
+        notebook.setCpu(new Cpu(Cpu.Series.CORE_I7, "TestDesktopCPU", Cpu.Type.DESKTOP, 2.4, 4));
         Set<ProductSpec.Extra> extras = EnumSet.noneOf(ProductSpec.Extra.class);
         extras.add(ProductSpec.Extra.USB_3);
         extras.add(ProductSpec.Extra.UMTS);

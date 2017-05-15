@@ -1,46 +1,45 @@
-package eu.ggnet.dwoss.spec;
+package eu.ggnet.dwoss.spec.itest;
 
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.spec.entity.piece.*;
+import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  * @author oliver.guenther
  */
-public class PersistenceIT {
+@RunWith(Arquillian.class)
 
-    private EntityManagerFactory emf;
+public class PersistenceIT extends ArquillianProjectArchive {
 
+    @Inject
+    @Specs
     private EntityManager em;
 
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    public void testPersistence() {
-        em.getTransaction().begin();
+    public void testPersistence() throws Exception {
+        utx.begin();
+        em.joinTransaction();
         // A Notebook
         ProductSeries ps = new ProductSeries(TradeName.ACER, ProductGroup.NOTEBOOK, "TravelMate");
         em.persist(ps);
@@ -155,9 +154,10 @@ public class PersistenceIT {
         bundle.setMonitor(A231spec);
         bundle.setModel(boxm);
         em.persist(bundle);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         CriteriaQuery<ProductSeries> cq = em.getCriteriaBuilder().createQuery(ProductSeries.class);
         cq.select(cq.from(ProductSeries.class));
         List<ProductSeries> serieses = em.createQuery(cq).getResultList();
@@ -182,6 +182,6 @@ public class PersistenceIT {
                 }
             }
         }
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

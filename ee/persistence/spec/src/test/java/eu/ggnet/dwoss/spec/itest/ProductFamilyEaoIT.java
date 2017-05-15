@@ -1,12 +1,17 @@
-package eu.ggnet.dwoss.spec.eao;
+package eu.ggnet.dwoss.spec.itest;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.spec.assist.Specs;
+import eu.ggnet.dwoss.spec.eao.ProductFamilyEao;
 import eu.ggnet.dwoss.spec.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.entity.ProductSeries;
 
@@ -16,23 +21,24 @@ import static org.junit.Assert.*;
  *
  * @author bastian.venz
  */
-public class ProductFamilyEaoIT {
+@RunWith(Arquillian.class)
+public class ProductFamilyEaoIT extends ArquillianProjectArchive {
 
-    public ProductFamilyEaoIT() {
-    }
-
-    private EntityManagerFactory emf;
-
+    @Inject
+    @Specs
     private EntityManager em;
 
-    private ProductFamily productFamily;
+    @Inject
+    private UserTransaction utx;
 
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-        em.getTransaction().begin();
-        productFamily = new ProductFamily("PF1");
+    /**
+     * Test of find method, of class ProductFamilyEao.
+     */
+    @Test
+    public void testFind() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        ProductFamily productFamily = new ProductFamily("PF1");
         ProductSeries testSeries1 = new ProductSeries(TradeName.HP, ProductGroup.MISC, "TestSeries1");
         em.persist(testSeries1);
         productFamily.setSeries(testSeries1);
@@ -44,26 +50,15 @@ public class ProductFamilyEaoIT {
         productFamily1.setSeries(testSeries2);
         em.persist(productFamily1);
 
-        em.getTransaction().commit();
-    }
+        utx.commit();
 
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
-
-    /**
-     * Test of find method, of class ProductFamilyEao.
-     */
-    @Test
-    public void testFind() {
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductFamilyEao familyEao = new ProductFamilyEao(em);
         ProductFamily testFamily = familyEao.find("PF1");
         assertNotNull(testFamily);
         assertNull(familyEao.find("NoFamily"));
         assertEquals(productFamily.getId(), testFamily.getId());
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

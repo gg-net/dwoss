@@ -1,45 +1,43 @@
-package eu.ggnet.dwoss.spec;
+package eu.ggnet.dwoss.spec.itest;
 
 import java.util.EnumSet;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.spec.entity.piece.*;
+import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  *
  * @author oliver.guenther
  */
-public class DifferentVaildationIT {
+@RunWith(Arquillian.class)
 
-    private EntityManagerFactory emf;
+public class DifferentVaildationIT extends ArquillianProjectArchive {
 
+    @Inject
+    @Specs
     private EntityManager em;
 
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    public void testDifference() {
+    public void testDifference() throws Exception {
         // A Notebook which is valid, but not persitable
         Notebook notebook = new Notebook();
         notebook.setPartNo("LX.AAAAA.BBB");
@@ -57,9 +55,10 @@ public class DifferentVaildationIT {
         assertTrue(validator.validate(notebook).isEmpty());
 
         try {
-            em.getTransaction().begin();
+            utx.begin();
+            em.joinTransaction();
             em.persist(notebook);
-            em.getTransaction().commit();
+            utx.commit();
             fail("Notebook should not be persitable");
         } catch (Exception ex) {
             // This is correct
@@ -71,7 +70,8 @@ public class DifferentVaildationIT {
         }
 
         // Now it's persitable
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductSeries ps = new ProductSeries(TradeName.ACER, ProductGroup.NOTEBOOK, "TravelMate");
         em.persist(ps);
         ProductFamily pf = new ProductFamily("TravelMate 8700");
@@ -82,6 +82,6 @@ public class DifferentVaildationIT {
         em.persist(pm);
         notebook.setModel(pm);
         em.persist(notebook);
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

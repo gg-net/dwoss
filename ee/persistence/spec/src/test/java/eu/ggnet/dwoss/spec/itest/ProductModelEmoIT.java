@@ -1,47 +1,46 @@
-package eu.ggnet.dwoss.spec.emo;
+package eu.ggnet.dwoss.spec.itest;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.spec.assist.Specs;
+import eu.ggnet.dwoss.spec.emo.*;
 import eu.ggnet.dwoss.spec.entity.ProductModel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ProductModelEmoIT {
+@RunWith(Arquillian.class)
+public class ProductModelEmoIT extends ArquillianProjectArchive {
 
-    EntityManagerFactory emf;
+    @Inject
+    @Specs
+    private EntityManager em;
 
-    EntityManager em;
-
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    public void testFullRequestBrandGroupName() {
+    public void testFullRequestBrandGroupName() throws Exception {
         TradeName sb = TradeName.HP;
         ProductGroup sg = ProductGroup.PROJECTOR;
         String sn = "SERIES";
         String fn = "FAMILY";
         String mn = "MODEL";
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductModelEmo modelEmo = new ProductModelEmo(em);
         ProductModel model = modelEmo.request(sb, sg, sn, fn, mn);
         assertNotNull(model);
@@ -53,30 +52,33 @@ public class ProductModelEmoIT {
         long fid = model.getFamily().getId();
         long mid = model.getId();
         long sid = model.getFamily().getSeries().getId();
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         model = modelEmo.request(sb, sg, sn, fn, mn);
         assertNotNull(model);
         assertEquals(mid, model.getId());
         assertEquals(fid, model.getFamily().getId());
         assertEquals(sid, model.getFamily().getSeries().getId());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testHalfRequestBrandGroupName() {
+    public void testHalfRequestBrandGroupName() throws Exception {
         TradeName sb = TradeName.HP;
         ProductGroup sg = ProductGroup.PROJECTOR;
         String sn = "SERIES";
         String fn = "FAMILY";
         String mn = "MODEL";
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         new ProductFamilyEmo(em).request(sb, sg, sn, fn);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductModelEmo modelEmo = new ProductModelEmo(em);
         ProductModel model = modelEmo.request(sb, sg, sn, fn, mn);
         assertNotNull(model);
@@ -88,37 +90,41 @@ public class ProductModelEmoIT {
         long fid = model.getFamily().getId();
         long mid = model.getId();
         long sid = model.getFamily().getSeries().getId();
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         model = modelEmo.request(sb, sg, sn, fn, mn);
         assertNotNull(model);
         assertEquals(mid, model.getId());
         assertEquals(fid, model.getFamily().getId());
         assertEquals(sid, model.getFamily().getSeries().getId());
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testRequestBrandGroupNameByHand() {
+    public void testRequestBrandGroupNameByHand() throws Exception {
         TradeName sb = TradeName.HP;
         ProductGroup sg = ProductGroup.PROJECTOR;
         String sn = "SERIES";
         String fn = "FAMILY";
         String mn = "MODEL";
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         new ProductSeriesEmo(em).request(sb, sg, sn);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         new ProductFamilyEmo(em).request(sb, sg, sn, fn);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductModel model = new ProductModelEmo(em).request(sb, sg, sn, fn, mn);
         assertNotNull(model);
-        em.getTransaction().commit();
+        utx.commit();
 
     }
 }

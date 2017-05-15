@@ -1,45 +1,43 @@
-package eu.ggnet.dwoss.spec.eao;
+package eu.ggnet.dwoss.spec.itest;
 
 import java.util.*;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.spec.assist.Specs;
+import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.entity.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class ProductSpecEaoIT {
+@RunWith(Arquillian.class)
+public class ProductSpecEaoIT extends ArquillianProjectArchive {
 
-    private EntityManagerFactory emf;
-
+    @Inject
+    @Specs
     private EntityManager em;
 
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     /**
      * Test of findByPartNo method, of class ProductSpecEao.
      */
     @Test
-    public void testFindByPartNo() {
-        em.getTransaction().begin();
+    public void testFindByPartNo() throws Exception {
+        utx.begin();
+        em.joinTransaction();
         ProductSeries veriton = new ProductSeries(TradeName.FUJITSU, ProductGroup.DESKTOP, "Veriton");
         em.persist(veriton);
 
@@ -61,9 +59,10 @@ public class ProductSpecEaoIT {
         M480G_1.add(Desktop.Odd.BLURAY_COMBO);
         M480G_1.setExtras(Desktop.Extra.KAMERA);
         em.persist(M480G_1);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductSpecEao specEao = new ProductSpecEao(em);
         Desktop spec = (Desktop)specEao.findByPartNo(M480G_1.getPartNo());
         assertNotNull(spec);
@@ -71,8 +70,9 @@ public class ProductSpecEaoIT {
     }
 
     @Test
-    public void testFindByProductId() {
-        em.getTransaction().begin();
+    public void testFindByProductId() throws Exception {
+        utx.begin();
+        em.joinTransaction();
         ProductSeries veriton = new ProductSeries(TradeName.FUJITSU, ProductGroup.DESKTOP, "Veriton");
         em.persist(veriton);
 
@@ -109,14 +109,15 @@ public class ProductSpecEaoIT {
         M480G_2.setExtras(Desktop.Extra.KAMERA);
         em.persist(M480G_2);
 
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductSpecEao specEao = new ProductSpecEao(em);
         Desktop spec = (Desktop)specEao.findByProductId(5L);
         assertNotNull(spec);
         List<ProductSpec> productSpecs = specEao.findByProductIds(Arrays.asList(5L, 6L));
         assertEquals(2, productSpecs.size());
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

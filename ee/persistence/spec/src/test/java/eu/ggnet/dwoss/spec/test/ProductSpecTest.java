@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.spec.entity;
+package eu.ggnet.dwoss.spec.test;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -7,6 +7,11 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.spec.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.entity.ProductModel;
+import eu.ggnet.dwoss.spec.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.entity.ProductSpec;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -17,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ProductSpecTest {
 
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     public void testValidateProductSpec() {

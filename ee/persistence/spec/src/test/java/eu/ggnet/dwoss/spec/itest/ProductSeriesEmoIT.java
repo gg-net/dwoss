@@ -1,45 +1,42 @@
-package eu.ggnet.dwoss.spec.emo;
+package eu.ggnet.dwoss.spec.itest;
 
 import java.util.List;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.eao.ProductSeriesEao;
+import eu.ggnet.dwoss.spec.emo.ProductSeriesEmo;
 import eu.ggnet.dwoss.spec.entity.ProductSeries;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ProductSeriesEmoIT {
+@RunWith(Arquillian.class)
 
-    EntityManagerFactory emf;
+public class ProductSeriesEmoIT extends ArquillianProjectArchive {
 
-    EntityManager em;
+    @Inject
+    @Specs
+    private EntityManager em;
 
-    ;
-
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(SpecPu.NAME, SpecPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
+    @Inject
+    private UserTransaction utx;
 
     @Test
-    public void testRequestBrandGroupName() {
+    public void testRequestBrandGroupName() throws Exception {
         TradeName b1 = TradeName.APPLE;
         ProductGroup g1 = ProductGroup.PROJECTOR;
         String n1 = "SERIES";
@@ -48,28 +45,32 @@ public class ProductSeriesEmoIT {
         ProductGroup g2 = ProductGroup.DESKTOP;
         String n2 = "SERIES";
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(new ProductSeries(b1, g1, n1));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         ProductSeriesEmo seriesEmo = new ProductSeriesEmo(em);
         ProductSeries productSeries = seriesEmo.request(b1, g1, n1);
         assertNotNull(productSeries);
         assertEquals(b1, productSeries.getBrand());
         assertEquals(g1, productSeries.getGroup());
         assertEquals(n1, productSeries.getName());
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         productSeries = seriesEmo.request(b2, g2, n2);
         assertNotNull(productSeries);
         assertEquals(b2, productSeries.getBrand());
         assertEquals(g2, productSeries.getGroup());
         assertEquals(n2, productSeries.getName());
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         seriesEmo.request(b2, g2, n2);
         seriesEmo.request(b2, g2, n2);
         seriesEmo.request(b2, g2, n2);
@@ -77,6 +78,6 @@ public class ProductSeriesEmoIT {
         List<ProductSeries> pss = new ProductSeriesEao(em).findAll();
         assertNotNull(pss);
         assertEquals("Only Two Elements should exist", 2, pss.size());
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

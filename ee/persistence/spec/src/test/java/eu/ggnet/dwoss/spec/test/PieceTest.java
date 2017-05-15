@@ -1,4 +1,7 @@
-package eu.ggnet.dwoss.spec.entity.piece;
+package eu.ggnet.dwoss.spec.test;
+
+import eu.ggnet.dwoss.spec.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.entity.piece.Gpu;
 
 import java.util.HashSet;
 import java.util.Set;
