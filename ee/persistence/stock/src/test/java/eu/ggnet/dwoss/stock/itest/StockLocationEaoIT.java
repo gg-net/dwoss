@@ -1,29 +1,41 @@
-package eu.ggnet.dwoss.stock.eao;
-
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockLocation;
-import eu.ggnet.dwoss.stock.assist.StockPu;
+package eu.ggnet.dwoss.stock.itest;
 
 import java.util.List;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.StockLocationEao;
+import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.entity.StockLocation;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
 import static eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation.STOCK_LOCATION_NAMES;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class StockLocationEaoIT {
+@RunWith(Arquillian.class)
+public class StockLocationEaoIT extends ArquillianProjectArchive {
+
+    @Inject
+    private UserTransaction utx;
+
+    @Inject
+    @Stocks
+    private EntityManager em;
 
     @Test
-    public void testFind() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-        EntityManager em = emf.createEntityManager();
+    public void testFind() throws Exception {
 
         StockLocationEao sls = new StockLocationEao(em);
 
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock laden = new Stock(0);
         laden.setName("Laden");
         for (String name : STOCK_LOCATION_NAMES) {
@@ -37,7 +49,10 @@ public class StockLocationEaoIT {
             lager.addStockLocation(new StockLocation(name));
         }
         em.persist(lager);
-        tx.commit();
+        utx.commit();
+
+        utx.begin();
+        em.joinTransaction();
 
         List<StockLocation> stockLocations = sls.findAll();
 
@@ -59,6 +74,6 @@ public class StockLocationEaoIT {
         assertEquals(1, stockLocations.size());
         assertEquals(STOCK_LOCATION_NAMES[0], stockLocations.get(0).getName());
         assertEquals(laden, stockLocations.get(0).getStock());
-
+        utx.commit();
     }
 }

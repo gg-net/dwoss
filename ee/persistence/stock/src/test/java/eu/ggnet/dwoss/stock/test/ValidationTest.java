@@ -1,5 +1,13 @@
-package eu.ggnet.dwoss.stock.entity;
+package eu.ggnet.dwoss.stock.test;
 
+
+import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.entity.StockTransactionPosition;
+import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
+import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 
 import java.util.Date;
 import java.util.Set;

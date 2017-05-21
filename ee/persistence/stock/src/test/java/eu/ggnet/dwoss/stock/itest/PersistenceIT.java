@@ -1,51 +1,63 @@
-package eu.ggnet.dwoss.stock.entity;
-
+package eu.ggnet.dwoss.stock.itest;
 
 import java.util.*;
 
-import javax.naming.NamingException;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.transaction.UserTransaction;
 
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.stock.assist.StockPu;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
+import com.mysema.query.SearchResults;
+import com.mysema.query.jpa.impl.JPAQueryFactory;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class PersistenceIT {
+@RunWith(Arquillian.class)
+public class PersistenceIT extends ArquillianProjectArchive {
 
-    private EntityManagerFactory emf;
+    @Inject
+    private UserTransaction utx;
 
-    @Before
-    public void setUp() throws NamingException {
-        emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-    }
+    @Inject
+    @Stocks
+    private EntityManager em;
 
     @After
-    public void after() {
-        emf.close();
+    public void clearDataBase() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        utx.commit();
     }
 
     @Test
-    public void testUniqueUnitReferenceBug() {
-        EntityManager em = emf.createEntityManager();
+    public void testUniqueUnitReferenceBug() throws Exception {
 
         Date now = new Date();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s1 = new Stock(1);
         s1.setName("1111111111111111");
         Stock s2 = new Stock(2);
         s2.setName("2222222222222222");
         em.persist(s1);
         em.persist(s2);
-        em.getTransaction().commit();
+
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
+        s1 = em.find(Stock.class, s1.getId());
 
         StockLocation s1l1 = new StockLocation("Regal A");
         StockLocation s1l2 = new StockLocation("Regal B");
@@ -54,7 +66,12 @@ public class PersistenceIT {
         StockUnit su1 = new StockUnit("Gerät", 1);
         su1.setStockLocation(s1l2);
 
-        em.getTransaction().begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+        s1 = em.find(Stock.class, s1.getId());
+        s2 = em.find(Stock.class, s1.getId());
+
         StockTransaction t1 = new StockTransaction(StockTransactionType.TRANSFER);
         t1.addStatus(new StockTransactionStatus(StockTransactionStatusType.PREPARED, now));
         t1.setSource(s1);
@@ -62,16 +79,21 @@ public class PersistenceIT {
         t1.addPosition(new StockTransactionPosition(su1));
         su1.setStock(null);
         em.persist(t1);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+        t1 = em.find(StockTransaction.class, t1.getId());
         for (StockTransactionPosition position : t1.getPositions()) {
             t1.getDestination().addUnit(position.getStockUnit());
             position.setStockUnit(null);
         }
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+        s1 = em.find(Stock.class, s1.getId());
+        s2 = em.find(Stock.class, s1.getId());
         t1 = new StockTransaction(StockTransactionType.TRANSFER);
         t1.addStatus(new StockTransactionStatus(StockTransactionStatusType.PREPARED, now));
         t1.setSource(s2);
@@ -79,29 +101,37 @@ public class PersistenceIT {
         t1.addPosition(new StockTransactionPosition(su1));
         su1.setStock(null);
         em.persist(t1);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+        t1 = em.find(StockTransaction.class, t1.getId());
         for (StockTransactionPosition position : t1.getPositions()) {
             t1.getDestination().addUnit(position.getStockUnit());
             position.setStockUnit(null);
         }
-        em.getTransaction().commit();
+        utx.commit();
 
     }
 
     @Test
-    public void testPersistence() {
-        EntityManager em = emf.createEntityManager();
+    public void testPersistence() throws Exception {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(() -> em);
 
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s1 = new Stock(1);
         s1.setName("1111111111111111");
         Stock s2 = new Stock(2);
         s2.setName("2222222222222222");
         em.persist(s1);
-        tx.commit();
+        utx.commit();
+
+        utx.begin();
+        em.joinTransaction();
+
+        s1 = em.merge(s1);
+        s2 = em.merge(s2);
 
         StockUnit su1 = new StockUnit("g1", 1);
         StockUnit su2 = new StockUnit("g2", 2);
@@ -113,19 +143,17 @@ public class PersistenceIT {
         s1.addUnit(su3);
         s2.addUnit(su4);
 
-        tx = em.getTransaction();
-        tx.begin();
         em.persist(su1);
         em.persist(su2);
         em.persist(su3);
         em.persist(su4);
-        tx.commit();
+        utx.commit();
 
-        tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
 
-        TypedQuery<Stock> q = em.createQuery("Select s from " + Stock.class.getSimpleName() + " s", Stock.class);
-        List<Stock> sus = q.getResultList();
+        List<Stock> sus = queryFactory.query().from(QStock.stock).list(QStock.stock);
+
         assertTrue(sus.size() == 2);
         Stock st1 = sus.get(0);
         if ( st1.getId() == s2.getId() ) {
@@ -163,9 +191,12 @@ public class PersistenceIT {
         t1.addStatus(commision);
         em.persist(t1);
 
-        tx.commit();
-        tx = em.getTransaction();
-        tx.begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
+        t1 = em.find(StockTransaction.class, t1.getId());
+        st2 = em.find(Stock.class, st2.getId());
 
         StockTransactionStatus transfer = new StockTransactionStatus(StockTransactionStatusType.IN_TRANSFER, new Date());
         transfer.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.DELIVERER, "User3", false));
@@ -176,20 +207,25 @@ public class PersistenceIT {
 
         em.remove(removePos);
 
-        tx.commit();
-        tx = em.getTransaction();
-        tx.begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
+        t1 = em.find(StockTransaction.class, t1.getId());
 
         StockTransactionStatus receive = new StockTransactionStatus(StockTransactionStatusType.RECEIVED, new Date());
         receive.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.RECEIVER, "User4", true));
         receive.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.DELIVERER, "User5", true));
         t1.addStatus(receive);
 
-        tx.commit();
-        tx = em.getTransaction();
-        tx.begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
 
-        StockTransaction t2 = em.createQuery("Select t from " + StockTransaction.class.getSimpleName() + " t", StockTransaction.class).getSingleResult();
+        SearchResults<StockTransaction> tResult = queryFactory.from(QStockTransaction.stockTransaction).listResults(QStockTransaction.stockTransaction);
+        assertThat(tResult.getTotal()).isEqualTo(1);
+        StockTransaction t2 = tResult.getResults().get(0);
+
         boolean b1 = false;
         boolean b2 = false;
         boolean b3 = false;
@@ -209,18 +245,21 @@ public class PersistenceIT {
 
         assertTrue(b1 && b2 && b3);
 
-        tx.commit();
-        tx = em.getTransaction();
-        tx.begin();
+        utx.commit();
+        utx.begin();
+        em.joinTransaction();
+
+        t1 = em.find(StockTransaction.class, t1.getId());
 
         for (StockTransactionPosition position : t1.getPositions()) {
             t1.getDestination().addUnit(position.getStockUnit());
             position.setStockUnit(null);
         }
 
-        tx.commit();
+        utx.commit();
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
 
         List<StockUnit> units = em.createNamedQuery("all", StockUnit.class).getResultList();
         LogicTransaction lt = new LogicTransaction();
@@ -230,7 +269,7 @@ public class PersistenceIT {
         }
         em.persist(lt);
 
-        tx.commit();
+        utx.commit();
 
     }
 }

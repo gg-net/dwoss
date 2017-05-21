@@ -1,46 +1,57 @@
-package eu.ggnet.dwoss.stock.emo;
-
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+package eu.ggnet.dwoss.stock.itest;
 
 import java.util.Arrays;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.stock.assist.StockPu;
+import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
  * @author pascal.perau
  */
-public class LogicTransactionEmoIT {
+@RunWith(Arquillian.class)
+public class LogicTransactionEmoIT extends ArquillianProjectArchive {
 
+    @Inject
+    private UserTransaction utx;
+
+    @Inject
+    @Stocks
     private EntityManager em;
 
-    private EntityManagerFactory emf;
-
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
+    private final static Logger L = LoggerFactory.getLogger(LogicTransactionEmoIT.class);
 
     @After
-    public void tearDown() {
-        if ( em != null ) em.close();
-        if ( emf != null ) emf.close();
+    public void clearDataBase() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        utx.commit();
     }
 
     @Test
-    public void testRequest() {
+    public void testRequest() throws Exception {
+        L.info("starting test request");
         LogicTransactionEmo ltEmo = new LogicTransactionEmo(em);
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
 
         LogicTransaction lt1 = new LogicTransaction();
         lt1.setDossierId(1);
@@ -52,20 +63,26 @@ public class LogicTransactionEmoIT {
         assertNotNull(lt1);
         assertNotNull(lt2);
 
-        em.getTransaction().commit();
+        utx.commit();
     }
 
     @Test
-    public void testEquilibrate() throws InterruptedException {
-        em.getTransaction().begin();
+    public void testEquilibrate() throws Exception {
+        L.info("starting test equilibrate");
+        utx.begin();
+        em.joinTransaction();
         Stock s = new Stock(0);
         s.setName("Test-0");
+        L.debug("Persisted {}", s);
         em.persist(s);
 //        StockEntityHelper.createOrUpdateMasterData(em);
 
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
+        s = em.merge(s);
+        L.debug("Merged {}", s);
         LogicTransaction logicTransaction = new LogicTransaction();
         LogicTransaction logicTransaction1 = new LogicTransaction();
         LogicTransaction logicTransaction2 = new LogicTransaction();
@@ -111,71 +128,84 @@ public class LogicTransactionEmoIT {
         logicTransaction1.add(stockUnit4);
         logicTransaction2.add(stockUnit5);
         logicTransaction2.add(stockUnit6);
+        L.debug("pre commit");
+        utx.commit();
 
-        em.getTransaction().commit();
-
-        em.getTransaction().begin();
+        L.debug("Post Commit");
+        utx.begin();
+        em.joinTransaction();
         LogicTransaction find = em.find(LogicTransaction.class, 1l);
 
         assertTrue("Size was not 2. find=" + find, find.getUnits().size() == 2);
         assertTrue("It wasnt All Units correctly in the Transaction. find=" + find,
                 find.getUnits().containsAll(Arrays.asList(new StockUnit[]{stockUnit1, stockUnit2})));
-        em.getTransaction().commit();
+        utx.commit();
 
         LogicTransactionEmo emo = new LogicTransactionEmo(em);
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         emo.equilibrate(1l, Arrays.asList(new Integer[]{1, 2, 7, 8}));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         find = em.find(LogicTransaction.class, 1l);
         assertTrue("Size was not 4. find=" + find, find.getUnits().size() == 4);
         assertTrue("It wasnt All Units correctly in the Transaction. find=" + find,
                 find.getUnits().containsAll(Arrays.asList(new StockUnit[]{stockUnit1, stockUnit2, stockUnit7, stockUnit8})));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         emo.equilibrate(1l, Arrays.asList(new Integer[]{1, 2, 8}));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         find = em.find(LogicTransaction.class, 1l);
         assertTrue("Size was not 3. find=" + find, find.getUnits().size() == 3);
         assertTrue("It wasnt All Units correctly in the Transaction. find="
                 + find, find.getUnits().containsAll(Arrays.asList(new StockUnit[]{stockUnit1, stockUnit2, stockUnit8})));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         emo.equilibrate(1l, Arrays.asList(new Integer[]{1, 7, 8}));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         find = em.find(LogicTransaction.class, 1l);
         assertTrue("Size was not 3. find=" + find, find.getUnits().size() == 3);
         assertTrue("It wasnt All Units correctly in the Transaction. find="
                 + find, find.getUnits().containsAll(Arrays.asList(new StockUnit[]{stockUnit1, stockUnit7, stockUnit8})));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         emo.equilibrate(1l, Arrays.asList(new Integer[]{}));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         find = em.find(LogicTransaction.class, 1l);
         assertTrue("LT was not null. find=" + find, find == null);
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         emo.equilibrate(5l, Arrays.asList(new Integer[]{1, 2, 7, 8}));
-        em.getTransaction().commit();
+        utx.commit();
 
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         find = new LogicTransactionEao(em).findByDossierId(5l);
         assertTrue("LT was Null.", find != null);
         assertTrue("Size was not 4. find=" + find, find.getUnits().size() == 4);
         assertTrue("It wasnt All Units correctly in the Transaction. find="
                 + find, find.getUnits().containsAll(Arrays.asList(new StockUnit[]{stockUnit1, stockUnit2, stockUnit7, stockUnit8})));
-        em.getTransaction().commit();
+        utx.commit();
+        L.info("stopping test equilibrate");
     }
 }

@@ -1,18 +1,17 @@
-package eu.ggnet.dwoss.stock.eao;
+package eu.ggnet.dwoss.stock.itest;
 
-
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.transaction.UserTransaction;
 
-import org.junit.After;
-import org.junit.Before;
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
 import static org.junit.Assert.*;
 
@@ -20,29 +19,22 @@ import static org.junit.Assert.*;
  *
  * @author pascal.perau
  */
-public class LogicTransactionEaoIT {
+@RunWith(Arquillian.class)
+public class LogicTransactionEaoIT extends ArquillianProjectArchive {
 
+    @Inject
+    private UserTransaction utx;
+
+    @Inject
+    @Stocks
     private EntityManager em;
 
-    private EntityManagerFactory emf;
-
-    @Before
-    public void setUp() {
-        emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void tearDown() {
-        em.close();
-        emf.close();
-    }
-
     @Test
-    public void testFindByUniqueUnitId() {
-        em.getTransaction().begin();
-        Stock s1 = new Stock(0,"TEEEEEEEST");
-        Stock s2 = new Stock(1,"TEEEEEEEST");
+    public void testFindByUniqueUnitId() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Stock s1 = new Stock(0, "TEEEEEEEST");
+        Stock s2 = new Stock(1, "TEEEEEEEST");
         em.persist(s1);
         em.persist(s2);
         StockUnit su1 = new StockUnit("1", 1);
@@ -81,10 +73,11 @@ public class LogicTransactionEaoIT {
         lt2.add(su8);
         em.persist(lt2);
         long lt2Id = lt2.getId();
-        em.getTransaction().commit();
+        utx.commit();
 
         LogicTransactionEao ltEao = new LogicTransactionEao(em);
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
 
         lt1 = ltEao.findByUniqueUnitId(1);
         assertNull(lt1);
@@ -100,6 +93,6 @@ public class LogicTransactionEaoIT {
         assertNotNull(lt2);
         assertEquals(lt2Id, lt2.getId());
 
-        em.getTransaction().commit();
+        utx.commit();
     }
 }

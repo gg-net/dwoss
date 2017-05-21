@@ -1,5 +1,7 @@
-package eu.ggnet.dwoss.stock.entity;
+package eu.ggnet.dwoss.stock.test;
 
+
+import eu.ggnet.dwoss.stock.entity.StockTransactionType;
 
 import org.junit.Test;
 

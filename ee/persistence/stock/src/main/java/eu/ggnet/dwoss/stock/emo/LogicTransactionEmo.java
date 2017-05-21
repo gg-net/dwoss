@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,12 @@
  */
 package eu.ggnet.dwoss.stock.emo;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
+import javax.persistence.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
@@ -42,6 +36,8 @@ public class LogicTransactionEmo {
 
     private EntityManager em;
 
+    private final static Logger L = LoggerFactory.getLogger(LogicTransactionEmo.class);
+
     public LogicTransactionEmo(EntityManager em) {
         this.em = em;
     }
@@ -52,7 +48,9 @@ public class LogicTransactionEmo {
         } catch (NoResultException e) {
             LogicTransaction lt = new LogicTransaction();
             lt.setDossierId(dossierId);
+            // Persist, Flusch then refresh with the locktype.
             em.persist(lt);
+            em.flush();
             em.refresh(lt, lockModeType);
             return lt;
         }
@@ -124,14 +122,19 @@ public class LogicTransactionEmo {
      */
     // TODO: Return removed, added.
     public EquilibrationResult equilibrate(long dossierId, final Collection<Integer> newUniqueUnitIds) throws IllegalArgumentException, IllegalStateException, NullPointerException {
+        L.debug("equilibrate dossierId={}, uniqueUnitIds={}", dossierId, newUniqueUnitIds);
         if ( newUniqueUnitIds == null ) throw new NullPointerException("uniqueUnitIds must not be null");
         LogicTransaction logicTransaction = new LogicTransactionEao(em).findByDossierId(dossierId, LockModeType.PESSIMISTIC_WRITE); // Null is possible
-        if ( logicTransaction == null && newUniqueUnitIds.isEmpty() ) return null;
+        if ( logicTransaction == null && newUniqueUnitIds.isEmpty() ) {
+            L.debug("Both are empty, nothing to equilibrate");
+            return null;
+        }
 
         NavigableSet<Integer> adding = new TreeSet<>(newUniqueUnitIds);
         Map<Integer, StockUnit> oldStockUnits = new HashMap<>();
         NavigableSet<Integer> removal = new TreeSet<>();
 
+        // Remove possible old stockuntis
         if ( logicTransaction != null ) {
 
             for (StockUnit stockUnit : logicTransaction.getUnits()) {
@@ -140,21 +143,27 @@ public class LogicTransactionEmo {
 
             removal.addAll(oldStockUnits.keySet());
             removal.removeAll(newUniqueUnitIds);
-
-            adding.removeAll(oldStockUnits.keySet());
-
+            adding.removeAll(oldStockUnits.keySet()); // newUniqueUnitIds - oldUniqueUnitIds = notJetAdded
+            L.debug("Removal: removing StockUnits with UniqueUnit.ids={} ", removal);
             for (Integer uniqueUnitId : removal) {
                 logicTransaction.remove(oldStockUnits.get(uniqueUnitId));
             }
 
             if ( newUniqueUnitIds.isEmpty() ) {
+                L.debug("Rqmoval: removing empty {}", logicTransaction);
                 em.remove(logicTransaction);
                 return null;
             }
         }
 
-        if ( logicTransaction == null ) logicTransaction = request(dossierId, LockModeType.PESSIMISTIC_WRITE);
+        // Non LT exists, but we need one.
+        if ( logicTransaction == null ) {
+            L.debug("Request: New LogicTransaction needed");
+            logicTransaction = request(dossierId, LockModeType.PESSIMISTIC_WRITE);
+            L.debug("Request: Result={}", logicTransaction);
+        }
 
+        L.debug("Adding: StockUnits with UniqueUnit.ids={}", adding);
         for (Integer uniqueUnitId : adding) {
             // check stockunit if not in LogicTransaction.
             StockUnit unit = new StockUnitEao(em).findByUniqueUnitId(uniqueUnitId);
@@ -162,6 +171,7 @@ public class LogicTransactionEmo {
             if ( unit.getLogicTransaction() != null ) throw new IllegalStateException(unit + " is already in a LogicTransaction");
             else logicTransaction.add(unit);
         }
+        L.debug("Adding: Result = {}", logicTransaction);
         return new EquilibrationResult(adding, removal, logicTransaction);
     }
 }

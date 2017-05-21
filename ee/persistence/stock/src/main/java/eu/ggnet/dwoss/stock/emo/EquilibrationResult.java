@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,9 +30,18 @@ import lombok.Value;
 @Value
 public class EquilibrationResult {
 
+    /**
+     * UniqueUnit.ids referencing StockUnits which were actually added.
+     */
     private final NavigableSet<Integer> added;
 
+    /**
+     * UniqueUnit.ids referencing StockUnits which were actually removed.
+     */
     private final NavigableSet<Integer> removed;
 
+    /**
+     * The resulting logic transaction.
+     */
     private final LogicTransaction transaction;
 }

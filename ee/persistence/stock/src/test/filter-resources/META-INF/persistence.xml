@@ -3,5 +3,6 @@
     <persistence-unit name="stock-pu">
         ${stock-pu.default-datasource}
         ${stock-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
 </persistence>

@@ -1,52 +1,50 @@
-package eu.ggnet.dwoss.stock.eao;
-
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.entity.StockLocation;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
+package eu.ggnet.dwoss.stock.itest;
 
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.stock.assist.StockPu;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
 import static org.junit.Assert.*;
 
-public class StockUnitEaoIT {
+@RunWith(Arquillian.class)
+public class StockUnitEaoIT extends ArquillianProjectArchive {
 
-    private EntityManagerFactory emf;
+    @Inject
+    private UserTransaction utx;
 
+    @Inject
+    @Stocks
     private EntityManager em;
 
-    @Before
-    public void before() {
-        emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
     @After
-    public void after() {
-        em.close();
-        emf.close();
+    public void clearDataBase() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        utx.commit();
     }
 
     @Test
-    public void testFindByIdentifierAndStock() {
+    public void testFindByIdentifierAndStock() throws Exception {
         StockUnitEao sus = new StockUnitEao(em);
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEST");
         em.persist(s);
-        tx.commit();
+        utx.commit();
 
         StockLocation sl = new StockLocation("Lagerplatz");
         s.addStockLocation(sl);
@@ -56,10 +54,11 @@ public class StockUnitEaoIT {
         s.addUnit(s1, sl);
         s.addUnit(s2, sl);
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(s);
-        em.persist(new Stock(1,"TEEEEEEEEST"));
-        tx.commit();
+        em.persist(new Stock(1, "TEEEEEEEEST"));
+        utx.commit();
 
         int id1 = s1.getId();
         int id2 = s2.getId();
@@ -80,14 +79,13 @@ public class StockUnitEaoIT {
     }
 
     @Test
-    public void testFindByUnitId() {
+    public void testFindByUnitId() throws Exception {
         StockUnitEao sus = new StockUnitEao(em);
-
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEEEST");
         em.persist(s);
-        tx.commit();
+        utx.commit();
         StockLocation sl = new StockLocation("Lagerplatz");
         s.addStockLocation(sl);
 
@@ -98,9 +96,10 @@ public class StockUnitEaoIT {
         s.addUnit(s1, sl);
         s.addUnit(s2, sl);
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(s);
-        tx.commit();
+        utx.commit();
 
         int id1 = s1.getId();
         int id2 = s2.getId();
@@ -120,14 +119,14 @@ public class StockUnitEaoIT {
     }
 
     @Test
-    public void testSumByTransaction() {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+    public void testSumByTransaction() throws Exception {
+        utx.begin();
+        em.joinTransaction();
         Stock s0 = new Stock(0, "1111111111111111111111111111");
         Stock s1 = new Stock(1, "2222222222222222222222222222");
         em.persist(s0);
         em.persist(s1);
-        tx.commit();
+        utx.commit();
         StockLocation s0l0 = new StockLocation("Lagerplatz");
         s0.addStockLocation(s0l0);
 
@@ -144,13 +143,14 @@ public class StockUnitEaoIT {
         s0.addUnit(su1, s0l0);
         s0.addUnit(su2, s0l0);
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(s0);
         em.persist(s1);
-        tx.commit();
+        utx.commit();
 
-        tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         StockTransaction st = new StockTransaction(StockTransactionType.TRANSFER);
         st.setDestination(s1);
         st.setSource(s0);
@@ -158,7 +158,7 @@ public class StockUnitEaoIT {
         em.persist(st);
         st.addPosition(new StockTransactionPosition(su0));
         st.addPosition(new StockTransactionPosition(su1));
-        tx.commit();
+        utx.commit();
 
         StockUnitEao sus = new StockUnitEao(em);
 
@@ -167,11 +167,10 @@ public class StockUnitEaoIT {
     }
 
     @Test
-    public void testFindByNoLogicTransaction() {
+    public void testFindByNoLogicTransaction() throws Exception {
         StockUnitEao sus = new StockUnitEao(em);
-        EntityTransaction tx = em.getTransaction();
-
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEEEEEEEst");
         em.persist(s);
         StockLocation sl = new StockLocation("Lagerplatz");
@@ -186,29 +185,30 @@ public class StockUnitEaoIT {
         s.addUnit(s3, sl);
         s.addUnit(s4, sl);
         em.persist(s);
-        em.persist(new Stock(1,"teeeeeeeeeeest"));
+        em.persist(new Stock(1, "teeeeeeeeeeest"));
         LogicTransaction lt = new LogicTransaction();
         lt.setDossierId(1);
         lt.add(s4);
         em.persist(lt);
-        tx.commit();
+        utx.commit();
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         List<StockUnit> sts = sus.findByNoLogicTransaction();
         assertEquals(3, sts.size());
 
         List<Integer> uuids = sus.findByNoLogicTransactionAsUniqueUnitId();
         assertEquals(3, uuids.size());
 
-        tx.commit();
+        utx.commit();
     }
 
     @Test
-    public void testFindByNoTransaction() {
+    public void testFindByNoTransaction() throws Exception {
         StockUnitEao sus = new StockUnitEao(em);
-        EntityTransaction tx = em.getTransaction();
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEST");
         em.persist(s);
         StockLocation sl = new StockLocation("Lagerplatz");
@@ -223,7 +223,7 @@ public class StockUnitEaoIT {
         s.addUnit(s3, sl);
         s.addUnit(s4, sl);
         em.persist(s);
-        em.persist(new Stock(1,"TEEEEEEEEEST2"));
+        em.persist(new Stock(1, "TEEEEEEEEEST2"));
         LogicTransaction lt = new LogicTransaction();
         lt.setDossierId(1);
         lt.add(s4);
@@ -234,11 +234,12 @@ public class StockUnitEaoIT {
         st.addStatus(new StockTransactionStatus(StockTransactionStatusType.PREPARED, new Date()));
         em.persist(st);
         st.addPosition(new StockTransactionPosition(s1));
-        tx.commit();
+        utx.commit();
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         List<StockUnit> sts = sus.findByNoTransaction();
         assertEquals(2, sts.size());
-        tx.commit();
+        utx.commit();
     }
 }

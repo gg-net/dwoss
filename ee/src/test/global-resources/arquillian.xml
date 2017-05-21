@@ -14,6 +14,7 @@
             <property name="type">zip</property>
             <property name="classifier">plus</property>
             <property name="conf">target/test-classes/tomee</property>
+            <property name="cleanOnStartUp">true</property>
             <property name="additionalLibs">
                 mvn:org.hibernate:hibernate-entitymanager:5.0.12.Final
                 mvn:org.hibernate:hibernate-core:5.0.12.Final

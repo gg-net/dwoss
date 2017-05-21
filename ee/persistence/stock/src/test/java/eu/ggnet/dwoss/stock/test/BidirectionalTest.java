@@ -1,7 +1,8 @@
-package eu.ggnet.dwoss.stock.entity;
-
+package eu.ggnet.dwoss.stock.test;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.stock.entity.*;
 
 import static org.junit.Assert.*;
 
@@ -12,8 +13,8 @@ public class BidirectionalTest {
         Stock s0 = new Stock(0);
         Stock s1 = new Stock(1);
 
-        StockUnit su0 = new StockUnit(0);
-        StockUnit su1 = new StockUnit(1);
+        StockUnit su0 = TestStockUnitFactory.makeStockUnitWithId(0);
+        StockUnit su1 = TestStockUnitFactory.makeStockUnitWithId(1);
 
         s0.addUnit(su0);
         assertEquals(1, s0.getUnits().size());
@@ -60,7 +61,7 @@ public class BidirectionalTest {
         assertEquals(1, s0.getStockLocations().size());
         s0l1.setStock(s0);
 
-        StockUnit su = new StockUnit(0);
+        StockUnit su = TestStockUnitFactory.makeStockUnitWithId(0);
         su.setStockLocation(s0l0);
         assertEquals(s0l1, su.getStockLocation());
         assertEquals(s0, su.getStock());
@@ -70,10 +71,6 @@ public class BidirectionalTest {
         assertNull(su.getStockLocation());
         assertNull(su.getStock());
 
-    }
-
-    @Test
-    public void testStockAndPosition() {
     }
 
 }

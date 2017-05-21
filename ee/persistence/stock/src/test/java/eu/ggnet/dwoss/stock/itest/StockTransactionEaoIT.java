@@ -1,53 +1,40 @@
-package eu.ggnet.dwoss.stock.eao;
-
+package eu.ggnet.dwoss.stock.itest;
 
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
+import javax.transaction.UserTransaction;
 
-import org.junit.After;
-import org.junit.Before;
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipation;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipationType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.StockTransactionEao;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-public class StockTransactionEaoIT {
+@RunWith(Arquillian.class)
+public class StockTransactionEaoIT extends ArquillianProjectArchive {
 
-    private EntityManagerFactory emf;
+    @Inject
+    private UserTransaction utx;
 
+    @Inject
+    @Stocks
     private EntityManager em;
 
-    @Before
-    public void before() {
-        emf = Persistence.createEntityManagerFactory(StockPu.NAME, StockPu.JPA_IN_MEMORY);
-        em = emf.createEntityManager();
-    }
-
-    @After
-    public void after() {
-        em.close();
-        emf.close();
-    }
-
     @Test
-    public void testfind() {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        Stock s1 = new Stock(0,"TEEEEEEEST");
-        Stock s2 = new Stock(1,"TEEEEEEEST");
+    public void testfind() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Stock s1 = new Stock(0, "TEEEEEEEST");
+        Stock s2 = new Stock(1, "TEEEEEEEST");
         em.persist(s1);
         em.persist(s2);
         StockTransaction st1 = new StockTransaction(StockTransactionType.ROLL_IN);
@@ -75,9 +62,10 @@ public class StockTransactionEaoIT {
         em.persist(st3);
         em.persist(st4);
 
-        tx.commit();
+        utx.commit();
 
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         StockTransactionEao stockTransactionEao = new StockTransactionEao(em);
         List<StockTransaction> sts = stockTransactionEao.findByDestination(s1.getId(), StockTransactionType.ROLL_IN, StockTransactionStatusType.PREPARED);
 
@@ -89,6 +77,6 @@ public class StockTransactionEaoIT {
         assertNotNull(sts);
         assertEquals(1, sts.size());
         assertEquals(st4.getId(), sts.get(0).getId());
-
+        utx.commit();
     }
 }

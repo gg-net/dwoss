@@ -26,7 +26,6 @@ import static org.junit.Assert.fail;
  * @author oliver.guenther
  */
 @RunWith(Arquillian.class)
-
 public class DifferentVaildationIT extends ArquillianProjectArchive {
 
     @Inject

@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.stock.emo;
+package eu.ggnet.dwoss.stock.test;
 
 import java.util.Arrays;
 import java.util.Collections;
