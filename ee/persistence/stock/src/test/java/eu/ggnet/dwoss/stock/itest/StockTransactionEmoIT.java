@@ -34,6 +34,9 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
     @Stocks
     private EntityManager em;
 
+    @Inject
+    private StockGeneratorOperation gen;
+    
     @After
     public void clearDataBase() throws Exception {
         utx.begin();
@@ -42,18 +45,10 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    private List<Stock> prepareStocks() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        StockGeneratorOperation gen = new StockGeneratorOperation(em);
-        List<Stock> stocks = gen.makeStocksAndLocations(2);
-        utx.commit();
-        return stocks;
-    }
 
     @Test
     public void testRequestDestroyPrepared() throws Exception {
-        List<Stock> stocks = prepareStocks();
+        List<Stock> stocks = gen.makeStocksAndLocations(2);
 
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(em);
 
@@ -83,7 +78,7 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
 
     @Test
     public void testRequestRollInPrepared() throws Exception {
-        List<Stock> stocks = prepareStocks();
+        List<Stock> stocks = gen.makeStocksAndLocations(2);
 
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(em);
 
@@ -113,7 +108,7 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
 
     @Test
     public void testCompleteRollInRollOut() throws Exception {
-        List<Stock> stocks = prepareStocks();
+        List<Stock> stocks = gen.makeStocksAndLocations(2);
 
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(em);
 
@@ -172,16 +167,17 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
 
     @Test
     public void testCompleteDestroy() throws Exception {
-        List<Stock> stocks = prepareStocks();
+        List<Stock> stocks = gen.makeStocksAndLocations(2);
 
         StockTransactionEmo stockTransactionEmo = new StockTransactionEmo(em);
         StockUnitEao stockUnitEao = new StockUnitEao(em);
 
         utx.begin();
         em.joinTransaction();
+        Stock s1 = em.find(Stock.class, stocks.get(0).getId());
         for (int i = 1; i <= 10; i++) {
             StockUnit su = new StockUnit(Integer.toString(i), i);
-            su.setStock(stocks.get(0));
+            su.setStock(s1);
             em.persist(su);
         }
 
@@ -192,7 +188,7 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
         for (StockUnit stockUnit : units) {
             assertTrue(stockUnit.isInStock());
             assertFalse(stockUnit.isInTransaction());
-            assertEquals(stocks.get(0), stockUnit.getStock());
+            assertEquals(s1, stockUnit.getStock());
         }
         utx.commit();
 
@@ -218,15 +214,16 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
 
     @Test
     public void testPrepare() throws Exception {
-        List<Stock> stocks = prepareStocks();
+        List<Stock> stocks = gen.makeStocksAndLocations(2);
 
         int transactionSize = 5;
 
         utx.begin();
         em.joinTransaction();
+        Stock s1 = em.find(Stock.class, stocks.get(0).getId());
         for (int i = 1; i <= 15; i++) {
             StockUnit su = new StockUnit(Integer.toString(i), i);
-            su.setStock(stocks.get(0));
+            su.setStock(s1);
             em.persist(su);
         }
         utx.commit();
@@ -252,12 +249,9 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
         List<StockTransaction> findByDestination = stEao.findAll();
         assertEquals("Assert three transactions", 3, findByDestination.size());
 
-        int multiplier = transactionSize;
         for (StockTransaction transaction : findByDestination) {
             List<StockTransactionPosition> positions = transaction.getPositions();
             assertEquals("Assert five posititons", 5, positions.size());
-            assertEquals("Assert last position to be a multiplier of 5", multiplier, positions.get(transactionSize - 1).getId());
-            multiplier += transactionSize;
         }
         utx.commit();
     }

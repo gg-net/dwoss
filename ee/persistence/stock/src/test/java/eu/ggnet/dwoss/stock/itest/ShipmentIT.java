@@ -85,13 +85,13 @@ public class ShipmentIT extends ArquillianProjectArchive {
 
         utx.begin();
         em.joinTransaction();
+        ship1 = em.find(Shipment.class, ship1.getId());
         Shipment ship2 = new Shipment("002", TradeName.DELL, TradeName.DELL, Shipment.Status.OPENED);
         em.persist(ship2);
         em.remove(ship1);
         List<Shipment> list = eao.findAll();
-        utx.commit();
-
         assertEquals(1, list.size());
+        utx.commit();
     }
     //</editor-fold>
 
@@ -106,12 +106,13 @@ public class ShipmentIT extends ArquillianProjectArchive {
 
         ship1.setShipmentId("005");
         ship1.setContractor(TradeName.AMAZON);
+
         utx.begin();
         em.joinTransaction();
         em.merge(ship1);
+        assertEquals(TradeName.AMAZON, eao.findAll().get(0).getContractor());
         utx.commit();
 
-        assertEquals(TradeName.AMAZON, eao.findAll().get(0).getContractor());
     }
     //</editor-fold>
 
