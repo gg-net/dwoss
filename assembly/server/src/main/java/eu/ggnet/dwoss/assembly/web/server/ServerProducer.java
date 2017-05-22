@@ -28,5 +28,5 @@ import eu.ggnet.dwoss.util.ImageFinder;
 public class ServerProducer {
 
     @Produces
-    private final static ImageFinder serverImageFinder = new ImageFinder("/remote/megatron/Application/DeutscheWarenwirtschaft/images/");
+    private final static ImageFinder serverImageFinder = new ImageFinder("/data/images/");
 }
