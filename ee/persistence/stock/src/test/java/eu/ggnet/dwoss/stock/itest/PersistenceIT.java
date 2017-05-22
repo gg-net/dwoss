@@ -71,6 +71,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         em.joinTransaction();
         s1 = em.find(Stock.class, s1.getId());
         s2 = em.find(Stock.class, s1.getId());
+        su1 = em.find(StockUnit.class, su1.getId());
 
         StockTransaction t1 = new StockTransaction(StockTransactionType.TRANSFER);
         t1.addStatus(new StockTransactionStatus(StockTransactionStatusType.PREPARED, now));
@@ -94,12 +95,15 @@ public class PersistenceIT extends ArquillianProjectArchive {
         em.joinTransaction();
         s1 = em.find(Stock.class, s1.getId());
         s2 = em.find(Stock.class, s1.getId());
+        su1 = em.find(StockUnit.class, su1.getId());
+
         t1 = new StockTransaction(StockTransactionType.TRANSFER);
         t1.addStatus(new StockTransactionStatus(StockTransactionStatusType.PREPARED, now));
         t1.setSource(s2);
         t1.setDestination(s1);
         t1.addPosition(new StockTransactionPosition(su1));
         su1.setStock(null);
+
         em.persist(t1);
         utx.commit();
 

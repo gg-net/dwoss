@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -42,9 +42,12 @@ import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.*;
 @Entity
 @EqualsAndHashCode(of = "id")
 @NamedQueries({
-    @NamedQuery(name = "StockTransaction.byTypeAndStatus", query = "select s from StockTransaction s where s.type = ?1 and s.status.type = ?2 ORDER BY s.id DESC"),
-    @NamedQuery(name = "StockTransaction.bySourceTypesComment", query = "select s from StockTransaction s where s.source.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4"),
-    @NamedQuery(name = "StockTransaction.byDestinationTypesComment", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4"),
+    @NamedQuery(name = "StockTransaction.byTypeAndStatus", query = "select s from StockTransaction s where s.type = ?1 and s.status.type = ?2 ORDER BY s.id DESC")
+    ,
+    @NamedQuery(name = "StockTransaction.bySourceTypesComment", query = "select s from StockTransaction s where s.source.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
+    ,
+    @NamedQuery(name = "StockTransaction.byDestinationTypesComment", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
+    ,
     @NamedQuery(name = "StockTransaction.byDestinationTypes", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3")
 })
 public class StockTransaction implements Serializable, EagerAble {
@@ -264,22 +267,22 @@ public class StockTransaction implements Serializable, EagerAble {
         for (StockTransactionStatus stockTransactionStatus : getStatusHistory()) stockTransactionStatus.getParticipations().size();
     }
 
-    @Null
+    @Null(message = "ValidationViolation must be null. ValidationMessage: ${validatedValue}")
     public String getValidationViolations() {
         List<StockTransactionStatus> sortedList = new ArrayList<>(getStatusHistory());
-        Collections.sort(sortedList);
+//        Collections.sort(sortedList); // OG does not remeber, why he sorted this.
         List<StockTransactionStatusType> sortedTypeList = new ArrayList<>();
         for (StockTransactionStatus stockTransactionStatus : sortedList) {
             sortedTypeList.add(stockTransactionStatus.getType());
         }
 
         if ( POSSIBLE_STATUS_TYPES.contains(sortedTypeList) ) return null;
-        return "TransactionStatusHistory is in invalid: " + sortedTypeList;
+        return "TransactionStatusHistory is in invalid. SuppliedTypes=" + sortedTypeList + " AllowedTypes=" + POSSIBLE_STATUS_TYPES;
     }
 
     @Override
     public String toString() {
-        return "StockTransaction{id=" + id + ",source=" +  source
+        return "StockTransaction{id=" + id + ",source=" + source
                 + ",destination=" + destination
                 + ",type=" + type + ",status=" + status + ",positions=" + positions + '}';
     }
