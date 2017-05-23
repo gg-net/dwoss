@@ -923,24 +923,9 @@
                 <type>jar</type>
             </dependency>
             <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.metawidget.modules</groupId>
-                <artifactId>metawidget-annotation</artifactId>
-                <version>4.2</version>
-            </dependency>
-            <dependency>
                 <groupId>org.metawidget.modules</groupId>
                 <artifactId>metawidget-all</artifactId>
                 <version>4.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.easytesting</groupId>
-                <artifactId>fest-assert-core</artifactId>
-                <version>2.0M10</version>
             </dependency>
             <dependency>
                 <groupId>com.github.insubstantial</groupId>
@@ -962,6 +947,12 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>3.1</version>
             </dependency>
+            <!-- Runtime Common/API Dependencies -->
+            <dependency>
+                <groupId>org.metawidget.modules</groupId>
+                <artifactId>metawidget-annotation</artifactId>
+                <version>4.2</version>
+            </dependency>
             <!-- Runtime Server Dependencies -->
             <dependency>
                 <groupId>com.mysema.querydsl</groupId>
@@ -972,6 +963,11 @@
                 <groupId>com.mysema.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>3.7.4</version>
+            </dependency>
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>2.9.9</version>
             </dependency>
             <!-- Test Dependencies. Dependencies only used for Testing -->
             <dependency>
@@ -995,6 +991,11 @@
                 <groupId>org.glassfish.web</groupId>
                 <artifactId>el-impl</artifactId>
                 <version>2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.easytesting</groupId>
+                <artifactId>fest-assert-core</artifactId>
+                <version>2.0M10</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

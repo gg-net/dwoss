@@ -17,6 +17,7 @@ import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -29,6 +30,9 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
     @Stocks
     private EntityManager em;
 
+    @Inject
+    private StockUnitEao sus;
+
     @After
     public void clearDataBase() throws Exception {
         utx.begin();
@@ -39,24 +43,21 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
 
     @Test
     public void testFindByIdentifierAndStock() throws Exception {
-        StockUnitEao sus = new StockUnitEao(em);
         utx.begin();
         em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEST");
         em.persist(s);
-        utx.commit();
 
         StockLocation sl = new StockLocation("Lagerplatz");
         s.addStockLocation(sl);
 
         StockUnit s1 = new StockUnit("G1", 1);
+        s1.setRefurbishId("23");
         StockUnit s2 = new StockUnit("G2", 2);
+        s2.setRefurbishId("42");
         s.addUnit(s1, sl);
         s.addUnit(s2, sl);
 
-        utx.begin();
-        em.joinTransaction();
-        em.persist(s);
         em.persist(new Stock(1, "TEEEEEEEEST"));
         utx.commit();
 
@@ -68,43 +69,15 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         s1 = sus.findByUniqueUnitId(1);
         s2 = sus.findByUniqueUnitId(2);
 
-        assertNotNull(s1);
-        assertNotNull(s2);
+        assertThat(s1).isNotNull();
+        assertThat(s2).isNotNull();
 
         assertEquals(id1, s1.getId());
         assertEquals(id2, s2.getId());
 
         List<StockUnit> units = sus.findByStockId(s.getId());
         assertEquals(2, units.size());
-    }
 
-    @Test
-    public void testFindByUnitId() throws Exception {
-        StockUnitEao sus = new StockUnitEao(em);
-        utx.begin();
-        em.joinTransaction();
-        Stock s = new Stock(0, "TEEEEEEEEEEEEEEEEEST");
-        em.persist(s);
-        utx.commit();
-        StockLocation sl = new StockLocation("Lagerplatz");
-        s.addStockLocation(sl);
-
-        StockUnit s1 = new StockUnit("G1", 1);
-        s1.setRefurbishId("23");
-        StockUnit s2 = new StockUnit("G2", 2);
-        s2.setRefurbishId("42");
-        s.addUnit(s1, sl);
-        s.addUnit(s2, sl);
-
-        utx.begin();
-        em.joinTransaction();
-        em.persist(s);
-        utx.commit();
-
-        int id1 = s1.getId();
-        int id2 = s2.getId();
-
-        assertFalse(id1 == id2);
         s1 = sus.findByRefurbishId("23");
         s2 = sus.findByRefurbishId("42");
 
@@ -126,7 +99,6 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         Stock s1 = new Stock(1, "2222222222222222222222222222");
         em.persist(s0);
         em.persist(s1);
-        utx.commit();
         StockLocation s0l0 = new StockLocation("Lagerplatz");
         s0.addStockLocation(s0l0);
 
@@ -143,14 +115,10 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         s0.addUnit(su1, s0l0);
         s0.addUnit(su2, s0l0);
 
-        utx.begin();
-        em.joinTransaction();
-        em.persist(s0);
-        em.persist(s1);
-        utx.commit();
+        em.persist(su0);
+        em.persist(su1);
+        em.persist(su2);
 
-        utx.begin();
-        em.joinTransaction();
         StockTransaction st = new StockTransaction(StockTransactionType.TRANSFER);
         st.setDestination(s1);
         st.setSource(s0);
@@ -160,15 +128,12 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         st.addPosition(new StockTransactionPosition(su1));
         utx.commit();
 
-        StockUnitEao sus = new StockUnitEao(em);
-
-        assertEquals(2, sus.countByTransaction(s0.getId(), StockTransactionType.TRANSFER, StockTransactionStatusType.PREPARED));
+        assertThat(sus.countByTransaction(s0.getId(), StockTransactionType.TRANSFER, StockTransactionStatusType.PREPARED)).isEqualTo(2);
 
     }
 
     @Test
     public void testFindByNoLogicTransaction() throws Exception {
-        StockUnitEao sus = new StockUnitEao(em);
         utx.begin();
         em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEEEEEEEEst");
@@ -192,21 +157,15 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         em.persist(lt);
         utx.commit();
 
-        utx.begin();
-        em.joinTransaction();
         List<StockUnit> sts = sus.findByNoLogicTransaction();
         assertEquals(3, sts.size());
 
         List<Integer> uuids = sus.findByNoLogicTransactionAsUniqueUnitId();
         assertEquals(3, uuids.size());
-
-        utx.commit();
     }
 
     @Test
     public void testFindByNoTransaction() throws Exception {
-        StockUnitEao sus = new StockUnitEao(em);
-
         utx.begin();
         em.joinTransaction();
         Stock s = new Stock(0, "TEEEEEEEEEEEEEEST");
@@ -236,10 +195,7 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
         st.addPosition(new StockTransactionPosition(s1));
         utx.commit();
 
-        utx.begin();
-        em.joinTransaction();
         List<StockUnit> sts = sus.findByNoTransaction();
         assertEquals(2, sts.size());
-        utx.commit();
     }
 }

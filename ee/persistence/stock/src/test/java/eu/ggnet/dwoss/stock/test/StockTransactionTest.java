@@ -1,24 +1,19 @@
 package eu.ggnet.dwoss.stock.test;
 
-
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipationType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
-
 import java.util.Date;
 import java.util.HashSet;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StockTransactionTest {
 
@@ -64,7 +59,7 @@ public class StockTransactionTest {
     }
 
     private void valid(StockTransaction tr1) {
-        assertTrue("StockTransaction should be valid, but: " + ConstraintViolationFormater.toMultiLine(new HashSet<ConstraintViolation<?>>(V.validate(tr1)), true),
+        assertTrue("StockTransaction should be valid, but: " + ConstraintViolationFormater.toMultiLine(new HashSet<>(V.validate(tr1)), true),
                 V.validate(tr1).isEmpty());
     }
 

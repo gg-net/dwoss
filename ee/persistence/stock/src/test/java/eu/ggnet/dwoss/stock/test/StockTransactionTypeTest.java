@@ -1,11 +1,10 @@
 package eu.ggnet.dwoss.stock.test;
 
+import org.junit.Test;
 
 import eu.ggnet.dwoss.stock.entity.StockTransactionType;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class StockTransactionTypeTest {
 

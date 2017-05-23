@@ -1,22 +1,25 @@
-package eu.ggnet.dwoss.uniqueunit.eao;
-
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+package eu.ggnet.dwoss.uniqueunit.itest;
 
 import java.util.*;
 
-import javax.persistence.*;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Condition;
-
+import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -24,14 +27,20 @@ import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class UniqueUnitEao2IT {
+@RunWith(Arquillian.class)
+public class UniqueUnitEao2IT extends ArquillianProjectArchive {
 
     private final static String PARTNO_1 = "AA.BBBBB.CCC";
 
+    @Inject
+    UserTransaction utx;
+
+    @Inject
+    @UniqueUnits
+    EntityManager em;
+
     @Test
-    public void testFindByIdentifier() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(UniqueUnitPu.NAME, UniqueUnitPu.JPA_IN_MEMORY);
-        EntityManager em = emf.createEntityManager();
+    public void testFindByIdentifier() throws Exception {
         Product p = new Product(ProductGroup.MONITOR, TradeName.FUJITSU, PARTNO_1, "The Notebook");
 
         UniqueUnitEao uus = new UniqueUnitEao(em);
@@ -74,15 +83,18 @@ public class UniqueUnitEao2IT {
         Set<ConstraintViolation<UniqueUnit>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(unit1);
         assertTrue(ConstraintViolationFormater.toMultiLine(new HashSet<>(validate), true), validate.isEmpty());
 
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
+        utx.begin();
+        em.joinTransaction();
         em.persist(p);
         em.persist(unit1);
         em.persist(unit2);
         em.persist(unit3);
         em.persist(unit4);
         em.persist(unit5);
-        tx.commit();
+        utx.commit();
+
+        utx.begin();
+        em.joinTransaction();
 
         UniqueUnit runit1 = uus.findByIdentifier(REFURBISHED_ID, "22223");
 
@@ -103,6 +115,6 @@ public class UniqueUnitEao2IT {
         for (UniqueUnit runit : runits) {
             assertTrue(runit.equals(unit1) || runit.equals(unit2));
         }
-
+        utx.commit();
     }
 }

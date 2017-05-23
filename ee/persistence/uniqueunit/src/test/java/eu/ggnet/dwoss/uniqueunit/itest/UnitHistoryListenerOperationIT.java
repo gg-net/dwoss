@@ -1,42 +1,37 @@
-package eu.ggnet.dwoss.uniqueunit.op;
+package eu.ggnet.dwoss.uniqueunit.itest;
 
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
-import java.util.*;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.embeddable.EJBContainer;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.*;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
 import static org.junit.Assert.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class UnitHistoryListenerOperationIT {
-
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class UnitHistoryListenerOperationIT extends ArquillianProjectArchive {
 
     @EJB
     private UniqueUnitAgent uniqueUnitAgent;
@@ -46,21 +41,6 @@ public class UnitHistoryListenerOperationIT {
 
     @Inject
     private UnitBean unitBean;
-
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void after() {
-        container.close();
-    }
 
     @Test
     public void testEvent() throws InterruptedException {
@@ -82,7 +62,6 @@ public class UnitHistoryListenerOperationIT {
     }
 
     @Stateless
-//
     public static class SenderBean {
 
         @Inject
@@ -94,8 +73,6 @@ public class UnitHistoryListenerOperationIT {
     }
 
     @Stateless
-//
-//
     public static class UnitBean {
 
         @Inject

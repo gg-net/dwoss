@@ -1,28 +1,22 @@
-package eu.ggnet.dwoss.uniqueunit.entity;
+package eu.ggnet.dwoss.uniqueunit.itest;
 
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
-import java.util.*;
+import java.util.Date;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.Tuple2;
 
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
@@ -33,30 +27,14 @@ import static org.junit.Assert.assertNull;
  *
  * @author oliver.guenther
  */
-public class PersistenceIT {
-
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class PersistenceIT extends ArquillianProjectArchive {
 
     @EJB
     private UniqueUnitAgent agent;
 
     @Inject
     private PersistenceBean persistenceBean;
-
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void after() {
-        container.close();
-    }
 
     @Test
     public void testPersistence() {
@@ -75,8 +53,6 @@ public class PersistenceIT {
     }
 
     @Stateless
-//
-//
     public static class PersistenceBean {
 
         @Inject
@@ -161,16 +137,6 @@ public class PersistenceIT {
             em.persist(unit4);
             return new Tuple2<>(unit3.getId(), unit4.getId());
         }
-//        public List<UniqueUnit> findAll() {
-//            EntityManager em = support.getEntityManager();
-//            CriteriaBuilder cb = em.getCriteriaBuilder();
-//            CriteriaQuery<UniqueUnit> cq = cb.createQuery(UniqueUnit.class);
-//            cq.select(cq.from(UniqueUnit.class));
-//            return em.createQuery(cq).getResultList();
-//        }
-//
-//        public UniqueUnit findById(int id) {
-//            return support.getEntityManager().find(UniqueUnit.class, id);
-//        }
+
     }
 }

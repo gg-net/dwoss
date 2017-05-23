@@ -1,5 +1,6 @@
-package eu.ggnet.dwoss.uniqueunit.entity;
+package eu.ggnet.dwoss.uniqueunit.test;
 
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 import javax.validation.Validation;

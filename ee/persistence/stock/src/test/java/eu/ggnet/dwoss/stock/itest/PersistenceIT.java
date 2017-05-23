@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -185,11 +186,15 @@ public class PersistenceIT extends ArquillianProjectArchive {
             su.setStock(null);
         }
 
-        StockTransactionStatus init = new StockTransactionStatus(StockTransactionStatusType.PREPARED, new Date());
+        Date d = new Date();
+
+        StockTransactionStatus init = new StockTransactionStatus(StockTransactionStatusType.PREPARED, d);
         init.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.PICKER, "Hans"));
         t1.addStatus(init);
 
-        StockTransactionStatus commision = new StockTransactionStatus(StockTransactionStatusType.COMMISSIONED, new Date());
+        StockTransactionStatus commision = new StockTransactionStatus(StockTransactionStatusType.COMMISSIONED, DateUtils.addSeconds(d, 1)); // Why add seconds ? Ask Olli.
+        // Has something todo with the convertion of util.Date -> sql.Date -> util.Date. The returned value shows milliseconds an is in the past. Magic.
+
         commision.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.PICKER, "User1", true));
         commision.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.DELIVERER, "User2", true));
         t1.addStatus(commision);
@@ -202,7 +207,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         t1 = em.find(StockTransaction.class, t1.getId());
         st2 = em.find(Stock.class, st2.getId());
 
-        StockTransactionStatus transfer = new StockTransactionStatus(StockTransactionStatusType.IN_TRANSFER, new Date());
+        StockTransactionStatus transfer = new StockTransactionStatus(StockTransactionStatusType.IN_TRANSFER, DateUtils.addSeconds(d, 2)); // Why add seconds ? Ask Olli.
         transfer.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.DELIVERER, "User3", false));
         t1.addStatus(transfer);
 
@@ -217,7 +222,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
         t1 = em.find(StockTransaction.class, t1.getId());
 
-        StockTransactionStatus receive = new StockTransactionStatus(StockTransactionStatusType.RECEIVED, new Date());
+        StockTransactionStatus receive = new StockTransactionStatus(StockTransactionStatusType.RECEIVED, DateUtils.addSeconds(d, 3)); // Why add seconds ? Ask Olli.
         receive.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.RECEIVER, "User4", true));
         receive.addParticipation(new StockTransactionParticipation(StockTransactionParticipationType.DELIVERER, "User5", true));
         t1.addStatus(receive);

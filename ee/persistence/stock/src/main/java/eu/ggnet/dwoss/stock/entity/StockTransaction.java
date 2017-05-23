@@ -270,14 +270,14 @@ public class StockTransaction implements Serializable, EagerAble {
     @Null(message = "ValidationViolation must be null. ValidationMessage: ${validatedValue}")
     public String getValidationViolations() {
         List<StockTransactionStatus> sortedList = new ArrayList<>(getStatusHistory());
-//        Collections.sort(sortedList); // OG does not remeber, why he sorted this.
+        Collections.sort(sortedList);
         List<StockTransactionStatusType> sortedTypeList = new ArrayList<>();
         for (StockTransactionStatus stockTransactionStatus : sortedList) {
             sortedTypeList.add(stockTransactionStatus.getType());
         }
 
         if ( POSSIBLE_STATUS_TYPES.contains(sortedTypeList) ) return null;
-        return "TransactionStatusHistory is in invalid. SuppliedTypes=" + sortedTypeList + " AllowedTypes=" + POSSIBLE_STATUS_TYPES;
+        return "TransactionStatusHistory is in invalid. Statuses=" + sortedList + " AllowedTypes=" + POSSIBLE_STATUS_TYPES;
     }
 
     @Override

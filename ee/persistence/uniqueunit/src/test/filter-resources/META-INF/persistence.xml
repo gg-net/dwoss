@@ -3,5 +3,6 @@
     <persistence-unit name="uniqueunit-pu">
         ${uniqueunit-pu.default-datasource}
         ${uniqueunit-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
 </persistence>

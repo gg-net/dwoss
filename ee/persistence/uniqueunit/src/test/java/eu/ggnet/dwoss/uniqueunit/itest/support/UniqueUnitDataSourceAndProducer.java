@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.itest.support;
+package eu.ggnet.dwoss.uniqueunit.itest.support;
 
 import java.util.HashMap;
 
@@ -33,21 +33,21 @@ import static eu.ggnet.dwoss.configuration.SystemConfig.*;
  */
 @DataSourceDefinitions(
         value = {
-            @DataSourceDefinition(name = DSNAME_PREFIX + "stock" + DSNAME_SUFFIX_MANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "uniqueunit" + DSNAME_SUFFIX_MANAGED,
                                   className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
+                                  url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=true"}
             )
             ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "stock" + DSNAME_SUFFIX_UNMANAGED,
+            @DataSourceDefinition(name = DSNAME_PREFIX + "uniqueunit" + DSNAME_SUFFIX_UNMANAGED,
                                   className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:stock" + DSURL_PROPERTIES,
+                                  url = "jdbc:hsqldb:mem:uniqueunit" + DSURL_PROPERTIES,
                                   properties = {"JtaManaged=false"}
             )
         }
 )
 @ManagedBean
-public class StockDataSourceAndProducer {
+public class UniqueUnitDataSourceAndProducer {
 
     @Produces
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
