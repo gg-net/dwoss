@@ -1,33 +1,25 @@
-package eu.ggnet.dwoss.receipt;
-
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-
-import java.util.HashMap;
-import java.util.Map;
+package eu.ggnet.dwoss.receipt.itest;
 
 import javax.ejb.EJB;
-import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.receipt.itest.support.SpecStore;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.spec.entity.*;
 
+import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.junit.Assert.*;
 
-public class ReceiptProductLogicProductModelIT {
-
-    //<editor-fold defaultstate="collapsed" desc=" SetUp ">
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive {
 
     @EJB
     private ProductProcessor productProcessor;
@@ -35,26 +27,7 @@ public class ReceiptProductLogicProductModelIT {
     @Inject
     private SpecStore specStore;
 
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(SpecPu.CMP_IN_MEMORY);
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(StockPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc=" createProductModel Testings ">
-
-    @Test(timeout = 5000)
+    @Test(timeout = 60000)
     public void testCreateProductModell() {
         ProductModel productModel = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel1");
         assertNotNull(productModel);
@@ -82,16 +55,16 @@ public class ReceiptProductLogicProductModelIT {
 
     }
 
-    @Test(expected = RuntimeException.class, timeout = 5000)
+    @Test(expected = RuntimeException.class, timeout = 60000)
     public void testCreateProductModellExceptionSameName() {
 
         //Test if two Products where created with the same name that will be throw a exception
         productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
         productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ModelException");
-        fail("No Exception Throw at the test \"testCreateProductModellExceptionSameName()\"");
+        failBecauseExceptionWasNotThrown(RuntimeException.class);
     }
 
-    @Test(expected = RuntimeException.class, timeout = 5000)
+    @Test(expected = RuntimeException.class, timeout = 60000)
     public void testCreateProductModellExceptionSameNameDifferentSeries() {
 
         //Create a ProductSeries and persist it.
@@ -102,8 +75,8 @@ public class ReceiptProductLogicProductModelIT {
         productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
         productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, series, family, "Model1");
 
-        fail("No Exception throw at the test \"testCreateProductModellExceptionSameNameDifferentSeries()\"");
+        failBecauseExceptionWasNotThrown(RuntimeException.class);
 
     }
-    //</editor-fold>
+
 }

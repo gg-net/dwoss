@@ -1,76 +1,45 @@
-package eu.ggnet.dwoss.receipt;
-
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.Notebook;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-
-import java.util.HashMap;
-import java.util.Map;
+package eu.ggnet.dwoss.receipt.itest;
 
 import javax.ejb.EJB;
-import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.transaction.UserTransaction;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
 
-import static org.junit.Assert.assertTrue;
+import static org.fest.assertions.api.Assertions.assertThat;
 
-public class ReceiptProductLogicPossibleDeadlockIT {
-
-    //<editor-fold defaultstate="collapsed" desc=" SetUp ">
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class ReceiptProductLogicPossibleDeadlockIT extends ArquillianProjectArchive {
 
     @EJB
     private ProductProcessor productLogic;
 
     @Inject
     @Specs
-    private EntityManagerFactory emf;
+    private EntityManager em;
 
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(SpecPu.CMP_IN_MEMORY);
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(StockPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc=" DeadLock Testings ">
+    @Inject
+    private UserTransaction utx;
 
     @Test
     @Ignore
-    public void testDeadlockProductSpec() {
+    public void testDeadlockProductSpec() throws Exception {
         //
         //
         //Test will run into a Deadlock if no Product Modell is setted!
-        //It will Display no Error but we hope for a Exception!
+        //It will Display no Error but we hope for an Exception!
         //To Recreated the Deadlock comment the Line Between the "Comment This" Comments
         //
         //
@@ -84,8 +53,8 @@ public class ReceiptProductLogicPossibleDeadlockIT {
         ProductModel productModel = new ProductModel("TestModel");
         productModel.setFamily(new ProductFamily("TestFamily"));
         //Create a CPU and GPU and persist it.
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
+        utx.begin();
+        em.joinTransaction();
         Cpu cpu = new Cpu(Cpu.Series.CORE, "TestCPU", Cpu.Type.MOBILE, 2.0, 5);
         Gpu gpu = new Gpu(Gpu.Type.MOBILE, Gpu.Series.GEFORCE_100, "TestGPU");
         ProductSeries productSeries = new ProductSeries(TradeName.ONESELF, ProductGroup.MISC, "TestSeries");
@@ -99,7 +68,7 @@ public class ReceiptProductLogicPossibleDeadlockIT {
         em.persist(productSeries);
         em.persist(productFamily);
         em.persist(productModel);
-        em.getTransaction().commit();
+        utx.commit();
 
         Notebook notebook = new Notebook(display, Desktop.Os.LINUX,
                 cpu, null,
@@ -114,8 +83,6 @@ public class ReceiptProductLogicPossibleDeadlockIT {
 
         ProductSpec testSpec = productLogic.create(notebook, productModel);
 
-        assertTrue(true);
-
+        assertThat(testSpec).isNotNull();
     }
-    //</editor-fold>
 }

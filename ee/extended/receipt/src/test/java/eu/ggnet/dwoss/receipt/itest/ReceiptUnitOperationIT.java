@@ -1,52 +1,33 @@
-package eu.ggnet.dwoss.receipt;
-
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.ReceiptOperation;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+package eu.ggnet.dwoss.receipt.itest;
 
 import java.util.*;
 
-import javax.ejb.*;
-import javax.ejb.embeddable.EJBContainer;
+import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.naming.NamingException;
-import javax.persistence.EntityManager;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.receipt.UnitProcessor;
+import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.assist.RedTapePu;
-
-
-import eu.ggnet.dwoss.customer.assist.CustomerPu;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 
 import static eu.ggnet.dwoss.rules.ReceiptOperation.*;
 import static org.junit.Assert.*;
@@ -55,15 +36,13 @@ import static org.junit.Assert.*;
  *
  * @author bastian.venz, oliver.guenther
  */
-public class ReceiptUnitOperationIT {
+@RunWith(Arquillian.class)
+public class ReceiptUnitOperationIT extends ArquillianProjectArchive {
 
-    //<editor-fold defaultstate="collapsed" desc="properties">
-    private EJBContainer container;
-
-    @Inject
+    @EJB
     private UnitProcessor unitProcessor;
 
-    @Inject
+    @EJB
     private UniqueUnitAgent uniqueUnitAgent;
 
     @Inject
@@ -88,37 +67,13 @@ public class ReceiptUnitOperationIT {
     private Contractors contractors;
 
     @Inject
-    private ReceiptUnitOperationHelper helper;
+    private StockTransactionEmo stockTransactionEmo;
 
-    @Inject
-    private UniqueUnitGenerator unitGenerator;
+    private final UniqueUnitGenerator unitGenerator = new UniqueUnitGenerator();
 
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc="before/after">
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(SpecPu.CMP_IN_MEMORY);
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(CustomerPu.CMP_IN_MEMORY);
-        c.putAll(StockPu.CMP_IN_MEMORY);
-        c.putAll(RedTapePu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_TESTING);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-        customerGenerator.makeSystemCustomers(contractors.all().toArray(new TradeName[0]));
-        unitGenerator = new UniqueUnitGenerator();
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
-
-    //</editor-fold>
     @Test
-    public void testReceiptAndUpdate() {
+    public void testReceiptAndUpdate() throws InterruptedException {
+        customerGenerator.makeSystemCustomers(contractors.all().toArray(new TradeName[0]));
         // Constants ,later permutate throug all
         Stock stock = stockGenerator.makeStocksAndLocations(2).get(0);
 
@@ -127,10 +82,10 @@ public class ReceiptUnitOperationIT {
         // Receipt a Unit
         ProductSpec productSpec = receiptGenerator.makeProductSpec();
         Product product = uniqueUnitAgent.findById(Product.class, productSpec.getProductId());
-        StockTransaction stockTransaction = helper.findOrCreateRollInTransaction(stock.getId(), "No User");
+        StockTransaction stockTransaction = stockTransactionEmo.requestRollInPrepared(stock.getId(), "No User", "Rollin via ReceiptUnitOperationHelper.findOrCreateRollInTransaction");
 
         for (TradeName contractor : contractors.all()) {
-            Shipment productShipment = helper.persist(new Shipment("SHIPMENTNAME_" + contractor, contractor, TradeName.ACER, Shipment.Status.OPENED));
+            Shipment productShipment = stockAgent.persist(new Shipment("SHIPMENTNAME_" + contractor, contractor, TradeName.ACER, Shipment.Status.OPENED));
             for (ReceiptOperation receiptOperation : operations) {
                 UniqueUnit receiptUnit = unitGenerator.makeUniqueUnit(contractor, product);
                 unitProcessor.receipt(receiptUnit, product, productShipment, stockTransaction, receiptOperation, "Receipt Operation from Test", "Testuser");
@@ -143,6 +98,7 @@ public class ReceiptUnitOperationIT {
                 }
             }
         }
+        Thread.sleep(3000);
     }
 
     private void asserts(UniqueUnit receiptUnit, StockTransaction stockTransaction, ReceiptOperation receiptOperation, TradeName contractor) {
@@ -208,30 +164,4 @@ public class ReceiptUnitOperationIT {
 
     }
 
-    @Stateless
-    public static class ReceiptUnitOperationHelper {
-
-        @Inject
-        @Stocks
-        private EntityManager em;
-
-        @Inject
-        private StockTransactionEmo stockTransactionEmo;
-
-        @Inject
-        private StockAgent agent;
-
-        public ReceiptUnitOperationHelper() {
-        }
-
-        public StockTransaction findOrCreateRollInTransaction(int stockId, String user) {
-            return stockTransactionEmo.requestRollInPrepared(stockId, user,
-                    "Rollin via ReceiptUnitOperationHelper.findOrCreateRollInTransaction");
-        }
-
-        public <T> T persist(T elem) {
-            agent.persist(elem);
-            return elem;
-        }
-    }
 }

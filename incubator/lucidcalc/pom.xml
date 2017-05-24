@@ -18,8 +18,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

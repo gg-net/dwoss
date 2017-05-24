@@ -12,16 +12,11 @@
     <packaging>ejb</packaging>
     <name>DwOss • EE • Core • Common</name>
 
-    <build>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources/</directory>
-                <filtering>true</filtering>
-            </testResource>
-        </testResources>
-    </build>
-
     <dependencies>
+        <dependency>
+            <groupId>org.metawidget.modules</groupId>
+            <artifactId>metawidget-annotation</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -41,24 +36,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.metawidget.modules</groupId>
-            <artifactId>metawidget-annotation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>saft-api</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core-hibernate</artifactId>
-            <scope>test</scope>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-cxf-rs</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xom</groupId>

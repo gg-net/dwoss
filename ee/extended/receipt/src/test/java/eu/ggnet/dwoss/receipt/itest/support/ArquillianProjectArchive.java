@@ -14,23 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.itest;
+package eu.ggnet.dwoss.receipt.itest.support;
 
 import java.io.File;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.shrinkwrap.api.Filters;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import eu.ggnet.dwoss.rights.RightsDataSourceAndProducer;
+import eu.ggnet.dwoss.receipt.UnitDestroyer;
+import eu.ggnet.dwoss.receipt.itest.ReceiptGeneratorOperationIT;
+import eu.ggnet.dwoss.receipt.test.TestBeansXml;
 
 import static java.lang.Package.getPackage;
+import static org.jboss.shrinkwrap.api.Filters.exclude;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
 /**
@@ -40,24 +41,37 @@ import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
  */
 public class ArquillianProjectArchive {
 
+    public static void main(String[] args) {
+        System.out.println(getPackage("eu.ggnet.dwoss.receipt.itest"));
+        System.out.println(getPackage("eu.ggnet.dwoss.receipt.test"));
+        createDeployment();
+    }
+
     @Deployment
     public static WebArchive createDeployment() {
+        // Compile Safe Packages.
+        Package projectPackage = UnitDestroyer.class.getPackage();
+        Package itestPackage = ReceiptGeneratorOperationIT.class.getPackage();
+        Package testPackage = TestBeansXml.class.getPackage();
+
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
                 .importRuntimeDependencies()
-                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator is needed on many places.
+                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator
+                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
+                .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
-
-        return ShrinkWrap.create(WebArchive.class, "rights-persistence-test.war")
-                .addPackages(true, Filters.exclude(getPackage("eu.ggnet.dwoss.rights.itest")), "eu.ggnet.dwoss.rights")
-                .addPackages(true, "org.fest") // Need this for Fest Assertations
-                .addClass(RightsDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
+                .addPackages(true, exclude(testPackage, itestPackage), projectPackage)
+                .addClass(ReceiptDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
-                .addClass(ArquillianProjectArchive.class)
+                .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addClass(SpecStore.class) // The local deployer configuration
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")
                 .addAsLibraries(libs);
+        return war;
     }
 }

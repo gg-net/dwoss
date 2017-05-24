@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.receipt;
+package eu.ggnet.dwoss.receipt.itest.support;
 
 import javax.enterprise.inject.Produces;
 

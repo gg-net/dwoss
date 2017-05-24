@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,38 +16,33 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang.time.DateUtils;
-import org.slf4j.*;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.saft.api.progress.IMonitor;
-
+import eu.ggnet.dwoss.price.engine.PriceEngine;
+import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.rules.Warranty;
-
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.price.engine.PriceEngine;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.saft.api.progress.IMonitor;
 
 import lombok.Data;
 

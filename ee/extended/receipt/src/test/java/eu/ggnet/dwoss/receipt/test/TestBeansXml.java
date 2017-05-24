@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.receipt;
+package eu.ggnet.dwoss.receipt.test;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,9 +17,15 @@ import static org.fest.assertions.api.Assertions.assertThat;
  */
 public class TestBeansXml {
 
+    /**
+     * Refachtor Safty net. Ensures, that the alternatives are set correctly.
+     *
+     * @throws ParsingException
+     * @throws ValidityException
+     * @throws IOException
+     */
     @Test
     public void testAlternatives() throws ParsingException, ValidityException, IOException {
-        // Refactor Safty Net.
         URL url = ClassLoader.getSystemClassLoader().getResource("META-INF/beans.xml");
         assertThat(url).isNotNull();
 

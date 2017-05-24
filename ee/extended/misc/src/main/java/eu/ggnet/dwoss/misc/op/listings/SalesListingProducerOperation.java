@@ -17,7 +17,8 @@
 package eu.ggnet.dwoss.misc.op.listings;
 
 import java.awt.Color;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -32,13 +33,15 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.mail.*;
-import org.slf4j.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
+import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
 import eu.ggnet.dwoss.progress.MonitorFactory;
@@ -52,11 +55,13 @@ import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.CFormat.Representation;
+import eu.ggnet.lucidcalc.*;
 
-import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
-import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.*;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.LEFT;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.TOP;
 
 /**
  * Operation for all Saleslistings.

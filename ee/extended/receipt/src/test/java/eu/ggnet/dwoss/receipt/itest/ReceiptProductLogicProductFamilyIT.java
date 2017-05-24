@@ -1,32 +1,27 @@
-package eu.ggnet.dwoss.receipt;
-
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-
-import java.util.HashMap;
-import java.util.Map;
+package eu.ggnet.dwoss.receipt.itest;
 
 import javax.ejb.EJB;
-import javax.ejb.embeddable.EJBContainer;
 import javax.inject.Inject;
-import javax.naming.NamingException;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.receipt.itest.support.SpecStore;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
 
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.junit.Assert.*;
 
-public class ReceiptProductLogicProductFamilyIT {
-
-    //<editor-fold defaultstate="collapsed" desc=" SetUp ">
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class ReceiptProductLogicProductFamilyIT extends ArquillianProjectArchive {
 
     @EJB
     private ProductProcessor productProcessor;
@@ -34,29 +29,10 @@ public class ReceiptProductLogicProductFamilyIT {
     @Inject
     private SpecStore bean;
 
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(SpecPu.CMP_IN_MEMORY);
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(StockPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc=" createProductFamily Testings ">
-
     @Test
     public void testCreateProductFamily() {
         ProductFamily productFamily = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
-        assertNotNull(productFamily); //Test if the created ProductFamily is not Null
+        assertThat(productFamily).isNotNull(); //Test if the created ProductFamily is not Null
         assertTrue(productFamily.getId() > 0); // Test if the ProductFamily has a ID
         assertEquals(SpecPu.DEFAULT_NAME, productFamily.getSeries().getName()); // Test if the Name of the created Series the Default Name is
         ProductFamily productFamily2 = productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC2");
@@ -89,7 +65,7 @@ public class ReceiptProductLogicProductFamilyIT {
         productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
         productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
 
-        fail("No Exception Throw at the test \"testCreateProductFamilyException()\"");
+        failBecauseExceptionWasNotThrown(RuntimeException.class);
     }
 
     @Test(expected = RuntimeException.class)
@@ -101,8 +77,8 @@ public class ReceiptProductLogicProductFamilyIT {
         productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, series, "TestPC");
         productProcessor.create(TradeName.DELL, ProductGroup.NOTEBOOK, null, "TestPC");
 
-        fail("No Exception throw at the test \"testCreateProductFamilyExceptionSameNameDifferentSeries\"");
+        failBecauseExceptionWasNotThrown(RuntimeException.class);
 
     }
-    //</editor-fold>
+
 }

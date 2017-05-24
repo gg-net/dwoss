@@ -16,20 +16,22 @@
  */
 package eu.ggnet.dwoss.redtape.reporting;
 
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.*;
+import javax.ejb.Schedule;
+import javax.ejb.Singleton;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.validation.*;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
@@ -49,7 +51,6 @@ import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.*;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.*;
@@ -68,8 +69,9 @@ import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.rules.PaymentMethod.*;
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.*;
-import static org.apache.commons.lang3.StringUtils.*;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
+import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**
  * Operation for closing of RedTape.
@@ -118,7 +120,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
 
     @Inject
     private Instance<WarrantyService> warrantyServiceInstance;
-    
+
     @Inject
     private ReceiptCustomers receiptCustomers;
 
@@ -158,7 +160,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * <li>Find all associated {@link StockUnit}'s and roll them out. See
      * {@link #closeStock(java.util.Set, java.lang.String, java.lang.String, de.dw.progress.IMonitor)}</li>
      * </ol>
-     *
+     * <p>
      * <p/>
      * @param arranger the arranger
      * @param manual   is this called manual or automatic
@@ -453,8 +455,8 @@ public class RedTapeCloserOperation implements RedTapeCloser {
 
     private Set<Document> findCloseableBlocker() {
         Collection<Long> receipts = receiptCustomers.getReceiptCustomers().values();
-                List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false)
-                        .stream().filter(d -> !receipts.contains(d.getCustomerId())).collect(Collectors.toList());
+        List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false)
+                .stream().filter(d -> !receipts.contains(d.getCustomerId())).collect(Collectors.toList());
 
         //all active blockers from open dossiers
         Set<Document> blocker = openDossiers.stream()

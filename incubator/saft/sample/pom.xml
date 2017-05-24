@@ -11,6 +11,11 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>saft-core</artifactId>
             <version>${project.version}</version>
@@ -18,10 +23,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -23,8 +23,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -1,63 +1,32 @@
-package eu.ggnet.dwoss.receipt;
+package eu.ggnet.dwoss.receipt.itest;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.Notebook;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-
-import java.util.*;
+import java.util.List;
 
 import javax.ejb.EJB;
-import javax.ejb.embeddable.EJBContainer;
-import javax.naming.NamingException;
 
-import org.junit.*;
+import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.SystemConfig;
+import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.stock.assist.StockPu;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitPu;
+import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.NOTEBOOK;
-import static eu.ggnet.dwoss.rules.TradeName.*;
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.rules.TradeName.PACKARD_BELL;
 import static org.junit.Assert.*;
 
-public class ReceiptProductLogicProductSpecIT {
-
-    //<editor-fold defaultstate="collapsed" desc=" SetUp ">
-    private EJBContainer container;
+@RunWith(Arquillian.class)
+public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
     @EJB
     private ProductProcessor productProcessor;
 
     @EJB
     private SpecAgent specAgent;
-
-    @Before
-    public void setUp() throws NamingException {
-        Map<String, Object> c = new HashMap<>();
-        c.putAll(SpecPu.CMP_IN_MEMORY);
-        c.putAll(UniqueUnitPu.CMP_IN_MEMORY);
-        c.putAll(StockPu.CMP_IN_MEMORY);
-        c.putAll(SystemConfig.OPENEJB_EJB_XML_DISCOVER);
-        c.putAll(SystemConfig.OPENEJB_LOG_WARN);
-        container = EJBContainer.createEJBContainer(c);
-        container.getContext().bind("inject", this);
-    }
-
-    @After
-    public void tearDown() {
-        container.close();
-    }
-    //</editor-fold>
-    //<editor-fold defaultstate="collapsed" desc=" createProductSpec Testings ">
 
     @Test
     public void testCreateProductSpec() throws Exception {
@@ -132,9 +101,7 @@ public class ReceiptProductLogicProductSpecIT {
         productProcessor.create(notebook, productModel);
         fail("Error 040: No Exception Found at: CreateProductSpec");
     }
-    //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" updateProductSpec Testing ">
     @Test
     // Produced Optimistic Lock Exception.
     public void testUpdateProductSpecModelChange() {
@@ -184,5 +151,4 @@ public class ReceiptProductLogicProductSpecIT {
         assertEquals(model2Id, specs.get(0).getModel().getId());
         assertEquals(comment, ((Notebook)specs.get(0)).getComment());
     }
-    //</editor-fold>
 }

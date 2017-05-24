@@ -3,26 +3,31 @@
     <persistence-unit name="customer-pu">
         ${customer-pu.default-datasource}
         ${customer-pu.classes}
-        ${customer-pu.default-search}
+        ${customer-pu.default-properties}
     </persistence-unit>
     <persistence-unit name="redtape-pu">
         ${redtape-pu.default-datasource}
         ${redtape-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
     <persistence-unit name="report-pu">
         ${report-pu.default-datasource}
         ${report-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
     <persistence-unit name="spec-pu">
         ${spec-pu.default-datasource}
         ${spec-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
     <persistence-unit name="stock-pu">
         ${stock-pu.default-datasource}
         ${stock-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
     <persistence-unit name="uniqueunit-pu">
         ${uniqueunit-pu.default-datasource}
         ${uniqueunit-pu.classes}
+        ${test-pu.default-properties}
     </persistence-unit>
 </persistence>
