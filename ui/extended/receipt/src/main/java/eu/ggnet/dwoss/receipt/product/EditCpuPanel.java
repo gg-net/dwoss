@@ -88,7 +88,6 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
         modelField.setText(cpu.getModel());
         series.setSelected(cpu.getSeries());
         nameField.setText(cpu.getName());
-        if ( cpu.getEconomicValue() != null ) economicValueField.setText(Double.toString(cpu.getEconomicValue()));
         this.cpu = cpu;
     }
 
@@ -100,7 +99,6 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
         newCpu.setSeries(series.getSelected());
         newCpu.setModel(modelField.getText());
         newCpu.setName(nameField.getText());
-        newCpu.setEconomicValue(economicValueField.getText().trim().equals("") ? null : Double.parseDouble(economicValueField.getText().replace(",", ".")));
         return newCpu;
     }
 
@@ -175,9 +173,6 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
         desktopCheckBox = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        economicValueField = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), java.awt.Color.black), "Cpu Daten bearbeiten / hinzufügen", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
@@ -205,10 +200,6 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
 
         jLabel4.setText("Name:");
 
-        jLabel7.setText("wirtschaftl. Wert:");
-
-        jLabel8.setText("€");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -235,18 +226,11 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(nameField))))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(economicValueField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
-                .addComponent(jLabel8)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(9, 9, 9)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jLabel9)
@@ -261,13 +245,7 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
                     .addComponent(mobileCheckBox)
                     .addComponent(desktopCheckBox)
                     .addComponent(jLabel4)
-                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(economicValueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -276,12 +254,9 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
     }//GEN-LAST:event_manufacturerBoxActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox desktopCheckBox;
-    private javax.swing.JTextField economicValueField;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JComboBox manufacturerBox;
     private javax.swing.JCheckBox mobileCheckBox;

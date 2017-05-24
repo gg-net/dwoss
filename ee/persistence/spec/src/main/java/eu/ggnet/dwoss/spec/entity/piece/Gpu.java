@@ -178,6 +178,12 @@ public class Gpu implements Serializable {
     @NotNull
     private Series series;
 
+    /**
+     * 
+     * Not used anymore, can be removed later.
+     * @deprecated
+     */
+    @Deprecated
     @XmlAttribute
     @Column(columnDefinition = "DECIMAL(7,2)")
     private Double economicValue;
