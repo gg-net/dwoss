@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.priv;
 
-import javax.ejb.*;
+import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
@@ -31,4 +32,5 @@ public interface SearchSingleton {
      */
     void reindexSearch();
 
+    boolean isActive();
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,15 +23,16 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.hibernate.search.MassIndexer;
-import org.hibernate.search.impl.SimpleIndexingProgressMonitor;
+import org.hibernate.search.batchindexing.impl.SimpleIndexingProgressMonitor;
 import org.hibernate.search.jpa.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
-
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
+
+import lombok.Getter;
 
 /**
  * This Singleton is to create and recreate the SearchIndex in Memory.
@@ -51,14 +52,18 @@ public class SearchSingletonBean implements SearchSingleton {
     @Inject
     private MonitorFactory monitorFactory;
 
+    @Getter
+    private boolean active = false;
+
     @Schedule(hour = "2")
     @Override
     public void reindexSearch() {
+        active = true;
         final SubMonitor m = monitorFactory.newSubMonitor("Recreationg Searchindex");
         m.start();
         try {
-            MassIndexer createIndexer = Search.getFullTextEntityManager(em).createIndexer();
-            createIndexer.progressMonitor(new SimpleIndexingProgressMonitor() {
+            MassIndexer indexer = Search.getFullTextEntityManager(em).createIndexer();
+            indexer.progressMonitor(new SimpleIndexingProgressMonitor() {
 
                 private final AtomicLong documentsDoneCounter = new AtomicLong();
 
@@ -89,12 +94,14 @@ public class SearchSingletonBean implements SearchSingleton {
 
             });
             // Values still not optimal, but the mysql db holds.
-            createIndexer
+            indexer
                     .batchSizeToLoadObjects(10000)
                     .threadsToLoadObjects(3)
                     .startAndWait();
         } catch (InterruptedException ex) {
             LOG.error("Error on Reindex Search.", ex);
+        } finally {
+            active = false;
         }
         m.finish();
     }

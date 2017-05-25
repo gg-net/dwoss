@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther.
  *
  * This library is free software; you can redistribute it and/or
@@ -16,23 +16,13 @@
  */
 package eu.ggnet.statemachine.swing;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.*;
+import java.util.*;
 
 import javax.swing.JFrame;
 
-import org.apache.commons.collections15.Transformer;
-import org.apache.commons.collections15.functors.ConstantTransformer;
+import eu.ggnet.statemachine.*;
 
-import eu.ggnet.statemachine.Link;
-import eu.ggnet.statemachine.State;
-import eu.ggnet.statemachine.StateFormater;
-import eu.ggnet.statemachine.StateMachine;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
@@ -40,10 +30,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-import edu.uci.ics.jung.visualization.renderers.DefaultVertexLabelRenderer;
-import edu.uci.ics.jung.visualization.renderers.GradientVertexRenderer;
-import edu.uci.ics.jung.visualization.renderers.Renderer;
-import edu.uci.ics.jung.visualization.renderers.VertexLabelAsShapeRenderer;
+import edu.uci.ics.jung.visualization.renderers.*;
 
 /**
  * Class for displaing Ui Informations.
@@ -144,40 +131,34 @@ public class Grapher {
         VisualizationViewer<State<T>, String> vv = new VisualizationViewer<>(layout);
         vv.setPreferredSize(new Dimension(1280, 1024)); //Sets the viewing area size
 
-        vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller<String>());
-        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<State<T>>());
+        vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 
         vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.AUTO);
 
 //                final VisualizationModel<String,Number> visualizationModel =
 //            new DefaultVisualizationModel<String,Number>(layout, preferredSize);
-
         // this class will provide both label drawing and vertex shapes
         VertexLabelAsShapeRenderer<State<T>, String> vlasr = new VertexLabelAsShapeRenderer<>(vv.getRenderContext());
 //
 //        // customize the render context
         if ( formater != null ) {
-            vv.getRenderContext().setVertexLabelTransformer(
-                    new Transformer<State<T>, String>() {
-                @Override
-                public String transform(State<T> state) {
-                    return formater.toHtml(state);
-                }
+            vv.getRenderContext().setVertexLabelTransformer((state) -> {
+                return formater.toHtml(state);
             });
-
-            vv.setVertexToolTipTransformer(new Transformer<State<T>, String>() {
-                @Override
-                public String transform(State<T> state) {
-                    return formater.toToolTipHtml(state);
-                }
+            vv.setVertexToolTipTransformer((state) -> {
+                return formater.toToolTipHtml(state);
             });
-
         }
 
         vv.getRenderContext().setVertexShapeTransformer(vlasr);
         vv.getRenderContext().setVertexLabelRenderer(new DefaultVertexLabelRenderer(Color.RED));
-        vv.getRenderContext().setEdgeDrawPaintTransformer(new ConstantTransformer(Color.DARK_GRAY));
-        vv.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(2.5f)));
+        vv.getRenderContext().setEdgeDrawPaintTransformer((input) -> {
+            return Color.DARK_GRAY;
+        });
+        vv.getRenderContext().setEdgeStrokeTransformer((input) -> {
+            return new BasicStroke(2.5f);
+        });
 
         // customize the renderer
         vv.getRenderer().setVertexRenderer(new GradientVertexRenderer<State<T>, String>(Color.LIGHT_GRAY, Color.WHITE, true));

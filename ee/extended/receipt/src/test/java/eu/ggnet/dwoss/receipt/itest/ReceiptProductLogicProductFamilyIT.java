@@ -4,12 +4,12 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.receipt.itest.support.SpecStore;
+import eu.ggnet.dwoss.receipt.itest.support.*;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
@@ -28,6 +28,14 @@ public class ReceiptProductLogicProductFamilyIT extends ArquillianProjectArchive
 
     @Inject
     private SpecStore bean;
+
+    @Inject
+    private DatabaseCleaner cleaner;
+
+    @After
+    public void clearDatabase() throws Exception {
+        cleaner.clear();
+    }
 
     @Test
     public void testCreateProductFamily() {

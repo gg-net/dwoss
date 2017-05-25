@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.itest.support;
+package eu.ggnet.dwoss.misc.op.itest;
 
 import java.io.File;
 
@@ -26,9 +26,8 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import eu.ggnet.dwoss.receipt.UnitDestroyer;
-import eu.ggnet.dwoss.receipt.itest.ReceiptGeneratorOperationIT;
-import eu.ggnet.dwoss.receipt.test.TestBeansXml;
+import eu.ggnet.dwoss.misc.op.StockTaking;
+import eu.ggnet.dwoss.misc.op.test.TestBeansXml;
 
 import static org.jboss.shrinkwrap.api.Filters.exclude;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -43,8 +42,7 @@ public class ArquillianProjectArchive {
     @Deployment
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
-        Package projectPackage = UnitDestroyer.class.getPackage();
-        Package itestPackage = ReceiptGeneratorOperationIT.class.getPackage();
+        Package projectPackage = StockTaking.class.getPackage();
         Package testPackage = TestBeansXml.class.getPackage();
 
         File[] libs = Maven.resolver()
@@ -56,12 +54,10 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
-                .addPackages(true, exclude(testPackage, itestPackage), projectPackage)
-                .addClass(ReceiptDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+                .addPackages(true, exclude(testPackage), projectPackage)
+                .addClass(MiscDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
-                .addClass(SpecStore.class)
-                .addClass(DatabaseCleaner.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")

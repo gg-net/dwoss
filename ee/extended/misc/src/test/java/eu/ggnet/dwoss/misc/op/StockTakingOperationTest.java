@@ -5,10 +5,10 @@ import java.io.File;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.misc.op.StockTakingOperation.ReaderResult;
-
 import eu.ggnet.dwoss.util.FileJacket;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  *

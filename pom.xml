@@ -202,7 +202,7 @@
                     <property name="hibernate.search.default.directory_provider" value="ram" />
                     <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
                     <property name="hibernate.search.default.worker.execution" value="sync"/>
-                    <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
+                    <property name="hibernate.search.default.worker.thread_pool.size" value="3"/>
                     <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
@@ -728,8 +728,8 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-search</artifactId>
-                <version>4.4.3.Final</version>
+                <artifactId>hibernate-search</artifactId> <!-- hibernate serach orm könnte es jetzt sein -->
+                <version>5.6.1.Final</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>hibernate-jpa-2.0-api</artifactId>
@@ -905,6 +905,11 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>3.7.4</version>
             </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-search-orm</artifactId> <!-- hibernate serach orm könnte es jetzt sein -->
+                <version>5.6.1.Final</version>
+            </dependency>
             <!-- Runtime EE - Persistence Dependencies -->
             <dependency>
                 <groupId>com.mysema.querydsl</groupId>
@@ -1009,6 +1014,11 @@
                 <groupId>xom</groupId>
                 <artifactId>xom</artifactId>
                 <version>1.2.5</version>
+            </dependency>
+            <dependency> <!-- Used in for JAX RS Webclient Test -->
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>2.7.18</version> <!-- Starting with Version 3 the Webclient class is missing. -->
             </dependency>
         </dependencies>
     </dependencyManagement>

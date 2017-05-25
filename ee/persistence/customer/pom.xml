@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search</artifactId>
+            <artifactId>hibernate-search-orm</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

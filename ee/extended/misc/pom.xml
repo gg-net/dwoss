@@ -15,6 +15,11 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-core-progress</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-uniqueunit</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -39,12 +44,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-progress</artifactId>
+            <artifactId>dwoss-ee-persistence-customer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -53,9 +54,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-customer</artifactId>
-            <version>${project.version}</version>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -70,16 +74,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-redtape</artifactId>
             <version>${project.version}</version>
@@ -89,6 +83,11 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-receipt</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xom</groupId>
+            <artifactId>xom</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

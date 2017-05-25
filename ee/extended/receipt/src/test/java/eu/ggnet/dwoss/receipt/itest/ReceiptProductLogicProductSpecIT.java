@@ -3,13 +3,16 @@ package eu.ggnet.dwoss.receipt.itest;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.entity.piece.*;
@@ -27,6 +30,14 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
     @EJB
     private SpecAgent specAgent;
+
+    @Inject
+    private DatabaseCleaner cleaner;
+
+    @After
+    public void clearDatabase() throws Exception {
+        cleaner.clear();
+    }
 
     @Test
     public void testCreateProductSpec() throws Exception {
