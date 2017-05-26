@@ -261,7 +261,8 @@ public class UniqueUnit implements Serializable, EagerAble {
         REMAINS_OF_GLUE_BOTTOM_SIDE("Klebereste auf der Geräteunterseite"),
         SLIGHT_SCRATCHES_AROUND_TOUCHPAD("leichte Kratzer um das Touchpad"),
         USETRACES_ON_CASE_BOTTOM_SIDE("Gebrauchsspuren auf der Geräteunterseite"),
-        USETRACES_DISPLAY("Gebrauchsspuren auf dem Display");
+        USETRACES_DISPLAY("Gebrauchsspuren auf dem Display"),
+        FOOT_OR_STAND_MISSING("Fuß/Bein fehlt");
 
         private final String note;
 

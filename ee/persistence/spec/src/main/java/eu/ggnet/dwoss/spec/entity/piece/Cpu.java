@@ -154,7 +154,9 @@ public class Cpu implements Serializable {
 
     /**
      * The Frequenzy of the CPU.
+     * Not used anymore, can be removed later.
      */
+    @Deprecated
     @XmlAttribute
     private Double frequency;
 
@@ -176,13 +178,22 @@ public class Cpu implements Serializable {
 
     /**
      * Number of cores of the CPU
+     * Not used anymore, can be removed later.
      */
+    @Deprecated
     @XmlAttribute
     private Integer cores;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     private Gpu embeddedGpu;
 
+    /**
+     *
+     * Not used anymore, can be removed later.
+     *
+     * @deprecated
+     */
+    @Deprecated
     @XmlAttribute
     @Column(columnDefinition = "DECIMAL(7,2)")
     private Double economicValue;

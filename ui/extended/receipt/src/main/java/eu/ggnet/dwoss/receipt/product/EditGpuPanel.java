@@ -85,7 +85,6 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
         modelField.setText(gpu.getModel());
         series.setSelected(gpu.getSeries());
         nameField.setText(gpu.getName());
-        if ( gpu.getEconomicValue() != null ) economicValueField.setText(Double.toString(gpu.getEconomicValue()));
         this.gpu = gpu;
     }
 
@@ -97,7 +96,6 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
         newGpu.setSeries(series.getSelected());
         newGpu.setModel(modelField.getText());
         newGpu.setName(nameField.getText());
-        if ( !economicValueField.getText().trim().equals("") ) newGpu.setEconomicValue(Double.parseDouble(economicValueField.getText().replace(",", ".")));
         return newGpu;
     }
 
@@ -173,8 +171,6 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
         nameLabel = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
         typeLabel = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        economicValueField = new javax.swing.JTextField();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, new java.awt.Color(204, 204, 255), java.awt.Color.black), "GPU Daten bearbeiten / hinzufügen", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
         setMinimumSize(new java.awt.Dimension(400, 190));
@@ -285,20 +281,6 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(typeLabel, gridBagConstraints);
-
-        jLabel1.setText("wirtschaftl. Wert:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        add(jLabel1, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-        add(economicValueField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void manufacturerBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manufacturerBoxActionPerformed
@@ -307,8 +289,6 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox desktopCheckBox;
-    private javax.swing.JTextField economicValueField;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;

@@ -247,18 +247,26 @@ public abstract class SpecFormater {
         return gpu.getManufacturer().getNote() + " " + ((gpu.getName() == null || gpu.getName().isEmpty()) ? gpu.getSeries().getNote() + " " + gpu.getModel() : gpu.getName());
     }
 
+    /**
+     * 
+     * @param cpu
+     * @return a simple line containing in format {manufacturer} {cpu-name}
+     */
     private static String toSimpleLine(Cpu cpu) {
         if ( cpu == null ) return "Cpu is null";
-        String s = cpu.getManufacturer().getNote() + " " + ((cpu.getName() == null || cpu.getName().isEmpty()) ? cpu.getSeries().getNote() + " " + cpu.getModel() : cpu.getName());
-        boolean c = cpu.getCores() != null;
-        boolean f = cpu.getFrequency() != null;
-        if ( c || f ) {
-            s += " (";
-            if ( f ) s += cpu.getFrequency() + " Ghz";
-            if ( c && f ) s += ", ";
-            if ( c ) s += cpu.getCores() + " Kern(e)";
-            s += ")";
-        }
+        return cpu.getManufacturer().getNote() + " " + ((cpu.getName() == null || cpu.getName().isEmpty()) ? cpu.getSeries().getNote() + " " + cpu.getModel() : cpu.getName());
+    }
+
+     /**
+     * 
+     * @param cpu
+     * @return a line containing in format {manufacturer} {cpu-name} {#.## Ghz} {#} Kern(e)
+     */
+    private static String toFullLine(Cpu cpu) {
+        if ( cpu == null ) return "Cpu is null";
+        String s = toSimpleLine(cpu);
+        s += cpu.getFrequency() != null ? " " + cpu.getFrequency() + " Ghz" : "";
+        s += cpu.getCores() != null ? " " + cpu.getCores() + " Kern(e)" : "";
         return s;
     }
 
