@@ -22,12 +22,10 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.report.assist.Reports;
-import eu.ggnet.dwoss.rights.assist.Rights;
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
@@ -40,15 +38,8 @@ import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 public class DatabaseCleaner {
 
     @Inject
-    private UserTransaction utx;
-
-    @Inject
     @RedTapes
     private EntityManager redTapeEm;
-
-    @Inject
-    @Rights
-    private EntityManager rightsEm;
 
     @Inject
     @Reports
@@ -71,13 +62,8 @@ public class DatabaseCleaner {
     private EntityManager uniqueunitEm;
 
     public void clear() throws Exception {
-        utx.begin();
-        List<EntityManager> ems = Arrays.asList(redTapeEm, rightsEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
-
-        ems.forEach(em -> em.joinTransaction());
+        List<EntityManager> ems = Arrays.asList(redTapeEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
         ems.forEach(em -> em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate());
-
-        utx.commit();
     }
 
 }

@@ -22,7 +22,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
@@ -38,9 +37,6 @@ import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
  */
 @Stateless
 public class DatabaseCleaner {
-
-    @Inject
-    private UserTransaction utx;
 
     @Inject
     @RedTapes
@@ -71,13 +67,8 @@ public class DatabaseCleaner {
     private EntityManager uniqueunitEm;
 
     public void clear() throws Exception {
-        utx.begin();
         List<EntityManager> ems = Arrays.asList(redTapeEm, rightsEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
-
-        ems.forEach(em -> em.joinTransaction());
         ems.forEach(em -> em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate());
-
-        utx.commit();
     }
 
 }

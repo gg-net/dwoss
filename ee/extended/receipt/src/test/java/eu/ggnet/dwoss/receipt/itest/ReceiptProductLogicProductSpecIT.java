@@ -114,7 +114,6 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
     }
 
     @Test
-    // Produced Optimistic Lock Exception.
     public void testUpdateProductSpecModelChange() {
         ProductModel productModel = productProcessor.create(ACER, NOTEBOOK, null, null, "TestModel");
 

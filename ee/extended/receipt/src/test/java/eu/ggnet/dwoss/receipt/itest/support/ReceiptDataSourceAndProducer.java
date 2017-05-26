@@ -19,9 +19,6 @@ package eu.ggnet.dwoss.receipt.itest.support;
 import javax.annotation.ManagedBean;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
-import javax.enterprise.inject.Produces;
-
-import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 
@@ -134,7 +131,6 @@ import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 @ManagedBean
 public class ReceiptDataSourceAndProducer {
 
-    @Produces
-    public final static ImageFinder NULL_IMAGE_FINDER = new ImageFinder(null);
-
+    //   @Produces
+    //   public final static ImageFinder NULL_IMAGE_FINDER = new ImageFinder(null);
 }

@@ -105,7 +105,7 @@ public class UnitProcessorOperation implements UnitProcessor {
      * </ol>
      * <p/>
      * @param shipment         the shipment
-     * @param recieptUnit      the UniqueUnit to be receipt, must not be null
+     * @param receiptUnit      the UniqueUnit to be receipt, must not be null
      * @param operation        the Operation to do
      * @param transaction
      * @param arranger
@@ -113,12 +113,12 @@ public class UnitProcessorOperation implements UnitProcessor {
      * @throws IllegalArgumentException if validation fails
      */
     @Override
-    public void receipt(UniqueUnit recieptUnit, Product product, Shipment shipment,
+    public void receipt(UniqueUnit receiptUnit, Product product, Shipment shipment,
                         StockTransaction transaction, ReceiptOperation operation, String operationComment, String arranger) throws IllegalArgumentException {
-        L.info("Receiping Unit(refurbishId={},name={}) on StockTransaction(id={}) with {} by {}",
-                recieptUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), transaction.getId(), operation, arranger);
-        validateReceipt(recieptUnit);
-        UniqueUnit uniqueUnit = receiptUniqueUnit(recieptUnit, Objects.requireNonNull(product, "Product == null, not allowed"), shipment);
+        L.info("Receiping Unit(id={},refurbishId={},name={}) on StockTransaction(id={}) with {} by {}",
+                receiptUnit.getId(), receiptUnit.getRefurbishId(), ProductFormater.toNameWithPartNo(product), transaction.getId(), operation, arranger);
+        validateReceipt(receiptUnit);
+        UniqueUnit uniqueUnit = receiptUniqueUnit(receiptUnit, Objects.requireNonNull(product, "Product == null, not allowed"), shipment);
         StockUnit stockUnit = receiptAndAddStockUnit(uniqueUnit, transaction);
         if ( operation == ReceiptOperation.SALEABLE ) return; // Nothing to do
         executeOperation(uniqueUnit, stockUnit, operation, operationComment, arranger);
@@ -254,7 +254,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         UniqueUnitEao uniqueUnitEao = new UniqueUnitEao(uuEm);
         UniqueUnit uniqueUnit = uniqueUnitEao.findByIdentifier(Identifier.REFURBISHED_ID, receiptUnit.getIdentifier(Identifier.REFURBISHED_ID));
         if ( uniqueUnit != null ) throw new IllegalArgumentException(
-                    "UniqueUnit(refurbishedId=" + receiptUnit.getIdentifier(Identifier.REFURBISHED_ID) + ") exists: " + uniqueUnit);
+                    "Unit with refurbishedId=" + receiptUnit.getRefurbishId() + " exists.\n- Supplied Unit:" + receiptUnit + "\n- Database Unit:" + uniqueUnit);
         StockUnit stockUnit = new StockUnitEao(stockEm).findByRefurbishId(receiptUnit.getRefurbishId());
         if ( stockUnit != null ) throw new IllegalArgumentException(stockUnit + " exists");
     }

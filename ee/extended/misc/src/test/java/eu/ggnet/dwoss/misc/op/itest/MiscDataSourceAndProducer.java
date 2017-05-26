@@ -19,9 +19,6 @@ package eu.ggnet.dwoss.misc.op.itest;
 import javax.annotation.ManagedBean;
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
-import javax.enterprise.inject.Produces;
-
-import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 
@@ -133,8 +130,5 @@ import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 )
 @ManagedBean
 public class MiscDataSourceAndProducer {
-
-    @Produces
-    public final static ImageFinder NULL_IMAGE_FINDER = new ImageFinder(null);
 
 }

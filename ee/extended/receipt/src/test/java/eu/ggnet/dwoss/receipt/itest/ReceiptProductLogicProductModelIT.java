@@ -35,7 +35,7 @@ public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive 
         cleaner.clear();
     }
 
-    @Test(timeout = 60000)
+    @Test
     public void testCreateProductModell() {
         ProductModel productModel = productProcessor.create(TradeName.HP, ProductGroup.DESKTOP, null, null, "ProductModel1");
         assertNotNull(productModel);
@@ -63,7 +63,7 @@ public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive 
 
     }
 
-    @Test(expected = RuntimeException.class, timeout = 60000)
+    @Test(expected = RuntimeException.class)
     public void testCreateProductModellExceptionSameName() {
 
         //Test if two Products where created with the same name that will be throw a exception
@@ -72,7 +72,7 @@ public class ReceiptProductLogicProductModelIT extends ArquillianProjectArchive 
         failBecauseExceptionWasNotThrown(RuntimeException.class);
     }
 
-    @Test(expected = RuntimeException.class, timeout = 60000)
+    @Test(expected = RuntimeException.class)
     public void testCreateProductModellExceptionSameNameDifferentSeries() {
 
         //Create a ProductSeries and persist it.

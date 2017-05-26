@@ -207,8 +207,7 @@ public class ReceiptGeneratorOperation {
         ProductSpec productSpec = makeProductSpec();
         Product product = uniqueUnitAgent.findById(Product.class, productSpec.getProductId());
         UniqueUnit unit = unitGenerator.makeUniqueUnit(contractor, product);
-        unit.setProduct(product);
-        unitProcessor.receipt(unit, unit.getProduct(), shipment, transaction, ReceiptOperation.SALEABLE, "SampleGenerator", "Generator");
+        unitProcessor.receipt(unit, product, shipment, transaction, ReceiptOperation.SALEABLE, "SampleGenerator", "Generator");
         stockTransactionProcessor.rollIn(Arrays.asList(transaction), "JUnit");
         return unit;
     }
@@ -217,9 +216,9 @@ public class ReceiptGeneratorOperation {
         Product p = new Product();
         p.setPartNo(partNumber);
         p.setTradeName(TradeName.ACER);
-        p.setName("Garantieerweiterung auf 2 Jahre inkl. 1 Jahr McAfee, Seriennummer: ");
+        p.setName("Garantieerweiterung auf 2 Jahre, Seriennummer: ");
         p.setDescription("Mit dem Kauf der Garantieerweiterung wird bestätigt, "
-                + "dass die angegebene e-mail Addresse für die Aktivierung ausschließlich an die Acer Computer GmbH weitergegeben wird."
+                + "dass die angegebene e-mail Addresse für die Aktivierung ausschließlich an die 123 weitergegeben wird."
                 + " Seriennummer des Gerätes: ");
         p.setGroup(COMMENTARY);
         uuEm.persist(p);
