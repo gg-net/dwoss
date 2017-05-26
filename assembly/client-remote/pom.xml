@@ -46,48 +46,6 @@
     </build>
 
     <dependencies>
-        <!-- tomee - 1.7
-        Description:
-        - all exlusions: exclusions are in openejb-javaee-api
-        - hibernate-core: classes used in remote client
-        - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
-        -->
-        <!--        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-client</artifactId>
-            <version>4.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.validation</groupId>
-                    <artifactId>validation-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>4.2.15.Final</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate.javax.persistence</groupId>
-                    <artifactId>hibernate-jpa-2.0-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.spec.javax.transaction</groupId>
-                    <artifactId>jboss-transaction-api_1.1_spec</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.javamail</groupId>
-            <artifactId>geronimo-javamail_1.4_mail</artifactId>
-            <version>1.8.2</version>
-            <type>jar</type>
-        </dependency>-->
         <!-- tomee - 7.0
         Description:
         - all exlusions: exclusions are in openejb-javaee-api
@@ -102,7 +60,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.3.5.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>javax.validation</groupId>
@@ -110,17 +67,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency> <!-- Info: not working with 5.4. .... see tests.-->
+        <!-- For whatever reason, this is working in all tests, but not on the client. her wie sudanly need japser-el, which does not work in tests.-->
+        <!-- Expresion factory for hibernate validator-->
+        <!--        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
+        </dependency> -->
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>jasper-el</artifactId>
             <version>6.0.53</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.javamail</groupId>
             <artifactId>geronimo-javamail_1.4_mail</artifactId>
             <version>1.8.4</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

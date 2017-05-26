@@ -12,17 +12,17 @@
         </properties>
     </action>
     <action>
-            <actionName>CUSTOM-RunClient Sample Localhost</actionName>
-            <displayName>RunClient Sample Localhost</displayName>
-            <goals>
-                <goal>compile</goal>
-                <goal>jfx:run</goal>
-            </goals>
-            <properties>
-                <jfx.runAppParameter>--url=http://localhost:8080/tomee/ejb</jfx.runAppParameter>
-            </properties>
-            <activatedProfiles>
-                <activatedProfile>client-sample</activatedProfile>
-            </activatedProfiles>
-        </action>
+        <actionName>CUSTOM-RunClient Sample Localhost</actionName>
+        <displayName>RunClient Sample Localhost</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--url=http://localhost:8080/tomee/ejb</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-sample</activatedProfile>
+        </activatedProfiles>
+    </action>
 </actions>

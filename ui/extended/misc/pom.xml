@@ -40,10 +40,6 @@
             <artifactId>beansbinding</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-core-util</artifactId>
             <version>${project.version}</version>

@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
     <action>
-        <actionName>CUSTOM-sample-run-tomee-1.7</actionName>
-        <displayName>sample-run-tomee-1.7</displayName>
-        <goals>
-            <goal>clean</goal>
-            <goal>install</goal>
-            <goal>tomee:run</goal>
-        </goals>
-        <activatedProfiles>
-            <activatedProfile>server-sample</activatedProfile>
-            <activatedProfile>tomee-1.7.0</activatedProfile>
-        </activatedProfiles>
-    </action>
-    <action>
         <actionName>CUSTOM-sample-run-tomee-7.0</actionName>
         <displayName>sample-run-tomee-7.0</displayName>
         <goals>

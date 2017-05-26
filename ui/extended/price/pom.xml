@@ -12,15 +12,6 @@
     <artifactId>dwoss-ui-extended-price</artifactId>
     <name>DwOss • Ui • Extended • Price</name>
 
-    <!--    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>-->
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

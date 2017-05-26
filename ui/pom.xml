@@ -19,26 +19,6 @@
         </dependency>
     </dependencies>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.toedter</groupId>
-                <artifactId>jcalendar</artifactId>
-                <version>1.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jdesktop</groupId>
-                <artifactId>beansbinding</artifactId>
-                <version>1.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.swinglabs.swingx</groupId>
-                <artifactId>swingx-all</artifactId>
-                <version>1.6.5</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <modules>
         <module>core</module>
         <module>persistence</module>

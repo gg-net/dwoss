@@ -16,6 +16,10 @@
         <finalName>${project.artifactId}</finalName>
     </build>
 
+    <properties>
+        <org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>ide</org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${javaee.groupId}</groupId>
@@ -153,50 +157,6 @@
             </dependencies>
         </profile>
         <profile>
-            <id>tomee-1.7.0</id>
-            <!-- For best usage, build with tomee profile. so the logging of the application is redirected to log4j, see log4j.properties -->
-            <dependencies>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.openejb.maven</groupId>
-                        <artifactId>tomee-maven-plugin</artifactId>
-                        <version>1.7.0</version>
-                        <configuration>
-                            <finalName>${app.name}</finalName>
-                            <tomeeVersion>1.7.0</tomeeVersion>
-                            <tomeeClassifier>plus</tomeeClassifier>
-                            <libs>
-                                <lib>org.hibernate:hibernate-entitymanager:4.2.15.Final</lib>
-                                <lib>org.hibernate:hibernate-core:4.2.15.Final</lib>
-                                <lib>org.hibernate:hibernate-c3p0:4.2.15.Final</lib>
-                                <lib>org.hibernate:hibernate-validator:4.3.2.Final</lib>
-                                <lib>org.hibernate:hibernate-search:4.4.3.Final</lib>
-                                <lib>org.hibernate:hibernate-search-engine:4.4.3.Final</lib>
-                                <lib>org.hibernate.common:hibernate-commons-annotations:4.0.4.Final</lib>
-                                <lib>joda-time:joda-time:2.3</lib>
-                                <lib>org.jboss.logging:jboss-logging:3.1.0.GA</lib>
-                                <lib>org.javassist:javassist:3.15.0-GA</lib>
-                                <lib>dom4j:dom4j:1.6.1</lib>
-                                <lib>antlr:antlr:2.7.7</lib>
-                                <lib>remove:asm</lib>
-                                <lib>remove:bval-core</lib>
-                                <lib>remove:bval-jsr303</lib>
-                                <lib>remove:commons-lang-2.6</lib>
-                                <lib>remove:openjpa</lib>
-                                <lib>remove:serp</lib>
-                            </libs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>tomee-7.0.3</id>
             <!-- For best usage, build with tomee profile. so the logging of the application is redirected to log4j, see log4j.properties -->
             <dependencies>
@@ -220,10 +180,8 @@
                             <finalName>${app.name}</finalName>
                             <tomeeVersion>7.0.3</tomeeVersion>
                             <tomeeClassifier>plus</tomeeClassifier>
-                            <skipCurrentProject>false</skipCurrentProject>
                             <removeDefaultWebapps>false</removeDefaultWebapps>
                             <removeTomeeWebapp>false</removeTomeeWebapp>
-
                             <libs>
                                 <lib>org.hibernate:hibernate-entitymanager:5.0.12.Final</lib>
                                 <lib>org.hibernate:hibernate-core:5.0.12.Final</lib>
