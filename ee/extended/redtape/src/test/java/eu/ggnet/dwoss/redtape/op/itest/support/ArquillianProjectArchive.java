@@ -50,6 +50,7 @@ public class ArquillianProjectArchive {
                 .importRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
+                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-ee-extended-receipt", RUNTIME, false)) // Using Receipt for unit generation
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
@@ -61,8 +62,11 @@ public class ArquillianProjectArchive {
                 .addClass(SupportBean.class)
                 .addClass(NaivBuilderUtil.class)
                 .addClass(DatabaseCleaner.class)
+                .addClass(WarrantyServiceStup.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
+                .addAsResource("eu/ggnet/dwoss/redtape/Document_Template.jrxml")
+                .addAsResource("eu/ggnet/dwoss/redtape/Shipping_Template.jrxml")
                 .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")
                 .addAsLibraries(libs);
         return war;

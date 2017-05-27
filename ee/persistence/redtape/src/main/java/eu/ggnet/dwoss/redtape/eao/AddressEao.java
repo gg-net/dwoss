@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,13 @@
  */
 package eu.ggnet.dwoss.redtape.eao;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.entity.Address;
-
+import eu.ggnet.dwoss.redtape.entity.QAddress;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+
+import com.mysema.query.jpa.impl.JPAQuery;
 
 /**
  *
@@ -44,17 +46,12 @@ public class AddressEao extends AbstractEao<Address> {
      * Find a Address via correct formatted String.
      * The convention is: street + \n + zipCode + \n + city
      * <p>
-     * @param address
+     * @param addressString
      * @return a Address via correct formatted String.
      */
-    public Address findByDescription(String address) {
-        Query query = em.createNamedQuery("byFormatedString");
-        query.setParameter(1, address);
-        try {
-            return (Address)query.getSingleResult();
-        } catch (NoResultException ex) {
-            return null;
-        }
+    public Address findByDescription(String addressString) {
+        QAddress a = QAddress.address;
+        return new JPAQuery(em).from(a).where(a.description.eq(addressString)).singleResult(a);
     }
 
 }

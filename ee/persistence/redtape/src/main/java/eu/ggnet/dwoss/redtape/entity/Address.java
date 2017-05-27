@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,9 +29,7 @@ import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
  * @author bastian.venz
  */
 @Entity
-// TODO: It seams that HSQL DB does not have this .... put it at least in the mysql create
-// @Table(uniqueConstraints=@UniqueConstraint(columnNames="description",name="unique_address_description"))
-@NamedQuery(name = "byFormatedString", query = "select a from Address as a where a.description = ?1")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "description", name = "unique_address_description"))
 public class Address extends IdentifiableEntity implements Serializable {
 
     @Id

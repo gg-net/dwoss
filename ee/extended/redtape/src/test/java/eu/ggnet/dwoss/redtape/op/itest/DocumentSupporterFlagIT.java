@@ -4,8 +4,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
@@ -42,6 +41,11 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
 
     @Inject
     private DatabaseCleaner cleaner;
+
+    @Before
+    public void makeOneCustomer() {
+        customerId = cgo.makeCustomer();
+    }
 
     @After
     public void clearDatabase() throws Exception {

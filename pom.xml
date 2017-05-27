@@ -122,6 +122,7 @@
                 <class>eu.ggnet.dwoss.redtape.entity.Position</class>
                 <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
                 <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </redtape-pu.classes>
         <customer-pu.default-datasource>
@@ -162,6 +163,7 @@
                 <class>eu.ggnet.dwoss.customer.entity.Contact</class>
                 <class>eu.ggnet.dwoss.customer.entity.Customer</class>
                 <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </customer-pu.classes>
         <report-pu.default-datasource>
@@ -176,6 +178,7 @@
                 <class>eu.ggnet.dwoss.report.entity.Report</class>
                 <class>eu.ggnet.dwoss.report.entity.ReportLine</class>
                 <class>eu.ggnet.dwoss.report.entity.partial.SimpleReportLine</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </report-pu.classes>
         <rights-pu.default-datasource>
@@ -189,6 +192,7 @@
           <![CDATA[
                 <class>eu.ggnet.dwoss.rights.entity.Operator</class>
                 <class>eu.ggnet.dwoss.rights.entity.Persona</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </rights-pu.classes>
         <spec-pu.default-datasource>
@@ -215,6 +219,7 @@
                 <class>eu.ggnet.dwoss.spec.entity.piece.Cpu</class>
                 <class>eu.ggnet.dwoss.spec.entity.piece.Display</class>
                 <class>eu.ggnet.dwoss.spec.entity.piece.Gpu</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </spec-pu.classes>
         <stock-pu.default-datasource>
@@ -235,6 +240,7 @@
                 <class>eu.ggnet.dwoss.stock.entity.StockTransactionPosition</class>
                 <class>eu.ggnet.dwoss.stock.entity.StockTransactionStatus</class>
                 <class>eu.ggnet.dwoss.stock.entity.StockUnit</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </stock-pu.classes>
         <uniqueunit-pu.default-datasource>
@@ -250,6 +256,7 @@
                 <class>eu.ggnet.dwoss.uniqueunit.entity.Product</class>
                 <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</class>
                 <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</class>
+                <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </uniqueunit-pu.classes>
         <test-pu.default-properties>

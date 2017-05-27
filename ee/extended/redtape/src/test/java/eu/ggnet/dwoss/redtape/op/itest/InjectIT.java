@@ -23,7 +23,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(Arquillian.class)
 public class InjectIT extends ArquillianProjectArchive {
 
-    // Hint: Is used in another test here.
+    // Added in ArqProjectArchive
     @Inject
     private Instance<WarrantyService> wsi;
 

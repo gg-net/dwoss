@@ -17,7 +17,6 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
@@ -25,13 +24,13 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
-import eu.ggnet.dwoss.redtape.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.redtape.op.itest.support.DatabaseCleaner;
+import eu.ggnet.dwoss.redtape.op.itest.support.*;
 import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.entity.*;
@@ -48,7 +47,8 @@ import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRAN
 import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.ProductGroup.COMMENTARY;
-import static eu.ggnet.dwoss.rules.TradeName.*;
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.rules.TradeName.HP;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -89,21 +89,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
         }
     }
 
-    static class WarrantyServiceStup implements WarrantyService {
-
-        @Override
-        public boolean isWarranty(String partNo) {
-            return WARRANTY_PART_NO.equals(partNo);
-        }
-
-        @Override
-        public TradeName warrantyContractor(String partNo) {
-            return ONESELF;
-        }
-
-    };
-
-    static final String WARRANTY_PART_NO = "DEH2381234";
+    private final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;
 
     private final static Random R = new Random();
 
