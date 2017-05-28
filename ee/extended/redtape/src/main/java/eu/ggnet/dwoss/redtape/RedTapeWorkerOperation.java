@@ -22,7 +22,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -116,9 +117,11 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
         return salesProduct;
     }
 
+    // TODO: Rename to represent the forced detached
     /**
      * Creates a new, valid Dossier containing a document of the order type.
-     *
+     * This method allways returs a detached Entity. This is by design.
+     * <p>
      * See {@link RedTapeCreateDossierWorkflow} for implementation.
      *
      * @param customerId The customer associated to the new Dossier.
@@ -128,7 +131,9 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      */
     @Override
     public Dossier create(long customerId, boolean dispatch, String arranger) {
-        return createDossierWorkflow.execute(customerId, dispatch, arranger);
+        Dossier createdDos = createDossierWorkflow.execute(customerId, dispatch, arranger);
+        redTapeEm.detach(createdDos);
+        return createdDos;
     }
 
     /**
@@ -285,12 +290,14 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
         return internalUpdate(cdoc.getDocument(), null, arranger);
     }
 
+    // TODO: Rename to represent the forced detached
     /**
      * Update changes from a Document by looking up the original from the database.
      * <p/>
      * A document is not equal if {@link Document#equalsContent(Document) } is false
      * or Document.getDossier.paymentMethod or Document.getDossier.dispatch are different.
      * Every Document manipulation is done by this method and handling all necessary manipulations in the SopoSoft system as well.
+     * This method allways returns a detached entity. This is intended by design.
      * <p/>
      * <u>Dossier Handling</u>
      * <ul>
@@ -319,11 +326,13 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * @param doc         The Document that will be equalised against the original
      * @param destination In the case of CreditMemo, the destination for the units.
      * @param arranger    The recent user
-     * @return A new persisted Document or the given if equal
+     * @return A new persisted and detached Document or the given if equal.
      */
     @Override
     public Document update(final Document doc, Integer destination, final String arranger) {
-        return internalUpdate(doc, destination, arranger);
+        Document updatedDoc = internalUpdate(doc, destination, arranger);
+        redTapeEm.detach(updatedDoc);
+        return updatedDoc;
     }
 
     private Document internalUpdate(final Document doc, Integer destination, final String arranger) {

@@ -136,7 +136,9 @@ public class RedTapeCreateDossierWorkflow {
         dos.add(doc);
 
         redTapeEm.persist(dos);
+        redTapeEm.flush(); // Make sure the dos.id is generated an stored in the database. 
         dos.setIdentifier(mandator.getDossierPrefix() + _00000_.format(dos.getId()));
+        redTapeEm.flush(); // Force store Identifier
         L.info("Created {} by {}", DossierFormater.toSimpleLine(dos), arranger);
         return dos;
     }

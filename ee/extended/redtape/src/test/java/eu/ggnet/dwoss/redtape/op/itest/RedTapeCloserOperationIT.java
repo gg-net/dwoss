@@ -9,8 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
@@ -226,6 +225,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
     }
 
     @Test
+    @Ignore
     public void testDayClosingWarrenty() throws UserInfoException {
         long customerId = customerGenerator.makeCustomer();
         UniqueUnit uu = receiptGenerator.makeUniqueUnits(1, true, true).get(0);

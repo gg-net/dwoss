@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,34 +16,24 @@
  */
 package eu.ggnet.dwoss.redtape.workflow;
 
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-
 import java.util.*;
 
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
-
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
@@ -206,6 +196,8 @@ public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
         if ( !alteredDocument.isStillExactlyBriefed(previousDoc) ) newDocument.remove(Document.Flag.CUSTOMER_EXACTLY_BRIEFED);
         newDocument.setHistory(new DocumentHistory(arranger, "Update durch " + getClass().getSimpleName()));
         redTapeEm.persist(newDocument);
+        redTapeEm.flush(); // Writing new document an gennerating the id;
+        L.debug("Returning {} with {}", newDocument, newDocument.getDossier());
         validateAfter(newDocument.getDossier());
         if ( alteredDocument.getType() == previousDoc.getType() ) return newDocument; // Is this a first time change
         if ( !alteredDocument.containsPositionType(PositionType.UNIT) ) return newDocument; // Is it a full CreditMemo on a Unit

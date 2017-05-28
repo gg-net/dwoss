@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,13 @@
  */
 package eu.ggnet.dwoss.redtape.workflow;
 
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
 import eu.ggnet.dwoss.rules.PaymentMethod;
 
 /**
@@ -110,7 +106,26 @@ public class RedTapeUpdateOrderWorkflow extends RedTapeWorkflow {
             newDocument.remove(Document.Flag.CUSTOMER_EXACTLY_BRIEFED);
         }
         newDocument.setHistory(new DocumentHistory(arranger, comment));
+        Document testdoc = newDocument;
+        do {
+            L.warn("document.id={} InvoiceAddress.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getInvoiceAddress()));
+            L.warn("document.id={} ShippingAddress.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getShippingAddress()));
+            if ( testdoc.getPredecessor() == null ) {
+                L.warn("document.id={} no more predecessors", testdoc.getId());
+            } else {
+                L.warn("document.id={} previos.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getPredecessor()));
+            }
+            testdoc = testdoc.getPredecessor();
+        } while (testdoc != null);
+
+        final Dossier dos = newDocument.getDossier();
+        dos.getDocuments().forEach(d -> {
+            L.warn("dossier.id={} document.id={} InvoiceAddress.attached={}", dos.getId(), d.getId(), redTapeEm.contains(d.getInvoiceAddress()));
+            L.warn("dossier.id={} document.id={} ShippingAddress.attached={}", dos.getId(), d.getId(), redTapeEm.contains(d.getShippingAddress()));
+        });
+
         redTapeEm.persist(newDocument);
+        redTapeEm.flush(); // Writing new document an gennerating the id;
         L.debug("Returning {} with {}", newDocument, newDocument.getDossier());
         validateAfter(newDocument.getDossier());
         return newDocument;

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
 import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
 import eu.ggnet.dwoss.rules.PositionType;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
@@ -69,6 +68,8 @@ public class RedTapeUpdateComplaintWorkflow extends RedTapeWorkflow {
         Document newDocument = refreshAndPrepare(altered, previous);
         newDocument.setHistory(new DocumentHistory(arranger, "Update durch " + this.getClass().getSimpleName()));
         redTapeEm.persist(newDocument);
+        redTapeEm.flush(); // Writing new document an gennerating the id;
+        L.debug("Returning {} with {}", newDocument, newDocument.getDossier());
         return newDocument;
     }
 }

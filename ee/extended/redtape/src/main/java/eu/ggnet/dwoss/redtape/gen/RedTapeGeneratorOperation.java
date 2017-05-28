@@ -198,7 +198,7 @@ public class RedTapeGeneratorOperation {
             }
             // Break, if what we build is wrong.
             ValidationUtil.validate(doc);
-            LOG.info("Preupdate: {1}", doc.getId());
+            LOG.info("Preupdate document.id={}", doc.getId());
             doc = redTapeWorker.update(doc, null, "JUnit");
 
             for (int j = 0; j <= R.nextInt(4); j++) {

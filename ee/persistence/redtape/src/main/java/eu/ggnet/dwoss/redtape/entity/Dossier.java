@@ -29,9 +29,10 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import lombok.*;
+import static eu.ggnet.dwoss.rules.DocumentType.*;
 
 /**
  * The Dossier.
@@ -53,11 +54,16 @@ import lombok.*;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Dossier.byCustomerId", query = "select d from Dossier d where d.customerId = ?1"),
-    @NamedQuery(name = "Dossier.byCustomerIdAndClosed", query = "select d from Dossier as d where d.customerId = ?1 and d.closed = ?2 ORDER BY d.identifier DESC"),
-    @NamedQuery(name = "Dossier.byDossierIds", query = "select d from Dossier d where d.id in (?1)"),
-    @NamedQuery(name = "Dossier.byClosed", query = "select d from Dossier as d where d.closed = ?1"),
-    @NamedQuery(name = "Dossier.byIdentifier", query = "select d from Dossier d where d.identifier like ?1 ORDER BY d.identifier DESC"),
+    @NamedQuery(name = "Dossier.byCustomerId", query = "select d from Dossier d where d.customerId = ?1")
+    ,
+    @NamedQuery(name = "Dossier.byCustomerIdAndClosed", query = "select d from Dossier as d where d.customerId = ?1 and d.closed = ?2 ORDER BY d.identifier DESC")
+    ,
+    @NamedQuery(name = "Dossier.byDossierIds", query = "select d from Dossier d where d.id in (?1)")
+    ,
+    @NamedQuery(name = "Dossier.byClosed", query = "select d from Dossier as d where d.closed = ?1")
+    ,
+    @NamedQuery(name = "Dossier.byIdentifier", query = "select d from Dossier d where d.identifier like ?1 ORDER BY d.identifier DESC")
+    ,
     @NamedQuery(name = "Dossier.allDescending", query = "select d from Dossier d ORDER BY d.id DESC")
 })
 public class Dossier extends IdentifiableEntity implements Serializable, EagerAble {
@@ -248,6 +254,11 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
         return document;
     }
 
+    /**
+     * Returns all documents of this dossier in an unmodifiable set.
+     *
+     * @return all documents of this dossier in an unmodifiable set.
+     */
     public Set<Document> getDocuments() {
         return Collections.unmodifiableSet(documents);
     }

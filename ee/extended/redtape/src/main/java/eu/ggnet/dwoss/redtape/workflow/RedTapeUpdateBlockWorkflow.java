@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,6 +54,8 @@ public class RedTapeUpdateBlockWorkflow extends RedTapeWorkflow {
         equilibrateLogicTransaction(newDocument);
         newDocument.setHistory(new DocumentHistory(arranger, "Update durch " + this.getClass().getSimpleName()));
         redTapeEm.persist(newDocument);
+        redTapeEm.flush(); // Writing new document an gennerating the id;
+        L.debug("Returning {} with {}", newDocument, newDocument.getDossier());
         return newDocument;
     }
 }
