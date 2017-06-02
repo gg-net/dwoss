@@ -21,6 +21,7 @@ import java.io.File;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
@@ -67,7 +68,7 @@ public class ArquillianProjectArchive {
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsResource("eu/ggnet/dwoss/redtape/Document_Template.jrxml")
                 .addAsResource("eu/ggnet/dwoss/redtape/Shipping_Template.jrxml")
-                .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);
         return war;
     }

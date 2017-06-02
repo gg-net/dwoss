@@ -3,6 +3,7 @@ package eu.ggnet.dwoss.redtape;
 import java.io.IOException;
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.progress.ProgressProducerForTests;
@@ -18,6 +19,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class TestBeansXml {
 
     @Test
+    @Ignore
     public void testAlternatives() throws ParsingException, ValidityException, IOException {
         // Refactor Safty Net.
         URL url = ClassLoader.getSystemClassLoader().getResource("META-INF/beans.xml");

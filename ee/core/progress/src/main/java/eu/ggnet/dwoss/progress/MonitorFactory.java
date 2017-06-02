@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.progress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.PreDestroy;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 
@@ -116,4 +117,10 @@ public class MonitorFactory {
             }
         }
     }
+
+    @PreDestroy
+    private void shutdown() {
+        L.info("Monitorfactory is going down");
+    }
+
 }
