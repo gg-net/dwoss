@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
     <persistence-unit name="rights-pu">
-        ${rights-pu.default-datasource}
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <jta-data-source>rightsDataSource</jta-data-source>
+        <!--<non-jta-data-source>rightsDataSourceUnmanaged</non-jta-data-source>-->
         ${rights-pu.classes}
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="tomee.jpa.factory.lazy" value="true" />
         </properties>
     </persistence-unit>

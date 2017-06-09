@@ -25,7 +25,8 @@ import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
 
-import static eu.ggnet.dwoss.configuration.SystemConfig.*;
+import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_PREFIX;
+import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_SUFFIX_MANAGED;
 
 /**
  *
@@ -34,16 +35,29 @@ import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 @DataSourceDefinitions(
         value = {
             @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_MANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=true"}
+                                  url = "jdbc:h2:mem:rights;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+                                  className = "org.h2.jdbcx.JdbcDataSource", password = "sa", user = "sa"
+            //                    ,
+            //                                  properties = {"JtaManaged=true"}
             )
-            ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_UNMANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=false"}
-            )
+//            ,
+//            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_UNMANAGED,
+//                                  url = "jdbc:h2:mem:rights;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+//                                  className = "org.h2.jdbcx.JdbcDataSource", password = "sa", user = "sa",
+//                                  properties = {"JtaManaged=false"}
+//            )
+//            ,
+//            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_MANAGED,
+//                                  className = DSDRIVER_HSQLDB,
+//                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
+//                                  properties = {"JtaManaged=true"}
+//            )
+//            ,
+//            @DataSourceDefinition(name = DSNAME_PREFIX + "rights" + DSNAME_SUFFIX_UNMANAGED,
+//                                  className = DSDRIVER_HSQLDB,
+//                                  url = "jdbc:hsqldb:mem:rights" + DSURL_PROPERTIES,
+//                                  properties = {"JtaManaged=false"}
+//            )
         }
 )
 @ManagedBean
