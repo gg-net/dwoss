@@ -14,40 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.spec.itest;
+package eu.ggnet.dwoss.report.itest;
 
 import java.util.HashMap;
 
 import javax.annotation.ManagedBean;
-import javax.annotation.sql.DataSourceDefinition;
-import javax.annotation.sql.DataSourceDefinitions;
 import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
 
-import static eu.ggnet.dwoss.configuration.SystemConfig.*;
-
 /**
+ * Default datasource definition and empty mandator support informations for tests
  *
  * @author oliver.guenther
  */
-@DataSourceDefinitions(
-        value = {
-            @DataSourceDefinition(name = DSNAME_PREFIX + "spec" + DSNAME_SUFFIX_MANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=true"}
-            )
-            ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "spec" + DSNAME_SUFFIX_UNMANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:spec" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=false"}
-            )
-        }
-)
 @ManagedBean
-public class SpecDataSourceAndProducer {
+public class MandatorSupportProducer {
 
     @Produces
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
@@ -60,4 +42,14 @@ public class SpecDataSourceAndProducer {
 
     @Produces
     public static PostLedger pl = new PostLedger(new HashMap<>());
+
+    @Produces
+    public static RepaymentCustomers rc = new RepaymentCustomers(new HashMap<>());
+
+    @Produces
+    public static ScrapCustomers scrap = new ScrapCustomers(new HashMap<>());
+
+    @Produces
+    public static DeleteCustomers dc = new DeleteCustomers(new HashMap<>());
+
 }

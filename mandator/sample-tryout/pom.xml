@@ -51,5 +51,10 @@
             <artifactId>dwoss-ee-persistence-customer</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-mandator-sample-datasource</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -26,6 +26,9 @@ public class LogicTransactionEaoIT extends ArquillianProjectArchive {
     private UserTransaction utx;
 
     @Inject
+    private LogicTransactionEao ltEao;
+
+    @Inject
     @Stocks
     private EntityManager em;
 
@@ -75,10 +78,6 @@ public class LogicTransactionEaoIT extends ArquillianProjectArchive {
         long lt2Id = lt2.getId();
         utx.commit();
 
-        LogicTransactionEao ltEao = new LogicTransactionEao(em);
-        utx.begin();
-        em.joinTransaction();
-
         lt1 = ltEao.findByUniqueUnitId(1);
         assertNull(lt1);
 
@@ -93,6 +92,5 @@ public class LogicTransactionEaoIT extends ArquillianProjectArchive {
         assertNotNull(lt2);
         assertEquals(lt2Id, lt2.getId());
 
-        utx.commit();
     }
 }

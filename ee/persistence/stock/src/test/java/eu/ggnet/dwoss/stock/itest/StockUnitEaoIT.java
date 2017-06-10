@@ -16,6 +16,7 @@ import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.util.Utils;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -37,7 +38,7 @@ public class StockUnitEaoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        Utils.clearH2Db(em);
         utx.commit();
     }
 

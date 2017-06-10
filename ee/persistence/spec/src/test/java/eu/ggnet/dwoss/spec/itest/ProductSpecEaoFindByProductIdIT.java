@@ -31,6 +31,9 @@ public class ProductSpecEaoFindByProductIdIT extends ArquillianProjectArchive {
     @Inject
     private UserTransaction utx;
 
+    @Inject
+    private ProductSpecEao specEao;
+
     @Test
     public void testFindByProductId() throws Exception {
         utx.begin();
@@ -73,13 +76,10 @@ public class ProductSpecEaoFindByProductIdIT extends ArquillianProjectArchive {
 
         utx.commit();
 
-        utx.begin();
-        em.joinTransaction();
         ProductSpecEao specEao = new ProductSpecEao(em);
         Desktop spec = (Desktop)specEao.findByProductId(5L);
         assertNotNull(spec);
         List<ProductSpec> productSpecs = specEao.findByProductIds(Arrays.asList(5L, 6L));
         assertEquals(2, productSpecs.size());
-        utx.commit();
     }
 }

@@ -47,6 +47,7 @@
         <module>sample</module>
         <module>sample-service</module>
         <module>sample-tryout</module>
+        <module>sample-datasource</module>
     </modules>
 
 </project>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Persitence XML for the Sample Mandator Server -->
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="customer-pu">
+        ${customer-pu.default-datasource}
+        ${customer-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.search.default.directory_provider" value="ram"/>
+            <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
+            <property name="hibernate.search.default.worker.execution" value="sync"/>
+            <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="redtape-pu">
+        ${redtape-pu.default-datasource}
+        ${redtape-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="report-pu">
+        ${report-pu.default-datasource}
+        ${report-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="rights-pu">
+        ${rights-pu.default-datasource}
+        ${rights-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="spec-pu">
+        ${spec-pu.default-datasource}
+        ${spec-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="stock-pu">
+        ${stock-pu.default-datasource}
+        ${stock-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="uniqueunit-pu">
+        ${uniqueunit-pu.default-datasource}
+        ${uniqueunit-pu.classes}
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="tomee.jpa.factory.lazy" value="true" />
+        </properties>
+    </persistence-unit>
+</persistence>

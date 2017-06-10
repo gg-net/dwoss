@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.util.Utils;
 
 import com.mysema.query.SearchResults;
 import com.mysema.query.jpa.impl.JPAQueryFactory;
@@ -36,17 +37,17 @@ public class PersistenceIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        Utils.clearH2Db(em);
         utx.commit();
     }
 
     @Test
     public void testUniqueUnitReferenceBug() throws Exception {
-
         Date now = new Date();
 
         utx.begin();
         em.joinTransaction();
+
         Stock s1 = new Stock(1);
         s1.setName("1111111111111111");
         Stock s2 = new Stock(2);

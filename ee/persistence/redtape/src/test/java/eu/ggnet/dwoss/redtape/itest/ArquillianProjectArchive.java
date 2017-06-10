@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
+import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.redtape.test.PositionTest;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -53,8 +54,9 @@ public class ArquillianProjectArchive {
                         Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.redtape.itest"
                                 PositionTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.redtape.test"
                         "eu.ggnet.dwoss.redtape")
-                .addClass(RedTapeDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
+                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")

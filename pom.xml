@@ -122,7 +122,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>redtapeDataSource</jta-data-source>
-                <non-jta-data-source>redtapeDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </redtape-pu.default-datasource>
         <redtape-pu.classes>
@@ -140,24 +139,13 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>customerDataSource</jta-data-source>
-                <non-jta-data-source>customerDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </customer-pu.default-datasource>
-        <customer-pu.default-search>
-          <![CDATA[
-                <properties>
-                    <property name="hibernate.search.default.directory_provider" value="ram" />
-                    <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
-                    <property name="hibernate.search.default.worker.execution" value="sync"/>
-                    <property name="hibernate.search.default.worker.thread_pool.size" value="1"/>
-                </properties>
-          ]]>
-        </customer-pu.default-search>
         <customer-pu.default-properties>
           <![CDATA[
                 <properties>
-                    <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-                    <property name="hibernate.hbm2ddl.auto" value="create"/>
+                    <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+                    <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
                     <property name="hibernate.search.default.directory_provider" value="ram" />
                     <property name="hibernate.search.default.indexmanager" value="near-real-time"/>
                     <property name="hibernate.search.default.worker.execution" value="sync"/>
@@ -181,7 +169,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>reportDataSource</jta-data-source>
-                <non-jta-data-source>reportDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </report-pu.default-datasource>
         <report-pu.classes>
@@ -196,7 +183,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>rightsDataSource</jta-data-source>
-                <non-jta-data-source>rightsDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </rights-pu.default-datasource>
         <rights-pu.classes>
@@ -210,7 +196,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>specDataSource</jta-data-source>
-                <non-jta-data-source>specDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </spec-pu.default-datasource>
         <spec-pu.classes>
@@ -237,7 +222,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>stockDataSource</jta-data-source>
-                <non-jta-data-source>stockDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </stock-pu.default-datasource>
         <stock-pu.classes>
@@ -258,7 +242,6 @@
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
                 <jta-data-source>uniqueunitDataSource</jta-data-source>
-                <non-jta-data-source>uniqueunitDataSourceUnmanaged</non-jta-data-source>
           ]]>
         </uniqueunit-pu.default-datasource>
         <uniqueunit-pu.classes>
@@ -273,9 +256,9 @@
         <test-pu.default-properties>
           <![CDATA[
                 <properties>
-                  <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-                  <property name="hibernate.hbm2ddl.auto" value="create"/>
-                  <property name="tomee.jpa.factory.lazy" value="true" />
+                    <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+                    <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+                    <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
         </test-pu.default-properties>
@@ -785,6 +768,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>5.0.12.Final</version>
+                <exclusions> <!-- Is in the JDK-->
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- Runtime EE - Persistence Dependencies -->
             <dependency>
@@ -987,7 +976,7 @@
 
     <profiles>
         <profile>
-            <id>integration</id>
+            <id>integration-tomee-remote</id>
             <build>
                 <plugins>
                     <plugin>
@@ -1012,18 +1001,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <!--Do we need the development profile ?-->
-            <id>development</id>
-            <!--            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>-->
         </profile>
     </profiles>
 

@@ -21,6 +21,7 @@ import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.util.Utils;
 
 import static eu.ggnet.dwoss.rules.Step.WEEK;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -123,7 +124,7 @@ public class UniqueUnitEaoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        Utils.clearH2Db(em);
         utx.commit();
     }
 

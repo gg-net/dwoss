@@ -14,41 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.itest;
+package eu.ggnet.dwoss.customer.itest;
 
 import java.util.HashMap;
 
 import javax.annotation.ManagedBean;
-import javax.annotation.sql.DataSourceDefinition;
-import javax.annotation.sql.DataSourceDefinitions;
 import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
-
-import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 
 /**
  * Default datasource definition and empty mandator support informations for tests
  *
  * @author oliver.guenther
  */
-@DataSourceDefinitions(
-        value = {
-            @DataSourceDefinition(name = DSNAME_PREFIX + "report" + DSNAME_SUFFIX_MANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=true"}
-            )
-            ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "report" + DSNAME_SUFFIX_UNMANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:report" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=false"}
-            )
-        }
-)
 @ManagedBean
-public class ReportDataSourceAndProducer {
+public class MandatorSupportProducer {
 
     @Produces
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());

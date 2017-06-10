@@ -28,7 +28,8 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import eu.ggnet.dwoss.rights.RightsDataSourceAndProducer;
+import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.rights.MandatorSupportProducer;
 
 import static java.lang.Package.getPackage;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -52,7 +53,8 @@ public class ArquillianProjectArchive {
         return ShrinkWrap.create(WebArchive.class, "rights-persistence-test.war")
                 .addPackages(true, Filters.exclude(getPackage("eu.ggnet.dwoss.rights.itest")), "eu.ggnet.dwoss.rights")
                 .addPackages(true, "org.fest") // Need this for Fest Assertations
-                .addClass(RightsDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")

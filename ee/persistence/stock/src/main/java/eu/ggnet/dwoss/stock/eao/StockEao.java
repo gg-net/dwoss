@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.entity.Stock;
 
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
  * @author oliver.guenther
  */
 @Stateless
-public class StockEao extends AbstractEao<Shipment> {
+public class StockEao extends AbstractEao<Stock> {
 
     @Inject
     @Stocks
@@ -42,12 +42,12 @@ public class StockEao extends AbstractEao<Shipment> {
      * @param em the Shipment Manager.
      */
     public StockEao(EntityManager em) {
-        super(Shipment.class);
+        super(Stock.class);
         this.em = em;
     }
 
     public StockEao() {
-        super(Shipment.class);
+        super(Stock.class);
     }
 
     @Override

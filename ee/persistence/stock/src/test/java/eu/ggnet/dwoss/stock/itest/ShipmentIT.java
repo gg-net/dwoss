@@ -15,6 +15,7 @@ import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.ShipmentEao;
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.util.Utils;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +44,7 @@ public class ShipmentIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        Utils.clearH2Db(em);
         utx.commit();
     }
 

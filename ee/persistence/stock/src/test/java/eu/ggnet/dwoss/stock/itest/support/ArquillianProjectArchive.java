@@ -28,6 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
+import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.stock.itest.PersistenceIT;
 import eu.ggnet.dwoss.stock.test.ValidationTest;
 
@@ -54,7 +55,8 @@ public class ArquillianProjectArchive {
                         Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.customer.itest"
                                 ValidationTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.customer.test"
                         "eu.ggnet.dwoss.stock")
-                .addClass(StockDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
@@ -63,4 +65,5 @@ public class ArquillianProjectArchive {
                 .addAsLibraries(libs);
         return war;
     }
+
 }

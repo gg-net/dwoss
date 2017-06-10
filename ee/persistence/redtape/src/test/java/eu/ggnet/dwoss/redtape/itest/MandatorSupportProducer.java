@@ -19,36 +19,17 @@ package eu.ggnet.dwoss.redtape.itest;
 import java.util.HashMap;
 
 import javax.annotation.ManagedBean;
-import javax.annotation.sql.DataSourceDefinition;
-import javax.annotation.sql.DataSourceDefinitions;
 import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
-
-import static eu.ggnet.dwoss.configuration.SystemConfig.*;
 
 /**
  * Default datasource definition and empty mandator support informations for tests
  *
  * @author oliver.guenther
  */
-@DataSourceDefinitions(
-        value = {
-            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_MANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=true"}
-            )
-            ,
-            @DataSourceDefinition(name = DSNAME_PREFIX + "redtape" + DSNAME_SUFFIX_UNMANAGED,
-                                  className = DSDRIVER_HSQLDB,
-                                  url = "jdbc:hsqldb:mem:redtape" + DSURL_PROPERTIES,
-                                  properties = {"JtaManaged=false"}
-            )
-        }
-)
 @ManagedBean
-public class RedTapeDataSourceAndProducer {
+public class MandatorSupportProducer {
 
     @Produces
     public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());

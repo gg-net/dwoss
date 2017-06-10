@@ -71,3 +71,4 @@ hs_err_pid*
 /incubator/statemachine/state-runtime/target/
 /mandator/sample-tryout/target/
 /ee/web/search/target/
+/mandator/sample-datasource/target/

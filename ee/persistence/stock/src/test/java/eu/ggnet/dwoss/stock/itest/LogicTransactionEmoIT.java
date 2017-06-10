@@ -18,6 +18,7 @@ import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.util.Utils;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -42,7 +43,7 @@ public class LogicTransactionEmoIT extends ArquillianProjectArchive {
     public void clearDataBase() throws Exception {
         utx.begin();
         em.joinTransaction();
-        em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate();
+        Utils.clearH2Db(em);
         utx.commit();
     }
 
