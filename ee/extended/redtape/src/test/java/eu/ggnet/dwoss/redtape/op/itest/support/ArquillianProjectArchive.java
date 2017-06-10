@@ -27,6 +27,7 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
+import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.op.itest.InjectIT;
 
@@ -57,9 +58,9 @@ public class ArquillianProjectArchive {
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
                 .addPackages(true, exclude(itestPackage), projectPackage)
-                .addClass(RedtapeDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(SupportBean.class)
                 .addClass(NaivBuilderUtil.class)
                 .addClass(DatabaseCleaner.class)
