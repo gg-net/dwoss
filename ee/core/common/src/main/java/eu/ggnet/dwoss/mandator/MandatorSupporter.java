@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.mandator;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
@@ -26,7 +25,6 @@ import eu.ggnet.dwoss.mandator.api.value.*;
  * <p/>
  * @author oliver.guenther
  */
-@Local
 @Remote
 public interface MandatorSupporter {
 
@@ -71,7 +69,7 @@ public interface MandatorSupporter {
      * @return the {@link PostLedger}.
      */
     PostLedger loadPostLedger();
-    
+
     /**
      * Returns the {@link ShippingTerms}.
      * <p>

@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.report.op;
 
 import java.util.*;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.RevenueReportSum;
@@ -31,7 +30,6 @@ import eu.ggnet.dwoss.util.FileJacket;
  * <p>
  * @author oliver.guenther
  */
-@Local
 @Remote
 public interface RevenueReporter {
 

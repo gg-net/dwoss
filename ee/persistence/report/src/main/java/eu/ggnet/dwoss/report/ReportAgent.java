@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -55,7 +54,6 @@ import static eu.ggnet.dwoss.rules.PositionType.*;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface ReportAgent extends RemoteAgent {
 
     @Value

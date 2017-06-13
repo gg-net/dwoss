@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.report.itest;
 
+import eu.ggnet.dwoss.report.itest.support.ArquillianProjectArchive;
+
 import java.text.ParseException;
 import java.util.*;
 

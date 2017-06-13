@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.report.op;
 
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -37,7 +37,8 @@ import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT_ANNEX;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
-import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;
 import static java.awt.Color.*;
 
@@ -47,7 +48,6 @@ import static java.awt.Color.*;
  * @author pascal.perau
  */
 @Stateless
-
 public class RevenueReporterOperation implements RevenueReporter {
 
     @Inject

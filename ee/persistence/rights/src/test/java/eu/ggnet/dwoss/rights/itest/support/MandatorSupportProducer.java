@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.itest;
+package eu.ggnet.dwoss.rights.itest.support;
 
 import java.util.HashMap;
 
@@ -24,7 +24,6 @@ import javax.enterprise.inject.Produces;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
- * Default datasource definition and empty mandator support informations for tests
  *
  * @author oliver.guenther
  */
@@ -42,14 +41,4 @@ public class MandatorSupportProducer {
 
     @Produces
     public static PostLedger pl = new PostLedger(new HashMap<>());
-
-    @Produces
-    public static RepaymentCustomers rc = new RepaymentCustomers(new HashMap<>());
-
-    @Produces
-    public static ScrapCustomers scrap = new ScrapCustomers(new HashMap<>());
-
-    @Produces
-    public static DeleteCustomers dc = new DeleteCustomers(new HashMap<>());
-
 }

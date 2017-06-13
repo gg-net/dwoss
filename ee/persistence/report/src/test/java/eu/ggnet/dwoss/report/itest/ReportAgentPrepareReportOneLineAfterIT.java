@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.report.itest;
 
+import eu.ggnet.dwoss.report.itest.support.ReportLineItHelper;
+import eu.ggnet.dwoss.report.itest.support.ArquillianProjectArchive;
+
 import java.util.Date;
 
 import javax.ejb.EJB;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.itest;
+package eu.ggnet.dwoss.report.itest.support;
 
 import java.io.File;
 
@@ -29,9 +29,9 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.rights.MandatorSupportProducer;
+import eu.ggnet.dwoss.report.itest.PersistenceIT;
+import eu.ggnet.dwoss.report.test.ReportTest;
 
-import static java.lang.Package.getPackage;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
 /**
@@ -48,18 +48,23 @@ public class ArquillianProjectArchive {
                 .importRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator is needed on many places.
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
+                .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
-
-        return ShrinkWrap.create(WebArchive.class, "rights-persistence-test.war")
-                .addPackages(true, Filters.exclude(getPackage("eu.ggnet.dwoss.rights.itest")), "eu.ggnet.dwoss.rights")
-                .addPackages(true, "org.fest") // Need this for Fest Assertations
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "report-persistence-test.war")
+                .addPackages(true,
+                        Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.redtape.itest"
+                                ReportTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.redtape.test"
+                        "eu.ggnet.dwoss.report")
                 .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
-                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
-                .addClass(ArquillianProjectArchive.class)
+                .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addClass(ReportLineItHelper.class) // Helper Bean
+                .addClass(SampleDataSourceDefinition.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
+                .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);
+        return war;
     }
 }

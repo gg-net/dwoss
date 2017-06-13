@@ -64,11 +64,6 @@
             <scope>test</scope>
             <type>pom</type>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tomee</groupId>
-            <artifactId>arquillian-tomee-remote</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <modules>

@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.mandator.tryout;
 
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
+import javax.faces.bean.ManagedBean;
 
 import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_PREFIX;
 import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_SUFFIX_MANAGED;
@@ -96,6 +97,7 @@ import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PR
             ), // </editor-fold>
         }
 )
+@ManagedBean
 public class SampleDataSourceDefinition {
 
     public final static String DSDRIVER = "org.h2.jdbcx.JdbcDataSource";

@@ -121,7 +121,7 @@
         <redtape-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>redtapeDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/redtapeDataSource</jta-data-source>
           ]]>
         </redtape-pu.default-datasource>
         <redtape-pu.classes>
@@ -138,7 +138,7 @@
         <customer-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>customerDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/customerDataSource</jta-data-source>
           ]]>
         </customer-pu.default-datasource>
         <customer-pu.default-properties>
@@ -168,7 +168,7 @@
         <report-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>reportDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/reportDataSource</jta-data-source>
           ]]>
         </report-pu.default-datasource>
         <report-pu.classes>
@@ -182,7 +182,7 @@
         <rights-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>rightsDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/rightsDataSource</jta-data-source>
           ]]>
         </rights-pu.default-datasource>
         <rights-pu.classes>
@@ -195,7 +195,7 @@
         <spec-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>specDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/specDataSource</jta-data-source>
           ]]>
         </spec-pu.default-datasource>
         <spec-pu.classes>
@@ -221,7 +221,7 @@
         <stock-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>stockDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/stockDataSource</jta-data-source>
           ]]>
         </stock-pu.default-datasource>
         <stock-pu.classes>
@@ -241,7 +241,7 @@
         <uniqueunit-pu.default-datasource>
           <![CDATA[
                 <provider>org.hibernate.ejb.HibernatePersistence</provider>
-                <jta-data-source>uniqueunitDataSource</jta-data-source>
+                <jta-data-source>java:comp/env/uniqueunitDataSource</jta-data-source>
           ]]>
         </uniqueunit-pu.default-datasource>
         <uniqueunit-pu.classes>
@@ -912,11 +912,6 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.apache.tomee</groupId>
-                <artifactId>arquillian-tomee-remote</artifactId>
-                <version>7.0.3</version>
-            </dependency>
-            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version>5.4.1.Final</version>
@@ -940,6 +935,22 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
                 <version>2.7.18</version> <!-- Starting with Version 3 the Webclient class is missing. -->
+            </dependency>
+            <!-- Arquillian Containers -->
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-remote</artifactId>
+                <version>2.0.2.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-managed</artifactId>
+                <version>2.0.2.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomee</groupId>
+                <artifactId>arquillian-tomee-remote</artifactId>
+                <version>7.0.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -977,6 +988,13 @@
     <profiles>
         <profile>
             <id>integration-tomee-remote</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.apache.tomee</groupId>
+                    <artifactId>arquillian-tomee-remote</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -995,6 +1013,112 @@
                                 </goals>
                                 <configuration>
                                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>integration-wildfly-remote</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <systemPropertyVariables>
+                                <arquillian.launch>wildfly-remote</arquillian.launch>
+                            </systemPropertyVariables>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>integration-wildfly-managed</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <systemPropertyVariables>
+                                <arquillian.launch>wildfly-managed</arquillian.launch>
+                            </systemPropertyVariables>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>integration-test</id>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>verify</id>
+                                <goals>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--Download and extract wildfly-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>10.1.0.Final</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>target</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
                                 </configuration>
                             </execution>
                         </executions>

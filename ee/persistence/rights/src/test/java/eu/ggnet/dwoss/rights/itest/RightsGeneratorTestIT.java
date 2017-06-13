@@ -5,6 +5,8 @@
  */
 package eu.ggnet.dwoss.rights.itest;
 
+import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
+
 import java.util.List;
 
 import javax.ejb.EJB;

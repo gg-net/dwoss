@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.rights.itest;
 
+import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
+
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
