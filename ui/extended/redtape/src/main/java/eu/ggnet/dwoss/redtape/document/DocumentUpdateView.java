@@ -16,20 +16,22 @@
  */
 package eu.ggnet.dwoss.redtape.document;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.net.URL;
-import java.util.*;
+import java.util.EnumSet;
 import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.*;
 import javax.swing.text.*;
 
 import javafx.application.Platform;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
@@ -40,15 +42,16 @@ import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.SwingInteraction;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
+import eu.ggnet.dwoss.redtape.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.Getter;
@@ -114,7 +117,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         this.accessCos = Lookup.getDefault().lookup(Guardian.class);
         refreshAddressArea();
 
-        if ( !Client.hasFound(RedTapeHookService.class) ) convertToWarrantyPositionButton.setVisible(false);
+        if ( !Client.hasFound(WarrantyHook.class) ) convertToWarrantyPositionButton.setVisible(false);
 
         if ( document.isClosed() || EnumSet.of(DocumentType.COMPLAINT, DocumentType.CREDIT_MEMO, DocumentType.ANNULATION_INVOICE).contains(document.getType()) ) {
             disableComponents(addProductBatchButton, addUnitButton, unitInputField, addServiceButton, shippingCostButton);
@@ -657,15 +660,15 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         if ( !positionsFxList.getSelectionModel().isEmpty() ) {
             Platform.runLater(() -> {
                 try {
-                    //constructore makes sure the service is present
+                    //constructor made sure the service is present
                     document.appendAll(
-                            lookup(RedTapeHookService.class)
-                            .addWarrantyForUnitPosition(positionsFxList.getSelectionModel().getSelectedItem(), document.getId())
-                            .request(new SwingInteraction(this)));
+                            lookup(WarrantyHook.class)
+                                    .addWarrantyForUnitPosition(positionsFxList.getSelectionModel().getSelectedItem(), document.getId())
+                                    .request(new SwingInteraction(this)));
                     positions.clear();
                     positions.addAll(document.getPositions().values());
                 } catch (UserInfoException ex) {
-                    DwOssCore.show(null, ex);
+                    UiCore.handle(ex);
                 }
             });
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,20 +21,17 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 /**
- * A service implemented by the mandator to supply a list for possible positions.
+ * Workflowhook for an optional Warranty, only remote usage.
  *
- * @author pascal.perau
+ * @author oliver.guenther
  */
 @Remote
-public interface PositionService {
+public interface WarrantyHook {
 
-    /**
-     * Returns a list of service postions as templates.
-     *
-     * @return a list of service postions as templates.
-     */
-    List<Position> servicePositionTemplates();
+    Result<List<Position>> addWarrantyForUnitPosition(Position p, long documentId) throws UserInfoException;
 
 }

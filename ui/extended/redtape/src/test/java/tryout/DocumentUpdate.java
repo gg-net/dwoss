@@ -31,8 +31,6 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
-
 
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
@@ -165,7 +163,6 @@ public class DocumentUpdate {
         Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
         Client.addSampleStub(RedTapeAgent.class, null);
         Client.addSampleStub(UnitOverseer.class, null);
-        Client.addSampleStub(RedTapeHookService.class, null);
 
         DocumentUpdateView cd = new DocumentUpdateView(doc);
         DocumentUpdateController controller = new DocumentUpdateController(cd, doc);

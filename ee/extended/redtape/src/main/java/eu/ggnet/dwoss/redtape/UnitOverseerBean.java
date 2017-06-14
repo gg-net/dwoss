@@ -35,7 +35,6 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.eao.PositionEao;
@@ -70,6 +69,8 @@ import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRAN
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.util.Locale.GERMANY;
+
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
 /**
  * A EJB to supply Information about Units bimport eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
@@ -107,7 +108,7 @@ public class UnitOverseerBean implements UnitOverseer {
     private Instance<LegacyLocalBridge> bridgeInstance;
 
     @Inject
-    private Instance<RedTapeHookService> redTapeHook;
+    private Instance<UnitPositionHook> redTapeHook;
 
     @Inject
     private PostLedger postLedger;

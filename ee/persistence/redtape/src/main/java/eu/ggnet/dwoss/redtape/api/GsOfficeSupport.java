@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+/*
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,35 +16,28 @@
  */
 package eu.ggnet.dwoss.redtape.api;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
 import eu.ggnet.saft.api.progress.IMonitor;
 
 /**
- * Remote interfaces to provide position template generators.
- * <p>
- * @author pascal.perau
+ * Support for the GsOffice XML export to be implemented by the mandator.
+ *
+ * @author oliver.guenther
  */
-@Remote
 @Local
-public interface RedTapeHookService {
+public interface GsOfficeSupport {
 
-    Result<List<Position>> elaborateUnitPosition(Position p, long documentId) throws UserInfoException;
-
-    Result<List<Position>> addWarrantyForUnitPosition(Position p, long documentId) throws UserInfoException;
-
-    default RowData generateGSRowData(Map<Document, UiCustomer> documents, FinancialAccounting accounting, IMonitor m){
+    // TODO: Please move this to each mandator. A default solution is not very helpful.
+    public default RowData generateGSRowData(Map<Document, UiCustomer> documents, FinancialAccounting accounting, IMonitor m) {
         RowData rowData = new RowData();
         for (Document doc : documents.keySet()) {
             Row r = new Row();

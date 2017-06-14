@@ -16,14 +16,16 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
+import eu.ggnet.dwoss.redtape.api.GsOfficeSupport;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
 /**
  * Sample implementation of the position service.
@@ -32,16 +34,11 @@ import eu.ggnet.dwoss.util.interactiveresult.Result;
  * @author pascal.perau
  */
 @Stateless
-public class SampleHookServiceBean implements RedTapeHookService {
+public class SampleHookServiceBean implements UnitPositionHook, GsOfficeSupport {
 
     @Override
     public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
         return new Result<>(Arrays.asList(p));
-    }
-
-    @Override
-    public Result<List<Position>> addWarrantyForUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
-        return new Result<>(new ArrayList<>());
     }
 
 }

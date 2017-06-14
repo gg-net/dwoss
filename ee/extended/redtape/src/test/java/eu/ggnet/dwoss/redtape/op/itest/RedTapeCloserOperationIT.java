@@ -20,7 +20,6 @@ import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtape.op.itest.support.*;
@@ -52,6 +51,8 @@ import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
+
 /**
  *
  * @author oliver.guenther
@@ -59,7 +60,7 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
 
-    class RedTapeHookStup implements RedTapeHookService {
+    class RedTapeHookStup implements UnitPositionHook {
 
         @Override
         public Result<List<Position>> elaborateUnitPosition(Position p, long documentId) throws UserInfoException {
@@ -82,10 +83,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
             ));
         }
 
-        @Override
-        public Result<List<Position>> addWarrantyForUnitPosition(Position p, long documentId) throws UserInfoException {
-            return null;
-        }
     }
 
     private final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;

@@ -18,23 +18,20 @@ package eu.ggnet.dwoss.redtape.api;
 
 import java.util.List;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 /**
- * A service implemented by the mandator to supply a list for possible positions.
- *
+ * Interfaces to provide position template generators.
+ * <p>
  * @author pascal.perau
  */
-@Remote
-public interface PositionService {
+@Local
+public interface UnitPositionHook {
 
-    /**
-     * Returns a list of service postions as templates.
-     *
-     * @return a list of service postions as templates.
-     */
-    List<Position> servicePositionTemplates();
+    Result<List<Position>> elaborateUnitPosition(Position p, long documentId) throws UserInfoException;
 
 }

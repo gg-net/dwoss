@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,13 +17,10 @@
 package eu.ggnet.dwoss.redtape.gsoffice;
 
 import eu.ggnet.dwoss.redtape.api.RowData;
-import eu.ggnet.dwoss.redtape.api.Row;
 
 import java.io.OutputStream;
 import java.util.*;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import javax.xml.bind.*;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
@@ -34,9 +31,6 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.api.*;
 
 import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
-
-import eu.ggnet.dwoss.rules.DocumentType;
 
 import lombok.*;
 
@@ -56,7 +50,7 @@ import lombok.*;
 @AllArgsConstructor
 public class GsOfficeExporterUtil {
 
-    private RedTapeHookService redTapeHook;
+    private GsOfficeSupport supportImplementation;
 
     private OutputStream output;
 
@@ -66,7 +60,7 @@ public class GsOfficeExporterUtil {
 
     public void execute(IMonitor monitor) {
         SubMonitor m = SubMonitor.convert(monitor, "Create GS-Office XML Data", customerInvoices.size() + 10);
-        RowData rowData = redTapeHook.generateGSRowData(customerInvoices, accounting, monitor);
+        RowData rowData = supportImplementation.generateGSRowData(customerInvoices, accounting, monitor);
         m.message("writting Output");
         try {
             JAXBContext context = JAXBContext.newInstance(RowData.class);
@@ -80,62 +74,4 @@ public class GsOfficeExporterUtil {
         m.finish();
     }
 
-    private RowData generateDefaultGSRowData(SubMonitor m) {
-        RowData rowData = new RowData();
-        for (Document doc : customerInvoices.keySet()) {
-            Row r = new Row();
-            m.worked(1, "processing Invioce " + doc.getIdentifier());
-            UiCustomer customer = customerInvoices.get(doc);
-            r.setBeleg("AR/K" + doc.getDossier().getCustomerId() + doc.getDossier().getIdentifier().replace("_", "") + "/" + doc.getIdentifier().substring(0, 4));
-            r.setBuerfDatum(doc.getActual());
-            r.setDatum(doc.getActual());
-            r.setFaDatum(doc.getActual());
-            r.setReDatum(doc.getActual());
-            String buchungsText = customer.getCompany();
-            if ( buchungsText == null || buchungsText.trim().equals("") ) {
-                buchungsText = customer.getLastName();
-            }
-            if ( buchungsText == null || buchungsText.trim().equals("") ) {
-                buchungsText = "Kundenummer=" + customer.getId();
-            }
-            buchungsText = buchungsText.replaceAll("-", "_");
-            buchungsText += " - " + doc.getIdentifier();
-            r.setBuchtext(buchungsText);
-            r.setWawiBeleg("K" + customer.getId() + "/" + doc.getIdentifier());
-            r.setStCode("01");
-
-            r.setKonto(accounting.getDefaultLedger());
-            if ( !accounting.isDisableCustomerLedgers() && customer.getLedger() > 0 ) r.setKonto(customer.getLedger());
-
-            Map<Integer, Row> bookingRates = new HashMap<>();
-            for (Position position : doc.getPositions().values()) {
-                if ( position.getBookingAccount() <= 0 ) continue;
-                Row row;
-                if ( !bookingRates.containsKey(position.getBookingAccount()) ) {
-                    bookingRates.put(position.getBookingAccount(), new Row(r));
-                    row = bookingRates.get(position.getBookingAccount());
-                    row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.getAfterTaxPrice()));
-                    row.setBetrag((position.getAmount() * position.getPrice()), (position.getAmount() * position.getAfterTaxPrice()));
-                    row.setStProz(position.getTax() * 100);
-                    row.setStNumeric(position.getTax() * 100);
-                    if ( doc.getType() == DocumentType.CREDIT_MEMO ) {
-                        row.setKonto(position.getBookingAccount());
-                        row.setGKonto(accounting.getDefaultLedger());
-                    } else {
-                        row.setGKonto(position.getBookingAccount());
-                    }
-                    rowData.add(row);
-                } else {
-                    row = bookingRates.get(position.getBookingAccount());
-                    if ( row.getStNumeric() != (position.getTax() * 100) )
-                        throw new RuntimeException("Document enthält Positionen mit unterschiedlicher UmSt. Rechnung: " + doc.getIdentifier() + ", aktuelle UmSt.: " + row.getStProz() + ", abweichung in Position: " + position.getName() + " mit UmSt. von " + (position.getTax() * 100));
-                    row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.getAfterTaxPrice()));
-                    row.setBetrag(row.getNettoSumme(), row.getBruttoSumme());
-                }
-            }
-        }
-        return rowData;
-    }
 }

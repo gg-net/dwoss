@@ -30,11 +30,10 @@ import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
+import eu.ggnet.dwoss.redtape.api.GsOfficeSupport;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.entity.Document;
-
 import eu.ggnet.dwoss.util.FileJacket;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
@@ -61,7 +60,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
     private FinancialAccounting accounting;
 
     @Inject
-    private RedTapeHookService redTapeHook;
+    private GsOfficeSupport gsOfficeSupport;
 
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -89,7 +88,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
         }
         m.message("Generating Outfile");
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(redTapeHook, out, customerInvoices, accounting);
+            GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(gsOfficeSupport, out, customerInvoices, accounting);
             exporter.execute(m);
             m.finish();
             return new FileJacket("Buchungsaetze Sopo von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
