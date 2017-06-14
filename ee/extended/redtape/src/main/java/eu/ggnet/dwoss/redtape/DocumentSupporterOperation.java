@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,8 +51,8 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -148,7 +148,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     private Mandator mandator;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     /**
      * Creates a JasperPrint for the Document.
@@ -185,7 +185,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             MultiPartEmail email = mandator.prepareDirectMail();
 
             email.setCharset("UTF-8");
-            
+
             email.addTo(customerMailAddress);
             email.setSubject(document.getType().getName() + " | " + document.getDossier().getIdentifier());
             email.setMsg(text + mandator.getDefaultMailSignature());

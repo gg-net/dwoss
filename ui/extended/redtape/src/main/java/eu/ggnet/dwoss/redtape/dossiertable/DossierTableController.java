@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,22 +26,17 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Client;
-
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-
-import eu.ggnet.dwoss.redtape.IDossierSelectionHandler;
-
 import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.redtape.IDossierSelectionHandler;
+import eu.ggnet.dwoss.redtape.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.saft.core.Client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.redtape.dossiertable.DossierTableController.IMAGE_NAME.*;
-
-
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
@@ -49,7 +44,7 @@ import static eu.ggnet.saft.core.Client.lookup;
  * @author pascal.perau
  */
 public class DossierTableController {
-    
+
     @Getter
     @RequiredArgsConstructor
     static enum IMAGE_NAME {
@@ -148,12 +143,12 @@ public class DossierTableController {
     private class LegacyDossierLoader extends DossierLoader {
 
         public LegacyDossierLoader(long customerId) {
-            super(customerId, lookup(LegacyBridge.class).name());
+            super(customerId, lookup(LegacyRemoteBridge.class).remoteName());
         }
 
         @Override
         protected List<Dossier> find(int last, int amount) {
-            return lookup(LegacyBridge.class).findByCustomerId(customerId, last, amount);
+            return lookup(LegacyRemoteBridge.class).findByCustomerId(customerId, last, amount);
         }
 
     }
@@ -230,7 +225,7 @@ public class DossierTableController {
     }
 
     public void loadLegacyDossiers(long customerId) {
-        if ( model == null || customerId <= 0 || legacyLoaded || !Client.hasFound(LegacyBridge.class) ) return;
+        if ( model == null || customerId <= 0 || legacyLoaded || !Client.hasFound(LegacyRemoteBridge.class) ) return;
         legacyLoader = new LegacyDossierLoader(customerId);
         legacyLoaded = true;
         legacyLoader.execute();
@@ -278,7 +273,7 @@ public class DossierTableController {
         }
         return result;
     }
-    
+
     static URL load(IMAGE_NAME image) {
         return DossierIconPanelRenderer.class.getResource(image.getFileName());
     }

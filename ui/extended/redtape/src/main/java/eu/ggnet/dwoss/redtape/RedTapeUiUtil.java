@@ -18,12 +18,13 @@ package eu.ggnet.dwoss.redtape;
 
 import eu.ggnet.saft.core.Client;
 
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 
 import static eu.ggnet.saft.core.Client.lookup;
+
+import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 
 /**
  *
@@ -38,8 +39,8 @@ public class RedTapeUiUtil {
      * @return a HTML view.
      */
     public static String toHtmlDetailed(Dossier dos) {
-        if ( dos.isLegacy() && Client.hasFound(LegacyBridge.class) ) {
-            return lookup(LegacyBridge.class).toDetailedHtmlDossier(dos.getLegacyIdentifier());
+        if ( dos.isLegacy() && Client.hasFound(LegacyRemoteBridge.class) ) {
+            return lookup(LegacyRemoteBridge.class).toDetailedHtmlDossier(dos.getLegacyIdentifier());
         } else {
             return lookup(RedTapeWorker.class).toDetailedHtml(dos.getId());
         }

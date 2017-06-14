@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,21 +23,18 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
 import javax.swing.RowFilter.Entry;
+import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
-import eu.ggnet.saft.core.Client;
-
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
+import eu.ggnet.dwoss.redtape.RedTapeUiUtil;
+import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
-
-import eu.ggnet.dwoss.redtape.RedTapeUiUtil;
-
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.TableColumnChooserPopup;
+import eu.ggnet.saft.core.Client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -184,7 +181,7 @@ public class DossierTableView extends javax.swing.JPanel {
     private void initFilterButtons() {
         for (FilterType t : FilterType.values()) {
             final FilterType filterType = t;
-            if ( filterType == LEGACY && !Client.hasFound(LegacyBridge.class) ) continue;
+            if ( filterType == LEGACY && !Client.hasFound(LegacyRemoteBridge.class) ) continue;
             JRadioButton button = new JRadioButton(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -202,7 +199,7 @@ public class DossierTableView extends javax.swing.JPanel {
             });
             String label = filterType.getName();
             if ( filterType == LEGACY ) {
-                label = filterType.getName() + " (" + Client.lookup(LegacyBridge.class).name() + ")";
+                label = filterType.getName() + " (" + Client.lookup(LegacyRemoteBridge.class).remoteName() + ")";
             }
             button.setName(label);
             button.setText(label);

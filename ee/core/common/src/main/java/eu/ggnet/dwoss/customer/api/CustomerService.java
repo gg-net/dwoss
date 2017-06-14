@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import javax.ejb.*;
+import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
@@ -27,7 +28,6 @@ import eu.ggnet.dwoss.rules.CustomerFlag;
  * @author pascal.perau
  */
 @Remote
-@Local
 public interface CustomerService {
 
     /**

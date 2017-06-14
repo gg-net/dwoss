@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
@@ -74,7 +74,7 @@ public class RedTapeGeneratorOperation {
     private MonitorFactory monitorFactory;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
     private PostLedger postLedger;

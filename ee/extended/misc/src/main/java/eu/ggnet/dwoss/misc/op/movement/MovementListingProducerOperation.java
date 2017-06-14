@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,7 +38,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
-import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
@@ -60,7 +60,7 @@ public class MovementListingProducerOperation implements MovementListingProducer
     private final static Logger L = LoggerFactory.getLogger(MovementListingProducerOperation.class);
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
     @Stocks
@@ -94,7 +94,7 @@ public class MovementListingProducerOperation implements MovementListingProducer
         List<String> dossierids = new ArrayList<>();
         List<Long> systemCustomers = customerService.allSystemCustomerIds();
         for (Document document : documents) {
-            if ( systemCustomers.contains(document.getDossier().getCustomerId())) continue;
+            if ( systemCustomers.contains(document.getDossier().getCustomerId()) ) continue;
             m.worked(1, "verarbeite " + document.getDossier().getIdentifier());
             LogicTransaction lt = ltEao.findByDossierId(document.getDossier().getId());
             if ( !hasUnitOnStock(lt, stock) ) continue; // Filter by stock

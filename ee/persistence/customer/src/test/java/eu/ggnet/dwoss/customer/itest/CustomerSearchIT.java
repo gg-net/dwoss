@@ -1,26 +1,22 @@
 package eu.ggnet.dwoss.customer.itest;
 
+import eu.ggnet.dwoss.customer.itest.support.CustomerSearchITHelper;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.assist.Customers;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.*;
 
-import static eu.ggnet.dwoss.customer.priv.ConverterUtil.mergeFromOld;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -67,38 +63,6 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
         assertTrue("No element should be here: " + find, find.isEmpty());
         find = helper.testLucenceSearch("schlagstock ltd");
         assertTrue("One element should be here: " + find, find.size() == 1);
-    }
-
-    @Stateless
-    public static class CustomerSearchITHelper {
-
-        @Inject
-        @Customers
-        private EntityManager em;
-
-        @Inject
-        private Mandator mandator;
-
-        @Inject
-        private CustomerEao eao;
-
-        @Inject
-        private DefaultCustomerSalesdata salesData;
-
-        public void persist(OldCustomer old) {
-            Customer customer = new Customer();
-            mergeFromOld(old, customer, mandator.getMatchCode(), salesData);
-            em.persist(customer);
-        }
-
-        public List<Customer> testLucenceSearch(String s) throws InterruptedException {
-            List<Customer> find = eao.find(s);
-            for (Customer customer : find) {
-                customer.toMultiLine();
-            }
-            return find;
-        }
-
     }
 
 }

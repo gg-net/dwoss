@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,11 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
+import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
@@ -54,7 +55,7 @@ public class UnitSupporterOperation implements UnitSupporter {
     private Mandator mandator;
 
     @Inject
-    private Instance<LegacyBridge> bridgeInstance;
+    private Instance<LegacyLocalBridge> bridgeInstance;
 
     /**
      * Returns true if supplied refurbishId is available, meaning not jet in the database.
@@ -67,8 +68,8 @@ public class UnitSupporterOperation implements UnitSupporter {
         UniqueUnit uniqueUnit = new UniqueUnitEao(uuEm).findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
         if ( uniqueUnit != null ) return false;
         if ( bridgeInstance.isUnsatisfied() ) return true;
-        LegacyBridge bridge = bridgeInstance.get();
-        L.info("Using LegacyBridge ({})", bridge.name());
+        LegacyLocalBridge bridge = bridgeInstance.get();
+        L.info("Using LegacyBridge ({})", bridge.localName());
         return bridge.isUnitIdentifierAvailable(refurbishId);
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
@@ -69,7 +69,7 @@ public class DebitorsReporterOperation implements DebitorsReporter {
     private MonitorFactory monitorFactory;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     /**
      * Creates the Report

@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.priv;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 /**
@@ -24,7 +23,6 @@ import javax.ejb.Remote;
  * @author bastian.venz
  */
 @Remote
-@Local
 public interface SearchSingleton {
 
     /**

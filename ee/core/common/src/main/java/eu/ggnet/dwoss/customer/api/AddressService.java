@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.api;
 
 import eu.ggnet.dwoss.rules.AddressType;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.event.AddressChange;
@@ -28,9 +27,7 @@ import eu.ggnet.dwoss.event.AddressChange;
  * @author pascal.perau
  */
 @Remote
-@Local
 public interface AddressService {
-
 
     /**
      * Returns the default address label of customer and type.

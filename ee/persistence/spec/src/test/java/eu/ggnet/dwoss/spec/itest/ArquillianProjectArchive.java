@@ -61,6 +61,7 @@ public class ArquillianProjectArchive {
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsResource(new ClassLoaderAsset("eu/ggnet/dwoss/spec/assist/gen/specs.xml"), "eu/ggnet/dwoss/spec/assist/gen/specs.xml") // Needed for the Specgenerator.
+                .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);
         return war;

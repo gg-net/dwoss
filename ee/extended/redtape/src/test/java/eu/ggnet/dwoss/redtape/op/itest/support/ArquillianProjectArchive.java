@@ -69,6 +69,7 @@ public class ArquillianProjectArchive {
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsResource("eu/ggnet/dwoss/redtape/Document_Template.jrxml")
                 .addAsResource("eu/ggnet/dwoss/redtape/Shipping_Template.jrxml")
+                .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);
         return war;

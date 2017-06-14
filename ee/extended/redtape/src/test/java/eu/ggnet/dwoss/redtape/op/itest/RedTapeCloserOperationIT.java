@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
@@ -114,7 +114,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
     private RedTapeAgent redTapeAgent;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
     private ProductEao eao;

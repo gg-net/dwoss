@@ -38,7 +38,6 @@ import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 
@@ -52,6 +51,8 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import tryout.stub.*;
+
+import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 
 /**
  *
@@ -98,7 +99,7 @@ public class RedTape {
         });
         Client.addSampleStub(StockAgent.class, null);
         Client.addSampleStub(UniqueUnitAgent.class, null);
-        Client.addSampleStub(LegacyBridge.class, null);
+        Client.addSampleStub(LegacyRemoteBridge.class, null);
         Client.addSampleStub(ShippingCostService.class, null);
         Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
 

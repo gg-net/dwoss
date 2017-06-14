@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.itest;
 
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+
 import javax.ejb.EJB;
 import javax.inject.Inject;
 

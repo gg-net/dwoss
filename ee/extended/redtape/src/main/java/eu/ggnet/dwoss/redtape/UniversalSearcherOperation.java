@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.format.DossierFormater;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
-import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -32,18 +23,23 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge.Unit;
+import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
+import eu.ggnet.dwoss.redtape.api.LegacyUnit;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
-
+import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.format.DocumentFormater;
+import eu.ggnet.dwoss.redtape.format.DossierFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
-
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-
 import eu.ggnet.dwoss.util.Tuple2;
 
 /**
@@ -66,10 +62,10 @@ public class UniversalSearcherOperation implements UniversalSearcher {
     private Mandator mandator;
 
     @Inject
-    private Instance<LegacyBridge> bridgeInstance;
+    private Instance<LegacyLocalBridge> bridgeInstance;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     /**
      * Returns a List of short descriptions of Customers in Html.
@@ -157,13 +153,13 @@ public class UniversalSearcherOperation implements UniversalSearcher {
         }
 
         if ( bridgeInstance.isUnsatisfied() ) return result;
-        for (Unit unit : bridgeInstance.get().findUnit(search)) {
+        for (LegacyUnit unit : bridgeInstance.get().findUnit(search)) {
             try {
                 if ( uurefurbishIds.contains(Long.parseLong(unit.getUnitIdentifier())) ) continue;
                 String re = "<b>" + unit.getUnitIdentifier() + "</b> - ";
                 re += unit.getSerial() + "<br />";
                 re += unit.getManufacturerPartNo() + "<br />";
-                re += "Status: <i>Nicht verfügbar (Legacy System:" + bridgeInstance.get().name() + ")</i><br />";
+                re += "Status: <i>Nicht verfügbar (Legacy System:" + bridgeInstance.get().localName() + ")</i><br />";
                 result.add(new Tuple2<>(Long.parseLong(unit.getUnitIdentifier()), re));
             } catch (NumberFormatException e) {
                 // Ignore

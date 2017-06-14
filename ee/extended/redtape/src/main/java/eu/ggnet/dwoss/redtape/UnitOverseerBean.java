@@ -26,14 +26,15 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.redtape.api.LegacyBridge;
+import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
 import eu.ggnet.dwoss.redtape.api.RedTapeHookService;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
@@ -71,7 +72,9 @@ import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED
 import static java.util.Locale.GERMANY;
 
 /**
- * A EJB to supply Information about Units backed up by multiple data sources.
+ * A EJB to supply Information about Units bimport eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
+ * <p>
+ * acked up by multiple data sources.
  * <p/>
  * @author oliver.guenther
  */
@@ -98,10 +101,10 @@ public class UnitOverseerBean implements UnitOverseer {
     private EntityManager reportEm;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
-    private Instance<LegacyBridge> bridgeInstance;
+    private Instance<LegacyLocalBridge> bridgeInstance;
 
     @Inject
     private Instance<RedTapeHookService> redTapeHook;

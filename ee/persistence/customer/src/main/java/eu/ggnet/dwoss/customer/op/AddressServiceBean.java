@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,17 @@
  */
 package eu.ggnet.dwoss.customer.op;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-
-import javax.ejb.*;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
-
 import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.AddressType;
 
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
@@ -38,6 +37,7 @@ import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
  * @author pascal.perau
  */
 @Stateless
+@LocalBean
 public class AddressServiceBean implements AddressService {
 
     @Inject

@@ -26,7 +26,9 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.api.*;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.op.AddressServiceBean;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
@@ -55,10 +57,10 @@ public class RedTapeCreateDossierWorkflow {
     private EntityManager redTapeEm;
 
     @Inject
-    private AddressService addressService;
+    private AddressServiceBean addressService;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
     private Mandator mandator;
@@ -136,7 +138,7 @@ public class RedTapeCreateDossierWorkflow {
         dos.add(doc);
 
         redTapeEm.persist(dos);
-        redTapeEm.flush(); // Make sure the dos.id is generated an stored in the database. 
+        redTapeEm.flush(); // Make sure the dos.id is generated an stored in the database.
         dos.setIdentifier(mandator.getDossierPrefix() + _00000_.format(dos.getId()));
         redTapeEm.flush(); // Force store Identifier
         L.info("Created {} by {}", DossierFormater.toSimpleLine(dos), arranger);

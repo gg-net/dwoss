@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.priv;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.entity.Customer;
@@ -26,7 +25,6 @@ import eu.ggnet.dwoss.customer.entity.Customer;
  * <p>
  * @author oliver.guenther
  */
-@Local
 @Remote
 public interface OldCustomerAgent {
 

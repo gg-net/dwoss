@@ -62,6 +62,7 @@ public class ArquillianProjectArchive {
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")
+                .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsLibraries(libs);
         return war;
     }

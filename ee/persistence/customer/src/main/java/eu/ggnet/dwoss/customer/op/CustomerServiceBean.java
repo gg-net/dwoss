@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.op;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
@@ -38,6 +39,7 @@ import eu.ggnet.dwoss.rules.CustomerFlag;
  * CustomerService implementation for {@link OldCustomer}.
  */
 @Stateless
+@LocalBean
 public class CustomerServiceBean implements CustomerService {
 
     private final static Logger L = LoggerFactory.getLogger(CustomerServiceBean.class);

@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.customer.itest;
 
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+
 import java.util.EnumSet;
 import java.util.List;
 

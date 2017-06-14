@@ -33,8 +33,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
@@ -116,7 +116,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
     private Event<UnitHistory> history;
 
     @Inject
-    private CustomerService customerService;
+    private CustomerServiceBean customerService;
 
     @Inject
     private Instance<WarrantyService> warrantyServiceInstance;
