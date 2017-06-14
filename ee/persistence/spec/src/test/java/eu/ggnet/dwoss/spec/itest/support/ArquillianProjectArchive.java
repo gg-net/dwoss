@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.spec.itest;
+package eu.ggnet.dwoss.spec.itest.support;
 
 import java.io.File;
 
@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.spec.itest.PersistenceIT;
 import eu.ggnet.dwoss.spec.test.SpecTest;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -58,6 +59,7 @@ public class ArquillianProjectArchive {
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addClass(ContainerITGeneratorHelper.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsResource(new ClassLoaderAsset("eu/ggnet/dwoss/spec/assist/gen/specs.xml"), "eu/ggnet/dwoss/spec/assist/gen/specs.xml") // Needed for the Specgenerator.

@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;

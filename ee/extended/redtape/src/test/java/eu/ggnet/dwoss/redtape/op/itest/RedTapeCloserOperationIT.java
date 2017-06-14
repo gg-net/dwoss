@@ -20,6 +20,7 @@ import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtape.op.itest.support.*;
@@ -50,8 +51,6 @@ import static eu.ggnet.dwoss.rules.TradeName.HP;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-
-import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
 /**
  *
@@ -116,7 +115,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
     @Inject
     private ProductEao eao;
 
-    @Inject
+    @EJB
     private StockAgent stockAgent;
 
     @Inject

@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
+
 import java.util.List;
 
 import javax.inject.Inject;

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,10 @@ package eu.ggnet.dwoss.stock;
 
 import java.util.List;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.stock.entity.*;
-
 
 /**
  * The Stock Agent
@@ -31,7 +29,6 @@ import eu.ggnet.dwoss.stock.entity.*;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface StockAgent extends RemoteAgent {
 
     /**

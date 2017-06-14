@@ -248,7 +248,7 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         @Inject
         ReportLineEao eao;
 
-        @Inject
+        @EJB
         private UniqueUnitAgent uniqueUnitAgent;
 
         public void generateLines(int amount) {
