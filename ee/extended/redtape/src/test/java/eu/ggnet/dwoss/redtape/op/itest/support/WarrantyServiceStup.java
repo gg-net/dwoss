@@ -23,7 +23,7 @@ import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
 
 /**
  *
- * @author olive
+ * @author oliver
  */
 public class WarrantyServiceStup implements WarrantyService {
 

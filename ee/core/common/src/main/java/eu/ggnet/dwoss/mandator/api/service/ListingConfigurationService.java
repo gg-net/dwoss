@@ -1,5 +1,5 @@
-/* 
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+/*
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,23 @@ package eu.ggnet.dwoss.mandator.api.service;
 import java.util.*;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 
 /**
+ * Local Configurations for Listings.
  *
- * @author pascal.perau
+ * @author oliver.guenther
  */
 @Local
-@Remote
-public interface ListingService {
-
-    /**
-     * Return a collection of action configurations.
-     * <p>
-     * @return a collection of action configurations.
-     */
-    List<ListingActionConfiguration> listingActionConfigurations();
+public interface ListingConfigurationService {
 
     List<ListingConfiguration> listingConfigurations();
 
     FtpConfiguration listingFtpConfiguration(Map<TradeName, Collection<FileJacket>> files);
 
     ListingMailConfiguration listingMailConfiguration();
+
 }

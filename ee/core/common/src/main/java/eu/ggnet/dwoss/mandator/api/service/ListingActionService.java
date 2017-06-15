@@ -16,27 +16,22 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
+import java.util.*;
+
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-
 /**
- * Service for Shipping Costs, optional.
- * A Mandator may implement the service. If not, no automatic calculation of shipping costs is happening.
- * <p>
- * @author oliver.guenther
+ *
+ * @author pascal.perau
  */
 @Remote
-public interface ShippingCostService {
+public interface ListingActionService {
 
     /**
-     * Calculates the shipping cost based on the parameters.
+     * Return a collection of action configurations.
      * <p>
-     * @param positionCount     the amount of relevant positions (units and product batches)
-     * @param paymentMethod     the payment method
-     * @param shippingCondition the shippingCondition
-     * @return the shippingCost without tax
+     * @return a collection of action configurations.
      */
-    double calculate(int positionCount, PaymentMethod paymentMethod, ShippingCondition shippingCondition);
+    List<ListingActionConfiguration> listingActionConfigurations();
+
 }

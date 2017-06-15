@@ -4,9 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -16,13 +14,10 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.*;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.op.itest.support.*;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
@@ -40,36 +35,6 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
-    @Stateless
-    public static class DocumentManipulator {
-
-        @Inject
-        @RedTapes
-        private EntityManager redTapeEm;
-
-        public Document changeActual(Document doc, Date date) {
-            doc = new DocumentEao(redTapeEm).findById(doc.getId());
-            doc.setActual(date);
-            return doc;
-        }
-    }
-
-    @Stateless
-    public static class LogicTransactionEaoWrapper {
-
-        @Inject
-        @Stocks
-        private EntityManager stockEm;
-
-        public List<LogicTransaction> findAll() {
-            return new LogicTransactionEao(stockEm).findAll();
-        }
-
-        public LogicTransaction findByDossierId(long dossierId) {
-            return new LogicTransactionEao(stockEm).findByDossierId(dossierId);
-        }
-    }
-
     @EJB
     private UnitOverseer unitOverseer;
 
@@ -80,7 +45,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
     private CustomerGeneratorOperation customerGenerator;
 
     @Inject
-    private LogicTransactionEaoWrapper logicTransactionEao;
+    private LogicTransactionEao logicTransactionEao;
 
     @EJB
     private RedTapeAgent redTapeAgent;
@@ -89,7 +54,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
     private StockAgent stockAgent;
 
     @Inject
-    private DocumentManipulator manipulator;
+    private SupportBean manipulator;
 
     @Inject
     private ReceiptGeneratorOperation receiptGenerator;

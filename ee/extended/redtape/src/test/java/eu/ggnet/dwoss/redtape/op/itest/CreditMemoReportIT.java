@@ -21,6 +21,7 @@ import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.FileJacket;
@@ -97,7 +98,11 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
 
         Product uuProduct1 = uu1.getProduct();
 
-        int stockIdOfUU1 = stockAgent.findStockUnitByUniqueUnitIdEager(uu1.getId()).getStock().getId();
+        assertThat(uu1).describedAs("First generated UniqueUnit").isNotNull();
+        StockUnit su1 = stockAgent.findStockUnitByUniqueUnitIdEager(uu1.getId());
+        assertThat(su1).describedAs("StockUnit of generated UniqueUnit").isNotNull();
+        assertThat(su1.getStock()).describedAs("Stock of StockUnit of generated UniqueUnit").isNotNull();
+        int stockIdOfUU1 = su1.getStock().getId();
 
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
         Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);

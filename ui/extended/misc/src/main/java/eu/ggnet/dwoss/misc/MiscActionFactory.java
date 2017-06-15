@@ -24,7 +24,6 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
-import eu.ggnet.dwoss.mandator.api.service.ListingService;
 import eu.ggnet.dwoss.misc.action.*;
 import eu.ggnet.dwoss.misc.action.imageid.ExportImageIdsAction;
 import eu.ggnet.dwoss.misc.action.imageid.ImportImageIdsAction;
@@ -44,6 +43,8 @@ import eu.ggnet.saft.core.ActionFactory;
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
 
+import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
+
 /**
  *
  * @author oliver.guenther
@@ -60,8 +61,8 @@ public class MiscActionFactory implements ActionFactory {
         String s = "Listings";
         actions.add(new MetaAction(s, new AllSalesListingAction()));
 
-        if ( hasFound(ListingService.class) ) {
-            Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = lookup(ListingService.class).listingActionConfigurations().stream()
+        if ( hasFound(ListingActionService.class) ) {
+            Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = lookup(ListingActionService.class).listingActionConfigurations().stream()
                     .collect(Collectors.groupingBy(ListingActionConfiguration::getLocation));
             if ( actionConfigs != null && !actionConfigs.isEmpty() ) {
                 for (List<ListingActionConfiguration> listingActionConfigurations : actionConfigs.values()) {

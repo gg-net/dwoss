@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,9 @@
  */
 package eu.ggnet.dwoss.common.log;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.AroundTimeout;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import java.util.Arrays;
+
+import javax.interceptor.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class AutoLoggerInterceptor {
         Class<?> clazz = ctx.getMethod().getDeclaringClass();
         String method = ctx.getMethod().getName();
         Logger log = LoggerFactory.getLogger(clazz);
-        if ( log.isDebugEnabled() ) log.debug(method + " executed with parameters = " + ctx.getParameters());
+        if ( log.isDebugEnabled() ) log.debug(method + " executed with parameters = " + Arrays.toString(ctx.getParameters()));
         else log.info(method + " excuted");
 
         try {

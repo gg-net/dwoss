@@ -402,7 +402,8 @@ public class UnitProcessorOperation implements UnitProcessor {
                 return rs.getInt(1);
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            L.error("CountPositionsDirect failed, returning doc.getPositions().size() as fallback. Look into Datasource und native SQL.", ex);
+            return doc.getPositions().size();
         }
     }
 }

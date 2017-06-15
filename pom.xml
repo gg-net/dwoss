@@ -1035,6 +1035,9 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <systemPropertyVariables>
+                                <arquillian.launch>wildfly-remote</arquillian.launch>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -1072,6 +1075,9 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <systemPropertyVariables>
+                                <arquillian.launch>wildfly-managed</arquillian.launch>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                     <plugin>

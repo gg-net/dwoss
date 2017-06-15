@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.redtape.op.itest.support;
 
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.Stock;
-
 import java.util.Arrays;
 import java.util.Date;
 
@@ -20,6 +15,7 @@ import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.emo.StockLocationDiscoverer;
 import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.entity.*;
 
 /**
  *
@@ -64,4 +60,5 @@ public class SupportBean {
         doc.setActual(date);
         return doc;
     }
+
 }

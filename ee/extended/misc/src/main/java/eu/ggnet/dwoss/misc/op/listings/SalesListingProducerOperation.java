@@ -114,7 +114,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
     private MonitorFactory monitorFactory;
 
     @Inject
-    private Instance<ListingService> listingService;
+    private Instance<ListingConfigurationService> listingService;
 
     @Override
     public FileJacket generateAllSalesListing() {

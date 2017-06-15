@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ import eu.ggnet.dwoss.stock.entity.StockTransaction;
 
 import java.io.Serializable;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.ReceiptOperation;
@@ -38,7 +37,6 @@ import lombok.Data;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface UnitProcessor {
 
     @Data
@@ -145,7 +143,7 @@ public interface UnitProcessor {
 
     /**
      * Transfers a UniqueUnits StockUnit to the supplied Stock.
-     *
+     * <p>
      * <ul>
      * <li>Validate, if a StockUnit for the UniqueUnit exists, and this StockUnit is in Stock</li>
      * <li>Transfer StockUnit via {@link StockTransactionType#EXTERNAL_TRANSFER}</li>

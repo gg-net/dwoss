@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.mandator.api.service;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
@@ -27,7 +26,6 @@ import eu.ggnet.dwoss.rules.PaymentMethod;
  * @author pascal.perau
  */
 @Local
-@Remote
 public interface DocumentService {
 
     String paymentInstructionText(DocumentType type, PaymentMethod paymentMethod);

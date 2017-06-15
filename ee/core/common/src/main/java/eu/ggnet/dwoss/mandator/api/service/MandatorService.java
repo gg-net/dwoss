@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,14 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.TradeName;
-
 
 /**
  *
  * @author pascal.perau
  */
-@Local
 @Remote
 public interface MandatorService {
 

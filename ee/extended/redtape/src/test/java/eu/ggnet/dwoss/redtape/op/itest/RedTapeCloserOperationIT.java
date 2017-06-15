@@ -1,12 +1,12 @@
 package eu.ggnet.dwoss.redtape.op.itest;
 
+import eu.ggnet.dwoss.redtape.op.itest.support.RedTapeCloserOpertaionItBean;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
@@ -26,14 +26,11 @@ import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtape.op.itest.support.*;
 import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
@@ -42,12 +39,9 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.redtape.entity.Document.Condition.CANCELED;
-import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
-import static eu.ggnet.dwoss.rules.ProductGroup.COMMENTARY;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
-import static eu.ggnet.dwoss.rules.TradeName.HP;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -84,7 +78,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
 
     }
 
-    private final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;
+    public final static String WARRANTY_PART_NO = WarrantyServiceStup.WARRANTY_PART_NO;
 
     private final static Random R = new Random();
 
@@ -269,53 +263,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
         redTapeCloser.executeManual("Junit");
 
         redTapeCloserOpertaionItBean.checkReferences(dos.getId());
-    }
-
-    @Stateless
-    public static class RedTapeCloserOpertaionItBean {
-
-        @Inject
-        private ReportLineEao reportEao;
-
-        @Inject
-        @UniqueUnits
-        private EntityManager uuEm;
-
-        @Inject
-        @Stocks
-        private EntityManager stockEm;
-
-        public void checkReferences(long dossierId) {
-            List<ReportLine> allLines = reportEao.findAll();
-
-            List<ReportLine> collect = allLines.stream().filter((line) -> {
-                return line.getPositionType().equals(PositionType.PRODUCT_BATCH)
-                        && line.getDossierId() == dossierId;
-            }).collect(Collectors.toList());
-            assertEquals("Assert ten warranties to be present", 2, collect.size());
-
-            for (ReportLine line : collect) {
-                ReportLine reference = line.getReference(WARRANTY);
-                assertFalse("Line has no unit reference " + line, reference == null);
-                assertEquals("Assert equal dossier id in reference", reference.getDossierId(), dossierId);
-                assertFalse("Contractor has not been set", reference.getContractor() == null);
-            }
-        }
-
-        public Product makeWarrantyProduct() {
-            Product p = new Product(COMMENTARY, HP, WARRANTY_PART_NO, "Warranty Product");
-            uuEm.persist(p);
-            return p;
-        }
-
-        //delete Stockunit and logictransaction for specific stockunit
-        public void deleteStockUnit(int stockUnitId) {
-            StockUnit unit = stockEm.find(StockUnit.class, stockUnitId);
-            LogicTransaction transaction = stockEm.find(LogicTransaction.class, unit.getLogicTransaction().getId());
-            stockEm.remove(unit);
-            stockEm.remove(transaction);
-        }
-
     }
 
     /**

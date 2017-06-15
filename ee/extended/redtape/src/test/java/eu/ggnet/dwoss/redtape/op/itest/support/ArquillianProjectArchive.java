@@ -28,10 +28,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.op.itest.InjectIT;
+import eu.ggnet.dwoss.redtape.*;
 
-import static org.jboss.shrinkwrap.api.Filters.exclude;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
 /**
@@ -45,7 +43,6 @@ public class ArquillianProjectArchive {
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
         Package projectPackage = RedTapeWorker.class.getPackage();
-        Package itestPackage = InjectIT.class.getPackage();
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
@@ -56,15 +53,23 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
-        WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
-                .addPackages(true, exclude(itestPackage), projectPackage)
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "redtape-persistence-test.war")
+                // Because we use the same package for persistence redtape and extended redtape, we need to select everything here manually.
+                // TODO: Consider moving everything into a different package.
+                .addPackages(true, projectPackage.getName() + ".gen", projectPackage.getName() + ".gsoffice", projectPackage.getName() + ".reporting",
+                        projectPackage.getName() + ".state", projectPackage.getName() + ".workflow")
+                .addClasses(DocumentSupporter.class, DocumentSupporterOperation.class, RedTapeWorker.class, RedTapeWorkerOperation.class, UnitOverseer.class,
+                        UnitOverseerBean.class, UnitOverseerRest.class, UniversalSearcher.class, UniversalSearcherOperation.class)
+                // End of manual add ----
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
+                // Testresources.
                 .addClass(SupportBean.class)
                 .addClass(NaivBuilderUtil.class)
                 .addClass(DatabaseCleaner.class)
                 .addClass(WarrantyServiceStup.class)
+                .addClass(RedTapeCloserOpertaionItBean.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsResource("eu/ggnet/dwoss/redtape/Document_Template.jrxml")
