@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.workflow;
 
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.RedTapeCounter;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -34,17 +28,13 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
 import eu.ggnet.dwoss.redtape.eao.AddressEao;
 import eu.ggnet.dwoss.redtape.emo.RedTapeCounterEmo;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
-
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-
 import eu.ggnet.dwoss.stock.emo.EquilibrationResult;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
 
@@ -54,22 +44,38 @@ import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
  *
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
-@AllArgsConstructor
 public abstract class RedTapeWorkflow {
 
     protected final Logger L = LoggerFactory.getLogger(this.getClass());
 
-    protected final EntityManager redTapeEm;
+    protected EntityManager redTapeEm;
 
-    protected final EntityManager uniqueUnitEm;
+    protected EntityManager uniqueUnitEm;
 
-    protected final EntityManager stockEm;
+    protected EntityManager stockEm;
 
     // TODO: push down.
     protected String arranger;
 
-    protected final Mandator mandator;
+    protected Mandator mandator;
+
+    public RedTapeWorkflow() {
+    }
+
+    public RedTapeWorkflow(EntityManager redTapeEm, EntityManager uniqueUnitEm, EntityManager stockEm, Mandator mandator) {
+        this.redTapeEm = redTapeEm;
+        this.uniqueUnitEm = uniqueUnitEm;
+        this.stockEm = stockEm;
+        this.mandator = mandator;
+    }
+
+    public RedTapeWorkflow(EntityManager redTapeEm, EntityManager uniqueUnitEm, EntityManager stockEm, String arranger, Mandator mandator) {
+        this.redTapeEm = redTapeEm;
+        this.uniqueUnitEm = uniqueUnitEm;
+        this.stockEm = stockEm;
+        this.arranger = arranger;
+        this.mandator = mandator;
+    }
 
     public Document execute() {
         throw new UnsupportedOperationException("Not Yet Implemented");

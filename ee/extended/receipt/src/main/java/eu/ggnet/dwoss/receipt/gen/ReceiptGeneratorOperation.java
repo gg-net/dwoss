@@ -206,7 +206,7 @@ public class ReceiptGeneratorOperation {
         UniqueUnit unit = unitGenerator.makeUniqueUnit(contractor, product);
         unitProcessor.receipt(unit, product, shipment, transaction, ReceiptOperation.SALEABLE, "SampleGenerator", "Generator");
         stockTransactionProcessor.rollIn(Arrays.asList(transaction), "JUnit");
-        return unit;
+        return uniqueUnitAgent.findUnitByIdentifierEager(REFURBISHED_ID, unit.getRefurbishId());
     }
 
     public void makeWarrantyProduct(String partNumber) {

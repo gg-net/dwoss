@@ -32,14 +32,23 @@ public class SupportBean {
     @RedTapes
     private EntityManager redTapeEm;
 
+    @Inject
+    private StockUnitEao stockUnitEao;
+
+    @Inject
+    private StockTransactionEmo stockTransactionEmo;
+
+    @Inject
+    private LogicTransactionEao logicTransactionEao;
+
     public LogicTransaction findByDossierId(long id) {
-        LogicTransaction lt = new LogicTransactionEao(stockEm).findByDossierId(id);
+        LogicTransaction lt = logicTransactionEao.findByDossierId(id);
         lt.getUnits().size();
         return lt;
     }
 
     public StockUnit changeStock(int uniqueUnitId, int target) {
-        StockUnit stockUnit1 = new StockUnitEao(stockEm).findByUniqueUnitId(uniqueUnitId);
+        StockUnit stockUnit1 = stockUnitEao.findByUniqueUnitId(uniqueUnitId);
         StockLocationDiscoverer discoverer = new StockLocationDiscoverer(stockEm);
         Stock notDestination = stockEm.find(Stock.class, target);
         discoverer.discoverAndSetLocation(stockUnit1, notDestination);
@@ -47,11 +56,10 @@ public class SupportBean {
     }
 
     public StockUnit rollOut(int uniqueUnitId) {
-        StockTransactionEmo transactionEmo = new StockTransactionEmo(stockEm);
-        StockUnit stockUnit2 = new StockUnitEao(stockEm).findByUniqueUnitId(uniqueUnitId);
-        StockTransaction rollOut = transactionEmo.requestRollOutPrepared(stockUnit2.getStock().getId(), "JUnit", "JUnit");
+        StockUnit stockUnit2 = stockUnitEao.findByUniqueUnitId(uniqueUnitId);
+        StockTransaction rollOut = stockTransactionEmo.requestRollOutPrepared(stockUnit2.getStock().getId(), "JUnit", "JUnit");
         rollOut.addUnit(stockUnit2);
-        transactionEmo.completeRollOut("JUnit", Arrays.asList(rollOut));
+        stockTransactionEmo.completeRollOut("JUnit", Arrays.asList(rollOut));
         return stockUnit2;
     }
 

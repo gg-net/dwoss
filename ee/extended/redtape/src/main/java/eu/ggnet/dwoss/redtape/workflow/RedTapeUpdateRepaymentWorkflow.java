@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.redtape.workflow;
 
 import java.util.*;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
@@ -43,6 +44,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
  *
  * @author oliver.guenther
  */
+@Stateless
 public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
 
     @Inject
@@ -55,12 +57,23 @@ public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
     private PostLedger postLedger;
 
     @Inject
-    public RedTapeUpdateRepaymentWorkflow(
-            @RedTapes EntityManager redTapeEm,
-            @UniqueUnits EntityManager uniqueUnitEm,
-            @Stocks EntityManager stockEm,
-            Mandator mandator) {
-        super(redTapeEm, uniqueUnitEm, stockEm, mandator);
+    public void setRedTapeEm(@RedTapes EntityManager redTapeEm) {
+        this.redTapeEm = redTapeEm;
+    }
+
+    @Inject
+    public void setUniqueUnitEm(@UniqueUnits EntityManager uniqueUnitEm) {
+        this.uniqueUnitEm = uniqueUnitEm;
+    }
+
+    @Inject
+    public void setStockEm(@Stocks EntityManager stockEm) {
+        this.stockEm = stockEm;
+    }
+
+    @Inject
+    public void setMandator(Mandator mandator) {
+        this.mandator = mandator;
     }
 
     protected void validate(Document altered, Document previous, Integer destinationId) {

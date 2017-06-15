@@ -20,6 +20,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Set;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -46,6 +47,7 @@ import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
  *
  * @author oliver.guenther
  */
+@Stateless
 public class RedTapeCreateDossierWorkflow {
 
     protected final static Logger L = LoggerFactory.getLogger(RedTapeCreateDossierWorkflow.class);

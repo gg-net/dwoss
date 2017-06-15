@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,9 @@ package eu.ggnet.dwoss.uniqueunit.op;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnitSupport;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
@@ -33,7 +34,8 @@ import eu.ggnet.dwoss.uniqueunit.entity.Product;
 public class ProductOperation {
 
     @Inject
-    private UniqueUnitSupport uus;
+    @UniqueUnits
+    private EntityManager uus;
 
     /**
      * Update a price of a product by id.
@@ -45,7 +47,7 @@ public class ProductOperation {
      * @return the updated product
      */
     public Product updatePrice(long productId, PriceType priceType, double price, String comment) {
-        Product product = new ProductEao(uus.getEntityManager()).findById(productId);
+        Product product = new ProductEao(uus).findById(productId);
         if ( product == null ) return null;
         product.setPrice(priceType, price, comment);
         return product;

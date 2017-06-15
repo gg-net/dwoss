@@ -300,7 +300,7 @@ public class ProductProcessorOperation implements ProductProcessor {
 
         L.info("Persisting {} including model change={}", SpecFormater.toDetailedName(spec), (model == spec.getModel()));
         specEm.persist(spec);
-
+        specEm.flush(); // Ensuring Id generation.
         ProductEao productEao = new ProductEao(uuEm);
         Product product = productEao.findByPartNo(spec.getPartNo());
         if ( product == null ) product = new Product();
@@ -310,7 +310,11 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         L.debug("persisting {}", product);
-        if ( !uuEm.contains(product) ) uuEm.persist(product);
+        if ( !uuEm.contains(product) ) {
+            uuEm.persist(product);
+            uuEm.flush(); // Ensuring Id generation
+        }
+
         L.debug("creating weak reference ProductSpec.productId=Product.id value ({})", product.getId());
         spec.setProductId(product.getId());
 

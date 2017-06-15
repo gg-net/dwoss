@@ -99,8 +99,9 @@ public class RedTapeOperationCapitalAssetIT extends ArquillianProjectArchive {
         //Commit explicit date to document for assertion
         doc = supportBean.changeActual(doc, new GregorianCalendar(2012, 3, 15).getTime());
 
+        Position pos = NaivBuilderUtil.unit(uu);
         //Create Positions
-        doc.append(NaivBuilderUtil.unit(uu));
+        doc.append(pos);
         doc.append(NaivBuilderUtil.comment("Comment", "A nice comment"));
 
         //add units to LogicTransaction

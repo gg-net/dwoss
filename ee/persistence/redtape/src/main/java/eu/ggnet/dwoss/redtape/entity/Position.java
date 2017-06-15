@@ -18,7 +18,8 @@ package eu.ggnet.dwoss.redtape.entity;
 
 import java.io.Serializable;
 import java.lang.ProcessBuilder.Redirect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -26,10 +27,10 @@ import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 
 import eu.ggnet.dwoss.redtape.entity.Position.Key;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 
 import lombok.*;
-import lombok.experimental.Builder;
 
 import static javax.persistence.CascadeType.*;
 
@@ -55,8 +56,10 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @IdClass(Key.class)
 @NamedQueries({
-    @NamedQuery(name = "Position.findByDocumentId", query = "SELECT p FROM Position p WHERE p.document.id = ?1"),
-    @NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1"),
+    @NamedQuery(name = "Position.findByDocumentId", query = "SELECT p FROM Position p WHERE p.document.id = ?1")
+    ,
+    @NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1")
+    ,
     @NamedQuery(name = "Position.findByUniqueUnitId", query = "SELECT p FROM Position p WHERE p.uniqueUnitId = ?1")
 })
 public class Position implements Serializable, Comparable<Position> {

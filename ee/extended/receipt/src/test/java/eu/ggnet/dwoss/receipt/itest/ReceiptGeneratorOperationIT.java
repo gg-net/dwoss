@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,9 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
@@ -41,8 +42,23 @@ public class ReceiptGeneratorOperationIT extends ArquillianProjectArchive {
     @Inject
     ProductEao productEao;
 
+    @Inject
+    private DatabaseCleaner cleaner;
+
+    @After
+    public void clearDatabase() throws Exception {
+        cleaner.clear();
+    }
+
     @Test
-    public void testGenerate() throws Exception {
+    public void testMakeUniqueUnit() {
+        UniqueUnit uu = receiptGenerator.makeUniqueUnit();
+        assertThat(uu).as("UniqueUnit").isNotNull();
+        assertThat(uu.getProduct()).as("Product").isNotNull();
+    }
+
+    @Test
+    public void testMakeProductSpecsAndUniqueUnits() throws Exception {
         List<ProductSpec> specs = receiptGenerator.makeProductSpecs(20, true);
         assertThat(specs).as("Generated ProductSpecs").isNotEmpty().hasSize(20);
         for (ProductSpec spec : specs) {
