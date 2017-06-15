@@ -47,14 +47,8 @@ import eu.ggnet.dwoss.uniqueunit.op.ProductOperation;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.COMMENTARY;
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 
-/**
- * Generator for Products an
- * import static de.dw.rules.ProductGroup.COMMENTARY;
- * d Units to be receipt, uses {@link SpecGenerator}.
- *
- * @author oliver.guenther
- */
 @Stateless
 public class ReceiptGeneratorOperation {
 
@@ -103,12 +97,14 @@ public class ReceiptGeneratorOperation {
 
     /**
      * Generates an amount of ProductSpecs and receipts them.
+     * Persists entities in spec and uniqueunit.
      *
      * @param amount            the amount to generate.
      * @param generateCostPrice
      * @return the generated and receipted specs.
      */
     public List<ProductSpec> makeProductSpecs(int amount, boolean generateCostPrice) {
+        L.info("Generating {} Products", amount);
         SubMonitor m = monitorFactory.newSubMonitor("Generating " + amount + " Products", amount);
         m.start();
         List<ProductSpec> specs = new ArrayList<>();
@@ -161,6 +157,7 @@ public class ReceiptGeneratorOperation {
         if ( amountProducts <= minProducts ) amountProducts = minProducts;
         if ( amountProducts >= maxProducts ) amountProducts = maxProducts;
 
+        L.info("Generating {} Units", amount);
         SubMonitor m = monitorFactory.newSubMonitor("Generating " + amount + " Units", amount);
         m.start();
         List<ProductSpec> productSpecs = makeProductSpecs(amountProducts, generatePrice);
@@ -185,7 +182,7 @@ public class ReceiptGeneratorOperation {
             }
             if ( generateSalesChannel ) unit.setSalesChannel(R.nextBoolean() ? SalesChannel.CUSTOMER : SalesChannel.RETAILER);
             unitProcessor.receipt(unit, product, shipment, transaction, ReceiptOperation.SALEABLE, "SampleGenerator", "Generator");
-            units.add(unit);
+            units.add(uniqueUnitAgent.findUnitByIdentifierEager(REFURBISHED_ID, unit.getRefurbishId())); // Ad the now persisted instance.
         }
 
         stockTransactionProcessor.rollIn(Arrays.asList(transaction), "JUnit");

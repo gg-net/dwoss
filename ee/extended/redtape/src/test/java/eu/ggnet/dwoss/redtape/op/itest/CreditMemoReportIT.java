@@ -86,8 +86,6 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
     private ReceiptGeneratorOperation receiptGenerator;
 
     @Test
-//    @Ignore
-    // The chang of the report, that needs a predecessor results here in a nullpointer exception.
     public void testCreditMemoReportOperation() throws IOException, InterruptedException {
         long customerId = customerGenerator.makeCustomer();
         List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(4, true, true);

@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import java.sql.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,7 +23,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
-import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -73,10 +71,6 @@ public class UnitProcessorOperation implements UnitProcessor {
     @Inject
     @Stocks
     private EntityManager stockEm;
-
-    @Inject
-    @RedTapes
-    private DataSource redTapeSource;
 
     @Inject
     @RedTapes
@@ -329,14 +323,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         L.debug("Refreshed requestActiveDocumentBlock to = {} with dossier = {}", doc, doc.getDossier());
         if ( !doc.isActive() )
             throw new RuntimeException("The Document(id={}) has changed to inactive while locking, this was very unlikely, inform Administrator");
-        int directCount = countPositionsDirect(doc);
-        if ( doc.getPositions().size() != directCount ) {
-            L.warn("Using Workaround for UniqueUnit(id=" + uniqueUnit.getId() + ",refurbishId=" + uniqueUnit.getRefurbishId()
-                    + " cause Document(id=" + doc.getId() + ").position.size=" + doc.getPositions().size() + " != directCount=" + directCount);
-            doc.append(directCount + 1, toPosition(uniqueUnit, operationComment));
-        } else {
-            doc.append(toPosition(uniqueUnit, operationComment));
-        }
+        doc.append(toPosition(uniqueUnit, operationComment));
         LogicTransaction lt = new LogicTransactionEmo(stockEm).request(doc.getDossier().getId(), LockModeType.PESSIMISTIC_FORCE_INCREMENT);
         lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction
         L.debug("Executed Operation {} for uniqueUnit(id={},refurbishId={}), added to LogicTransaction({}) and Dossier({})",
@@ -384,26 +371,4 @@ public class UnitProcessorOperation implements UnitProcessor {
         position.setName("Entfernt durch " + operation);
     }
 
-    /**
-     * This is maximum crap.
-     * We need to verify the very seldom case, that another transaction did in fact modify the Document
-     * by adding positions in the same phase, this em was active.
-     *
-     * @param doc theDocument
-     * @return the amount of Positions directly from the Databases.
-     */
-    // FIXME: Repair this asp, after we switched to the EJB Server.
-    private int countPositionsDirect(Document doc) {
-        try {
-            try (Connection con = redTapeSource.getConnection();
-                    Statement stm = con.createStatement();
-                    ResultSet rs = stm.executeQuery("SELECT COUNT(id) FROM Position WHERE Document_id = " + doc.getId());) {
-                rs.next();
-                return rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            L.error("CountPositionsDirect failed, returning doc.getPositions().size() as fallback. Look into Datasource und native SQL.", ex);
-            return doc.getPositions().size();
-        }
-    }
 }

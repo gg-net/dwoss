@@ -301,8 +301,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         L.info("Persisting {} including model change={}", SpecFormater.toDetailedName(spec), (model == spec.getModel()));
         specEm.persist(spec);
 
-        EntityManager uniqueUnitEm = uuEm;
-        ProductEao productEao = new ProductEao(uniqueUnitEm);
+        ProductEao productEao = new ProductEao(uuEm);
         Product product = productEao.findByPartNo(spec.getPartNo());
         if ( product == null ) product = new Product();
         product.setGroup(spec.getModel().getFamily().getSeries().getGroup());
@@ -311,7 +310,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
         L.debug("persisting {}", product);
-        if ( !uniqueUnitEm.contains(product) ) uniqueUnitEm.persist(product);
+        if ( !uuEm.contains(product) ) uuEm.persist(product);
         L.debug("creating weak reference ProductSpec.productId=Product.id value ({})", product.getId());
         spec.setProductId(product.getId());
 

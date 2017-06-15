@@ -106,23 +106,6 @@ public class RedTapeUpdateOrderWorkflow extends RedTapeWorkflow {
             newDocument.remove(Document.Flag.CUSTOMER_EXACTLY_BRIEFED);
         }
         newDocument.setHistory(new DocumentHistory(arranger, comment));
-        Document testdoc = newDocument;
-        do {
-            L.warn("document.id={} InvoiceAddress.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getInvoiceAddress()));
-            L.warn("document.id={} ShippingAddress.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getShippingAddress()));
-            if ( testdoc.getPredecessor() == null ) {
-                L.warn("document.id={} no more predecessors", testdoc.getId());
-            } else {
-                L.warn("document.id={} previos.attached={}", testdoc.getId(), redTapeEm.contains(testdoc.getPredecessor()));
-            }
-            testdoc = testdoc.getPredecessor();
-        } while (testdoc != null);
-
-        final Dossier dos = newDocument.getDossier();
-        dos.getDocuments().forEach(d -> {
-            L.warn("dossier.id={} document.id={} InvoiceAddress.attached={}", dos.getId(), d.getId(), redTapeEm.contains(d.getInvoiceAddress()));
-            L.warn("dossier.id={} document.id={} ShippingAddress.attached={}", dos.getId(), d.getId(), redTapeEm.contains(d.getShippingAddress()));
-        });
 
         redTapeEm.persist(newDocument);
         redTapeEm.flush(); // Writing new document an gennerating the id;

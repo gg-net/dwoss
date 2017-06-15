@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtape;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.*;
+import javax.ejb.Remote;
 import javax.enterprise.event.Observes;
 
 import eu.ggnet.dwoss.event.AddressChange;
@@ -37,7 +37,7 @@ import lombok.Value;
  * <p/>
  * @author oliver.guenther
  */
-@Remote // HINT: Don't add local here. Otherwise the test will fail, as the entitys don't get detached on call.
+@Remote
 public interface RedTapeWorker {
 
     @Value
@@ -51,7 +51,7 @@ public interface RedTapeWorker {
 
     /**
      * Creates a new, valid Dossier containing a document of the order type.
-     *
+     * <p>
      * See {@link RedTapeCreateDossierWorkflow} for implementation.
      *
      * @param customerId The customer associated to the new Dossier.

@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.redtape.op.itest;
 
-import eu.ggnet.dwoss.redtape.op.itest.support.RedTapeCloserOpertaionItBean;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,7 +7,8 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
@@ -215,7 +214,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
     }
 
     @Test
-    @Ignore
     public void testDayClosingWarrenty() throws UserInfoException {
         long customerId = customerGenerator.makeCustomer();
         UniqueUnit uu = receiptGenerator.makeUniqueUnits(1, true, true).get(0);
