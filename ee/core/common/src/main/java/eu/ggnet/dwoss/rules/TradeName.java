@@ -213,7 +213,7 @@ public enum TradeName {
     }
 
     /**
-     * Rule: If we are a Manufacturer, brands is not Empty (never null).
+     * Applied Rule: If we are a manufacturer, brands is not Empty (never null).
      * <p>
      * @return true if is a manufacturer.
      */

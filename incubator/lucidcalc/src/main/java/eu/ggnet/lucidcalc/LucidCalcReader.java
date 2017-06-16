@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther.
  *
  * This library is free software; you can redistribute it and/or
@@ -48,12 +48,12 @@ public interface LucidCalcReader {
 
     /**
      * Reads an xls file and returns the contests as List of Instances of Type U
-     *
+     * <p>
      * TODO: Inference Mechanism only counts the Parameters, this can be done better and more secure.
      *
      *
      * @param <U>   the type
-     * @param doc   the file to be read
+     * @param file  the file to be read
      * @param clazz the clazz to build the container Instance.
      * @return the list
      */
@@ -63,13 +63,13 @@ public interface LucidCalcReader {
 
     /**
      * Reads an xls file and returns the contests as List of Instances of Type U
-     *
+     * <p>
      * TODO: Inference Mechanism only counts the Parameters, this can be done better and more secure.
      *
      *
-     * @param <U>   the type
-     * @param file  the file to be read
-     * @param clazz the instance to infer the type
+     * @param <U>      the type
+     * @param file     the file to be read
+     * @param instance the instance to infer the type
      * @return the list
      */
     <U> List<U> read(File file, U instance);

@@ -38,7 +38,7 @@ public class PriceCoreOperationIT extends ArquillianProjectArchive {
     @Test
     public void testStore() {
         stockGenerator.makeStocksAndLocations(2);
-        List<UniqueUnit> generated = receiptGenerator.makeUniqueUnits(20, true, false);
+        receiptGenerator.makeUniqueUnits(20, true, false);
 
         // Estimate all Units
         List<PriceEngineResult> pers = priceCore.loadAndCalculate(null);

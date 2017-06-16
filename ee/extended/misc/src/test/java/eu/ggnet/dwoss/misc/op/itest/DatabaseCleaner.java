@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.op.itest;
 
-import java.util.Arrays;
-import java.util.List;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -29,6 +26,7 @@ import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.util.Utils;
 
 /**
  *
@@ -62,8 +60,7 @@ public class DatabaseCleaner {
     private EntityManager uniqueunitEm;
 
     public void clear() throws Exception {
-        List<EntityManager> ems = Arrays.asList(redTapeEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
-        ems.forEach(em -> em.createNativeQuery("TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK").executeUpdate());
+        Utils.clearH2Db(redTapeEm, reportEm, customerEm, specEm, stockEm, uniqueunitEm);
     }
 
 }

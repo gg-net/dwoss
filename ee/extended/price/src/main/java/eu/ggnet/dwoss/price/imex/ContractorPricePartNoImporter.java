@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,14 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.FileJacket;
-
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.ejb.*;
+import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.UserInfoException;
 
 import lombok.Value;
 
@@ -34,7 +33,6 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface ContractorPricePartNoImporter {
 
     @Value

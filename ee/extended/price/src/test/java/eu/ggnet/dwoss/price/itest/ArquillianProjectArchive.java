@@ -21,13 +21,15 @@ import java.io.File;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
+import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.price.Exporter;
-import eu.ggnet.dwoss.price.test.TestBeansXml;
+import eu.ggnet.dwoss.price.test.ImportPriceManagementLogicTest;
 
 import static org.jboss.shrinkwrap.api.Filters.exclude;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -43,7 +45,7 @@ public class ArquillianProjectArchive {
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
         Package projectPackage = Exporter.class.getPackage();
-        Package testPackage = TestBeansXml.class.getPackage();
+        Package testPackage = ImportPriceManagementLogicTest.class.getPackage();
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
@@ -52,16 +54,16 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-ee-extended-receipt", RUNTIME, false)) // Using Receipt for unit generation
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
-                .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
+                .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
                 .addPackages(true, exclude(testPackage), projectPackage)
-                .addClass(PriceDataSourceAndProducer.class) // The Datasource Configuration and the Static Producers
+                .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
-                .addAsWebInfResource(new ClassLoaderAsset("META-INF/beans.xml"), "beans.xml")
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsLibraries(libs);
         return war;

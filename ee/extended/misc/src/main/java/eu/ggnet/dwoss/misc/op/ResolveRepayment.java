@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.misc.op;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.entity.ReportLine;
@@ -33,7 +32,6 @@ import lombok.ToString;
  *
  * @author bastian.venz
  */
-@Local
 @Remote
 public interface ResolveRepayment {
 

@@ -20,13 +20,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.apache.commons.lang.time.DateUtils;
-import org.fest.assertions.core.Condition;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,7 +37,6 @@ import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
@@ -50,7 +45,6 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -58,15 +52,13 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import static eu.ggnet.dwoss.rules.DocumentType.*;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
-import static eu.ggnet.dwoss.rules.TradeName.AMAZON;
 import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
 public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
 
-    @Inject
+    @EJB
     private ResolveRepayment bean;
 
     @Inject
@@ -108,23 +100,6 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
     @EJB
     private StockAgent stockAgent;
 
-    @Inject
-    private DatabaseCleaner cleaner;
-
-    @After
-    public void clearDatabase() throws Exception {
-        cleaner.clear();
-    }
-
-    @Test
-    public void testGetRepaymentLines() {
-        int amount = 50;
-        helper.generateLines(amount);
-
-        List<ReportLine> repaymentLines = bean.getRepaymentLines(AMAZON);
-        assertThat(repaymentLines).isNotEmpty().hasSize(amount);
-    }
-
     @Test
     public void testResolve() throws UserInfoException {
         List<Stock> allStocks = stockGenerator.makeStocksAndLocations(2);
@@ -133,18 +108,14 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         assertThat(customerGenerator.makeCustomers(10)).isNotEmpty();
         assertThat(receiptGenerator.makeUniqueUnits(200, true, true)).isNotEmpty();
         assertThat(redTapeGenerator.makeSalesDossiers(30)).isNotEmpty();
-        TradeName tradeName = ACER;
-        assertThat(tradeName).is(new Condition<TradeName>() {
-            @Override
-            public boolean matches(TradeName t) {
-                return t.isManufacturer();
-            }
-        });
+        final TradeName TRADE_NAME = ACER;
+        assertThat(TRADE_NAME.isManufacturer()).isTrue();
+
         long customerId = customerGenerator.makeCustomer();
         List<UniqueUnit> uus = receiptGenerator.makeUniqueUnits(1, true, true);
         UniqueUnit uu = uus.get(0);
-        helper.changeContractors(uu.getId(), tradeName);
-        String refurbishId = uu.getIdentifier(REFURBISHED_ID);
+        uu = helper.changeContractors(uu.getId(), TRADE_NAME);
+        String refurbishId = uu.getRefurbishId();
 
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
         Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0); // order oder direct invoice
@@ -158,14 +129,14 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
                 .price(uu.getPrice(CUSTOMER))
                 .tax(GlobalConfig.TAX)
                 .afterTaxPrice(MathUtil.roundedApply(uu.getPrice(CUSTOMER), GlobalConfig.TAX, 0.))
-                .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
+                .name(uu.getProduct().getName() + " | SN:" + uu.getSerial())
                 .description(uu.getProduct().getDescription())
                 .bookingAccount(-1)
                 .refurbishedId(refurbishId)
                 .build());
 
         //add units to LogicTransaction
-        unitOverseer.lockStockUnit(dos.getId(), uu.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
+        unitOverseer.lockStockUnit(dos.getId(), uu.getRefurbishId());
 
         doc.add(Document.Condition.PAID);
         doc.add(Document.Condition.PICKED_UP);
@@ -173,28 +144,29 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
 
         doc = redTapeWorker.update(doc, null, "JUnit");
 
-        doc = redTapeAgent.findByIdEager(Document.class, doc.getId());
+        // Now create an annulation Invoice
         doc.setType(ANNULATION_INVOICE);
-        ArrayList<Position> positions = new ArrayList<>();
+//        ArrayList<Position> positions = new ArrayList<>();
         for (Position value : doc.getPositions().values()) {
-            if ( value.getType() == UNIT ) positions.add(value);
+            //          if ( value.getType() == UNIT ) positions.add(value);
             value.setPrice(value.getPrice() * -1);
             value.setAfterTaxPrice(value.getAfterTaxPrice() * -1);
 
         }
-        doc = redTapeWorker.update(doc, activeStock.getId(), "JUnit Test");
+        redTapeWorker.update(doc, activeStock.getId(), "JUnit Test");
 
+        // Closing the Day. Creating report lines.
         redTapeCloser.executeManual("JUnitTest");
 
         // Ensure, that we have a Mirror Dossier on the repaymentcustomers.
-        List<Dossier> findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
-        assertThat(findDossiersOpenByCustomerIdEager).isNotEmpty();
-        Dossier repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
+        List<Dossier> repaymentDossiers = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(TRADE_NAME).get());
+        assertThat(repaymentDossiers).as("RepaymentDossiers").isNotEmpty();
+        Dossier repaymentDossier = repaymentDossiers.get(0);
         List<Document> activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
         assertThat(activeDocuments).isNotEmpty();
         assertThat(activeDocuments.get(0).getPositions(UNIT)).isNotEmpty();
 
-        Report report = new Report("Test", tradeName, new Date(), new Date());
+        Report report = new Report("Test", TRADE_NAME, new Date(), new Date());
         List<ReportLine> reportLines = reportLineEao.findAll();
         List<Storeable> arrayList = new ArrayList<>();
         reportLines.stream().filter((line) -> (line.getDocumentType() == INVOICE)).forEach((line) -> {
@@ -205,7 +177,8 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         assertThat(report.getLines()).isNotEmpty();
         List<ReportLine> notReported = report.getLines().stream().filter((l) -> reportLines.contains(l)).collect(Collectors.toList());
 
-        ReportLine lineToUniqueUnit = notReported.stream().filter((line) -> line.getUniqueUnitId() == uu.getId()).collect(Collectors.toList()).get(0);
+        final int uuId = uu.getId();
+        ReportLine lineToUniqueUnit = notReported.stream().filter((line) -> line.getUniqueUnitId() == uuId).collect(Collectors.toList()).get(0);
         assertThat(lineToUniqueUnit).isNotNull();
 
         List<ReportLine> repaymentLines = bean.getRepaymentLines(lineToUniqueUnit.getContractor());
@@ -213,13 +186,13 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
 
         assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNotEmpty();
         //Resolving of the Unit.
-        bean.resolveUnit(refurbishId, tradeName, "JUnit", "JUnit");
+        bean.resolveUnit(refurbishId, TRADE_NAME, "JUnit", "JUnit");
 
         List<Report> reports = reportAgent.findAll(Report.class);
         assertThat(reports).hasSize(2);
         Report repaymentReport = null;
         // Try to get Report with the Name that is generated in a Static method inside the ResolveRepaymentBean.
-        if ( reports.get(0).getName().equals(ResolveRepaymentBean.toReportName(tradeName)) ) repaymentReport = reports.get(0);
+        if ( reports.get(0).getName().equals(ResolveRepaymentBean.toReportName(TRADE_NAME)) ) repaymentReport = reports.get(0);
         else repaymentReport = reports.get(1);
 
         repaymentReport = reportAgent.findByIdEager(Report.class, repaymentReport.getId());
@@ -228,9 +201,9 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         assertThat(repaymentLines).contains(repaymentLine);
 
         // Ensure, that we the mirror Dossier has be cleared of the unit
-        findDossiersOpenByCustomerIdEager = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(tradeName).get());
-        assertThat(findDossiersOpenByCustomerIdEager).isNotEmpty();
-        repaymentDossier = findDossiersOpenByCustomerIdEager.get(0);
+        repaymentDossiers = redTapeAgent.findDossiersOpenByCustomerIdEager(repaymentCustomers.get(TRADE_NAME).get());
+        assertThat(repaymentDossiers).isNotEmpty();
+        repaymentDossier = repaymentDossiers.get(0);
         activeDocuments = repaymentDossier.getActiveDocuments(BLOCK);
         assertThat(activeDocuments).isNotEmpty();
         assertThat(activeDocuments.get(0).getPositions(UNIT)).isEmpty();
@@ -239,30 +212,4 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         assertThat(stockAgent.findStockUnitsByRefurbishIdEager(Arrays.asList(refurbishId))).isNullOrEmpty();
     }
 
-    @Stateless
-    public static class ResolveRepaymentBeanITHelper {
-
-        @Inject
-        private ReportLineGenerator generator;
-
-        @Inject
-        ReportLineEao eao;
-
-        @EJB
-        private UniqueUnitAgent uniqueUnitAgent;
-
-        public void generateLines(int amount) {
-            for (int i = 0; i < amount; i++) {
-                ReportLine makeReportLine = generator.makeReportLine(Arrays.asList(AMAZON), DateUtils.addDays(new Date(), -30), 25);
-                makeReportLine.setPositionType(PositionType.UNIT);
-                makeReportLine.setDocumentType(ANNULATION_INVOICE);
-                eao.getEntityManager().persist(makeReportLine);
-            }
-        }
-
-        public void changeContractors(int uniqueUnitID, TradeName name) {
-            UniqueUnit uu = uniqueUnitAgent.findByIdEager(UniqueUnit.class, uniqueUnitID);
-            uu.setContractor(name);
-        }
-    }
 }
