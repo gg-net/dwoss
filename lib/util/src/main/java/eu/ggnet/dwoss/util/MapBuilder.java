@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.util;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  *
