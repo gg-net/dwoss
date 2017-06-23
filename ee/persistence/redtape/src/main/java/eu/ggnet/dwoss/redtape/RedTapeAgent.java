@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
 /**
