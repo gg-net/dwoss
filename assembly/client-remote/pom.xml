@@ -52,10 +52,21 @@
         - hibernate-core: classes used in remote client
         - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
         -->
-        <dependency>
+        <!--        <dependency>
             <groupId>org.apache.tomee</groupId>
             <artifactId>openejb-client</artifactId>
             <version>7.0.3</version>
+        </dependency>-->
+        <dependency>
+            <groupId>${javaee.groupId}</groupId>
+            <artifactId>${javaee.artifactId}</artifactId>
+            <version>${javaee.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-ejb-client-bom</artifactId>
+            <version>10.1.0.Final</version>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -86,7 +97,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.0.12.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.hibernate.javax.persistence</groupId>
@@ -108,6 +118,10 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
