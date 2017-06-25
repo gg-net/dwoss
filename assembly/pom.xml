@@ -120,9 +120,7 @@
 
     <modules>
         <module>server</module>
-        <module>client-local</module>
         <module>client-remote</module>
-        <module>client-sample</module>
     </modules>
 
 </project>

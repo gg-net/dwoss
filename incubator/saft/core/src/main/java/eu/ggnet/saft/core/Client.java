@@ -18,8 +18,8 @@ package eu.ggnet.saft.core;
 
 import java.awt.*;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.*;
@@ -27,7 +27,10 @@ import javax.naming.*;
 import javax.swing.JOptionPane;
 
 import org.openide.util.Lookup;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.api.RemoteViewClass;
 
 import static java.awt.TrayIcon.MessageType.WARNING;
 import static java.util.stream.Collectors.joining;
@@ -247,7 +250,9 @@ public class Client {
      */
     private static <T> T remoteLookup(Class<T> clazz) throws IllegalArgumentException {
         Context context = context(clazz.getName());
+        // TODO: Remove later. Or reuse more sensful, wildfly returns nothing.
         if ( CLIENT_JNDI_NAME_CACHE.isEmpty() ) {
+            // This inspection only works on tomee. wildfly keeps beeing silent.
             L.info("Running Jndi Tree inspection on Suffix: ''");
             inspectJndiTree(context, ""); // Not existing in Local Environment
             L.info("Running Jndi Tree inspection on Suffix: 'java:global'");
@@ -269,6 +274,42 @@ public class Client {
         }
         List<String> errors = new ArrayList<>();
         String clazzName = clazz.getName();
+
+        // "ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!" + viewClassName
+        String topping = "ejb:" + Lookup.getDefault().lookup(Server.class).getApp() + "/" + clazz.getSimpleName();
+
+        // look for RemoteViewAnnotation
+        RemoteViewClass viewClass = clazz.getAnnotation(RemoteViewClass.class);
+        if ( Objects.nonNull(viewClass) ) {
+            String lookup = topping + "!" + viewClass.value();
+            L.debug("JNDI Lookup: Annotation. Trying lookup={}", lookup);
+            try {
+                T result = (T)context.lookup(lookup);
+                L.debug("JNDI Lookup: Trying Annotation. Successful lookup={}", lookup);
+                context.close();
+                return result;
+            } catch (NamingException ne) {
+                errors.add("NamingException(Annotation, lookup=" + lookup + ")");
+            }
+        }
+
+        // Try default implementations
+        List<String> viewClasses = Arrays.asList("Bean", "Operation");
+
+        for (String viewClassName : viewClasses) {
+            String lookup = topping + "!" + clazzName + viewClassName;
+            L.debug("JNDI Lookup: Default Implementations. Trying lookup={}", lookup);
+            try {
+                T result = (T)context.lookup(lookup);
+                L.debug("JNDI Lookup: Default Implementations. Successful lookup={}", lookup);
+                context.close();
+                return result;
+            } catch (NamingException ne) {
+                errors.add("NamingException(Default Implementations, lookup=" + lookup + ")");
+            }
+        }
+
+        // Fall back to cache
         if ( CLIENT_JNDI_NAME_CACHE.containsKey(clazzName) ) {
             for (String name : CLIENT_JNDI_NAME_CACHE.get(clazzName)) {
                 try {

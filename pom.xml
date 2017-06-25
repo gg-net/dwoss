@@ -729,6 +729,16 @@
                 <version>4.2</version>
             </dependency>
             <dependency>
+                <groupId>org.metawidget.modules.faces</groupId>
+                <artifactId>metawidget-primefaces</artifactId>
+                <version>4.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.metawidget.modules.faces</groupId>
+                <artifactId>metawidget-facesannotation</artifactId>
+                <version>4.2</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.5</version>

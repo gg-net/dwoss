@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,6 +32,8 @@ public interface Server {
      */
     @NonNull
     Context getContext();
+
+    String getApp();
 
     /**
      * Optionally initialise data after server startup in background.

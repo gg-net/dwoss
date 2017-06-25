@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,22 @@
  */
 package eu.ggnet.dwoss.customer.assist.gen;
 
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.ReceiptOperation;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.CustomersBuilder;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.util.gen.GeneratedAddress;
-import eu.ggnet.dwoss.util.gen.NameGenerator;
-import eu.ggnet.dwoss.util.gen.Name;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
@@ -228,6 +214,8 @@ public class CustomerGeneratorOperation {
             cem.persist(c);
             ids.add(c.getId());
         }
+        cem.flush(); // Solves some batching issues.
+        cem.clear();
         m.finish();
         return ids;
     }

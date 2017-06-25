@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,7 @@ package eu.ggnet.dwoss.assembly.remote.provides;
 import java.util.Objects;
 import java.util.Properties;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.naming.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -38,9 +36,23 @@ public class RemoteServer implements Server {
 
     @Override
     public Context getContext() {
+        return getWildflyContext();
+    }
+
+    public Context getTomeeContext() {
         Properties properties = new Properties();
         properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.openejb.client.RemoteInitialContextFactory");
         properties.setProperty(Context.PROVIDER_URL, Objects.requireNonNull(URL, "Remote Host URL is null"));
+        try {
+            return new InitialContext(properties);
+        } catch (NamingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public Context getWildflyContext() {
+        final Properties properties = new Properties();
+        properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         try {
             return new InitialContext(properties);
         } catch (NamingException ex) {
@@ -54,5 +66,10 @@ public class RemoteServer implements Server {
 
     @Override
     public void shutdown() {
+    }
+
+    @Override
+    public String getApp() {
+        return "dwoss-server-1.0-SNAPSHOT";
     }
 }

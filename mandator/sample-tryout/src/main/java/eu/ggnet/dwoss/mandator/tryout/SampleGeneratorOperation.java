@@ -94,8 +94,8 @@ public class SampleGeneratorOperation implements Serializable {
             customerGenerator.makeCustomers(100);
             receiptGenerator.makeProductSpecs(30, true);
             receiptGenerator.makeUniqueUnits(200, true, true);
-//            redTapeGenerator.makeSalesDossiers(50);
-//            reportLineGeneratorRemote.makeReportLines(500);
+            redTapeGenerator.makeSalesDossiers(50);
+            reportLineGeneratorRemote.makeReportLines(500);
             LOG.info("Persistence Data generated");
             return;
         }
