@@ -40,6 +40,8 @@ import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.eao.StockEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 
+import lombok.Getter;
+
 /**
  * Sample Genaerator.
  * If the connected databases are empty this class will generate random entities and persist them.
@@ -85,8 +87,21 @@ public class SampleGeneratorOperation implements Serializable {
     @Inject
     private ReportLineEao reportLineEao;
 
+    /**
+     * If true this generator is generating samples.
+     */
+    @Getter
+    private boolean generating = false;
+
+    /**
+     * If true this generator has completed generating samples.
+     */
+    @Getter
+    private boolean generated = false;
+
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
+            generating = true;
             LOG.info("Generating Persistence Data");
             rightsGenerator.make("admin", "admin", 123, EnumSet.allOf(AtomicRight.class));
             rightsGenerator.make("user", EnumSet.noneOf(AtomicRight.class));
@@ -97,9 +112,12 @@ public class SampleGeneratorOperation implements Serializable {
             redTapeGenerator.makeSalesDossiers(50);
             reportLineGeneratorRemote.makeReportLines(500);
             LOG.info("Persistence Data generated");
+            generating = false;
+            generated = true;
             return;
         }
 
+        generating = false;
         // We have some errors, lets help the user.
         if ( stockEao.count() > 0 ) error("Stock is not empty, disabling data generation");
         if ( customerEao.count() > 0 ) error("Customer is not empty, disabling data generation");
