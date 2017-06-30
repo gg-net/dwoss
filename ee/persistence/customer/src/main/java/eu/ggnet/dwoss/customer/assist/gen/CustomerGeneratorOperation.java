@@ -20,8 +20,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.entity.*;
@@ -35,6 +39,7 @@ import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Customer Generator.
@@ -42,7 +47,10 @@ import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
  * @author oliver.guenther
  */
 @Stateless
+@TransactionAttribute(REQUIRES_NEW)
 public class CustomerGeneratorOperation {
+
+    private final Logger L = LoggerFactory.getLogger(CustomerGeneratorOperation.class);
 
     private final static EnumSet<CustomerFlag> ALLOWED_FLAG = EnumSet.of(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY, CustomerFlag.CONFIRMS_DOSSIER);
 
@@ -180,6 +188,7 @@ public class CustomerGeneratorOperation {
 
     public List<Long> makeCustomers(int amount) {
         SubMonitor m = monitorFactory.newSubMonitor("Generiere " + amount + " Kunden", amount);
+        L.info("Generating {} customers", amount);
         m.start();
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
@@ -211,6 +220,7 @@ public class CustomerGeneratorOperation {
 
             Customer c = new Customer();
             ConverterUtil.mergeFromOld(old, c, mandator.getMatchCode(), defaults);
+            if ( L.isDebugEnabled() ) L.debug("Persisting {}", c.toMultiLine());
             cem.persist(c);
             ids.add(c.getId());
         }

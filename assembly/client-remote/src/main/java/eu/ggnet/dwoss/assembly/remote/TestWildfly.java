@@ -23,8 +23,8 @@ import javax.naming.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 /**
  *
@@ -35,49 +35,53 @@ public class TestWildfly {
     public static Logger L = LoggerFactory.getLogger(TestWildfly.class);
 
     public static void main(String[] args) throws Exception {
+        tryClassicJndi();
+    }
+
+    public static void tryClassicJndi() throws Exception {
         final Properties env = new Properties();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
         env.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+
 // the property below is required ONLY if there is no ejb client configuration loaded (such as a
 // jboss-ejb-client.properties in the class path) and the context will be used to lookup EJBs
         env.put("jboss.naming.client.ejb.context", true);
         InitialContext remoteContext = new InitialContext(env);
-        NavigableSet<String> inspectJndiTreeForModuleNames = inspectJndiTreeForModuleNames("java:global/dwoss-server/", remoteContext);
-        inspectJndiTreeForModuleNames.forEach(s -> {
-            System.out.println(s);
-        });
-        System.out.println("Blub");
 
-        UniqueUnitAgent uua = (UniqueUnitAgent)remoteContext.lookup("java:global/dwoss-server/UniqueUnitAgentBean");
-        List<UniqueUnit> all = uua.findAllEager(UniqueUnit.class);
-
-        for (UniqueUnit uniqueUnit : all) {
-            System.out.println("uniqueUnit = " + uniqueUnit);
+        NavigableSet<String> inspector = inspectJndiTreeForModuleNames("java:module", remoteContext);
+        System.out.println("Inspecting Result: ");
+        for (String string : inspector) {
+            System.out.println(string);
         }
 
-//        RemoteCalculator ejb = (RemoteCalculator)remoteContext.lookup("wildfly-http-remoting-ejb/CalculatorBean!"
-//                + RemoteCalculator.class.getName());
+        Object lookupObject = remoteContext.lookup("MandatorSupporter!eu.ggnet.dwoss.mandator.MandatorSupporterBean");
+
+        MandatorSupporter supporter = (MandatorSupporter)lookupObject;
+        Mandator mandator = supporter.loadMandator();
+
+        System.out.println(mandator);
+
     }
 
-    public static NavigableSet<String> inspectJndiTreeForModuleNames(String suffix, Context context) {
+    public static NavigableSet<String> inspectJndiTreeForModuleNames(String prefix, Context context) {
         NavigableSet<String> result = new TreeSet<>();
         try {
-            NamingEnumeration<NameClassPair> list = context.list(suffix);
+            NamingEnumeration<NameClassPair> list = context.list(prefix);
             while (list != null && list.hasMore()) {
                 try {
                     String name = list.next().getName();
                     if ( name.contains("EjbModule") || name.contains("com.sun.javafx") ) continue; // Ignoring some values
                     String[] split = name.split("!");
                     if ( split.length == 1 ) {
-                        L.debug("Storing in projects {}", suffix + "/" + name);
-                        result.add(suffix + "/" + name);
+                        L.debug("Storing in projects {}", prefix + "/" + name);
+                        result.add(prefix + "/" + name);
                     }
                 } catch (NamingException ex) {
-                    L.warn("Jndi Tree Module Name inspection on suffix {} failed: {}", suffix, ex.getMessage());
+                    L.warn("Jndi Tree Module Name inspection on suffix {} failed: {}", prefix, ex.getMessage());
                 }
             }
         } catch (NamingException ex) {
-            L.warn("Jndi Tree Module Name inspection on Suffix {} failed: {}", suffix, ex.getMessage());
+            L.warn("Jndi Tree Module Name inspection on Suffix {} failed: {}", prefix, ex.getMessage());
         }
         return result;
     }

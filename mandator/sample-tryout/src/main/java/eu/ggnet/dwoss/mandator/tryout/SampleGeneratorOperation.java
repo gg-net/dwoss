@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.mandator.tryout;
 
 import java.io.Serializable;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
@@ -29,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
@@ -38,7 +41,9 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.eao.StockEao;
+import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
 import lombok.Getter;
 
@@ -52,7 +57,7 @@ import lombok.Getter;
 @Singleton
 public class SampleGeneratorOperation implements Serializable {
 
-    static final Logger LOG = LoggerFactory.getLogger(SampleGeneratorOperation.class);
+    private static final Logger L = LoggerFactory.getLogger(SampleGeneratorOperation.class);
 
     @Inject
     private CustomerGeneratorOperation customerGenerator;
@@ -87,6 +92,9 @@ public class SampleGeneratorOperation implements Serializable {
     @Inject
     private ReportLineEao reportLineEao;
 
+    @Inject
+    private ProductEao productEao;
+
     /**
      * If true this generator is generating samples.
      */
@@ -99,19 +107,26 @@ public class SampleGeneratorOperation implements Serializable {
     @Getter
     private boolean generated = false;
 
+    // TODO: Super candidat für Background opperation. Dann kann man das generated auch über ein Future lösen :-)
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
             generating = true;
-            LOG.info("Generating Persistence Data");
+            L.info("Generating Persistence Data");
             rightsGenerator.make("admin", "admin", 123, EnumSet.allOf(AtomicRight.class));
             rightsGenerator.make("user", EnumSet.noneOf(AtomicRight.class));
             stockGenerator.makeStocksAndLocations(2);
             customerGenerator.makeCustomers(100);
+            List<Customer> allcustomers = customerEao.findAll();
+            L.info("Customer Size=" + allcustomers.size() + ", Ids=" + allcustomers.stream().map(c -> c.getId()).collect(Collectors.toList()));
+
             receiptGenerator.makeProductSpecs(30, true);
+            List<Product> allProduct = productEao.findAll();
+            L.info("Products Size=" + allProduct.size() + ", Ids=" + allProduct.stream().map(c -> c.getId()).collect(Collectors.toList()));
+
             receiptGenerator.makeUniqueUnits(200, true, true);
             redTapeGenerator.makeSalesDossiers(50);
             reportLineGeneratorRemote.makeReportLines(500);
-            LOG.info("Persistence Data generated");
+            L.info("Persistence Data generated");
             generating = false;
             generated = true;
             return;
@@ -127,7 +142,7 @@ public class SampleGeneratorOperation implements Serializable {
     }
 
     private void error(String msg) {
-        LOG.error(msg);
+        L.error(msg);
 //        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", msg));
     }
 

@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.redtape.gen;
 
 import java.util.*;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.ejb.*;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -49,12 +48,14 @@ import eu.ggnet.statemachine.StateTransition;
 import static eu.ggnet.dwoss.rules.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.util.stream.Collectors.toList;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  *
  * @author oliver.guenther
  */
 @Stateless
+@TransactionAttribute(REQUIRES_NEW)
 public class RedTapeGeneratorOperation {
 
     private final static Random R = new Random();

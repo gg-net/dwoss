@@ -276,7 +276,7 @@ public class Client {
         String clazzName = clazz.getName();
 
         // "ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!" + viewClassName
-        String topping = "ejb:" + Lookup.getDefault().lookup(Server.class).getApp() + "/" + clazz.getSimpleName();
+        String topping = "ejb:/" + Lookup.getDefault().lookup(Server.class).getApp() + "//" + clazz.getSimpleName();
 
         // look for RemoteViewAnnotation
         RemoteViewClass viewClass = clazz.getAnnotation(RemoteViewClass.class);

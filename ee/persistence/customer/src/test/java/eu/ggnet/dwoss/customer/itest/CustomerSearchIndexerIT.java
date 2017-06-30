@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.itest;
 
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -29,9 +27,10 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.priv.SearchSingleton;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *

@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.rights.assist.gen;
 import java.util.*;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -30,11 +31,14 @@ import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
 import eu.ggnet.dwoss.rights.op.AuthenticationBean;
 
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+
 /**
  *
  * @author Bastian Venz
  */
 @Stateless
+@TransactionAttribute(REQUIRES_NEW)
 public class RightsGeneratorOperation {
 
     @Inject

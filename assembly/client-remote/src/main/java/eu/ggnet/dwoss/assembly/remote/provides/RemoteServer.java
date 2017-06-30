@@ -70,6 +70,6 @@ public class RemoteServer implements Server {
 
     @Override
     public String getApp() {
-        return "dwoss-server-1.0-SNAPSHOT";
+        return "dwoss-server-1.0-SNAPSHOT/dwoss-server";
     }
 }

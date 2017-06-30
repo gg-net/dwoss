@@ -41,8 +41,9 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.UiAlert.Type;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -68,7 +69,8 @@ public class RunClientFx extends Application {
         Platform.setImplicitExit(false);
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
-        Client.enableCache(MandatorSupporter.class);
+        // TODO: Fails with wildfly. But also a bad solution, Complex code for one case.
+//        Client.enableCache(MandatorSupporter.class);
 
         System.out.println("Parameters");
         for (String parameter : getParameters().getRaw()) {

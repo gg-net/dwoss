@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.customer.itest;
 
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,8 +14,9 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *

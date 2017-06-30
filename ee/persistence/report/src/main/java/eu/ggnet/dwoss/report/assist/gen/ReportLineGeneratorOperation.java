@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.report.assist.gen;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -24,8 +25,10 @@ import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.assist.Reports;
 
-@Stateless
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
+@Stateless
+@TransactionAttribute(REQUIRES_NEW)
 public class ReportLineGeneratorOperation {
 
     @Inject

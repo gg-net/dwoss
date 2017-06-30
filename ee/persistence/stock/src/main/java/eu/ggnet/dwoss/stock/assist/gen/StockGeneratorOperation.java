@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
@@ -27,11 +28,14 @@ import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockLocation;
 
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+
 /**
  *
  * @author oliver.guenther
  */
 @Stateless
+@TransactionAttribute(REQUIRES_NEW)
 public class StockGeneratorOperation {
 
     public static final String[] STOCK_LOCATION_NAMES = {

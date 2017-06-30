@@ -31,10 +31,8 @@ import static eu.ggnet.dwoss.rules.ProductGroup.DESKTOP;
 import static eu.ggnet.dwoss.rules.Warranty.WARRANTY_TILL_DATE;
 
 /**
- * Generator for UniqueU
- * import static de.dw.rules.Warranty.WARRANTY_TILL_DATE;
- * nits.
- * <p/>
+ * Generator for UniqueUnits.
+ * <p>
  * @author oliver.guenther
  */
 public class UniqueUnitGenerator {

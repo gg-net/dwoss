@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.customer.itest;
 
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-
 import java.util.EnumSet;
 import java.util.List;
 
@@ -17,11 +15,12 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.rules.*;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
