@@ -39,7 +39,7 @@ public interface RemoteLookup {
      *
      * @param <T>   type of the clazz
      * @param clazz interface class token as key
-     * @return the local endpoint for a remote connection.
+     * @return the local endpoint for a remote connection or null if none found.
      */
     <T> T lookup(Class<T> clazz);
 }

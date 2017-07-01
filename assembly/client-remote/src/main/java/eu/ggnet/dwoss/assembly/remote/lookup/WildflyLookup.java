@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.naming.*;
 
@@ -46,7 +47,6 @@ public class WildflyLookup implements RemoteLookup {
 
     private synchronized void init() {
         if ( initialized ) return;
-        namesAndLookup = new HashMap<>();
         Object instance = null;
         String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
         try {
@@ -58,14 +58,21 @@ public class WildflyLookup implements RemoteLookup {
         Discovery discovery = (Discovery)instance;
         List<String> names = discovery.allJndiNames("java:app/" + APP);
         L.debug("Discovery returned {} raw entries", names.size());
-        for (String name : names) {
-            if ( !name.contains("!") ) continue;
-            String key = name.split("!")[1];
-            // INFO: There is no solution for ?statefull yet.
-            String value = "ejb:/" + APP + "//" + name;
-            L.debug("Storing lookup key={}, value={}", key, value);
-            namesAndLookup.put(key, value);
-        }
+
+        namesAndLookup = names.stream()
+                .filter(n -> n.contains("!"))
+                .collect(Collectors.toMap(n -> n.split("!")[1], n -> "ejb:/" + APP + "//" + n));
+        if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
+
+//        namesAndLookup = new HashMap<>();
+//        for (String name : names) {
+//            if ( !name.contains("!") ) continue;
+//            String key = name.split("!")[1];
+//            // INFO: There is no solution for ?statefull yet.
+//            String value = "ejb:/" + APP + "//" + name;
+//            L.debug("Storing lookup key={}, value={}", key, value);
+//            namesAndLookup.put(key, value);
+//        }
         L.debug("RemoteLookup initilaized");
         initialized = true;
     }
@@ -80,6 +87,7 @@ public class WildflyLookup implements RemoteLookup {
         if ( _context != null ) return _context;
         final Properties properties = new Properties();
         properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+
         try {
             _context = new InitialContext(properties);
             L.debug("New Context for " + this.getClass().getName() + " created");
@@ -101,6 +109,7 @@ public class WildflyLookup implements RemoteLookup {
         String namespace = namesAndLookup.get(Objects.requireNonNull(clazz, "Class must not be null").getName());
         if ( namespace == null ) {
             L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
+            return null;
         }
         L.debug("Trying to lookup {}", namespace);
         try {

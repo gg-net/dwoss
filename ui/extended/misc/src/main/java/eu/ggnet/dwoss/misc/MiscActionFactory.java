@@ -24,6 +24,7 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
+import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 import eu.ggnet.dwoss.misc.action.*;
 import eu.ggnet.dwoss.misc.action.imageid.ExportImageIdsAction;
 import eu.ggnet.dwoss.misc.action.imageid.ImportImageIdsAction;
@@ -42,8 +43,6 @@ import eu.ggnet.saft.core.ActionFactory;
 
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 
 /**
  *
@@ -97,7 +96,6 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Geschäftsführung", "Abschluss Reporte", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));
         actions.add(new MetaAction("Hilfe", new ShowMandatorAction()));
-        actions.add(new MetaAction("Hilfe", new JndiTreeInspectAction()));
 
         return actions;
     }

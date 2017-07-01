@@ -572,19 +572,6 @@
         </repository>
     </repositories>
 
-    <!--    <pluginRepositories>
-        <pluginRepository>
-            <id>sonatype.snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <updatePolicy>daily</updatePolicy>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>-->
-
     <dependencyManagement>
         <dependencies>
             <!-- Mobile Ui Usage -->
@@ -726,7 +713,6 @@
             <dependency>
                 <groupId>net.sf.jasperreports</groupId>
                 <artifactId>jasperreports</artifactId>
-                <!-- Hint on update: Jasperreports depends on lucene, which hibernat search also uses, keep in sync or research exclusion -->
                 <version>6.4.1</version>
                 <exclusions>
                     <exclusion>
@@ -762,8 +748,28 @@
                         <groupId>stax</groupId>
                     </exclusion>
                     <exclusion>
+                        <groupId>javax.xml.stream</groupId>
+                        <artifactId>stax-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>stax</groupId>
+                        <artifactId>stax</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <artifactId>geronimo-stax-api_1.0_spec</artifactId>
                         <groupId>org.apache.geronimo.specs</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-analyzers-common</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-queryparser</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>

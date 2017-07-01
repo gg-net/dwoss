@@ -32,7 +32,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
-import eu.ggnet.dwoss.assembly.remote.provides.RemoteServer;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
 import eu.ggnet.dwoss.common.exception.*;
@@ -59,13 +58,13 @@ public class RunClientFx extends Application {
     private SwingClient swingClient;
 
     public static void main(String[] args) {
-        System.out.println("Starting JavaFx Remote Client");
+        System.out.println("Starting Remote Client Main");
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Starting RemoteClient");
+        System.out.println("Starting RemoteClient JavaFx Stage");
         Platform.setImplicitExit(false);
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
@@ -156,7 +155,7 @@ public class RunClientFx extends Application {
             return;
         }
         // Setting the URL for Remote Connections.
-        RemoteServer.URL = url;
+//        RemoteServer.URL = url;
         EventQueue.invokeLater(() -> {
             swingClient = new SwingClient() {
                 @Override
