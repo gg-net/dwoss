@@ -19,11 +19,11 @@ package eu.ggnet.dwoss.mandator.tryout;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+import javax.ejb.*;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -108,7 +108,8 @@ public class SampleGeneratorOperation implements Serializable {
     private boolean generated = false;
 
     // TODO: Super candidat für Background opperation. Dann kann man das generated auch über ein Future lösen :-)
-    public void generateSampleData() {
+    @Asynchronous
+    public Future<Boolean> generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
             generating = true;
             L.info("Generating Persistence Data");
@@ -129,7 +130,7 @@ public class SampleGeneratorOperation implements Serializable {
             L.info("Persistence Data generated");
             generating = false;
             generated = true;
-            return;
+            return new AsyncResult<>(true);
         }
 
         generating = false;
@@ -139,6 +140,7 @@ public class SampleGeneratorOperation implements Serializable {
         if ( uniqueUnitEao.count() > 0 ) error("UniqueUnit is not empty, disabling data generation");
         if ( dossierEao.count() > 0 ) error("RedTape is not empty, disabling data generation");
         if ( reportLineEao.count() > 0 ) error("Report is not empty, disabling data generation");
+        return new AsyncResult<>(false);
     }
 
     private void error(String msg) {

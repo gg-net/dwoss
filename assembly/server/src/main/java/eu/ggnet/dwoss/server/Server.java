@@ -16,12 +16,25 @@
  */
 package eu.ggnet.dwoss.server;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.ejb.EJB;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.util.Utils;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -31,8 +44,23 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
 @ApplicationScoped
 public class Server {
 
+    private final Logger L = LoggerFactory.getLogger(Server.class);
+
+    @Getter
+    @Setter
+    private String prefix = "";
+
     @EJB
-    MandatorSupporter mandatorSupport;
+    private MandatorSupporter mandatorSupport;
+
+    public List<String> inspectJndi() {
+        try {
+            return Utils.inspect(new InitialContext(), prefix).stream().map(np -> "(name=" + np.getName() + ")").collect(Collectors.toList());
+        } catch (NamingException ex) {
+            L.warn("Jndi Tree Module Name inspection on Suffix {} failed: {}", prefix, ex.getMessage());
+        }
+        return Collections.EMPTY_LIST;
+    }
 
     public String getCompanyName() {
         return mandatorSupport.loadMandator().getCompany().getName();

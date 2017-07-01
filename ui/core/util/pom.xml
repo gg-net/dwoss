@@ -44,11 +44,10 @@
             <artifactId>swingx-all</artifactId>
         </dependency>
         <!-- Javasist  -->
-        <dependency>
-            <groupId>org.apache.openejb</groupId>
-            <artifactId>openejb-core-hibernate</artifactId>
+        <dependency> <!-- Creating a extra MySQl Dialect in Util -->
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
             <scope>provided</scope>
-            <type>pom</type>
         </dependency>
     </dependencies>
 </project>

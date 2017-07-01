@@ -16,23 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.SFormulaAction;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STable;
-
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -43,42 +26,46 @@ import javax.inject.Inject;
 import javax.mail.util.ByteArrayDataSource;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.mail.*;
-import org.slf4j.*;
-
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
-
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 import eu.ggnet.dwoss.mandator.api.service.DocumentService;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.MailDocumentParameter;
 import eu.ggnet.dwoss.mandator.api.value.partial.MandatorMailAttachment;
-
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.entity.Document.Flag;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-
+import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
+import static eu.ggnet.dwoss.redtape.DocumentSupporterOperation.TemplateParameter.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
-import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static eu.ggnet.lucidcalc.CFormat.Representation.*;
 import static eu.ggnet.lucidcalc.SUtil.SR;
-import static eu.ggnet.dwoss.redtape.DocumentSupporterOperation.TemplateParameter.*;
 import static java.awt.Color.*;
 
 /**
@@ -179,7 +166,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         String doctype = (jtype == DocumentViewType.DEFAULT ? document.getType().getName() : jtype.getName());
 
-        try (InputStream is = mandator.getMailDocumentTemplate().openStream();
+        try (InputStream is = mandator.getMailTemplateLocation().toURL().openStream();
                 InputStreamReader templateReader = new InputStreamReader(is)) {
             String text = new MailDocumentParameter(customer.toTitleNameLine(), doctype).eval(IOUtils.toString(templateReader));
             MultiPartEmail email = mandator.prepareDirectMail();
@@ -345,7 +332,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         reportParameter.put(TAX, GlobalConfig.TAX * 100);
         reportParameter.put(ACTUAL, document.getActual());
         reportParameter.put(COMPANY, mandator.getCompany().toSingleLine());
-        reportParameter.put(COMPANY_LOGO, mandator.getCompany().getLogo());
+        reportParameter.put(COMPANY_LOGO, mandator.getCompany().getLogo().toURL());
         reportParameter.put(FOOTER, mandator.getDocumentIntermix().getFooter() + "\n");
         reportParameter.put(PERFOMANCE_ON, document.getActual());
         reportParameter.put(PAYMENT_TEXT, "");

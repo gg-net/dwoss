@@ -32,6 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.api.RemoteViewClass;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import static java.awt.TrayIcon.MessageType.WARNING;
 import static java.util.stream.Collectors.joining;
 
@@ -55,6 +58,10 @@ public class Client {
     private static final NavigableMap<String, NavigableSet<String>> CLIENT_JNDI_NAME_CACHE = new TreeMap<>();
 
     private static TrayIcon sampleStubTrayIcon;
+
+    @Getter
+    @Setter
+    private static RemoteLookup remoteLookup;
 
     /**
      * Request a context.
@@ -133,6 +140,8 @@ public class Client {
     public static <T> boolean hasFound(Class<T> clazz) {
         // Allows the hasFound in a sample environment. A key without a value just means a optional service missing.
         if ( sampleStubs.containsKey(clazz.getName()) ) return sampleStubs.get(clazz.getName()) != null;
+        if ( remoteLookup != null ) return remoteLookup.contains(clazz);
+        // Old way.
         return CLIENT_JNDI_NAME_CACHE.containsKey(clazz.getName());
     }
 
@@ -249,6 +258,12 @@ public class Client {
      * @throws IllegalArgumentException If some error in the process happens, like nothing is found.
      */
     private static <T> T remoteLookup(Class<T> clazz) throws IllegalArgumentException {
+        if ( remoteLookup != null ) {
+            L.info("Using RemoteLookup {}", remoteLookup);
+            return remoteLookup.lookup(clazz);
+        }
+
+        // Old way, to bee removed.
         Context context = context(clazz.getName());
         // TODO: Remove later. Or reuse more sensful, wildfly returns nothing.
         if ( CLIENT_JNDI_NAME_CACHE.isEmpty() ) {
@@ -276,12 +291,13 @@ public class Client {
         String clazzName = clazz.getName();
 
         // "ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!" + viewClassName
-        String topping = "ejb:/" + Lookup.getDefault().lookup(Server.class).getApp() + "//" + clazz.getSimpleName();
+//        String topping = "ejb:/" + Lookup.getDefault().lookup(Server.class).getApp() + "//";
+        String topping = Lookup.getDefault().lookup(Server.class).getApp() + "/";
 
         // look for RemoteViewAnnotation
         RemoteViewClass viewClass = clazz.getAnnotation(RemoteViewClass.class);
         if ( Objects.nonNull(viewClass) ) {
-            String lookup = topping + "!" + viewClass.value();
+            String lookup = topping + viewClass.value() + "!" + clazz.getName();
             L.debug("JNDI Lookup: Annotation. Trying lookup={}", lookup);
             try {
                 T result = (T)context.lookup(lookup);
@@ -294,13 +310,16 @@ public class Client {
         }
 
         // Try default implementations
-        List<String> viewClasses = Arrays.asList("Bean", "Operation");
+        List<String> beanImplementations = Arrays.asList("Bean", "Operation");
 
-        for (String viewClassName : viewClasses) {
-            String lookup = topping + "!" + clazzName + viewClassName;
+        for (String beanImplementation : beanImplementations) {
+            String lookup = topping + clazz.getSimpleName() + beanImplementation + "!" + clazz.getName();
             L.debug("JNDI Lookup: Default Implementations. Trying lookup={}", lookup);
             try {
                 T result = (T)context.lookup(lookup);
+                L.debug("ToString:" + result.toString());
+                L.debug("Class:" + result.getClass());
+                L.debug("Hashcode:" + result.hashCode());
                 L.debug("JNDI Lookup: Default Implementations. Successful lookup={}", lookup);
                 context.close();
                 return result;

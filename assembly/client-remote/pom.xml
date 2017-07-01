@@ -80,11 +80,11 @@
         </dependency>
         <!-- For whatever reason, this is working in all tests, but not on the client. her wie sudanly need japser-el, which does not work in tests.-->
         <!-- Expresion factory for hibernate validator-->
-        <!--        <dependency>
+        <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>el-impl</artifactId>
-        </dependency> -->
-        <dependency>
+        </dependency> 
+        <!--        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>jasper-el</artifactId>
             <version>6.0.53</version>
@@ -93,7 +93,7 @@
             <groupId>org.apache.geronimo.javamail</groupId>
             <artifactId>geronimo-javamail_1.4_mail</artifactId>
             <version>1.8.4</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>

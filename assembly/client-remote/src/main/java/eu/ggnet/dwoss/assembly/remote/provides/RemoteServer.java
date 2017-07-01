@@ -36,7 +36,7 @@ public class RemoteServer implements Server {
 
     @Override
     public Context getContext() {
-        return getWildflyContext();
+        return getWildflyJndiContext();
     }
 
     public Context getTomeeContext() {
@@ -50,9 +50,25 @@ public class RemoteServer implements Server {
         }
     }
 
-    public Context getWildflyContext() {
+    public Context getWildflyEjbContext() {
         final Properties properties = new Properties();
         properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+        try {
+            return new InitialContext(properties);
+        } catch (NamingException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    public Context getWildflyJndiContext() {
+        final Properties properties = new Properties();
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.jboss.naming.remote.client.InitialContextFactory");
+        properties.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+
+// the property below is required ONLY if there is no ejb client configuration loaded (such as a
+// jboss-ejb-client.properties in the class path) and the context will be used to lookup EJBs
+        properties.put("jboss.naming.client.ejb.context", true);
+
         try {
             return new InitialContext(properties);
         } catch (NamingException ex) {
@@ -70,6 +86,6 @@ public class RemoteServer implements Server {
 
     @Override
     public String getApp() {
-        return "dwoss-server-1.0-SNAPSHOT/dwoss-server";
+        return "dwoss-server";
     }
 }

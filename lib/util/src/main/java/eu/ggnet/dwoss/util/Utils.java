@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.util;
 import java.net.*;
 import java.util.*;
 
+import javax.naming.*;
 import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
@@ -87,6 +88,33 @@ public class Utils {
             L.debug("Enabling foraign key constraints");
             em.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
         }
+    }
+
+    /**
+     * Inspects a context namespace based on the prefixes.
+     *
+     * @param context  the context to inspect, must not be null.
+     * @param prefixes the prefixes to be used, at least one must be supplied.
+     * @return a list of names of the found namespace.
+     */
+    public static List<NameClassPair> inspect(Context context, String... prefixes) {
+        Objects.requireNonNull(context, "Context must not be null");
+        Objects.requireNonNull(prefixes, "At least one prefix must be supplied");
+
+        List<NameClassPair> result = new ArrayList<>();
+        for (String prefix : prefixes) {
+            try {
+                NamingEnumeration<NameClassPair> list = context.list(prefix);
+                while (list != null && list.hasMore()) {
+                    try {
+                        result.add(list.next());
+                    } catch (NamingException ex) {
+                    }
+                }
+            } catch (NamingException ex) {
+            }
+        }
+        return result;
     }
 
     public static void main(String[] args) {

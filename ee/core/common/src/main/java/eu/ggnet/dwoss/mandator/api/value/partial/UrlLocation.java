@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,37 +17,41 @@
 package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
 
 /**
- * Masterdata for Mandator.
- * <p/>
+ * A serializable (for wildfly) wrapper for URL.
+ *
  * @author oliver.guenther
  */
-@Builder
-@Value
-public class Company implements Serializable {
+@ToString
+@EqualsAndHashCode
+public class UrlLocation implements Serializable {
 
-    private final String name;
+    @Getter
+    private String location;
 
-    private final String street;
-
-    private final String city;
-
-    private final String zip;
-
-    @NotNull
-    private final UrlLocation logo;
-
-    private final String email;
-
-    private final String emailName;
-
-    public String toSingleLine() {
-        return name + " - " + street + " - " + zip + " " + city;
+    public UrlLocation(@NotNull URL url) {
+        location = Objects.requireNonNull(url, "Url must not be null").toString();
     }
+
+    /**
+     * Returs a URL of the internal location.
+     *
+     * @return a URL of the internal location
+     */
+    public URL toURL() {
+        try {
+            return new URL(location);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("UrlLocation=" + location + " cannot be converted to an URL. This should never happen");
+        }
+    }
+
 }

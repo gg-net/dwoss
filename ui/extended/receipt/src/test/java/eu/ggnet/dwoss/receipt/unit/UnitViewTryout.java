@@ -1,17 +1,7 @@
 package eu.ggnet.dwoss.receipt.unit;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.receipt.unit.UnitModel;
-import eu.ggnet.dwoss.receipt.unit.UnitController;
-import eu.ggnet.dwoss.receipt.unit.UnitView;
-
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.persistence.LockModeType;
@@ -20,23 +10,19 @@ import javax.swing.UIManager;
 
 import org.junit.Test;
 
-import eu.ggnet.saft.core.Client;
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.mandator.api.value.partial.Company;
-
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-
 import eu.ggnet.dwoss.rules.DocumentType;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.saft.core.Client;
 
 /**
  * Tryout Test for Unit View.
@@ -60,8 +46,8 @@ public class UnitViewTryout {
                 return Mandator.builder()
                         .defaultMailSignature(null)
                         .smtpConfiguration(null)
-                        .mailDocumentTemplate(null)
-                        .company(new Company("TestCompany", null, null, null, null, null, null))
+                        .mailTemplateLocation(null)
+                        .company(CompanyGen.makeCompany())
                         .dossierPrefix("DW")
                         .documentIntermix(null)
                         .documentIdentifierGeneratorConfigurations(new EnumMap<>(DocumentType.class))

@@ -31,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.assembly.remote.provides.RemoteServer;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
 import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
@@ -41,9 +42,8 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.UiAlert.Type;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.core.Client.lookup;
@@ -130,6 +130,7 @@ public class RunClientFx extends Application {
     @Override
     public void init() throws Exception {
         super.init();
+        Client.setRemoteLookup(new WildflyLookup());
         System.out.println("JavaFx Init called");
     }
 

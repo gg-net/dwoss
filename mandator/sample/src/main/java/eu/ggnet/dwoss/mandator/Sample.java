@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,6 @@
  */
 package eu.ggnet.dwoss.mandator;
 
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIntermix;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.mandator.api.value.partial.Company;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
-import eu.ggnet.dwoss.mandator.api.value.partial.SmtpConfiguration;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -39,7 +24,10 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.commons.io.FileUtils;
 
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
+import eu.ggnet.dwoss.mandator.api.value.partial.*;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.rules.TradeName.*;
@@ -51,14 +39,15 @@ import static eu.ggnet.dwoss.rules.TradeName.*;
 public class Sample {
 
     static {
-        Company company = new Company()
-                .withName("Example GmbH")
-                .withStreet("Test Street 7")
-                .withZip("99999")
-                .withCity("Testcity")
-                .withEmail("test@example.de")
-                .withEmailName("Example GmbH Shop")
-                .withLogo(loadLogo());
+        Company company = Company.builder()
+                .name("Example GmbH")
+                .street("Test Street 7")
+                .zip("99999")
+                .city("Testcity")
+                .email("test@example.de")
+                .emailName("Example GmbH Shop")
+                .logo(new UrlLocation(loadLogo()))
+                .build();
 
         SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true);
 
@@ -79,7 +68,7 @@ public class Sample {
 
         MANDATOR = Mandator.builder()
                 .smtpConfiguration(smtpConfiguration)
-                .mailDocumentTemplate(loadMailDocument())
+                .mailTemplateLocation(new UrlLocation(loadMailDocument()))
                 .company(company)
                 .dossierPrefix("DW")
                 .documentIntermix(documentIntermix)

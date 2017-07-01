@@ -1,28 +1,17 @@
 package eu.ggnet.dwoss.receipt.unit;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
 
 import javax.persistence.LockModeType;
 
 import org.junit.Test;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.mandator.api.value.partial.Company;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.product.DesktopBundleView;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-
-
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.DesktopBundle;
@@ -45,8 +34,8 @@ public class DesktopBundleViewTryout {
                 return Mandator.builder()
                         .defaultMailSignature(null)
                         .smtpConfiguration(null)
-                        .mailDocumentTemplate(null)
-                        .company(new Company("TestCompany", null, null, null, null, null, null))
+                        .mailTemplateLocation(null)
+                        .company(CompanyGen.makeCompany())
                         .dossierPrefix("DW")
                         .documentIntermix(null)
                         .documentIdentifierGeneratorConfigurations(new EnumMap<>(DocumentType.class))

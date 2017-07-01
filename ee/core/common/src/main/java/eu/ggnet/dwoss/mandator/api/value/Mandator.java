@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,7 +67,7 @@ public class Mandator implements Serializable {
      * </ul>
      */
     @NotNull
-    private final URL mailDocumentTemplate;
+    private final UrlLocation mailTemplateLocation;
 
     /**
      * File used as default attachment when sending mails.

@@ -14,24 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.api;
+package eu.ggnet.dwoss.discover;
 
-import java.lang.annotation.*;
+import java.util.List;
 
 /**
- * ViewClassImplementation for JNDI Name resoulution.
- * The Wildfly needs in for the remotelookup ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!" + viewClassName the viewClass.
- * The JavaSpec defines it optional, but wildfly thinks otherwise. This Annotation added to the remote interface must contation the classname of the
- * implemetation, so the client can build the full jndi name.
  *
  * @author oliver.guenther
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-@Documented
-@Deprecated
-public @interface RemoteViewClass {
+public interface Discovery {
 
-    String value();
+    /**
+     * The Lookup Name.
+     */
+    public final static String NAME = DiscoveryBean.class.getSimpleName() + "!" + Discovery.class.getName();
+
+    /**
+     * Returns a list of all name mappings in the namespace prefix.
+     *
+     * @param prefix the namespace
+     * @return a list of all name mappings in the namespace java:app, or an empty list.
+     */
+    List<String> allJndiNames(String prefix);
 
 }

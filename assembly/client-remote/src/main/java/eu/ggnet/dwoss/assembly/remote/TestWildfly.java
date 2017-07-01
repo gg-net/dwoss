@@ -16,13 +16,15 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
-import java.util.*;
+import java.util.Properties;
 
-import javax.naming.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
@@ -35,7 +37,21 @@ public class TestWildfly {
     public static Logger L = LoggerFactory.getLogger(TestWildfly.class);
 
     public static void main(String[] args) throws Exception {
-        tryClassicJndi();
+        // tryClassicJndi();
+        // tryEjbJndi();
+        tryRemoteLookupImplementation();
+    }
+
+    public static void tryEjbJndi() throws Exception {
+        final Properties env = new Properties();
+        env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+        InitialContext remoteContext = new InitialContext(env);
+        Object lookupObject = remoteContext.lookup("ejb:/dwoss-server//MandatorSupporterBean!eu.ggnet.dwoss.mandator.MandatorSupporter");
+        MandatorSupporter supporter = (MandatorSupporter)lookupObject;
+        Mandator mandator = supporter.loadMandator();
+
+        System.out.println(mandator);
+        System.out.println(mandator.getDocumentIntermix().toMultiLine());
     }
 
     public static void tryClassicJndi() throws Exception {
@@ -48,42 +64,23 @@ public class TestWildfly {
         env.put("jboss.naming.client.ejb.context", true);
         InitialContext remoteContext = new InitialContext(env);
 
-        NavigableSet<String> inspector = inspectJndiTreeForModuleNames("java:module", remoteContext);
-        System.out.println("Inspecting Result: ");
-        for (String string : inspector) {
-            System.out.println(string);
-        }
-
-        Object lookupObject = remoteContext.lookup("MandatorSupporter!eu.ggnet.dwoss.mandator.MandatorSupporterBean");
+        Object lookupObject = remoteContext.lookup("dwoss-server/MandatorSupporterBean!eu.ggnet.dwoss.mandator.MandatorSupporter");
 
         MandatorSupporter supporter = (MandatorSupporter)lookupObject;
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);
-
+        System.out.println(mandator.getDocumentIntermix().toMultiLine());
     }
 
-    public static NavigableSet<String> inspectJndiTreeForModuleNames(String prefix, Context context) {
-        NavigableSet<String> result = new TreeSet<>();
-        try {
-            NamingEnumeration<NameClassPair> list = context.list(prefix);
-            while (list != null && list.hasMore()) {
-                try {
-                    String name = list.next().getName();
-                    if ( name.contains("EjbModule") || name.contains("com.sun.javafx") ) continue; // Ignoring some values
-                    String[] split = name.split("!");
-                    if ( split.length == 1 ) {
-                        L.debug("Storing in projects {}", prefix + "/" + name);
-                        result.add(prefix + "/" + name);
-                    }
-                } catch (NamingException ex) {
-                    L.warn("Jndi Tree Module Name inspection on suffix {} failed: {}", prefix, ex.getMessage());
-                }
-            }
-        } catch (NamingException ex) {
-            L.warn("Jndi Tree Module Name inspection on Suffix {} failed: {}", prefix, ex.getMessage());
-        }
-        return result;
+    public static void tryRemoteLookupImplementation() {
+        WildflyLookup l = new WildflyLookup();
+
+        MandatorSupporter supporter = l.lookup(MandatorSupporter.class);
+        Mandator mandator = supporter.loadMandator();
+
+        System.out.println(mandator);
+        System.out.println(mandator.getDocumentIntermix().toMultiLine());
     }
 
 }

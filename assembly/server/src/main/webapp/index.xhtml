@@ -17,6 +17,20 @@
             <p style="width: 100%; align-content: center; font-size: xx-large">
                 <m:metawidget value="#{server.mandator}" />
             </p>
+            <p>
+                <h:outputLabel value="URL: #{server.mandator.company.logo.toString()}" />
+            </p>
+            <h:form>
+                <h:panelGrid columns="4" cellpadding="5">
+                    <h:outputLabel for="name" value="Prefix:" style="font-weight:bold" />
+                    <p:inputText id="name" value="#{server.prefix}" />
+                    <p:commandButton value="Submit" update="display" icon="ui-icon-check" />
+                </h:panelGrid>
+                <p:dataList id="display" value="#{server.inspectJndi()}" var="result" >
+                    #{result}
+                </p:dataList>
+            </h:form>
+
         </h:body>
     </f:view>
 </html>

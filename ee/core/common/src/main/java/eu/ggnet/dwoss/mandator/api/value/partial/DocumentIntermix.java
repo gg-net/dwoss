@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,18 @@
  */
 package eu.ggnet.dwoss.mandator.api.value.partial;
 
-import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
-
 import java.io.Serializable;
 import java.net.URL;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
+import java.util.*;
 
 import org.metawidget.inspector.annotation.UiLarge;
 
-import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
+import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
+import eu.ggnet.dwoss.rules.DocumentType;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * Contains Details about a Document to intermix in the rendering process.
@@ -40,19 +35,18 @@ import lombok.ToString;
  * @author oliver.guenther
  */
 // TODO: We could make a Builder for this, but not now. For now I risk manipulation.
-@Getter
 @ToString
 @EqualsAndHashCode
 public class DocumentIntermix implements Serializable {
 
-    private final URL defaultDocumentTemplate;
-
-    private final Map<DocumentViewType, URL> viewTypeDocumentTemplates = new HashMap<>();
+    private final UrlLocation defaultDocumentTemplate;
 
     @Getter
     @Setter
     @UiLarge
     private String footer;
+
+    private final Map<DocumentViewType, UrlLocation> viewTypeDocumentTemplates = new HashMap<>();
 
     private final Map<FreeDocumentTemplateParameter, String> defaultTexts = new HashMap<>();
 
@@ -60,12 +54,56 @@ public class DocumentIntermix implements Serializable {
 
     private final Map<DocumentType, Map<FreeDocumentTemplateParameter, String>> documentTypeTexts = new HashMap<>();
 
-    public DocumentIntermix(URL defaultDocumentTemplate) {
+    public String toMultiLine() {
+        final StringBuilder sb = new StringBuilder("DocumentIntermix\n");
+        sb.append("- defaultDocumentTemplate=").append(defaultDocumentTemplate).append("\n");
+        sb.append("- footer=").append(footer).append("\n");
+
+        sb.append("- viewTypeDocumentTemplates.size()=").append(viewTypeDocumentTemplates.size()).append("\n");
+        for (Entry<DocumentViewType, UrlLocation> e : viewTypeDocumentTemplates.entrySet()) {
+            sb.append("  - ").append(e.getKey()).append(":").append(e.getValue()).append("\n");
+        }
+
+        sb.append("- defaultTexts.size()=").append(defaultTexts.size()).append("\n");
+        for (Entry<FreeDocumentTemplateParameter, String> e : defaultTexts.entrySet()) {
+            sb.append("  - ").append(e.getKey()).append(":").append(e.getValue()).append("\n");
+        }
+
+        sb.append("- viewTypeTexts.size()=").append(viewTypeTexts.size()).append("\n");
+        for (Entry<DocumentViewType, Map<FreeDocumentTemplateParameter, String>> e : viewTypeTexts.entrySet()) {
+            sb.append("  - ").append(e.getKey()).append(":");
+            if ( e.getValue() == null ) {
+                sb.append("null\n");
+            } else {
+                sb.append("size()=").append(e.getValue().size());
+                for (Entry<FreeDocumentTemplateParameter, String> f : e.getValue().entrySet()) {
+                    sb.append("    - ").append(f.getKey()).append(":").append(f.getValue()).append("\n");
+                }
+            }
+        }
+
+        sb.append("- documentTypeTexts.size()=").append(documentTypeTexts.size()).append("\n");
+        for (Entry<DocumentType, Map<FreeDocumentTemplateParameter, String>> e : documentTypeTexts.entrySet()) {
+            sb.append("  - ").append(e.getKey()).append(":");
+            if ( e.getValue() == null ) {
+                sb.append("null\n");
+            } else {
+                sb.append("size()=").append(e.getValue().size());
+                for (Entry<FreeDocumentTemplateParameter, String> f : e.getValue().entrySet()) {
+                    sb.append("    - ").append(f.getKey()).append(":").append(f.getValue()).append("\n");
+                }
+            }
+        }
+
+        return sb.toString();
+    }
+
+    public DocumentIntermix(UrlLocation defaultDocumentTemplate) {
         this.defaultDocumentTemplate = defaultDocumentTemplate;
     }
 
-    public DocumentIntermix add(DocumentViewType viewType, URL url) {
-        viewTypeDocumentTemplates.put(viewType, url);
+    public DocumentIntermix add(DocumentViewType viewType, UrlLocation url) {
+        viewTypeDocumentTemplates.put(viewType, Objects.requireNonNull(url, "UrlLocation on add must not be null"));
         return this;
     }
 
@@ -92,12 +130,13 @@ public class DocumentIntermix implements Serializable {
      * Returns a the default document template or a specialized on for the viewtype.
      * <p/>
      * @param viewType the viewtype, if null the default document template will be returned.
-     * @return a document template.
+     * @return a document template, may be null.
      */
-    public URL getTemplate(DocumentViewType viewType) {
-        if ( viewTypeDocumentTemplates == null ) return defaultDocumentTemplate;
-        if ( !viewTypeDocumentTemplates.containsKey(viewType) ) return defaultDocumentTemplate;
-        return viewTypeDocumentTemplates.get(viewType);
+    public URL getTemplate(final DocumentViewType viewType) {
+        final URL defaultTemplate = defaultDocumentTemplate != null ? defaultDocumentTemplate.toURL() : null;
+        if ( viewTypeDocumentTemplates == null ) return defaultTemplate;
+        if ( !viewTypeDocumentTemplates.containsKey(viewType) ) return defaultTemplate;
+        return viewTypeDocumentTemplates.get(viewType).toURL();
     }
 
     /**

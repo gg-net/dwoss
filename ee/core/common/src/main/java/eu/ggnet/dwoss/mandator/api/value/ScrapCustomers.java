@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,8 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
@@ -29,7 +30,7 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
-public class ScrapCustomers  implements Serializable{
+public class ScrapCustomers implements Serializable {
 
     private final Map<TradeName, Long> contractorCustomers;
 
