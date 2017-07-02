@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.RemoteLookup;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * RemoteLookup for Tomee. Untested, but should work.
  *
@@ -43,8 +45,15 @@ public class TomeeLookup implements RemoteLookup {
     // full classname, full lookups
     private static final NavigableMap<String, NavigableSet<String>> CLIENT_JNDI_NAME_CACHE = new TreeMap<>();
 
+    public TomeeLookup(LookupConfig config) {
+        requireNonNull(config, "LookupConfig must not be null");
+        requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
+        if ( config.getPort() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
+        this.URL = "http://" + config.getHost() + ":" + config.getPort() + "/tomee/ejb";
+    }
+
     public TomeeLookup(String URL) {
-        this.URL = Objects.requireNonNull(URL, "Remote Host URL is null");
+        this.URL = requireNonNull(URL, "Remote Host URL is null");
     }
 
     private void inspectJndiTree(Context context, String suffix) {

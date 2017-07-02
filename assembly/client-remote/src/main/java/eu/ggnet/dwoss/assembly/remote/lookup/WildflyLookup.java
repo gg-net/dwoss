@@ -21,11 +21,15 @@ import java.util.stream.Collectors;
 
 import javax.naming.*;
 
+import org.jboss.ejb.client.*;
+import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.discover.Discovery;
 import eu.ggnet.saft.core.RemoteLookup;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Remotelookup with Wildfly as Server.
@@ -36,8 +40,6 @@ public class WildflyLookup implements RemoteLookup {
 
     private final static Logger L = LoggerFactory.getLogger(WildflyLookup.class);
 
-    private final static String APP = "dwoss-server";
-
     private boolean initialized = false;
 
     private Context _context;
@@ -45,8 +47,36 @@ public class WildflyLookup implements RemoteLookup {
     // full classname, full lookup
     private Map<String, String> namesAndLookup;
 
+    private final LookupConfig CONFIG;
+
+    public WildflyLookup(LookupConfig config) {
+        requireNonNull(config, "LookupConfig must not be null");
+        requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
+        requireNonNull(config.getUsername(), "Username of LookupConfig must not be null");
+        requireNonNull(config.getPassword(), "Password of LookupConfig must not be null");
+        requireNonNull(config.getApp(), "App of LookupConfig must not be null");
+        if ( config.getPort() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
+
+        this.CONFIG = config;
+    }
+
     private synchronized void init() {
         if ( initialized ) return;
+
+        Properties p = new Properties();
+        p.put("endpoint.name", "client-endpoint");
+        p.put("remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED", "false");
+        p.put("remote.connections", "one");
+        p.put("remote.connection.one.port", Integer.toString(CONFIG.getPort()));
+        p.put("remote.connection.one.host", CONFIG.getHost());
+        p.put("remote.connection.one.username", CONFIG.getUsername());
+        p.put("remote.connection.one.password", CONFIG.getPassword());
+
+        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
+        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
+        EJBClientContext.setSelector(selector);
+
+        final String APP = CONFIG.getApp();
         Object instance = null;
         String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
         try {

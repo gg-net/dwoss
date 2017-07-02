@@ -18,22 +18,17 @@ package eu.ggnet.dwoss.assembly.remote;
 
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-import java.io.IOException;
-import java.net.*;
-import java.util.Objects;
+import java.util.Map;
 
 import javax.validation.ConstraintViolationException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
-import eu.ggnet.dwoss.assembly.remote.select.RemoteMandatorSelectorController;
-import eu.ggnet.dwoss.assembly.remote.select.RemoteMode;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.assembly.remote.lookup.*;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -41,7 +36,6 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.UiAlert.Type;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
@@ -51,111 +45,40 @@ import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
 /**
  * JavaFx entry Point.
  * <p/>
- * @author oliver.guenther
+ * @import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
+ * author oliver.guenther
  */
 public class RunClientFx extends Application {
 
     private SwingClient swingClient;
 
+    /**
+     * Optional errorstring from init, to be inspecte in start.
+     */
+    private String error = null;
+
+    private LookupConfig lookupConfig;
+
     public static void main(String[] args) {
-        System.out.println("Starting Remote Client Main");
+        System.out.println("Java main");
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("Starting RemoteClient JavaFx Stage");
-        Platform.setImplicitExit(false);
-        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
-        MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
-        // TODO: Fails with wildfly. But also a bad solution, Complex code for one case.
-//        Client.enableCache(MandatorSupporter.class);
+        LoggerFactory.getLogger(RunClientFx.class).info("JavaFx start");
+        System.out.println("JavaFx start");
 
-        System.out.println("Parameters");
-        for (String parameter : getParameters().getRaw()) {
-            System.out.println(" - " + parameter);
-        }
-
-        // Default Mode: GG-Net Productive
-        if ( (getParameters().getRaw().isEmpty()
-              || (getParameters().getNamed().containsKey("autologout") && getParameters().getNamed().size() == 1))
-                && !Objects.equals(System.getProperty("select"), "true") ) {
-            startRemoteApplication(RemoteMode.GG_NET_PRODUCTIVE.getUrl());
-            return;
-        }
-        // If Parameters contain key --url, use parameter and move forward
-        if ( getParameters().getNamed().containsKey("url") ) {
-            startRemoteApplication(getParameters().getNamed().get("url"));
-            return;
-        }
-        // If Parameters contain keys --mandator and --mode and the approriated Values can be mapped to a Mode, use the url and move forward
-        if ( getParameters().getNamed().containsKey("mandator")
-                && getParameters().getNamed().containsKey("mode")
-                && RemoteMode.find(getParameters().getNamed().get("mandator"), getParameters().getNamed().get("mode")) != null ) {
-            startRemoteApplication(RemoteMode.find(getParameters().getNamed().get("mandator"), getParameters().getNamed().get("mode")).getUrl());
-            return;
-        }
-
-        // Otherwise show all paramters, telling, that these are not useful and to use usage.
-        if ( !getParameters().getRaw().contains("--select") && !Objects.equals(System.getProperty("select"), "true") ) {
-            String usage = "Usage\n\n"
-                    + "--url=[URL to tomee EJb connector]\n\n"
-                    + "Example: http://localhost:8080/tomee/ejb";
-
-            Alert
-                    .title("Fehlerhafte Paramter")
-                    .message("Es wurden folgende fehlerhaften Parameter gefunden:")
-                    .nl("Raw: " + getParameters().getRaw().toString())
-                    .nl("Map: " + getParameters().getNamed())
-                    .nl("Für die korrekte Benutzung Usage anschauen")
-                    .show(Type.WARNING);
-
-        }
-        // If Parameters are empty, silently move to Selector Dialog.
-
-        FXMLLoader loader = RemoteMandatorSelectorController.newAutoLoader();
-        Pane pane = loader.getRoot();
-        final RemoteMandatorSelectorController controller = loader.getController();
-        controller.setStage(primaryStage);
-        primaryStage.setScene(new Scene(pane));
-        primaryStage.setTitle("Host Selector");
-
-        primaryStage.showingProperty().not().and(controller.okProperty()).addListener((ov, oldValue, newValue) -> {
-            startRemoteApplication(controller.getUrl());
-        });
-        primaryStage.show();
-    }
-
-    @Override
-    public void init() throws Exception {
-        super.init();
-        Client.setRemoteLookup(new WildflyLookup());
-        System.out.println("JavaFx Init called");
-    }
-
-    @Override
-    public void stop() throws Exception {
-        super.stop();
-        System.out.println("JavaFx Stop called");
-    }
-
-    private void startRemoteApplication(String url) {
-        System.out.println("Starting with " + url);
-        final URL provider;
-        try {
-            provider = new URL(url);
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
-        }
-        if ( !isReachable(provider.getHost()) ) {
-            Alert
-                    .title("Fehler")
-                    .message("Verbindung zum Server " + provider.getHost() + " nicht möglich. Abbruch.\nBitte noch einmal versuchen und die Technik informieren.")
+        if ( error != null ) {
+            Alert.title("Fehler im Init")
+                    .nl("Fehler in der Initialisierung oder Verbindung")
+                    .nl("Später noch mal probieren oder Technik kontaktieren")
+                    .nl()
+                    .nl(error)
                     .show(ERROR);
             return;
         }
-        // Setting the URL for Remote Connections.
-//        RemoteServer.URL = url;
+
         EventQueue.invokeLater(() -> {
             swingClient = new SwingClient() {
                 @Override
@@ -167,21 +90,73 @@ public class RunClientFx extends Application {
             };
             swingClient.init();
             swingClient.show(
-                    "(Remote," + provider.getHost() + ":" + provider.getPort() + ") - Mandant:"
+                    "(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
                     + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
         });
+
+    }
+
+    @Override
+    public void init() throws Exception {
+        LoggerFactory.getLogger(RunClientFx.class).info("JavaFx init");
+        System.out.println("JavaFx init");
+
+        String key = discoverConfigParameters();
+        if ( !Configurations.containsConfig(key) ) usage(key); // Go to default, but inform on console abaout usage.
+        lookupConfig = Configurations.getConfigOrDefault(key);
+        Client.setRemoteLookup(new WildflyLookup(lookupConfig));
+
+        Platform.setImplicitExit(false);
+        Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
+
+        MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
+
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 
+        Client.enableCache(MandatorSupporter.class);
+
+        verifyRemoteConnection();
     }
 
-    private boolean isReachable(String host) {
+    @Override
+    public void stop() throws Exception {
+        System.out.println("JavaFx stop");
+    }
+
+    /**
+     * Discovers the config from parameters including some convertions of old configs.
+     *
+     * @return the config key or inf none given null;
+     */
+    private String discoverConfigParameters() {
+        LoggerFactory.getLogger(RunClientFx.class).debug("JavaFx parameters {}", getParameters().getRaw());
+        Map<String, String> p = getParameters().getNamed();
+        String key = p.get("config"); // may return null
+        // Optional: Look for old Parameters
+        if ( key == null ) key = "http://retrax.ahrensburg.gg-net.de:9080/tomee/ejb".equals(p.get("--url")) ? "elus" : null; // old direkt tomee way
+        if ( key == null ) key = p.get("mandator"); // old key
+        return key;
+    }
+
+    private void usage(String givenKey) {
+        String usage = "Called without parameter or wrong parameter, using default config.\n"
+                + "Usage: --config=key\n"
+                + "Values: " + Configurations.toInfo() + "\n"
+                + "Used key was: " + givenKey;
+        System.out.println(usage);
+    }
+
+    @SuppressWarnings({"CallToPrintStackTrace", "UseSpecificCatch"})
+    private void verifyRemoteConnection() {
         try {
-            if ( InetAddress.getByName(host).isReachable(5000) ) return true;
-        } catch (IOException ex) {
-            // TODO: Log me
+            // Try to load the Mandator.
+            Client.lookup(MandatorSupporter.class).loadMandator();
+        } catch (Exception e) {
+            error = e.getMessage() + " thrown by " + e.getClass().getSimpleName();
+            LoggerFactory.getLogger(RunClientFx.class).error("Exception on remote connection test.", e);
+            e.printStackTrace();
         }
-        return false;
     }
 }

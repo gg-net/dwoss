@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
     <action>
-        <actionName>CUSTOM-RunClient - select</actionName>
-        <displayName>RunClient with Selector</displayName>
-        <goals>
-            <goal>compile</goal>
-            <goal>jfx:run</goal>
-        </goals>
-        <properties>
-            <select>true</select>
-        </properties>
-    </action>
-    <action>
         <actionName>CUSTOM-RunClient Sample Localhost</actionName>
         <displayName>RunClient Sample Localhost</displayName>
         <goals>
@@ -19,10 +8,38 @@
             <goal>jfx:run</goal>
         </goals>
         <properties>
-            <jfx.runAppParameter>--url=http://localhost:8080/tomee/ejb</jfx.runAppParameter>
+            <jfx.runAppParameter>--config=local</jfx.runAppParameter>
         </properties>
         <activatedProfiles>
             <activatedProfile>client-sample</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient GGNet Produktiv</actionName>
+        <displayName>RunClient GGNet Produktiv</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=ggnet</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient Elus Produktiv</actionName>
+        <displayName>RunClient Elus Produktiv</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=elus</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-elus</activatedProfile>
         </activatedProfiles>
     </action>
 </actions>

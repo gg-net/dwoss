@@ -24,6 +24,7 @@ import javax.naming.InitialContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.assembly.remote.lookup.LookupConfig;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -74,7 +75,13 @@ public class TestWildfly {
     }
 
     public static void tryRemoteLookupImplementation() {
-        WildflyLookup l = new WildflyLookup();
+        WildflyLookup l = new WildflyLookup(LookupConfig.builder()
+                .host("localhost")
+                .port(8080)
+                .username("admin")
+                .password("admin")
+                .app("dwoss-server")
+                .build());
 
         MandatorSupporter supporter = l.lookup(MandatorSupporter.class);
         Mandator mandator = supporter.loadMandator();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,21 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.common.exception;
+package eu.ggnet.dwoss.assembly.remote.lookup;
 
-import java.awt.AWTEvent;
-import java.awt.EventQueue;
+import lombok.Builder;
+import lombok.Value;
 
-import eu.ggnet.saft.core.UiCore;
+/**
+ * Configuration for a Lookup.
+ *
+ * @author oliver.guenther
+ */
+@Value
+@Builder
+public class LookupConfig {
 
-public class UnhandledExceptionCatcher extends EventQueue {
+    private final int port;
 
-    @Override
-    protected void dispatchEvent(AWTEvent newEvent) {
-        try {
-            super.dispatchEvent(newEvent);
-        } catch (Exception e) {
-            UiCore.handle(e);
-        }
-    }
+    private final String host;
+
+    private final String username;
+
+    private final String password;
+
+    private final String app;
+
 }
