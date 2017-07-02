@@ -102,7 +102,7 @@ public class MonitorFactory {
         return monitors.get(key);
     }
 
-    @Schedule(second = "0", minute = "*/5", hour = "*", dayOfMonth = "*", month = "*", year = "*")
+    @Schedule(second = "0", minute = "*/5", hour = "*", dayOfMonth = "*", month = "*", year = "*", info = "Cleanup of Montiors", persistent = false)
     private void cleanUp() {
         L.debug("cleanUp called by Timer @ {}", new Date());
         for (Integer key : new HashSet<>(monitors.keySet())) {
