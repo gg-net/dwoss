@@ -79,6 +79,11 @@ public class RunClientFx extends Application {
             return;
         }
 
+        /*
+        The SwingClient is a little bit ugly.
+        The result is, that we must init it on the EventQueue and we can not use the supplied fx stage.
+         */
+        Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
             swingClient = new SwingClient() {
                 @Override
@@ -106,7 +111,6 @@ public class RunClientFx extends Application {
         lookupConfig = Configurations.getConfigOrDefault(key);
         Client.setRemoteLookup(new WildflyLookup(lookupConfig));
 
-        Platform.setImplicitExit(false);
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
 
         MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);

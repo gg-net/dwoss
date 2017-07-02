@@ -18,10 +18,8 @@
                 <!--
                 Die Dokumentation ist grad total schrott:
                 Für direkten Aufruf:
-
-                mvn compile jfx:run -Djfx.runAppParameter="- - url=http://localhost:8080/tomee/ejb"
+                mvn compile jfx:run -Djfx.runAppParameter="- - config=local"
                 (die beiden minuse ohne freizeichen)
-                Die Url zeigt zum ejb connector vom tomee
                 -->
                 <groupId>com.zenjava</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -31,6 +29,7 @@
                     <jfxMainAppJarName>client.jar</jfxMainAppJarName>
                     <preLoader>eu.ggnet.dwoss.assembly.remote.DwPreloader</preLoader>
                     <allPermissions>true</allPermissions>
+
                 </configuration>
                 <executions>
                     <execution>
@@ -83,7 +82,7 @@
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>el-impl</artifactId>
-        </dependency> 
+        </dependency>
         <!--        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>jasper-el</artifactId>
