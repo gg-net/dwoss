@@ -85,15 +85,6 @@ public class RunClientFx extends Application {
          */
         Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
-            swingClient = new SwingClient() {
-                @Override
-                protected void close() {
-                    System.out.println("Calling Close");
-                    Platform.exit();
-                    System.exit(0); // Again, not perfect.
-                }
-            };
-            swingClient.init();
             swingClient.show(
                     "(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
                     + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
@@ -122,6 +113,18 @@ public class RunClientFx extends Application {
         Client.enableCache(MandatorSupporter.class);
 
         verifyRemoteConnection();
+
+        EventQueue.invokeAndWait(() -> {
+            swingClient = new SwingClient() {
+                @Override
+                protected void close() {
+                    System.out.println("Calling Close");
+                    Platform.exit();
+                    System.exit(0); // Again, not perfect, but otherwise the application dosen't close and I don't know why.
+                }
+            };
+            swingClient.init();
+        });
     }
 
     @Override
