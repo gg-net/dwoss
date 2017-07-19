@@ -33,6 +33,8 @@ import static eu.ggnet.dwoss.rules.TradeName.APPLE;
  *
  * @author oliver.guenther
  */
+//TODO: might be removed due to the PositionService interface
+@Deprecated
 public class ServicePositionTemplates {
 
     public static final List<Position> GGNET = new ArrayList<>();
