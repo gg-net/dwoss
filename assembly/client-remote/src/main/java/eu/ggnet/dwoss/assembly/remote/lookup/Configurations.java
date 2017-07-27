@@ -55,7 +55,7 @@ public class Configurations {
         );
 
         CONF = Collections.unmodifiableMap(c);
-        DEFAULT = null;
+        DEFAULT = CONF.get("ggnet");
     }
 
     public static boolean containsConfig(String key) {

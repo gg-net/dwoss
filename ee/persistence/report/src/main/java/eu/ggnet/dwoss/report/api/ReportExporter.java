@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.report.api;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
@@ -29,7 +28,6 @@ import eu.ggnet.dwoss.util.FileJacket;
  * @author oliver.guenther
  */
 @Remote
-@Local
 public interface ReportExporter {
 
     FileJacket toFullXls(ViewReportResult report);

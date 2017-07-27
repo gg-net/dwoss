@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.rights.api;
 
 import javax.ejb.Local;
-import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
@@ -26,7 +25,6 @@ import eu.ggnet.dwoss.util.UserInfoException;
  * <p>
  * @author bastian.venz
  */
-@Remote
 @Local
 public interface AuthenticationService {
 
