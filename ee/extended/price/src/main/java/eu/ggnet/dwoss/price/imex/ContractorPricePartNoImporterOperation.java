@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,8 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import eu.ggnet.dwoss.rules.TradeName;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -28,24 +26,20 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.lucidcalc.LucidCalcReader;
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.partno.PartNoSupport;
-
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.LucidCalcReader;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
 import lombok.Value;
 
@@ -186,11 +180,11 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             validSize++;
             Product p = productEao.findByPartNo(contractorImport.manufacturerPartNo);
             if ( p == null ) {
-                errors.add("No UniqueUnit Entity for PartNo " + contractorImport.manufacturerPartNo + ", Ignoring");
+                errors.add("No UniqueUnit.Product Entity found for PartNo " + contractorImport.manufacturerPartNo + ", Ignoring");
                 continue;
             }
             importAbleSize++;
-            if ( contractorPartNo.equals(p.getAdditionalPartNo(contractor)) && p.getPrice(PriceType.CONTRACTOR_REFERENCE) > 0 ) continue;
+            // There was a difference before. Now its the same.
             importedSize++;
             p.setAdditionalPartNo(contractor, contractorPartNo);
             p.setPrice(CONTRACTOR_REFERENCE, contractorImport.referencePrice, "Import by " + arranger);

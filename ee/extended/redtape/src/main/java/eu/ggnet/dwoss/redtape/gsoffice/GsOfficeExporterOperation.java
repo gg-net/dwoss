@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.api.GsOfficeSupport;
@@ -62,6 +63,9 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
     @Inject
     private GsOfficeSupport gsOfficeSupport;
 
+    @Inject
+    private Mandator mandator;
+
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
@@ -91,7 +95,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
             GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(gsOfficeSupport, out, customerInvoices, accounting);
             exporter.execute(m);
             m.finish();
-            return new FileJacket("Buchungsaetze Sopo von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
+            return new FileJacket("Buchungsaetze DW " + mandator.getCompany().getName() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
