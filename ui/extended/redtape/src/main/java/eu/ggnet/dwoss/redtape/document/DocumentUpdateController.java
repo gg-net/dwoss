@@ -16,15 +16,17 @@
  */
 package eu.ggnet.dwoss.redtape.document;
 
-import java.awt.*;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
+import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -56,8 +58,8 @@ public class DocumentUpdateController {
 
     /**
      * This method creates a position from a specified type.
-     * Values set to Position are:<br />
-     * <p/>
+     * Values set to Position are:<br>
+     * <p>
      * @param dossierId   the dossier id
      * @param type        the position type
      * @param refurbishId the refurbishId if a type is unit.
@@ -112,16 +114,6 @@ public class DocumentUpdateController {
             UiCore.handle(ex);
             return null;
         }
-//
-//        PositionUpdateCask productUpdateView = new PositionUpdateCask(pos);
-//        OkCancelDialog<PositionUpdateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Position bearbeiten", productUpdateView);
-//        dialog.setLocationRelativeTo(view);
-//        dialog.setVisible(true);
-//        if ( dialog.getCloseType() == CloseType.OK ) {
-//            Position result = productUpdateView.getPosition();
-//            return result;
-//        }
-//        return null;
     }
 
     public eu.ggnet.dwoss.redtape.entity.Position createCommentPosition() {
@@ -146,16 +138,6 @@ public class DocumentUpdateController {
             UiCore.handle(ex);
             return null;
         }
-//        .ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(PositionType.SERVICE).createPosition();
-//        ServiceViewCask serviceView = new ServiceViewCask(p);
-//        OkCancelDialog<ServiceViewCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Diensleistung/Kleinteil hinzufügen", serviceView);
-//        dialog.setLocationRelativeTo(view);
-//        dialog.setVisible(true);
-//        if ( dialog.getCloseType() == CloseType.OK ) {
-//            p = serviceView.getPosition();
-//            return p;
-//        }
-//        return null;
     }
 
     public SalesProduct createProductBatchPosition(List<SalesProduct> products) {

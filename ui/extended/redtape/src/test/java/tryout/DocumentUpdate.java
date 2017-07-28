@@ -1,23 +1,6 @@
 package tryout;
 
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
-import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
-import eu.ggnet.dwoss.redtape.UnitOverseer;
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Address;
+import java.util.Arrays;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -25,16 +8,27 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import org.junit.Test;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-
+import eu.ggnet.dwoss.mandator.api.value.PostLedger.LedgerValue;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
+import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.MapBuilder;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.api.AuthenticationException;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
-import tryout.stub.*;
+import tryout.stub.CustomerServiceStub;
+import tryout.stub.RedTapeWorkerStub;
 
 import static eu.ggnet.dwoss.configuration.GlobalConfig.TAX;
 import static eu.ggnet.dwoss.rules.PositionType.*;
@@ -58,6 +52,7 @@ public class DocumentUpdate {
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
+        UiCore.startSwing(() -> new MainPanel());
 
         Dossier dos = new Dossier();
         dos.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
@@ -152,7 +147,15 @@ public class DocumentUpdate {
 
             @Override
             public PostLedger loadPostLedger() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return new PostLedger(new MapBuilder<>()
+                        .put(UNIT, new LedgerValue(1))
+                        .put(SERVICE, new LedgerValue(2, Arrays.asList(
+                                21,
+                                22
+                        )))
+                        .put(PRODUCT_BATCH, new LedgerValue(3))
+                        .put(SHIPPING_COST, new LedgerValue(4))
+                        .toHashMap());
             }
 
             @Override
@@ -163,6 +166,17 @@ public class DocumentUpdate {
         Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
         Client.addSampleStub(RedTapeAgent.class, null);
         Client.addSampleStub(UnitOverseer.class, null);
+        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
+
+            {
+                setRights(new Operator("All Rights", 1, Arrays.asList(AtomicRight.values())));
+            }
+
+            @Override
+            public void login(String user, char[] pass) throws AuthenticationException {
+
+            }
+        });
 
         DocumentUpdateView cd = new DocumentUpdateView(doc);
         DocumentUpdateController controller = new DocumentUpdateController(cd, doc);

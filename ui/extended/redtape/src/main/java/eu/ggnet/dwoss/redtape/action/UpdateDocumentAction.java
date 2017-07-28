@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,19 +18,16 @@ package eu.ggnet.dwoss.redtape.action;
 
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.common.DwOssCore;
 
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import eu.ggnet.dwoss.redtape.entity.Document;
@@ -42,9 +39,9 @@ import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
 
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.UiCore;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -62,7 +59,7 @@ public class UpdateDocumentAction extends AbstractAction {
     private final RedTapeController redTapeController;
 
     private final long id;
-    
+
     private Document doc;
 
     {
@@ -89,7 +86,7 @@ public class UpdateDocumentAction extends AbstractAction {
             try {
                 doc = lookup(RedTapeWorker.class).revertCreate(doc);
             } catch (UserInfoException ex) {
-                DwOssCore.show(parent, ex);
+                UiCore.handle(ex);
             }
         }
         redTapeController.reloadSelectionOnStateChange(doc.getDossier());
