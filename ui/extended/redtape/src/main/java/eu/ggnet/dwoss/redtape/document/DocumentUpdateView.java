@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -147,8 +148,10 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
                 if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
                     if ( isChangeAllowed() ) {
-                        controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
-                        positionsFxList.refresh();
+                        ForkJoinPool.commonPool().execute(() -> {
+                            controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
+                            // positionsFxList.refresh();
+                        });
                     } else {
                         Alert.show("Änderung an Positionen ist nicht erlaubt.");
                     }

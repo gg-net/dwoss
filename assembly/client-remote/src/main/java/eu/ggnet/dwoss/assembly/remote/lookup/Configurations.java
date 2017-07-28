@@ -36,7 +36,7 @@ public class Configurations {
                 .port(8080)
                 .username("dwapp")
                 .password("dwuserapp")
-                .app("dwoss-server")
+                .app("dw-ggnet")
                 .build());
         c.put("ggnet-test", LookupConfig.builder()
                 .host("blackout.cybertron.global")
@@ -50,7 +50,7 @@ public class Configurations {
                 .port(8080)
                 .username("dwapp")
                 .password("dwuserapp")
-                .app("dwoss-server")
+                .app("dw-elus")
                 .build());
         c.put("elus-test", LookupConfig.builder()
                 .host("blackout.cybertron.global")
