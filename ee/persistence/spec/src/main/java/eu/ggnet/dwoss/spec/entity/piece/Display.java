@@ -408,6 +408,7 @@ public class Display implements Serializable {
         if ( this.resolution != other.resolution ) return false;
         if ( this.type != other.type ) return false;
         if ( this.ration != other.ration ) return false;
+        if ( this.led != other.led ) return false;
         return true;
     }
 
