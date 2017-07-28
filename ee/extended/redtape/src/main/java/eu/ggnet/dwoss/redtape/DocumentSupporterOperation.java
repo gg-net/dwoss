@@ -180,7 +180,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
                     "Dokument.pdf", "Das ist das Dokument zu Ihrem Aufrag als PDF.");
             for (MandatorMailAttachment mma : mandator.getDefaultMailAttachment()) {
-                email.attach(mma.getAttachmentData(), mma.getAttachmentName(), mma.getAttachmentDescription());
+                email.attach(mma.getAttachmentData().toURL(), mma.getAttachmentName(), mma.getAttachmentDescription());
             }
             email.send();
         } catch (EmailException ex) {

@@ -17,12 +17,11 @@
 package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
-import java.net.URL;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
+import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Builder;
 
 /**
  * Valueholder for attachments in {@link Mandator} mail attachments.
@@ -33,7 +32,7 @@ import lombok.experimental.Builder;
 @Builder
 public class MandatorMailAttachment implements Serializable {
 
-    private URL attachmentData;
+    private UrlLocation attachmentData;
 
     private String attachmentName;
 

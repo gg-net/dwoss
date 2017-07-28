@@ -15,6 +15,20 @@
         </activatedProfiles>
     </action>
     <action>
+        <actionName>CUSTOM-RunClient GGNet Test</actionName>
+        <displayName>RunClient GGNet Test</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=ggnet-test</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
         <actionName>CUSTOM-RunClient GGNet Produktiv</actionName>
         <displayName>RunClient GGNet Produktiv</displayName>
         <goals>
@@ -26,6 +40,20 @@
         </properties>
         <activatedProfiles>
             <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient Elus Test</actionName>
+        <displayName>RunClient Elus Test</displayName>
+        <goals>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=elus-test</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-elus</activatedProfile>
         </activatedProfiles>
     </action>
     <action>

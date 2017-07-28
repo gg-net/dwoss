@@ -134,3 +134,6 @@ Things we know, but haven't written down yet.
  - http://stackoverflow.com/questions/39410183/hibernate-5-2-2-no-persistence-provider-for-entitymanager
  - In Hiberante 5.2 the hibernate-entitymanager is obsolete. everything is in core
  - TransactionAttribute(Requires New) on every generator.
+ - Wildfly Remote needs ApplicationRealm User https://www.schoenberg-solutions.de/roller/arndtsBlog/entry/remote-zugriff-wildfly-10-teil4
+ - persistenc.xml -> <property name="hibernate.id.new_generator_mappings" value="false" /> , since 5.x hibernate uses other default key generator.
+   This returns to old behavior

@@ -38,12 +38,26 @@ public class Configurations {
                 .password("admin")
                 .app("dwoss-server")
                 .build());
+        c.put("ggnet-test", LookupConfig.builder()
+                .host("blackout.cybertron.global")
+                .port(8080)
+                .username("test")
+                .password("test")
+                .app("dw-ggnet")
+                .build());
         c.put("elus", LookupConfig.builder()
                 .host("retrax.cybertron.global")
                 .port(9080)
                 .username("admin")
                 .password("admin")
                 .app("dwoss-server")
+                .build());
+        c.put("elus-test", LookupConfig.builder()
+                .host("blackout.cybertron.global")
+                .port(8080)
+                .username("test")
+                .password("test")
+                .app("dw-elus")
                 .build());
         c.put("local", LookupConfig.builder()
                 .host("localhost")

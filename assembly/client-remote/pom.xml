@@ -189,20 +189,20 @@
                     <version>${dw.version}</version>
                 </dependency>
                 <!-- Needed for SQL Exceptions throw up. -->
-                <dependency>
+                <!--                <dependency>
                     <groupId>mysql</groupId>
                     <artifactId>mysql-connector-java</artifactId>
-                </dependency>
+                </dependency>-->
             </dependencies>
         </profile>
         <profile>
             <id>client-elus</id>
             <dependencies>
                 <!-- Needed for SQL Exceptions throw up. -->
-                <dependency>
+                <!--                <dependency>
                     <groupId>mysql</groupId>
                     <artifactId>mysql-connector-java</artifactId>
-                </dependency>
+                </dependency>-->
             </dependencies>
         </profile>
         <profile>

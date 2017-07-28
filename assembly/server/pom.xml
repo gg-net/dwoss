@@ -100,6 +100,9 @@
             <properties>
                 <mandator.name>GG-Net GmbH</mandator.name>
             </properties>
+            <build>
+                <finalName>dw-ggnet</finalName>
+            </build>
             <dependencies>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
@@ -129,6 +132,9 @@
             <properties>
                 <mandator.name>ELUS</mandator.name>
             </properties>
+            <build>
+                <finalName>dw-elus</finalName>
+            </build>
             <dependencies>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
