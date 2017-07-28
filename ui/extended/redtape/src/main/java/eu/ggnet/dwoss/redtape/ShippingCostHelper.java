@@ -59,7 +59,7 @@ public class ShippingCostHelper {
         SortedMap<Integer, Position> positions = doc.getPositions(PositionType.SHIPPING_COST);
         if ( positions.isEmpty() ) {
             PositionBuilder pb = new PositionBuilder().setType(PositionType.SHIPPING_COST)
-                    .setName("Versandkosten").setDescription("Dies sind die Versandkosten von diesem Auftrag.")
+                    .setName("Versandkosten").setDescription("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
                     .setPrice(costs).setTax(GlobalConfig.TAX).setAfterTaxPrice(costs + (costs * GlobalConfig.TAX))
                     .setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST).orElse(-1));
             doc.append(pb.createPosition());

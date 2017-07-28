@@ -69,9 +69,17 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
         templates.add(commPosition);
 
         commPosition = new Position();
+        commPosition.setName("Vorab-Überweisung");
+        commPosition.setDescription("Der Versand der Ware erfolgt nach Zahlungseingang. \n"
+                + "Bei Zahlungseingang bis 11:00 Uhr (Montag bis Freitag) erfolgt der Versand tagesgleich.");
+        commPosition.setType(PositionType.COMMENT);
+        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
+        templates.add(commPosition);
+
+        commPosition = new Position();
         commPosition.setName("Information, " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
         commPosition.setDescription("Wir konnten bis heute keinen Zahlungseingang feststellen.\n"
-                + "Wir müssen annehmen, Sie haben kein Interesse mehr und geben das Gerät in 48 Stunden wieder zum Verkauf frei.");
+                + "Wir müssen annehmen, Sie haben kein Interesse mehr haben und geben das Gerät in 48 Stunden wieder zum Verkauf frei.");
         commPosition.setType(PositionType.COMMENT);
         commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
