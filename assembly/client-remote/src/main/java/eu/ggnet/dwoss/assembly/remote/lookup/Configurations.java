@@ -34,8 +34,8 @@ public class Configurations {
         c.put("ggnet", LookupConfig.builder()
                 .host("retrax.cybertron.global")
                 .port(8080)
-                .username("admin")
-                .password("admin")
+                .username("dwapp")
+                .password("dwuserapp")
                 .app("dwoss-server")
                 .build());
         c.put("ggnet-test", LookupConfig.builder()
@@ -47,9 +47,9 @@ public class Configurations {
                 .build());
         c.put("elus", LookupConfig.builder()
                 .host("retrax.cybertron.global")
-                .port(9080)
-                .username("admin")
-                .password("admin")
+                .port(8080)
+                .username("dwapp")
+                .password("dwuserapp")
                 .app("dwoss-server")
                 .build());
         c.put("elus-test", LookupConfig.builder()
