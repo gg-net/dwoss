@@ -6,7 +6,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotate a dependend Action, it will indecated as the default one.
+ * Annotate a dependent Action, it will indicated as the default one.
  *
  * @author oliver.guenther
  */

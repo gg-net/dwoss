@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,18 @@
  */
 package eu.ggnet.dwoss.login;
 
-import java.awt.AWTEvent;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
-import java.awt.event.AWTEventListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.concurrent.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.saft.core.AutoLoginLogout;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
-import eu.ggnet.saft.core.AutoLoginLogout;
-
 import static eu.ggnet.saft.core.Client.lookup;
-import static java.awt.AWTEvent.KEY_EVENT_MASK;
-import static java.awt.AWTEvent.MOUSE_EVENT_MASK;
-import static java.awt.AWTEvent.MOUSE_MOTION_EVENT_MASK;
+import static java.awt.AWTEvent.*;
 
 @ServiceProvider(service = AutoLoginLogout.class)
 public class AutoLoginLogoutHandler implements AWTEventListener, KeyEventDispatcher, ActionListener, AutoLoginLogout {

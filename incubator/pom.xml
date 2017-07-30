@@ -12,7 +12,6 @@
     <description>Incubator projects, which might be release as separate projects if stable.</description>
     <modules>
         <module>saft</module>
-        <module>mobile-ui</module>
         <module>lucidcalc</module>
         <module>statemachine</module>
     </modules>

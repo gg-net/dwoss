@@ -10,7 +10,7 @@
     <artifactId>dwoss-mandator-sample-tryout</artifactId>
     <packaging>ejb</packaging>
 
-    <name>DwOss • Mandator • Sample • Tryout</name>
+    <name>DwOss • Mandator • Sample Tryout</name>
     <description>Contains classes and config files for usage in a tryout scenario. Including database generators.</description>
 
     <build>

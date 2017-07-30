@@ -10,7 +10,7 @@
     <artifactId>dwoss-mandator-sample-service</artifactId>
     <packaging>ejb</packaging>
 
-    <name>DwOss • Mandator • Sample • Service</name>
+    <name>DwOss • Mandator • Sample Service</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

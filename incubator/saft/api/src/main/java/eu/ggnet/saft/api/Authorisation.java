@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
 package eu.ggnet.saft.api;
 
 /**
- * Taging Interface for every kind of Authorisation implementation.
+ * Tagging Interface for every kind of Authorisation implementation.
  * <p>
  * @author oliver.guenther
  */

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.util;
 /**
  *
  * @author pascal.perau
- * @deprecated no longer needed. See http://overload.ahrensburg.gg-net.de/jira/browse/DW-1154
+ * @deprecated no longer needed. See https://jira.cybertron.global/browse/DW-1154
  */
 // TODO: Doofer Name
 @Deprecated

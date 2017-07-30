@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,18 @@
  */
 package eu.ggnet.dwoss.util.gen;
 
+import lombok.Value;
+
 /**
  * A Name
  *
  * @author oliver.guenther
  */
+@Value
 public class Name {
 
     public static enum Gender {
-        MALE,FEMALE
+        MALE, FEMALE
     }
 
     private final String first;
@@ -32,28 +35,5 @@ public class Name {
     private final String last;
 
     private final Gender gender;
-
-    public Name(String first, String last, Gender gender) {
-        this.first = first;
-        this.last = last;
-        this.gender = gender;
-    }
-
-    public String getFirst() {
-        return first;
-    }
-
-    public String getLast() {
-        return last;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    @Override
-    public String toString() {
-        return "Name{" + "first=" + first + ", last=" + last + ", gender=" + gender + '}';
-    }
 
 }
