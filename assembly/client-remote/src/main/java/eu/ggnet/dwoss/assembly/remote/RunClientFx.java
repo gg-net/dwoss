@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -57,7 +59,7 @@ public class RunClientFx extends Application {
      */
     private String error = null;
 
-    private LookupConfig lookupConfig;
+    private EjbConnectionConfiguration lookupConfig;
 
     public static void main(String[] args) {
         System.out.println("Java main");

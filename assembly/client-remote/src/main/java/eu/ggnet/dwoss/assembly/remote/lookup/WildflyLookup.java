@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,9 +49,9 @@ public class WildflyLookup implements RemoteLookup {
     // full classname, full lookup
     private Map<String, String> namesAndLookup;
 
-    private final LookupConfig CONFIG;
+    private final EjbConnectionConfiguration CONFIG;
 
-    public WildflyLookup(LookupConfig config) {
+    public WildflyLookup(EjbConnectionConfiguration config) {
         requireNonNull(config, "LookupConfig must not be null");
         requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
         requireNonNull(config.getUsername(), "Username of LookupConfig must not be null");

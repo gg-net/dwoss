@@ -51,11 +51,6 @@
         - hibernate-core: classes used in remote client
         - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
         -->
-        <!--        <dependency>
-            <groupId>org.apache.tomee</groupId>
-            <artifactId>openejb-client</artifactId>
-            <version>7.0.3</version>
-        </dependency>-->
         <dependency>
             <groupId>${javaee.groupId}</groupId>
             <artifactId>${javaee.artifactId}</artifactId>
@@ -77,22 +72,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- For whatever reason, this is working in all tests, but not on the client. her wie sudanly need japser-el, which does not work in tests.-->
         <!-- Expresion factory for hibernate validator-->
         <dependency>
             <groupId>org.glassfish.web</groupId>
             <artifactId>el-impl</artifactId>
         </dependency>
-        <!--        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>jasper-el</artifactId>
-            <version>6.0.53</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.javamail</groupId>
-            <artifactId>geronimo-javamail_1.4_mail</artifactId>
-            <version>1.8.4</version>
-        </dependency>-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -175,6 +159,11 @@
             <dependencies>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-config</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-persistence-repair</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
@@ -188,21 +177,16 @@
                     <artifactId>dw-ui-pro-price</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
-                <!-- Needed for SQL Exceptions throw up. -->
-                <!--                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </dependency>-->
             </dependencies>
         </profile>
         <profile>
             <id>client-elus</id>
             <dependencies>
-                <!-- Needed for SQL Exceptions throw up. -->
-                <!--                <dependency>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </dependency>-->
+                <dependency>
+                    <groupId>eu.ggnet.dw</groupId>
+                    <artifactId>dw-config</artifactId>
+                    <version>${dw.version}</version>
+                </dependency>
             </dependencies>
         </profile>
         <profile>

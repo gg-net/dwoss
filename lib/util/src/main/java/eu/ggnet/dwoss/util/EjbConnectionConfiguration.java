@@ -14,19 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.assembly.remote.lookup;
+package eu.ggnet.dwoss.util;
 
 import lombok.Builder;
 import lombok.Value;
 
 /**
- * Configuration for a Lookup.
+ * Configuration for an EjbConnection.
+ * Conntains enought parameters to be used for a wildfly client or a tomme client.
  *
  * @author oliver.guenther
  */
 @Value
 @Builder
-public class LookupConfig {
+public class EjbConnectionConfiguration {
 
     private final int port;
 

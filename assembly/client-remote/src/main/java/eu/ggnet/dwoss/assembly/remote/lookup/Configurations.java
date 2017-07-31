@@ -18,71 +18,56 @@ package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
 
+import org.openide.util.Lookup;
+
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+import eu.ggnet.dwoss.util.EjbConnectionConfigurationProvider;
+
 /**
  *
  * @author oliver.guenther
  */
 public class Configurations {
 
-    private final static Map<String, LookupConfig> CONF;
+    private static Map<String, EjbConnectionConfiguration> conf;
 
-    private final static LookupConfig DEFAULT;
+    private final static String DEFAULT_KEY = "ggnet";
 
-    // TODO: Move Configs of produktive systems to dw pro an make service Lookup here.
-    static {
-        Map<String, LookupConfig> c = new HashMap<>();
-        c.put("ggnet", LookupConfig.builder()
-                .host("retrax.cybertron.global")
-                .port(8080)
-                .username("dwapp")
-                .password("dwuserapp")
-                .app("dw-ggnet")
-                .build());
-        c.put("ggnet-test", LookupConfig.builder()
-                .host("blackout.cybertron.global")
-                .port(8080)
-                .username("test")
-                .password("test")
-                .app("dw-ggnet")
-                .build());
-        c.put("elus", LookupConfig.builder()
-                .host("retrax.cybertron.global")
-                .port(8080)
-                .username("dwapp")
-                .password("dwuserapp")
-                .app("dw-elus")
-                .build());
-        c.put("elus-test", LookupConfig.builder()
-                .host("blackout.cybertron.global")
-                .port(8080)
-                .username("test")
-                .password("test")
-                .app("dw-elus")
-                .build());
-        c.put("local", LookupConfig.builder()
+    private static void init() {
+        if ( !Objects.isNull(conf) ) return;
+        conf = new HashMap<>();
+        conf.put("local", EjbConnectionConfiguration.builder()
                 .host("localhost")
                 .port(8080)
                 .username("admin")
                 .password("admin")
                 .app("dwoss-server")
-                .build()
-        );
-
-        CONF = Collections.unmodifiableMap(c);
-        DEFAULT = CONF.get("ggnet");
+                .build());
+        Optional.of(Lookup.getDefault().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
     }
 
     public static boolean containsConfig(String key) {
-        return CONF.keySet().contains(key);
+        init();
+        return conf.containsKey(key);
     }
 
-    public static LookupConfig getConfigOrDefault(String key) {
-        if ( !containsConfig(key) ) return DEFAULT;
-        return CONF.get(key);
+    /**
+     * Returns the configuration of the key or if not pressend either the default or the first.
+     * Exists for the rare case, that the client is called with wrong or old parameters.
+     *
+     * @param key identifing the configuration
+     * @return a configuration
+     */
+    public static EjbConnectionConfiguration getConfigOrDefault(String key) {
+        init();
+        if ( !containsConfig(key) && !containsConfig(DEFAULT_KEY) ) return conf.values().iterator().next(); // the first usefull.
+        if ( !containsConfig(key) ) return conf.get(DEFAULT_KEY);
+        return conf.get(key);
     }
 
     public static String toInfo() {
-        return "Keys:" + CONF.keySet() + " Default: ggnet";
+        init();
+        return "Keys:" + conf.keySet() + " Default: " + DEFAULT_KEY;
     }
 
 }

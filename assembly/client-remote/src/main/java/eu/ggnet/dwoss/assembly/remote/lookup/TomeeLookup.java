@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+
 import java.util.*;
 
 import javax.naming.*;
@@ -45,7 +47,7 @@ public class TomeeLookup implements RemoteLookup {
     // full classname, full lookups
     private static final NavigableMap<String, NavigableSet<String>> CLIENT_JNDI_NAME_CACHE = new TreeMap<>();
 
-    public TomeeLookup(LookupConfig config) {
+    public TomeeLookup(EjbConnectionConfiguration config) {
         requireNonNull(config, "LookupConfig must not be null");
         requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
         if ( config.getPort() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);

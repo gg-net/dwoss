@@ -24,7 +24,7 @@ import javax.naming.InitialContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.assembly.remote.lookup.LookupConfig;
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -75,7 +75,7 @@ public class TestWildfly {
     }
 
     public static void tryRemoteLookupImplementation() {
-        WildflyLookup l = new WildflyLookup(LookupConfig.builder()
+        WildflyLookup l = new WildflyLookup(EjbConnectionConfiguration.builder()
                 .host("localhost")
                 .port(8080)
                 .username("admin")
