@@ -133,6 +133,10 @@ public class SimpleReportLine implements Serializable {
     @Getter
     @Setter
     private PositionType positionType;
+    
+    @Getter
+    @Setter
+    private String comment;
 
     @Getter
     @Setter

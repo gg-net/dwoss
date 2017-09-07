@@ -245,6 +245,15 @@ public interface ReportAgent extends RemoteAgent {
     Report store(Report report, Collection<ReportLine.Storeable> storeables);
 
     /**
+     * Updates the comment of a ReportLine
+     * If no instance could be found no changes will ba made.
+     *
+     * @param id      primary key of the ReportLine to be updated.
+     * @param comment string to be set as new comment for the ReportLine
+     */
+    void updateReportLineComment(long id, String comment);
+
+    /**
      * Returns a ReportResult build from an existing Report.
      * <p>
      * @param reportId the id of the exisitng report

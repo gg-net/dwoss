@@ -4,7 +4,11 @@ import java.util.*;
 
 import javax.persistence.LockModeType;
 
+import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import org.junit.Test;
 
@@ -12,6 +16,7 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.SimpleReportLinePane;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
@@ -35,41 +40,41 @@ public class SimpleReportLine {
                             .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                             .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.DELL).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(10).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(10).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.HP).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(23).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(23).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.EMACHINES).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ONESELF).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.LENOVO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                            .reportingDate(new Date()).build(),
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
+                                    .reportingDate(new Date()).build(),
                             eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ALSO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                            .reportingDate(new Date()).build()
+                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
+                                    .reportingDate(new Date()).build()
                     );
 
             @Override
@@ -170,18 +175,30 @@ public class SimpleReportLine {
             public ViewReportResult prepareReport(ReportParameter p, boolean loadUnreported) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public void updateReportLineComment(long id, String comment) {
+                
+            }
             //</editor-fold>
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
-        new JFXPanel();    // To start the platform
+        JFXPanel jfxPanel = new JFXPanel(); // To start the platform
 
-//        Platform.runLater(() -> {
-//            SimpleReportLinePane srl = new SimpleReportLinePane();
-//            srl.load(new SearchParameter());
-//            srl.showAndWait();
-//            complete = true;
-//        });
+        Platform.runLater(() -> {
+
+            Stage stage = new Stage();
+            stage.setTitle("SimpleReportLine Tryout");
+
+            SimpleReportLinePane srl = new SimpleReportLinePane();
+            srl.load(new SearchParameter());
+            Scene scene = new Scene(srl, Color.ALICEBLUE);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            complete = true;
+        });
         while (!complete) {
             Thread.sleep(500);
         }

@@ -23,18 +23,19 @@ import java.util.concurrent.CompletableFuture;
 import javax.swing.*;
 
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.*;
+import javafx.collections.*;
+import javafx.collections.ListChangeListener.Change;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.text.*;
 
 import org.metawidget.swing.SwingMetawidget;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.Workspace;
 
+import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
@@ -77,6 +79,38 @@ public class SimpleReportLinePane extends BorderPane {
     public SimpleReportLinePane() {
         model = FXCollections.observableArrayList();
 
+        //building the Searchar on Top 
+        Label searchRefurbishIdLabel = new Label("RefurbishId:");
+        final TextField searchRefurbishIdField = new TextField();
+        Button searchButton = new Button("Search");
+        EventHandler<ActionEvent> eh = (e) -> {
+            load(new SearchParameter(searchRefurbishIdField.getText()));
+        };
+        searchButton.setOnAction(eh);
+        searchRefurbishIdField.setOnAction(eh);
+
+        HBox top = new HBox();
+        top.setSpacing(5);
+        top.setAlignment(CENTER_LEFT);
+        Label selectedRefPrice = new Label("Selected Reference Price:");
+        selectedRefPrice.setStyle("-fx-font-weight: bold;");
+
+        Label referencePriceLabel = new Label("0");
+        referencePriceLabel.textProperty().bind(referencePriceProperty.asString("%,.2f €"));
+        top.getChildren().addAll(searchRefurbishIdLabel, searchRefurbishIdField, searchButton, selectedRefPrice, referencePriceLabel);
+
+        setTop(top);
+
+        //building context Menu for right mouse button for this table
+        MenuItem editItem = new MenuItem("Edit Comment");
+        editItem.setOnAction((ActionEvent event) -> {
+            openCommentEdit();
+        });
+        //TODO add more Item like delete/copy/cut/paste SimpleReportLine to the contextmenu
+        ContextMenu contextMenu = new ContextMenu();
+        contextMenu.getItems().addAll(editItem);
+
+        //build all the Colums 
         TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
         id.setCellValueFactory(new PropertyValueFactory("id"));
         TableColumn<SimpleReportLine, String> refurbishId = new TableColumn<>("RefurbishId");
@@ -108,45 +142,65 @@ public class SimpleReportLinePane extends BorderPane {
         positionType.setCellValueFactory(new PropertyValueFactory("positionType"));
 
         table = new TableView<>();
-        table.getColumns().addAll(reportingDate, refurbishId, partNo, productName, contractor, amount, contractorReferencePrice, price, purchasePrice, documentType, positionType, unqiueUnitId, id);
+        table.getColumns().addAll(
+                reportingDate,
+                refurbishId,
+                partNo,
+                productName,
+                contractor,
+                amount,
+                contractorReferencePrice,
+                price,
+                purchasePrice,
+                documentType,
+                positionType,
+                id,
+                unqiueUnitId);
         table.setItems(model);
         table.getSelectionModel().setSelectionMode(MULTIPLE);
-        table.getSelectionModel().selectedIndexProperty().addListener((ov, o, n) -> {
-            double ref = 0;
-            for (SimpleReportLine srl : table.getSelectionModel().getSelectedItems()) {
-                ref += srl.getContractorReferencePrice();
-            }
-            referencePriceProperty.set(ref);
+
+        //updated the selectet reference price on the top
+        table.getSelectionModel().getSelectedIndices().addListener((Change<? extends Integer> c) -> {
+            referencePriceProperty.set(
+                    table.getSelectionModel().getSelectedItems().stream()
+                            .mapToDouble(line -> line.getContractorReferencePrice()).sum()
+            );
         });
-        table.setOnMouseClicked((e) -> {
-            if ( e.getButton().equals(MouseButton.PRIMARY) && e.getClickCount() == 2 ) {
-                openDetailView(table.getSelectionModel().getSelectedItem().getId());
+        //adding a RowFactory to show the Comment of a SimpleReportLine as a Tooltip
+        table.setRowFactory((view) -> new TableRow<SimpleReportLine>() {
+            private Tooltip tooltip = new Tooltip();
+
+            @Override
+            protected void updateItem(SimpleReportLine item, boolean empty) {
+                super.updateItem(item, empty);
+                tooltip.setText(item == null ? "" : item.getComment());
+                setTooltip(tooltip);
             }
         });
 
-        Label searchRefurbishIdLabel = new Label("RefurbishId:");
-        final TextField searchRefurbishIdField = new TextField();
-        Button searchButton = new Button("Search");
-        EventHandler<ActionEvent> eh = (e) -> {
-            load(new SearchParameter(searchRefurbishIdField.getText()));
-        };
+        /**
+         * open the Detail Dialog on doubleclick.
+         * allways close the Context Menu. To catch miss-clicks on open Context Menu
+         */
+        table.setOnMouseClicked((event) -> {
+            if ( event.getButton().equals(MouseButton.PRIMARY) ) {
+                contextMenu.hide();
+                if ( event.getClickCount() == 2 ) {
+                    openDetailView(table.getSelectionModel().getSelectedItem().getId());
+                }
+            }
+        });
 
-        searchButton.setOnAction(eh);
-        searchRefurbishIdField.setOnAction(eh);
+        //open the Contextmenu next to the mouse cursor 
+        table.setOnContextMenuRequested((ContextMenuEvent event) -> {
+            contextMenu.show(table, event.getScreenX(), event.getScreenY());
+        });
 
-        HBox top = new HBox();
-        top.getChildren().addAll(searchRefurbishIdLabel, searchRefurbishIdField, searchButton);
-
-        VBox right = new VBox();
-        right.getChildren().add(new Label("Ref Price"));
-        Label referencePriceLabel = new Label("0");
-        referencePriceLabel.textProperty().bind(referencePriceProperty.asString("%,.2f €"));
-        right.getChildren().add(referencePriceLabel);
-
-        setTop(top);
         setCenter(table);
-        setRight(right);
 
+        /**
+         * show the Progressbar on the lower end of the Window
+         */
         progressBar = new ProgressBar();
         progressBar.setMinWidth(200);
         progressBar.setVisible(false);
@@ -154,30 +208,98 @@ public class SimpleReportLinePane extends BorderPane {
         progressIndicator = new ProgressIndicator();
         progressIndicator.setMaxSize(20, 20);
         progressIndicator.setVisible(false);
+
         HBox progress = new HBox();
         progress.getChildren().addAll(progressBar, progressIndicator);
+        BorderPane lower = new BorderPane();
         status = new Text();
 
-        BorderPane lower = new BorderPane();
         lower.setRight(progress);
         lower.setCenter(status);
 
         setBottom(lower);
+    }
+
+    /**
+     * Save the new Comment to the Database
+     * TODO
+     * something like --> update dw_report.ReportLine set comment="test" where id=9;
+     *
+     * @param id
+     * @param input
+     */
+    public void storeComment(long id, String input) {
+        table.getSelectionModel().getSelectedItem().setComment(input);
+        Client.lookup(ReportAgent.class).updateReportLineComment(id, input);
+        table.refresh();
+        System.out.println("Given ID: " + id + ", given input: " + input);
+    }
+
+    /**
+     * open Dialog for Comment.
+     * An small Textarea with a Save and Cancle Button
+     */
+    public void openCommentEdit() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 10, 0, 10));
+
+        Label label1 = new Label("Comment: ");
+        TextArea textarea = new TextArea();
+        textarea.setText(table.getSelectionModel().getSelectedItem().getComment());
+        textarea.setEditable(true);
+        textarea.setWrapText(true);
+
+        VBox vb = new VBox(label1, textarea);
+        grid.add(vb, 0, 0);
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        final DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setContent(grid);
+
+        dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+        okButton.setText("Save");
+        textarea.textProperty().addListener((event, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        Platform.runLater(() -> textarea.requestFocus());
+
+        dialog.showAndWait().filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem().getId(), textarea.getText()));
 
     }
 
+    /**
+     * Open the DetailView
+     * this get autogenerated by Metawidget in Swing
+     *
+     * @param reportLineId
+     */
     public void openDetailView(final long reportLineId) {
         CompletableFuture
                 .supplyAsync(() -> {
                     ReportLine rl = Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
-                    SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class, TradeName.class, SalesChannel.class, DocumentType.class, PositionType.class, ReportLine.WorkflowStatus.class);
+                    SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class,
+                            TradeName.class,
+                            SalesChannel.class,
+                            DocumentType.class,
+                            PositionType.class,
+                            ReportLine.WorkflowStatus.class
+                    );
                     mw.setReadOnly(true);
                     mw.setToInspect(rl);
                     return mw;
                 })
                 .handle((mw, u) -> {
                     EventQueue.invokeLater(() -> {
-                        if ( u != null ) u.printStackTrace(); // FIXME !!!!
+                        if ( u != null ) {
+                            u.printStackTrace(); // FIXME !!!!
+                        }
+
                         JDialog dialog = new JDialog(Client.lookup(Workspace.class).getMainFrame(), "Details für Reportline");
                         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                         dialog.getContentPane().add(mw);
@@ -190,6 +312,12 @@ public class SimpleReportLinePane extends BorderPane {
                 });
     }
 
+    /**
+     * Load the Search result into the tablemodle
+     * Loadingspeed ist limited to 0.5s per call. (why ?)
+     *
+     * @param search
+     */
     public void load(final ReportAgent.SearchParameter search) {
         // TODO: Implement Cancel
         Task<Void> task = new Task<Void>() {
@@ -216,17 +344,21 @@ public class SimpleReportLinePane extends BorderPane {
                     last += amount;
                     updateMessage("Loaded from " + last + " by " + amount);
                     updateProgress(last, max);
-                    if ( t2 - t1 < 400 ) amount += (t2 - t1) / 10; // Loadingspeed ist limited to 0.5s per call.
+                    //limited the speed
+                    if ( t2 - t1 < 400 ) {
+                        amount += (t2 - t1) / 10;
+                    }
                     updateResult(partial);
                 } while (!partial.isEmpty() && !isCancelled());
                 updateMessage("");
                 return null;
             }
-
         };
+
         task.exceptionProperty().addListener((ov, o, n) -> {
             throw new RuntimeException("Exception in Task", n);
         });
+
         progressIndicator.visibleProperty().bind(task.runningProperty());
         progressBar.visibleProperty().bind(task.runningProperty());
         progressBar.progressProperty().bind(task.progressProperty());

@@ -113,6 +113,22 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         return optionalFetchEager(report);
     }
 
+    /**
+     * Updates the comment of a ReportLine
+     * If no instance could be found no changes will ba made.
+     *
+     * @param id      primary key of the ReportLine to be updated.
+     * @param comment string to be set as new comment for the ReportLine
+     */
+    @Override
+    public void updateReportLineComment(long id, String comment) {
+        ReportLine find = reportEm.find(ReportLine.class, id);
+        if ( find != null ) {
+            find.setComment(comment);
+            reportEm.merge(find);
+        }
+    }
+
     @Override
     public ViewReportResult findReportResult(long reportId) {
         Report r = findById(Report.class, reportId);
