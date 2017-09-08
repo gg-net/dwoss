@@ -440,7 +440,7 @@ public class RedTapeStateMachine extends StateMachine<CustomerDocument> {
 //        CustomerDocument cd = new CustomerDocument(new HashSet<>(), doc, ShippingCondition.DEFAULT, PaymentMethod.DIRECT_DEBIT);
         RedTapeStateMachine om = new RedTapeStateMachine();
 //        Grapher.showExact(om,new RedTapeStateFormater() ,om.IV);
-
+//
 //        System.out.println(om.getState(cd));
     }
 }
