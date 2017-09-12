@@ -23,7 +23,9 @@ import javafx.animation.FadeTransition;
 import javafx.application.Preloader;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.*;
 import javafx.util.Duration;
 
@@ -44,14 +46,15 @@ public class DwPreloader extends Preloader {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+       
         p = new BorderPane();
-        ImageView iv = new ImageView(splash);
-        p.setCenter(iv);
-        Scene s = new Scene(p, splash.getWidth(), splash.getHeight());
+        p.setCenter(new ImageView(splash));
+        Scene s = new Scene(p, splash.getWidth(), splash.getHeight(), Color.TRANSPARENT);
         FadeTransition ft = new FadeTransition(Duration.millis(1000), p);
         ft.setFromValue(0);
         ft.setToValue(1);
         ft.play();
+
         return s;
     }
 
