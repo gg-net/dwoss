@@ -31,12 +31,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.metawidget.swing.SwingMetawidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +78,8 @@ public class SimpleReportLinePane extends BorderPane {
 
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
+    private boolean deleteConfirmed = false;
+
     public SimpleReportLinePane() {
         model = FXCollections.observableArrayList();
 
@@ -102,13 +106,18 @@ public class SimpleReportLinePane extends BorderPane {
         setTop(top);
 
         //building context Menu for right mouse button for this table
-        MenuItem editItem = new MenuItem("Edit Comment");
-        editItem.setOnAction((ActionEvent event) -> {
+        MenuItem editComment = new MenuItem("Edit Comment");
+        editComment.setOnAction((ActionEvent event) -> {
             openCommentEdit();
         });
+        MenuItem deleldComment = new MenuItem("Delet Comment");
+        deleldComment.setOnAction((ActionEvent event) -> {
+            openCommentDelet();
+        });
+
         //TODO add more Item like delete/copy/cut/paste SimpleReportLine to the contextmenu
         ContextMenu contextMenu = new ContextMenu();
-        contextMenu.getItems().addAll(editItem);
+        contextMenu.getItems().addAll(editComment, deleldComment);
 
         //build all the Colums 
         TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
@@ -198,9 +207,7 @@ public class SimpleReportLinePane extends BorderPane {
 
         setCenter(table);
 
-        /**
-         * show the Progressbar on the lower end of the Window
-         */
+        //show the Progressbar on the lower end of the Window
         progressBar = new ProgressBar();
         progressBar.setMinWidth(200);
         progressBar.setVisible(false);
@@ -257,19 +264,48 @@ public class SimpleReportLinePane extends BorderPane {
         Dialog<ButtonType> dialog = new Dialog<>();
         final DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setContent(grid);
-
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
-        okButton.setDisable(true);
         okButton.setText("Save");
+
         textarea.textProperty().addListener((event, oldValue, newValue) -> {
-            okButton.setDisable(newValue.trim().isEmpty());
+            if (oldValue != null && newValue != null ) {
+                if ( oldValue.length() > newValue.length() && newValue.length() <= 3 && !deleteConfirmed ) {
+                    Alert alert = new Alert(AlertType.INFORMATION, "Do you really want to delete the comment?", ButtonType.OK);
+                    alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
+                        deleteConfirmed = true;
+                    });
+                }
+            }
         });
 
-        Platform.runLater(() -> textarea.requestFocus());
+        Platform.runLater(() -> {
+            textarea.requestFocus();
+            textarea.end();
+        });
 
         dialog.showAndWait().filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem().getId(), textarea.getText()));
+
+    }
+    
+    /**
+     * open Dialog for deleting the comment.
+     * only Cancle and Ok Button to informate the user abbout that the deleting is permanent
+     */
+    public void openCommentDelet() {
+        String input = "";
+        GridPane grid = new GridPane();
+        Label label1 = new Label("Do you really want to delete the comment? ");
+        grid.add(label1, 0, 0);
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        final DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setContent(grid);
+        dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+
+        dialog.showAndWait().filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem().getId(), input));
 
     }
 
