@@ -180,8 +180,13 @@ public class SimpleReportLine {
             public void updateReportLineComment(long id, String comment) {
                 
             }
+             @Override
+            public boolean updateReportName(int optLock, long reportId, String name) {
+                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
             //</editor-fold>
 
+           
         };
         Client.addSampleStub(ReportAgent.class, rastub);
         JFXPanel jfxPanel = new JFXPanel(); // To start the platform
