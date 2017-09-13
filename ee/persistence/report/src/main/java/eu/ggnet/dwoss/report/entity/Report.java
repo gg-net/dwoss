@@ -85,6 +85,7 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
     private long id;
 
     @Version
+    @Getter
     private int optLock;
 
     @NotNull

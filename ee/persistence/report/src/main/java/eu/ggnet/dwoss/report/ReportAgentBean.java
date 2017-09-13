@@ -129,6 +129,28 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         }
     }
 
+    /**
+     * Updates the name of a Report
+     * If no instance could be found no changes will be made.
+     *
+     * @param optLock
+     * @param reportId primary key of the Report to be updated.
+     * @param name     string to be set as new comment for the Report
+     * @return false if there is a verison conflict
+     * @exception NullPointerException get throw if no Report get found
+     * 
+     */
+    @Override
+    public boolean updateReportName(int optLock, long reportId, String name) {
+        Report find = reportEm.find(Report.class, reportId);
+            if ( find.getOptLock() == optLock ) {
+                find.setName(name);
+                reportEm.merge(find);
+                return true;
+            }
+        return false;
+    }
+
     @Override
     public ViewReportResult findReportResult(long reportId) {
         Report r = findById(Report.class, reportId);

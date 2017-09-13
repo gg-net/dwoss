@@ -252,7 +252,16 @@ public interface ReportAgent extends RemoteAgent {
      * @param comment string to be set as new comment for the ReportLine
      */
     void updateReportLineComment(long id, String comment);
-
+    
+        /**
+     * Updates the comment of a Report
+     * If no instance could be found no changes will be made.
+     *
+     * @param id      primary key of the Report to be updated.
+     * @param name string to be set as new comment for the Report
+     */
+    boolean updateReportName(int optLock, long reportId, String name); 
+    
     /**
      * Returns a ReportResult build from an existing Report.
      * <p>
