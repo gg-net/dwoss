@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.report;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -34,6 +35,8 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.core.Client;
 
+import static java.time.ZoneId.systemDefault;
+
 /**
  *
  * @author pascal.perau
@@ -48,14 +51,39 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
     private final ComboBox<TradeName> typeBox;
 
+    private final ComboBox<Integer> yearBox;
+
     private boolean deleteConfirmed = false;
 
     public ReportSelectionPane() {
         Label reportTypeLabel = new Label("Reporttyp:");
+        reportTypeLabel.setStyle("-fx-font-weight: bold;");
+
         typeBox = new ComboBox<>();
+        yearBox = new ComboBox<>();
+
+        /**
+         * Adding a listener for the type dropdrown. 
+         * for selecting all reports with the selected trademark AND the selected year.
+         * the .getStartingDate() of report giveback a Date Object
+         * what only can be casted to a primitiv int and the value
+         * of the selected item of the dropdown for the year give back a Integer. 
+         */
         typeBox.valueProperty().addListener((ob, ov, newValue) -> {
             if ( filteredReports != null ) {
-                filteredReports.setPredicate(report -> report.getType() == newValue);
+                filteredReports.setPredicate(report -> report.getType() == newValue
+                        && Objects.equals(LocalDateTime.ofInstant(report.getStartingDate().toInstant(), systemDefault()).getYear(), yearBox.getValue()) //using autoboxing and object equals for safety
+                );
+            }
+        });
+        /**
+         * Adding a listener for the type dropdrown. 
+         * for selecting all reports with the selected year AND the selected trademark.
+         */
+        yearBox.valueProperty().addListener((ob, ov, newValue) -> {
+            if ( filteredReports != null ) {
+                filteredReports.setPredicate(report -> LocalDateTime.ofInstant(report.getStartingDate().toInstant(), systemDefault()).getYear() == newValue
+                        && report.getType() == typeBox.getValue());
             }
         });
 
@@ -67,8 +95,10 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(editComment);
 
-        HBox hbox = new HBox(10.);
-        hbox.getChildren().addAll(reportTypeLabel, typeBox);
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(10, 100, 5, 10));
+        hbox.setSpacing(10);
+        hbox.getChildren().addAll(reportTypeLabel, typeBox, yearBox);
 
         reportListView = new ListView<>();
         reportListView.setCellFactory(new ReportListCell.Factory());
@@ -118,7 +148,6 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
             textarea.requestFocus();
             textarea.end();
         });
-
         dialog.showAndWait().filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> storeName(reportListView.getSelectionModel().getSelectedItem(), textarea.getText()));
     }
@@ -134,6 +163,8 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
     @Override
     public void accept(List<Report> allReports) {
         reports = FXCollections.observableList(allReports);
+        filteredReports = new FilteredList<>(reports);
+        reportListView.setItems(filteredReports);
 
         ObservableList<TradeName> typeItems = FXCollections.observableList(allReports
                 .stream()
@@ -141,10 +172,18 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
                 .distinct()
                 .collect(Collectors.toList()));
         typeBox.setItems(typeItems);
-        typeBox.getSelectionModel().selectFirst();
+        typeBox.getSelectionModel().selectFirst(); // select triggers tradename filter
 
-        filteredReports = new FilteredList<>(reports, (Report r) -> r.getType() == typeBox.valueProperty().get());
-        reportListView.setItems(filteredReports);
+        ObservableList<Integer> yearItems = FXCollections.observableList(allReports
+                .stream()
+                .map(r -> LocalDateTime.ofInstant(r.getStartingDate().toInstant(), systemDefault()).getYear())
+                .distinct()
+                .collect(Collectors.toList())
+        );
+        Collections.reverse(yearItems); //newest date on the top oldest on the button
+
+        yearBox.setItems(yearItems);
+        yearBox.getSelectionModel().selectFirst(); // select triggers year filter
     }
 
     public Report selected() {

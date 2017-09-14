@@ -47,8 +47,6 @@ public class ReportSelection {
 
     private boolean complete = false;
 
-    Set<TradeName> tradeNames = EnumSet.allOf(TradeName.class);
-
     @Test
     public void tryout() throws InterruptedException {
         ReportAgent rastub = new ReportAgent() {
@@ -159,22 +157,24 @@ public class ReportSelection {
         JFXPanel jfxPanel = new JFXPanel();
 
         Date today = new Date();
-        today.setHours(0);
-        today.setYear(116);
+        Date enddate = new Date();
+        Date startdate = new Date();
 
+        Set<TradeName> trades = new HashSet<>();
+        trades.add(TradeName.HP);
+        trades.add(TradeName.ACER);
+        
         //build some sample Reports
         List<Report> allReports = new ArrayList();
         for (int i = 0; i < 8; i++) {
-            for (TradeName traden : tradeNames) {
-                String name = "Report: " + i + "-" + traden + "-" + today.toString();
-                today.setMonth(i);
-                today.setYear(116 + i);
-                Report e = new Report(name, traden, today, today);
+            for (TradeName traden : trades) {
+                startdate.setYear(62 + i);
+                long sum = today.getTime() + startdate.getTime();
+                Date sumDate = new Date(sum);
 
-                today.setYear(117 + i);
-                today.setMonth(i + 2);
-                e.setEndingDate(today);
+                String name = "Report: " + i + "-" + traden + "-" + sumDate.toString();
 
+                Report e = new Report(name, traden, sumDate, enddate);
                 allReports.add(e);
             }
         }
