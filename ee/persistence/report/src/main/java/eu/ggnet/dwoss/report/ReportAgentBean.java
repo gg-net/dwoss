@@ -117,16 +117,18 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * Updates the comment of a ReportLine
      * If no instance could be found no changes will ba made.
      *
-     * @param id      primary key of the ReportLine to be updated.
+     * @param reportId      primary key of the ReportLine to be updated.
      * @param comment string to be set as new comment for the ReportLine
      */
     @Override
-    public void updateReportLineComment(long id, String comment) {
-        ReportLine find = reportEm.find(ReportLine.class, id);
-        if ( find != null ) {
+    public boolean updateReportLineComment(int optLock, long reportId, String comment) {
+        ReportLine find = reportEm.find(ReportLine.class, reportId);
+        if ( find.getOptLock() == optLock ) {
             find.setComment(comment);
             reportEm.merge(find);
+            return true;
         }
+        return false;
     }
 
     /**

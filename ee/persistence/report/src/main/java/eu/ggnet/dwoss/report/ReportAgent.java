@@ -248,17 +248,21 @@ public interface ReportAgent extends RemoteAgent {
      * Updates the comment of a ReportLine
      * If no instance could be found no changes will ba made.
      *
-     * @param id      primary key of the ReportLine to be updated.
+     * @param optLock
+     * @param reportId      primary key of the ReportLine to be updated.
      * @param comment string to be set as new comment for the ReportLine
+     * @return 
      */
-    void updateReportLineComment(long id, String comment);
+    boolean updateReportLineComment(int optLock, long reportId, String comment);
     
         /**
      * Updates the comment of a Report
      * If no instance could be found no changes will be made.
      *
-     * @param id      primary key of the Report to be updated.
+     * @param optLock       the optimistic locking
+     * @param reportId      primary key of the Report to be updated.
      * @param name string to be set as new comment for the Report
+     * @return 
      */
     boolean updateReportName(int optLock, long reportId, String name); 
     

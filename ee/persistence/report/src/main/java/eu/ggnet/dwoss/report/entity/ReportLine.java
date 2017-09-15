@@ -211,8 +211,9 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * Integer value for optimistic locking.
      */
     @Version
-    @UiHidden
+    @Getter
     private int optLock;
+
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private final Set<ReportLine> refrences = new HashSet<>();
