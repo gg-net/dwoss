@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
+import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
@@ -232,14 +233,15 @@ public class SimpleReportLinePane extends BorderPane {
      * TODO
      * something like --> update dw_report.ReportLine set comment="test" where id=9;
      *
-     * @param id
+     * @param report
      * @param input
      */
-    public void storeComment(long id, String input) {
-        table.getSelectionModel().getSelectedItem().setComment(input);
-        Client.lookup(ReportAgent.class).updateReportLineComment(id, input);
-        table.refresh();
-        System.out.println("Given ID: " + id + ", given input: " + input);
+    public void storeComment(SimpleReportLine report, String input) {
+        if ( Client.lookup(ReportAgent.class).updateReportName(report.getOptLock(), report.getId(), input) ) {
+            table.getSelectionModel().getSelectedItem().setComment(input);
+            table.refresh();
+            System.out.println("Given ID: " + report.getId() + ", given input: " + input);
+        }
     }
 
     /**
@@ -269,7 +271,7 @@ public class SimpleReportLinePane extends BorderPane {
         okButton.setText("Save");
 
         textarea.textProperty().addListener((event, oldValue, newValue) -> {
-            if (oldValue != null && newValue != null ) {
+            if ( oldValue != null && newValue != null ) {
                 if ( oldValue.length() > newValue.length() && newValue.length() <= 3 && !deleteConfirmed ) {
                     Alert alert = new Alert(AlertType.INFORMATION, "Do you really want to delete the comment?", ButtonType.OK);
                     alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
@@ -285,10 +287,10 @@ public class SimpleReportLinePane extends BorderPane {
         });
 
         dialog.showAndWait().filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem().getId(), textarea.getText()));
+                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), textarea.getText()));
 
     }
-    
+
     /**
      * open Dialog for deleting the comment.
      * only Cancle and Ok Button to informate the user abbout that the deleting is permanent
@@ -305,7 +307,7 @@ public class SimpleReportLinePane extends BorderPane {
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
         dialog.showAndWait().filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem().getId(), input));
+                .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), input));
 
     }
 
