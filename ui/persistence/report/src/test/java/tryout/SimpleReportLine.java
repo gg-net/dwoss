@@ -177,14 +177,18 @@ public class SimpleReportLine {
             }
 
             @Override
-            public void updateReportLineComment(long id, String comment) {
-                
+            public boolean updateReportLineComment(int optLock, long reportId, String comment) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-             @Override
+            @Override
             public boolean updateReportName(int optLock, long reportId, String name) {
-                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
             //</editor-fold>
+
+            
+
+
 
            
         };

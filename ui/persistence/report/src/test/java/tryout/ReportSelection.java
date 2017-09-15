@@ -82,11 +82,6 @@ public class ReportSelection {
             }
 
             @Override
-            public void updateReportLineComment(long id, String comment) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public ViewReportResult findReportResult(long reportId) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -145,13 +140,19 @@ public class ReportSelection {
             public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-
+            
+            @Override
+            public boolean updateReportLineComment(int optLock, long reportId, String comment) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
             //</editor-fold>
             @Override
             public boolean updateReportName(int optLock, long reportId, String name) {
                 System.out.println("Report Name get updated");
                 return true;
             }
+
+
         };
         Client.addSampleStub(ReportAgent.class, rastub);
         JFXPanel jfxPanel = new JFXPanel();
