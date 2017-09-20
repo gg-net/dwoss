@@ -117,8 +117,8 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * Updates the comment of a ReportLine
      * If no instance could be found no changes will ba made.
      *
-     * @param reportId      primary key of the ReportLine to be updated.
-     * @param comment string to be set as new comment for the ReportLine
+     * @param reportId primary key of the ReportLine to be updated.
+     * @param comment  string to be set as new comment for the ReportLine
      */
     @Override
     public boolean updateReportLineComment(int optLock, long reportId, String comment) {
@@ -140,16 +140,22 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * @param name     string to be set as new comment for the Report
      * @return false if there is a verison conflict
      * @exception NullPointerException get throw if no Report get found
-     * 
+     *
      */
     @Override
     public boolean updateReportName(int optLock, long reportId, String name) {
+        //find original report instance
         Report find = reportEm.find(Report.class, reportId);
-            if ( find.getOptLock() == optLock ) {
-                find.setName(name);
-                reportEm.merge(find);
-                return true;
-            }
+        //check version for clashes
+        if ( find.getOptLock() == optLock ) {
+            //update report name on found instance
+            find.setName(name);
+            //update to database
+            reportEm.merge(find);
+            //return true for successfull update
+            return true;
+        }
+        //false return if the version doesnt match
         return false;
     }
 

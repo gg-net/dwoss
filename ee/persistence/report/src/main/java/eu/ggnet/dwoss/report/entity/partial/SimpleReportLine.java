@@ -71,6 +71,13 @@ public class SimpleReportLine implements Serializable {
     @GeneratedValue
     private long id;
 
+    /**
+     * Integer value for optimistic locking.
+     */
+    @Version
+    @Getter
+    private int optLock;
+
     @Temporal(javax.persistence.TemporalType.DATE)
     @Getter
     @Setter
@@ -133,7 +140,7 @@ public class SimpleReportLine implements Serializable {
     @Getter
     @Setter
     private PositionType positionType;
-    
+
     @Getter
     @Setter
     private String comment;
