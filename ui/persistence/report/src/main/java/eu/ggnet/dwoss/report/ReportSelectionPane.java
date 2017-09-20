@@ -63,11 +63,11 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
         yearBox = new ComboBox<>();
 
         /**
-         * Adding a listener for the type dropdrown. 
+         * Adding a listener for the type dropdrown.
          * for selecting all reports with the selected trademark AND the selected year.
          * the .getStartingDate() of report giveback a Date Object
          * what only can be casted to a primitiv int and the value
-         * of the selected item of the dropdown for the year give back a Integer. 
+         * of the selected item of the dropdown for the year give back a Integer.
          */
         typeBox.valueProperty().addListener((ob, ov, newValue) -> {
             if ( filteredReports != null ) {
@@ -77,7 +77,7 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
             }
         });
         /**
-         * Adding a listener for the type dropdrown. 
+         * Adding a listener for the type dropdrown.
          * for selecting all reports with the selected year AND the selected trademark.
          */
         yearBox.valueProperty().addListener((ob, ov, newValue) -> {
@@ -156,7 +156,6 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
         if ( Client.lookup(ReportAgent.class).updateReportName(report.getOptLock(), report.getId(), input) ) {
             reportListView.getSelectionModel().getSelectedItem().setName(input);
             reportListView.refresh();
-            System.out.println("Given ID: " + report.getId() + ", given input: " + input);
         }
     }
 

@@ -230,9 +230,6 @@ public class SimpleReportLinePane extends BorderPane {
 
     /**
      * Save the new Comment to the Database
-     * TODO
-     * something like --> update dw_report.ReportLine set comment="test" where id=9;
-     *
      * @param report
      * @param input
      */
@@ -240,7 +237,6 @@ public class SimpleReportLinePane extends BorderPane {
         if ( Client.lookup(ReportAgent.class).updateReportName(report.getOptLock(), report.getId(), input) ) {
             table.getSelectionModel().getSelectedItem().setComment(input);
             table.refresh();
-            System.out.println("Given ID: " + report.getId() + ", given input: " + input);
         }
     }
 
