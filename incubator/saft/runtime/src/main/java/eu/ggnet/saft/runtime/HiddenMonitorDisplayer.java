@@ -49,7 +49,7 @@ public class HiddenMonitorDisplayer implements Runnable {
             if ( remoteKeys.equals(localKeys) ) return; // no new progress, all is tracked.
             remoteKeys.removeAll(localKeys);
             for (Integer key : remoteKeys) {
-                new HiddenMonitorDisplayTask(key, localKeys, view.progressBar, view.messageLabel).execute();
+                HiddenMonitorDisplayTask hiddenMonitorDisplayTask = new HiddenMonitorDisplayTask(key, localKeys, view.progressBarFX, view.messageLabel);
                 localKeys.add(key);
             }
         } catch (IllegalArgumentException | NullPointerException ex) {
