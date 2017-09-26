@@ -219,10 +219,7 @@ public class SwingClient {
         UiCore.continueSwing(view);
         UiCore.backgroundActivityProperty().addListener((ov, o, n) -> {
             EventQueue.invokeLater(() -> view.extraProgressPanel.setVisible(n));
-            Platform.runLater(() -> {
-                view.progressIndicator.setProgress(n ? -1 : 0);
-                view.progressBarFX.setProgress(n ? -1 : 0);
-                    });
+            Platform.runLater(() -> view.progressIndicator.setProgress(n ? -1 : 0));
         });
     }
 
