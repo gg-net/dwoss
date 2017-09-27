@@ -16,23 +16,23 @@
  */
 package eu.ggnet.saft.runtime;
 
+import java.util.List;
 import java.util.SortedSet;
+import java.util.concurrent.ExecutionException;
 
-import javafx.concurrent.Task;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.api.progress.HiddenMonitor;
 import eu.ggnet.saft.api.progress.ProgressObserver;
 import eu.ggnet.saft.runtime.HiddenMonitorDisplayTask.Progress;
-
 import lombok.Data;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
-public class HiddenMonitorDisplayTask extends Task<Progress> {
+public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDisplayTask.Progress> {
 
     @Data
     public static class Progress {
@@ -44,63 +44,67 @@ public class HiddenMonitorDisplayTask extends Task<Progress> {
 
     private final int key;
 
-    private final SortedSet<Integer> localKeys;
+    private final SortedSet<Integer> keys;
 
-    private final ProgressBar progressBar;
+    private final JProgressBar progressBar;
 
-    private final Label messageBar;
+    private final JLabel messageBar;
 
     /**
      * Constructor.
      * <p/>
      * @param key         the key identifing this progress
-     * @param localKeys    a concurent safe set used by all monitors to inform, that one has finished.
      * @param progressBar the progress bar
      * @param messageBar  the message bar
+     * @param keys        a concurent safe set used by all monitors to inform, that one has finished.
      */
-
-    public HiddenMonitorDisplayTask(int key, SortedSet<Integer> localKeys, ProgressBar progressBar, Label messageBar) {
+    public HiddenMonitorDisplayTask(int key, SortedSet<Integer> keys, final JProgressBar progressBar, final JLabel messageBar) {
         this.key = key;
-        this.localKeys = localKeys;
+        this.keys = keys;
         this.progressBar = progressBar;
         this.messageBar = messageBar;
-        progressBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+        progressBar.setIndeterminate(true);
     }
 
-    @SuppressWarnings("SleepWhileInLoop")
     @Override
-    protected Progress call() throws Exception {
+    @SuppressWarnings("SleepWhileInLoop")
+    protected Void doInBackground() throws Exception {
         // Hint: the supplied Monitor has a length of 100;
         HiddenMonitor hm = lookup(ProgressObserver.class).getMonitor(key);
         while (hm != null && !hm.isFinished()) {
             int progress = 100 - hm.getAbsolutRemainingTicks();
             if ( progress < 0 ) progress = 0;
             if ( progress > 100 ) progress = 100;
-            process(new Progress(progress, hm.getTitle() + ":" + StringUtils.defaultIfBlank(hm.getMessage(), "")));
+            publish(new Progress(progress, hm.getTitle() + ":" + StringUtils.defaultIfBlank(hm.getMessage(), "")));
             Thread.sleep(250);
             hm = lookup(ProgressObserver.class).getMonitor(key);
         }
-        process(new Progress(100, ""));
-        localKeys.remove(key);
-        done();
+        publish(new Progress(100, ""));
+        keys.remove(key);
         return null;
     }
 
-    protected void process(Progress chunks) {
-        if ( !progressBar.isVisible() ) {
-            progressBar.setVisible(true);
-        }
-        if ( chunks.getProgress() > 0 && progressBar.isIndeterminate() ) {
-            progressBar.setProgress(0.0);
-        }
-        messageBar.setText(chunks.getMessage());
-        progressBar.setProgress(chunks.getProgress());
+    @Override
+    protected void process(List<Progress> chunks) {
+        Progress last = chunks.get(chunks.size() - 1);
+        if ( !progressBar.isVisible() ) progressBar.setVisible(true);
+        if ( last.getProgress() > 0 && progressBar.isIndeterminate() ) progressBar.setIndeterminate(false);
+        messageBar.setText(last.getMessage());
+        progressBar.setValue(last.getProgress());
     }
 
     @Override
     protected void done() {
-        messageBar.setText("");
-        progressBar.setProgress(0.0);
-        progressBar.setVisible(false);
+        try {
+            get();
+        } catch (InterruptedException | ExecutionException ex) {
+            // Hint: If this dies, a Log is ok, as it only impacts the progress bar.
+            LoggerFactory.getLogger(this.getClass()).warn("Exception during progress {}", ex.getMessage());
+        } finally {
+            messageBar.setText("");
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(false);
+            progressBar.setVisible(false);
+        }
     }
 }

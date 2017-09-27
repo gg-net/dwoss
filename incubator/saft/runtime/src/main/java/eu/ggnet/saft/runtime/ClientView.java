@@ -23,8 +23,7 @@ import java.util.ResourceBundle;
 import javax.swing.ImageIcon;
 
 import javafx.embed.swing.JFXPanel;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
 
 import eu.ggnet.saft.core.SwingCore;
@@ -36,9 +35,6 @@ import eu.ggnet.saft.core.UiCore;
  * @author oliver.guenther
  */
 public class ClientView extends javax.swing.JFrame {
-    
-    public ProgressBar progressBarFX;
-    public Label messageLabel;
 
     final static String BUNDLE = "eu/ggnet/saft/runtime/Bundle";
 
@@ -56,14 +52,9 @@ public class ClientView extends javax.swing.JFrame {
 
     private void initFxComponents() {
         try {
-            progressBarFX = new ProgressBar();
-            progressBarFX.setProgress(0);
-            messageLabel = new Label();
             progressIndicator = new ProgressIndicator();
             progressIndicator.setProgress(0);
-            HBox hbox = new HBox(progressIndicator, progressBarFX, messageLabel);
-            hbox.setAlignment(Pos.CENTER_RIGHT);
-            BorderPane pane = new BorderPane(hbox);
+            BorderPane pane = new BorderPane(progressIndicator);
             JFXPanel wrap = SwingCore.wrap(pane);
             extraProgressPanel.add(wrap, BorderLayout.CENTER);
         } catch (InterruptedException ex) {
@@ -82,6 +73,7 @@ public class ClientView extends javax.swing.JFrame {
     @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
+        progressBar.setVisible(false);
         extraProgressPanel.setVisible(false);
     }
 
@@ -95,6 +87,8 @@ public class ClientView extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        messageLabel = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
         toolBar = new javax.swing.JToolBar();
         mainPanel = new javax.swing.JPanel();
         extraProgressPanel = new javax.swing.JPanel();
@@ -102,6 +96,22 @@ public class ClientView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        messageLabel.setToolTipText("");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        getContentPane().add(messageLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.2;
+        gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
+        getContentPane().add(progressBar, gridBagConstraints);
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
@@ -125,11 +135,9 @@ public class ClientView extends javax.swing.JFrame {
         extraProgressPanel.setPreferredSize(new java.awt.Dimension(25, 25));
         extraProgressPanel.setLayout(new java.awt.BorderLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(1, 1, 1, 1);
         getContentPane().add(extraProgressPanel, gridBagConstraints);
         setJMenuBar(menuBar);
@@ -141,10 +149,11 @@ public class ClientView extends javax.swing.JFrame {
     javax.swing.JPanel extraProgressPanel;
     javax.swing.JPanel mainPanel;
     javax.swing.JMenuBar menuBar;
+    javax.swing.JLabel messageLabel;
+    javax.swing.JProgressBar progressBar;
     javax.swing.JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
 
     ProgressIndicator progressIndicator;
-   
 
 }
