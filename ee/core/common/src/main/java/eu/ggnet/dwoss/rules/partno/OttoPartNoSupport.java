@@ -33,7 +33,11 @@ public class OttoPartNoSupport implements PartNoSupport {
     @Override
     public String violationMessages(String partNo) {
         if ( partNo == null ) return "PartNo is null";
-        if ( !Pattern.matches("[0-9]{3}.[0-9]{3}", partNo) ) return "PartNo " + partNo + " does not match the Pattern [0-9]{3}.[0-9]{3}";
+
+        if ( !(Pattern.matches("[0-9]{2}.[0-9]{3}.[0-9]{3}", partNo) || Pattern.matches("[0-9]{3}.[0-9]{3}", partNo)) ) {
+            return "PartNo " + partNo
+                    + "does not match either one of the Patterns [0-9]{3}.[0-9]{3} and [0-9]{2}.[0-9]{3}.[0-9]{3}";
+        }
         return null;
     }
 
@@ -41,6 +45,10 @@ public class OttoPartNoSupport implements PartNoSupport {
     public String normalize(String partNo) {
         if ( partNo != null && Pattern.matches("[0-9]{6}", partNo) ) { // Rebuild
             return partNo.substring(0, 3) + "." + partNo.substring(3);
+        }
+
+        if ( partNo != null && Pattern.matches("[0-9]{8}", partNo) ) { // Rebuild
+            return partNo.substring(0, 2) + "." + partNo.substring(3, 6) + "." + partNo.substring(6);
         }
         return partNo;
     }
