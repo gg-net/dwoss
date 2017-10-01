@@ -73,3 +73,4 @@ hs_err_pid*
 /ee/web/search/target/
 /mandator/sample-datasource/target/
 /ee/web/target/
+/assembly/ear/target/

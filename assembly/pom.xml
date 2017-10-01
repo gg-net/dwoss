@@ -119,6 +119,7 @@
     </build>
 
     <modules>
+	<module>ear</module>
         <module>server</module>
         <module>client-remote</module>
     </modules>
