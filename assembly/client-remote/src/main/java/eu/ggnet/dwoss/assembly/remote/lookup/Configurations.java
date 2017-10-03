@@ -43,7 +43,7 @@ public class Configurations {
                 .password("admin")
                 .app("dwoss-server")
                 .build());
-        Optional.of(Lookup.getDefault().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
+        Optional.ofNullable(Lookup.getDefault().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
     }
 
     public static boolean containsConfig(String key) {
