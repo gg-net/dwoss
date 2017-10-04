@@ -65,37 +65,31 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-price</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-redtape</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-receipt</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-rights</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-redtape</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-extended-misc</artifactId>
             <version>${project.version}</version>
-            <type>ejb</type>
         </dependency>
     </dependencies>
 

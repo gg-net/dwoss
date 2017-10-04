@@ -1,21 +1,12 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Reminder;
-import eu.ggnet.dwoss.redtape.entity.Reminder;
-
 import java.util.Arrays;
 import java.util.Objects;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.*;
 
 import static org.junit.Assert.*;
 

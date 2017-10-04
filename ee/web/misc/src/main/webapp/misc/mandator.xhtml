@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</title>
+            <style>
+                table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+            </style>
+        </h:head>
+        <h:body>
+            <h:outputText escape="false" value="#{mandatorSupporterBean.loadMandator().toHtml()}" />
+
+            <h:dataTable value="#{rightsFacesBean.findAll()}" var="o">
+                <h:column>
+                    <!-- column header -->
+                    <f:facet name="header">Id</f:facet>
+                    <!-- row record -->
+                    #{o.id}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Username</f:facet>
+                        #{o.username}
+                </h:column>
+            </h:dataTable>
+
+        </h:body>
+    </f:view>
+</html>
+

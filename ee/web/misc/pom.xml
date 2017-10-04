@@ -7,16 +7,15 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dwoss-ee-web-search</artifactId>
+    <artifactId>dwoss-ee-web-misc</artifactId>
     <packaging>war</packaging>
 
-    <name>DwOss • EE • Web • Search</name>
+    <name>DwOss • EE • Web • Misc</name>
+
+    <description>Misc Web Komponents. Everything that has no home, starts here.</description>
 
     <properties>
-        <org-netbeans-modules-projectapi.jsf_2e_language>Facelets</org-netbeans-modules-projectapi.jsf_2e_language>
-        <org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>ide</org-netbeans-modules-maven-jaxws.rest_2e_config_2e_type>
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.7-web</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
-        <org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>js/libs</org-netbeans-modules-web-clientproject-api.js_2e_libs_2e_folder>
     </properties>
 
     <build>
@@ -49,20 +48,21 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-common</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-uniqueunit</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-report</artifactId>
+            <artifactId>dwoss-mandator-sample</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>-->
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-persistence-rights</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-mandator-sample-datasource</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
-
 </project>

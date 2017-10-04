@@ -12,6 +12,27 @@
     <name>DwOss • EE • Persistence • UniqueUnit</name>
     <packaging>ejb</packaging>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-assertions</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <classes>
+                        <param>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</param>
+                        <param>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</param>
+                    </classes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

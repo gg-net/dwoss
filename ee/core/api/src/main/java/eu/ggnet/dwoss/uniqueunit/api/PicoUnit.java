@@ -19,24 +19,19 @@ package eu.ggnet.dwoss.uniqueunit.api;
 import eu.ggnet.dwoss.search.api.SearchResult;
 import eu.ggnet.saft.api.ui.IdSupplier;
 
-import lombok.ToString;
+import lombok.Value;
 
 /**
  * The smallest representation of a unique unit.
  * <p>
  * @author oliver.guenther
  */
-@ToString
+@Value
 public class PicoUnit implements SearchResult, IdSupplier {
 
     public final int uniqueUnitId;
 
     public final String shortDescription;
-
-    public PicoUnit(int uniqueUnitId, String shortDescription) {
-        this.uniqueUnitId = uniqueUnitId;
-        this.shortDescription = shortDescription;
-    }
 
     @Override
     public String shortDescription() {

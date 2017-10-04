@@ -12,6 +12,7 @@
 
     <modules>
         <module>search</module>
+	<module>misc</module>
     </modules>
 
 </project>

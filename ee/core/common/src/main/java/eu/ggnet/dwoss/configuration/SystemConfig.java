@@ -23,7 +23,9 @@ import java.util.Map;
  * Contains configuration options to tweak the system configuration.
  * <p/>
  * @author oliver.guenther
+ * @deprecated Possibly useless, may be removed.
  */
+@Deprecated
 public class SystemConfig {
 
     static {

@@ -98,6 +98,55 @@ public class DocumentIntermix implements Serializable {
         return sb.toString();
     }
 
+    public String toHtml() {
+        final StringBuilder sb = new StringBuilder("<p>");
+        sb.append("<u>DefaultDocumentTemplate</u>: ").append(defaultDocumentTemplate).append("<br />");
+        sb.append("<u>Footer</u>: ").append(footer).append("<br />");
+
+        sb.append("<u>ViewTypeDocumentTemplates(").append(viewTypeDocumentTemplates.size()).append(")</u>:<ul>");
+        for (Entry<DocumentViewType, UrlLocation> e : viewTypeDocumentTemplates.entrySet()) {
+            sb.append("<li>").append(e.getKey()).append(":").append(e.getValue()).append("</li>");
+        }
+        sb.append("</ul>");
+        sb.append("<u>DefaultTexts(").append(defaultTexts.size()).append(")</u>:<ul>");
+        for (Entry<FreeDocumentTemplateParameter, String> e : defaultTexts.entrySet()) {
+            sb.append("<li>").append(e.getKey()).append(":").append(e.getValue()).append("</li>");
+        }
+        sb.append("</ul>");
+        sb.append("<u>ViewTypeTexts(").append(viewTypeTexts.size()).append(")</u>:<ul>");
+        for (Entry<DocumentViewType, Map<FreeDocumentTemplateParameter, String>> e : viewTypeTexts.entrySet()) {
+            sb.append("<li>").append(e.getKey()).append(":");
+            if ( e.getValue() == null ) {
+                sb.append("null");
+            } else {
+                sb.append("size(").append(e.getValue().size()).append(")<ul>");
+                for (Entry<FreeDocumentTemplateParameter, String> f : e.getValue().entrySet()) {
+                    sb.append("<li>").append(f.getKey()).append(":").append(f.getValue()).append("</li>>");
+                }
+                sb.append("</ul>");
+            }
+            sb.append("</li>");
+        }
+        sb.append("</ul>");
+
+        sb.append("<u>DocumentTypeTexts(").append(documentTypeTexts.size()).append(")</u>:<ul>");
+        for (Entry<DocumentType, Map<FreeDocumentTemplateParameter, String>> e : documentTypeTexts.entrySet()) {
+            sb.append("<li>").append(e.getKey()).append(":");
+            if ( e.getValue() == null ) {
+                sb.append("null");
+            } else {
+                sb.append("size(").append(e.getValue().size()).append(")<ul>");
+                for (Entry<FreeDocumentTemplateParameter, String> f : e.getValue().entrySet()) {
+                    sb.append("<li>").append(f.getKey()).append(":").append(f.getValue()).append("</li>");
+                }
+                sb.append("</ul>");
+            }
+            sb.append("</li>");
+        }
+        sb.append("</ul></p>");
+        return sb.toString();
+    }
+
     public DocumentIntermix(UrlLocation defaultDocumentTemplate) {
         this.defaultDocumentTemplate = defaultDocumentTemplate;
     }

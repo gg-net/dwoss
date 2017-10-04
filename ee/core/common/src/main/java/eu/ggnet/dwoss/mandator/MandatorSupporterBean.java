@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.mandator;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import eu.ggnet.dwoss.mandator.api.value.*;
 
@@ -26,6 +27,7 @@ import eu.ggnet.dwoss.mandator.api.value.*;
  * <p/>
  * @author oliver.guenther
  */
+@Named
 @Stateless
 public class MandatorSupporterBean implements MandatorSupporter {
 

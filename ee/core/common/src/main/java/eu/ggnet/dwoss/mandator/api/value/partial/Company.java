@@ -50,4 +50,18 @@ public class Company implements Serializable {
     public String toSingleLine() {
         return name + " - " + street + " - " + zip + " " + city;
     }
+
+    /**
+     * ToString HTML representation.
+     *
+     * @return HTML view of the Company.
+     */
+    public String toHtml() {
+        return "<p>"
+                + name + "( Logo:" + logo + " )<br />"
+                + street + "<br />"
+                + zip + "&nbsp;" + city + "<br />"
+                + "email:&nbsp;" + emailName + "&nbsp;&lt;" + email + "&gt;"
+                + "</p>";
+    }
 }

@@ -133,4 +133,26 @@ public class Mandator implements Serializable {
         return email;
     }
 
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("<table>");
+        sb.append("<tr>");
+        sb.append("<td><p><b>Company</b></p>");
+        sb.append(company.toHtml());
+        sb.append("</td>");
+        sb.append("<td><p><b>Smtp Configuration</b></p>");
+        sb.append(smtpConfiguration.toHtml());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<td colspan=\"2\"><p><b>DocumentIntermix</b></p>");
+        sb.append(documentIntermix.toHtml());
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append("<tr>");
+        sb.append("<td colspan=\"2\"><p><b>More to Come</b></p><p>Es fehlen noch Parameter</p>");
+        sb.append("</td>");
+        sb.append("</tr><table>");
+        return sb.toString();
+    }
+
 }

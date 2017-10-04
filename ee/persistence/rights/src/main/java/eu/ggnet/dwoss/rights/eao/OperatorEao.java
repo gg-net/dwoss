@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,6 @@ import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.rights.assist.Rights;
 import eu.ggnet.dwoss.rights.entity.Operator;
-
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,4 +37,14 @@ public class SmtpConfiguration implements Serializable {
     private final String charset;
 
     private final boolean useStartTls;
+
+    public String toHtml() {
+        return "<p>"
+                + "Host:&nbsp;" + hostname + "<br />"
+                + "User:&nbsp;" + smtpAuthenticationUser + "<br />"
+                + "Pass:&nbsp;" + smtpAuthenticationPass + "<br />"
+                + "Charset:&nbsp;" + charset + "<br />"
+                + "StartTls:&nbsp;" + useStartTls + "</p>";
+    }
+
 }

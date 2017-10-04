@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,31 +44,31 @@ public class DocumentIdentifierGeneratorConfiguration implements Serializable {
          * Generates a Prefix, that consists of the last two digits of the actual year.
          */
         YY {
-                    @Override
-                    public String generate() {
-                        return new SimpleDateFormat("yy").format(new Date());
-                    }
-                },
+            @Override
+            public String generate() {
+                return new SimpleDateFormat("yy").format(new Date());
+            }
+        },
         /**
          * Generates a Prefix, that consists of the full year. E.g. 2014.
          */
         YYYY {
-                    @Override
-                    public String generate() {
-                        return new SimpleDateFormat("yyyy").format(new Date());
-                    }
-                },
+            @Override
+            public String generate() {
+                return new SimpleDateFormat("yyyy").format(new Date());
+            }
+        },
         /**
          * Generates a prefix, that is allways one (1).
          */
         ONE {
 
-                    @Override
-                    public String generate() {
-                        return "1";
-                    }
+            @Override
+            public String generate() {
+                return "1";
+            }
 
-                };
+        };
 
         /**
          * Returns the generated prefix.
