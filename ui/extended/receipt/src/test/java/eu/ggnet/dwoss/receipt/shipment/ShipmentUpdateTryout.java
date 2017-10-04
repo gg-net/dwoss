@@ -1,27 +1,17 @@
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.receipt.shipment.ShipmentUpdateStage;
-
 import java.util.EnumSet;
-
-import org.junit.Test;
-
-import eu.ggnet.saft.core.Client;
-
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.stock.entity.Shipment;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+
+import org.junit.Test;
+
+import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.saft.core.Client;
 
 /**
  *
@@ -70,6 +60,12 @@ public class ShipmentUpdateTryout {
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public String loadMandatorAsHtml() {
+                return loadMandator().toHtml();
+            }
+
         });
 
         new JFXPanel();    // To start the platform

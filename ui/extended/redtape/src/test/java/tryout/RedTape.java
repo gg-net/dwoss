@@ -1,58 +1,33 @@
 package tryout;
 
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.redtape.RedTapeController;
-import eu.ggnet.dwoss.redtape.RedTapeView;
-import eu.ggnet.dwoss.redtape.RedTapeModel;
-import eu.ggnet.dwoss.redtape.UniversalSearcher;
-import eu.ggnet.dwoss.redtape.DocumentSupporter;
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-
-import java.util.*;
-
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.saft.api.AuthenticationException;
-
-import org.junit.Test;
+import java.util.Arrays;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.saft.core.Client;
+import org.junit.Test;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
-
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.AuthenticationException;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import tryout.stub.*;
-
-import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 
 /**
  *
@@ -136,6 +111,11 @@ public class RedTape {
 
             @Override
             public ShippingTerms loadShippingTerms() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public String loadMandatorAsHtml() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });

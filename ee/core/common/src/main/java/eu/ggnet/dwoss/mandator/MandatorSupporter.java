@@ -36,6 +36,13 @@ public interface MandatorSupporter {
     Mandator loadMandator();
 
     /**
+     * Returns the Mandator as an Html representation.
+     *
+     * @return the Mandator as an Html representation.
+     */
+    String loadMandatorAsHtml();
+
+    /**
      * Loads the default Salesdata.
      * <p>
      * @return the default salesdata.

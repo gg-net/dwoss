@@ -71,6 +71,11 @@ public class DesktopBundleViewTryout {
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public String loadMandatorAsHtml() {
+                return loadMandator().toHtml();
+            }
         }, new SpecAgent() {
             @Override
             public ProductSpec findProductSpecByPartNoEager(String partNo) {

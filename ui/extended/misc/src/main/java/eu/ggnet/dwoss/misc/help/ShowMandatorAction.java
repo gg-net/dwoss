@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,16 +19,11 @@ package eu.ggnet.dwoss.misc.help;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JDialog;
-
-import org.metawidget.swing.SwingMetawidget;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -44,14 +39,6 @@ public class ShowMandatorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(false, 2, TradeName.class);
-        mw.setReadOnly(true);
-        mw.setToInspect(lookup(MandatorSupporter.class).loadMandator());
-        JDialog dialog = new JDialog(lookup(Workspace.class).getMainFrame(), "Aktiver Mandant");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.getContentPane().add(mw);
-        dialog.pack();
-        dialog.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-        dialog.setVisible(true);
+        Ui.call(() -> Css.toHtml5WithStyle(lookup(MandatorSupporter.class).loadMandatorAsHtml())).openFx(HtmlPane.class).exec();
     }
 }

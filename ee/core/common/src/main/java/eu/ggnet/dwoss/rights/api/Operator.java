@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@
 package eu.ggnet.dwoss.rights.api;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
-import lombok.Value;
+import lombok.*;
 
 /**
  * This is a Data Transfer Object for {@link Operator}.
@@ -27,13 +27,15 @@ import lombok.Value;
  * @author Bastian Venz
  * <p>
  */
-@Value
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Operator implements Serializable {
 
-    private final String username;
+    private String username;
 
-    private final int quickLoginKey;
+    private int quickLoginKey;
 
-    private final List<AtomicRight> rights;
+    private List<AtomicRight> rights;
 
 }

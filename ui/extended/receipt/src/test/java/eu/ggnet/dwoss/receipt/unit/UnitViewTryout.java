@@ -83,6 +83,12 @@ public class UnitViewTryout {
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public String loadMandatorAsHtml() {
+                return loadMandator().toHtml();
+            }
+
         });
 
         Client.addSampleStub(SpecAgent.class, new SpecAgent() {

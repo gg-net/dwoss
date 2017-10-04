@@ -8,7 +8,7 @@
       xmlns:pe="http://primefaces.org/ui/extensions">
     <f:view contentType="text/html">
         <h:head>
-            <title>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</title>
+            <title>Users</title>
             <style>
                 table, th, td {
                     border: 1px solid black;
@@ -17,8 +17,25 @@
             </style>
         </h:head>
         <h:body>
-            <h1>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</h1>
-            <h:outputText escape="false" value="#{mandatorSupporterBean.loadMandator().toHtml()}" />
+            <h1>Users</h1>
+            <h:dataTable value="#{rightsFacesBean.findAll()}" var="o">
+                <h:column>
+                    <!-- column header -->
+                    <f:facet name="header">Id</f:facet>
+                    <!-- row record -->
+                    #{o.id}
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Username</f:facet>
+                        #{o.username}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Rights</f:facet>
+                        #{o.rights}                    
+                </h:column>
+            </h:dataTable>
+
         </h:body>
     </f:view>
 </html>

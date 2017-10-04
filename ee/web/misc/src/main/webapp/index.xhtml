@@ -5,20 +5,18 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+      xmlns:pe="http://primefaces.org/ui/extensions" >
     <f:view contentType="text/html">
         <h:head>
-            <title>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</title>
-            <style>
-                table, th, td {
-                    border: 1px solid black;
-                    border-collapse: collapse;
-                }
-            </style>
+            <title>DW Misc Index Stub</title>
         </h:head>
         <h:body>
-            <h1>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</h1>
-            <h:outputText escape="false" value="#{mandatorSupporterBean.loadMandator().toHtml()}" />
+            <h1>DW Misc Index Stub</h1>
+            <hr />
+            Subsites:
+            <h:link value="Mandator" outcome="misc/mandator" />,
+            <h:link value="Users" outcome="misc/users" />
+            <hr />
         </h:body>
     </f:view>
 </html>

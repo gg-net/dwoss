@@ -87,4 +87,9 @@ public class MandatorSupporterBean implements MandatorSupporter {
         return shippingTerms;
     }
 
+    @Override
+    public String loadMandatorAsHtml() {
+        return mandator.toHtml();
+    }
+
 }

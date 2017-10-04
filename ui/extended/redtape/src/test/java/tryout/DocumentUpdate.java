@@ -162,6 +162,11 @@ public class DocumentUpdate {
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public String loadMandatorAsHtml() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
         });
         Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
         Client.addSampleStub(RedTapeAgent.class, null);

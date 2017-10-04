@@ -14,32 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.web.misc;
+package eu.ggnet.dwoss.web.misc.stub;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.Alternative;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.entity.Operator;
 
 /**
  *
  * @author oliver.guenther
  */
-@ManagedBean
-public class CustomerProvider {
+@Alternative
+public class OperatorEaoStub extends OperatorEao {
 
-    @Produces
-    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
-
-    @Produces
-    public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
-
-    @Produces
-    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
-
-    @Produces
-    public static PostLedger pl = new PostLedger(new HashMap<>());
+    @Override
+    public List<Operator> findAll() {
+        Operator operator = new Operator("Hans");
+        operator.add(AtomicRight.CREATE_ANNULATION_INVOICE);
+        operator.add(AtomicRight.CREATE_COMPLAINT);
+        return Arrays.asList(operator, new Operator("Peter"));
+    }
 
 }

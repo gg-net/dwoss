@@ -328,7 +328,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                         <webResources>
@@ -338,6 +338,7 @@
                                 <targetPath>WEB-INF</targetPath>
                             </resource>
                         </webResources>
+                        <dependentWarExcludes>index.xhtml,WEB-INF/web.xml,WEB-INF/jboss-deployment-structure.xml,WEB-INF/beans.xml,WEB-INF/classes/META-INF/persistence.xml,WEB-INF/persistence.xml,META-INF/persistence.xml,**/stub/**</dependentWarExcludes>
                     </configuration>
                 </plugin>
                 <plugin>

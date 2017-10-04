@@ -14,26 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.web.misc;
+package eu.ggnet.dwoss.web.misc.stub;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
-import javax.enterprise.inject.Alternative;
+import javax.annotation.ManagedBean;
+import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.rights.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
  *
  * @author oliver.guenther
  */
-@Alternative
-public class OperatorEaoMock extends OperatorEao {
+@ManagedBean
+public class MandatorSupportStub {
 
-    @Override
-    public List<Operator> findAll() {
-        return Arrays.asList(new Operator("Hans"), new Operator("Peter"));
-    }
+    @Produces
+    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
+
+    @Produces
+    public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
+
+    @Produces
+    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
+
+    @Produces
+    public static PostLedger pl = new PostLedger(new HashMap<>());
 
 }

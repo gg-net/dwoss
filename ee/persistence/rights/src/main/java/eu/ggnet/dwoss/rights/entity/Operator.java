@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,15 +22,16 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
+
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
 import lombok.*;
 
@@ -45,7 +46,8 @@ import static javax.persistence.FetchType.EAGER;
 @NoArgsConstructor
 @ToString(exclude = "personas")
 @NamedQueries({
-    @NamedQuery(name = "Operator.byUsername", query = "Select i from Operator as i where i.username = ?1"),
+    @NamedQuery(name = "Operator.byUsername", query = "Select i from Operator as i where i.username = ?1")
+    ,
     @NamedQuery(name = "Operator.byUsernameAndPasswordAndSalt", query = "Select i from Operator as i where i.username = ?1 AND i.password = ?2 AND i.salt = ?3")})
 public class Operator extends IdentifiableEntity implements Serializable, EagerAble {
 
@@ -62,8 +64,6 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     @Setter
     private int optLock;
 
-    @Getter
-    @Setter
     private int quickLoginKey;
 
     @ElementCollection
@@ -71,8 +71,6 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     private List<AtomicRight> rights = new ArrayList<>();
 
     @NotNull
-    @Getter
-    @Setter
     private String username;
 
     /**
@@ -127,6 +125,22 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     }
 
     public Operator(String username) {
+        this.username = username;
+    }
+
+    public int getQuickLoginKey() {
+        return quickLoginKey;
+    }
+
+    public void setQuickLoginKey(int quickLoginKey) {
+        this.quickLoginKey = quickLoginKey;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
     }
 

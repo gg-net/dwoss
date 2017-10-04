@@ -14,36 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.web.misc;
-
-import java.util.List;
-
-import javax.annotation.ManagedBean;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import eu.ggnet.dwoss.rights.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.entity.Operator;
-
 /**
- *
- * @author oliver.guenther
+ * Stub Package. Exclude via maven war overlay.
  */
-@Named
-@ManagedBean
-@Stateless
-public class RightsFacesBean {
-
-    @Inject
-    private OperatorEao eao;
-
-    public List<Operator> findAll() {
-        List<Operator> all = eao.findAll();
-        for (Operator operator : all) {
-            operator.fetchEager();
-        }
-        return all;
-    }
-
-}
+package eu.ggnet.dwoss.web.misc.stub;
