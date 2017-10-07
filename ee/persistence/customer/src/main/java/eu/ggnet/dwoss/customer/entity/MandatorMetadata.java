@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,15 @@
  */
 package eu.ggnet.dwoss.customer.entity;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 
@@ -133,6 +130,22 @@ public class MandatorMetadata implements Serializable {
      */
     public boolean isSet() {
         return shippingCondition != null || paymentCondition != null || paymentMethod != null || !allowedSalesChannels.isEmpty();
+    }
+
+    /**
+     * Html representation of the class.
+     *
+     * @return a html string
+     */
+    public String toHtml() {
+        if ( !isSet() ) return "No Mandator Metadata";
+        return "ManadatorMatchCode:" + mandatorMatchcode
+                + "<ul>"
+                + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition + "</li>")
+                + (paymentCondition == null ? "" : "<li>Zahlungskonditionen:" + paymentCondition.getNote() + "</li>")
+                + (paymentMethod == null ? "" : "<li>Zahlungsmodalität:" + paymentMethod.getNote() + "</li>")
+                + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels + "</li>")
+                + "</ul>";
     }
 
 }

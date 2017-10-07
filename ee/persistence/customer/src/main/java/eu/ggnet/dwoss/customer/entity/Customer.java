@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -161,6 +161,32 @@ public class Customer implements Serializable {
         flags.clear();
     }
 
+    /**
+     * Generates a human readable representation of the customers name.
+     * Works as follows:
+     * If there is a company get the prefered otherwise the first.
+     * If there is no company get the prefered contact otherwise the first.
+     *
+     * @return a human readable representation
+     */
+    public String toName() {
+        String name = null;
+        if ( !companies.isEmpty() ) {
+            for (Company company : companies) {
+                if ( name == null ) name = company.getName();
+                if ( company.isPrefered() ) name = company.getName();
+            }
+        } else if ( !contacts.isEmpty() ) {
+            for (Contact contact : contacts) {
+                if ( name == null ) name = contact.toFullName();
+                if ( contact.isPrefered() ) name = contact.toFullName();
+            }
+        } else {
+            name = "Incomplete Customer DBid=" + id;
+        }
+        return name;
+    }
+
     public String toMultiLine() {
         String result = toString();
         for (Company company : companies) {
@@ -187,4 +213,39 @@ public class Customer implements Serializable {
         return result;
     }
 
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("<p><u>" + toName() + "</u></p>");
+        if ( !companies.isEmpty() ) {
+            sb.append("Firmen(n):<ul>");
+            for (Company company : companies) {
+                sb.append("<li>").append(company.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !contacts.isEmpty() ) {
+            sb.append("Kontakt(e):<ul>");
+            for (Contact contact : contacts) {
+                sb.append("<li>").append(contact.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !mandatorMetadata.isEmpty() ) {
+            sb.append("Mandantenspezifische Informationen:<ul>");
+            for (MandatorMetadata mandatorMetadata : mandatorMetadata) {
+                sb.append("<li>").append(mandatorMetadata.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !flags.isEmpty() ) {
+            sb.append("Kundenparameter:<ul>");
+            for (CustomerFlag flag : flags) {
+                sb.append("<li>").append(flag.getName()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( comment != null ) {
+            sb.append("<p>Kommentar: ").append(comment).append("</p>");
+        }
+        return sb.toString();
+    }
 }

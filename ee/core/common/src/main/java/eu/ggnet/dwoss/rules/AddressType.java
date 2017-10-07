@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,20 @@
  */
 package eu.ggnet.dwoss.rules;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 /**
  * A type for differentiate between addresses.
  * <p>
  * @author pascal.perau
  */
+@Getter
+@RequiredArgsConstructor
 public enum AddressType {
 
-    INVOICE, SHIPPING
+    INVOICE("Rechnungsadresse"), SHIPPING("Lieferadresse");
+
+    private final String name;
+
 }

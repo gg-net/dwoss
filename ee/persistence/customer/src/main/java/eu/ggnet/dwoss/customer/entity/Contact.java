@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,8 @@
 package eu.ggnet.dwoss.customer.entity;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -166,6 +167,15 @@ public class Contact implements Serializable {
     }
 
     /**
+     * Returns a human readable representation of title, first and lastname.
+     *
+     * @return a human readable representation of title, first and lastname.
+     */
+    public String toFullName() {
+        return (title == null ? "" : title + " ") + (firstName == null ? "" : firstName + " ") + (lastName == null ? "" : lastName);
+    }
+
+    /**
      *
      * @return
      */
@@ -175,6 +185,29 @@ public class Contact implements Serializable {
 
     public List<Communication> getCommunications() {
         return new ArrayList<>(communications);
+    }
+
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefered ? "<b>" : "");
+        sb.append(title == null ? "" : title + "&nbsp;").append(firstName == null ? "" : firstName + "&nbsp;").append(lastName == null ? "" : lastName)
+                .append(sex == null ? "&nbsp;(?)" : "(" + sex + ")").append(prefered ? "&nbsp;(Bevorzugt)" : "").append("<br />");
+        if ( !addresses.isEmpty() ) {
+            sb.append("Adresse(n):<ul>");
+            for (Address address : addresses) {
+                sb.append("<li>").append(address.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !communications.isEmpty() ) {
+            sb.append("Com:<ul>");
+            for (Communication communication : communications) {
+                sb.append("<li>").append(communication.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        sb.append(prefered ? "</b>" : "");
+        return sb.toString();
     }
 
 }

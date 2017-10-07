@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,28 +16,28 @@
  */
 package eu.ggnet.dwoss.customer.assist.gen;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.util.gen.Name;
-import eu.ggnet.dwoss.util.gen.NameGenerator;
-import eu.ggnet.dwoss.util.gen.GeneratedAddress;
-
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.priv.ConverterUtil;
+import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.customer.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.entity.Contact.Sex.MALE;
+import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
 
 /**
  *
  * @author oliver.guenther
  */
 public class CustomerGenerator {
+
+    private final static EnumSet<CustomerFlag> ALLOWED_FLAG = EnumSet.of(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY, CustomerFlag.CONFIRMS_DOSSIER);
 
     private final Random R = new Random();
 
@@ -69,12 +69,29 @@ public class CustomerGenerator {
      */
     public Customer makeCustomer() {
         Customer c = new Customer();
-        int r = R.nextInt(14) + 1;
+        int r = R.nextInt(5) + 1;
+        boolean prefered = false;
         for (int i = 0; i < r; i++) {
-            c.add(makeCompany());
-            c.add(makeContact());
+            Contact con = makeContact();
+            if ( !prefered ) {
+                prefered = R.nextBoolean();
+                con.setPrefered(prefered);
+            }
+            c.add(con);
         }
+        r = R.nextInt(2) + 1;
+        for (int i = 0; i < r; i++) {
+            Company com = makeCompany();
+            if ( !prefered ) {
+                prefered = R.nextBoolean();
+                com.setPrefered(prefered);
+            }
+            c.add(com);
+        }
+        if ( !prefered ) c.getContacts().iterator().next().setPrefered(true);
         c.add(makeMandatorMetadata());
+        if ( R.nextBoolean() ) c.add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
+        c.setComment("Date ist eine Kommentar zum Kunden");
         return c;
     }
 
@@ -88,7 +105,12 @@ public class CustomerGenerator {
         Company c = new Company();
         c.setLedger(R.nextInt(1000) + 1);
         c.setName(GEN.makeCompanyName());
-        c.add(makeCommunication());
+        while (R.nextBoolean()) {
+            c.add(makeCommunication());
+        }
+        while (R.nextBoolean()) {
+            c.add(makeAddress());
+        }
         return c;
     }
 
@@ -119,8 +141,13 @@ public class CustomerGenerator {
         c.setLastName(n.getLast());
         c.setSex(n.getGender().ordinal() == 1 ? MALE : FEMALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        c.add(makeCommunication());
+        while (R.nextBoolean()) {
+            c.add(makeCommunication());
+        }
         c.add(makeAddress());
+        while (R.nextInt() > 70) {
+            c.add(makeAddress());
+        }
         return c;
     }
 
@@ -146,11 +173,12 @@ public class CustomerGenerator {
      */
     public Address makeAddress() {
         GeneratedAddress a = GEN.makeAddress();
-        Address customerAddress = new Address();
-        customerAddress.setCity(a.getTown());
-        customerAddress.setStreet(a.getStreet());
-        customerAddress.setZipCode(a.getPostalCode());
-        return customerAddress;
+        Address address = new Address();
+        if ( R.nextBoolean() ) address.setPreferedType(new RandomEnum<>(AddressType.class).random());
+        address.setCity(a.getTown());
+        address.setStreet(a.getStreet());
+        address.setZipCode(a.getPostalCode());
+        return address;
     }
 
     /**
@@ -188,6 +216,42 @@ public class CustomerGenerator {
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
         EnumSet.allOf(SalesChannel.class).stream().filter(t -> R.nextInt(10) < 3).forEach(t -> m.add(t));
         return m;
+    }
+
+    public Customer makeOldCustomer() {
+        DefaultCustomerSalesdata salesdata = new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.ADVANCE_PAYMENT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L));
+        return makeOldCustomer("GEN", salesdata);
+    }
+
+    public Customer makeOldCustomer(String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
+        Name name = GEN.makeName();
+        GeneratedAddress address = GEN.makeAddress();
+        OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
+        if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
+        for (CustomerFlag f : ALLOWED_FLAG) {
+            if ( R.nextInt(10) < 3 ) old.addFlag(f);
+        }
+        old.setLedger(R.nextInt(10000));
+
+        if ( R.nextInt(10) < 3 ) {
+            old.setFirma(old.getNachname() + " GmbH");
+            old.setTaxId("HRB123456");
+            old.getAllowedSalesChannels().add(RETAILER);
+        }
+        if ( R.nextInt(10) < 3 ) {
+            GeneratedAddress lia = GEN.makeAddress();
+            old.setLIAdresse(lia.getStreet());
+            old.setLIOrt(lia.getTown());
+            old.setLIPlz(lia.getPostalCode());
+        }
+        old.setEmail(name.getLast().toLowerCase() + "@example.com");
+        old.setTelefonnummer("+49 99 123456789");
+        old.setHandynummer("+49 555 12344321");
+        if ( R.nextInt(10) < 3 ) old.setFaxnummer("+49 88 123456789");
+
+        Customer c = new Customer();
+        ConverterUtil.mergeFromOld(old, c, mandatorMatchCode, defaults);
+        return c;
     }
 
 }

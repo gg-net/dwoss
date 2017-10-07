@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -80,6 +80,15 @@ public class Communication implements Serializable {
     public Communication(Type type, boolean prefered) {
         this.type = type;
         this.prefered = prefered;
+    }
+
+    /**
+     * Html representation of the class.
+     *
+     * @return a html string
+     */
+    public String toHtml() {
+        return type + ":&nbsp;" + identifier;
     }
 
 }

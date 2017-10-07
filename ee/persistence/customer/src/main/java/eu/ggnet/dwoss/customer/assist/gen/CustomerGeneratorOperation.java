@@ -35,10 +35,10 @@ import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.gen.*;
+import eu.ggnet.dwoss.util.gen.GeneratedAddress;
+import eu.ggnet.dwoss.util.gen.NameGenerator;
 
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
-import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
@@ -55,6 +55,8 @@ public class CustomerGeneratorOperation {
     private final static EnumSet<CustomerFlag> ALLOWED_FLAG = EnumSet.of(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY, CustomerFlag.CONFIRMS_DOSSIER);
 
     private final NameGenerator GEN = new NameGenerator();
+
+    private final CustomerGenerator CGEN = new CustomerGenerator();
 
     private final Random R = new Random();
 
@@ -192,34 +194,7 @@ public class CustomerGeneratorOperation {
         m.start();
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            Name name = GEN.makeName();
-            GeneratedAddress address = GEN.makeAddress();
-            m.worked(1, name.getFirst() + " " + name.getLast());
-            OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
-            if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
-            for (CustomerFlag f : ALLOWED_FLAG) {
-                if ( R.nextInt(10) < 3 ) old.addFlag(f);
-            }
-            old.setLedger(R.nextInt(10000));
-
-            if ( R.nextInt(10) < 3 ) {
-                old.setFirma(old.getNachname() + " GmbH");
-                old.setTaxId("HRB123456");
-                old.getAllowedSalesChannels().add(RETAILER);
-            }
-            if ( R.nextInt(10) < 3 ) {
-                GeneratedAddress lia = GEN.makeAddress();
-                old.setLIAdresse(lia.getStreet());
-                old.setLIOrt(lia.getTown());
-                old.setLIPlz(lia.getPostalCode());
-            }
-            old.setEmail(name.getLast().toLowerCase() + "@example.com");
-            old.setTelefonnummer("+49 99 123456789");
-            old.setHandynummer("+49 555 12344321");
-            if ( R.nextInt(10) < 3 ) old.setFaxnummer("+49 88 123456789");
-
-            Customer c = new Customer();
-            ConverterUtil.mergeFromOld(old, c, mandator.getMatchCode(), defaults);
+            Customer c = CGEN.makeOldCustomer(mandator.getMatchCode(), defaults);
             if ( L.isDebugEnabled() ) L.debug("Persisting {}", c.toMultiLine());
             cem.persist(c);
             ids.add(c.getId());

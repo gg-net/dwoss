@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,8 @@
 package eu.ggnet.dwoss.customer.entity;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -174,6 +175,41 @@ public class Company implements Serializable {
 
     public List<Communication> getCommunications() {
         return new ArrayList<>(communications);
+    }
+
+    /**
+     * Html representation of the class.
+     *
+     * @return a html string
+     */
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefered ? "<b>" : "");
+        sb.append(name).append("&nbsp;(").append(prefered ? "Bevorzugt," : "").append("FiBu-Konto:").append(ledger).append(")<br />");
+        sb.append(taxId == null ? "" : "TaxId:" + taxId + "<br />");
+        if ( !contacts.isEmpty() ) {
+            sb.append("Kontakt(e):<ul>");
+            for (Contact contact : contacts) {
+                sb.append("<li>").append(contact.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !addresses.isEmpty() ) {
+            sb.append("Adresse(n):<ul>");
+            for (Address address : addresses) {
+                sb.append("<li>").append(address.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !communications.isEmpty() ) {
+            sb.append("Com:<ul>");
+            for (Communication communication : communications) {
+                sb.append("<li>").append(communication.toHtml()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        sb.append(prefered ? "</b>" : "");
+        return sb.toString();
     }
 
 }

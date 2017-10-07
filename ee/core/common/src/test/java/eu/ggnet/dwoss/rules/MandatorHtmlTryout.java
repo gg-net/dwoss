@@ -113,7 +113,6 @@ public class MandatorHtmlTryout {
         });
 
         latch.await();
-
     }
 
 }

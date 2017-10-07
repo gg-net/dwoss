@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.search.annotations.Boost;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.rules.AddressType;
 
@@ -52,7 +50,7 @@ public class Address implements Serializable {
     private short optLock;
 
     /**
-     * Is this a address to be used for a specific type by default.
+     * Is this a address to be used for a specific type by default, null indicates no preference.
      */
     @Setter
     @Enumerated
@@ -90,6 +88,12 @@ public class Address implements Serializable {
 
     public Address(AddressType preferedType) {
         this.preferedType = preferedType;
+    }
+
+    public String toHtml() {
+        return (preferedType == null ? "" : "<i>Bevorzugte: " + preferedType.getName() + "<br />")
+                + street + "<br />"
+                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>");
     }
 
 }
