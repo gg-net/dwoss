@@ -140,4 +140,9 @@ public class CustomerServiceBean implements CustomerService {
     public List<Long> allSystemCustomerIds() {
         return customerEao.findAllSystemCustomerIds();
     }
+
+    @Override
+    public String asNewHtmlHighDetailed(long id) {
+        return customerEao.findById(id).toHtml();
+    }
 }

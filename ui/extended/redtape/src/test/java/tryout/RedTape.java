@@ -7,11 +7,12 @@ import net.sf.jasperreports.engine.JasperPrint;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Document;
@@ -25,9 +26,14 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import tryout.stub.*;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -76,49 +82,18 @@ public class RedTape {
         Client.addSampleStub(UniqueUnitAgent.class, null);
         Client.addSampleStub(LegacyRemoteBridge.class, null);
         Client.addSampleStub(ShippingCostService.class, null);
-        Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
 
-            @Override
-            public Mandator loadMandator() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+        MandatorSupporter mandatorSupporterMock = mock(MandatorSupporter.class);
+        when(mandatorSupporterMock.loadSalesdata()).thenReturn(new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
+                Arrays.asList(SalesChannel.CUSTOMER, SalesChannel.RETAILER), null));
 
-            @Override
-            public DefaultCustomerSalesdata loadSalesdata() {
-                return new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
-                        Arrays.asList(SalesChannel.CUSTOMER, SalesChannel.RETAILER), null);
-            }
+        Client.addSampleStub(MandatorSupporter.class, mandatorSupporterMock);
 
-            @Override
-            public ReceiptCustomers loadReceiptCustomers() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
+        CustomerCos ccos = mock(CustomerCos.class);
+        when(ccos.createCustomer()).thenReturn(0L);
+        when(ccos.updateCustomer(anyLong())).thenReturn(true);
 
-            @Override
-            public SpecialSystemCustomers loadSystemCustomers() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Contractors loadContractors() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public PostLedger loadPostLedger() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public ShippingTerms loadShippingTerms() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String loadMandatorAsHtml() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
+        Client.addSampleStub(CustomerCos.class, ccos);
 
         RedTapeModel model = new RedTapeModel();
         RedTapeController controller = new RedTapeController();
@@ -129,6 +104,7 @@ public class RedTape {
         view.setController(controller);
         view.pack();
         view.setVisible(true);
+        UiCore.continueSwing(view);
         while (view.isVisible()) {
             Thread.sleep(500);
         }

@@ -1,22 +1,25 @@
 package tryout.stub;
 
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-
 import java.util.*;
 
+import eu.ggnet.dwoss.customer.api.*;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.priv.ConverterUtil;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.*;
 
 /**
  *
  * @author pascal.perau
  */
 public class CustomerServiceStub implements CustomerService {
+
+    private eu.ggnet.dwoss.customer.entity.Customer c;
+
+    public CustomerServiceStub() {
+        CustomerGenerator gen = new CustomerGenerator();
+        c = gen.makeOldCustomer();
+    }
 
     @Override
     public CustomerMetaData asCustomerMetaData(long customerId) {
@@ -40,7 +43,7 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public String asHtmlHighDetailed(long id) {
-        return "Super, Duper, High Detailed Customer Of Doom For Id" + id;
+        return ConverterUtil.convert(c, "BLA", new DefaultCustomerSalesdata(ShippingCondition.DEALER_ONE, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L))).toHtmlHighDetailed();
     }
 
     @Override
@@ -61,6 +64,11 @@ public class CustomerServiceStub implements CustomerService {
     @Override
     public List<Long> allSystemCustomerIds() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String asNewHtmlHighDetailed(long id) {
+        return c.toHtml();
     }
 
 }

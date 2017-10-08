@@ -16,22 +16,19 @@
  */
 package eu.ggnet.dwoss.rules;
 
-import java.awt.EventQueue;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import javax.swing.JFrame;
-
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import org.junit.Test;
 
@@ -86,30 +83,21 @@ public class MandatorHtmlTryout {
                 .bugMail("error@localhost")
                 .build();
 
+        new JFXPanel(); // Implicit start the platform.
         CountDownLatch latch = new CountDownLatch(1);
 
-        EventQueue.invokeAndWait(() -> {
-            final JFXPanel jfxPanel = new JFXPanel();
-            Platform.runLater(() -> {
-                WebView view = new WebView();
-                view.getEngine().loadContent(Css.toHtml5WithStyle(mandator.toHtml()));
-                BorderPane p = new BorderPane(view);
-                Scene sc = new Scene(p);
-                jfxPanel.setScene(sc);
+        Platform.runLater(() -> {
+            Stage stage = new Stage();
+            stage.setTitle("HtmlViewer");
+            WebView view = new WebView();
+            view.getEngine().loadContent(Css.toHtml5WithStyle(mandator.toHtml()));
+            BorderPane p = new BorderPane(view);
+            Scene scene = new Scene(p, Color.ALICEBLUE);
+            stage.setScene(scene);
+            stage.setOnCloseRequest(e -> {
+                latch.countDown();
             });
-            JFrame f = new JFrame("Tryout");
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.getContentPane().add(jfxPanel);
-            f.setSize(300, 300);
-            f.setVisible(true);
-            f.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    latch.countDown();
-                }
-
-            });
-
+            stage.show();
         });
 
         latch.await();

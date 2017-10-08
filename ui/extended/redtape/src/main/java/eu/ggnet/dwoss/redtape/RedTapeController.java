@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -37,14 +37,16 @@ import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.action.*;
 import eu.ggnet.dwoss.redtape.dossiertable.DossierTableController;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition.Hint;
+import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
@@ -297,7 +299,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openCreateCustomer() {
         long customerId = lookup(CustomerCos.class).createCustomer();
         if ( customerId == 0 ) {
-            System.out.println("Da zero customer of doom !!!!!!!!!!!!!!!!!!!!!!!!");
+            Alert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
         }
         model.setPurchaseCustomer(customerId);
@@ -381,8 +383,8 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param doc the {@link Document} entity.
      */
     public void openDocumentViewer(Document doc) {
-        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);        
-        dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />" 
+        HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
+        dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />"
                 + lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()) + "</html>");
         dialog.setVisible(true);
     }

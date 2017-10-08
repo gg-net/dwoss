@@ -1,34 +1,20 @@
 package tryout;
 
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-
 import java.util.*;
-
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.saft.api.AuthenticationException;
 
 import org.junit.Test;
 
-import eu.ggnet.saft.core.Client;
-
 import eu.ggnet.dwoss.common.AbstractGuardian;
-
-
 import eu.ggnet.dwoss.customer.CustomerCreateController;
 import eu.ggnet.dwoss.customer.CustomerCreateView;
-
-
+import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.api.AuthenticationException;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 /**
  *
@@ -113,6 +99,11 @@ public class CreateCustomer {
 
             @Override
             public List<Long> allSystemCustomerIds() {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public String asNewHtmlHighDetailed(long id) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });

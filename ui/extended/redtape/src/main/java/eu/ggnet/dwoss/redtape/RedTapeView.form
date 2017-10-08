@@ -141,7 +141,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jLabel4" max="32767" attributes="0"/>
-                      <Component id="positionAmountLabel" alignment="1" pref="119" max="32767" attributes="0"/>
+                      <Component id="positionAmountLabel" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>

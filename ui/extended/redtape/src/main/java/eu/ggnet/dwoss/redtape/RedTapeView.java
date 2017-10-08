@@ -18,31 +18,37 @@ package eu.ggnet.dwoss.redtape;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import javafx.application.Platform;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
 import org.openide.util.Lookup;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.redtape.dossiertable.DossierTableView;
-import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.redtape.renderer.*;
+import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.renderer.DocumentStringRenderer;
+import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
 import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
@@ -253,8 +259,8 @@ public class RedTapeView extends javax.swing.JFrame {
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
                     Ui.parent(jLabel1)
                             .call(() -> "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
-                                    + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
-                                    + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>")
+                            + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
+                            + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>")
                             .openFx(HtmlPane.class, "StateInfo")
                             .exec();
                 }
@@ -268,26 +274,27 @@ public class RedTapeView extends javax.swing.JFrame {
     private JPopupMenu buildCustomerPopup() {
         JPopupMenu menu = new JPopupMenu();
 
-        JMenuItem newCustomerItem = new JMenuItem(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if ( controller != null ) controller.openCreateCustomer();
-            }
+        JMenuItem newCustomerItem = new JMenuItem("Neu");
+        newCustomerItem.addActionListener(e -> {
+            if ( controller != null ) controller.openCreateCustomer();
         });
-        newCustomerItem.setText("Neu");
 
-        JMenuItem editEditItem = new JMenuItem(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if ( model.getPurchaseCustomer() != null ) {
-                    controller.openUpdateCustomer(model.getPurchaseCustomer().getId());
-                    customerDetailArea.setText(lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
-                }
+        JMenuItem editEditItem = new JMenuItem("Bearbeiten");
+        editEditItem.addActionListener(e -> {
+            if ( model.getPurchaseCustomer() != null ) {
+                controller.openUpdateCustomer(model.getPurchaseCustomer().getId());
+                customerDetailArea.setText(lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
             }
         });
-        editEditItem.setText("Bearbeiten");
+
+        JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
+        showNewDetails.addActionListener(e -> {
+            Ui.call(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId())).openFx(HtmlPane.class, "Customer").exec();
+        });
+
         menu.add(newCustomerItem);
         menu.add(editEditItem);
+        menu.add(showNewDetails);
         return menu;
     }
 
