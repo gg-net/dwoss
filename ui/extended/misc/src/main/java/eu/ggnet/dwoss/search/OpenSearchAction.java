@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 GG-Net GmbH
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package eu.ggnet.dwoss.search;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
+import eu.ggnet.saft.core.Ui;
+
 /**
- * The Public Search API.
- * All modules that what to be a supplier or consumer of searches need at least this package.
+ *
+ * @author oliver.guenther
  */
-package eu.ggnet.dwoss.search.api;
+public class OpenSearchAction extends AbstractAction {
+
+    public OpenSearchAction() {
+        super("(Die neue) Suche");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Ui.openFx(SearchCask.class).exec();
+    }
+
+}

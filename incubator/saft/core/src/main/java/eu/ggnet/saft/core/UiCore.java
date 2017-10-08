@@ -5,8 +5,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javax.swing.JFrame;
@@ -14,7 +16,9 @@ import javax.swing.JFrame;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.*;
+import javafx.concurrent.Worker;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import eu.ggnet.saft.core.all.UiUtil;
@@ -24,16 +28,17 @@ import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 /**
+ * The Core of the Saft UI, containing methods for startup or registering things.
  *
  * @author oliver.guenther
  */
 public class UiCore {
 
-    private final static BooleanProperty backgroundActivity = new SimpleBooleanProperty();
+    private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
 
     // We need the raw type here. Otherwise we cannot get different typs of cosumers in and out.
     @SuppressWarnings("unchecked")
-    private static final Map<Class, Consumer> exceptionConsumer = new HashMap<>();
+    private static final Map<Class, Consumer> EXCEPTION_CONSUMER = new HashMap<>();
 
     private static Consumer<Throwable> finalConsumer = (b) -> {
         Runnable r = () -> {
@@ -53,7 +58,18 @@ public class UiCore {
     };
 
     public static BooleanProperty backgroundActivityProperty() {
-        return backgroundActivity;
+        return BACKGROUND_ACTIVITY;
+    }
+
+    /**
+     * Observers the progress on any javaFx worker.
+     * If there is some form of central managed and displayed progress and status message system registered with saft, this can be used to show a worker
+     * progress.
+     *
+     * @param w the worker to be observed.
+     */
+    public static void observeProgress(Worker<?> w) {
+        if ( w != null ) BACKGROUND_ACTIVITY.bind(w.runningProperty()); //Hint: Binds are weak, so should not hinder the gc to work.
     }
 
     /**
@@ -111,7 +127,7 @@ public class UiCore {
 
     /**
      * Starts the Ui in JavaFx variant.
-     *
+     * <p>
      * This also assumes two things:
      * <ul>
      * <li>The JavaFX Platfrom is already running (as a Stage already exists), most likely created through default lifecycle of javaFx</li>
@@ -145,7 +161,7 @@ public class UiCore {
      * @param consumer the consumer to handle it.
      */
     public static <T> void registerExceptionConsumer(Class<T> clazz, Consumer<T> consumer) {
-        exceptionConsumer.put(clazz, consumer);
+        EXCEPTION_CONSUMER.put(clazz, consumer);
     }
 
     /**
@@ -164,10 +180,10 @@ public class UiCore {
      * @param b
      */
     public static void handle(Throwable b) {
-        backgroundActivity.set(false); // Cleanup
-        for (Class<?> clazz : exceptionConsumer.keySet()) {
+        BACKGROUND_ACTIVITY.set(false); // Cleanup
+        for (Class<?> clazz : EXCEPTION_CONSUMER.keySet()) {
             if ( ExceptionUtil.containsInStacktrace(clazz, b) ) {
-                exceptionConsumer.get(clazz).accept(ExceptionUtil.extractFromStraktrace(clazz, b));
+                EXCEPTION_CONSUMER.get(clazz).accept(ExceptionUtil.extractFromStraktrace(clazz, b));
                 return;
             }
         }

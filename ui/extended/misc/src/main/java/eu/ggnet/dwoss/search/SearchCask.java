@@ -31,50 +31,41 @@ import javafx.scene.layout.BorderPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.search.api.SearchResult;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UiCore;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
 
 /**
  * Search View, new Version.
+ * Uses {@link Searcher}.
  *
  * @author oliver.guenther
  */
 @Title("Suche")
-public class SearchPane extends BorderPane implements ClosedListener {
+public class SearchCask extends BorderPane implements ClosedListener {
 
-    private final TextField searchField;
+    private final Service<List<ShortSearchResult>> searchService;
 
-    private final Button searchButton;
+    public SearchCask() {
+        // Creating and laying out the Ui
+        StringProperty searchProperty = new SimpleStringProperty();
+        ObservableList<ShortSearchResult> resultProperty = FXCollections.observableArrayList();
 
-    private final ListView<SearchResult> resultListView;
-
-    private final StringProperty search;
-
-    private final ObservableList<SearchResult> result;
-
-    private Service<List<SearchResult>> searchService;
-
-    public SearchPane() {
-        search = new SimpleStringProperty();
-        result = FXCollections.observableArrayList();
-
-        searchField = new TextField();
-        searchButton = new Button("Suchen");
-        resultListView = new ListView<>();
+        TextField searchField = new TextField();
+        Button searchButton = new Button("Suchen");
+        ListView<ShortSearchResult> resultListView = new ListView<>();
 
         ProgressBar progressBar = new ProgressBar();
-        progressBar.setMaxWidth(MAX_VALUE);
-        progressBar.setMaxHeight(MAX_VALUE);
+        progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
+        progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
         ProgressIndicator progressIndicator = new ProgressIndicator();
-
-        progressBar.setProgress(0);
-        progressIndicator.setProgress(0);
 
         BorderPane top = new BorderPane();
         top.setLeft(new Label("Frage:"));
@@ -89,36 +80,22 @@ public class SearchPane extends BorderPane implements ClosedListener {
         setCenter(resultListView);
         setBottom(bottom);
 
-        searchField.textProperty().bindBidirectional(search);
-        resultListView.itemsProperty().bind(new SimpleListProperty<>(result));
-
-        searchButton.setOnAction((ActionEvent event) -> {
-            if ( searchService.getState() == READY ) searchService.start();
-            else searchService.restart();
-        });
-
-        searchField.setOnKeyPressed((ke) -> {
-            if ( ke.getCode() == KeyCode.ENTER ) {
-                if ( searchService.getState() == READY ) searchService.start();
-                else searchService.restart();
-            }
-        });
-
-        searchService = new Service<List<SearchResult>>() {
+        // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
+        searchService = new Service<List<ShortSearchResult>>() {
 
             private Searcher searcher;
 
             @Override
-            protected Task<List<SearchResult>> createTask() {
+            protected Task<List<ShortSearchResult>> createTask() {
                 if ( searcher == null ) searcher = Client.lookup(Searcher.class);
 
-                return new Task<List<SearchResult>>() {
+                return new Task<List<ShortSearchResult>>() {
                     @Override
-                    protected List<SearchResult> call() throws Exception {
+                    protected List<ShortSearchResult> call() throws Exception {
                         updateProgress(-1, -1);
-                        if ( StringUtils.isEmpty(search.get()) ) return Collections.EMPTY_LIST; // Empty check.
-                        searcher.initSearch(search.get());
-                        List<SearchResult> last = Collections.EMPTY_LIST;
+                        if ( StringUtils.isEmpty(searchProperty.get()) ) return Collections.EMPTY_LIST; // Empty check.
+                        searcher.initSearch(new SearchRequest(searchProperty.get()));
+                        List<ShortSearchResult> last = Collections.EMPTY_LIST;
                         int done = 0;
                         while (!isCancelled() && searcher.hasNext()) {
                             last = searcher.next();
@@ -135,16 +112,30 @@ public class SearchPane extends BorderPane implements ClosedListener {
             }
         };
 
-        searchService.valueProperty().addListener((ob, o, n) -> {
-            if ( n == null ) result.clear(); // happens if service has allready a value and is reinited.
-            else result.addAll(n);
-        });
-
+        // Binding all Ui Properties
+        UiCore.observeProgress(searchService);
+        searchProperty.bind(searchField.textProperty());
+        resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
         progressBar.progressProperty().bind(searchService.progressProperty());
         progressIndicator.progressProperty().bind(searchService.progressProperty());
-
         bottom.visibleProperty().bind(searchService.runningProperty());
 
+        // Adding Actions and Listeners
+        searchService.valueProperty().addListener((ob, o, n) -> {
+            if ( n == null ) resultProperty.clear(); // happens if service has allready a value and is reinited.
+            else resultProperty.addAll(n);
+        });
+
+        searchButton.setOnAction((ActionEvent event) -> search());
+        searchField.setOnKeyPressed((ke) -> {
+            if ( ke.getCode() == KeyCode.ENTER ) search();
+        });
+
+    }
+
+    private void search() {
+        if ( searchService.getState() == READY ) searchService.start();
+        else searchService.restart();
     }
 
     @Override

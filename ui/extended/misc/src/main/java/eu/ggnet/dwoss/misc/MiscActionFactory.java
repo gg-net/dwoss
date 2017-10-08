@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.search.OpenSearchAction;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.saft.core.ActionFactory;
@@ -96,6 +97,7 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Geschäftsführung", "Abschluss Reporte", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));
         actions.add(new MetaAction("Hilfe", new ShowMandatorAction()));
+        actions.add(new MetaAction("Kunden und Aufträge", new OpenSearchAction()));
 
         return actions;
     }

@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 import javafx.scene.Parent;
 
@@ -16,7 +16,8 @@ import eu.ggnet.saft.core.swing.SwingSaft;
 import lombok.*;
 
 /**
- * Replacement for JOptionPane.
+ * Fluent Alert Dialog , replacement for JOptionPane.
+ * See {@link Alert} as starting point.
  *
  * @author oliver.guenther
  */
@@ -58,11 +59,23 @@ public class UiAlert {
      */
     private Parent javafxParent = null;
 
+    /**
+     * Set the title of the alert.
+     *
+     * @param title the title
+     * @return the alert for fluent usage.
+     */
     public UiAlert title(String title) {
         this.title = title;
         return this;
     }
 
+    /**
+     * Set the message of the alert.
+     *
+     * @param message the message
+     * @return the alert for fluent usage.
+     */
     public UiAlert message(String message) {
         this.message = message;
         return this;
@@ -72,28 +85,51 @@ public class UiAlert {
      * Appends to the message prepended by a new line.
      *
      * @param message the message to append
-     * @return the UiAlert.
+     * @return the alert for fluent usage.
      */
     public UiAlert nl(String message) {
         this.message += "\n" + message;
         return this;
     }
 
+    /**
+     * Appends a new line to the message.
+     *
+     * @return the alert for fluent usage.
+     */
     public UiAlert nl() {
         this.message += "\n";
         return this;
     }
 
+    /**
+     * Sets an optional (Swing) parent to alert.
+     *
+     * @param swingParent the swing parent
+     * @return the alert for fluent usage.
+     */
     public UiAlert parent(Component swingParent) {
         this.swingParent = swingParent;
         return this;
     }
 
+    /**
+     * Sets an optional (JavaFx) parent to alert.
+     *
+     * @param javafxParent the javafx parent
+     * @return the alert for fluent usage.
+     */
     public UiAlert parent(Parent javafxParent) {
         this.javafxParent = javafxParent;
         return this;
     }
 
+    /**
+     * Shows the final alert.
+     * For now the implementation is done with a JOptionPane.
+     *
+     * @param type the type of the alert.
+     */
     public void show(Type type) {
         try {
             // TODO: At the moment, I only have a Swing implementation.

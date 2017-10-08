@@ -17,12 +17,14 @@
 package eu.ggnet.dwoss.search.api;
 
 /**
+ * The simples form of a search result.
  *
  * @author oliver.guenther
+ * @deprecated unsinn: search result is a value not an interface.
  */
-// Hint think about relevanc concept.
+@Deprecated
 public interface SearchResult {
-    
+
     String shortDescription();
-    
+
 }

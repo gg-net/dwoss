@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.dwoss.util.TupleHtmlRenderer;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import java.awt.Dialog;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,16 +25,11 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.dwoss.redtape.UnitOverseer;
-import eu.ggnet.dwoss.redtape.UniversalSearcher;
-
-import eu.ggnet.dwoss.rules.DocumentType;
-
-import eu.ggnet.dwoss.util.INoteModel;
-import eu.ggnet.dwoss.util.Tuple2;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -140,7 +130,6 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
         this(lookup(Workspace.class).getMainFrame(), lookup(UniversalSearcher.class), lookup(UnitOverseer.class));
     }
 
-    /** Creates new form UiSearch */
     public UniversalSearchViewCask(java.awt.Window parent, UniversalSearcher searchOperation, UnitOverseer unitOverseer) {
         this.searchOperation = searchOperation;
         this.unitOverseer = unitOverseer;

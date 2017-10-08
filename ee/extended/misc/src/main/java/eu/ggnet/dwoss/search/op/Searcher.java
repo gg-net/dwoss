@@ -18,30 +18,32 @@ package eu.ggnet.dwoss.search.op;
 
 import java.util.List;
 
-import eu.ggnet.dwoss.search.api.SearchResult;
+import javax.ejb.Remote;
+
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
 
 /**
  * A statfull searcher for all connected modules.
  *
- *
- *
  * @author oliver.guenther
  */
+@Remote
 public interface Searcher {
 
     /**
      * Set a new search string, resetting every thing that happend before.
      *
-     * @param search the search string.
+     * @param request the search string.
      */
-    void initSearch(String search);
+    void initSearch(SearchRequest request);
 
     /**
      * Returns a list of the next search results. If the list is empty, no more values can be found.
      *
      * @return a list of the next search results, never null.
      */
-    List<SearchResult> next();
+    List<ShortSearchResult> next();
 
     /**
      * Returns true as long as there might be a next result.

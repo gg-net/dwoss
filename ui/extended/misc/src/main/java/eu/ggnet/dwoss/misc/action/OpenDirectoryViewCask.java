@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.saft.core.ToolbarComponent;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -82,7 +81,7 @@ public class OpenDirectoryViewCask extends javax.swing.JPanel implements Toolbar
         try {
             Desktop.getDesktop().open(new File(GlobalConfig.APPLICATION_PATH_OUTPUT));
         } catch (IOException ex) {
-            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
+            UiCore.handle(ex);
         }
     }//GEN-LAST:event_buttonActionPerformed
 

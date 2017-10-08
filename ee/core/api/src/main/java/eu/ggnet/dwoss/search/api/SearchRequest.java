@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 GG-Net GmbH
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * The Public Search API.
- * All modules that what to be a supplier or consumer of searches need at least this package.
- */
 package eu.ggnet.dwoss.search.api;
+
+import lombok.Value;
+
+/**
+ * Wrapper for a request.
+ * This class will be enhanced in the future.
+ *
+ * @author oliver.guenther
+ */
+@Value
+public class SearchRequest {
+
+    private final String search;
+
+}

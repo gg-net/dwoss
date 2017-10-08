@@ -29,8 +29,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.search.SearchPane;
-import eu.ggnet.dwoss.search.api.SearchResult;
+import eu.ggnet.dwoss.search.SearchCask;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.saft.core.Client;
 
@@ -40,45 +41,25 @@ import eu.ggnet.saft.core.Client;
  */
 public class SearchTryout {
 
-    private final static class Result implements SearchResult {
-
-        private final String shortDescription;
-
-        public Result(String shortDescription) {
-            this.shortDescription = shortDescription;
-        }
-
-        @Override
-        public String shortDescription() {
-            return shortDescription;
-        }
-
-        @Override
-        public String toString() {
-            return "Result{" + "shortDescription=" + shortDescription + '}';
-        }
-
-    }
-
     @Test
     public void runTryout() throws InterruptedException {
         Client.addSampleStub(Searcher.class, new Searcher() {
 
             private final Logger LOG = LoggerFactory.getLogger(Searcher.class);
 
-            private String activeSearch;
+            private SearchRequest activeSearch;
 
             private int count = 0;
 
             @Override
-            public void initSearch(String search) {
+            public void initSearch(SearchRequest search) {
                 LOG.info("Search inited with " + search + ", resetting count");
                 activeSearch = search;
                 count = 0;
             }
 
             @Override
-            public List<SearchResult> next() {
+            public List<ShortSearchResult> next() {
                 LOG.info("Next called (search={}, count={})", activeSearch, count);
                 // return with a window of 3 untill count >= 0;
                 if ( count >= 10 ) return Collections.EMPTY_LIST;
@@ -88,9 +69,9 @@ public class SearchTryout {
                     // Ignore
                 }
                 return Arrays.asList(
-                        new Result(activeSearch + " result " + (count++)),
-                        new Result(activeSearch + " result " + (count++)),
-                        new Result(activeSearch + " result " + (count++))
+                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch),
+                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch),
+                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch)
                 );
             }
 
@@ -112,7 +93,7 @@ public class SearchTryout {
         Platform.runLater(() -> {
             Stage stage = new Stage();
             stage.setTitle("TestSearch");
-            SearchPane search = new SearchPane();
+            SearchCask search = new SearchCask();
             Scene scene = new Scene(search, Color.ALICEBLUE);
             stage.setScene(scene);
             stage.setOnCloseRequest(e -> {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 GG-Net GmbH
+ * Copyright (C) 2017 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,8 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * The Public Search API.
- * All modules that what to be a supplier or consumer of searches need at least this package.
- */
 package eu.ggnet.dwoss.search.api;
+
+import lombok.AllArgsConstructor;
+import lombok.Value;
+
+/**
+ * The short result of a search.
+ *
+ * @author oliver.guenther
+ */
+@Value
+@AllArgsConstructor
+public class ShortSearchResult {
+
+    /**
+     * A global unique id identifying the source of global search result.
+     */
+    private final String sourceId;
+
+    /**
+     * A id which is unique in the source.
+     */
+    private final long id;
+
+    /**
+     * A short description of the result.
+     */
+    private final String shortDescription;
+
+}
