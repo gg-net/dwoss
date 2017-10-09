@@ -18,26 +18,28 @@ package eu.ggnet.dwoss.search.api;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
- * The short result of a search.
+ * Global Key to identify an entiy uniquely.
  *
  * @author oliver.guenther
  */
 @Value
-@AllArgsConstructor
-public class ShortSearchResult implements Serializable {
+public class GlobalKey implements Serializable {
 
     /**
-     * Global Key of the result.
+     * Identifies a application component. For now, we know which components exist in every final depolyment.
+     * If this changes in the future, we must convert the componets to some string representation.
      */
-    private final GlobalKey key;
+    public static enum Component {
+        CUSTOMER, UNIQUE_UNIT
+    }
+
+    private final Component component;
 
     /**
-     * A short description of the result.
+     * A unique database identifier.
      */
-    private final String shortDescription;
-
+    private final long id;
 }

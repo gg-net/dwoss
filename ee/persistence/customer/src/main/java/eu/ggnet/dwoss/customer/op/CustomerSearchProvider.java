@@ -25,6 +25,8 @@ import javax.inject.Inject;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.search.api.*;
 
+import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
+
 /**
  * Search Provider for Customers.
  *
@@ -32,8 +34,6 @@ import eu.ggnet.dwoss.search.api.*;
  */
 @Stateless
 public class CustomerSearchProvider implements SearchProvider {
-
-    private final static String SOURCE_ID = "CUSTOMER";
 
     @Inject
     private CustomerEao customerEao;
@@ -47,19 +47,19 @@ public class CustomerSearchProvider implements SearchProvider {
     @Override
     public List<ShortSearchResult> search(SearchRequest request, int start, int limit) {
         return customerEao.find(request.getSearch(), start, limit).stream().map((customer) -> {
-            return new ShortSearchResult(SOURCE_ID, customer.getId(), customer.toName());
+            return new ShortSearchResult(new GlobalKey(CUSTOMER, customer.getId()), customer.toName());
         }).collect(Collectors.toList());
     }
 
     @Override
-    public String details(ShortSearchResult preResult) {
+    public String details(GlobalKey key) {
         // TODO: How about some safty mesures.
-        return customerEao.findById(preResult.getId()).toHtml();
+        return customerEao.findById(key.getId()).toHtml();
     }
 
     @Override
-    public String getSourceId() {
-        return SOURCE_ID;
+    public GlobalKey.Component getSource() {
+        return GlobalKey.Component.CUSTOMER;
     }
 
 }

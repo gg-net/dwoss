@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.search.api;
 
+import java.io.Serializable;
+
 import lombok.Value;
 
 /**
@@ -25,7 +27,7 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
-public class SearchRequest {
+public class SearchRequest implements Serializable {
 
     private final String search;
 

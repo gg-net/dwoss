@@ -1,8 +1,9 @@
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.misc.op.itest;
 
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -12,28 +13,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.assist.Customers;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.search.api.*;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.op.Searcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
+ * Test the Searcher, very bad solution.
  *
- * @author Bastian Venz
+ * @author Oliver Günther
  */
 @RunWith(Arquillian.class)
-public class CustomerSearchIT extends ArquillianProjectArchive {
-
-    @Inject
-    private CustomerEao eao;
+public class SearcherOperationIT extends ArquillianProjectArchive {
 
     @Inject
     @Customers
@@ -48,9 +46,16 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
     @Inject
     private DefaultCustomerSalesdata salesData;
 
-    @Inject
-    private SearchProvider searchProvider;
+    @EJB
+    private Searcher searcher;
 
+    /**
+     * Very bad solution for the searcher test.
+     * This test works, cause the searcher is getting only the customer provider, and the provider is working as asserted. If we every change the customer
+     * search implementation or move the searcher in an extra package, this test must be reworked.
+     *
+     * @throws Exception
+     */
     @Test
     public void testLucenceSearch() throws Exception {
         OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", null, "Helle Strasse 22", "12345", "Musterhausen");
@@ -84,23 +89,22 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
 
         utx.commit();
 
-        List<Customer> find = eao.find("schlag*");
-
-        assertThat(find).as("Result of search").hasSize(1);
-        assertTrue("Only One element should be here: " + find, find.size() == 1);
-        find = eao.find("schlag");
-        assertTrue("No element should be here: " + find, find.isEmpty());
-        find = eao.find("schlagstock ltd");
-        assertTrue("One element should be here: " + find, find.size() == 1);
-
         // Testing Search via Provider
-        assertThat(searchProvider).as("Searchprovider").isNotNull().returns(GlobalKey.Component.CUSTOMER, e -> e.getSource());
+        assertThat(searcher).as("Searchprovider").isNotNull();
         SearchRequest req = new SearchRequest("schlag*");
-        int estimateMaxResults = searchProvider.estimateMaxResults(req);
-        assertThat(estimateMaxResults).as("estimated max results").isEqualTo(1);
+        searcher.initSearch(req);
 
-        List<ShortSearchResult> result = searchProvider.search(req, 0, 10);
-        assertThat(result).as("Searchresult").hasSize(1);
+        assertThat(searcher.estimateMaxResults()).as("Estimated max Results").isEqualTo(1);
+
+        List<ShortSearchResult> result = searcher.next();
+        assertThat(result).as("First Searchresult").hasSize(1);
+
+        result = searcher.next();
+        assertThat(result).as("Second Searchresult").isEmpty();
+
+        searcher.initSearch(req);
+        result = searcher.next();
+        assertThat(result).as("Searchresult after Reinit").hasSize(1);
     }
 
     private Customer convert(OldCustomer old) {

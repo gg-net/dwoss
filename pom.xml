@@ -683,10 +683,10 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>3.7.4</version>
             </dependency>
-            <dependency> <!-- For Indexer connection  -->
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4  -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
-                <version>5.6.1.Final</version>
+                <version>5.5.4.Final</version>
             </dependency>
             <dependency> <!-- Creating a extra MySQl Dialect in Util -->
                 <groupId>org.hibernate</groupId>

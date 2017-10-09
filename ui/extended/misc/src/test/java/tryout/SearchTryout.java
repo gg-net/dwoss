@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.SearchCask;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.api.GlobalKey.Component;
+import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.saft.core.Client;
 
@@ -69,9 +69,9 @@ public class SearchTryout {
                     // Ignore
                 }
                 return Arrays.asList(
-                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch),
-                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch),
-                        new ShortSearchResult("TRYOUT", count++, "A interesting result based on " + activeSearch)
+                        new ShortSearchResult(new GlobalKey(Component.CUSTOMER, count++), "A interesting result based on " + activeSearch),
+                        new ShortSearchResult(new GlobalKey(Component.CUSTOMER, count++), "A interesting result based on " + activeSearch),
+                        new ShortSearchResult(new GlobalKey(Component.CUSTOMER, count++), "A interesting result based on " + activeSearch)
                 );
             }
 

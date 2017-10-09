@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.misc.op.StockTaking;
+import eu.ggnet.dwoss.search.op.Searcher;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
@@ -43,6 +44,7 @@ public class ArquillianProjectArchive {
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
         Package projectPackage = StockTaking.class.getPackage();
+        Package projectPackage2 = Searcher.class.getPackage();
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
@@ -55,7 +57,7 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
-                .addPackages(true, projectPackage)
+                .addPackages(true, projectPackage, projectPackage2)
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration

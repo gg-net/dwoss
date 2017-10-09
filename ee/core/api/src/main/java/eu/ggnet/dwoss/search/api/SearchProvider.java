@@ -29,11 +29,11 @@ import javax.ejb.Local;
 public interface SearchProvider {
 
     /**
-     * Must return a constant string as id, identifying the source.
+     * Must return the component identifying the source, never null.
      *
-     * @return the source id
+     * @return the componente
      */
-    String getSourceId();
+    GlobalKey.Component getSource();
 
     /**
      * Returns an estimate result count based on the request.
@@ -57,9 +57,9 @@ public interface SearchProvider {
     /**
      * Return details based on the short result.
      *
-     * @param result the short result as parameter.
+     * @param key the global key as identifier for the details.
      * @return a string, hopefully html with details.
      */
-    String details(ShortSearchResult result);
+    String details(GlobalKey key);
 
 }
