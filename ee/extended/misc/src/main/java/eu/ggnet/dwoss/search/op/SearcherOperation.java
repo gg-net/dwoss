@@ -54,6 +54,7 @@ public class SearcherOperation implements Searcher {
 
     @Override
     public void initSearch(SearchRequest request) {
+        LOG.info("search inited with {}", request);
         this.request = request;
         this.start = 0;
         if ( isInvalidate() ) {
@@ -67,6 +68,7 @@ public class SearcherOperation implements Searcher {
     public List<ShortSearchResult> next() {
         if ( isInvalidate() ) return Collections.EMPTY_LIST;
         // Todo: For now I only support one provider.
+        LOG.debug("called next() activeProvider.search(request={}, start={}, LIMIT={})", request, start, LIMIT);
         List<ShortSearchResult> result = activeProvider.search(request, start, LIMIT);
         start += LIMIT;
         lastResultNotEmpty = (!result.isEmpty());

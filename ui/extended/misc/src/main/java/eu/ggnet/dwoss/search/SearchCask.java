@@ -30,6 +30,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
@@ -52,6 +54,8 @@ import static javafx.concurrent.Worker.State.READY;
 public class SearchCask extends BorderPane implements ClosedListener {
 
     private final Service<List<ShortSearchResult>> searchService;
+
+    private final Logger LOG = LoggerFactory.getLogger(SearchCask.class);
 
     public SearchCask() {
         // Creating and laying out the Ui
@@ -94,11 +98,13 @@ public class SearchCask extends BorderPane implements ClosedListener {
                     protected List<ShortSearchResult> call() throws Exception {
                         updateProgress(-1, -1);
                         if ( StringUtils.isEmpty(searchProperty.get()) ) return Collections.EMPTY_LIST; // Empty check.
+                        LOG.info("Searching {}", searchProperty.get());
                         searcher.initSearch(new SearchRequest(searchProperty.get()));
                         List<ShortSearchResult> last = Collections.EMPTY_LIST;
                         int done = 0;
                         while (!isCancelled() && searcher.hasNext()) {
                             last = searcher.next();
+                            LOG.debug("Search of {} found {}", searchProperty.get(), last);
                             done = done + last.size();
                             updateValue(last);
                             int estimate = searcher.estimateMaxResults();

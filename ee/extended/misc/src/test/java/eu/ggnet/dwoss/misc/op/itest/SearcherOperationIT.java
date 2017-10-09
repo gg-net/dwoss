@@ -95,6 +95,7 @@ public class SearcherOperationIT extends ArquillianProjectArchive {
         searcher.initSearch(req);
 
         assertThat(searcher.estimateMaxResults()).as("Estimated max Results").isEqualTo(1);
+        assertThat(searcher.hasNext()).isTrue();
 
         List<ShortSearchResult> result = searcher.next();
         assertThat(result).as("First Searchresult").hasSize(1);
