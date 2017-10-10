@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.search;
 
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
@@ -39,7 +40,7 @@ public class SearchListCell extends ListCell<ShortSearchResult> {
     protected void updateItem(ShortSearchResult item, boolean empty) {
         super.updateItem(item, empty);
         if ( item == null ) setText("");
-        else setText("[" + item.getKey().getComponent() + ":" + item.getKey().getId() + "] " + item.getShortDescription());
+        else setText(item.getShortDescription() + " [" + item.getKey().getComponent() + ":" + item.getKey().getId() + "]");
     }
 
 }

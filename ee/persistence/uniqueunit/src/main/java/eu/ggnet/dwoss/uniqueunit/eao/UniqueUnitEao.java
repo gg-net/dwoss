@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.uniqueunit.eao;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +147,41 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
         query.setParameter("search", search.replaceAll("\\*", "%"));
         List<Integer> ids = (List<Integer>)query.getResultList();
         return findByIds(ids);
+    }
+
+    /**
+     * Returns a list of UniqueUnits which match the search string.
+     *
+     * @param search the search string, may start or end with '*' as wildcard, may not be null
+     * @param start  the start of the result
+     * @param limit  the limit of the result
+     * @return a list of UniqueUnits which match the search string.
+     */
+    // TODO: Remove Copypast
+    public List<UniqueUnit> find(String search, int start, int limit) {
+        List<UniqueUnit> result = Collections.EMPTY_LIST;
+        if ( search == null ) return result;
+        // TODO: Replace native Query
+        Query query = em.createNativeQuery("SELECT a.id FROM UniqueUnit as a join UniqueUnit_identifiers as b on a.id = b.UniqueUnit_id where b.identifiers like :search");
+        query.setParameter("search", search.replaceAll("\\*", "%"));
+        query.setFirstResult(start);
+        query.setMaxResults(limit);
+        List<Integer> ids = (List<Integer>)query.getResultList();
+        return findByIds(ids);
+    }
+
+    /**
+     * Count the UniqueUnit, which would match the search string.
+     *
+     * @param search the search string.
+     * @return the amount of units.
+     */
+    public int countFind(String search) {
+        if ( StringUtils.isBlank(search) ) return 0;
+        // TODO: Replace native Query
+        Query query = em.createNativeQuery("SELECT count(a.id) FROM UniqueUnit as a join UniqueUnit_identifiers as b on a.id = b.UniqueUnit_id where b.identifiers like :search");
+        query.setParameter("search", search.replaceAll("\\*", "%"));
+        return ((BigInteger)query.getSingleResult()).intValue();
     }
 
     /**

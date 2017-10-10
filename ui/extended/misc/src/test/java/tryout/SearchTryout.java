@@ -64,10 +64,12 @@ public class SearchTryout {
                 LOG.info("Next called (search={}, count={})", activeSearch, count);
                 // return with a window of 3 untill count >= 0;
                 if ( count >= 10 ) return Collections.EMPTY_LIST;
-                try {
-                    Thread.sleep(2000); // Intensive search
-                } catch (InterruptedException ex) {
-                    // Ignore
+                if ( count > 0 ) {
+                    try {
+                        Thread.sleep(1000); // Intensive search
+                    } catch (InterruptedException ex) {
+                        // Ignore
+                    }
                 }
                 return Arrays.asList(
                         new ShortSearchResult(new GlobalKey(Component.CUSTOMER, count++), "A interesting result based on " + activeSearch),

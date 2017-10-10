@@ -31,6 +31,8 @@ import eu.ggnet.dwoss.discover.Discovery;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.RemoteLookup;
 
+import lombok.*;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -39,6 +41,17 @@ import static java.util.Objects.requireNonNull;
  * @author oliver.guenther
  */
 public class WildflyLookup implements RemoteLookup {
+
+    @RequiredArgsConstructor
+    @Getter
+    @EqualsAndHashCode(of = "key")
+    private static class KeyEquals {
+
+        private final String key;
+
+        private final String value;
+
+    }
 
     private final static Logger L = LoggerFactory.getLogger(WildflyLookup.class);
 
@@ -93,7 +106,9 @@ public class WildflyLookup implements RemoteLookup {
 
         namesAndLookup = names.stream()
                 .filter(n -> n.contains("!"))
-                .collect(Collectors.toMap(n -> n.split("!")[1], n -> "ejb:/" + APP + "//" + n));
+                .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + APP + "//" + n))
+                .distinct() // Removes posible multiple implementations. If these exist in the JNDI tree, we can ignore them, as we discover via Interface.
+                .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
         if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
 
 //        namesAndLookup = new HashMap<>();

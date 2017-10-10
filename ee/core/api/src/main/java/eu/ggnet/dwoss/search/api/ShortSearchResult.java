@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.search.api;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 /**
@@ -27,7 +26,6 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
-@AllArgsConstructor
 public class ShortSearchResult implements Serializable {
 
     /**

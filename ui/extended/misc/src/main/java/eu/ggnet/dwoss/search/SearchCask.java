@@ -41,6 +41,7 @@ import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.fx.FxSaft;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
@@ -156,7 +157,10 @@ public class SearchCask extends BorderPane implements ClosedListener {
 
     @Override
     public void closed() {
-        if ( searchService != null && searchService.isRunning() ) searchService.cancel();
+        if ( searchService != null ) FxSaft.dispatch(() -> {
+                if ( searchService.isRunning() ) searchService.cancel();
+                return null;
+            });
     }
 
     // TODO: optional on hide: pause search

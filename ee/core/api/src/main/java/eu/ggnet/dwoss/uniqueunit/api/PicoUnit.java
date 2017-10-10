@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api;
 
-import eu.ggnet.dwoss.search.api.SearchResult;
 import eu.ggnet.saft.api.ui.IdSupplier;
 
 import lombok.Value;
@@ -27,13 +26,12 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
-public class PicoUnit implements SearchResult, IdSupplier {
+public class PicoUnit implements IdSupplier {
 
     public final int uniqueUnitId;
 
     public final String shortDescription;
 
-    @Override
     public String shortDescription() {
         return shortDescription;
     }

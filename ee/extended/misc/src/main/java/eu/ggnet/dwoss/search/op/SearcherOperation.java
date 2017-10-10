@@ -16,8 +16,7 @@
  */
 package eu.ggnet.dwoss.search.op;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import javax.ejb.Stateful;
 import javax.enterprise.inject.Instance;
@@ -44,7 +43,7 @@ public class SearcherOperation implements Searcher {
     @Inject
     private Instance<SearchProvider> providers;
 
-    private SearchProvider activeProvider;
+    private final List<SearchProvider> activeProviders = new ArrayList<>();
 
     private SearchRequest request = null;
 
@@ -52,25 +51,39 @@ public class SearcherOperation implements Searcher {
 
     private boolean lastResultNotEmpty = false;
 
+    private int estimatedMax = 0;
+
     @Override
     public void initSearch(SearchRequest request) {
         LOG.info("search inited with {}", request);
         this.request = request;
         this.start = 0;
+        this.estimatedMax = 0;
+        activeProviders.clear();
         if ( isInvalidate() ) {
             this.lastResultNotEmpty = false;
         } else {
             this.lastResultNotEmpty = true;
+            for (SearchProvider provider : providers) {
+                // TODO: If we add the component to the filterrequest, remove them here.
+                activeProviders.add(provider);
+            }
         }
     }
 
     @Override
     public List<ShortSearchResult> next() {
-        if ( isInvalidate() ) return Collections.EMPTY_LIST;
-        // Todo: For now I only support one provider.
-        LOG.debug("called next() activeProvider.search(request={}, start={}, LIMIT={})", request, start, LIMIT);
-        List<ShortSearchResult> result = activeProvider.search(request, start, LIMIT);
+        if ( isInvalidate() || activeProviders.isEmpty() ) return Collections.EMPTY_LIST;
+        LOG.debug("called next() activeProvider(component={}).search(request={}, start={}, LIMIT={})",
+                activeProviders.get(0).getSource(), request, start, LIMIT);
+        List<ShortSearchResult> result = activeProviders.get(0).search(request, start, LIMIT);
         start += LIMIT;
+        while (result.isEmpty() && !activeProviders.isEmpty()) { // change providers till one returns a result ore no providers are there.
+            activeProviders.remove(0);
+            // The If is needed  if remove has tacken the last one. Wihle will terminate after that.
+            if ( !activeProviders.isEmpty() ) result = activeProviders.get(0).search(request, 0, LIMIT);
+            start = LIMIT;
+        }
         lastResultNotEmpty = (!result.isEmpty());
         return result;
     }
@@ -82,32 +95,34 @@ public class SearcherOperation implements Searcher {
 
     @Override
     public int estimateMaxResults() {
+        // TODO: For now, we only call estimatedMax once. If the implementations ever get undeterministic, we have to optimize that.
         if ( isInvalidate() ) return 0;
-        return activeProvider.estimateMaxResults(request);
+        if ( estimatedMax > 0 ) return estimatedMax;
+        for (SearchProvider provider : activeProviders) {
+            estimatedMax += provider.estimateMaxResults(request);
+        }
+        return estimatedMax;
     }
 
     private boolean isInvalidate() {
-        init();
-        if ( activeProvider == null ) return true;
         if ( request == null ) return true;
         if ( StringUtils.isBlank(request.getSearch()) ) return true;
-        return false;
-    }
-
-    private void init() {
-        if ( activeProvider != null ) return; // TODO: For now I only use the first one.
         if ( providers.isUnsatisfied() ) {
+            // TODO: Verifiy, that isUnsatisfied doesen't take too long.
             LOG.warn("No SearchProviders are found, but SearchOperation.next was called");
-        } else {
-            activeProvider = providers.iterator().next(); // TODO: For now I only use the first one.
+            return true;
         }
+        return false;
     }
 
     @Override
     public String details(GlobalKey key) {
+        if ( key == null ) return "";
         if ( isInvalidate() ) return "";
-        // TODO: for now we use only the first provider.
-        return activeProvider.details(key);
+        for (SearchProvider provider : providers) {
+            if ( provider.getSource() == key.getComponent() ) return provider.details(key);
+        }
+        return "";
     }
 
 }
