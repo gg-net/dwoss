@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +26,9 @@ import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.api.IsStateful;
 import eu.ggnet.dwoss.discover.Discovery;
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.RemoteLookup;
 
 import static java.util.Objects.requireNonNull;
@@ -143,6 +143,10 @@ public class WildflyLookup implements RemoteLookup {
             L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
             return null;
         }
+        if ( clazz.isAnnotationPresent(IsStateful.class) ) {
+            namespace += "?stateful";
+        }
+
         L.debug("Trying to lookup {}", namespace);
         try {
             T t = (T)context().lookup(namespace);

@@ -103,4 +103,11 @@ public class SearcherOperation implements Searcher {
         }
     }
 
+    @Override
+    public String details(GlobalKey key) {
+        if ( isInvalidate() ) return "";
+        // TODO: for now we use only the first provider.
+        return activeProvider.details(key);
+    }
+
 }

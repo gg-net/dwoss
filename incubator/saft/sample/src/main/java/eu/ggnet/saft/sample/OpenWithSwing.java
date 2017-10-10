@@ -1,24 +1,16 @@
 package eu.ggnet.saft.sample;
 
-import eu.ggnet.saft.sample.support.SimplePane;
-import eu.ggnet.saft.sample.support.BasicApplicationController;
-import eu.ggnet.saft.sample.support.PanelWithSelfCloser;
-import eu.ggnet.saft.sample.support.UnitViewer;
-import eu.ggnet.saft.sample.support.MainPanelAddButtons;
-import eu.ggnet.saft.sample.support.PanelAsFrame;
-import eu.ggnet.saft.sample.support.PaneAsFrameWithSelfCloser;
-import eu.ggnet.saft.sample.support.PaneConsumesIdSupplier;
-import eu.ggnet.saft.sample.support.SimpleFxmlController;
-import eu.ggnet.saft.sample.support.PanelOnceDialog;
-import eu.ggnet.saft.sample.support.PaneAsFrame;
-
 import java.util.Random;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import javafx.application.Platform;
 
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.sample.support.*;
 
 import lombok.Value;
 
@@ -87,7 +79,7 @@ public class OpenWithSwing {
             menu = new JMenu("JavaFxDialogs");
 
             b = new JMenuItem("Once");
-            b.addActionListener((e) -> Ui.exec(Ui.openFx(SimplePane.class)));
+            b.addActionListener((e) -> Ui.openFx(SimplePane.class).exec());
             menu.add(b);
 
             b = new JMenuItem("Mutiple 1 with Title");
@@ -98,6 +90,10 @@ public class OpenWithSwing {
             b.addActionListener((e) -> Ui.exec(Ui.openFx(SimplePane.class, "2")));
             menu.add(b);
 
+            b = new JMenuItem("HtmlPane");
+            b.addActionListener((e) -> Ui.call(() -> "<h1>Ueberschrift</h1>").openFx(HtmlPane.class).exec());
+            menu.add(b);
+
             b = new JMenuItem("Once Fxml");
             b.addActionListener((e) -> Ui.exec(Ui.openFxml(SimpleFxmlController.class)));
             menu.add(b);
@@ -105,6 +101,7 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Consumer with Random Id Supplier");
             b.addActionListener((e) -> {
+                System.out.println("Bla:" + Platform.isFxApplicationThread());
                 Ui.call(() -> new S(NAMES[R.nextInt(NAMES.length)])).openFx(PaneConsumesIdSupplier.class).exec();
             });
             menu.add(b);

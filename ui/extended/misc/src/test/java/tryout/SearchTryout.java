@@ -17,11 +17,10 @@
 package tryout;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -34,6 +33,8 @@ import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.fx.FxSaft;
 
 /**
  *
@@ -84,25 +85,27 @@ public class SearchTryout {
             public int estimateMaxResults() {
                 return 10;
             }
+
+            @Override
+            public String details(GlobalKey key) {
+                return "<b> Details of " + key + "</b>";
+            }
         });
+        JFXPanel panel = new JFXPanel();
+        panel.setScene(new Scene(new Label("UiCore Main Panel")));
+        panel.setSize(100, 100);
 
-        new JFXPanel();    // Implicit start the platform
+        UiCore.startSwing(() -> panel);
 
-        CountDownLatch count = new CountDownLatch(1);
-
-        Platform.runLater(() -> {
+        FxSaft.dispatch(() -> {
             Stage stage = new Stage();
             stage.setTitle("TestSearch");
             SearchCask search = new SearchCask();
             Scene scene = new Scene(search, Color.ALICEBLUE);
             stage.setScene(scene);
-            stage.setOnCloseRequest(e -> {
-                count.countDown();
-            });
-            stage.show();
+            stage.showAndWait();
+            return null;
         });
-
-        count.await();
 
     }
 }

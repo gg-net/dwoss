@@ -27,6 +27,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,10 +37,10 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
+import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
@@ -57,7 +58,10 @@ public class SearchCask extends BorderPane implements ClosedListener {
 
     private final Logger LOG = LoggerFactory.getLogger(SearchCask.class);
 
+    private final Searcher searcher;
+
     public SearchCask() {
+        searcher = Client.lookup(Searcher.class);
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
         ObservableList<ShortSearchResult> resultProperty = FXCollections.observableArrayList();
@@ -65,6 +69,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
         TextField searchField = new TextField();
         Button searchButton = new Button("Suchen");
         ListView<ShortSearchResult> resultListView = new ListView<>();
+        resultListView.setCellFactory(new SearchListCell.Factory());
 
         ProgressBar progressBar = new ProgressBar();
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
@@ -87,11 +92,8 @@ public class SearchCask extends BorderPane implements ClosedListener {
         // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
         searchService = new Service<List<ShortSearchResult>>() {
 
-            private Searcher searcher;
-
             @Override
             protected Task<List<ShortSearchResult>> createTask() {
-                if ( searcher == null ) searcher = Client.lookup(Searcher.class);
 
                 return new Task<List<ShortSearchResult>>() {
                     @Override
@@ -135,6 +137,14 @@ public class SearchCask extends BorderPane implements ClosedListener {
         searchButton.setOnAction((ActionEvent event) -> search());
         searchField.setOnKeyPressed((ke) -> {
             if ( ke.getCode() == KeyCode.ENTER ) search();
+        });
+
+        resultListView.setOnMouseClicked((MouseEvent click) -> {
+            if ( click.getClickCount() == 2 ) {
+                ShortSearchResult selectedItem = resultListView.getSelectionModel().getSelectedItem();
+                Ui.parent(SearchCask.this)
+                        .call(() -> searcher.details(selectedItem.getKey())).openFx(HtmlPane.class, selectedItem.getKey().toString()).exec();
+            }
         });
 
     }

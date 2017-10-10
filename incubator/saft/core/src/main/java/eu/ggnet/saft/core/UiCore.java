@@ -69,7 +69,8 @@ public class UiCore {
      * @param w the worker to be observed.
      */
     public static void observeProgress(Worker<?> w) {
-        if ( w != null ) BACKGROUND_ACTIVITY.bind(w.runningProperty()); //Hint: Binds are weak, so should not hinder the gc to work.
+        if ( w == null ) return;
+        w.runningProperty().addListener((ob, o, n) -> BACKGROUND_ACTIVITY.setValue(n));
     }
 
     /**

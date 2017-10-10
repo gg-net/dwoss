@@ -20,14 +20,15 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.search.api.SearchRequest;
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.api.IsStateful;
+import eu.ggnet.dwoss.search.api.*;
 
 /**
  * A statfull searcher for all connected modules.
  *
  * @author oliver.guenther
  */
+@IsStateful
 @Remote
 public interface Searcher {
 
@@ -63,4 +64,11 @@ public interface Searcher {
      */
     int estimateMaxResults();
 
+    /**
+     * Returns a detailed possible Html result
+     *
+     * @param key the global key
+     * @return a detailed possible Html result
+     */
+    String details(GlobalKey key);
 }
