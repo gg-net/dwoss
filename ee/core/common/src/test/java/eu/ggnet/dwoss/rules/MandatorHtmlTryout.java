@@ -17,10 +17,10 @@
 package eu.ggnet.dwoss.rules;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+import java.util.*;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -42,8 +42,10 @@ import eu.ggnet.dwoss.mandator.api.value.partial.*;
  */
 public class MandatorHtmlTryout {
 
+    private boolean complete = false;
+
     @Test
-    public void tryout() throws InterruptedException, InvocationTargetException {
+    public void tryout() throws InterruptedException, InvocationTargetException, MalformedURLException {
 
         Company company = Company.builder()
                 .name("Example GmbH")
@@ -71,11 +73,33 @@ public class MandatorHtmlTryout {
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
                 new DocumentIdentifierGeneratorConfiguration("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
+        String defaultMailSignature = "Mail Signatur \n Test Test \t Senior System Requirements Specilist \n  Mobiel: 0174 123 45 67 \n  Phone; 040 123 45 67 \n Impressums: xxxx";
+        UrlLocation mailTemplateLocation = new UrlLocation(new URL("http://example.com/"));
+
+
+        MandatorMailAttachment attachment1 = MandatorMailAttachment.builder()
+                .attachmentName("NewFile.txt")
+                .attachmentDescription("txt file")
+                .attachmentData(mailTemplateLocation)
+                .build();
+        MandatorMailAttachment attachment2 = MandatorMailAttachment.builder()
+                .attachmentName("NewFile.docx")
+                .attachmentDescription("Microsoft Word Document")
+                .attachmentData(mailTemplateLocation)
+                .build();
+
+        Set<MandatorMailAttachment> defaultMailAttachment = new HashSet<>();
+        defaultMailAttachment.add(attachment1);
+        defaultMailAttachment.add(attachment2);
+
         Mandator mandator = Mandator.builder()
                 .smtpConfiguration(smtpConfiguration)
                 .company(company)
                 .dossierPrefix("DW")
                 .documentIntermix(documentIntermix)
+                .defaultMailSignature(defaultMailSignature)
+                .mailTemplateLocation(mailTemplateLocation)
+                .defaultMailAttachment(defaultMailAttachment)
                 .documentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
                 .receiptMode(TradeName.ACER)
                 .applyDefaultChannelOnRollIn(false)
@@ -84,7 +108,6 @@ public class MandatorHtmlTryout {
                 .build();
 
         new JFXPanel(); // Implicit start the platform.
-        CountDownLatch latch = new CountDownLatch(1);
 
         Platform.runLater(() -> {
             Stage stage = new Stage();
@@ -94,13 +117,13 @@ public class MandatorHtmlTryout {
             BorderPane p = new BorderPane(view);
             Scene scene = new Scene(p, Color.ALICEBLUE);
             stage.setScene(scene);
-            stage.setOnCloseRequest(e -> {
-                latch.countDown();
-            });
-            stage.show();
-        });
+            stage.showAndWait();
 
-        latch.await();
+            complete = true;
+        });
+        while (!complete) {
+            Thread.sleep(500);
+        }
     }
 
 }

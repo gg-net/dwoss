@@ -17,8 +17,7 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -143,15 +142,71 @@ public class Mandator implements Serializable {
         sb.append(smtpConfiguration.toHtml());
         sb.append("</td>");
         sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<td colspan=\"2\"><p><b>DocumentIntermix</b></p>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Receipt: </b>");
+        sb.append(receiptMode);
+        sb.append("</p></td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Dossier Prefix: </b>");
+        sb.append(dossierPrefix);
+        sb.append("</p>");
+        sb.append("<p><b>DocumentIntermix</b></p>");
         sb.append(documentIntermix.toHtml());
-        sb.append("</td>");
-        sb.append("</tr>");
-        sb.append("<tr>");
-        sb.append("<td colspan=\"2\"><p><b>More to Come</b></p><p>Es fehlen noch Parameter</p>");
-        sb.append("</td>");
-        sb.append("</tr><table>");
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>DefaultMailSignature</b></p>");
+        sb.append(defaultMailSignature);
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Mail get saved  here:</b></p>");
+        sb.append(mailTemplateLocation.getLocation());
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>ApplyDefaultChannelOnRollIn:</b></p>");
+        sb.append(applyDefaultChannelOnRollIn);
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>matchCode:</b></p>");
+        sb.append(matchCode);
+        sb.append("</td></tr>");
+        
+        sb.append("<tr><td colspan=\"2\"><p><b>The Bug Report Mail:</b></p>");
+        sb.append(bugMail);
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Mail Attachment:</b></p>");
+        if ( defaultMailAttachment.isEmpty() ) {
+            sb.append("<b>No Attachment</b>");
+        } else {
+            Iterator<MandatorMailAttachment> it = defaultMailAttachment.iterator();
+            sb.append("<ul>");
+            while (it.hasNext()) {
+                MandatorMailAttachment attachment = it.next();
+                sb.append("<li>");
+                sb.append(attachment.toHtml());
+                sb.append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Document Identifier Generator Configurations:</b></p>");
+        if ( documentIdentifierGeneratorConfigurations.isEmpty() ) {
+            sb.append("<b>No Document Identifier Generator Configuration</b>");
+        } else {
+            documentIdentifierGeneratorConfigurations.forEach((DocumentType, DocumentIdentifierGeneratorConfiguration) -> {
+                sb.append("<ul>");
+                sb.append("<li>");
+                sb.append(DocumentType.toHtml());
+                sb.append(DocumentIdentifierGeneratorConfiguration.toHtml());
+                sb.append("</li>");
+                sb.append("</ul>");
+            });
+        }
+
+        sb.append("</td></tr>");
+
+        sb.append("<table>");
         return sb.toString();
     }
 

@@ -94,4 +94,76 @@ public class DocumentIdentifierGeneratorConfiguration implements Serializable {
      * The Format for the counter.
      */
     private final DecimalFormat counterFormat;
+
+    /**
+     * ToString HTML representation.
+     *
+     * @return HTML view of the DocumentIdentifierGeneratorConfiguration.
+     */
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("DocumentIdentifierGeneratorConfiguration: ");
+        sb.append("<ul>");
+        sb.append("<li>");
+        sb.append("<b>VAR_PREFIX: </b>");
+        sb.append(VAR_PREFIX);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>VAR_COUNTER: </b>");
+        sb.append(VAR_COUNTER);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>Pattern: </b>");
+        sb.append(pattern);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>This PrefixTypes are available: </b>");
+        sb.append("<ul>");
+        for (PrefixType value : PrefixType.values()) {
+            sb.append("<li>");
+            sb.append(value.generate());
+            sb.append("</li>");
+        }
+        sb.append("</ul>");
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>Set PrefixType: </b>");
+        sb.append(prefixType.generate());
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>counterFormat: </b>");
+        sb.append(counterFormat);
+        sb.append("</li>");
+        sb.append("</ul>");
+
+        return sb.toString();
+    }
+
+    /**
+     * toHtmlSingleLine HTML representation.
+     *
+     * @return HTML on a Singleline view of the DocumentIdentifierGeneratorConfiguration.
+     */
+    public String toHtmlSingleLine() {
+        StringBuilder sb = new StringBuilder("DocumentIdentifierGeneratorConfiguration: ");
+        sb.append("<ul>");
+        
+        sb.append("<li>");
+        sb.append("<b>VAR_PREFIX: </b>");
+        sb.append(VAR_PREFIX);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>VAR_COUNTER: </b>");
+        sb.append(VAR_COUNTER);
+        sb.append("</li>");
+
+        sb.append("</ul>");
+
+        return sb.toString();
+    }
 }
