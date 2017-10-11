@@ -214,7 +214,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Getter
     private int optLock;
 
-
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private final Set<ReportLine> refrences = new HashSet<>();
 
@@ -1063,6 +1062,232 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      */
     public String toSimple() {
         return "ReportLine{" + "id=" + id + ", refurbishId=" + refurbishId + ", reportingDate=" + reportingDate + ", mfgDate=" + mfgDate + '}';
+    }
+
+    /**
+     * ToString HTML representation.
+     *
+     * @return HTML view of the ReportLine.
+     */
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("ReportLine: ");
+        sb.append("<ul>");
+        sb.append("<li>");
+        sb.append("<b>id: </b>");
+        sb.append(id);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>reportingDate: </b>");
+        sb.append(reportingDate);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>dossierId: </b>");
+        sb.append(dossierId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>dossierIdentifier: </b>");
+        sb.append(dossierIdentifier);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>documentId: </b>");
+        sb.append(documentId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>documentIdentifier: </b>");
+        sb.append(documentIdentifier);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>documentType: </b>");
+        sb.append(documentType);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>workflowStatus: </b>");
+        sb.append(workflowStatus);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>amount: </b>");
+        sb.append(amount);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>name: </b>");
+        sb.append(name);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>description: </b>");
+        sb.append(description);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>positionType: </b>");
+        sb.append(positionType);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>positionTypeName: </b>");
+        sb.append(positionTypeName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>price: </b>");
+        sb.append(price);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>tax: </b>");
+        sb.append(tax);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>afterTaxPrice: </b>");
+        sb.append(afterTaxPrice);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>bookingAccount: </b>");
+        sb.append(bookingAccount);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>customerId: </b>");
+        sb.append(customerId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>invoiceAddress: </b>");
+        sb.append(invoiceAddress);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productGroup: </b>");
+        sb.append(productGroup);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productGroupName: </b>");
+        sb.append(productGroupName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productBrand: </b>");
+        sb.append(productBrand);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productBrandName: </b>");
+        sb.append(productBrandName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productName: </b>");
+        sb.append(productName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>partNo: </b>");
+        sb.append(partNo);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>manufacturerCostPrice: </b>");
+        sb.append(manufacturerCostPrice);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>productId: </b>");
+        sb.append(productId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>refurbishId: </b>");
+        sb.append(refurbishId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>serial: </b>");
+        sb.append(serial);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>mfgDate: </b>");
+        sb.append(mfgDate);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>uniqueUnitId: </b>");
+        sb.append(uniqueUnitId);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>marginPercentage: </b>");
+        sb.append(marginPercentage);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>purchasePrice: </b>");
+        sb.append(purchasePrice);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>salesChannel: </b>");
+        sb.append(salesChannel);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>salesChannelName: </b>");
+        sb.append(salesChannelName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>contractor: </b>");
+        sb.append(contractor);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>contractorName: </b>");
+        sb.append(contractorName);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>contractorPartNo: </b>");
+        sb.append(contractorPartNo);
+        sb.append("</li>");
+
+        sb.append("<li>");
+        sb.append("<b>contractorReferencePrice: </b>");
+        sb.append(contractorReferencePrice);
+        sb.append("</li>");
+
+        sb.append("</ul>");
+
+        return sb.toString();
+    }
+
+    /**
+     * toHtmlSingleLine HTML representation.
+     *
+     * @return HTML on a Singleline view of the ReportLine.
+     */
+    public String toHtmlSingleLine() {
+        return "<ul><li>ReportLine{" + "</li><b><li>id: </li></b>" + id + "</li><b><li>, reportingDate: </li></b>" + reportingDate + "</li><b><li>, documentId: </li></b>" + documentId 
+                + "</li><b><li>, documentType: </li></b>" + documentType
+                + "</li><b><li>, workflowStatus: </li></b>" + workflowStatus + "</li><b><li>, amount: </li></b>" + amount + "</li><b><li>, name: </li></b>" + name 
+                + "</li><b><li>, description: </li></b>" + description
+                + "</li><b><li>, positionType: </li></b>" + positionType + "</li><b><li>, price: </li></b>" + price  + "</li><b><li>, manufacturerCostPrice: </li></b>" + manufacturerCostPrice 
+                + "</li><b><li>, productId: </li></b>" + productId + "</li><b><li>, refurbishId: </li></b>" + refurbishId 
+                + "</li><b><li>, serial: </li></b>" + serial + "</li><b><li>, uniqueUnitId: </li></b>" + uniqueUnitId + "</li><b><li>, purchasePrice: </li></b>" + purchasePrice
+                + "</li><b><li>, salesChannelName: </li></b>" + salesChannelName + "</li><b><li>, contractorName: </li></b>" + contractorName 
+                +"</li><b><li>, contractorReferencePrice: </li></b>" + contractorReferencePrice + "</ul>";
+
     }
 
 }

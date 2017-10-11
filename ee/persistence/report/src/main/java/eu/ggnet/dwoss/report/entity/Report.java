@@ -315,4 +315,58 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
         return "Report{" + "id=" + id + ", name=" + name + ", type=" + type + ", typeName=" + typeName + ", startingDate=" + startingDate + ", endingDate=" + endingDate + ", comment=" + comment + '}';
     }
 
+    /**
+     * ToString HTML representation.
+     *
+     * @return HTML view of the Report.
+     */
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder("<table>");
+        sb.append("<tr>");
+        sb.append("<td><p><b>Report</b></p>");
+        sb.append("<b>id: </b>");
+        sb.append(id);
+        sb.append("</td>");
+        sb.append("<td><p><b>Name</b></p>");
+        sb.append(name);
+        sb.append("</td>");
+        sb.append("</tr>");
+
+        sb.append("<tr>");
+        sb.append("<td><p><b>Type:</b></p>");
+        sb.append(type);
+        sb.append("<td><p><b>Typename</b></p>");
+        sb.append(typeName);
+        sb.append("</td>");
+        sb.append("</td></tr>");
+
+        sb.append("<tr>");
+        sb.append("<td><p><b>StartingDate:</b></p>");
+        sb.append(startingDate);
+        sb.append("<td><p><b>EndingDate</b></p>");
+        sb.append(endingDate);
+        sb.append("</td>");
+        sb.append("</td></tr>");
+
+        sb.append("<tr>");
+        sb.append("<td colspan=\"2\"><p><b>comment:</b></p>");
+        sb.append(comment);
+        sb.append("</td></tr>");
+
+        sb.append("</ul>");
+
+        return sb.toString();
+
+    }
+
+    /**
+     * toHtmlSingleLine HTML representation.
+     *
+     * @return HTML on a Singleline view of the Report.
+     */
+    public String toHtmlSingleLine() {
+        return "Report{" + "id:" + id + ", Name:" + name + ", Type:" + type + ", Date:" + startingDate + " - " + endingDate + '}';
+
+    }
+
 }
