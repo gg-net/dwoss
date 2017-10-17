@@ -17,14 +17,13 @@
 package eu.ggnet.dwoss.util;
 
 /**
+ * A simple Interface to return a note from any object.
+ * This interface should no longer be used, as there are better ways to perform the intended task.
+ * But it doesn't hurt anyone, and it might be remove if we ever redesign the receipt ui.
  *
  * @author pascal.perau
- * @deprecated no longer needed. See https://jira.cybertron.global/browse/DW-1154
  */
-// TODO: Doofer Name
-@Deprecated
 public interface INoteModel {
 
-    @Deprecated
     public String getNote();
 }

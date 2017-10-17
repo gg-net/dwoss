@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,14 @@
 package eu.ggnet.dwoss.spec.assist.gen;
 
 import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
 import javax.xml.bind.JAXB;
 
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.entity.xml.SpecsRoot;
+import eu.ggnet.dwoss.spec.format.SpecFormater;
 
 /**
  * SpecGenerator, creates instances without changing any persistence layer.
@@ -104,7 +106,33 @@ public class SpecGenerator {
     public static void main(String[] args) {
         SpecGenerator g = new SpecGenerator();
         for (int i = 0; i < 10; i++) {
-            System.out.println(g.makeSpec());
+            ProductSpec spec = g.makeSpec();
+            System.out.println(spec);
         }
+        ProductSpec spec = g.makeSpec();
+        System.out.println();
+        System.out.println("toName");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toName(spec));
+        System.out.println();
+        System.out.println("toDetailedName");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toDetailedName(spec));
+        System.out.println();
+        System.out.println("toSingleLine");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toSingleLine(spec));
+        System.out.println();
+        System.out.println("toSingleHtmlLine");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toSingleHtmlLine(spec));
+        System.out.println();
+        System.out.println("toHtml");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toHtml(spec));
+        System.out.println();
+        System.out.println("toSource");
+        System.out.println("------------");
+        System.out.println(SpecFormater.toSource(spec));
     }
 }
