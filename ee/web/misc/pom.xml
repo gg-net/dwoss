@@ -55,7 +55,7 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>tryout</id>
@@ -65,11 +65,11 @@
                     <artifactId>dwoss-mandator-sample</artifactId>
                     <version>${project.version}</version>
                 </dependency>
-                <dependency>
+                <!--                <dependency>
                     <groupId>${project.groupId}</groupId>
                     <artifactId>dwoss-mandator-sample-datasource</artifactId>
                     <version>${project.version}</version>
-                </dependency>
+                </dependency>-->
             </dependencies>
         </profile>
     </profiles>

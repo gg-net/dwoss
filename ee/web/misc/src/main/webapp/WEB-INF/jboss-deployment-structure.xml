@@ -1,8 +1,8 @@
-<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
 
     <deployment>
         <dependencies>
-            <module name="com.h2database.h2" /> <!-- Enableing the H2 in memory database used in tests -->
             <system export="true"> <!-- Allowing JavaFX classes on the server side, used in Rights entities -->
                 <paths>
                     <path name="javafx/beans/property"/>
