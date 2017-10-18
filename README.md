@@ -47,8 +47,9 @@ Benötigt wird:
 Checkout and Build:
 
  1. https://github.com/gg-net/dwoss.git
- 2. Im Hauptverzeichniss: mvn clean install -Pdevelopment
- 3. Unter assembly/server: mvn clean install tomee:run -Pserver-sample,tomee-1.7.0
+ 2. Im Hauptverzeichniss: mvn clean install
+ 3. Unter assembly/server: mvn clean install -Pserver-sample
+ -- Deploy on wildfly10
  4. Unter assembly/client-remote: mvn clean install jfx:run -Pclient-sample
 
 User admin/admin hat alle Rechte, User user/user hat minimale Rechte.
@@ -57,14 +58,10 @@ Projekt Resourcen
 -----------------
 
 Die meisten Information werden in der Java Dokumentation verarbeitet.
-**[Project und Java Dokumentation](http://deutschewarenwirtschaft.de/site/apidocs/index.html)**
 
 Weitere relevante Systeme:
 
-- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS)
-- Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
 - Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
-- Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)
 
 English version
 ===============
@@ -78,11 +75,7 @@ Project Resources
 -----------------
 
 Most of the Project information are merged into the javadoc.
-**[Project und Java Documentation](http://deutschewarenwirtschaft.de/site/apidocs/index.html)**
 
 Also sources of information:
 
-- Wiki: [GG-Net Confluence](https://confluence.cybertron.global/display/DWOSS)
-- Blog: [GG-Net Blog](https://confluence.cybertron.global/display/DWOSS/Deutsche+Warenwirtschaft+Blog)
 - Issue Tracker: [GG-Net Jira](https://jira.cybertron.global)
-- Build Server: [GG-Net Bamboo](https://bamboo.cybertron.global)

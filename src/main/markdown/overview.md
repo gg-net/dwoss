@@ -1,22 +1,15 @@
 Deutsche Warenwirtschaft Open Source
 ====================================
 
-Most of the Development and User Documentation starts here. We are trying to put
+Most of the development and user documentation starts here. We are trying to put
 all information into the java code as javadoc or referencing html files.
 
 Overview
 --------
 
 The software is a classic client server application. The server part is based on
-the Java EE 6 Specs and uses multiple data sources. The client is a fat Swing
-Client, which is constantly merged to JavaFX. The connection is made through
-classic remote interfaces.
-
-The application has two working modes. Either the server part (dwoss-server) is
-deployed in an EE 6 Server including the full hibernate persistence layer and
-the client connects via jndi naming and remote interfaces. Or both components
-are run together on the client with a embedded EE 6 Server.
-The typical deployment is the [Tomee Server](http://tomee.apache.org).
+the Java EE 7 Specs and uses multiple data sources. The client is a fat Swing and
+JavaFx Client. The connection is made through remote ejb invocations.
 
 Architecture
 ------------
@@ -26,7 +19,7 @@ In the core the application has a simple layer model.
 1. Library
 2. EE (for the Server), UI (for the Client)
 	1. Core
-		- Non Persistence Projects
+		- Non Persistence Projects, APIs.
 	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
 		- Only one data source per project.
@@ -41,7 +34,7 @@ See the developed Graph in
 
 **GroupId**: eu.ggnet.dwoss
 
-**ArtifactId**: dwoss-"layer"-"sublayer"-"project" (Hint: The sublayer might not exist)
+**ArtifactId**: dwoss-"layer"-"sublayer"-"project"
 
  - Some layers do not have a sublayer.
  - Incubator projects have the same groupId, but might have a completely
@@ -53,7 +46,7 @@ See the developed Graph in
  - If a project stretches over multiple layers, the same package tree can be used.
  - The developer has to ensure, that only one ```package-info.java``` exists.
  - The validation of overlapping class names is happening in the assembly projects,
-   so it's recommended that the developer watches out for this also.
+   so it's recommended that the developer watches out for this.
 
 #### Typical Packages, Classes and Methods with their Nature ####
 
@@ -97,7 +90,7 @@ See {@link eu.ggnet.saft.core.Client} for details on how these are discovered on
 client side.
 
 Each persistence Project may supply a "Project"Agent. This is the simplest way to get
-to entites from the remote side. The Agent implementation should consits mostly of
+to entites from the remote side. The Agent implementation should consit mostly of
 findXXX methodes and supply fetch eager versions.
 
 #### Ui Class and Method Names ####
@@ -109,11 +102,6 @@ findXXX methodes and supply fetch eager versions.
  - CRUD Implementations:
 	- Operation/View for creating,building,first time usage of something: Create\*
 	- Operation/View for modifying, editing, updating of something: Update\*
-
-Logging in Tests
-----------------
-
-https://confluence.cybertron.global/display/DWOSS/Arquillian+Tomee+Surefire+Failsafe+Output+Problems
 
 Implicite Knowledge
 -------------------
