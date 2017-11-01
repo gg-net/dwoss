@@ -27,7 +27,7 @@ import eu.ggnet.saft.core.Client;
  *
  * @author oliver.guenther
  */
-public class SimpleReportLine {
+public class SimpleReportLineTryout {
 
     private boolean complete = false;
 
@@ -178,12 +178,14 @@ public class SimpleReportLine {
 
             @Override
             public boolean updateReportLineComment(int optLock, long reportId, String comment) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("Line = " + reportId + " adding comment " + comment);
+                return true;
             }
 
             @Override
             public boolean updateReportName(int optLock, long reportId, String name) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                System.out.println("Report = " + reportId + " changing name = " + name);
+                return true;
             }
             //</editor-fold>
 

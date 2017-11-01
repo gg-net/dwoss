@@ -21,10 +21,12 @@ import java.util.*;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.report.api.MarginCalculator;
@@ -38,10 +40,11 @@ import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 
-import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
-import static eu.ggnet.dwoss.report.entity.Report.ViewMode.*;
+import static eu.ggnet.dwoss.report.entity.Report.ViewMode.DEFAULT;
+import static eu.ggnet.dwoss.report.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
+import static eu.ggnet.dwoss.rules.PositionType.*;
 
 /**
  *
@@ -117,15 +120,14 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * Updates the comment of a ReportLine
      * If no instance could be found no changes will ba made.
      *
-     * @param reportId primary key of the ReportLine to be updated.
-     * @param comment  string to be set as new comment for the ReportLine
+     * @param reportLineId primary key of the ReportLine to be updated.
+     * @param comment      string to be set as new comment for the ReportLine
      */
     @Override
-    public boolean updateReportLineComment(int optLock, long reportId, String comment) {
-        ReportLine find = reportEm.find(ReportLine.class, reportId);
-        if ( find.getOptLock() == optLock ) {
-            find.setComment(comment);
-            reportEm.merge(find);
+    public boolean updateReportLineComment(int optLock, long reportLineId, String comment) {
+        ReportLine line = reportEm.find(ReportLine.class, reportLineId);
+        if ( line.getOptLock() == optLock ) {
+            line.setComment(comment);
             return true;
         }
         return false;
@@ -150,8 +152,6 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         if ( find.getOptLock() == optLock ) {
             //update report name on found instance
             find.setName(name);
-            //update to database
-            reportEm.merge(find);
             //return true for successfull update
             return true;
         }

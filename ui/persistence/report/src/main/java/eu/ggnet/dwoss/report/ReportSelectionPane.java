@@ -16,18 +16,18 @@
  */
 package eu.ggnet.dwoss.report;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
 
@@ -53,8 +53,6 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
     private final ComboBox<Integer> yearBox;
 
-    private boolean deleteConfirmed = false;
-
     public ReportSelectionPane() {
         Label reportTypeLabel = new Label("Reporttyp:");
         reportTypeLabel.setStyle("-fx-font-weight: bold;");
@@ -71,8 +69,9 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
          */
         typeBox.valueProperty().addListener((ob, ov, newValue) -> {
             if ( filteredReports != null ) {
+
                 filteredReports.setPredicate(report -> report.getType() == newValue
-                        && Objects.equals(LocalDateTime.ofInstant(report.getStartingDate().toInstant(), systemDefault()).getYear(), yearBox.getValue()) //using autoboxing and object equals for safety
+                        && Objects.equals(LocalDate.from(Instant.ofEpochMilli(report.getStartingDate().getTime()).atZone(systemDefault())).getYear(), yearBox.getValue()) //using autoboxing and object equals for safety
                 );
             }
         });
@@ -82,7 +81,7 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
          */
         yearBox.valueProperty().addListener((ob, ov, newValue) -> {
             if ( filteredReports != null ) {
-                filteredReports.setPredicate(report -> LocalDateTime.ofInstant(report.getStartingDate().toInstant(), systemDefault()).getYear() == newValue
+                filteredReports.setPredicate(report -> LocalDate.from(Instant.ofEpochMilli(report.getStartingDate().getTime()).atZone(systemDefault())).getYear() == newValue
                         && report.getType() == typeBox.getValue());
             }
         });
@@ -112,44 +111,24 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
     }
 
     public void openNameEdit() {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(0, 10, 0, 10));
 
         Label label1 = new Label("Name: ");
-        TextArea textarea = new TextArea();
-        textarea.setText(reportListView.getSelectionModel().getSelectedItem().getName());
-        textarea.setEditable(true);
-        textarea.setWrapText(true);
+        TextField textField = new TextField();
+        textField.setText(reportListView.getSelectionModel().getSelectedItem().getName());
+        textField.deselect();
 
-        VBox vb = new VBox(label1, textarea);
-        grid.add(vb, 0, 0);
+        VBox vb = new VBox(label1, textField);
 
         Dialog<ButtonType> dialog = new Dialog<>();
-        final DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.setContent(grid);
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.setContent(vb);
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        dialog.setResizable(true);
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
         okButton.setText("Save");
 
-        textarea.textProperty().addListener((event, oldValue, newValue) -> {
-            if ( oldValue != null && newValue != null ) {
-                if ( oldValue.length() > newValue.length() && newValue.length() <= 3 && !deleteConfirmed ) {
-                    Alert alert = new Alert(AlertType.INFORMATION, "Do you really want to delete the comment?", ButtonType.OK);
-                    alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
-                        deleteConfirmed = true;
-                    });
-                }
-            }
-        });
-
-        Platform.runLater(() -> {
-            textarea.requestFocus();
-            textarea.end();
-        });
         dialog.showAndWait().filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> storeName(reportListView.getSelectionModel().getSelectedItem(), textarea.getText()));
+                .ifPresent(response -> storeName(reportListView.getSelectionModel().getSelectedItem(), textField.getText()));
     }
 
     private void storeName(Report report, String input) {
@@ -175,7 +154,7 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
         ObservableList<Integer> yearItems = FXCollections.observableList(allReports
                 .stream()
-                .map(r -> LocalDateTime.ofInstant(r.getStartingDate().toInstant(), systemDefault()).getYear())
+                .map(r -> LocalDate.from(Instant.ofEpochMilli(r.getStartingDate().getTime()).atZone(systemDefault())).getYear())
                 .distinct()
                 .collect(Collectors.toList())
         );

@@ -136,46 +136,39 @@ public class Mandator implements Serializable {
         StringBuilder sb = new StringBuilder("<table>");
         sb.append("<tr>");
         sb.append("<td><p><b>Company</b></p>");
-        sb.append(company.toHtml());
+        sb.append(company == null ? "null" : company.toHtml());
         sb.append("</td>");
         sb.append("<td><p><b>Smtp Configuration</b></p>");
-        sb.append(smtpConfiguration.toHtml());
+        sb.append(smtpConfiguration == null ? "null" : smtpConfiguration.toHtml());
         sb.append("</td>");
         sb.append("</tr>");
 
-        sb.append("<tr><td colspan=\"2\"><p><b>Receipt: </b>");
+        sb.append("<tr><td colspan=\"2\"><ul>");
+        sb.append("<li><b>ReceiptMode: </b>");
         sb.append(receiptMode);
-        sb.append("</p></td></tr>");
-
-        sb.append("<tr><td colspan=\"2\"><p><b>Dossier Prefix: </b>");
+        sb.append("</li><li><b>Dossier Prefix: </b>");
         sb.append(dossierPrefix);
-        sb.append("</p>");
+        sb.append("</li><li><b>MailTemplateLocation: </b>");
+        sb.append(mailTemplateLocation == null ? "null" : mailTemplateLocation.getLocation());
+        sb.append("</li><li><b>ApplyDefaultChannelOnRollIn: </b>");
+        sb.append(applyDefaultChannelOnRollIn);
+        sb.append("</li><li><b>matchCode: </b>");
+        sb.append(matchCode);
+        sb.append("</li><li><b>Bug Report Mail:</b>");
+        sb.append(bugMail);
+        sb.append("</li>");
+
+        sb.append("</td></tr><tr><td colspan=\"2\">");
         sb.append("<p><b>DocumentIntermix</b></p>");
-        sb.append(documentIntermix.toHtml());
+        sb.append(documentIntermix == null ? "null" : documentIntermix.toHtml());
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>DefaultMailSignature</b></p>");
         sb.append(defaultMailSignature);
         sb.append("</td></tr>");
 
-        sb.append("<tr><td colspan=\"2\"><p><b>Mail get saved  here:</b></p>");
-        sb.append(mailTemplateLocation.getLocation());
-        sb.append("</td></tr>");
-
-        sb.append("<tr><td colspan=\"2\"><p><b>ApplyDefaultChannelOnRollIn:</b></p>");
-        sb.append(applyDefaultChannelOnRollIn);
-        sb.append("</td></tr>");
-
-        sb.append("<tr><td colspan=\"2\"><p><b>matchCode:</b></p>");
-        sb.append(matchCode);
-        sb.append("</td></tr>");
-        
-        sb.append("<tr><td colspan=\"2\"><p><b>The Bug Report Mail:</b></p>");
-        sb.append(bugMail);
-        sb.append("</td></tr>");
-
-        sb.append("<tr><td colspan=\"2\"><p><b>Mail Attachment:</b></p>");
-        if ( defaultMailAttachment.isEmpty() ) {
+        sb.append("<tr><td colspan=\"2\"><p><b>Default Mail Attachment:</b></p>");
+        if ( defaultMailAttachment == null || defaultMailAttachment.isEmpty() ) {
             sb.append("<b>No Attachment</b>");
         } else {
             Iterator<MandatorMailAttachment> it = defaultMailAttachment.iterator();
@@ -183,7 +176,7 @@ public class Mandator implements Serializable {
             while (it.hasNext()) {
                 MandatorMailAttachment attachment = it.next();
                 sb.append("<li>");
-                sb.append(attachment.toHtml());
+                sb.append(attachment);
                 sb.append("</li>");
             }
             sb.append("</ul>");
@@ -191,17 +184,18 @@ public class Mandator implements Serializable {
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>Document Identifier Generator Configurations:</b></p>");
-        if ( documentIdentifierGeneratorConfigurations.isEmpty() ) {
+        if ( documentIdentifierGeneratorConfigurations == null || documentIdentifierGeneratorConfigurations.isEmpty() ) {
             sb.append("<b>No Document Identifier Generator Configuration</b>");
         } else {
-            documentIdentifierGeneratorConfigurations.forEach((DocumentType, DocumentIdentifierGeneratorConfiguration) -> {
-                sb.append("<ul>");
+            sb.append("<ul>");
+            documentIdentifierGeneratorConfigurations.forEach((type, generatorConfig) -> {
                 sb.append("<li>");
-                sb.append(DocumentType.toHtml());
-                sb.append(DocumentIdentifierGeneratorConfiguration.toHtml());
+                sb.append(type);
+                sb.append(" : ");
+                sb.append(generatorConfig);
                 sb.append("</li>");
-                sb.append("</ul>");
             });
+            sb.append("</ul>");
         }
 
         sb.append("</td></tr>");

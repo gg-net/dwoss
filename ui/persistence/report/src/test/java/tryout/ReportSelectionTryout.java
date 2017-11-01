@@ -43,7 +43,7 @@ import eu.ggnet.saft.core.Client;
  *
  * @author jens.papenhagen
  */
-public class ReportSelection {
+public class ReportSelectionTryout {
 
     private boolean complete = false;
 

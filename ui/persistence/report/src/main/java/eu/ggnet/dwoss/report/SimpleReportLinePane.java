@@ -20,31 +20,32 @@ import java.awt.EventQueue;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
-import javafx.scene.text.*;
+import javafx.scene.text.Text;
 
-import org.apache.commons.lang3.StringUtils;
 import org.metawidget.swing.SwingMetawidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
@@ -84,7 +85,7 @@ public class SimpleReportLinePane extends BorderPane {
     public SimpleReportLinePane() {
         model = FXCollections.observableArrayList();
 
-        //building the Searchar on Top 
+        //building the Searchar on Top
         Label searchRefurbishIdLabel = new Label("RefurbishId:");
         final TextField searchRefurbishIdField = new TextField();
         Button searchButton = new Button("Search");
@@ -113,14 +114,14 @@ public class SimpleReportLinePane extends BorderPane {
         });
         MenuItem deleldComment = new MenuItem("Delet Comment");
         deleldComment.setOnAction((ActionEvent event) -> {
-            openCommentDelet();
+            openCommentDelete();
         });
 
         //TODO add more Item like delete/copy/cut/paste SimpleReportLine to the contextmenu
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(editComment, deleldComment);
 
-        //build all the Colums 
+        //build all the Colums
         TableColumn<SimpleReportLine, Long> id = new TableColumn<>("Id");
         id.setCellValueFactory(new PropertyValueFactory("id"));
         TableColumn<SimpleReportLine, String> refurbishId = new TableColumn<>("RefurbishId");
@@ -201,7 +202,7 @@ public class SimpleReportLinePane extends BorderPane {
             }
         });
 
-        //open the Contextmenu next to the mouse cursor 
+        //open the Contextmenu next to the mouse cursor
         table.setOnContextMenuRequested((ContextMenuEvent event) -> {
             contextMenu.show(table, event.getScreenX(), event.getScreenY());
         });
@@ -230,11 +231,12 @@ public class SimpleReportLinePane extends BorderPane {
 
     /**
      * Save the new Comment to the Database
-     * @param report
+     *
+     * @param line
      * @param input
      */
-    public void storeComment(SimpleReportLine report, String input) {
-        if ( Client.lookup(ReportAgent.class).updateReportName(report.getOptLock(), report.getId(), input) ) {
+    public void storeComment(SimpleReportLine line, String input) {
+        if ( Client.lookup(ReportAgent.class).updateReportLineComment(line.getOptLock(), line.getId(), input) ) {
             table.getSelectionModel().getSelectedItem().setComment(input);
             table.refresh();
         }
@@ -291,10 +293,10 @@ public class SimpleReportLinePane extends BorderPane {
      * open Dialog for deleting the comment.
      * only Cancle and Ok Button to informate the user abbout that the deleting is permanent
      */
-    public void openCommentDelet() {
+    public void openCommentDelete() {
         String input = "";
         GridPane grid = new GridPane();
-        Label label1 = new Label("Do you really want to delete the comment? ");
+        Label label1 = new Label("Möchten Sie den Kommentar löschen ?");
         grid.add(label1, 0, 0);
 
         Dialog<ButtonType> dialog = new Dialog<>();

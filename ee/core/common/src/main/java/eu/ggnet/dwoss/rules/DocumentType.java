@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.rules;
 
 import java.util.EnumSet;
 
+import lombok.ToString;
+
 /**
  * The possible Types of Documents.
  * Hint on notation: A short notation is used. A CreditMemo can only exist if a Invoice exits means a Dossier can only have an active Document of type
@@ -25,6 +27,7 @@ import java.util.EnumSet;
  * the dossier has an active Document of type Invoice.
  * Hint: Only on this component to have type safty in the Mandator.
  */
+@ToString
 public enum DocumentType {
 
     /**
@@ -299,91 +302,6 @@ public enum DocumentType {
      */
     public static boolean isRepayment(DocumentType type) {
         return EnumSet.of(CREDIT_MEMO, ANNULATION_INVOICE).contains(type);
-    }
-
-    /**
-     * ToString HTML representation.
-     *
-     * @return HTML view of the DocumentType.
-     */
-    public String toHtml() {
-        StringBuilder sb = new StringBuilder("DocumentType:");
-        sb.append("<ul>");
-        sb.append("<li>");
-        sb.append("<b>Name:</b>");
-        sb.append(name);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>matchCode:</b>");
-        sb.append(matchCode);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>ORDER: </b>");
-        sb.append(ORDER);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>INVOICE: </b>");
-        sb.append(INVOICE);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>COMPLAINT: </b>");
-        sb.append(COMPLAINT);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>ANNULATION_INVOICE: </b>");
-        sb.append(ANNULATION_INVOICE);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>CREDIT_MEMO: </b>");
-        sb.append(CREDIT_MEMO);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>BLOCK: </b>");
-        sb.append(BLOCK);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>RETURNS: </b>");
-        sb.append(RETURNS);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>CAPITAL_ASSET: </b>");
-        sb.append(CAPITAL_ASSET);
-        sb.append("</li>");
-        sb.append("</ul>");
-
-        return sb.toString();
-    }
-
-    /**
-     * toHtmlSingleLine HTML representation.
-     *
-     * @return HTML view of the DocumentType.
-     */
-    public String toHtmlSingleLine() {
-        StringBuilder sb = new StringBuilder("DocumentType:");
-        sb.append("<ul>");
-        sb.append("<li>");
-        sb.append("<b>Name:</b>");
-        sb.append(name);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>matchCode:</b>");
-        sb.append(matchCode);
-        sb.append("</li>");
-
-        sb.append("</ul>");
-
-        return sb.toString();
     }
 
 }

@@ -32,49 +32,10 @@ import lombok.Value;
 @Builder
 public class MandatorMailAttachment implements Serializable {
 
-    private UrlLocation attachmentData;
-
     private String attachmentName;
 
     private String attachmentDescription;
 
-    /**
-     * ToString HTML representation.
-     *
-     * @return HTML view of the MandatorMailAttachment.
-     */
-    public String toHtml() {
-        StringBuilder sb = new StringBuilder("Attachment: ");
-        sb.append("<b>");
-        sb.append(attachmentName);
-        sb.append("</b> &nbsp;");
-        sb.append("<a href=\" ");
-        sb.append(attachmentData.getLocation());
-        sb.append(" \" title=\"");
-        sb.append(attachmentDescription);
-        sb.append("\" >");
-        sb.append("Click here</a>");
-
-        return sb.toString();
-    }
-
-    /**
-     * toHtmlSingleLine HTML representation.
-     *
-     * @return HTML on a Singleline view of the MandatorMailAttachment.
-     */
-    public String toHtmlSingleLine() {
-        StringBuilder sb = new StringBuilder("<p>");
-        sb.append("<b>");
-        sb.append(attachmentName);
-        sb.append("</b> ");
-        sb.append("<i>");
-        sb.append(attachmentDescription);
-        sb.append("</i> on: ");
-        sb.append(attachmentData.getLocation());
-        sb.append("</p>");
-
-        return sb.toString();
-    }
+    private UrlLocation attachmentData;
 
 }

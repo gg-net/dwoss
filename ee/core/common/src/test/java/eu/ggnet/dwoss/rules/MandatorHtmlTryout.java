@@ -76,7 +76,6 @@ public class MandatorHtmlTryout {
         String defaultMailSignature = "Mail Signatur \n Test Test \t Senior System Requirements Specilist \n  Mobiel: 0174 123 45 67 \n  Phone; 040 123 45 67 \n Impressums: xxxx";
         UrlLocation mailTemplateLocation = new UrlLocation(new URL("http://example.com/"));
 
-
         MandatorMailAttachment attachment1 = MandatorMailAttachment.builder()
                 .attachmentName("NewFile.txt")
                 .attachmentDescription("txt file")
