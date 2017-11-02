@@ -89,7 +89,7 @@
 			<staticText>
 				<reportElement x="15" y="3" width="198" height="20" forecolor="#000000" uuid="0787475c-35ed-4799-95c9-96b1f3c24465"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" pdfFontName=""/>
+					<font fontName="SansSerif" size="11" isBold="true" isItalic="false" isUnderline="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Einzelstückbeschreibung:]]></text>
 			</staticText>
