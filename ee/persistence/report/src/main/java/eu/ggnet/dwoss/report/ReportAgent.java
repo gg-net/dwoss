@@ -38,16 +38,14 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 
+import lombok.*;
 import lombok.experimental.Builder;
 
-import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
-
-import lombok.*;
-
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
+import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
 import static eu.ggnet.dwoss.report.entity.Report.ViewMode.DEFAULT;
 import static eu.ggnet.dwoss.report.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 
 /**
  *
@@ -249,23 +247,22 @@ public interface ReportAgent extends RemoteAgent {
      * If no instance could be found no changes will ba made.
      *
      * @param optLock
-     * @param reportId      primary key of the ReportLine to be updated.
-     * @param comment string to be set as new comment for the ReportLine
-     * @return 
+     * @param reportId primary key of the ReportLine to be updated.
+     * @param comment  string to be set as new comment for the ReportLine
+     * @return
      */
     boolean updateReportLineComment(int optLock, long reportId, String comment);
-    
-        /**
+
+    /**
      * Updates the comment of a Report
      * If no instance could be found no changes will be made.
      *
-     * @param optLock       the optimistic locking
-     * @param reportId      primary key of the Report to be updated.
+     * @param key  the optimistic locking key
      * @param name string to be set as new comment for the Report
-     * @return 
+     * @return
      */
-    boolean updateReportName(int optLock, long reportId, String name); 
-    
+    boolean updateReportName(Report.OptimisticKey key, String name);
+
     /**
      * Returns a ReportResult build from an existing Report.
      * <p>

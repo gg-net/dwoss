@@ -50,6 +50,9 @@ public class ReportSelectionTryout {
     @Test
     public void tryout() throws InterruptedException {
         ReportAgent rastub = new ReportAgent() {
+
+            private int counter = 0;
+
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">
             @Override
             public List<SimpleReportLine> findSimple(SearchParameter search, int firstResult, int maxResults) {
@@ -140,18 +143,25 @@ public class ReportSelectionTryout {
             public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-            
+
             @Override
             public boolean updateReportLineComment(int optLock, long reportId, String comment) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
             //</editor-fold>
             @Override
-            public boolean updateReportName(int optLock, long reportId, String name) {
-                System.out.println("Report Name get updated");
-                return true;
+            public boolean updateReportName(Report.OptimisticKey key, String name) {
+                System.out.println("Report Name updated with " + name + " calles");
+                counter++;
+                if ( (counter % 2) != 0 ) {
+                    System.out.println("Counter=" + counter + " simulating Error");
+                    return false;
+                } else {
+                    System.out.println("Counter=" + counter + " simulating Success");
+                    return true;
+                }
             }
-
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
@@ -164,7 +174,7 @@ public class ReportSelectionTryout {
         Set<TradeName> trades = new HashSet<>();
         trades.add(TradeName.HP);
         trades.add(TradeName.ACER);
-        
+
         //build some sample Reports
         List<Report> allReports = new ArrayList();
         for (int i = 0; i < 8; i++) {

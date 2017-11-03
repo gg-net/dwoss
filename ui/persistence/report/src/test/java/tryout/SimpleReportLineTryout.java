@@ -1,6 +1,7 @@
 package tryout;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
 
@@ -29,9 +30,8 @@ import eu.ggnet.saft.core.Client;
  */
 public class SimpleReportLineTryout {
 
-    private boolean complete = false;
-
     @Test
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void tryout() throws InterruptedException {
         ReportAgent rastub = new ReportAgent() {
 
@@ -183,15 +183,17 @@ public class SimpleReportLineTryout {
             }
 
             @Override
-            public boolean updateReportName(int optLock, long reportId, String name) {
-                System.out.println("Report = " + reportId + " changing name = " + name);
+            public boolean updateReportName(Report.OptimisticKey key, String name) {
+                System.out.println("Report = " + key + " changing name = " + name);
                 return true;
             }
             //</editor-fold>
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
-        JFXPanel jfxPanel = new JFXPanel(); // To start the platform
+        new JFXPanel(); // To start the platform
+
+        final CountDownLatch B = new CountDownLatch(1);
 
         Platform.runLater(() -> {
 
@@ -204,11 +206,10 @@ public class SimpleReportLineTryout {
             stage.setScene(scene);
             stage.showAndWait();
 
-            complete = true;
+            B.countDown();
         });
-        while (!complete) {
-            Thread.sleep(500);
-        }
+
+        B.await();
 
     }
 

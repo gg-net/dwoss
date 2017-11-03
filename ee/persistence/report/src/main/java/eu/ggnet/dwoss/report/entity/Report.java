@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,6 +44,15 @@ import static eu.ggnet.dwoss.report.entity.Report.ViewMode.DEFAULT;
 @Entity
 @NoArgsConstructor
 public class Report extends IdentifiableEntity implements Serializable, EagerAble {
+
+    @Value
+    public final static class OptimisticKey {
+
+        private final long id;
+
+        private final int optLock;
+
+    }
 
     /**
      * The ViewModw of a Report.
@@ -270,6 +279,15 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
     public void fetchEager() {
         ReportLine.EagerHelper eagerHelper = new ReportLine.EagerHelper();
         eagerHelper.fetch(this);
+    }
+
+    /**
+     * Returns a tuple of the id and the optLock value
+     *
+     * @return a tuple of the id and the optLock value
+     */
+    public OptimisticKey toKey() {
+        return new OptimisticKey(id, optLock);
     }
 
     /**

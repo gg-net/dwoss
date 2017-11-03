@@ -268,6 +268,7 @@ public class SimpleReportLinePane extends BorderPane {
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
         okButton.setText("Save");
 
+        // TODO: Noch mal mit Jens discutieren.
         textarea.textProperty().addListener((event, oldValue, newValue) -> {
             if ( oldValue != null && newValue != null ) {
                 if ( oldValue.length() > newValue.length() && newValue.length() <= 3 && !deleteConfirmed ) {
@@ -284,7 +285,8 @@ public class SimpleReportLinePane extends BorderPane {
             textarea.end();
         });
 
-        dialog.showAndWait().filter(response -> response == ButtonType.OK)
+        dialog.showAndWait()
+                .filter(result -> result == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), textarea.getText()));
 
     }

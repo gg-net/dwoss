@@ -27,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
@@ -35,13 +36,34 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.core.Client;
 
+import lombok.Value;
+
+import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
 import static java.time.ZoneId.systemDefault;
+import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
 /**
  *
  * @author pascal.perau
  */
 public class ReportSelectionPane extends BorderPane implements Consumer<List<Report>> {
+
+    @Value
+    private final static class EditResult {
+
+        private final Report.OptimisticKey key;
+
+        private final String text;
+
+    }
+
+    @Value
+    private final static class UpdateResult {
+
+        private final boolean successful;
+
+        private final String text;
+    }
 
     private final ListView<Report> reportListView;
 
@@ -114,28 +136,33 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
         Label label1 = new Label("Name: ");
         TextField textField = new TextField();
-        textField.setText(reportListView.getSelectionModel().getSelectedItem().getName());
+        final Report selectedReport = reportListView.getSelectionModel().getSelectedItem();
+        textField.setText(selectedReport.getName());
         textField.deselect();
 
         VBox vb = new VBox(label1, textField);
 
-        Dialog<ButtonType> dialog = new Dialog<>();
+        Dialog<EditResult> dialog = new Dialog<>();
+        dialog.setHeaderText("Report Namen ändern");
+
         DialogPane dialogPane = dialog.getDialogPane();
         dialogPane.setContent(vb);
-        dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+        dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, new ButtonType("Save", ButtonData.OK_DONE));
         dialog.setResizable(true);
-        Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
-        okButton.setText("Save");
 
-        dialog.showAndWait().filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> storeName(reportListView.getSelectionModel().getSelectedItem(), textField.getText()));
-    }
+        dialog.setResultConverter((type) -> type.getButtonData() == OK_DONE ? new EditResult(selectedReport.toKey(), textField.getText()) : null);
 
-    private void storeName(Report report, String input) {
-        if ( Client.lookup(ReportAgent.class).updateReportName(report.getOptLock(), report.getId(), input) ) {
-            reportListView.getSelectionModel().getSelectedItem().setName(input);
-            reportListView.refresh();
-        }
+        dialog.showAndWait()
+                .map(r -> new UpdateResult(Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()), r.getText()))
+                .ifPresent(r -> {
+                    if ( r.isSuccessful() ) {
+                        reportListView.getSelectionModel().getSelectedItem().setName(r.getText());
+                        reportListView.refresh();
+                    } else {
+                        eu.ggnet.saft.core.Alert.show(ReportSelectionPane.this, "Error on Update", "Update nicht erfolgreich, Vielleicht Fenster öffnen und schließen", ERROR);
+                    }
+                });
+
     }
 
     @Override

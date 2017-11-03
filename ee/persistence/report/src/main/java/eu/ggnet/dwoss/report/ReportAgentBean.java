@@ -134,29 +134,17 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
     }
 
     /**
-     * Updates the name of a Report
-     * If no instance could be found no changes will be made.
-     *
-     * @param optLock
-     * @param reportId primary key of the Report to be updated.
-     * @param name     string to be set as new comment for the Report
-     * @return false if there is a verison conflict
-     * @exception NullPointerException get throw if no Report get found
-     *
+     * See {@link ReportAgent#updateReportName(eu.ggnet.dwoss.report.entity.Report.OptimisticKey, java.lang.String) }.
      */
     @Override
-    public boolean updateReportName(int optLock, long reportId, String name) {
-        //find original report instance
-        Report find = reportEm.find(Report.class, reportId);
-        //check version for clashes
-        if ( find.getOptLock() == optLock ) {
-            //update report name on found instance
-            find.setName(name);
-            //return true for successfull update
-            return true;
-        }
-        //false return if the version doesnt match
-        return false;
+    public boolean updateReportName(Report.OptimisticKey key, String name) {
+        // TODO: Build a better result with error messages.
+        if ( key == null || name == null ) return false;
+        Report find = reportEm.find(Report.class, key.getId());
+        if ( find == null ) return false;
+        if ( find.getOptLock() != key.getOptLock() ) return false;
+        find.setName(name);
+        return true;
     }
 
     @Override
