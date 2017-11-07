@@ -4,7 +4,9 @@ package eu.ggnet.saft.api.ui;
  * Optional Initialiser for JPanel and Panes, called while the ui setVisible process.
  *
  * @author oliver.guenther
+ * @deprecated never used in productive environment
  */
+@Deprecated
 public interface Initialiser {
 
     /**

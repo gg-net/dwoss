@@ -112,7 +112,9 @@ public class UiCore {
 
         try {
             JFrame panel = SwingSaft.dispatch(() -> {
+                T node = builder.call();
                 JFrame p = new JFrame();
+                p.setTitle(UiUtil.title(node.getClass()));
                 p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 p.getContentPane().add(builder.call());
                 p.pack();

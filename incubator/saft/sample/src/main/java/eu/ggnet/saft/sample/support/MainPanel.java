@@ -7,10 +7,13 @@ package eu.ggnet.saft.sample.support;
 
 import javax.swing.JProgressBar;
 
+import eu.ggnet.saft.api.ui.Title;
+
 /**
  *
  * @author oliver.guenther
  */
+@Title("Main")
 public class MainPanel extends javax.swing.JPanel {
 
     /**

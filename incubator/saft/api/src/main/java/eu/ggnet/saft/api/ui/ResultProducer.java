@@ -14,15 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.core.experimental;
+package eu.ggnet.saft.api.ui;
 
 /**
- * Implemented by someone, how produces a result.
+ * Indicates, that the implementor will return a somehow computed result.
  *
  * @author oliver.guenther
  */
 public interface ResultProducer<T> {
 
+    /**
+     * Returns the result, may be null
+     *
+     * @return a result, may be null
+     */
     T getResult();
 
 }

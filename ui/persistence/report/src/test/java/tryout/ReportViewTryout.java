@@ -1,19 +1,7 @@
 package tryout;
 
-import eu.ggnet.dwoss.report.ReportController;
-
 import java.io.IOException;
 import java.util.*;
-
-import org.junit.Test;
-
-import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-
-import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-
-import eu.ggnet.dwoss.rules.TradeName;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -22,6 +10,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import org.junit.Test;
+
+import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ReportController;
+import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
+import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.rules.TradeName;
 
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.INVOICED;
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.REPAYMENTS;
@@ -51,11 +48,11 @@ public class ReportViewTryout {
         lines.put(REPAYMENTS, repayedLinesLines);
         ViewReportResult result = new ViewReportResult(lines,
                 ReportParameter.builder()
-                .reportName("JUnit " + tradeName + " Report")
-                .contractor(tradeName)
-                .start(new Date())
-                .end(new Date())
-                .build());
+                        .reportName("JUnit " + tradeName + " Report")
+                        .contractor(tradeName)
+                        .start(new Date())
+                        .end(new Date())
+                        .build());
 
         new JFXPanel();
         Platform.runLater(() -> {

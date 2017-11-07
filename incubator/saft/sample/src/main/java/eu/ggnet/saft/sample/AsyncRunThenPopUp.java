@@ -1,13 +1,12 @@
 package eu.ggnet.saft.sample;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.api.CallableA1;
-import eu.ggnet.saft.sample.support.DocumentAdressUpdateView;
-import eu.ggnet.saft.sample.support.MainPanel;
-
 import java.awt.EventQueue;
 import java.util.concurrent.Callable;
+
+import eu.ggnet.saft.api.CallableA1;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.sample.support.*;
 
 /**
  * Opens a Swing Panel as Popup Dialog blocking the hole application and on Ok calculates an async result.
@@ -18,9 +17,12 @@ public class AsyncRunThenPopUp {
 
     private static class HardWorker {
 
-        public static <T> T work2s(String worktype, T t) throws InterruptedException {
+        public static <T> T work2s(String worktype, T t) {
             System.out.print("Doing 2 sec " + worktype + " work ... ");
-            Thread.sleep(2000);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+            }
             System.out.println("done");
             return t;
         }
@@ -36,6 +38,27 @@ public class AsyncRunThenPopUp {
             });
         });
 
+        saftClassic();
+
+    }
+
+    public static void saftNew() {
+        Ui.exec(() -> {
+            Ui.swing().eval(() -> HardWorker.work2s("per", "Eine leere Adresse"), () -> new DocumentAdressUpdateViewOkCanceler())
+                    .map(t -> HardWorker.work2s("middle", t))
+                    .map(t -> Ui.swing().eval(() -> t, () -> new DocumentAdressUpdateViewOkCanceler()))
+                    .ifPresent(t -> HardWorker.work2s("post", t));
+            ;
+            // Ui.openSwing(() -> HardWorker.work2s("per", "Eine leere Adresse"), DocumentAdressUpdateView.class)
+            //   .map(t -> HardWorker.work2s("middle", t.getAddress()))
+            //   .map(t -> Ui.openSwing(DocumentAdressUpdateView.class))
+            //   .ifPresent(t -> HardWorker.work2s("post", t.getAddress()));
+            return null;
+        });
+
+    }
+
+    public static void saftClassic() {
         Ui.exec(Ui
                 .call(() -> HardWorker.work2s("per", "Eine leere Adresse"))
                 .choiceSwing(DocumentAdressUpdateView.class)
@@ -45,8 +68,8 @@ public class AsyncRunThenPopUp {
         );
     }
 
-    public static void longer() {
-        // A JAva 7 View.
+    public static void saftClassicJ7() {
+        // A Java 7 View.
         Ui.exec(Ui.call(new Callable<String>() {
 
             @Override
@@ -54,8 +77,7 @@ public class AsyncRunThenPopUp {
                 return "Hallo";
             }
 
-        })
-                .choiceSwing(DocumentAdressUpdateView.class)
+        }).choiceSwing(DocumentAdressUpdateView.class)
                 .onOk(new CallableA1<DocumentAdressUpdateView, Integer>() {
 
                     @Override

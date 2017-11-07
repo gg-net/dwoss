@@ -1,17 +1,18 @@
 package eu.ggnet.saft.core.swing;
 
-import java.awt.*;
 import java.awt.Dialog.ModalityType;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import javafx.stage.Modality;
 
@@ -95,6 +96,17 @@ public class SwingSaft {
         });
     }
 
+    /**
+     * Executes the supplied callable on the EventQueue.
+     * If this method is called from the EventQueue, the same thread is used, otherwise its dispaced to the EventQueue.
+     *
+     * @param <T>
+     * @param callable the callable to be dispached
+     * @return the result of the callable
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws InvocationTargetException
+     */
     public static <T> T dispatch(Callable<T> callable) throws ExecutionException, InterruptedException, InvocationTargetException {
         FutureTask<T> task = new FutureTask(callable);
         if ( EventQueue.isDispatchThread() ) task.run();

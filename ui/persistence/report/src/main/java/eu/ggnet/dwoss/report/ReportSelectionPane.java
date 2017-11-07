@@ -163,6 +163,17 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
                     }
                 });
 
+        // Not yet implemented
+//        Ui.dialog().eval(() -> dialog)
+//                .map(r -> new UpdateResult(Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()), r.getText()))
+//                .ifPresent(r -> {
+//                    if ( r.isSuccessful() ) {
+//                        reportListView.getSelectionModel().getSelectedItem().setName(r.getText());
+//                        reportListView.refresh();
+//                    } else {
+//                        eu.ggnet.saft.core.Alert.show(ReportSelectionPane.this, "Error on Update", "Update nicht erfolgreich, Vielleicht Fenster öffnen und schließen", ERROR);
+//                    }
+//                });
     }
 
     @Override
