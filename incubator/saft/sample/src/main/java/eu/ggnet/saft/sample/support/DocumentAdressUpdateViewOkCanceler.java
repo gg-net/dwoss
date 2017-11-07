@@ -7,8 +7,8 @@ import java.util.function.Consumer;
 import javax.swing.JFrame;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.core.swing.DialogButtonPanel;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
@@ -20,10 +20,12 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
 
     private String originalAddress;
 
-    private boolean ok = false;
+    private DialogButtonPanel buttons;
 
     public DocumentAdressUpdateViewOkCanceler() {
         initComponents();
+        buttons = new DialogButtonPanel("Save", "Abbrechen");
+        buttonPanel.add(buttons);
     }
 
     public String getAddress() {
@@ -38,7 +40,7 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
 
     @Override
     public String getResult() {
-        if ( !ok ) return null;
+        if ( !buttons.isOk() ) return null;
         if ( UiUtil.isBlank(adressArea.getText()) ) return null;
         return adressArea.getText();
     }
@@ -56,8 +58,7 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
         adressArea = new javax.swing.JTextArea();
         resetToOriginalButton = new javax.swing.JButton();
         resetToCustomerButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
+        buttonPanel = new javax.swing.JPanel();
 
         setPreferredSize(new java.awt.Dimension(300, 300));
         setLayout(new java.awt.GridBagLayout());
@@ -101,27 +102,13 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(resetToCustomerButton, gridBagConstraints);
 
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
+        buttonPanel.setLayout(new java.awt.BorderLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        add(cancelButton, gridBagConstraints);
-
-        okButton.setText("Ok");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        add(okButton, gridBagConstraints);
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(buttonPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void resetToOriginalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetToOriginalButtonActionPerformed
@@ -132,21 +119,10 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
         System.out.println("Would do a reset");
     }//GEN-LAST:event_resetToCustomerButtonActionPerformed
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        ok = false;
-        Ui.closeWindowOf(this);
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        ok = true;
-        Ui.closeWindowOf(this);
-    }//GEN-LAST:event_okButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea adressArea;
-    private javax.swing.JButton cancelButton;
+    private javax.swing.JPanel buttonPanel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton okButton;
     private javax.swing.JButton resetToCustomerButton;
     private javax.swing.JButton resetToOriginalButton;
     // End of variables declaration//GEN-END:variables
