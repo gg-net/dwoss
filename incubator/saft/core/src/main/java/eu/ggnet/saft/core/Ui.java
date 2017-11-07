@@ -18,8 +18,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.core.all.UiCreator;
 import eu.ggnet.saft.core.all.UiOk;
-import eu.ggnet.saft.core.experimental.DialogFx;
-import eu.ggnet.saft.core.experimental.Swing;
+import eu.ggnet.saft.core.experimental.*;
 import eu.ggnet.saft.core.fx.FxCreator;
 import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.swing.*;
@@ -73,6 +72,15 @@ public class Ui {
     }
 
     /**
+     * Shortcut to a file chooser.
+     *
+     * @return a file chooser builder.
+     */
+    public static FileChooserBuilder fileChooser() {
+        return new FileChooserBuilder();
+    }
+
+    /**
      * Wrapper around {@link ForkJoinPool#commonPool() } with Ui Exception handling.
      * This is the default way to build a ui chain/stream with some background activity
      * <pre>
@@ -96,6 +104,16 @@ public class Ui {
             try {
                 callable.call();
             } catch (Exception e) {
+                UiCore.handle(e);
+            }
+        });
+    }
+
+    public static void exec(Runnable runnable) {
+        ForkJoinPool.commonPool().execute(() -> {
+            try {
+                runnable.run();
+            } catch (RuntimeException e) {
                 UiCore.handle(e);
             }
         });

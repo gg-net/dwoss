@@ -49,7 +49,6 @@ public class AsyncRunThenPopUp {
                     .map(t -> HardWorker.work2s("middle", t))
                     .map(t -> Ui.swing().eval(() -> t, () -> new DocumentAdressUpdateViewOkCanceler()))
                     .ifPresent(t -> HardWorker.work2s("post", t));
-            return null;
         });
 
     }
