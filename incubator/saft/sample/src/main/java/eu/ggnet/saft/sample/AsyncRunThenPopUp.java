@@ -38,7 +38,8 @@ public class AsyncRunThenPopUp {
             });
         });
 
-        saftClassic();
+        saftNew();
+//        saftClassic();
 
     }
 
@@ -48,11 +49,6 @@ public class AsyncRunThenPopUp {
                     .map(t -> HardWorker.work2s("middle", t))
                     .map(t -> Ui.swing().eval(() -> t, () -> new DocumentAdressUpdateViewOkCanceler()))
                     .ifPresent(t -> HardWorker.work2s("post", t));
-            ;
-            // Ui.openSwing(() -> HardWorker.work2s("per", "Eine leere Adresse"), DocumentAdressUpdateView.class)
-            //   .map(t -> HardWorker.work2s("middle", t.getAddress()))
-            //   .map(t -> Ui.openSwing(DocumentAdressUpdateView.class))
-            //   .ifPresent(t -> HardWorker.work2s("post", t.getAddress()));
             return null;
         });
 
