@@ -5,9 +5,10 @@
  */
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Frame;
+import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.core.UiAlert.Type;
 
 /**
  *
@@ -25,7 +26,7 @@ public class PanelAsFrame extends javax.swing.JPanel implements ClosedListener {
 
     @Override
     public void closed() {
-        Alert.show(this + " got closed !");
+        Alert.title("ClosedListener Info").message("ClosedListener was called").nl(this.getClass().getName()).show(Type.INFO);
     }
 
     /**

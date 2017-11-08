@@ -84,7 +84,7 @@ public class FxOps {
             List<MenuItem> menuItems = actions
                     .stream()
                     .filter(a -> authorised(a.consumer()))
-                    .map(a -> toMenuItem(a))
+                    .map(FxOps::toMenuItem)
                     .collect(Collectors.toList());
 
             // -- Nice, a progress bar for the factories.
@@ -101,7 +101,7 @@ public class FxOps {
                         .dynamicOf(t, filter)
                         .stream()
                         .filter(a -> authorised(a.consumer()))
-                        .map(a -> toMenuItem(a))
+                        .map(FxOps::toMenuItem)
                         .collect(Collectors.toList());
                 Platform.runLater(() -> {
                     if ( !menu.getItems().containsAll(menuItems) ) return; // The menu is all ready invisible again. don't do anything.

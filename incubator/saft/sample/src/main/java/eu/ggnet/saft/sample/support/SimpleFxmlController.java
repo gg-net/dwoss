@@ -1,12 +1,13 @@
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Title;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
-import java.util.function.Consumer;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * FXML Controller class
@@ -14,10 +15,26 @@ import java.util.function.Consumer;
  * @author oliver.guenther
  */
 @Title("This is a simple Title")
-public class SimpleFxmlController implements FxController, Consumer<String> {
+public class SimpleFxmlController implements FxController, Consumer<String>, ResultProducer<String> {
+
+    private boolean okPressed = false;
 
     @FXML
     private TextField input;
+
+    @FXML
+    private GridPane root;
+
+    @FXML
+    public void ok() {
+        okPressed = true;
+        Ui.closeWindowOf(root);
+    }
+
+    @FXML
+    public void cancel() {
+        Ui.closeWindowOf(root);
+    }
 
     @Override
     public String toString() {
@@ -27,6 +44,12 @@ public class SimpleFxmlController implements FxController, Consumer<String> {
     @Override
     public void accept(String t) {
         input.setText(t);
+    }
+
+    @Override
+    public String getResult() {
+        if ( okPressed ) return input.getText();
+        return null;
     }
 
 }

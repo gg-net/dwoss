@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.concurrent.Worker;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -59,18 +58,6 @@ public class UiCore {
 
     public static BooleanProperty backgroundActivityProperty() {
         return BACKGROUND_ACTIVITY;
-    }
-
-    /**
-     * Observers the progress on any javaFx worker.
-     * If there is some form of central managed and displayed progress and status message system registered with saft, this can be used to show a worker
-     * progress.
-     *
-     * @param w the worker to be observed.
-     */
-    public static void observeProgress(Worker<?> w) {
-        if ( w == null ) return;
-        w.runningProperty().addListener((ob, o, n) -> BACKGROUND_ACTIVITY.setValue(n));
     }
 
     /**

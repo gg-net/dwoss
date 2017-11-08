@@ -22,6 +22,7 @@ import java.util.function.Consumer;
  * A Wrapper for a consumer, which also holds a title.
  * <p>
  * @author oliver.guenther
+ * @param <T>
  */
 public class DescriptiveConsumer<T> {
 

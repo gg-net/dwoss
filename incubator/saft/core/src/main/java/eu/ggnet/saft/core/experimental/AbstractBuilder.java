@@ -17,24 +17,24 @@
 package eu.ggnet.saft.core.experimental;
 
 import java.awt.Dialog;
-import java.awt.Dialog.ModalityType;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import javax.swing.*;
 
 import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.Frame;
+import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.UiUtil;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -42,32 +42,56 @@ import lombok.experimental.Accessors;
  *
  * @author oliver.guenther
  */
-@Accessors(fluent = true)
-public abstract class AbstractComponentBuilder {
+@Getter
+@ToString
+public abstract class AbstractBuilder {
+
+    /**
+     * Calls the callable in the same thread, while sending progress information into the ui.
+     *
+     * @param <A>
+     * @param callable
+     * @return
+     */
+    protected static <A> A callWithProgress(Callable<A> callable) {
+        return Ui.progress((Void t) -> {
+            try {
+                return callable.call();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }).apply(null);
+    }
 
     // Internal Parameter class
-    protected class Params {
+    @Builder
+    @Accessors(fluent = true)
+    protected static class Params {
 
         protected final Class<?> panelClazz;
 
-        protected final String id;
+        @Getter
+        @Setter
+        protected String id = null;
 
-        protected final String title;
+        protected final String titleTemplate;
 
         protected final boolean framed;
 
         protected final Dialog.ModalityType modalityType;
 
-        protected final String key;
-
-        protected Params(Class<?> panelClazz, String id, String title, boolean framed, ModalityType modalityType, String key) {
-            this.panelClazz = panelClazz;
-            this.id = id;
-            this.title = title;
-            this.framed = framed;
-            this.modalityType = modalityType;
-            this.key = key;
+        protected void optionalSupplyId(Object possibleIdSupplier) {
+            if ( id == null && possibleIdSupplier instanceof IdSupplier ) id = ((IdSupplier)possibleIdSupplier).id();
         }
+
+        protected String title() {
+            return titleTemplate == null ? UiUtil.title(panelClazz, id) : titleTemplate;
+        }
+
+        protected String key() {
+            return panelClazz.getName() + (id == null ? "" : ":" + id);
+        }
+    ;
 
     }
 
@@ -81,26 +105,31 @@ public abstract class AbstractComponentBuilder {
      * Sets the once mode.
      * If set to true, an once mode is enable. This ensures that one one window of the same type is created and show.
      * If minimised it becomes reopend, if in the back it becomes moved to the front.
+     * Default = true.
      */
-    protected boolean once = false;
+    protected boolean once = true;
 
     /**
      * An optional id. Replaces the id part in a title like: this is a title of {id}
+     * Default = null.
      */
     protected String id = null;
 
     /**
      * An optional title. If no title is given, the classname is used.
+     * Default = null
      */
     protected String title = null;
 
     /**
      * Enables the Frame mode, makeing the created window a first class element.
+     * Default = false
      */
     protected boolean frame = false;
 
     /**
      * Optional value for the modality.
+     * Default = null
      */
     protected Modality modality = null;
 
@@ -124,57 +153,54 @@ public abstract class AbstractComponentBuilder {
         return false;
     }
 
-    protected Window constructAndShow(JComponent panel, Params p) throws ExecutionException, InterruptedException, InvocationTargetException {
+    protected Window constructAndShow(JComponent component, Params params) throws ExecutionException, InterruptedException, InvocationTargetException {
         Window window = SwingSaft.dispatch(() -> {
             Window w = null;
-            if ( p.framed ) {
+            System.out.println(params);
+            if ( params.framed ) {
                 // TODO: Reuse Parent and Modality ?
                 JFrame jframe = new JFrame();
-                jframe.setTitle(p.title);
+                jframe.setTitle(params.title());
                 jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                jframe.getContentPane().add(panel);
+                jframe.getContentPane().add(component);
                 w = jframe;
             } else {
                 JDialog dialog = new JDialog(swingParent);
                 dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                dialog.setModalityType(p.modalityType);
+                dialog.setModalityType(params.modalityType);
                 // Parse the Title somehow usefull.
-                dialog.setTitle(p.title);
-                dialog.getContentPane().add(panel);
+                dialog.setTitle(params.title());
+                dialog.getContentPane().add(component);
                 w = dialog;
             }
-            w.setIconImages(SwingSaft.loadIcons(p.panelClazz));
+            w.setIconImages(SwingSaft.loadIcons(params.panelClazz));
             w.pack();
             w.setLocationRelativeTo(swingParent);
-            Client.lookup(UserPreferences.class).loadLocation(p.panelClazz, p.id, w);
+            Client.lookup(UserPreferences.class).loadLocation(params.panelClazz, params.id, w);
             w.setVisible(true);
             return w;
         });
-        SwingSaft.enableCloser(window, panel);
-        SwingCore.ACTIVE_WINDOWS.put(p.key, new WeakReference<>(window));
+        SwingCore.ACTIVE_WINDOWS.put(params.key(), new WeakReference<>(window));
         // Removes on close.
         window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 // Clean us up.
-                SwingCore.ACTIVE_WINDOWS.remove(p.key);
+                SwingCore.ACTIVE_WINDOWS.remove(params.key());
                 // Store location.
-                Client.lookup(UserPreferences.class).storeLocation(p.panelClazz, p.id, window);
+                Client.lookup(UserPreferences.class).storeLocation(params.panelClazz, params.id, window);
             }
         });
         return window;
     }
 
     protected Params buildParameterBackedUpByDefaults(Class<?> panelClazz) {
-        return new Params(
-                panelClazz,
-                AbstractComponentBuilder.this.id,
-                (AbstractComponentBuilder.this.title == null ? UiUtil.title(panelClazz, id) : AbstractComponentBuilder.this.title),
-                (frame ? panelClazz.getAnnotation(Frame.class) != null : frame),
-                UiUtil.toSwing(modality).orElse(Dialog.ModalityType.MODELESS),
-                panelClazz.getName() + (id == null ? "" : ":" + id)
-        );
-
+        return Params.builder()
+                .panelClazz(panelClazz)
+                .id(AbstractBuilder.this.id)
+                .titleTemplate(AbstractBuilder.this.title)
+                .framed(!frame ? panelClazz.getAnnotation(Frame.class) != null : frame)
+                .modalityType(UiUtil.toSwing(modality).orElse(Dialog.ModalityType.MODELESS)).build();
     }
 
     protected static void wait(Window window) throws InterruptedException {

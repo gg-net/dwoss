@@ -25,6 +25,7 @@ import lombok.ToString;
  * Helper to bind Instance with action.
  * <p>
  * @author oliver.guenther
+ * @param <T>
  */
 @AllArgsConstructor
 @ToString

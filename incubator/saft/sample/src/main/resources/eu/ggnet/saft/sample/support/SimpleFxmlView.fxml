@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.saft.sample.support.SimpleFxmlController">
+<GridPane fx:id="root" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.saft.sample.support.SimpleFxmlController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="ALWAYS" maxWidth="229.0" minWidth="10.0" prefWidth="218.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="82.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -17,6 +19,16 @@
   </rowConstraints>
    <children>
       <Label text="Eingabe" />
-      <TextField fx:id="input" GridPane.columnIndex="1" />
+      <TextField fx:id="input" prefHeight="25.0" prefWidth="88.0" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+      <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
+      <Button mnemonicParsing="false" onAction="#ok" text="Ok" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+         <GridPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </GridPane.margin>
+      </Button>
    </children>
 </GridPane>

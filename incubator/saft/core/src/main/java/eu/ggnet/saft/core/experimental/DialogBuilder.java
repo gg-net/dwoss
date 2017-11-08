@@ -35,7 +35,11 @@ import eu.ggnet.saft.core.fx.FxSaft;
  *
  * @author oliver.guenther
  */
-public class DialogFx extends AbstractComponentBuilder {
+public class DialogBuilder extends AbstractBuilder {
+
+    public DialogBuilder() {
+        SwingCore.ensurePlatformIsRunning();
+    }
 
     /**
      * Sets the once mode.
@@ -45,7 +49,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param once the once mode
      * @return this as fluent usage
      */
-    public DialogFx once(boolean once) {
+    public DialogBuilder once(boolean once) {
         super.once = once;
         return this;
     }
@@ -56,7 +60,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param id the optional id.
      * @return this as fluent usage
      */
-    public DialogFx id(String id) {
+    public DialogBuilder id(String id) {
         super.id = id;
         return this;
     }
@@ -67,7 +71,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param title the title;
      * @return this as fluent usage
      */
-    public DialogFx title(String title) {
+    public DialogBuilder title(String title) {
         super.title = title;
         return this;
     }
@@ -78,7 +82,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param frame if true frame is assumed.
      * @return this as fluent usage
      */
-    public DialogFx frame(boolean frame) {
+    public DialogBuilder frame(boolean frame) {
         super.frame = frame;
         return this;
     }
@@ -89,7 +93,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param modality the modality to use
      * @return this as fluent usage
      */
-    public DialogFx modality(Modality modality) {
+    public DialogBuilder modality(Modality modality) {
         super.modality = modality;
         return this;
     }
@@ -100,7 +104,7 @@ public class DialogFx extends AbstractComponentBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public DialogFx parent(Window swingParent) {
+    public DialogBuilder parent(Window swingParent) {
         super.swingParent = swingParent;
         return this;
     }
@@ -120,7 +124,7 @@ public class DialogFx extends AbstractComponentBuilder {
 
             V dialog = FxSaft.dispatch(dialogProducer);
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
             Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
@@ -151,8 +155,10 @@ public class DialogFx extends AbstractComponentBuilder {
 
             V dialog = FxSaft.dispatch(dialogProducer);
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return Optional.empty();
-            dialog.accept(preProducer.call()); // Calling the preproducer and setting the result in the panel
+            P preResult = callWithProgress(preProducer);
+            p.optionalSupplyId(preResult);
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            dialog.accept(preResult); // Calling the preproducer and setting the result in the panel
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
             Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.

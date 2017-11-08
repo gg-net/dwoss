@@ -20,7 +20,8 @@ import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -31,6 +32,7 @@ import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 import lombok.experimental.Accessors;
+
 
 /*
     I - 4 Fälle:
@@ -58,7 +60,7 @@ import lombok.experimental.Accessors;
  * @author oliver.guenther
  */
 @Accessors(fluent = true)
-public class Swing extends AbstractComponentBuilder {
+public class SwingBuilder extends AbstractBuilder {
 
     /**
      * Sets the once mode.
@@ -68,7 +70,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param once the once mode
      * @return this as fluent usage
      */
-    public Swing once(boolean once) {
+    public SwingBuilder once(boolean once) {
         super.once = once;
         return this;
     }
@@ -79,7 +81,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param id the optional id.
      * @return this as fluent usage
      */
-    public Swing id(String id) {
+    public SwingBuilder id(String id) {
         super.id = id;
         return this;
     }
@@ -90,7 +92,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param title the title;
      * @return this as fluent usage
      */
-    public Swing title(String title) {
+    public SwingBuilder title(String title) {
         super.title = title;
         return this;
     }
@@ -101,7 +103,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param frame if true frame is assumed.
      * @return this as fluent usage
      */
-    public Swing frame(boolean frame) {
+    public SwingBuilder frame(boolean frame) {
         super.frame = frame;
         return this;
     }
@@ -112,7 +114,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param modality the modality to use
      * @return this as fluent usage
      */
-    public Swing modality(Modality modality) {
+    public SwingBuilder modality(Modality modality) {
         super.modality = modality;
         return this;
     }
@@ -123,7 +125,7 @@ public class Swing extends AbstractComponentBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public Swing parent(Window swingParent) {
+    public SwingBuilder parent(Window swingParent) {
         this.swingParent = swingParent;
         return this;
     }
@@ -141,8 +143,9 @@ public class Swing extends AbstractComponentBuilder {
             Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
             V panel = SwingSaft.dispatch(swingPanelProducer);
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return;
-            constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
+            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            SwingSaft.enableCloser(window, panel);
         } catch (ExecutionException | InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -164,10 +167,13 @@ public class Swing extends AbstractComponentBuilder {
             Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
             V panel = SwingSaft.dispatch(swingPanelProducer);
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return;
-            panel.accept(preProducer.call()); // Calling the preproducer and setting the result in the panel
-            constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-        } catch (Exception e) {
+            P preResult = callWithProgress(preProducer);
+            p.optionalSupplyId(preResult);
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
+            panel.accept(preResult); // Calling the preproducer and setting the result in the panel
+            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            SwingSaft.enableCloser(window, panel);
+        } catch (InterruptedException | InvocationTargetException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
@@ -187,8 +193,9 @@ public class Swing extends AbstractComponentBuilder {
             Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
             V panel = SwingSaft.dispatch(swingPanelProducer);  // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            SwingSaft.enableCloser(window, panel);
             wait(window);
             return Optional.ofNullable(panel.getResult());
         } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
@@ -213,12 +220,15 @@ public class Swing extends AbstractComponentBuilder {
             Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
             V panel = SwingSaft.dispatch(swingPanelProducer); // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key) ) return Optional.empty();
-            panel.accept(preProducer.call()); // Calling the preproducer and setting the result in the panel
+            P preResult = callWithProgress(preProducer);
+            p.optionalSupplyId(preResult);
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            panel.accept(preResult); // Calling the preproducer and setting the result in the panel
             Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            SwingSaft.enableCloser(window, panel);
             wait(window);
             return Optional.ofNullable(panel.getResult());
-        } catch (Exception ex) {
+        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }
     }

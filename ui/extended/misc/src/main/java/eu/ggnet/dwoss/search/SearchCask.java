@@ -40,7 +40,8 @@ import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.fx.FxSaft;
 
 import static java.lang.Double.MAX_VALUE;
@@ -122,7 +123,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
         };
 
         // Binding all Ui Properties
-        UiCore.observeProgress(searchService);
+        Ui.progress(searchService);
         searchProperty.bind(searchField.textProperty());
         resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
         progressBar.progressProperty().bind(searchService.progressProperty());

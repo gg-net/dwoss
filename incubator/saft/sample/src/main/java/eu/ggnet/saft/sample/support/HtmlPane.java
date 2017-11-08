@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.sample;
+package eu.ggnet.saft.sample.support;
 
 import java.util.function.Consumer;
 
