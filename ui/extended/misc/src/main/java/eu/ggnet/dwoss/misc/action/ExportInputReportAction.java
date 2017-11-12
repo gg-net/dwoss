@@ -16,22 +16,14 @@
  */
 package eu.ggnet.dwoss.misc.action;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.SwingWorker;
 
 import javafx.application.Platform;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.misc.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
 import eu.ggnet.dwoss.util.OkCancelStage;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
@@ -54,23 +46,10 @@ public class ExportInputReportAction extends AccessableAction {
             OkCancelStage<InputReportSelectorPane> stage = new OkCancelStage<>("Auswählen", selector);
             stage.showAndWait();
             if ( stage.isCancel() ) return;
-
-            new SwingWorker<File, Object>() {
-                @Override
-                protected File doInBackground() throws Exception {
-                    return lookup(UniqueUnitReporter.class).unitInputAsXls(selector.getStart(), selector.getEnd(), selector.getStep()).toTemporaryFile();
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        Desktop.getDesktop().open(get());
-                    } catch (InterruptedException | ExecutionException | IOException ex) {
-                        DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
-                    }
-                }
-            }.execute();
+            Ui.exec(() -> {
+                Ui.osOpen(Ui.progress().title(EXPORT_INPUT_REPORT.toName())
+                        .call(() -> lookup(UniqueUnitReporter.class).unitInputAsXls(selector.getStart(), selector.getEnd(), selector.getStep()).toTemporaryFile()));
+            });
         });
-
     }
 }

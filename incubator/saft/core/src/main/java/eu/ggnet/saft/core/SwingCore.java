@@ -16,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import eu.ggnet.saft.UiCore;
+
 /**
  * Core which is used if Saft is in Swing mode.
  *
@@ -28,11 +30,6 @@ public class SwingCore {
     private static boolean started = false;
 
     /**
-     * The Main Application Frame. If null not initialised.
-     */
-    static JFrame mainFrame = null;
-
-    /**
      * Active Windows Collection. Is used to get a window by a key if its already active.
      */
     public final static Map<String, WeakReference<Window>> ACTIVE_WINDOWS = new HashMap<>();
@@ -43,7 +40,7 @@ public class SwingCore {
     private static final Map<Scene, JFXPanel> swingParentHelper = new WeakHashMap<>();
 
     public static JFrame mainFrame() {
-        return mainFrame;
+        return UiCore.getMainFrame();
     }
 
     public static JFXPanel wrap(Pane p) throws InterruptedException {

@@ -26,6 +26,7 @@ import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.redtape.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
@@ -58,7 +59,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
                     if ( fj == null ) Alert.show("Keine Rückgabewerte");
                     else Desktop.getDesktop().open(fj.toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    UiCore.handle(ex);
+                    Ui.handle(ex);
                 }
             }
         }.execute();

@@ -19,9 +19,8 @@ import javafx.stage.Modality;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.Initialiser;
 import eu.ggnet.saft.core.all.OkCancelResult;
-import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.UiUtil;
 
 /**
  *
@@ -70,9 +69,6 @@ public class SwingSaft {
     public static <T, R extends JPanel> R construct(Class<R> panelClazz, T parameter) throws Exception {
         return dispatch(() -> {
             R panel = panelClazz.getConstructor().newInstance();
-            if ( panel instanceof Initialiser ) {
-                ((Initialiser)panel).initialise();
-            }
             if ( parameter != null && panel instanceof Consumer ) {
                 try {
                     ((Consumer<T>)panel).accept(parameter);

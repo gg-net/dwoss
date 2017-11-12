@@ -1,5 +1,7 @@
 package eu.ggnet.saft.core.swing;
 
+import eu.ggnet.saft.Ui;
+
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
@@ -15,7 +17,7 @@ import eu.ggnet.saft.api.ui.Frame;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.OnceCaller;
-import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.UiUtil;
 
 import static eu.ggnet.saft.core.Client.lookup;
 

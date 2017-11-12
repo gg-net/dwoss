@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,22 +17,13 @@
 package eu.ggnet.dwoss.misc.action.listings;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
-import java.util.concurrent.*;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.core.Workspace;
-
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -51,25 +42,12 @@ public class SalesListingCreateAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<List<FileJacket>, Object>() {
-            @Override
-            protected List<FileJacket> doInBackground() throws Exception {
-                return lookup(SalesListingProducer.class).generateListings(config);
-            }
+        Ui.exec(() -> {
+            Ui.progress().title(config.getName()).call(() -> {
+                lookup(SalesListingProducer.class).generateListings(config).forEach(fj -> fj.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+                return null;
+            });
+        });
 
-            @Override
-            protected void done() {
-                try {
-                    List<FileJacket> files = get();
-                    if ( files != null ) {
-                        for (FileJacket file : files) {
-                            file.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT);
-                        }
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
     }
 }

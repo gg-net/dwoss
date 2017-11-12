@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.action;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingWorker;
-
-import eu.ggnet.saft.core.Workspace;
 
 import eu.ggnet.dwoss.misc.op.PersistenceValidator;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -42,24 +34,8 @@ public class DatabaseValidationAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<Object, Object>() {
-            @Override
-            protected Object doInBackground() throws Exception {
-                FileJacket jacket = lookup(PersistenceValidator.class).validateDatabase();
-                if ( jacket == null ) return null;
-                File f = jacket.toTemporaryFile();
-                Desktop.getDesktop().open(f);
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
+        Ui.exec(() -> {
+            Optional.ofNullable(lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
+        });
     }
 }

@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 /**
  *

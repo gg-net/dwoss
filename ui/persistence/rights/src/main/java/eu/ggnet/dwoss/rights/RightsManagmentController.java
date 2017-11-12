@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,29 +20,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.rights.RightsAgent;
-
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.Title;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -51,7 +50,8 @@ import static eu.ggnet.saft.core.Client.lookup;
  *
  * @author Bastian Venz
  */
-public class RightsManagmentController implements Initializable {
+@Title("Rechte Verwaltung")
+public class RightsManagmentController implements Initializable, FxController {
 
     @FXML
     ListView<Operator> userlist;
@@ -106,16 +106,13 @@ public class RightsManagmentController implements Initializable {
         addPersonaButton.visibleProperty().bind(deactivePersonas.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
         removePersonaButton.visibleProperty().bind(activePersonas.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0).and(opProp.isNotNull()));
 
-        userlist.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if ( event.getButton().equals(MouseButton.PRIMARY) ) {
-                    Operator op = userlist.getSelectionModel().getSelectedItem();
-                    if ( event.getClickCount() == 1 ) {
-                        setSelectedOperator(op);
-                    } else if ( op != null ) {
-                        openOperatorManagment(op);
-                    }
+        userlist.setOnMouseClicked((event) -> {
+            if ( event.getButton().equals(MouseButton.PRIMARY) ) {
+                Operator op = userlist.getSelectionModel().getSelectedItem();
+                if ( event.getClickCount() == 1 ) {
+                    setSelectedOperator(op);
+                } else if ( op != null ) {
+                    openOperatorManagment(op);
                 }
             }
         });
@@ -313,15 +310,15 @@ public class RightsManagmentController implements Initializable {
         deactiveRights.getItems().clear();
         Platform.runLater(
                 new Runnable() {
-                    @Override
-                    public void run() {
-                        RightsAgent agent = lookup(RightsAgent.class);
-                        userlist.getItems().addAll(agent.findAllEager(Operator.class));
-                        List<Persona> findAllEager = agent.findAllEager(Persona.class);
-                        allPersonas.addAll(findAllEager);
-                        deactivePersonas.getItems().addAll(findAllEager);
-                    }
-                }
+            @Override
+            public void run() {
+                RightsAgent agent = lookup(RightsAgent.class);
+                userlist.getItems().addAll(agent.findAllEager(Operator.class));
+                List<Persona> findAllEager = agent.findAllEager(Persona.class);
+                allPersonas.addAll(findAllEager);
+                deactivePersonas.getItems().addAll(findAllEager);
+            }
+        }
         );
     }
 
@@ -344,8 +341,8 @@ public class RightsManagmentController implements Initializable {
             resetDeactivePersonas();
             resetDeactiveRights();
             resetAllRights();
-        } catch (IOException exception) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), exception);
+        } catch (IOException ex) {
+            Ui.handle(ex);
         }
     }
 
@@ -365,8 +362,9 @@ public class RightsManagmentController implements Initializable {
             Scene scene = new Scene(page, Color.ALICEBLUE);
             stage.setScene(scene);
             stage.showAndWait();
-        } catch (IOException exception) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), exception);
+        } catch (IOException ex) {
+            Ui.handle(ex);
+
         }
     }
 

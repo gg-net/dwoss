@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,10 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.AbstractListModel;
 
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -58,7 +55,7 @@ public class DirectoryMonitor extends AbstractListModel<File> implements Runnabl
             directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             reloadView();
         } catch (IOException | RuntimeException ex) {
-            DwOssCore.show(Client.lookup(Workspace.class).getMainFrame(), ex);
+            Ui.handle(ex);
             throw new RuntimeException(ex);
         }
     }

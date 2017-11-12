@@ -2,12 +2,12 @@ package eu.ggnet.saft.sample;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.sample.support.MainPanel;
 
 /**
- * A Simple Exception handling Example.
+ * Example of overwriting the UI Exception handling.
  *
  * @author oliver.guenther
  */
@@ -20,10 +20,9 @@ public class OverwriteExceptions {
             JOptionPane.showMessageDialog(null, "Important:" + t.getClass().getSimpleName() + " : " + t.getMessage());
         });
 
-        Ui.exec(Ui.call(() -> {
+        Ui.exec(() -> {
             throw new IllegalArgumentException("Sinnlos");
-        })
-        );
+        });
     }
 
 }

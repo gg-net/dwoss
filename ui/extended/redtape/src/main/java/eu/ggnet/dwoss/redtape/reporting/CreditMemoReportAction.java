@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Workspace;
 
 import static eu.ggnet.saft.core.Client.lookup;

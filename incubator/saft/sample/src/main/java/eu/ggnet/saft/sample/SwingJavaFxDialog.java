@@ -1,11 +1,11 @@
 package eu.ggnet.saft.sample;
 
-import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.sample.support.MainPanel;
 
 import static javafx.scene.control.ButtonType.CANCEL;
@@ -13,6 +13,7 @@ import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Opening a JavaFX Pane as popup Dialog, blocking the hole application.
+ * See the javafx Dialog for more details.
  *
  * @author oliver.guenther
  */
@@ -21,11 +22,7 @@ public class SwingJavaFxDialog {
     public static void main(String[] args) {
         UiCore.startSwing(() -> new MainPanel());
 
-        new JFXPanel();
-
-//        dialog.showAndWait().ifPresent(System.out::println);
-
-        Ui.dialog().parent(SwingCore.mainFrame()).eval(() -> {
+        Ui.dialog().eval(() -> {
             Dialog<String> dialog = new Dialog<>();
             GridPane grid = new GridPane();
             grid.setHgap(10);

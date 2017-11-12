@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 

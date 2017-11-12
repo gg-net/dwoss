@@ -1,6 +1,6 @@
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.Frame;
 
 import javafx.scene.control.Button;

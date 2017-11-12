@@ -26,8 +26,8 @@ import javax.swing.ImageIcon;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.ToolbarComponent;
-import eu.ggnet.saft.core.UiCore;
 
 /**
  *
@@ -81,7 +81,7 @@ public class OpenDirectoryViewCask extends javax.swing.JPanel implements Toolbar
         try {
             Desktop.getDesktop().open(new File(GlobalConfig.APPLICATION_PATH_OUTPUT));
         } catch (IOException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }//GEN-LAST:event_buttonActionPerformed
 

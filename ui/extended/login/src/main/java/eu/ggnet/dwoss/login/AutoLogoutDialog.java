@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.Workspace;
 
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -177,7 +177,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
             } catch (AuthenticationException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
             } catch (Exception ex) {
-                DwOssCore.show(this, ex);
+                Ui.handle(ex);
             }
         }
     }//GEN-LAST:event_loginButtonActionPerformed

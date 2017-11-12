@@ -16,6 +16,7 @@
  */
 package eu.ggnet.saft.core.experimental;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
@@ -128,8 +130,19 @@ public class FxBuilder extends AbstractBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public FxBuilder parent(Window swingParent) {
-        this.swingParent = swingParent;
+    public FxBuilder parent(Component swingParent) {
+        super.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        return this;
+    }
+
+    /**
+     * Represents the parent of the ui element, optional.
+     *
+     * @param javaFxParent the parent
+     * @return this as fluent usage
+     */
+    public FxBuilder parent(Parent javaFxParent) {
+        super.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
         return this;
     }
 
@@ -160,9 +173,9 @@ public class FxBuilder extends AbstractBuilder {
      * Case: Ib
      *
      * @param <P>                result type of the preProducer
-     * @param <V>
-     * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
+     * @param <V>                javafx Pane and Consumer type
      * @param preProducer        the preProducer, must not be null
+     * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
      */
     public <P, V extends Pane & Consumer<P>> void show(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
         try {

@@ -17,8 +17,6 @@
 package eu.ggnet.saft.sample.search;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.all.DescriptiveConsumer;
@@ -36,7 +34,7 @@ public class UnitDependentActionFactory implements DescriptiveConsumerFactory<Mi
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(UnitDependentActionFactory.class.getName()).log(Level.SEVERE, null, ex);
+            //
         }
         return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> Alert.show("Umfuhr ausgeführt")));
     }

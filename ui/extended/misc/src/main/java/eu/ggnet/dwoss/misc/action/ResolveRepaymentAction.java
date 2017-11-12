@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.misc.repayment.ContractorSelectorPane;
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;

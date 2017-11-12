@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 /**
  * FXML Controller class

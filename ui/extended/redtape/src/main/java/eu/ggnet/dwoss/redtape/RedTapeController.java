@@ -48,6 +48,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
@@ -341,7 +342,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                 Dossier dos = lookup(RedTapeWorker.class).updateComment(model.getSelectedDossier(), sav.getText());
                 reloadSelectionOnStateChange(dos);
             } catch (UserInfoException ex) {
-                UiCore.handle(ex);
+                Ui.handle(ex);
             }
         }
     }

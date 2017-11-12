@@ -24,7 +24,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.ops.Ops;
 
 import static java.lang.Double.MAX_VALUE;
@@ -34,7 +35,7 @@ import static java.lang.Double.MAX_VALUE;
  * @author oliver.guenther
  */
 @Title("Unit Viewer")
-public class UnitDetailSelectivView extends BorderPane implements Consumer<MicroUnit>, ClosedListener, Initialiser {
+public class UnitDetailSelectivView extends BorderPane implements Consumer<MicroUnit>, ClosedListener {
 
     private final TextField header;
 
@@ -49,6 +50,7 @@ public class UnitDetailSelectivView extends BorderPane implements Consumer<Micro
         body = new TextArea();
         progressIndicator = new ProgressIndicator();
         setCenter(new StackPane(body, progressIndicator));
+        Ops.registerSelectListener(this);
         reset();
     }
 
@@ -74,11 +76,6 @@ public class UnitDetailSelectivView extends BorderPane implements Consumer<Micro
                 progressIndicator.setVisible(false);
             });
         });
-    }
-
-    @Override
-    public void initialise() {
-        Ops.registerSelectListener(this);
     }
 
     @Override

@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.api.Reply;
 
 import lombok.*;
 import lombok.experimental.Builder;
@@ -259,9 +260,9 @@ public interface ReportAgent extends RemoteAgent {
      *
      * @param key  the optimistic locking key
      * @param name string to be set as new comment for the Report
-     * @return
+     * @return a reply, which on success has the name as payload.
      */
-    boolean updateReportName(Report.OptimisticKey key, String name);
+    Reply<String> updateReportName(Report.OptimisticKey key, String name);
 
     /**
      * Returns a ReportResult build from an existing Report.

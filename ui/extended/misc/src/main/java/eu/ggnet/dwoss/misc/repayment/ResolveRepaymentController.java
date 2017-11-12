@@ -35,9 +35,9 @@ import eu.ggnet.dwoss.misc.op.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.UiAlert.Type;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
@@ -143,7 +143,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
                         .show(Type.INFO);
                 reset();
             } catch (UserInfoException ex) {
-                UiCore.handle(ex);
+                Ui.handle(ex);
             } finally {
                 reset();
             }

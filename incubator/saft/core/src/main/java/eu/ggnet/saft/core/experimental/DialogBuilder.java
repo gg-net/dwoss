@@ -16,19 +16,21 @@
  */
 package eu.ggnet.saft.core.experimental;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.SwingCore;
-import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.fx.FxSaft;
 
 /**
@@ -104,8 +106,19 @@ public class DialogBuilder extends AbstractBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public DialogBuilder parent(Window swingParent) {
-        super.swingParent = swingParent;
+    public DialogBuilder parent(Component swingParent) {
+        super.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        return this;
+    }
+
+    /**
+     * Represents the parent of the ui element, optional.
+     *
+     * @param javaFxParent the parent
+     * @return this as fluent usage
+     */
+    public DialogBuilder parent(Parent javaFxParent) {
+        super.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
         return this;
     }
 
@@ -128,7 +141,10 @@ public class DialogBuilder extends AbstractBuilder {
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
             Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
-                ((Button)b).setOnAction(e -> Ui.closeWindowOf(window));
+                ((Button)b).setOnAction(e -> {
+                    System.out.println("Close called");
+                    Ui.closeWindowOf(window);
+                });
             });
             wait(window);
             return Optional.ofNullable(dialog.getResult());

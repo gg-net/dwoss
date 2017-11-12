@@ -39,6 +39,7 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.assist.ReportUtil.*;
@@ -137,14 +138,15 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
      * See {@link ReportAgent#updateReportName(eu.ggnet.dwoss.report.entity.Report.OptimisticKey, java.lang.String) }.
      */
     @Override
-    public boolean updateReportName(Report.OptimisticKey key, String name) {
+    public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
         // TODO: Build a better result with error messages.
-        if ( key == null || name == null ) return false;
+        if ( key == null ) return Reply.failure("Key is null");
+        if ( name == null ) return Reply.failure("Name is null");
         Report find = reportEm.find(Report.class, key.getId());
-        if ( find == null ) return false;
-        if ( find.getOptLock() != key.getOptLock() ) return false;
+        if ( find == null ) return Reply.failure("No Report found with id " + key.getId());
+        if ( find.getOptLock() != key.getOptLock() ) return Reply.failure("OptLock missmatsch. Bitte Fenster schließen und neu öffnen");
         find.setName(name);
-        return true;
+        return Reply.success(name);
     }
 
     @Override

@@ -24,8 +24,8 @@ import javax.swing.JButton;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.util.HtmlPane;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *

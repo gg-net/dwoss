@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape;
 
+import eu.ggnet.saft.Ui;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;

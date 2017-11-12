@@ -28,10 +28,11 @@ import javax.swing.*;
 
 import javafx.stage.Modality;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiUtil;
 import eu.ggnet.saft.api.ui.Frame;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.all.UiUtil;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 import lombok.*;
@@ -54,13 +55,7 @@ public abstract class AbstractBuilder {
      * @return
      */
     protected static <A> A callWithProgress(Callable<A> callable) {
-        return Ui.progress((Void t) -> {
-            try {
-                return callable.call();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        }).apply(null);
+        return Ui.progress().call(callable);
     }
 
     // Internal Parameter class
@@ -156,7 +151,6 @@ public abstract class AbstractBuilder {
     protected Window constructAndShow(JComponent component, Params params) throws ExecutionException, InterruptedException, InvocationTargetException {
         Window window = SwingSaft.dispatch(() -> {
             Window w = null;
-            System.out.println(params);
             if ( params.framed ) {
                 // TODO: Reuse Parent and Modality ?
                 JFrame jframe = new JFrame();

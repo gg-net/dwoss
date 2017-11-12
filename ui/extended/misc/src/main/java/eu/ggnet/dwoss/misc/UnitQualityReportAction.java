@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,16 +18,11 @@ package eu.ggnet.dwoss.misc;
 
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.common.DwOssCore;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingWorker;
 import javax.validation.constraints.NotNull;
 
 import org.metawidget.inspector.annotation.UiComesAfter;
@@ -41,8 +36,8 @@ import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
 
-import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Ui;
 
 import lombok.Data;
 
@@ -84,20 +79,9 @@ public class UnitQualityReportAction extends AbstractAction {
         final ReportParameter rp = mw.getToInspect();
         if ( !ValidationUtil.isValidOrShow(lookup(Workspace.class).getMainFrame(), rp) ) return;
 
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                return lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor());
-            }
+        Ui.exec(() -> {
+            Ui.osOpen(lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor()).toTemporaryFile());
+        });
 
-            @Override
-            protected void done() {
-                try {
-                    Desktop.getDesktop().open(get().toTemporaryFile());
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
     }
 }

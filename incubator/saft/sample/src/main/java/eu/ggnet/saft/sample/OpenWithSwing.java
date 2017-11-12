@@ -1,5 +1,8 @@
 package eu.ggnet.saft.sample;
 
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.Ui;
+
 import java.util.Random;
 
 import javax.swing.JMenu;

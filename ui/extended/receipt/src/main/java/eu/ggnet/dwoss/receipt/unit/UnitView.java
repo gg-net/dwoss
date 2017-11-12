@@ -26,7 +26,6 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.receipt.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.receipt.UiUtil;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.Survey;
@@ -38,6 +37,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.UserPreferences;
 
@@ -770,7 +770,7 @@ public class UnitView extends javax.swing.JDialog {
         try {
             controller.createOrEditPart(partNoField.getText());
         } catch (UserInfoException ex) {
-            DwOssCore.show(this, ex);
+            Ui.handle(ex);
         }
         controller.validateRefurbishedId();
     }//GEN-LAST:event_editProductButtonActionPerformed

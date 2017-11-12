@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 
 import java.awt.EventQueue;

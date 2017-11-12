@@ -14,27 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.search;
+package eu.ggnet.dwoss.common;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
-import eu.ggnet.saft.Ui;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 /**
+ * Utility Class to wrap replies.
  *
  * @author oliver.guenther
  */
-public class OpenSearchAction extends AbstractAction {
+public class ReplyUtil {
 
-    public OpenSearchAction() {
-        super("(Die neue) Suche");
+    public static interface UserInfoExceptionCallable<R> {
+
+        R call() throws UserInfoException;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Ui.openFx(SearchCask.class).exec();
+    /**
+     * Wraps a result with possible UserInfoException in a reply.
+     *
+     * @param <R>      the type of payload
+     * @param callable the call which might throw an exception.
+     * @return the reply.
+     */
+    public static <R> Reply<R> wrap(UserInfoExceptionCallable<R> callable) {
+        try {
+            return Reply.success(callable.call());
+        } catch (UserInfoException ex) {
+            return Reply.failure(ex.getMessage());
+        }
     }
 
 }

@@ -62,5 +62,12 @@ public interface SalesListingProducer {
 
     FileJacket generateAllSalesListing();
 
+    /**
+     * Returns a list of generated Files as Jackets, never Null.
+     *
+     * @param config the config to be used.
+     * @return a list of generated Files as Jackets, never Null.
+     * @throws UserInfoException
+     */
     List<FileJacket> generateListings(ListingActionConfiguration config) throws UserInfoException;
 }

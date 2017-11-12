@@ -26,9 +26,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.*;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 
@@ -63,7 +64,7 @@ public class DirectoryMonitorFX implements Runnable {
             directory.toPath().register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             updateList();
         } catch (IOException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }
 
@@ -82,7 +83,7 @@ public class DirectoryMonitorFX implements Runnable {
      */
     private void createNodeTree(String path) {
         TreeItem<Object> tree = new TreeItem<>(path.substring(path.lastIndexOf(File.separator)));
-        //build a list for folder and for files  
+        //build a list for folder and for files
         List<TreeItem<Object>> folders = new ArrayList<>();
         List<TreeItem<Object>> files = new ArrayList<>();
 
@@ -101,7 +102,7 @@ public class DirectoryMonitorFX implements Runnable {
             tree.getChildren().addAll(folders);
             tree.getChildren().addAll(files);
         } catch (IOException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
         tree.setExpanded(true);
 
@@ -112,8 +113,9 @@ public class DirectoryMonitorFX implements Runnable {
 
     /**
      * make a single leaf for Files
+     *
      * @param subPath
-     * @return 
+     * @return
      */
     private TreeItem<Object> getLeafs(Path subPath) {
         String strPath = subPath.toString();
@@ -123,6 +125,7 @@ public class DirectoryMonitorFX implements Runnable {
 
     /**
      * make a own SubLeaft for Folder in the main Folder
+     *
      * @param subPath
      * @param parent
      */
@@ -137,7 +140,7 @@ public class DirectoryMonitorFX implements Runnable {
                 }
             }
         } catch (IOException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }
 

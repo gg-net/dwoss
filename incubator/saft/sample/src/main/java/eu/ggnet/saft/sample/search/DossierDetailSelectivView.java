@@ -24,7 +24,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.ops.Ops;
 
 import static java.lang.Double.MAX_VALUE;
@@ -34,7 +35,7 @@ import static java.lang.Double.MAX_VALUE;
  * @author oliver.guenther
  */
 @Title("Dossier Viewer")
-public class DossierDetailSelectivView extends BorderPane implements Consumer<MicroDossier>, ClosedListener, Initialiser {
+public class DossierDetailSelectivView extends BorderPane implements Consumer<MicroDossier>, ClosedListener {
 
     private final TextField header;
 
@@ -48,6 +49,7 @@ public class DossierDetailSelectivView extends BorderPane implements Consumer<Mi
         setTop(header);
         body = new TextArea();
         progressIndicator = new ProgressIndicator();
+        Ops.registerSelectListener(this);
         setCenter(new StackPane(body, progressIndicator));
         reset();
     }
@@ -74,11 +76,6 @@ public class DossierDetailSelectivView extends BorderPane implements Consumer<Mi
                 progressIndicator.setVisible(false);
             });
         });
-    }
-
-    @Override
-    public void initialise() {
-        Ops.registerSelectListener(this);
     }
 
     @Override

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.common.exception;
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
 
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 public class UnhandledExceptionCatcher extends EventQueue {
 
@@ -28,7 +28,7 @@ public class UnhandledExceptionCatcher extends EventQueue {
         try {
             super.dispatchEvent(newEvent);
         } catch (Exception e) {
-            UiCore.handle(e);
+            Ui.handle(e);
         }
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,22 +24,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.PojoColumn;
 import eu.ggnet.dwoss.util.table.PojoTableModel;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -57,7 +47,7 @@ public class SalesProductViewCask extends javax.swing.JPanel {
 
             super(new ArrayList<SalesProduct>(),
                     new PojoColumn<SalesProduct>(
-                    "PartNo", false, 10, String.class, "partNo"),
+                            "PartNo", false, 10, String.class, "partNo"),
                     new PojoColumn<SalesProduct>("Name", false, 100, String.class, "name"),
                     new PojoColumn<SalesProduct>("Preis (netto)", false, 10, Double.class, "price"));
         }
@@ -198,8 +188,8 @@ public class SalesProductViewCask extends javax.swing.JPanel {
             if ( showInputDialog == null || showInputDialog.trim().isEmpty() ) return;
             redTapeWorker.createSalesProduct(showInputDialog);
             reloadListData();
-        } catch (HeadlessException | UserInfoException e) {
-            DwOssCore.show(SwingUtilities.getWindowAncestor(this), e);
+        } catch (HeadlessException | UserInfoException ex) {
+            Ui.handle(ex);
         }
 
     }//GEN-LAST:event_createButtonActionPerformed

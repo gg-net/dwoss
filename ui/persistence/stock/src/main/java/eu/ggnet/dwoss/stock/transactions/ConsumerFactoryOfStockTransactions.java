@@ -16,16 +16,18 @@
  */
 package eu.ggnet.dwoss.stock.transactions;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.all.DescriptiveConsumer;
 import eu.ggnet.saft.core.all.DescriptiveConsumerFactory;
 import eu.ggnet.saft.core.authorisation.Guardian;
@@ -42,6 +44,7 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
 
     @Override
     public List<DescriptiveConsumer<PicoUnit>> of(PicoUnit t) {
+
         StockAgent stockAgent = lookup(StockAgent.class);
         StockUnit su = stockAgent.findStockUnitByUniqueUnitIdEager(t.uniqueUnitId);
         if ( su == null || su.isInTransaction() ) return Collections.EMPTY_LIST;
@@ -51,18 +54,29 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                 .stream()
                 .filter(s -> !s.equals(su.getStock()))
                 .map(destination -> {
-                    return new DescriptiveConsumer<PicoUnit>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
-                        Ui.call(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"))
-                        .choiceFx(CreateQuestionView.class)
-                        .onOk(v -> {
-                            lookup(StockTransactionProcessor.class).perpareTransfer(
-                                    v.model().stockUnits,
-                                    v.model().destination.getId(),
-                                    guardian.getUsername(),
-                                    v.model().comment);
-                            Alert.show("Umfuhr anglegt.");
-                            return null;
-                        }).exec();
+                    return new DescriptiveConsumer<>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
+                        Ui.exec(() -> {
+                            Ui.dialog().eval(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"), () -> new CreateQuestionView())
+                                    .map(v -> ReplyUtil.wrap(() -> lookup(StockTransactionProcessor.class).perpareTransfer(
+                                    v.stockUnits,
+                                    v.destination.getId(),
+                                    lookup(Guardian.class).getUsername(),
+                                    v.comment)))
+                                    .filter(Ui.failure()::handle).ifPresent(u -> Alert.show("Umfuhr angelegt"));
+                        });
+
+// OLD Style
+//                        Ui.call(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"))
+//                                .choiceFx(CreateQuestionView.class)
+//                                .onOk(v -> {
+//                                    lookup(StockTransactionProcessor.class).perpareTransfer(
+//                                            v.model().stockUnits,
+//                                            v.model().destination.getId(),
+//                                            guardian.getUsername(),
+//                                            v.model().comment);
+//                                    Alert.show("Umfuhr anglegt.");
+//                                    return null;
+//                                }).exec();
                     });
                 })
                 .collect(Collectors.toList());

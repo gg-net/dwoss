@@ -2,7 +2,7 @@ package eu.ggnet.saft.sample;
 
 import java.util.Optional;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 /**
  * Shows a chain,that is broken through a null result.

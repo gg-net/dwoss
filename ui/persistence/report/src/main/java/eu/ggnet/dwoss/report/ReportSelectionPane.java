@@ -34,11 +34,11 @@ import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Client;
 
 import lombok.Value;
 
-import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
 import static java.time.ZoneId.systemDefault;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
@@ -152,28 +152,16 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
         dialog.setResultConverter((type) -> type.getButtonData() == OK_DONE ? new EditResult(selectedReport.toKey(), textField.getText()) : null);
 
-        dialog.showAndWait()
-                .map(r -> new UpdateResult(Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()), r.getText()))
-                .ifPresent(r -> {
-                    if ( r.isSuccessful() ) {
-                        reportListView.getSelectionModel().getSelectedItem().setName(r.getText());
+        Ui.exec(() -> {
+            Ui.dialog().parent(this).eval(() -> dialog)
+                    .map(r -> Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
+                    .filter(Ui.failure()::handle)
+                    .ifPresent(r -> {
+                        reportListView.getSelectionModel().getSelectedItem().setName(r.getPayload());
                         reportListView.refresh();
-                    } else {
-                        eu.ggnet.saft.core.Alert.show(ReportSelectionPane.this, "Error on Update", "Update nicht erfolgreich, Vielleicht Fenster öffnen und schließen", ERROR);
-                    }
-                });
+                    });
+        });
 
-        // Not yet implemented
-//        Ui.dialog().eval(() -> dialog)
-//                .map(r -> new UpdateResult(Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()), r.getText()))
-//                .ifPresent(r -> {
-//                    if ( r.isSuccessful() ) {
-//                        reportListView.getSelectionModel().getSelectedItem().setName(r.getText());
-//                        reportListView.refresh();
-//                    } else {
-//                        eu.ggnet.saft.core.Alert.show(ReportSelectionPane.this, "Error on Update", "Update nicht erfolgreich, Vielleicht Fenster öffnen und schließen", ERROR);
-//                    }
-//                });
     }
 
     @Override

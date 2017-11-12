@@ -1,4 +1,4 @@
-package eu.ggnet.saft.core.all;
+package eu.ggnet.saft;
 
 import java.awt.Desktop;
 import java.awt.Dialog;
@@ -10,7 +10,8 @@ import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.CallableA1;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.all.OkCancelResult;
+import eu.ggnet.saft.core.all.OnceCaller;
 
 /**
  * Util is
@@ -84,6 +85,7 @@ public class UiUtil {
         return Optional.empty();
     }
 
+    @Deprecated
     public static boolean isBlank(final CharSequence cs) {
         int strLen;
         if ( cs == null || (strLen = cs.length()) == 0 ) {

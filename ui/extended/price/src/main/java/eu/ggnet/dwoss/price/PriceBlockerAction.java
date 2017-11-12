@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,9 +33,8 @@ import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
@@ -65,7 +64,7 @@ public class PriceBlockerAction extends AccessableAction {
             per.setUnitPriceFixed(Change.SET);
             lookup(Importer.class).store(per, "Set directly via PriceBlocker", lookup(Guardian.class).getUsername());
         } catch (UserInfoException ex) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+            Ui.handle(ex);
         }
     }
 

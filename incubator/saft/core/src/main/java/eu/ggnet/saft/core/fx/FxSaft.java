@@ -14,7 +14,6 @@ import javafx.stage.Window;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Initialiser;
 
 /**
  *
@@ -45,9 +44,6 @@ public class FxSaft {
 
     public static <T, R extends Pane> R construct(Class<R> paneClass, T parameter) throws Exception {
         R pane = paneClass.getConstructor().newInstance();
-        if ( pane instanceof Initialiser ) {
-            ((Initialiser)pane).initialise();
-        }
         if ( parameter != null && pane instanceof Consumer ) {
             try {
                 ((Consumer<T>)pane).accept(parameter);

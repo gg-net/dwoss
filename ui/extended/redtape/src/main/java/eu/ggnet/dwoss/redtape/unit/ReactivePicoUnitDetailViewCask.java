@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.Guardian;
 import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.ops.Ops;
@@ -43,7 +43,7 @@ import static javafx.scene.text.Font.font;
  */
 @Frame
 @Title("Reactive Geräte Ansicht")
-public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consumer<PicoUnit>, ClosedListener, Initialiser {
+public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consumer<PicoUnit>, ClosedListener {
 
     private final Label head;
 
@@ -59,6 +59,7 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
         progressIndicator = new ProgressIndicator();
         setCenter(new StackPane(webView, progressIndicator));
         progressIndicator.setVisible(false);
+        Ops.registerSelectListener(this);
     }
 
     @Override
@@ -83,11 +84,6 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
             return null;
         });
 
-    }
-
-    @Override
-    public void initialise() {
-        Ops.registerSelectListener(this);
     }
 
     @Override

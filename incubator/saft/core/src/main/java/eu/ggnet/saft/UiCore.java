@@ -1,4 +1,4 @@
-package eu.ggnet.saft.core;
+package eu.ggnet.saft;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -20,7 +20,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.core.FxCore;
+import eu.ggnet.saft.core.SwingCore;
 import eu.ggnet.saft.core.exception.ExceptionUtil;
 import eu.ggnet.saft.core.exception.SwingExceptionDialog;
 import eu.ggnet.saft.core.fx.FxSaft;
@@ -34,6 +35,18 @@ import eu.ggnet.saft.core.swing.SwingSaft;
 public class UiCore {
 
     private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
+
+    private static JFrame mainFrame = null; // Frame in Swing Mode
+
+    private static Stage mainStage = null; // Frame in Fx Mode
+
+    public static JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public static Stage getMainStage() {
+        return mainStage;
+    }
 
     // We need the raw type here. Otherwise we cannot get different typs of cosumers in and out.
     @SuppressWarnings("unchecked")
@@ -68,7 +81,7 @@ public class UiCore {
     public static void continueSwing(JFrame mainView) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
         Platform.setImplicitExit(false); // Need this, as we asume many javafx elements opening and closing.
-        SwingCore.mainFrame = mainView;
+        mainFrame = mainView;
         mainView.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -130,7 +143,7 @@ public class UiCore {
      */
     public static <T extends Parent> void startJavaFx(final Stage primaryStage, final Callable<T> builder) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
-        FxCore.mainStage = primaryStage;
+        mainStage = primaryStage;
         FxSaft.dispatch(() -> {
             T node = builder.call();
             primaryStage.setTitle(UiUtil.title(node.getClass()));
@@ -164,12 +177,24 @@ public class UiCore {
         if ( consumer != null ) finalConsumer = consumer;
     }
 
+    public static boolean isRunning() {
+        return mainFrame != null || FxCore.mainStage() != null;
+    }
+
+    public static boolean isFx() {
+        return (mainStage != null);
+    }
+
+    public static boolean isSwing() {
+        return (mainFrame != null);
+    }
+
     /**
-     * Passes the Exception to
+     * Intake from Ui.
      * <p>
      * @param b
      */
-    public static void handle(Throwable b) {
+    static void handle(Throwable b) {
         BACKGROUND_ACTIVITY.set(false); // Cleanup
         for (Class<?> clazz : EXCEPTION_CONSUMER.keySet()) {
             if ( ExceptionUtil.containsInStacktrace(clazz, b) ) {
@@ -178,18 +203,6 @@ public class UiCore {
             }
         }
         finalConsumer.accept(b);
-    }
-
-    public static boolean isRunning() {
-        return SwingCore.mainFrame() != null || FxCore.mainStage() != null;
-    }
-
-    public static boolean isFx() {
-        return (FxCore.mainStage() != null);
-    }
-
-    public static boolean isSwing() {
-        return (SwingCore.mainFrame() != null);
     }
 
 }

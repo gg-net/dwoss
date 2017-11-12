@@ -32,7 +32,6 @@ public class UserInfoExceptionConsumer implements Consumer<UserInfoException> {
 
     @Override
     public void accept(UserInfoException ex) {
-        Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null);
         Alert.title(ex.getHead()).message(ex.getMessage())
                 .parent(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
                 .show(map(ex.getType()));

@@ -6,8 +6,9 @@ import java.util.function.Consumer;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.all.UiUtil;
 import eu.ggnet.saft.core.swing.DialogButtonPanel;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
@@ -41,7 +42,7 @@ public class DocumentAdressUpdateViewOkCanceler extends javax.swing.JPanel imple
     @Override
     public String getResult() {
         if ( !buttons.isOk() ) return null;
-        if ( UiUtil.isBlank(adressArea.getText()) ) return null;
+        if ( StringUtils.isBlank(adressArea.getText()) ) return null;
         return adressArea.getText();
     }
 

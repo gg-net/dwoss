@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,10 @@ package eu.ggnet.dwoss.report.returns;
 import java.awt.BorderLayout;
 import java.util.List;
 
-import eu.ggnet.dwoss.common.DesktopUtil;
 import eu.ggnet.dwoss.report.TableLine;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.saft.Ui;
 
 /**
  *
@@ -128,7 +128,7 @@ public class ReturnsCask extends javax.swing.JPanel {
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         ReturnsTableModel model = (ReturnsTableModel)reportTableViewCask.getModel();
-        DesktopUtil.open(ReturnsExporter.returnsToXls(model.getSelectedLines()));
+        Ui.osOpen(ReturnsExporter.returnsToXls(model.getSelectedLines()));
     }//GEN-LAST:event_exportButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

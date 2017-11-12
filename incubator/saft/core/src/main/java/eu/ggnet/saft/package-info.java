@@ -14,27 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.search;
-
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-
-import eu.ggnet.saft.Ui;
-
 /**
+ * Central package for Saft.
+ * Here are all starting classes, that are stable and well documented.
  *
- * @author oliver.guenther
  */
-public class OpenSearchAction extends AbstractAction {
-
-    public OpenSearchAction() {
-        super("(Die neue) Suche");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Ui.openFx(SearchCask.class).exec();
-    }
-
-}
+package eu.ggnet.saft;

@@ -276,7 +276,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
                 prepareAndUpload(result);
                 break;
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**

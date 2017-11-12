@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 
@@ -44,11 +43,9 @@ import eu.ggnet.dwoss.redtape.entity.Dossier;
 
 import eu.ggnet.dwoss.redtape.RedTapeUiUtil;
 
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.PojoFilter;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -198,7 +195,7 @@ public class DossierFilterController {
             } catch (CancellationException ex) {
                 // Do nothing, normal cancel.
             } catch (ExecutionException | InterruptedException ex) {
-                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                Ui.handle(ex);
             }
         }
 

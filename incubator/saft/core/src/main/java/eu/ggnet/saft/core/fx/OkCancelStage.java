@@ -1,6 +1,6 @@
 package eu.ggnet.saft.core.fx;
 
-import eu.ggnet.saft.core.all.UiUtil;
+import eu.ggnet.saft.UiUtil;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;

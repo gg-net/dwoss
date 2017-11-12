@@ -26,11 +26,11 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.redtape.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Client;
 
 import lombok.Getter;
@@ -122,7 +122,7 @@ public class DossierTableController {
             } catch (CancellationException ex) {
                 L.debug("Worker {} canceled", this);
             } catch (InterruptedException | ExecutionException ex) {
-                DwOssCore.show(null, ex);
+                Ui.handle(ex);
             }
         }
     }

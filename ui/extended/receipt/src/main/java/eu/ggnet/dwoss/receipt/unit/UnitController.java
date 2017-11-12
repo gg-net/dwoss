@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,31 +27,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
+import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.MetaValue;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink.Result;
 import eu.ggnet.dwoss.receipt.unit.chain.Chains;
-
 import eu.ggnet.dwoss.rules.ReceiptOperation;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 import lombok.Setter;
 
+import static eu.ggnet.dwoss.rules.ReceiptOperation.IN_SALE;
 import static eu.ggnet.saft.core.Client.lookup;
-import static eu.ggnet.dwoss.rules.ReceiptOperation.*;
 import static javax.swing.JOptionPane.*;
 
 public class UnitController {
@@ -168,7 +163,7 @@ public class UnitController {
                 try {
                     model.getMetaUnit().getRefurbishId().setValue(get());
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(view, ex);
+                    Ui.handle(ex);
                 } finally {
                     view.updateMetaUnit();
                 }
@@ -202,7 +197,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(view, ex);
+                    Ui.handle(ex);
                 } finally {
                     view.updateMetaUnit();
                     view.updateProduct();
@@ -226,7 +221,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(view, ex);
+                    Ui.handle(ex);
                 } finally {
                     view.updateMetaUnit();
                 }
@@ -249,7 +244,7 @@ public class UnitController {
                 try {
                     get();
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(view, ex);
+                    Ui.handle(ex);
                 } finally {
                     view.updateMetaUnit();
                 }

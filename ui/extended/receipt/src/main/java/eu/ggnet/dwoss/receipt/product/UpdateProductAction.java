@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
@@ -57,7 +57,7 @@ public class UpdateProductAction extends AccessableAction {
                 new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, lookup(Workspace.class).getMainFrame());
             }
         } catch (UserInfoException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }
 }

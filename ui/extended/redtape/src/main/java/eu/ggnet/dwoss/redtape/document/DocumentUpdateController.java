@@ -32,7 +32,8 @@ import eu.ggnet.dwoss.redtape.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -108,10 +109,9 @@ public class DocumentUpdateController {
      */
     public Position editPosition(final Position pos) {
         try {
-            // Hint: Unusual usage, but works if we need a return type and use null for cancel.
             return Ui.parent(view).call(() -> pos).choiceSwing(PositionUpdateCask.class).onOk(x -> x.getPosition()).call();
         } catch (Exception ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
             return null;
         }
     }
@@ -135,7 +135,7 @@ public class DocumentUpdateController {
             return Ui.parent(view).call(() -> Position.builder().type(PositionType.SERVICE).build())
                     .choiceSwing(ServiceViewCask.class).onOk(x -> x.getPosition()).call();
         } catch (Exception ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
             return null;
         }
     }

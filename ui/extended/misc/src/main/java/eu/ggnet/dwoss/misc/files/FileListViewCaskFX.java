@@ -16,15 +16,11 @@
  */
 package eu.ggnet.dwoss.misc.files;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.*;
 
 import eu.ggnet.saft.core.MainComponent;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +29,7 @@ import javafx.scene.layout.BorderPane;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 /**
  *
@@ -57,18 +53,13 @@ public class FileListViewCaskFX extends BorderPane implements MainComponent {
         scheduledExecutorService.scheduleWithFixedDelay(dm, 2, 1, TimeUnit.SECONDS);
 
         this.treeview = dm.getTreeView();
-        //override the double-click event Handling for Treeview to only open File 
+        //override the double-click event Handling for Treeview to only open File
         treeview.addEventHandler(MouseEvent.ANY, event -> {
             if ( event.getEventType().equals(MouseEvent.MOUSE_CLICKED) && event.getClickCount() == 2 && event.getButton().equals(MouseButton.PRIMARY) ) {
                 TreeItem<Object> selectedItem = (TreeItem<Object>)treeview.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
-                    try {
-                        //build the right path for the file to get open. Because the selectedItem.getValue() give back a String
-                        File file = new File(GlobalConfig.APPLICATION_PATH_OUTPUT + File.separator + (String)selectedItem.getValue());
-                        Desktop.getDesktop().open(file);
-                    } catch (IOException ex) {
-                        UiCore.handle(ex);
-                    }
+                    //build the right path for the file to get open. Because the selectedItem.getValue() give back a String
+                    Ui.osOpen(new File(GlobalConfig.APPLICATION_PATH_OUTPUT + File.separator + (String)selectedItem.getValue()));
                 }
                 event.consume();
             }

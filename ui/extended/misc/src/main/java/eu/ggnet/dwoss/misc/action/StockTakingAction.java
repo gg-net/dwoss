@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,9 +31,8 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.JOptionPane.*;
@@ -80,7 +79,7 @@ public class StockTakingAction extends AbstractAction {
                 try {
                     Desktop.getDesktop().open(get().toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
-                    UiCore.handle(ex);
+                    Ui.handle(ex);
                 }
             }
         }.execute();

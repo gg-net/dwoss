@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.stock;
 
-import eu.ggnet.dwoss.stock.StockTransactionManagerView;
-
 import java.awt.Dialog;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -30,17 +28,12 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -104,7 +97,7 @@ public class StockTransactionManagerController {
                 } catch (CancellationException ex) {
                     // Ignore
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                    Ui.handle(ex);
                 }
             }
         };
@@ -130,7 +123,7 @@ public class StockTransactionManagerController {
             JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
             model.remove(transaction);
         } catch (Exception ex) {
-            DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+            Ui.handle(ex);
         }
     }
 }

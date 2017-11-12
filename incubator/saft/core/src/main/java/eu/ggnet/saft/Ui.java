@@ -1,14 +1,12 @@
-package eu.ggnet.saft.core;
+package eu.ggnet.saft;
 
 import java.awt.*;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
-import java.util.function.Function;
 
 import javax.swing.JPanel;
 
-import javafx.concurrent.Worker;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
@@ -17,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.core.FxCore;
+import eu.ggnet.saft.core.SwingCore;
 import eu.ggnet.saft.core.all.UiCreator;
 import eu.ggnet.saft.core.all.UiOk;
 import eu.ggnet.saft.core.experimental.*;
@@ -24,9 +24,15 @@ import eu.ggnet.saft.core.fx.FxCreator;
 import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.swing.*;
 
+/*
+ Notes of olli:
+- alles was mit ui zuständen des frameworks zu tun hat, startet hier. zb. mainFrame, progress, failure messager, excetion output.
+ */
 /**
  * The main entry point.
  * <p>
+ * <p>
+ * import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
  * Some rules which I invented on the way:
  * <ul>
  * <li>Result of null is indicator to break the chain</li>
@@ -59,7 +65,7 @@ public class Ui {
      * @return a new swing builder.
      */
     public static SwingBuilder swing(Window swingParent) {
-        return new SwingBuilder().parent(swingParent);
+        return new SwingBuilder().parent(SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame()));
     }
 
     /**
@@ -99,6 +105,24 @@ public class Ui {
      */
     public static FileChooserBuilder fileChooser() {
         return new FileChooserBuilder();
+    }
+
+    /**
+     * Returns a new failure Handler.
+     *
+     * @return a new failure Handler.
+     */
+    public static Failure failure() {
+        return new Failure();
+    }
+
+    /**
+     * Returns a new progress Handler.
+     *
+     * @return a new progress Handler.
+     */
+    public static ProgressBuilder progress() {
+        return new ProgressBuilder();
     }
 
     /**
@@ -175,67 +199,29 @@ public class Ui {
     }
 
     /**
-     * Enables the progress information in the main ui while the supplied function is run.
-     * Starts a progress display then the returned function is called and stops it, then its complete.
-     * Uses the class name of the supplied function as monitor title.
-     *
-     * @param <U>
-     * @param <T>
-     * @param function the function to be wrapped into progress information.
-     * @return a new function, which if called,shows progress.
-     */
-    public static <U, T> Function<T, U> progress(Function<T, U> function) {
-        // TODO: Progresshandling sucks, but its only internal, so we can live with it for now.
-        return (T t) -> {
-            UiCore.backgroundActivityProperty().set(true);
-            try {
-                return function.apply(t);
-            } finally {
-                UiCore.backgroundActivityProperty().set(false);
-            }
-        };
-    }
-
-    /**
-     * Observes progress of a supplied function.
-     * Starts a progress display then the returned function is called and stops it, then its complete.
-     *
-     * @param <U>
-     * @param <T>
-     * @param function the function to be wrapped into progress information.
-     * @param title    the title of the progress monitor.
-     * @return a new function, which if called,shows progress.
-     */
-    public static <U, T> Function<? super T, ? extends U> progress(String title, Function<? super T, ? extends U> function) {
-        // TODO: Title is ignored for now.
-        return progress(function);
-    }
-
-    /**
-     * Observers the progress on any javaFx worker.
-     * If there is some form of central managed and displayed progress and status message system registered with saft, this can be used to show a worker
-     * progress.
-     *
-     * @param <T>
-     * @param worker the worker to be observed.
-     * @return the parameter worker, for fluent usage.
-     */
-    public static <T> Worker<T> progress(Worker<T> worker) {
-        if ( worker != null ) worker.runningProperty().addListener((ob, o, n) -> UiCore.backgroundActivityProperty().setValue(n));
-        return worker;
-    }
-
-    /**
      * Wrapper for Desktop.getDesktop().open() with UI Exception handling
      *
      * @param file a file to open via ui.
+     * @return true if operation was successful, otherwise false. Can be used if the following operations should happen.
      */
-    public static void osOpen(File file) {
+    public static boolean osOpen(File file) {
         try {
             Desktop.getDesktop().open(file);
+            return true;
         } catch (Exception e) {
             UiCore.handle(e);
         }
+        return false;
+    }
+
+    /**
+     * Handles an Exception in the Ui, using the registered ExceptionCosumers form {@link UiCore#registerExceptionConsumer(java.lang.Class, java.util.function.Consumer)
+     * }.
+     *
+     * @param b the throwable to be handled.
+     */
+    public static void handle(Throwable b) {
+        UiCore.handle(b);
     }
 
     // starting from here comes old. will be deprecated in the future

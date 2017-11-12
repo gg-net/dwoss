@@ -17,11 +17,11 @@
 package tryout;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import org.junit.Test;
 
@@ -36,7 +36,9 @@ import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.OkCancelStage;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -45,10 +47,8 @@ import eu.ggnet.saft.core.Client;
  */
 public class ReportSelectionTryout {
 
-    private boolean complete = false;
-
     @Test
-    public void tryout() throws InterruptedException {
+    public void tryout() throws Exception {
         ReportAgent rastub = new ReportAgent() {
 
             private int counter = 0;
@@ -151,59 +151,58 @@ public class ReportSelectionTryout {
 
             //</editor-fold>
             @Override
-            public boolean updateReportName(Report.OptimisticKey key, String name) {
+            public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
                 System.out.println("Report Name updated with " + name + " calles");
                 counter++;
                 if ( (counter % 2) != 0 ) {
                     System.out.println("Counter=" + counter + " simulating Error");
-                    return false;
+                    return Reply.failure("Counter=" + counter + " simulating Error");
                 } else {
                     System.out.println("Counter=" + counter + " simulating Success");
-                    return true;
+                    return Reply.success(name);
                 }
             }
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
-        JFXPanel jfxPanel = new JFXPanel();
+        CountDownLatch l = new CountDownLatch(1);
+        JButton a = new JButton("Close");
+        a.addActionListener(ev -> l.countDown());
 
-        Date today = new Date();
-        Date enddate = new Date();
-        Date startdate = new Date();
+        JButton b = new JButton("Show ReportList");
+        JPanel p = new JPanel();
+        p.add(a);
+        p.add(b);
 
-        Set<TradeName> trades = new HashSet<>();
-        trades.add(TradeName.HP);
-        trades.add(TradeName.ACER);
+        UiCore.startSwing(() -> p);
 
-        //build some sample Reports
-        List<Report> allReports = new ArrayList();
-        for (int i = 0; i < 8; i++) {
-            for (TradeName traden : trades) {
-                startdate.setYear(62 + i);
-                long sum = today.getTime() + startdate.getTime();
-                Date sumDate = new Date(sum);
+        b.addActionListener((evt) -> {
+            final Date today = new Date();
+            final Date enddate = new Date();
+            final Date startdate = new Date();
 
-                String name = "Report: " + i + "-" + traden + "-" + sumDate.toString();
+            final Set<TradeName> trades = new HashSet<>();
+            trades.add(TradeName.HP);
+            trades.add(TradeName.ACER);
 
-                Report e = new Report(name, traden, sumDate, enddate);
-                allReports.add(e);
+            //build some sample Reports
+            List<Report> allReports = new ArrayList();
+            for (int i = 0; i < 8; i++) {
+                for (TradeName traden : trades) {
+                    startdate.setYear(62 + i);
+                    long sum = today.getTime() + startdate.getTime();
+                    Date sumDate = new Date(sum);
+
+                    String name = "Report: " + i + "-" + traden + "-" + sumDate.toString();
+
+                    Report e = new Report(name, traden, sumDate, enddate);
+                    allReports.add(e);
+                }
             }
-        }
 
-        Platform.runLater(() -> {
-            ReportSelectionPane selector = new ReportSelectionPane();
-            selector.accept(allReports);
-
-            OkCancelStage<ReportSelectionPane> stage = new OkCancelStage<>("Auswählen", selector);
-            stage.showAndWait();
-            System.out.println("OK=" + stage.isOk());
-            System.out.println(selector);
-            complete = true;
+            Ui.fx().show(() -> allReports, () -> new ReportSelectionPane());
         });
 
-        while (!complete) {
-            Thread.sleep(500);
-        }
-
+        l.await();
     }
 }

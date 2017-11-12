@@ -1,18 +1,24 @@
 package eu.ggnet.saft.sample.support;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
+
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.embed.swing.JFXPanel;
-import javafx.geometry.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.fx.OkCancelStage;
-
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import eu.ggnet.saft.Ui;
 
 /**
  * Shows a selector pane for the Revenue Report.
@@ -20,7 +26,7 @@ import java.util.concurrent.CountDownLatch;
  * @author oliver.guenther
  */
 @Title("Umsatzreport Parameter")
-public class RevenueReportSelectorPane extends GridPane {
+public class RevenueReportSelectorPane extends GridPane implements ResultProducer<RevenueReportSelectorPane> {
 
     private final ObjectProperty<Step> step = new SimpleObjectProperty<>();
 
@@ -29,6 +35,8 @@ public class RevenueReportSelectorPane extends GridPane {
     private final ObjectProperty<LocalDate> start;
 
     private final ObjectProperty<LocalDate> end;
+
+    private boolean ok = false;
 
     public RevenueReportSelectorPane() {
         setAlignment(Pos.CENTER);
@@ -58,6 +66,18 @@ public class RevenueReportSelectorPane extends GridPane {
         addRow(2, new Label("Start:"), startPicker);
         addRow(3, new Label("End:"), endPicker);
 
+        Button okButton = new Button("Ok");
+        okButton.setOnAction(e -> {
+            ok = true;
+            Ui.closeWindowOf(this);
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> {
+            Ui.closeWindowOf(this);
+        });
+
+        addRow(4, okButton, cancelButton);
     }
 
     public Step getStep() {
@@ -85,24 +105,21 @@ public class RevenueReportSelectorPane extends GridPane {
         final JFXPanel p = new JFXPanel();
         final CountDownLatch block = new CountDownLatch(1);
 
-        Platform.runLater(new Runnable() {
-
-            @Override
-            public void run() {
-                RevenueReportSelectorPane pane = new RevenueReportSelectorPane();
-                OkCancelStage<RevenueReportSelectorPane> stage = new OkCancelStage<>("Toller Title", pane);
-                stage.showAndWait();
-                if (stage.isOk()) {
-                    System.out.println("OK Pressed");
-                    System.out.println(pane);
-                } else {
-                    System.out.println("Closed without OK");
-                }
-                block.countDown();
-            }
+        Platform.runLater(() -> {
+            RevenueReportSelectorPane pane = new RevenueReportSelectorPane();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(pane));
+            stage.showAndWait();
+            block.countDown();
         });
 
         block.await();
+    }
+
+    @Override
+    public RevenueReportSelectorPane getResult() {
+        if ( ok ) return this;
+        return null;
     }
 
 }

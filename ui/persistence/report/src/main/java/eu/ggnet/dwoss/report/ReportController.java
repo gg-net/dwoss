@@ -35,7 +35,6 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 
-import eu.ggnet.dwoss.common.DesktopUtil;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.api.ReportExporter;
@@ -43,7 +42,7 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 import lombok.*;
 
@@ -214,7 +213,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
                         toCurrencyColumn("Marge", cell -> new ReadOnlyDoubleWrapper(cell.getValue().getPrice() - cell.getValue().getPurchasePrice()).getReadOnlyProperty()),
                         toTableLineColumn("Rechnungsaddresse", cell -> new ReadOnlyStringWrapper(cell.getValue().getInvoiceAddress()).getReadOnlyProperty()),
                         toTableLineColumn("DocumentType", cell -> new ReadOnlyStringWrapper(
-                                        cell.getValue().getDocumentTypeName() + cell.getValue().getWorkflowStatus().getSign()).getReadOnlyProperty()),
+                        cell.getValue().getDocumentTypeName() + cell.getValue().getWorkflowStatus().getSign()).getReadOnlyProperty()),
                         toTableLineColumn("Lieferanten ArtikelNr.", cell -> new ReadOnlyStringWrapper(cell.getValue().getContractorPartNo()).getReadOnlyProperty())
                 ));
         return columns;
@@ -373,11 +372,11 @@ public class ReportController implements Initializable, FxController, Consumer<R
                     Client.lookup(ReportAgent.class).store(
                             reportResult.getParameter().toNewReport(),
                             reportResult.getRelevantLines()
-                            .values()
-                            .stream()
-                            .flatMap(Collection::stream)
-                            .map(ReportLine::toStorable)
-                            .collect(Collectors.toList())
+                                    .values()
+                                    .stream()
+                                    .flatMap(Collection::stream)
+                                    .map(ReportLine::toStorable)
+                                    .collect(Collectors.toList())
                     );
                     Platform.runLater(() -> viewmode.set(true));
                     return null;
@@ -408,12 +407,12 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleExportButtonAction() {
-        DesktopUtil.open(Client.lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
+        Ui.osOpen(Client.lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
     }
 
     @FXML
     public void handleFullExportButtonAction() {
-        DesktopUtil.open(XlsExporter.toFullXls(filterRelevantLines()));
+        Ui.osOpen(XlsExporter.toFullXls(filterRelevantLines()));
     }
 
     public static URL loadFxml() {

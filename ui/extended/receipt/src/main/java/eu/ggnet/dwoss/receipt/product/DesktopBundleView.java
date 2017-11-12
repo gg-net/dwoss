@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,20 +28,15 @@ import eu.ggnet.dwoss.receipt.unit.UnitModel;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.unit.chain.Chains;
 import eu.ggnet.dwoss.receipt.unit.chain.partno.ProductSpecMatches;
-
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.util.IPreClose;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 
@@ -307,8 +302,8 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
             partNo1.setValue(desktopPartNoField.getText());
             productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo1.getValue(), mustBrand, mustGroup1, parent);
             validateAndUpdateDesktop();
-        } catch (UserInfoException e) {
-            DwOssCore.show(parent, e);
+        } catch (UserInfoException ex) {
+            Ui.handle(ex);
         }
     }//GEN-LAST:event_desktopEditButtonActionPerformed
 
@@ -317,8 +312,8 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
             partNo2.setValue(monitorPartNoField.getText());
             productSupport.createOrEditPart(mustBrand.getManufacturer(), partNo2.getValue(), mustBrand, mustGroup2, parent);
             validateAndUpdateMonitor();
-        } catch (UserInfoException e) {
-            DwOssCore.show(parent, e);
+        } catch (UserInfoException ex) {
+            Ui.handle(ex);
         }
     }//GEN-LAST:event_monitorEditButtonActionPerformed
 

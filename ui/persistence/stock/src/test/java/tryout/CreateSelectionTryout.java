@@ -29,7 +29,9 @@ import org.junit.Test;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.CreateSelectionController;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Client;
 
 /**
  *
@@ -143,12 +145,10 @@ public class CreateSelectionTryout {
         });
 
         UiCore.startSwing(() -> b);
-        Ui.choiceFxml(CreateSelectionController.class)
-                .onOk(c -> {
-                    System.out.println(c);
-                    return null;
-                })
-                .exec();
+        Ui.exec(() -> {
+            Ui.fxml().eval(CreateSelectionController.class).ifPresent(System.out::println);
+        });
+
         l.await();
     }
 

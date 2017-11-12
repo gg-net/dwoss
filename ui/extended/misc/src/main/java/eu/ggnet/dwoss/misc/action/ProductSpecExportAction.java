@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,23 +17,18 @@
 package eu.ggnet.dwoss.misc.action;
 
 import java.awt.event.ActionEvent;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.spec.SpecExporter;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.spec.SpecExporter;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * Action to Export the ProductSpecs to XML.
@@ -52,25 +47,13 @@ public class ProductSpecExportAction extends AccessableAction {
         if ( input == null ) return;
         try {
             final int amount = Integer.parseInt(input);
+            Ui.exec(() -> {
+                Ui.progress().wrap(() -> lookup(SpecExporter.class).toXml(amount).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+            });
 
-            new SwingWorker<FileJacket, Object>() {
-                @Override
-                protected FileJacket doInBackground() throws Exception {
-                    return lookup(SpecExporter.class).toXml(amount);
-                }
-
-                @Override
-                protected void done() {
-                    try {
-                        FileJacket fj = get();
-                        fj.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT);
-                    } catch (InterruptedException | ExecutionException ex) {
-                        DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                    }
-                }
-            }.execute();
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Die Eingabe '" + input + "' ist keine Zahl");
+            Alert.show("Die Eingabe '" + input + "' ist keine Zahl");
+            return;
         }
     }
 }

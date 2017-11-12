@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import tryout.stub.*;

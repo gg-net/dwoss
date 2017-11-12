@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,24 +17,18 @@
 package eu.ggnet.dwoss.redtape.reporting;
 
 import java.awt.event.ActionEvent;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 
 import org.openide.util.Lookup;
 
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
-import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
-
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * Closes the last Week.
@@ -52,22 +46,8 @@ public class LastWeekCloseAction extends AccessableAction {
         final RedTapeCloser closer = lookup(RedTapeCloser.class);
         if ( JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(lookup(Workspace.class).getMainFrame(), "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?",
                 "Wochen-/Tagesabschluss", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) ) return;
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                closer.executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername());
-                return null;
-            }
 
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (InterruptedException | ExecutionException e) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), e);
-                }
-            }
-        }.execute();
+        Ui.exec(Ui.progress().wrap(() -> closer.executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())));
 
     }
 }

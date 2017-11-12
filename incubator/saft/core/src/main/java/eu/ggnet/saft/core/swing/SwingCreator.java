@@ -1,5 +1,7 @@
 package eu.ggnet.saft.core.swing;
 
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.*;

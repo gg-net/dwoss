@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.saft.api.progress.HiddenMonitor;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 /**
  *

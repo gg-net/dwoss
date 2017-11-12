@@ -25,9 +25,9 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
@@ -87,7 +87,7 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
             } catch (CancellationException ex) {
                 // Do nothing, normal cancel.
             } catch (ExecutionException | InterruptedException ex) {
-                DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                Ui.handle(ex);
             }
         }
     }

@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.fx.FxSaft;
 
 /**

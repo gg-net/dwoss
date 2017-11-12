@@ -1,6 +1,7 @@
 package eu.ggnet.saft.core.fx;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.UiUtil;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.all.*;
 import eu.ggnet.saft.api.CallableA1;
 

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.action;
 
+import eu.ggnet.saft.Ui;
+
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.RevenueReportSelectorPane;

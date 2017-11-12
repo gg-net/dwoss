@@ -23,13 +23,10 @@ import javax.swing.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Workspace;
-
 import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
-
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
-
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Workspace;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.Action.NAME;
@@ -48,12 +45,10 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
         dialog.setVisible(true);
         L.debug("Start generating OptimizedCreditMemoReport.");
         if ( dialog.isOk() ) {
-            try {
-                L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", dialog.getStart(), dialog.getEnd());
-                Ui.call(() -> lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile()).osOpen().call();
-            } catch (Exception ex) {
-                UiCore.handle(ex);
-            }
+            L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", dialog.getStart(), dialog.getEnd());
+            Ui.exec(() -> {
+                Ui.osOpen(lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile());
+            });
         }
         L.debug("Done generating OptimizedCreditMemoReport.");
     }

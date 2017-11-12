@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,15 +17,12 @@
 package eu.ggnet.dwoss.customer.action;
 
 import java.awt.event.ActionEvent;
-import java.util.concurrent.ExecutionException;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.Workspace;
-
-
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.priv.SearchSingleton;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Alert;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -40,23 +37,10 @@ public class RecreateSearchIndex extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                lookup(SearchSingleton.class).reindexSearch();
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get();
-                    JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Suchindex neu erzeugt.");
-                } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
+    public void actionPerformed(ActionEvent event) {
+        Ui.exec(() -> {
+            Ui.progress().wrap(() -> lookup(SearchSingleton.class).reindexSearch()).run();
+            Alert.show("Suchindex wurde neu erzeugt");
+        });
     }
 }

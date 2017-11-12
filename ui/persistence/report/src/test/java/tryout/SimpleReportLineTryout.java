@@ -22,6 +22,7 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -183,9 +184,9 @@ public class SimpleReportLineTryout {
             }
 
             @Override
-            public boolean updateReportName(Report.OptimisticKey key, String name) {
+            public Reply<String> updateReportName(Report.OptimisticKey key, String name) {
                 System.out.println("Report = " + key + " changing name = " + name);
-                return true;
+                return Reply.success(name);
             }
             //</editor-fold>
 

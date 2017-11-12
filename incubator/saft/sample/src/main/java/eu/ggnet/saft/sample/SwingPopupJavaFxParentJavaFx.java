@@ -5,9 +5,11 @@ import java.util.concurrent.ExecutionException;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.sample.support.MainPanel;
 import eu.ggnet.saft.sample.support.RevenueReportSelectorPane;
 
@@ -20,25 +22,32 @@ import static javafx.scene.text.Font.font;
  */
 public class SwingPopupJavaFxParentJavaFx {
 
-    public static class TestPane extends BorderPane {
+    public static class TestPane extends BorderPane implements ResultProducer<String> {
+
+        private boolean ok = false;
 
         public TestPane() {
             Label l = new Label("Ein JavaFX Dialog");
             l.setFont(font(50));
-            Button b = new Button("Open another Dialog");
-            b.setOnAction((e) -> {
-                Ui.exec(Ui
-                        .parent(l)
-                        .choiceFx(RevenueReportSelectorPane.class)
-                        .onOk(v -> {
-                            System.out.println(v);
-                            return null;
-                        })
-                );
+            Button one = new Button("Open another Dialog");
+            one.setOnAction((e) -> Ui.exec(() -> {
+                Ui.fx().parent(l).eval(() -> new RevenueReportSelectorPane()).ifPresent(System.out::println);
+            }));
+
+            Button two = new Button("Ok (Close this dialog)");
+            two.setOnAction(e -> {
+                ok = true;
+                Ui.closeWindowOf(this);
             });
 
             setCenter(l);
-            setBottom(b);
+            setBottom(new FlowPane(one, two));
+        }
+
+        @Override
+        public String getResult() {
+            if ( ok ) return this.toString();
+            return null;
         }
 
     }
@@ -47,14 +56,9 @@ public class SwingPopupJavaFxParentJavaFx {
         UiCore.startSwing(() -> new MainPanel());
 
         // JavaFX Pane in Swing Dialog.
-        Ui.exec(Ui
-                .choiceFx(TestPane.class)
-                .onOk(v -> {
-                    System.out.println(v.getId());
-                    return null;
-                })
-        );
-
+        Ui.exec(() -> {
+            Ui.fx().eval(() -> new TestPane()).ifPresent(System.out::println);
+        });
     }
 
 }

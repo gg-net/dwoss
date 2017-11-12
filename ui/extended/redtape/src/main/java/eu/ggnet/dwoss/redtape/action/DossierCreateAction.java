@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,28 @@
  */
 package eu.ggnet.dwoss.redtape.action;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.common.DwOssCore;
-
-import java.awt.*;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-
-import eu.ggnet.saft.core.authorisation.Guardian;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-
+import eu.ggnet.dwoss.redtape.RedTapeController;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
-
-import eu.ggnet.dwoss.redtape.RedTapeController;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -99,7 +94,7 @@ public class DossierCreateAction extends AbstractAction {
             try {
                 lookup(RedTapeWorker.class).revertCreate(doc);
             } catch (UserInfoException ex) {
-                DwOssCore.show(parent, ex);
+                Ui.handle(ex);
             }
         }
     }

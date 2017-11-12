@@ -16,6 +16,7 @@
  */
 package eu.ggnet.saft.core.experimental;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.FxController;
@@ -128,8 +130,19 @@ public class FxmlBuilder extends AbstractBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public FxmlBuilder parent(Window swingParent) {
-        this.swingParent = swingParent;
+    public FxmlBuilder parent(Component swingParent) {
+        super.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        return this;
+    }
+
+    /**
+     * Represents the parent of the ui element, optional.
+     *
+     * @param javaFxParent the parent
+     * @return this as fluent usage
+     */
+    public FxmlBuilder parent(Parent javaFxParent) {
+        super.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
         return this;
     }
 

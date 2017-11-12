@@ -16,6 +16,9 @@
  */
 package tryout;
 
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.Ui;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,13 +27,12 @@ import javax.swing.*;
 
 import eu.ggnet.saft.core.Workspace;
 
-
 import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
@@ -86,7 +85,7 @@ public class ContractorImportAction extends AccessableAction {
                             .details(result.getErrors())
                             .showDialog();
                 } catch (InterruptedException | ExecutionException ex) {
-                    UiCore.handle(ex);
+                    Ui.handle(ex);
                 }
             }
         }.execute();

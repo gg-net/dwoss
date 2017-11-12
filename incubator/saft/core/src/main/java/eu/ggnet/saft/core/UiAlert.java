@@ -11,6 +11,8 @@ import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 import lombok.*;
@@ -138,7 +140,7 @@ public class UiAlert {
                 return null;
             });
         } catch (ExecutionException | InterruptedException | InvocationTargetException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }
 

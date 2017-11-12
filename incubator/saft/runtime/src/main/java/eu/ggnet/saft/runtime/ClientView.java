@@ -26,8 +26,8 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
 
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.SwingCore;
-import eu.ggnet.saft.core.UiCore;
 
 /**
  * Client View, Main Frame.
@@ -58,7 +58,7 @@ public class ClientView extends javax.swing.JFrame {
             JFXPanel wrap = SwingCore.wrap(pane);
             extraProgressPanel.add(wrap, BorderLayout.CENTER);
         } catch (InterruptedException ex) {
-            UiCore.handle(ex);
+            Ui.handle(ex);
         }
     }
 

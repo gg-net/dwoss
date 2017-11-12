@@ -17,7 +17,7 @@
 
 package eu.ggnet.saft.core.swing;
 
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 

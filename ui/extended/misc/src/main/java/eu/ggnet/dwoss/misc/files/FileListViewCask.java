@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.*;
 
 import javax.swing.*;
@@ -28,7 +27,7 @@ import javax.swing.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import eu.ggnet.saft.core.MainComponent;
 
@@ -60,12 +59,7 @@ public class FileListViewCask extends javax.swing.JPanel implements MainComponen
                 ListModel model = fileList.getModel();
                 Object value = model.getElementAt(index);
                 if ( !(value instanceof File) ) return;
-                File file = (File)value;
-                try {
-                    Desktop.getDesktop().open(file);
-                } catch (IOException ex) {
-                    DwOssCore.show(SwingUtilities.getWindowAncestor(FileListViewCask.this), ex);
-                }
+                Ui.osOpen((File)value);
             }
         });
 

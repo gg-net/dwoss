@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,27 +19,19 @@ package eu.ggnet.dwoss.price;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
-import eu.ggnet.dwoss.price.Importer;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
-import eu.ggnet.dwoss.common.DwOssCore;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.exception.ExceptionUtil;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
+import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -75,7 +67,7 @@ public class PriceImportAction extends AccessableAction {
                     try {
                         get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        UiCore.handle(ex);
+                        Ui.handle(ex);
                     }
                 }
             }.execute();

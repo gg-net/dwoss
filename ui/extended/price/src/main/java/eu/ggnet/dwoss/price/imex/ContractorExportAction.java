@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,22 +16,12 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractAction;
-import javax.swing.SwingWorker;
-
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.price.imex.ContractorPricePartNoExporter;
 
 import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -50,21 +40,11 @@ public class ContractorExportAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                if ( contractor.isManufacturer() ) return lookup(ContractorPricePartNoExporter.class).toManufacturerXls(contractor);
-                return lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor);
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    Desktop.getDesktop().open(get().toTemporaryFile());
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
-                }
-            }
-        }.execute();
+        Ui.exec(() -> {
+            Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
+                    .call(() -> (contractor.isManufacturer()
+                                 ? lookup(ContractorPricePartNoExporter.class).toManufacturerXls(contractor)
+                                 : lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor)).toTemporaryFile()));
+        });
     }
 }

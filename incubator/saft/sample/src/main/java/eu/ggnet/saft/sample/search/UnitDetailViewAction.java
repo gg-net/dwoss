@@ -18,8 +18,9 @@ package eu.ggnet.saft.sample.search;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.api.ui.DefaultAction;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.Ui;
 
 /**
  *
@@ -31,7 +32,7 @@ public class UnitDetailViewAction implements Consumer<MicroUnit> {
 
     @Override
     public void accept(MicroUnit t) {
-        Ui.call(() -> t).openFx(UnitDetailView.class).exec();
+        Ui.fx().show(() -> t, () -> new UnitDetailView());
     }
 
 }

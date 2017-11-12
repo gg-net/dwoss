@@ -20,7 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.net.URL;
 import java.util.EnumSet;
-import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -38,7 +37,6 @@ import javafx.scene.paint.Color;
 import org.apache.commons.lang3.StringUtils;
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.common.DwOssCore;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.SwingInteraction;
@@ -50,8 +48,9 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Client;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.Getter;
@@ -148,8 +147,8 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
                 if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
                     if ( isChangeAllowed() ) {
-                            controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
-                            positionsFxList.refresh();
+                        controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
+                        positionsFxList.refresh();
                     } else {
                         Alert.show("Änderung an Positionen ist nicht erlaubt.");
                     }
@@ -588,7 +587,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             try {
                 controller.addPosition(document.getDossier().getId(), PositionType.UNIT, sopo, false);
             } catch (Exception ex) {
-                DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
+                Ui.handle(ex);
             }
         }
         Platform.runLater(new Runnable() {
@@ -620,7 +619,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
                 positions.addAll(document.getPositions().values());
             });
         } catch (UserInfoException ex) {
-            DwOssCore.show(SwingUtilities.getWindowAncestor(this), ex);
+            Ui.handle(ex);
         }
     }//GEN-LAST:event_addNonUnitPosition
 
@@ -668,7 +667,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
                     positions.clear();
                     positions.addAll(document.getPositions().values());
                 } catch (UserInfoException ex) {
-                    UiCore.handle(ex);
+                    Ui.handle(ex);
                 }
             });
         }

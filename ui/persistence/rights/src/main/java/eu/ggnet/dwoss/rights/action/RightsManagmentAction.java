@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,14 @@
  */
 package eu.ggnet.dwoss.rights.action;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
-import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.rights.RightsManagmentController;
 
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 
 /**
@@ -49,23 +38,7 @@ public class RightsManagmentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Window mainFrame = lookup(Workspace.class).getMainFrame();
-                try {
-                    Stage stage = new Stage();
-                    stage.setTitle("Rechte Managment");
-                    AnchorPane page = (AnchorPane)FXMLLoader.load(RightsManagmentController.class.getResource("RightsManagmentView.fxml"));
-                    Scene scene = new Scene(page, Color.ALICEBLUE);
-                    stage.setScene(scene);
-                    stage.show();
-                } catch (IOException exception) {
-                    DwOssCore.show(mainFrame, exception);
-                }
-            }
-
-        });
+        Ui.fxml().show(RightsManagmentController.class);
     }
 
 }

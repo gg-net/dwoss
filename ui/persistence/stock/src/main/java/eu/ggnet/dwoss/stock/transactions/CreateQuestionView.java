@@ -19,29 +19,47 @@ package eu.ggnet.dwoss.stock.transactions;
 import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.saft.api.ui.Title;
 
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.OK;
+
 /**
  *
  * @author oliver.guenther
  */
 @Title("Umfuhr anlegen")
-public class CreateQuestionView extends VBox implements Consumer<CreateQuestionModel> {
+public class CreateQuestionView extends Dialog<CreateQuestionModel> implements Consumer<CreateQuestionModel> {
 
     private CreateQuestionModel model;
 
+    private VBox vbox;
+
+    public CreateQuestionView() {
+        vbox = new VBox();
+        getDialogPane().setContent(vbox);
+        getDialogPane().getButtonTypes().addAll(OK, CANCEL);
+        setResultConverter(buttonType -> {
+            if ( buttonType.equals(OK) ) return model;
+            return null;
+        });
+
+    }
+
     @Override
     public void accept(CreateQuestionModel model) {
-        setPadding(new Insets(10));
         this.model = model;
-        getChildren().add(new Label("Umfuhr von " + model.source.getName() + " nach " + model.destination.getName() + " für folgende(s) Gerät(e):"));
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().add(new Label("Umfuhr von " + model.source.getName() + " nach " + model.destination.getName() + " für folgende(s) Gerät(e):"));
         for (StockUnit stockUnit : model.stockUnits) {
-            getChildren().add(new Label("- [" + stockUnit.getRefurbishId() + "] " + stockUnit.getName()));
+            vbox.getChildren().add(new Label("- [" + stockUnit.getRefurbishId() + "] " + stockUnit.getName()));
         }
+
     }
 
     public CreateQuestionModel model() {

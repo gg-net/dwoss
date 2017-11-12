@@ -17,12 +17,14 @@
 package eu.ggnet.dwoss.stock.transactions;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.*;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -32,7 +34,12 @@ import static eu.ggnet.saft.core.Client.lookup;
  * @author oliver.guenther
  */
 @Title("Umfuhr für (ein) einzelne(s) Gerät(e)")
-public class CreateSelectionController implements FxController {
+public class CreateSelectionController implements FxController, ResultProducer<CreateSelectionController> {
+
+    private boolean ok = false;
+
+    @FXML
+    private GridPane root;
 
     @FXML
     private TextField refurbishIds;
@@ -50,6 +57,17 @@ public class CreateSelectionController implements FxController {
         target.getItems().addAll(lookup(StockAgent.class).findAll(Stock.class));
     }
 
+    @FXML
+    void okPressed() {
+        ok = true;
+        Ui.closeWindowOf(root);
+    }
+
+    @FXML
+    void cancelPressed() {
+        Ui.closeWindowOf(root);
+    }
+
     public Stock target() {
         return target.getSelectionModel().getSelectedItem();
     }
@@ -65,6 +83,12 @@ public class CreateSelectionController implements FxController {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "(target=" + target() + ", refurbishIds=" + refurbishIds() + ", comment" + comment() + ")";
+    }
+
+    @Override
+    public CreateSelectionController getResult() {
+        if ( ok ) return this;
+        return null;
     }
 
 }

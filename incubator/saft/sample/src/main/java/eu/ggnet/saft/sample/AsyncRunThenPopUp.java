@@ -1,12 +1,11 @@
 package eu.ggnet.saft.sample;
 
 import java.awt.EventQueue;
-import java.util.concurrent.Callable;
 
-import eu.ggnet.saft.api.CallableA1;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.sample.support.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.sample.support.DocumentAdressUpdateViewOkCanceler;
+import eu.ggnet.saft.sample.support.MainPanel;
 
 /**
  * Opens a Swing Panel as Popup Dialog blocking the hole application and on Ok calculates an async result.
@@ -39,48 +38,15 @@ public class AsyncRunThenPopUp {
         });
 
         saftNew();
-//        saftClassic();
-
     }
 
     public static void saftNew() {
         Ui.exec(() -> {
             Ui.swing().eval(() -> HardWorker.work2s("per", "Eine leere Adresse"), () -> new DocumentAdressUpdateViewOkCanceler())
-                    .map(Ui.progress(t -> HardWorker.work2s("middle", t)))
+                    .map(Ui.progress().wrap(t -> HardWorker.work2s("middle", t)))
                     .map(t -> Ui.swing().eval(() -> t, () -> new DocumentAdressUpdateViewOkCanceler()))
                     .ifPresent(t -> HardWorker.work2s("post", t));
         });
-
-    }
-
-    public static void saftClassic() {
-        Ui.exec(Ui
-                .call(() -> HardWorker.work2s("per", "Eine leere Adresse"))
-                .choiceSwing(DocumentAdressUpdateView.class)
-                .onOk((t) -> HardWorker.work2s("middle", t.getAddress()))
-                .choiceSwing(DocumentAdressUpdateView.class)
-                .onOk((t) -> HardWorker.work2s("post", t.getAddress()))
-        );
-    }
-
-    public static void saftClassicJ7() {
-        // A Java 7 View.
-        Ui.exec(Ui.call(new Callable<String>() {
-
-            @Override
-            public String call() throws Exception {
-                return "Hallo";
-            }
-
-        }).choiceSwing(DocumentAdressUpdateView.class)
-                .onOk(new CallableA1<DocumentAdressUpdateView, Integer>() {
-
-                    @Override
-                    public Integer call(DocumentAdressUpdateView t) throws Exception {
-                        return 1;
-                    }
-                })
-        );
 
     }
 

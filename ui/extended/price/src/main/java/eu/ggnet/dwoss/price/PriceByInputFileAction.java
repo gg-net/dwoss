@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,28 +16,20 @@
  */
 package eu.ggnet.dwoss.price;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.price.Exporter;
-
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.common.DwOssCore;
-import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.core.UiCore;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
+import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -68,19 +60,10 @@ public class PriceByInputFileAction extends AccessableAction {
                     FileUtil.checkIfExcelFile(dialog.getSelectedFile());
                     FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
                     FileJacket outFile = lookup(Exporter.class).toXlsByXls(inFile);
-                    File f = outFile.toTemporaryFile();
-                    Desktop.getDesktop().open(f);
+                    Ui.osOpen(outFile.toTemporaryFile());
                     return null;
                 }
 
-                @Override
-                protected void done() {
-                    try {
-                        get();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        UiCore.handle(ex);
-                    }
-                }
             }.execute();
         }
     }

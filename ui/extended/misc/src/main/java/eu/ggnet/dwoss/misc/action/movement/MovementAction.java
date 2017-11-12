@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,10 @@ import javax.swing.*;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
-import eu.ggnet.saft.core.Workspace;
-
 import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
 
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.common.DwOssCore;
+import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -63,7 +61,7 @@ public class MovementAction extends AbstractAction {
                     JasperViewer viewer = new JasperViewer(get(), false);
                     viewer.setVisible(true);
                 } catch (InterruptedException | ExecutionException ex) {
-                    DwOssCore.show(lookup(Workspace.class).getMainFrame(), ex);
+                    Ui.handle(ex);
                 }
             }
         }.execute();

@@ -1,24 +1,18 @@
 package tryout;
 
-import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.rights.RightsAgent;
+import eu.ggnet.dwoss.rights.action.RightsManagmentAction;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.Client;
 
-import eu.ggnet.dwoss.rights.RightsAgent;
-
-import eu.ggnet.dwoss.rights.RightsManagmentController;
-
 import tryout.stub.RightsAgentStub;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 /**
  *
@@ -30,27 +24,21 @@ public class RightsManagmentControllerTryout {
 
     @Test
     public void testSomeMethod() throws InterruptedException {
-        new JFXPanel();    // To start the platform 
+        CountDownLatch latch = new CountDownLatch(1);
+
         Client.addSampleStub(RightsAgent.class, new RightsAgentStub());
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Stage stage = new Stage();
-                    stage.setTitle("Rechte Managment");
-                    AnchorPane page = (AnchorPane)FXMLLoader.load(RightsManagmentController.loadFxml());
-                    Scene scene = new Scene(page, Color.ALICEBLUE);
-                    stage.setScene(scene);
-                    stage.showAndWait();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                complete = true;
-            }
+
+        UiCore.startSwing(() -> {
+            JButton close = new JButton("Schliessen");
+            close.addActionListener(l -> latch.countDown());
+
+            JPanel main = new JPanel();
+            main.add(new JButton(new RightsManagmentAction()));
+            main.add(close);
+            return main;
         });
-        while (!complete) {
-            Thread.sleep(500);
-        }
+
+        latch.await();
     }
 
 }

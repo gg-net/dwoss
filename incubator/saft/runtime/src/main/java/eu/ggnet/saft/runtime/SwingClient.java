@@ -16,6 +16,8 @@
  */
 package eu.ggnet.saft.runtime;
 
+import eu.ggnet.saft.UiCore;
+
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.*;

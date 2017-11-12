@@ -16,6 +16,7 @@
  */
 package eu.ggnet.saft.core.experimental;
 
+import java.awt.Component;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -26,9 +27,11 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import javafx.scene.Parent;
 import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.SwingCore;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 import lombok.experimental.Accessors;
@@ -125,8 +128,19 @@ public class SwingBuilder extends AbstractBuilder {
      * @param swingParent the parent
      * @return this as fluent usage
      */
-    public SwingBuilder parent(Window swingParent) {
-        this.swingParent = swingParent;
+    public SwingBuilder parent(Component swingParent) {
+        super.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        return this;
+    }
+
+    /**
+     * Represents the parent of the ui element, optional.
+     *
+     * @param javaFxParent the parent
+     * @return this as fluent usage
+     */
+    public SwingBuilder parent(Parent javaFxParent) {
+        super.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
         return this;
     }
 

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
 

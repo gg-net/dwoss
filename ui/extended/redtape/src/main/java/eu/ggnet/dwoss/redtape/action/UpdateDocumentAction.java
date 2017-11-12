@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateView;
 
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.Ui;
 
 import lombok.AllArgsConstructor;
 
@@ -86,7 +86,7 @@ public class UpdateDocumentAction extends AbstractAction {
             try {
                 doc = lookup(RedTapeWorker.class).revertCreate(doc);
             } catch (UserInfoException ex) {
-                UiCore.handle(ex);
+                Ui.handle(ex);
             }
         }
         redTapeController.reloadSelectionOnStateChange(doc.getDossier());

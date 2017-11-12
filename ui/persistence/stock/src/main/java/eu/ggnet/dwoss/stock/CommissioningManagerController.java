@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,9 +30,8 @@ import eu.ggnet.dwoss.stock.entity.StockUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import eu.ggnet.dwoss.common.DwOssCore;
-
 import eu.ggnet.dwoss.rights.op.Authentication;
+import eu.ggnet.saft.Ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -122,8 +121,8 @@ public class CommissioningManagerController {
                     StockUnit su = get();
                     if ( !valid(su, refurbishId) ) return;
                     model.addUnit(su);
-                } catch (UserInfoException | ExecutionException | InterruptedException e) {
-                    DwOssCore.show(view, e);
+                } catch (UserInfoException | ExecutionException | InterruptedException ex) {
+                    Ui.handle(ex);
                 } finally {
                     view.unitIdTextField.setEnabled(true);
                     view.unitIdTextField.setText("");
