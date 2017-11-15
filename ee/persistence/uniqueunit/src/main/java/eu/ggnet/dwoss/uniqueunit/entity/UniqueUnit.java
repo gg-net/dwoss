@@ -16,15 +16,18 @@
  */
 package eu.ggnet.dwoss.uniqueunit.entity;
 
-import java.io.*;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.INoteModel;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -63,14 +66,11 @@ import static javax.persistence.CascadeType.*;
                 query = "select new eu.ggnet.dwoss.uniqueunit.eao.CountHolder(u.inputDate, u.product.tradeName, u.contractor, count(u.id)) "
                 + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
 })
-public class UniqueUnit implements Serializable, EagerAble {
+@SuppressWarnings("PersistenceUnitPresent")
+public class UniqueUnit extends AbstractUnitProduct implements Serializable, EagerAble {
 
     public static NavigableMap<String, UniqueUnit> asMapByRefurbishId(Collection<UniqueUnit> uus) {
-        NavigableMap<String, UniqueUnit> result = new TreeMap<>();
-        for (UniqueUnit uu : uus) {
-            result.put(uu.getIdentifier(REFURBISHED_ID), uu);
-        }
-        return result;
+        return new TreeMap<>(uus.stream().collect(Collectors.toMap(uu -> uu.getIdentifier(REFURBISHED_ID), uu -> uu)));
     }
 
     private final static DateFormat MEDIUM = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -78,6 +78,8 @@ public class UniqueUnit implements Serializable, EagerAble {
     /**
      * The equipment parts a UniqueUnit may have.
      */
+    @RequiredArgsConstructor
+    @Getter
     public static enum Equipment implements INoteModel {
 
         POWER_CABLE("Stromkabel"),
@@ -134,26 +136,6 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
-        private final double economicValue;
-
-        private Equipment(String note) {
-            this(note, 0);
-        }
-
-        private Equipment(String note, double economicValue) {
-            this.note = note;
-            this.economicValue = economicValue;
-        }
-
-        @Override
-        public String getNote() {
-            return note;
-        }
-
-        public double getEconomicValue() {
-            return economicValue;
-        }
-
         public static Set<Equipment> getEquipments() {
             return getEquipments(null);
         }
@@ -174,7 +156,7 @@ public class UniqueUnit implements Serializable, EagerAble {
                             THREE_D_GLASSES, REMOTE, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE);
                 case ALL_IN_ONE:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, POWER_CABLE, MOUSE, KEYBOARD, GAME_MOUSE, GAME_KEYBOARD, CABLELES_KEYBOARD, CABLELES_MOUSE, ANTENNA_ADAPTER,
-                            DONGLE, FOOT, DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, REMOTE, AC_ADAPTER_INC_CABLE, WALLHOLDER, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER, 
+                            DONGLE, FOOT, DISPLAY_FOOT_CONNECTOR, THREE_D_GLASSES, REMOTE, AC_ADAPTER_INC_CABLE, WALLHOLDER, MANUAL, ALTERNATIVE_PLUGIN_AC_ADAPTER,
                             ALTERNATIBVE_USB_CABLE, USB_KABEL);
                 case DESKTOP_BUNDLE:
                     Set<Equipment> equipments = getEquipments(ProductGroup.DESKTOP);
@@ -207,6 +189,8 @@ public class UniqueUnit implements Serializable, EagerAble {
     /**
      * Most common standart notes that a unit may have.
      */
+    @RequiredArgsConstructor
+    @Getter
     public static enum StaticComment implements INoteModel {
 
         FRONT_COVER_MISSING("Untere Fronklappe fehlt"),
@@ -266,30 +250,13 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
-        private final double economicValue;
-
-        private StaticComment(String note) {
-            this(note, 0);
-        }
-
-        private StaticComment(String note, double economicValue) {
-            this.note = note;
-            this.economicValue = economicValue;
-        }
-
-        @Override
-        public String getNote() {
-            return note;
-        }
-
-        public double getEconomicValue() {
-            return economicValue;
-        }
     }
 
     /**
      * Most common internal notes that a unit may have.
      */
+    @RequiredArgsConstructor
+    @Getter
     public static enum StaticInternalComment implements INoteModel {
 
         /**
@@ -308,30 +275,13 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
-        private final double economicValue;
-
-        private StaticInternalComment(String note) {
-            this(note, 0);
-        }
-
-        private StaticInternalComment(String note, double economicValue) {
-            this.note = note;
-            this.economicValue = economicValue;
-        }
-
-        @Override
-        public String getNote() {
-            return note;
-        }
-
-        public double getEconomicValue() {
-            return economicValue;
-        }
     }
 
     /**
      * Possible states every unit is categorized in.
      */
+    @RequiredArgsConstructor
+    @Getter
     public enum Condition implements INoteModel {
 
         AS_NEW("neuwertig"),
@@ -339,26 +289,6 @@ public class UniqueUnit implements Serializable, EagerAble {
         USED("gebraucht");
 
         private final String note;
-
-        private final double economicValue;
-
-        private Condition(String note) {
-            this(note, 0);
-        }
-
-        private Condition(String note, double economicValue) {
-            this.note = note;
-            this.economicValue = economicValue;
-        }
-
-        @Override
-        public String getNote() {
-            return note;
-        }
-
-        public double getEconomicValue() {
-            return economicValue;
-        }
     }
 
     /**
@@ -374,33 +304,12 @@ public class UniqueUnit implements Serializable, EagerAble {
         PRICE_FIXED
     }
 
-    /**
-     * Classification inspired by Also.
-     * <p/>
-     * @deprecated Cooperation with Also has been canceled, may be removed.
-     */
-    @RequiredArgsConstructor
-    @Getter
-    @Deprecated
-    public static enum BnClassification {
-
-        B0_UNDEFINED("B0 - Keine Klassifikation"),
-        B1_NEW("B1 - Vergleichbar mit Neuware"),
-        B2_AS_NEW("B2 - Neuwertig und Vollständig"),
-        B3_USED("B3 - Gebraucht und Verkaufsfähig"),
-        B4_USED("B4 - Gebraucht und Unvollständig"),
-        B5_BROCKEN("B5 - Beschädigt"),
-        B6_CHEAP("B6 - Wert unter 25,- €");
-
-        private final String name;
-
-    }
-
     @Getter
     @Id
     @GeneratedValue
     private int id;
 
+    @Getter
     @Version
     private short optLock;
 
@@ -412,18 +321,15 @@ public class UniqueUnit implements Serializable, EagerAble {
     private Map<Identifier, String> identifiers = new EnumMap<>(Identifier.class);
 
     // No Merge, Product may change while a UniqueUnit is detached.
+    @Getter
     @NotNull
     @ManyToOne(cascade = {PERSIST, REFRESH, DETACH}, fetch = FetchType.EAGER)
     private Product product;
 
-    @NotNull
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyEnumerated
-    private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
-
-    @NotNull
-    @OneToMany(cascade = ALL)
-    private List<PriceHistory> priceHistories = new ArrayList<>();
+    // No Merge, Product may change while a UniqueUnit is detached.
+    @Getter
+    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
+    private UnitCollection unitCollection;
 
     @Getter
     @Setter
@@ -497,12 +403,6 @@ public class UniqueUnit implements Serializable, EagerAble {
 
     @Getter
     @Setter
-    @NotNull
-    @Basic(optional = false)
-    private SalesChannel salesChannel = SalesChannel.UNKNOWN;
-
-    @Getter
-    @Setter
     @Temporal(TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
     private Date inputDate;
@@ -516,17 +416,6 @@ public class UniqueUnit implements Serializable, EagerAble {
     @Setter
     @Temporal(TemporalType.DATE)
     private Date warrentyValid;
-
-    /**
-     * Also Classifiaction.
-     * <p/>
-     * @deprecated Cooperation with Also has been canceled, may be removed.
-     */
-    @Getter
-    @Setter
-    @NotNull
-    @Deprecated
-    private BnClassification classification = BnClassification.B0_UNDEFINED;
 
     /**
      * A non Productive Constructor.
@@ -555,36 +444,12 @@ public class UniqueUnit implements Serializable, EagerAble {
         this.comment = comment;
     }
 
-    public void setPrice(PriceType type, double price, String comment) {
-        if ( MathUtil.equals(getPrice(type), price) ) {
-            return; // Don't set the same price
-        }
-        prices.put(type, price);
-        priceHistories.add(new PriceHistory(type, price, new Date(), comment));
-    }
-
-    public boolean hasPrice(PriceType type) {
-        return prices.get(type) != null && prices.get(type) > 0.01;
-    }
-
-    public double getPrice(PriceType type) {
-        return prices.get(type) == null ? 0 : prices.get(type);
-    }
-
-    public Map<PriceType, Double> getPrices() {
-        return Collections.unmodifiableMap(prices);
-    }
-
     public boolean removeFlag(Flag flag) {
         return flags.remove(flag);
     }
 
     public boolean addFlag(Flag flag) {
         return flags.add(flag);
-    }
-
-    public List<PriceHistory> getPriceHistory() {
-        return priceHistories;
     }
 
     public String getIdentifier(Identifier type) {
@@ -607,7 +472,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         if ( this.identifiers.containsKey(type) && Objects.equals(this.identifiers.get(type), identifier) ) {
             return;
         }
-        addHistory(UniqueUnitHistory.Type.UNIQUE_UNIT, type + " set to " + identifier);
+        addHistory(type + " set to " + identifier);
         this.identifiers.put(type, identifier);
     }
 
@@ -615,7 +480,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         if ( Objects.equals(this.shipmentLabel, shipmentLabel) ) {
             return;
         }
-        addHistory(UniqueUnitHistory.Type.UNIQUE_UNIT, "Setting Shipment from " + this.shipmentLabel + " to " + shipmentLabel);
+        addHistory("Setting Shipment from " + this.shipmentLabel + " to " + shipmentLabel);
         this.shipmentLabel = shipmentLabel;
     }
 
@@ -628,24 +493,17 @@ public class UniqueUnit implements Serializable, EagerAble {
         history.add(uniqueUnitHistory);
     }
 
-    public void addHistory(UniqueUnitHistory.Type type, String comment) {
-        addHistory(new UniqueUnitHistory(type, comment));
-    }
-
     public void addHistory(String comment) {
-        addHistory(new UniqueUnitHistory(UniqueUnitHistory.Type.UNDEFINED, comment));
-    }
-
-    public Product getProduct() {
-        return product;
+        addHistory(new UniqueUnitHistory(comment));
     }
 
     /**
      * Sets the {@link Product} in consideration of equalancy and bidirectional
      * behaviour.
-     * <p/>
+     * <p>
      * @param product
      */
+    @SuppressWarnings("null")
     public void setProduct(Product product) {
         if ( product == null && this.product == null ) {
             return;
@@ -662,13 +520,40 @@ public class UniqueUnit implements Serializable, EagerAble {
         this.product = product;
     }
 
+    /**
+     * Sets the {@link UnitCollection} in consideration of equalancy and bidirectional
+     * behaviour.
+     * <p>
+     * @param unitCollection
+     */
+    @SuppressWarnings("null")
+    public void setUnitCollection(UnitCollection unitCollection) {
+        if ( unitCollection == null && this.unitCollection == null ) {
+            return;
+        }
+        if ( this.unitCollection != null && this.unitCollection.equals(unitCollection) ) {
+            return;
+        }
+        if ( this.unitCollection != null ) {
+            this.unitCollection.units.remove(this);
+        }
+        if ( unitCollection != null ) {
+            unitCollection.units.add(this);
+        }
+        this.unitCollection = unitCollection;
+    }
+
     @Override
     public String toString() {
         String productString = null;
         String formatedMfgDate = null;
         String formatedInputDate = null;
+        String unitCollectionString = null;
         if ( product != null ) {
             productString = "[" + product.getPartNo() + "]" + product.getTradeName() + " " + product.getName();
+        }
+        if ( unitCollection != null ) {
+            unitCollectionString = "[id=" + unitCollection.getId() + ", nameExtension=" + unitCollection.getNameExtension() + "]";
         }
         if ( mfgDate != null ) {
             formatedMfgDate = DateFormats.ISO.format(mfgDate);
@@ -676,22 +561,22 @@ public class UniqueUnit implements Serializable, EagerAble {
         if ( inputDate != null ) {
             formatedInputDate = MEDIUM.format(inputDate);
         }
-        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString + ", prices=" + prices + ", equipments=" + equipments
-                + ", flags=" + flags + ", comments=" + comments + ", internalComments=" + internalComments + ", condition=" + condition
+        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString + ", unitCollection=" + unitCollectionString
+                + ", prices=" + getPrices() + ", equipments=" + equipments + ", flags=" + flags + ", comments=" + comments + ", internalComments=" + internalComments
+                + ", condition=" + condition
                 + ", contractor=" + contractor + ", mfgDate=" + formatedMfgDate + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel
-                + ", salesChannel=" + salesChannel + ", inputDate=" + formatedInputDate + ", warranty=" + warranty + ", classification=" + classification
-                + ", comment=" + comment + ", internalComment=" + internalComment + '}';
+                + ", salesChannel=" + getPrices() + ", inputDate=" + formatedInputDate + ", warranty=" + warranty + ", comment=" + comment
+                + ", internalComment=" + internalComment + '}';
     }
 
     /**
      * Calls all m-n Relations recursive to ensure, that this instance works
      * detached.
      */
+    // TODO: think about unitcollection in fetcheager.
     @Override
     public void fetchEager() {
-        if ( getProduct() != null ) {
-            getProduct().getName();
-        }
+        if ( getProduct() != null ) getProduct().getName();
         getComments().size();
         getInternalComments().size();
         getEquipments().size();

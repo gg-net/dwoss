@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,9 @@ import java.util.*;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.rules.Warranty;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Equipment;
-
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.INoteModel;
-
-import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
 
@@ -196,7 +194,7 @@ public abstract class UniqueUnitFormater {
         TreeSet<UniqueUnitHistory> history = new TreeSet<>((UniqueUnitHistory o1, UniqueUnitHistory o2) -> o1.getOccurence().compareTo(o2.getOccurence()));
         history.addAll(unit.getHistory());
         res = history.stream().map((uniqueUnitHistory)
-                -> "<li>Datum: " + uniqueUnitHistory.getOccurence() + " | Typ: " + uniqueUnitHistory.getType().name()
+                -> "<li>Datum: " + uniqueUnitHistory.getOccurence()
                 + "<br />Anmerkung:" + uniqueUnitHistory.getComment() + "</li>")
                 .reduce(res, String::concat);
         res += "</ol></p>";

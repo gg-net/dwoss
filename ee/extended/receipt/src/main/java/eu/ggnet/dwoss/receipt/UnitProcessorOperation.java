@@ -44,8 +44,9 @@ import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -328,7 +329,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction
         L.debug("Executed Operation {} for uniqueUnit(id={},refurbishId={}), added to LogicTransaction({}) and Dossier({})",
                 operation, uniqueUnit.getId(), uniqueUnit.getRefurbishId(), lt.getId(), doc.getDossier().getIdentifier());
-        uniqueUnit.addHistory(UniqueUnitHistory.Type.STOCK, "RecepitOeration:" + operation + ", " + operationComment + " by " + arranger);
+        uniqueUnit.addHistory("RecepitOeration:" + operation + ", " + operationComment + " by " + arranger);
     }
 
     private boolean cleanUpOldOperation(UniqueUnit uniqueUnit, StockUnit stockUnit, ReceiptOperation updateOperation, String operationComment, String arranger) {

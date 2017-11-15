@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.uniqueunit.entity;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -44,20 +43,17 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @NamedQueries({
     @NamedQuery(name = "Product.byTradeNames", query = "select p from Product p where p.tradeName in (?1)"),
     @NamedQuery(name = "Product.byPartNos", query = "select p from Product p where p.partNo in (?1)"),
     @NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
 })
-public class Product implements Serializable, EagerAble, Comparable<Product> {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Product extends AbstractUnitProduct implements Serializable, EagerAble, Comparable<Product> {
 
     public static NavigableMap<String, Product> asMapByPartNos(Collection<Product> products) {
-        NavigableMap<String, Product> result = new TreeMap<>();
-        for (Product product : products) {
-            result.put(product.getPartNo(), product);
-        }
-        return result;
+        return new TreeMap<>(products.stream().collect(Collectors.toMap(p -> p.getPartNo(), p -> p)));
     }
 
     public static enum Flag {
@@ -70,6 +66,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @GeneratedValue
     private long id;
 
+    @Getter
     @Version
     private short optLock;
 
@@ -121,17 +118,12 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated
+    @SuppressWarnings("FieldMayBeFinal")
     private Map<TradeName, String> additionalPartNo = new EnumMap<>(TradeName.class);
 
-    @NotNull
-    @ElementCollection(fetch = FetchType.EAGER)
-    @MapKeyEnumerated
-    private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
-
-    @NotNull
-    @OneToMany(cascade = ALL)
-    private List<PriceHistory> priceHistories = new ArrayList<>();
-
+    @Getter
+    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
+    private CategoryProduct categoryProduct;
     /**
      * Represents Flags the user can set for this element.
      * This is a better aproacht, than creating multiple boolean falues.
@@ -146,6 +138,10 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @NotNull
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
     List<UniqueUnit> units = new ArrayList<>();
+
+    @NotNull
+    @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
+    List<UnitCollection> unitCollections = new ArrayList<>();
 
     @Setter
     @Getter
@@ -178,26 +174,14 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         unit.setProduct(null);
     }
 
-    public void setPrice(PriceType type, double price, String comment) {
-        if ( MathUtil.equals(getPrice(type), price) ) return; // Don't set the same price
-        prices.put(type, price);
-        priceHistories.add(new PriceHistory(type, price, new Date(), comment));
+    public void addUnitCollections(UnitCollection unitCollection) {
+        if ( unitCollection == null ) return;
+        unitCollection.setProduct(this);
     }
 
-    public double getPrice(PriceType type) {
-        return prices.get(type) == null ? 0 : prices.get(type);
-    }
-
-    public boolean hasPrice(PriceType type) {
-        return prices.get(type) != null && prices.get(type) > 0.01;
-    }
-
-    public Map<PriceType, Double> getPrices() {
-        return prices;
-    }
-
-    public List<PriceHistory> getPriceHistory() {
-        return priceHistories;
+    public void removeUnitCollection(UnitCollection unitCollection) {
+        if ( unitCollection == null ) return;
+        unitCollection.setProduct(null);
     }
 
     public void setAdditionalPartNo(TradeName tradeName, String partNo) {
@@ -225,8 +209,31 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     }
 
     /**
+     * Sets the {@link Product} in consideration of equalancy and bidirectional
+     * behaviour.
+     * <p>
+     * @param categoryProduct
+     */
+    @SuppressWarnings("null")
+    public void setCategoryProduct(CategoryProduct categoryProduct) {
+        if ( categoryProduct == null && this.categoryProduct == null ) {
+            return;
+        }
+        if ( this.categoryProduct != null && this.categoryProduct.equals(categoryProduct) ) {
+            return;
+        }
+        if ( this.categoryProduct != null ) {
+            this.categoryProduct.products.remove(this);
+        }
+        if ( categoryProduct != null ) {
+            categoryProduct.products.add(this);
+        }
+        this.categoryProduct = categoryProduct;
+    }
+
+    /**
      * Returns null if the instance is valid, or a string representing the error.
-     * <p/>
+     * <p>
      * @return null if the instance is valid, or a string representing the error.
      */
     @Null
@@ -248,7 +255,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     @Override
     public void fetchEager() {
-        priceHistories.size();
+        getPriceHistory().size();
         units.size();
     }
 
@@ -256,6 +263,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     public String toString() {
         return "Product{" + "id=" + id + ", partNo=" + partNo + ", group=" + group + ", tradeName=" + tradeName + ", name=" + name
                 + ", eol=" + eol + ", gtin=" + gtin + ", description=" + description + ", additionalPartNo=" + additionalPartNo
-                + ", prices=" + prices + ", flags=" + flags + ", imageId=" + imageId + '}';
+                + ", prices=" + getPrices() + ", flags=" + flags + ", imageId=" + imageId + '}';
     }
 }

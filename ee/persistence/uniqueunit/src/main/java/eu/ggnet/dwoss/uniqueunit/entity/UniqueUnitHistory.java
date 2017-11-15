@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,12 +36,6 @@ import lombok.*;
 @ToString(exclude = "uniqueUnit")
 public class UniqueUnitHistory extends IdentifiableEntity implements Serializable, Comparable<UniqueUnitHistory> {
 
-    @Deprecated // TODO: Not in use, remove some day
-    public enum Type {
-
-        UNDEFINED, UNIQUE_UNIT, STOCK, SOPO
-    }
-
     @Id
     @GeneratedValue
     @Getter
@@ -64,36 +58,27 @@ public class UniqueUnitHistory extends IdentifiableEntity implements Serializabl
     @Getter
     UniqueUnit uniqueUnit;
 
-    // TODO: Change type to some optional String based tag, or remove
-    @Getter
-    @Setter
-    private Type type;
-
     /**
      * Id bases Constructor, do not use in production environment
      *
      * @param id
-     * @param type
      * @param occurence
      * @param comment
      */
-    public UniqueUnitHistory(int id, Type type, Date occurence, String comment) {
+    public UniqueUnitHistory(int id, Date occurence, String comment) {
         this.id = id;
         this.comment = comment;
         this.occurence = occurence;
-        this.type = type;
     }
 
-    public UniqueUnitHistory(Type type, String comment) {
+    public UniqueUnitHistory(String comment) {
         this.comment = comment;
-        this.type = type;
         this.occurence = new Date();
     }
 
-    public UniqueUnitHistory(Type type, Date occurence, String comment) {
+    public UniqueUnitHistory(Date occurence, String comment) {
         this.comment = comment;
         this.occurence = occurence;
-        this.type = type;
     }
 
     @Override

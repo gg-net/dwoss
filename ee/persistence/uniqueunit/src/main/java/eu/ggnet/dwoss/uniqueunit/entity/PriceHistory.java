@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,21 +21,18 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * A history to keep track of price changes in {@link UniqueUnit}s and {@link Product}s
- * <p/>
+ * <p>
  * @author pascal.perau
  */
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
+@SuppressWarnings("PersistenceUnitPresent")
 public class PriceHistory implements Serializable {
 
     @Getter

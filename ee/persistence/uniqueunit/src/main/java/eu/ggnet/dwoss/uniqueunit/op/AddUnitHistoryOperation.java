@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,6 @@ import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
 
 /**
  * Implementation of the {@link AddUnitHistory} {@link Remote} interface.
@@ -55,7 +54,7 @@ public class AddUnitHistoryOperation implements AddUnitHistory {
     public void addCommentHistory(String refurbishId, String comment, String arranger) {
         UniqueUnitEao eao = new UniqueUnitEao(entityManager);
         UniqueUnit uu = eao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
-        if ( uu != null ) uu.addHistory(UniqueUnitHistory.Type.UNDEFINED, comment + " - " + arranger);
+        if ( uu != null ) uu.addHistory(comment + " - " + arranger);
         else L.warn("No UniqueUnit for refurbishId " + refurbishId);
     }
 

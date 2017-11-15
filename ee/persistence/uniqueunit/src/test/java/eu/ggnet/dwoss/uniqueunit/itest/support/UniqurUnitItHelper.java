@@ -29,8 +29,8 @@ import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
 
@@ -98,8 +98,8 @@ public class UniqurUnitItHelper {
         unit1.setCondition(UniqueUnit.Condition.AS_NEW);
 
         UniqueUnit unit2 = new UniqueUnit(p1, now, "lila");
-        unit2.addHistory(new UniqueUnitHistory(UniqueUnitHistory.Type.UNDEFINED, "Aufgenommen als Sopo 332"));
-        unit2.addHistory(new UniqueUnitHistory(UniqueUnitHistory.Type.UNIQUE_UNIT, "Zerlegt weil kaput"));
+        unit2.addHistory("Aufgenommen als Sopo 332");
+        unit2.addHistory("Zerlegt weil kaput");
         unit2.setIdentifier(SERIAL, "DBCFDASFDSADEF");
         unit2.setContractor(TradeName.ONESELF);
         unit2.setComment("Auch ein Commentar");

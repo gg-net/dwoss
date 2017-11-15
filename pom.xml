@@ -247,7 +247,9 @@
         <uniqueunit-pu.classes>
           <![CDATA[
                 <class>eu.ggnet.dwoss.uniqueunit.entity.PriceHistory</class>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct</class>
                 <class>eu.ggnet.dwoss.uniqueunit.entity.Product</class>
+                <class>eu.ggnet.dwoss.uniqueunit.entity.UnitCollection</class>
                 <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</class>
                 <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
