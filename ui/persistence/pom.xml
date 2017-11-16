@@ -15,6 +15,7 @@
         <module>report</module>
         <module>rights</module>
         <module>stock</module>
+	<module>uniqueunit</module>
     </modules>
 
 </project>
