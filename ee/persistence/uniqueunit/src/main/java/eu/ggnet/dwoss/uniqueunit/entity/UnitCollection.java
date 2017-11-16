@@ -17,18 +17,23 @@
 package eu.ggnet.dwoss.uniqueunit.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.util.MathUtil;
+
 import lombok.*;
 
 import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * Represents a collection of units from the same product but not only the product.
+ * An example: Asume a product "lila handy" with 200 assosiated uniqueunits. Now you what to splitt the products in three categories: new units, units without
+ * a case and units you want to keep in stock for an special paralell event. So you create three unit collections an assign the 200 units apropriatly.
  *
  * @author oliver.guenther
  */
@@ -36,7 +41,7 @@ import static javax.persistence.CascadeType.*;
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @SuppressWarnings("PersistenceUnitPresent")
-public class UnitCollection extends AbstractUnitProduct implements Serializable {
+public class UnitCollection implements Serializable {
 
     @Id
     @GeneratedValue
@@ -46,14 +51,17 @@ public class UnitCollection extends AbstractUnitProduct implements Serializable 
     private short optLock;
 
     /**
-     * Should always be seen like: product.name - unitcollection.nameExtenstion.
+     * Extension to {@link Product#name}. Default combind format: {
+     *
+     * @ product.name} - {
+     * @ unitcollection.nameExtenstion}.
      */
     @Setter
     @Basic(optional = false)
     private String nameExtension;
 
     /**
-     * Should always be seen like: product.description - unitcollection.descriptionExtension.
+     * Extension to {@link Product#desciption}. Default combind format: {@code product.description}, {@code unitcollection.descriptionExtension}.
      */
     @Setter
     @Basic
@@ -61,13 +69,61 @@ public class UnitCollection extends AbstractUnitProduct implements Serializable 
     @Lob
     private String descriptionExtension;
 
+    /**
+     * Extenstion to {@link Product#partNo }. Default combind format: {@code product.partNo}-{@code unitcollection.descriptionExtension}
+     */
+    @Setter
+    @Basic(optional = false)
+    private String partNoExtension;
+
     @NotNull
-    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
+    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE}, fetch = EAGER) // Eager fetching, cause it's an esential part.
     private Product product;
 
     @NotNull
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "unitCollection")
     List<UniqueUnit> units = new ArrayList<>(); // Package private for bidirectional handling.
+
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyEnumerated
+    @SuppressWarnings("FieldMayBeFinal")
+    private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
+
+    @NotNull
+    @OneToMany(cascade = ALL)
+    @SuppressWarnings("FieldMayBeFinal")
+    private List<PriceHistory> priceHistories = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @NotNull
+    @Basic(optional = false)
+    private SalesChannel salesChannel = SalesChannel.UNKNOWN;
+
+    public void setPrice(PriceType type, double price, String comment) {
+        if ( MathUtil.equals(getPrice(type), price) ) {
+            return; // Don't set the same price
+        }
+        prices.put(type, price);
+        priceHistories.add(new PriceHistory(type, price, new Date(), comment));
+    }
+
+    public boolean hasPrice(PriceType type) {
+        return prices.get(type) != null && prices.get(type) > 0.01;
+    }
+
+    public double getPrice(PriceType type) {
+        return prices.get(type) == null ? 0 : prices.get(type);
+    }
+
+    public Map<PriceType, Double> getPrices() {
+        return Collections.unmodifiableMap(prices);
+    }
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistories;
+    }
 
     /**
      * Sets the {@link Product} in consideration of equalancy and bidirectional
@@ -104,7 +160,7 @@ public class UnitCollection extends AbstractUnitProduct implements Serializable 
 
     @Override
     public String toString() {
-        String productString = null;
+        String productString = "[Product is null, invalid]";
         if ( product != null ) {
             productString = "[" + product.getPartNo() + "]" + product.getTradeName() + " " + product.getName();
         }

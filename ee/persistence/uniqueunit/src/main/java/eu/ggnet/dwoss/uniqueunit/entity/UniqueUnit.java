@@ -26,8 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -67,7 +66,7 @@ import static javax.persistence.CascadeType.*;
                 + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
 })
 @SuppressWarnings("PersistenceUnitPresent")
-public class UniqueUnit extends AbstractUnitProduct implements Serializable, EagerAble {
+public class UniqueUnit implements Serializable, EagerAble {
 
     public static NavigableMap<String, UniqueUnit> asMapByRefurbishId(Collection<UniqueUnit> uus) {
         return new TreeMap<>(uus.stream().collect(Collectors.toMap(uu -> uu.getIdentifier(REFURBISHED_ID), uu -> uu)));
@@ -363,16 +362,10 @@ public class UniqueUnit extends AbstractUnitProduct implements Serializable, Eag
     @Column(name = "uniqueUnitCondition")
     private Condition condition;
 
+    @Getter
+    @Setter
     @NotNull
     private TradeName contractor;
-
-    public TradeName getContractor() {
-        return contractor;
-    }
-
-    public void setContractor(TradeName contractor) {
-        this.contractor = contractor;
-    }
 
     @Getter
     @Setter
@@ -416,6 +409,47 @@ public class UniqueUnit extends AbstractUnitProduct implements Serializable, Eag
     @Setter
     @Temporal(TemporalType.DATE)
     private Date warrentyValid;
+
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyEnumerated
+    @SuppressWarnings("FieldMayBeFinal")
+    private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
+
+    @NotNull
+    @OneToMany(cascade = ALL)
+    @SuppressWarnings("FieldMayBeFinal")
+    private List<PriceHistory> priceHistories = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @NotNull
+    @Basic(optional = false)
+    private SalesChannel salesChannel = SalesChannel.UNKNOWN;
+
+    public void setPrice(PriceType type, double price, String comment) {
+        if ( MathUtil.equals(getPrice(type), price) ) {
+            return; // Don't set the same price
+        }
+        prices.put(type, price);
+        priceHistories.add(new PriceHistory(type, price, new Date(), comment));
+    }
+
+    public boolean hasPrice(PriceType type) {
+        return prices.get(type) != null && prices.get(type) > 0.01;
+    }
+
+    public double getPrice(PriceType type) {
+        return prices.get(type) == null ? 0 : prices.get(type);
+    }
+
+    public Map<PriceType, Double> getPrices() {
+        return Collections.unmodifiableMap(prices);
+    }
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistories;
+    }
 
     /**
      * A non Productive Constructor.

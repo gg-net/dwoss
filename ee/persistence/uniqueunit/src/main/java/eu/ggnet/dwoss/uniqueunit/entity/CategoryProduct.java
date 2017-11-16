@@ -17,11 +17,13 @@
 package eu.ggnet.dwoss.uniqueunit.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.util.MathUtil;
 
 import lombok.*;
 
@@ -35,7 +37,7 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @SuppressWarnings("PersistenceUnitPresent")
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class CategoryProduct extends AbstractUnitProduct implements Serializable {
+public class CategoryProduct implements Serializable {
 
     @Getter
     @Id
@@ -66,6 +68,47 @@ public class CategoryProduct extends AbstractUnitProduct implements Serializable
     @NotNull
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "categoryProduct")
     List<Product> products = new ArrayList<>(); // Package private for bidirectional handling.
+
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyEnumerated
+    @SuppressWarnings("FieldMayBeFinal")
+    private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
+
+    @NotNull
+    @OneToMany(cascade = ALL)
+    @SuppressWarnings("FieldMayBeFinal")
+    private List<PriceHistory> priceHistories = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @NotNull
+    @Basic(optional = false)
+    private SalesChannel salesChannel = SalesChannel.UNKNOWN;
+
+    public void setPrice(PriceType type, double price, String comment) {
+        if ( MathUtil.equals(getPrice(type), price) ) {
+            return; // Don't set the same price
+        }
+        prices.put(type, price);
+        priceHistories.add(new PriceHistory(type, price, new Date(), comment));
+    }
+
+    public boolean hasPrice(PriceType type) {
+        return prices.get(type) != null && prices.get(type) > 0.01;
+    }
+
+    public double getPrice(PriceType type) {
+        return prices.get(type) == null ? 0 : prices.get(type);
+    }
+
+    public Map<PriceType, Double> getPrices() {
+        return Collections.unmodifiableMap(prices);
+    }
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistories;
+    }
 
     public void add(Product product) {
         if ( product == null ) return;
