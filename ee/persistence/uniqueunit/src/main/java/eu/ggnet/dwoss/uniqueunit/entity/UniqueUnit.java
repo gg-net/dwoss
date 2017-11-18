@@ -39,13 +39,13 @@ import static javax.persistence.CascadeType.*;
  * A UniqueUnit represents exactly one unit that is unique in the whole system.
  * Identefiable through {@link Identifier}
  *
- * @has n - 1 Product
  * @has 1 - n UniqueUnitHistory
  * @has n - m UniqueUnit.Equipment
  * @has n - m UniqueUnit.StaticComment
  * @has n - m UniqueUnit.StaticInternalComment
  * @has n - 1 UniqueUnit.Condition
- * @has 1 - n PriceHistory
+ * @has n - 1 SalesChannel
+ * @has 0 - n PriceHistory
  * @has 1 - 1 Identifier
  * @has n - m Flag
  */
@@ -54,13 +54,20 @@ import static javax.persistence.CascadeType.*;
 @EqualsAndHashCode(of = {"id"})
 @NamedQueries({
     // HINT: Netbeans Warinig is wrong. 2. HINT: Hibernate builds defective Query.
-    @NamedQuery(name = "UnqiueUnit.findByIdenfiersTypeValue", query = "SELECT u FROM UniqueUnit u join u.identifiers i WHERE KEY(i) = ?1 and VALUE(i) IN (?2)"),
-    @NamedQuery(name = "UnqiueUnit.betweenInputDates", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2"),
-    @NamedQuery(name = "UnqiueUnit.betweenInputDatesAndContractor", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2 and u.contractor = ?3"),
-    @NamedQuery(name = "UniqueUnit.findByIds", query = "SELECT u FROM UniqueUnit u WHERE u.id IN (:idList)"),
-    @NamedQuery(name = "UniqueUnit.byProductPartNo", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo = ?1"),
-    @NamedQuery(name = "UniqueUnit.byProductPartNosInputDate", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo in (?1) AND u.inputDate >= ?2 AND u.inputDate <= ?3"),
-    @NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1"),
+    @NamedQuery(name = "UnqiueUnit.findByIdenfiersTypeValue", query = "SELECT u FROM UniqueUnit u join u.identifiers i WHERE KEY(i) = ?1 and VALUE(i) IN (?2)")
+    ,
+    @NamedQuery(name = "UnqiueUnit.betweenInputDates", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2")
+    ,
+    @NamedQuery(name = "UnqiueUnit.betweenInputDatesAndContractor", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2 and u.contractor = ?3")
+    ,
+    @NamedQuery(name = "UniqueUnit.findByIds", query = "SELECT u FROM UniqueUnit u WHERE u.id IN (:idList)")
+    ,
+    @NamedQuery(name = "UniqueUnit.byProductPartNo", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo = ?1")
+    ,
+    @NamedQuery(name = "UniqueUnit.byProductPartNosInputDate", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo in (?1) AND u.inputDate >= ?2 AND u.inputDate <= ?3")
+    ,
+    @NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1")
+    ,
     @NamedQuery(name = "UniqueUnit.countByInputDateContractor",
                 query = "select new eu.ggnet.dwoss.uniqueunit.eao.CountHolder(u.inputDate, u.product.tradeName, u.contractor, count(u.id)) "
                 + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
@@ -173,12 +180,12 @@ public class UniqueUnit implements Serializable, EagerAble {
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, USB_KABEL, KEYBOARD_DOCK, VGA_NETWORK_ADAPTER, HEADSET, MANUAL,
                             MICRO_USB_TO_USB_ADAPTER, PORTFOLIO_CASE, SDCARD_16GB, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, USB_MICRO_HDMI_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, CRUNCHCOVER, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS,MAGNETIC_CHARGING_CABLE,SPARE_STRAP);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, MAGNETIC_CHARGING_CABLE, SPARE_STRAP);
                 case NOTEBOOK:
                     return EnumSet.of(ORIGINAL_BOXED, ALTERNATIVE_BOXED, PLUGIN_AC_ADAPTER, AC_ADAPTER_INC_CABLE, BATTERY, REMOTE, EXT_ANTENNA, THREE_D_GLASSES, MANUAL, DONGLE,
                             VGA_NETWORK_ADAPTER, CABLELES_MOUSE, HDMI_VGA_ADAPTER, USB_NETWORK_ADAPTER, PORTFOLIO_CASE, VGA_USB_NETWORK_ADAPTER, SIM_OPENER,
                             PORTFOLIO_CASE_INTEGRATED_KEYBOARD, ALTERNATIVE_PLUGIN_AC_ADAPTER, ALTERNATIBVE_USB_CABLE, KEYBOARD_DOCK, MS_OFFICE_365_PERSONAL,
-                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER,MAGNETIC_CHARGING_CABLE);
+                            MS_OFFICE_HOME_AND_STUDENT_2013, STYLUS, USB_KABEL, VGA_USB_ADAPTER, MAGNETIC_CHARGING_CABLE);
                 default:
             }
             return EnumSet.allOf(Equipment.class);

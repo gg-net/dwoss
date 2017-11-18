@@ -32,6 +32,10 @@ import static javax.persistence.CascadeType.*;
 /**
  * A human defined collection of products to be viewed together.
  *
+ * @has n - 1 SalesChannel
+ * @has 0 - n PriceHistory
+ * @has 0 - n Product
+ *
  * @author oliver.guenther
  */
 @Entity

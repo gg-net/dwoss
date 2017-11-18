@@ -35,18 +35,22 @@ import static javax.persistence.CascadeType.*;
 /**
  * Represents a Product.
  *
- * @has 1 - 1 TradeName
- * @has 1 - 1 ProductGroup
+ * @has n - 1 TradeName
+ * @has n - 1 ProductGroup
+ * @has n - 1 SalesChannel
  * @has 1 - n PriceHistory
  * @has n - m Flag
- * @has 1 - n UniqueUnit
+ * @has 0 - n UniqueUnit
+ * @has 0 - n UnitCollection
  * @author oliver.guenther
  */
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
 @NamedQueries({
-    @NamedQuery(name = "Product.byTradeNames", query = "select p from Product p where p.tradeName in (?1)"),
-    @NamedQuery(name = "Product.byPartNos", query = "select p from Product p where p.partNo in (?1)"),
+    @NamedQuery(name = "Product.byTradeNames", query = "select p from Product p where p.tradeName in (?1)")
+    ,
+    @NamedQuery(name = "Product.byPartNos", query = "select p from Product p where p.partNo in (?1)")
+    ,
     @NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
 })
 @SuppressWarnings("PersistenceUnitPresent")
@@ -72,7 +76,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     /**
      * The name of the Product.
-     *
+     * <p>
      * It sounds weird but, it can happen, that a Spec overwrites the value
      */
     @Getter
@@ -124,6 +128,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @Getter
     @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
     private CategoryProduct categoryProduct;
+
     /**
      * Represents Flags the user can set for this element.
      * This is a better aproacht, than creating multiple boolean falues.
@@ -194,7 +199,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     public List<PriceHistory> getPriceHistory() {
         return priceHistories;
     }
-
 
     public Product() {
     }

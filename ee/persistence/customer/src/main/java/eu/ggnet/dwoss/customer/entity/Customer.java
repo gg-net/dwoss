@@ -170,21 +170,26 @@ public class Customer implements Serializable {
      * @return a human readable representation
      */
     public String toName() {
-        String name = null;
+        String contactName = null;
+        String companyName = null;
         if ( !companies.isEmpty() ) {
             for (Company company : companies) {
-                if ( name == null ) name = company.getName();
-                if ( company.isPrefered() ) name = company.getName();
+                if ( companyName == null ) companyName = company.getName();
+                if ( company.isPrefered() ) companyName = company.getName();
             }
-        } else if ( !contacts.isEmpty() ) {
-            for (Contact contact : contacts) {
-                if ( name == null ) name = contact.toFullName();
-                if ( contact.isPrefered() ) name = contact.toFullName();
-            }
-        } else {
-            name = "Incomplete Customer DBid=" + id;
         }
-        return name;
+        if ( !contacts.isEmpty() ) {
+            for (Contact contact : contacts) {
+                if ( contactName == null ) contactName = contact.toFullName();
+                if ( contact.isPrefered() ) contactName = contact.toFullName();
+            }
+        }
+        if ( contactName == null && companyName == null ) return "Customer without company and contact" + id;
+        StringBuilder sb = new StringBuilder();
+        if ( companyName != null ) sb.append(companyName);
+        if ( companyName != null && contactName != null ) sb.append(" - ");
+        if ( contactName != null ) sb.append(contactName);
+        return sb.toString();
     }
 
     public String toMultiLine() {

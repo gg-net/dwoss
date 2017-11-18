@@ -35,6 +35,10 @@ import static javax.persistence.FetchType.EAGER;
  * An example: Asume a product "lila handy" with 200 assosiated uniqueunits. Now you what to splitt the products in three categories: new units, units without
  * a case and units you want to keep in stock for an special paralell event. So you create three unit collections an assign the 200 units apropriatly.
  *
+ * @has n - 1 SalesChannel
+ * @has 0 - n PriceHistory
+ * @has 0 - n UniqueUnit
+ *
  * @author oliver.guenther
  */
 @Entity
@@ -168,6 +172,5 @@ public class UnitCollection implements Serializable {
         return "UnitCollection{" + "id=" + id + ", optLock=" + optLock + ", nameExtension=" + nameExtension + ", descriptionExtension=" + descriptionExtension
                 + ", product=" + productString + '}';
     }
-
 
 }
