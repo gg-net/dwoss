@@ -11,13 +11,7 @@
             <title>Suche-Test</title>
         </h:head>
         <h:body>
-            <h:form id="test">
-                <h:panelGrid columns="4" cellpadding="5">
-                    <h:outputLabel for="search" value="Suche:" style="font-weight:bold" />
-                    <p:inputText id="search"  />
-                    <p:commandButton value="Submit" icon="ui-icon-check" />
-                </h:panelGrid>
-            </h:form>
+            <h1><h:link value="Suche" outcome="search/search" /></h1>
         </h:body>
     </f:view>
 </html>

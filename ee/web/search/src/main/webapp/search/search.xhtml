@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <f:view contentType="text/html">
+        <h:head>
+            <title>Suche</title>
+        </h:head>
+        <h:body>
+            <h:form id="search">
+                <p:growl id="growl" showDetail="true" sticky="true" />
+
+                <p:layout fullPage="true">
+                    <p:layoutUnit id="top" position="north" header="Search" >
+                        <h:panelGrid columns="4" cellpadding="5">
+                            <h:outputLabel for="search" value="Suche:" style="font-weight:bold" />
+                            <p:inputText id="search" value="#{searchController.lazyModel.search}" />
+                            <p:commandButton value="Submit" icon="ui-icon-check" onclick="PF('searchresult').update()"/>
+                        </h:panelGrid>
+                    </p:layoutUnit>
+                    <p:layoutUnit id="center" position="center" header="Output">
+                        <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="10"
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                                     rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">
+                            <p:ajax event="rowSelect" listener="#{searchController.onRowSelect}" />
+                            <p:column headerText="Ergebnis" filterBy="#{sresult.shortDescription}">
+                                <h:outputText value="#{sresult.shortDescription}" />
+                            </p:column>
+                            <p:column width="30%" headerText="Key" sortBy="#{sresult.key}" filterBy="#{sresult.key}">
+                                <h:outputText value="#{sresult.key}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </h:body>
+    </f:view>
+</html>
+

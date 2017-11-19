@@ -76,3 +76,4 @@ hs_err_pid*
 /assembly/ear/target/
 /ee/web/misc/target/
 /ui/persistence/uniqueunit/target/
+/ee/core/misc/target/

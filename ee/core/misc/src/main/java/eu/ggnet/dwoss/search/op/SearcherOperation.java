@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.search.op;
 
 import java.util.*;
 
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ import eu.ggnet.dwoss.search.api.*;
  * @author oliver.guenther
  */
 @Stateful
+@LocalBean
 public class SearcherOperation implements Searcher {
 
     private final Logger LOG = LoggerFactory.getLogger(SearcherOperation.class);
