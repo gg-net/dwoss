@@ -18,20 +18,20 @@
                     <p:layoutUnit id="top" position="north" header="Search" >
                         <h:panelGrid columns="4" cellpadding="5">
                             <h:outputLabel for="search" value="Suche:" style="font-weight:bold" />
-                            <p:inputText id="search" value="#{searchController.lazyModel.search}" />
-                            <p:commandButton value="Submit" icon="ui-icon-check" onclick="PF('searchresult').update()"/>
+                            <p:inputText id="searchInput" value="#{searchController.lazyModel.search}" />
+                            <p:commandButton value="Submit" icon="ui-icon-check" update="search:searchresult" process="@this searchInput"/>
                         </h:panelGrid>
                     </p:layoutUnit>
                     <p:layoutUnit id="center" position="center" header="Output">
-                        <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="10"
+                        <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="20"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-                                     rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">
+                                     rowsPerPageTemplate="20,50,100" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">
                             <p:ajax event="rowSelect" listener="#{searchController.onRowSelect}" />
-                            <p:column headerText="Ergebnis" filterBy="#{sresult.shortDescription}">
+                            <p:column headerText="Ergebnis">
                                 <h:outputText value="#{sresult.shortDescription}" />
                             </p:column>
-                            <p:column width="30%" headerText="Key" sortBy="#{sresult.key}" filterBy="#{sresult.key}">
-                                <h:outputText value="#{sresult.key}" />
+                            <p:column width="15%" headerText="Key">
+                                <h:outputText value="#{sresult.key.component}:#{sresult.key.id}" />
                             </p:column>
                         </p:dataTable>
                     </p:layoutUnit>

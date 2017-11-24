@@ -19,8 +19,11 @@ package eu.ggnet.dwoss.search.web.stub;
 import java.util.*;
 
 import javax.annotation.ManagedBean;
+import javax.inject.Singleton;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
@@ -33,7 +36,10 @@ import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
  * @author oliver.guenther
  */
 @ManagedBean
+@Singleton
 public class SearchProviderStub implements SearchProvider {
+
+    private static final Logger L = LoggerFactory.getLogger(SearchProviderStub.class);
 
     private final Map<SearchRequest, List<ShortSearchResult>> searches = new HashMap<>();
 
@@ -44,17 +50,21 @@ public class SearchProviderStub implements SearchProvider {
 
     @Override
     public int estimateMaxResults(SearchRequest request) {
-        return genAndGet(request).size();
+        int size = genAndGet(request).size();
+        L.info("estimateMaxResults(searchRequest={}) = {}", request, size);
+        return size;
     }
 
     @Override
     public List<ShortSearchResult> search(SearchRequest request, int start, int limit) {
         List<ShortSearchResult> data = genAndGet(request);
         if ( data.size() > start ) {
-            return data.subList(start, data.size() - start < limit ? data.size() - start : limit);
+            List<ShortSearchResult> result = data.subList(start, data.size() - start < limit ? start + (data.size() - start) : start + limit);
+            L.info("search(request={}, start={}, limit={}) = (max={}), {} ", request, start, limit, data.size(), result);
+            return result;
         }
+        L.info("search(request={}, start={}, limit={}) = (max={}),[] ", request, start, limit, data.size());
         return Collections.emptyList();
-
     }
 
     @Override
@@ -65,7 +75,7 @@ public class SearchProviderStub implements SearchProvider {
     private List<ShortSearchResult> genAndGet(SearchRequest request) {
         if ( searches.containsKey(request) ) return searches.get(request);
         List<ShortSearchResult> gen = new ArrayList<>();
-        int max = (int)(Math.random() * 500);
+        int max = (int)(Math.random() * 500) + 5;
         for (int i = 0; i < max; i++) {
             gen.add(new ShortSearchResult(new GlobalKey(CUSTOMER, i), "Search of " + request.getSearch() + " and random " + RandomStringUtils.randomAlphabetic(20)));
         }

@@ -44,15 +44,14 @@ public class SearchLazyModel extends LazyDataModel<ShortSearchResult> {
 
     private final List<ShortSearchResult> alreadyLoaded = new ArrayList<>();
 
-    private boolean newSearch = true;
-
     @Getter
     private String search;
 
     public void setSearch(String search) {
-        this.newSearch = true;
+        if ( Objects.equals(this.search, search) ) return;
         alreadyLoaded.clear();
         this.search = search;
+        searcher.initSearch(new SearchRequest(search));
     }
 
     private SearcherOperation searcher;
@@ -64,33 +63,35 @@ public class SearchLazyModel extends LazyDataModel<ShortSearchResult> {
     @Override
     public ShortSearchResult getRowData(String key) {
         ShortSearchResult searchResult = viewModel.get(key);
-        L.info("getRowData:ViewModel(key=" + key + ",value=" + searchResult + ")");
+        L.info("getRowData(key={}) returns searchResult={}", key, searchResult);
         return searchResult;
     }
 
     @Override
     public Object getRowKey(ShortSearchResult searchResult) {
         String key = viewKeyModel.get(searchResult);
-        L.info("getRowKey:ViewModel(key=" + key + ",value=" + searchResult + ")");
+        L.info("getRowKey(searchResult={}) returns key={}", searchResult, key);
         return key;
     }
 
     @Override
-    public List<ShortSearchResult> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
-        if ( StringUtils.isBlank(search) ) return Collections.emptyList();
-        if ( newSearch ) searcher.initSearch(new SearchRequest(search));
+    public int getRowCount() {
+        return searcher.estimateMaxResults();
+    }
 
-        if ( alreadyLoaded.size() < first + pageSize && !searcher.hasNext() ) return Collections.emptyList();
-        while (searcher.hasNext() && alreadyLoaded.size() < first + pageSize) {
+    @Override
+    public List<ShortSearchResult> load(int start, int limit, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
+        L.info("load(first={},pageSize={})", start, limit);
+        if ( StringUtils.isBlank(search) ) return Collections.emptyList();
+
+        while (searcher.hasNext() && alreadyLoaded.size() < start + limit) {
             alreadyLoaded.addAll(searcher.next());
-            setRowCount(alreadyLoaded.size());
         }
 
-        List<ShortSearchResult> pagedResult = new ArrayList<>(alreadyLoaded);
+        List<ShortSearchResult> pagedResult = new ArrayList<>();
 
-        try {
-            pagedResult = alreadyLoaded.subList(first, first + pageSize);
-        } catch (IndexOutOfBoundsException e) {
+        if ( alreadyLoaded.size() > start ) {
+            pagedResult = alreadyLoaded.subList(start, alreadyLoaded.size() - start < limit ? start + (alreadyLoaded.size() - start) : start + limit);
         }
 
         viewKeyModel.clear();
