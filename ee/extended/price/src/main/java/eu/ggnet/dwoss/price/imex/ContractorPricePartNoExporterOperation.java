@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,29 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CCalcDocument;
-
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
-
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
+import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
+import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.*;
-import static eu.ggnet.dwoss.util.DateFormats.ISO;
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 
 /**
  * Exporter implementation.
@@ -108,7 +101,7 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
                 .stream()
                 .filter(p -> p.getPrice(CONTRACTOR_REFERENCE) <= 0.01)
                 .sorted()
-                .map(p -> new Object[]{"", p.getPartNo(), p.getTradeName().getName(), p.getName(), 0.0})
+                .map(p -> new Object[]{"", p.getPartNo(), p.getTradeName().getName(), p.getName(), 0.0, p.getGtin()})
                 .collect(Collectors.toList());
 
         m.worked(5, "Generating File");
@@ -116,7 +109,8 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
         table.setTableFormat(new CFormat(BLACK, WHITE));
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC));
         table.add(new STableColumn("Contractor PartNo", 18)).add(new STableColumn("Hersteller PartNo", 20));
-        table.add(new STableColumn("Brand", 15)).add(new STableColumn("Bezeichnung", 25)).add(new STableColumn("Reference Preis", 12, new CFormat(CURRENCY_EURO)));
+        table.add(new STableColumn("Brand", 15)).add(new STableColumn("Bezeichnung", 25))
+                .add(new STableColumn("Reference Preis", 12, new CFormat(CURRENCY_EURO))).add(new STableColumn("GTIN/EAN", 14));
         table.setModel(new STableModelList(rows));
         CCalcDocument cdoc = new TempCalcDocument();
         cdoc.add(new CSheet(contractor.getName(), table));
