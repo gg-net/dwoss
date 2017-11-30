@@ -34,6 +34,11 @@
             <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency> <!-- Expresion factory for hibernate validator -->
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>saft-core</artifactId>

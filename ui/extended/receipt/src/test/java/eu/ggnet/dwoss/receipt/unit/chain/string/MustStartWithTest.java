@@ -1,12 +1,10 @@
 package eu.ggnet.dwoss.receipt.unit.chain.string;
 
-import eu.ggnet.dwoss.receipt.unit.chain.string.MustStartWith;
-
 import org.junit.Test;
 
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  *

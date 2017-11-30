@@ -1,7 +1,6 @@
 package eu.ggnet.dwoss.receipt.unit;
 
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.LockModeType;
 
@@ -44,7 +43,7 @@ public class DesktopBundleViewTryout {
 
             @Override
             public DefaultCustomerSalesdata loadSalesdata() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("loadSalesdata - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
@@ -54,22 +53,22 @@ public class DesktopBundleViewTryout {
 
             @Override
             public SpecialSystemCustomers loadSystemCustomers() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("loadSystemCustomers - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public Contractors loadContractors() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return new Contractors(EnumSet.of(TradeName.ALSO, TradeName.ACER), EnumSet.of(TradeName.ACER));
             }
 
             @Override
             public PostLedger loadPostLedger() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("loadPostLedger - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override
             public ShippingTerms loadShippingTerms() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("loadShippingTerms - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
             @Override

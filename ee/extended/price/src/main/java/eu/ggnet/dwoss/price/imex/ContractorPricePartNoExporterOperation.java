@@ -66,17 +66,6 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
                 .collect(Collectors.toList());
 
         m.setWorkRemaining(rows.size() + 10).message("Filtering");
-        // Old Way.
-//        List<Product> products = new ArrayList<>();
-//        for (Product product : allProducts) {
-//            if ( product.getPrice(MANUFACTURER_COST) <= 0.01 ) products.add(product); // If cost not set, prepare for export.
-//        }
-//        Collections.sort(products);
-//        List<Object[]> rows = new ArrayList<>(products.size());
-//        for (Product p : products) {
-//            rows.add(new Object[]{p.getPartNo(), 0.0, ProductFormater.toName(p)});
-//        }
-
         m.message("Generating Document");
         STable table = new STable();
         table.setTableFormat(new CFormat(BLACK, WHITE));
