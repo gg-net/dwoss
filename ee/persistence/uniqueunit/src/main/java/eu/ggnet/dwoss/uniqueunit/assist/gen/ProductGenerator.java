@@ -28,12 +28,17 @@ public class ProductGenerator {
     }
 
     private final Random rand = new Random();
+
     private final LocalDateTime now = LocalDateTime.now();
 
     private final List<ProductGroup> productGroups = new ArrayList<>(Arrays.asList(ProductGroup.values()));
+
     private final List<TradeName> tradeNames = new ArrayList<>(Arrays.asList(TradeName.values()));
+
     private final List<String> names = new ArrayList<>(Arrays.asList("A41515", "D85412", "B5458", "F65487", "S45656", "P464", "I4445", "V5461", "C4785"));
+
     private final List<Date> dates = new ArrayList<>(Arrays.asList(Date.from(now.minusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.plusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.toInstant(ZoneOffset.UTC))));
+
     private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
 
     /**
@@ -51,7 +56,7 @@ public class ProductGenerator {
                     "" + rand.nextInt(15000),
                     names.get(rand.nextInt(names.size())));
             p.setImageId(rand.nextInt(15000));
-            p.setGtin("" + rand.nextInt(15000));
+            p.setGtin(rand.nextInt(15000));
             p.setEol(dates.get(rand.nextInt(dates.size())));
             p.setPrice(priceTypes.get(rand.nextInt(priceTypes.size())), rand.nextInt(9999), "");
             products.add(p);

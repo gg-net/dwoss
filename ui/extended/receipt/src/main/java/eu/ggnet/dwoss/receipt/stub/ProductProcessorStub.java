@@ -334,7 +334,7 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public ProductSpec create(ProductSpec spec, ProductModel model) {
+    public ProductSpec create(ProductSpec spec, ProductModel model, long gtin) {
         specs.put(spec.getPartNo(), spec);
         return spec;
     }
@@ -346,7 +346,7 @@ public class ProductProcessorStub implements ProductProcessor {
     }
 
     @Override
-    public ProductSpec update(ProductSpec spec) {
+    public ProductSpec update(ProductSpec spec, long gtin) {
         return spec;
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,6 +57,16 @@ public class MonitorView extends AbstractView<Monitor> implements IPreClose {
         Monitor monitor = (Monitor)basicView.getSpec();
         monitor.setDisplay(displayView.getDisplay());
         return monitor;
+    }
+
+    @Override
+    public long getGtin() {
+        return basicView.getGtin();
+    }
+
+    @Override
+    public void setGtin(long gtin) {
+        basicView.setGtin(gtin);
     }
 
     /**

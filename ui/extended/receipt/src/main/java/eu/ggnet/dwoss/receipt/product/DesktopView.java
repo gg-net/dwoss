@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -432,6 +432,16 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
         }
         osBox.setModel(new DefaultComboBoxModel(os.getCategory().getOss()));
         osBox.setSelectedItem(os);
+    }
+
+    @Override
+    public long getGtin() {
+        return basicView.getGtin();
+    }
+
+    @Override
+    public void setGtin(long gtin) {
+        basicView.setGtin(gtin);
     }
 
     /**

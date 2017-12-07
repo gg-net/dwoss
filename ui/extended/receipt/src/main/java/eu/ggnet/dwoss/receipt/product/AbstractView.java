@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -86,6 +86,10 @@ public abstract class AbstractView<T extends ProductSpec> extends javax.swing.JP
     public abstract void setSpec(T t);
 
     public abstract T getSpec();
+
+    public abstract long getGtin();
+
+    public abstract void setGtin(long gtin);
 
     @Override
     public boolean pre(CloseType type) {

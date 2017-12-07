@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,10 +29,11 @@ import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.product.AbstractView;
 import eu.ggnet.dwoss.receipt.product.SimpleView;
 
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
@@ -94,14 +95,15 @@ public class UiProductSupport {
         ProductSpec spec = simpleView.getProductSpec();
         if ( edit ) spec = lookup(ProductProcessor.class).refresh(spec, simpleView.getModel());
         AbstractView productView = AbstractView.newView(spec, simpleView.getModel().getFamily().getSeries().getBrand());
+        if ( edit ) productView.setGtin(lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin());
         OkCancelDialog productDialog = new OkCancelDialog(parent, "Artikeldetailkonfiguration", productView);
         productDialog.setVisible(true);
         if ( productDialog.isCancel() ) return null;
         validate(simpleView.getModel());
         validate(productView.getSpec());
-        if ( edit ) return lookup(ProductProcessor.class).update(productView.getSpec());
+        if ( edit ) return lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
         // TODO: In Case of a Bundle autoupdate the name of the model.
-        else return lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getModel());
+        else return lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getModel(), productView.getGtin());
     }
 
     private void validate(Object o) throws UserInfoException {

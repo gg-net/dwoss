@@ -157,7 +157,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
      */
     @Setter
     @Getter
-    private String gtin;
+    private long gtin;
 
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)

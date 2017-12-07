@@ -5,6 +5,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
+
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -12,9 +13,11 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -24,8 +27,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -35,13 +42,15 @@ import org.slf4j.LoggerFactory;
  */
 public class ProductListController implements Initializable, FxController {
 
+    public static final DataFormat df = new DataFormat("dw/product");
+
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
 
     // is used to filter the list of products
     private FilteredList<Product> filteredProducts;
 
     @FXML
-    private TableView tableView;
+    private TableView<Product> tableView;
 
     @FXML
     private TableColumn<Product, String> productId;
@@ -115,6 +124,21 @@ public class ProductListController implements Initializable, FxController {
         menuProductGroup.getItems().addAll(ProductGroup.values());
 
         setCellValues();
+
+        tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+                if ( selectedProduct == null ) return;
+                Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+//                content.putString(selectedProduct.getName());
+                content.put(df, new PicoProduct(selectedProduct.getId(), selectedProduct.getName()));
+                db.setContent(content);
+                L.info("DnD of {} started", selectedProduct.getName());
+                event.consume();
+            }
+        });
 
         ProductTask productsTask = new ProductTask();
 

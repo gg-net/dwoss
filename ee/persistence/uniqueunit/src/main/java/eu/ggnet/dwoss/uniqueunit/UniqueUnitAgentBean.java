@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,22 @@
  */
 package eu.ggnet.dwoss.uniqueunit;
 
+import java.util.Map.Entry;
+import java.util.Objects;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 
@@ -36,13 +43,15 @@ import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 @Stateless
 public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnitAgent {
 
+    private final Logger L = LoggerFactory.getLogger(UniqueUnitAgentBean.class);
+
     @Inject
     @UniqueUnits
-    private EntityManager entityManager;
+    private EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {
-        return entityManager;
+        return em;
     }
 
     /**
@@ -53,7 +62,7 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
      */
     @Override
     public Product findProductByPartNo(String partNo) {
-        return new ProductEao(entityManager).findByPartNo(partNo);
+        return new ProductEao(em).findByPartNo(partNo);
     }
 
     /**
@@ -64,7 +73,7 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
      */
     @Override
     public Product findProductByPartNoEager(String partNo) {
-        return optionalFetchEager(new ProductEao(entityManager).findByPartNo(partNo));
+        return optionalFetchEager(new ProductEao(em).findByPartNo(partNo));
     }
 
     /**
@@ -76,6 +85,29 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
      */
     @Override
     public UniqueUnit findUnitByIdentifierEager(UniqueUnit.Identifier type, String identifier) {
-        return optionalFetchEager(new UniqueUnitEao(entityManager).findByIdentifier(type, identifier));
+        return optionalFetchEager(new UniqueUnitEao(em).findByIdentifier(type, identifier));
+    }
+
+    @Override
+    public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) {
+        Objects.requireNonNull(dto, "DTO is null, not allowed");
+        CategoryProduct cp = null;
+        if ( dto.getId() == 0 ) {
+            cp = new CategoryProduct();
+        } else {
+            cp = findById(CategoryProduct.class, dto.getId());
+        }
+        cp.setName(dto.getName());
+        cp.setDescription(dto.getDescription());
+        if ( dto.getSalesChannel() != null ) cp.setSalesChannel(dto.getSalesChannel());
+        cp.getProducts().forEach(p -> p.setCategoryProduct(null));
+        for (PicoProduct pp : dto.getProducts()) {
+            cp.add(findById(Product.class, pp.getId()));
+        }
+        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
+            cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
+        }
+        if ( dto.getId() == 0 ) em.persist(cp);
+        return cp;
     }
 }

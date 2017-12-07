@@ -339,4 +339,14 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
     private javax.swing.JTextField monitorField;
     private javax.swing.JTextField monitorPartNoField;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public long getGtin() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setGtin(long gtin) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -117,12 +117,13 @@ public interface ProductProcessor {
      *
      * @param spec  the spec to persist, must not be null
      * @param model the model for the spec, must not be null or new
+     * @param gtin the value of gtin
      * @throws IllegalArgumentException if Cpu or Gpu in a Desktop are new.
      *
-     * @return the detached created ProductSpec
+     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
     // TODO: Check if the model as parameter is still needed.
-    ProductSpec create(ProductSpec spec, ProductModel model) throws IllegalArgumentException;
+    ProductSpec create(ProductSpec spec, ProductModel model, long gtin) throws IllegalArgumentException;
 
     /**
      * Return a refreshed ProductSpec with the selected model added.
@@ -173,8 +174,9 @@ public interface ProductProcessor {
      * </ol>
      *
      * @param spec  the spec to be updated, must not be null
+     * @param gtin the value of gtin
      * @throws IllegalArgumentException if spec.productId == null
-     * @return the updated and detached instance of ProductSpec
+     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
-    ProductSpec update(ProductSpec spec) throws IllegalArgumentException;
+    ProductSpec update(ProductSpec spec, long gtin) throws IllegalArgumentException;
 }

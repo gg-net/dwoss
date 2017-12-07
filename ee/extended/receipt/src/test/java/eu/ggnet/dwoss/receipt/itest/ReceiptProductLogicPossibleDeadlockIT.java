@@ -81,7 +81,7 @@ public class ReceiptProductLogicPossibleDeadlockIT extends ArquillianProjectArch
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productLogic.create(notebook, productModel);
+        ProductSpec testSpec = productLogic.create(notebook, productModel, 0);
 
         assertThat(testSpec).isNotNull();
     }

@@ -12,7 +12,9 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import java.util.Collections;
 import java.util.List;
 
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.gen.ProductGenerator;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 /**
  *
@@ -108,6 +110,11 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>

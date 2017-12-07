@@ -18,9 +18,8 @@ package eu.ggnet.dwoss.uniqueunit;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
 /**
@@ -55,4 +54,16 @@ public interface UniqueUnitAgent extends RemoteAgent {
      * @return the found product or null.
      */
     Product findProductByPartNoEager(String partNo);
+
+    /**
+     * Creates or Updates a CategoryProduct based on the dto.
+     * If the id is 0 a new categoryproduct is assumed. Deletion of prices is done by setting a price to 0. *
+     *
+     * @param dto      the dto as basis, must not be null.
+     * @param username the user who changed that.
+     * @return the created or updated CategoryProduct.
+     * @throws NullPointerException if dto is null.
+     */
+    CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException;
+
 }

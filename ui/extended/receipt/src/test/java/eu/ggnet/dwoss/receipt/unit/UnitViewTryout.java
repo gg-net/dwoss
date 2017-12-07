@@ -20,8 +20,8 @@ import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -232,7 +232,13 @@ public class UnitViewTryout {
             public Product findProductByPartNoEager(String partNo) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+
+            @Override
+            public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
             // </editor-fold>
+
         });
 
         Client.addSampleStub(ProductProcessor.class, new ProductProcessorStub());

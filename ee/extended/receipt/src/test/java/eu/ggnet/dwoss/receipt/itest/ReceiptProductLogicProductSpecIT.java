@@ -16,10 +16,13 @@ import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.entity.piece.*;
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.NOTEBOOK;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.PACKARD_BELL;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
@@ -31,6 +34,9 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
     @EJB
     private SpecAgent specAgent;
 
+    @EJB
+    private UniqueUnitAgent uuAgent;
+
     @Inject
     private DatabaseCleaner cleaner;
 
@@ -41,6 +47,8 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
 
     @Test
     public void testCreateProductSpec() throws Exception {
+        final long GTIN = 123456782;
+
         //Create a CPU and GPU and persist it.
         Cpu cpu = productProcessor.create(new Cpu(Cpu.Series.AMD_V, "TestCPU", Cpu.Type.MOBILE, 2.0, 5));
         Gpu gpu = productProcessor.create(new Gpu(Gpu.Type.MOBILE, Gpu.Series.GEFORCE_100, "TestGPU"));
@@ -62,7 +70,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        ProductSpec testSpec = productProcessor.create(notebook, productModel);
+        ProductSpec testSpec = productProcessor.create(notebook, productModel, 0);
 
         assertNotNull(testSpec);
 
@@ -79,9 +87,13 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook2.setPartNo("LX.ASDFG.GH2");
         notebook2.setModel(productModel);
 
-        ProductSpec testSpec2 = productProcessor.create(notebook2, productModel);
+        ProductSpec testSpec2 = productProcessor.create(notebook2, productModel, GTIN);
         assertNotNull(testSpec2);
         assertNotSame(testSpec2, testSpec);
+
+        Product product = uuAgent.findById(Product.class, testSpec2.getProductId());
+        assertThat(product).isNotNull().returns(GTIN, Product::getGtin);
+
     }
 
     @Test(expected = RuntimeException.class)
@@ -108,8 +120,8 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHJ");
         notebook.setModel(productModel);
 
-        productProcessor.create(notebook, productModel);
-        productProcessor.create(notebook, productModel);
+        productProcessor.create(notebook, productModel, 0);
+        productProcessor.create(notebook, productModel, 0);
         fail("Error 040: No Exception Found at: CreateProductSpec");
     }
 
@@ -133,7 +145,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         notebook.setPartNo("LX.ASDFG.GHP");
         notebook.setModel(productModel);
 
-        ProductSpec spec = productProcessor.create(notebook, productModel);
+        ProductSpec spec = productProcessor.create(notebook, productModel, 0);
         ProductFamily family = spec.getModel().getFamily();
 
         ProductModel productModel2 = productProcessor.create(ACER, NOTEBOOK, family.getSeries(), family, "TestModel2");
@@ -145,7 +157,7 @@ public class ReceiptProductLogicProductSpecIT extends ArquillianProjectArchive {
         String comment = "MuhBlub";
         ((Notebook)spec).setComment(comment);
 
-        productProcessor.update(spec);
+        productProcessor.update(spec, 0);
 
         List<ProductSeries> series = specAgent.findAllEager(ProductSeries.class);
         assertNotNull(series);

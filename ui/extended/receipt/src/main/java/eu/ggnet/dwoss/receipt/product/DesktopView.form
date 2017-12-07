@@ -82,7 +82,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="1" green="1" red="1" type="rgb"/>
             </TitledBorder>
           </Border>
@@ -248,7 +247,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="1" green="1" red="1" type="rgb"/>
             </TitledBorder>
           </Border>
@@ -361,7 +359,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="1. HDD"/>
             <Property name="focusable" type="boolean" value="false"/>
-            <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="hddSecondTypeBox">
@@ -486,7 +483,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="1" green="1" red="1" type="rgb"/>
             </TitledBorder>
           </Border>
@@ -570,7 +566,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
               <Color PropertyName="color" blue="1" green="1" red="1" type="rgb"/>
             </TitledBorder>
           </Border>
@@ -629,7 +624,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
             </TitledBorder>
           </Border>
         </Property>
@@ -795,7 +789,6 @@
                   <Color PropertyName="shadow" blue="1" green="1" red="1" type="rgb"/>
                 </EtchetBorder>
               </Border>
-              <Font PropertyName="font" name="Dialog" size="12" style="1"/>
             </TitledBorder>
           </Border>
         </Property>

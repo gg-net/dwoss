@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -110,5 +110,15 @@ public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {
         create.setVisible(true);
         System.out.println(SpecFormater.toSingleLine(view.getSpec()));
         System.exit(0);
+    }
+
+    @Override
+    public long getGtin() {
+        return desktopView.getGtin();
+    }
+
+    @Override
+    public void setGtin(long gtin) {
+        desktopView.setGtin(gtin);
     }
 }

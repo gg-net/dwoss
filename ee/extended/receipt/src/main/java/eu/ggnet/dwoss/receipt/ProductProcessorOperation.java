@@ -252,13 +252,14 @@ public class ProductProcessorOperation implements ProductProcessor {
      *
      * @param spec  the spec to persist, must not be null
      * @param model the model for the spec, must not be null or new
+     * @param gtin  the value of gtin
      * @throws IllegalArgumentException if Cpu or Gpu in a Desktop are new.
      *
-     * @return the detached created ProductSpec
+     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
     // TODO: Check if the model as parameter is still needed.
     @Override
-    public ProductSpec create(ProductSpec spec, ProductModel model) throws IllegalArgumentException {
+    public ProductSpec create(ProductSpec spec, ProductModel model, long gtin) throws IllegalArgumentException {
         if ( model == null ) throw new NullPointerException("Model is null");
         if ( spec == null ) throw new NullPointerException("ProductSpec is null");
         // Hint: Normally the column unique option should do that, but HSQLDB somehow lost it.
@@ -309,6 +310,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setPartNo(spec.getPartNo());
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
+        product.setGtin(gtin);
         L.debug("persisting {}", product);
         if ( !uuEm.contains(product) ) {
             uuEm.persist(product);
@@ -361,11 +363,12 @@ public class ProductProcessorOperation implements ProductProcessor {
      * </ol>
      *
      * @param spec the spec to be updated, must not be null and not new
+     * @param gtin the value of gtin
      * @throws IllegalArgumentException if spec.productId == null
-     * @return the updated and detached instance of ProductSpec
+     * @return the eu.ggnet.dwoss.spec.entity.ProductSpec
      */
     @Override
-    public ProductSpec update(ProductSpec spec) throws IllegalArgumentException {
+    public ProductSpec update(ProductSpec spec, long gtin) throws IllegalArgumentException {
         // 1. Validation
         if ( spec.getProductId() == null ) throw new IllegalArgumentException("ProductSpec has no productId, violation ! " + spec);
         ProductEao productEao = new ProductEao(uuEm);
@@ -387,6 +390,7 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setPartNo(spec.getPartNo());
         product.setName(spec.getModel().getName());
         product.setDescription(SpecFormater.toSingleLine(spec));
+        product.setGtin(gtin);
         L.debug("updateing {}", product);
         return spec;
     }

@@ -98,10 +98,22 @@ public class CategoryProduct implements Serializable {
         priceHistories.add(new PriceHistory(type, price, new Date(), comment));
     }
 
+    /**
+     * Returns true if a price is bigger than 0.
+     *
+     * @param type the type
+     * @return true if if a price is bigger than 0.
+     */
     public boolean hasPrice(PriceType type) {
         return prices.get(type) != null && prices.get(type) > 0.01;
     }
 
+    /**
+     * Returs the setted price or 0 if no price is set.
+     *
+     * @param type the type
+     * @return the setted price or 0 if no price is set.
+     */
     public double getPrice(PriceType type) {
         return prices.get(type) == null ? 0 : prices.get(type);
     }
@@ -119,9 +131,18 @@ public class CategoryProduct implements Serializable {
         product.setCategoryProduct(this);
     }
 
-    public void remove(Product unit) {
-        if ( unit == null ) return;
-        unit.setCategoryProduct(null);
+    public void remove(Product product) {
+        if ( product == null ) return;
+        product.setCategoryProduct(null);
+    }
+
+    /**
+     *
+     * @return unmodifiable list of products.
+     */
+    public List<Product> getProducts() {
+        //TODO: maybe grab them from the database instead?
+        return Collections.unmodifiableList(products);
     }
 
     @Override
