@@ -20,8 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.uniqueunit.ui.ProductListController;
-
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 import eu.ggnet.saft.Ui;
 
 /**

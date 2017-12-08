@@ -21,6 +21,7 @@ import javax.ejb.Remote;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * The UniqueUnitAgent.
@@ -66,4 +67,11 @@ public interface UniqueUnitAgent extends RemoteAgent {
      */
     CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException;
 
+    /**
+     * Delete a category product.
+     *
+     * @param id the id
+     * @return a reply
+     */
+    Reply<Void> deleteCategoryProduct(long id);
 }

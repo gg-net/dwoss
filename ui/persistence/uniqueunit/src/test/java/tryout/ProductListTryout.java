@@ -1,5 +1,7 @@
 package tryout;
 
+import tryout.stub.UniqueUnitAgentStub;
+
 import java.awt.Dimension;
 
 import javax.swing.*;
@@ -9,14 +11,14 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.Client;
 
-import eu.ggnet.dwoss.uniqueunit.ui.ProductListController;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 
 /**
  * Test the ListView with Sample data.
  *
  * @author lucas.huelsen
  */
-public class MainTryout {
+public class ProductListTryout {
 
     /**
      * The main() method is ignored in correctly deployed JavaFX application.

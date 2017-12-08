@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.uniqueunit.ui;
+package eu.ggnet.dwoss.uniqueunit.ui.product;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -66,9 +67,6 @@ public class ProductListController implements Initializable, FxController {
 
     @FXML
     private TableColumn<Product, String> productPartNo;
-
-    @FXML
-    private TableColumn<Product, String> productPrice;
 
     @FXML
     private TableColumn<Product, String> productImageId;
@@ -132,7 +130,6 @@ public class ProductListController implements Initializable, FxController {
                 if ( selectedProduct == null ) return;
                 Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-//                content.putString(selectedProduct.getName());
                 content.put(df, new PicoProduct(selectedProduct.getId(), selectedProduct.getName()));
                 db.setContent(content);
                 L.info("DnD of {} started", selectedProduct.getName());
@@ -164,7 +161,6 @@ public class ProductListController implements Initializable, FxController {
         productTradeName.setCellValueFactory(new PropertyValueFactory<>("tradeName"));
         productGroup.setCellValueFactory(new PropertyValueFactory<>("group"));
         productPartNo.setCellValueFactory(new PropertyValueFactory<>("partNo"));
-        productPrice.setCellValueFactory(new PropertyValueFactory<>("prices"));
         productImageId.setCellValueFactory(new PropertyValueFactory<>("imageId"));
         productGtin.setCellValueFactory(new PropertyValueFactory<>("gtin"));
         productEol.setCellValueFactory(new PropertyValueFactory<>("eol"));

@@ -16,28 +16,26 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.action;
 
-import java.util.Arrays;
-import java.util.List;
+import java.awt.event.ActionEvent;
 
-import org.openide.util.lookup.ServiceProvider;
+import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ActionFactory;
-import eu.ggnet.saft.core.ActionFactory.MetaAction;
+import eu.ggnet.dwoss.uniqueunit.ui.categoryProduct.CategoryProductListController;
+import eu.ggnet.saft.Ui;
 
 /**
  *
- * @author Oliver Günther
+ * @author Bastian Venz
  */
-@ServiceProvider(service = ActionFactory.class)
-public class UniqueUnitActionFactory implements ActionFactory {
+public class CategoryProductListAction extends AbstractAction {
 
-    private static final String MENU_NAME = "Artikelstamm";
+    public CategoryProductListAction() {
+        super("KategoryProdukte öffnen");
+    }
 
     @Override
-    public List<MetaAction> createMetaActions() {
-        return Arrays.asList(
-                new MetaAction(MENU_NAME, new ProductListAction()),
-                new MetaAction(MENU_NAME, new CategoryProductListAction())
-        );
+    public void actionPerformed(ActionEvent e) {
+        Ui.fxml().show(CategoryProductListController.class);
     }
+
 }

@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit;
 
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -34,6 +34,7 @@ import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * The Implementation of the UniqueUnitAgent
@@ -91,7 +92,7 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     @Override
     public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) {
         Objects.requireNonNull(dto, "DTO is null, not allowed");
-        CategoryProduct cp = null;
+        CategoryProduct cp;
         if ( dto.getId() == 0 ) {
             cp = new CategoryProduct();
         } else {
@@ -109,5 +110,16 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
         }
         if ( dto.getId() == 0 ) em.persist(cp);
         return cp;
+    }
+
+    @Override
+    public Reply<Void> deleteCategoryProduct(long id) {
+        CategoryProduct cp = em.find(CategoryProduct.class, id);
+        if ( cp == null ) return Reply.failure("No Instance of CategoryProduct with id " + id + " found");
+        for (Product p : new ArrayList<>(cp.getProducts())) {
+            cp.remove(p);
+        }
+        em.remove(cp);
+        return Reply.success(null);
     }
 }

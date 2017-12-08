@@ -22,6 +22,7 @@ import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -238,6 +239,11 @@ public class UnitViewTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
             // </editor-fold>
+
+            @Override
+            public Reply<Void> deleteCategoryProduct(long id) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
 
         });
 

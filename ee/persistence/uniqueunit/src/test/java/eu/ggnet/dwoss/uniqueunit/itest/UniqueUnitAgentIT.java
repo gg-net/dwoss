@@ -16,6 +16,7 @@ import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
+import eu.ggnet.saft.api.Reply;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -74,5 +75,11 @@ public class UniqueUnitAgentIT extends ArquillianProjectArchive {
         assertThat(cp).as("CategroyProtuct").isNotNull().as("CategroyProtuct id is equal").returns(lastid, CategoryProduct::getId);
         assertThat(cp.getProducts()).contains(p1);
         assertThat(cp.getPrice(PriceType.SALE)).isEqualTo(200.0);
+
+        Reply<Void> reply = agent.deleteCategoryProduct(cp.getId());
+        assertThat(reply).isNotNull().returns(true, Reply::hasSucceded);
+
+        CategoryProduct notFound = agent.findById(CategoryProduct.class, cp.getId());
+        assertThat(notFound).isNull();
     }
 }
