@@ -23,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +77,8 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         private final String name2;
 
         private final Double referencePrice;
+
+        private final String gtin;
 
     }
 
@@ -147,7 +150,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         ProductEao productEao = new ProductEao(uuEm);
         ReportLineEao reportLineEao = new ReportLineEao(reportEm);
         LucidCalcReader reader = new JExcelLucidCalcReader();
-        reader.addColumn(0, String.class).addColumn(1, String.class).addColumn(2, String.class).addColumn(3, String.class).addColumn(4, Double.class);
+        reader.addColumn(0, String.class).addColumn(1, String.class).addColumn(2, String.class).addColumn(3, String.class).addColumn(4, Double.class).addColumn(5, String.class);
         List<ContractorImport> imports = reader.read(inFile.toTemporaryFile(), ContractorImport.class);
         List<String> errors = reader.getErrors();
         m.worked(5);
@@ -155,38 +158,46 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         int validSize = 0;
         int importAbleSize = 0;
         int importedSize = 0;
-        PartNoSupport support = contractor.getPartNoSupport();
+        PartNoSupport partNoSupport = contractor.getPartNoSupport();
 
         for (ContractorImport contractorImport : imports) {
             m.worked(1, "Importing (" + contractorImport.manufacturerPartNo + ")");
             // HINT: It would be much better to validate the import class and put the validation there, but the support comes afterwards.
             String contractorPartNo = contractorImport.contractorPartNo;
-            if ( support != null ) {
-                contractorPartNo = support.normalize(contractorPartNo);
-                if ( !support.isValid(contractorPartNo) ) {
-                    errors.add(support.violationMessages(contractorPartNo));
+            if ( partNoSupport != null ) {
+                contractorPartNo = partNoSupport.normalize(contractorPartNo);
+                if ( !partNoSupport.isValid(contractorPartNo) ) {
+                    errors.add(partNoSupport.violationMessages(contractorPartNo));
                     continue;
+                    // TODO: accept a missing contractorPartNo. Don't continue
                 }
             }
-            if ( contractorImport.manufacturerPartNo == null ) {
-                errors.add("ManufacturerPartNo is null of" + contractorImport);
+            if ( StringUtils.isBlank(contractorImport.manufacturerPartNo) && StringUtils.isBlank(contractorImport.gtin) ) {
+                errors.add("No ManufacturerPartNo or EAN found for " + contractorImport);
                 continue;
             }
             if ( contractorImport.referencePrice == null || contractorImport.referencePrice <= 0.01 ) {
-                errors.add("PartNo " + contractorImport + " hat keinen Preis");
+                errors.add(contractorImport + " hat keinen Preis");
                 continue;
             }
             // Some validation of the manufacturer part no would also be nice.
             validSize++;
-            Product p = productEao.findByPartNo(contractorImport.manufacturerPartNo);
+            Product p = null;
+
+            if ( !StringUtils.isBlank(contractorImport.manufacturerPartNo) ) p = productEao.findByPartNo(contractorImport.manufacturerPartNo);
+            try {
+                if ( p == null && !StringUtils.isBlank(contractorImport.gtin) ) p = productEao.findByGtin(Long.parseLong(contractorImport.gtin));
+            } catch (NumberFormatException e) {
+                errors.add("Cannot parse GTIN " + contractorImport.gtin);
+            }
             if ( p == null ) {
-                errors.add("No UniqueUnit.Product Entity found for PartNo " + contractorImport.manufacturerPartNo + ", Ignoring");
+                errors.add("No UniqueUnit.Product Entity found for PartNo " + contractorImport.manufacturerPartNo + " bzw. Gtin " + contractorImport.gtin + ", Ignoring");
                 continue;
             }
             importAbleSize++;
             // There was a difference before. Now its the same.
             importedSize++;
-            p.setAdditionalPartNo(contractor, contractorPartNo);
+            if ( !StringUtils.isBlank(contractorImport.manufacturerPartNo) ) p.setAdditionalPartNo(contractor, contractorPartNo);
             p.setPrice(CONTRACTOR_REFERENCE, contractorImport.referencePrice, "Import by " + arranger);
         }
         uuEm.flush();

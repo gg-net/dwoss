@@ -62,11 +62,11 @@ public interface ContractorPricePartNoImporter {
 
     /**
      * Imports the Costprices of the contractor form an supplied Xls file in a jacket.
-     * <p/>
+     * <p>
      * The file must look like:
-     * <p/>
+     * <p>
      * Manufacturer PartNo | Manufacturer Cost Price | ....
-     * <p/>
+     * <p>
      * @param contractorManufacturer a contractor which is also a manufacturer.
      * @param inFile                 the in file
      * @param arranger               the arranger
@@ -77,11 +77,11 @@ public interface ContractorPricePartNoImporter {
 
     /**
      * Imports the Contractor Reference Prices and Additional PartNos.
-     * <p/>
+     * <p>
      * The file must look like:
-     * <p/>
-     * Contractor PartNo | Manufacturer PartNo | *ignored* | *ignored* | Contractor Reference Price
-     * <p/>
+     * <p>
+     * Contractor PartNo (optional) | Manufacturer PartNo (oder EAN) | *ignored* | *ignored* | Contractor Reference Price | EAN (oder Manufacturer)
+     * <p>
      * @param contractor the contractor for the import
      * @param inFile     the inFile
      * @param arranger   the Arranger
