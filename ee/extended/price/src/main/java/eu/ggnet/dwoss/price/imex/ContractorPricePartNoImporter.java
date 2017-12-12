@@ -16,16 +16,12 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import java.io.Serializable;
-import java.util.Collection;
-
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import lombok.Value;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * Importer for Contractor and Manufacturer Prices and PartNo.
@@ -34,31 +30,6 @@ import lombok.Value;
  */
 @Remote
 public interface ContractorPricePartNoImporter {
-
-    @Value
-    public static class ImportResult implements Serializable {
-
-        private final String overview;
-
-        private final String errors;
-
-        public ImportResult(int readAbleLines, int validLines, int importAbleSize, int importedSize, Collection<?> detailedErrors) {
-            this.overview = "Lesbare Zeilen: " + readAbleLines + "\n"
-                    + "Valide Zeilen: " + validLines + "\n"
-                    + "Valide Zeilen für existierende UniqueUnit Daten: " + importAbleSize + "\n"
-                    + "Imortierte neue Daten: " + importedSize + "\n";
-            StringBuilder sb = new StringBuilder();
-            for (Object error : detailedErrors) {
-                sb.append(error.toString()).append("\n");
-            }
-            this.errors = sb.toString();
-        }
-
-        public ImportResult(String overview, String errors) {
-            this.overview = overview;
-            this.errors = errors;
-        }
-    }
 
     /**
      * Imports the Costprices of the contractor form an supplied Xls file in a jacket.
@@ -73,19 +44,23 @@ public interface ContractorPricePartNoImporter {
      * @return a aggregated import result.
      * @throws UserInfoException reporting all errors after the import.
      */
-    ImportResult fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger) throws UserInfoException;
+    Reply<Void> fromManufacturerXls(TradeName contractorManufacturer, FileJacket inFile, String arranger) throws UserInfoException;
 
     /**
      * Imports the Contractor Reference Prices and Additional PartNos.
      * <p>
-     * The file must look like:
-     * <p>
-     * Contractor PartNo (optional) | Manufacturer PartNo (oder EAN) | *ignored* | *ignored* | Contractor Reference Price | EAN (oder Manufacturer)
-     * <p>
+     * The file must look like this: Manufacturer PartNo | GTIN | Name | Contractor Reference Price | ContractorPartNo <br />
+     * The following rules must apply:
+     * <ul>
+     * <li>Either Manufacturer PartNo or GTIN must be set. If both are set, valid and no GTIN is in the database, the GTIN is set</li>
+     * <li>Name is ignored</li>
+     * <li>ContractorPartNo is optional</li>
+     * </ul>
+     *
      * @param contractor the contractor for the import
      * @param inFile     the inFile
      * @param arranger   the Arranger
-     * @return a aggregated import result.
+     * @return a reply.
      */
-    ImportResult fromContractorXls(TradeName contractor, FileJacket inFile, String arranger);
+    Reply<Void> fromContractorXls(TradeName contractor, FileJacket inFile, String arranger);
 }

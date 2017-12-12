@@ -16,26 +16,25 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
-
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
 
-import eu.ggnet.saft.core.Workspace;
-
-import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.common.DetailDialog;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.FileUtil;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.authorisation.Guardian;
 
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
+import static eu.ggnet.saft.core.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -64,9 +63,9 @@ public class ContractorImportAction extends AccessableAction {
                 "Fehlende Liferanten Daten importieren",
                 YES_NO_OPTION, QUESTION_MESSAGE) ) return;
 
-        new SwingWorker<ContractorPricePartNoImporter.ImportResult, Void>() {
+        new SwingWorker<Reply<Void>, Void>() {
             @Override
-            protected ContractorPricePartNoImporter.ImportResult doInBackground() throws Exception {
+            protected Reply<Void> doInBackground() throws Exception {
                 FileUtil.checkIfExcelFile(inFile);
                 FileJacket in = new FileJacket("in", ".xls", inFile);
                 String user = lookup(Guardian.class).getUsername();
@@ -77,12 +76,12 @@ public class ContractorImportAction extends AccessableAction {
             @Override
             protected void done() {
                 try {
-                    ContractorPricePartNoImporter.ImportResult result = get();
+                    Reply<Void> result = get();
                     new DetailDialog(lookup(Workspace.class).getMainFrame())
                             .head(contractor.getName() + " Import")
                             .message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen")
-                            .overview(result.getOverview())
-                            .details(result.getErrors())
+                            .overview(result.getSummary())
+                            .details(result.getDetailDescription())
                             .showDialog();
                 } catch (InterruptedException | ExecutionException ex) {
                     Ui.handle(ex);

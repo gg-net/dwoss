@@ -18,6 +18,7 @@ package eu.ggnet.saft.api;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -26,13 +27,8 @@ import lombok.Getter;
  *
  * @author oliver.guenther
  */
+@AllArgsConstructor
 public final class Reply<T> implements Serializable {
-
-    private Reply(boolean success, T payload, String errorMessage) {
-        this.success = success;
-        this.payload = payload;
-        this.errorMessage = errorMessage;
-    }
 
     private final boolean success;
 
@@ -40,7 +36,10 @@ public final class Reply<T> implements Serializable {
     private final T payload;
 
     @Getter
-    private final String errorMessage;
+    private final String summary;
+
+    @Getter
+    private final String detailDescription;
 
     public boolean hasSucceded() {
         return success;
@@ -54,18 +53,41 @@ public final class Reply<T> implements Serializable {
      * @return the reply instance
      */
     public static <T> Reply<T> success(T payload) {
-        return new Reply<>(true, payload, null);
+        return new Reply<>(true, payload, "success", null);
     }
 
     /**
-     * Creates a failed replay with an error message.
+     * Creates a successful reply with payload and messages.
      *
-     * @param <T>     type of payload not needed
-     * @param message the errormessage
+     * @param <T>               type of payload
+     * @param payload           the payload
+     * @param summary           the summary
+     * @param detailDescription the detailDescription
      * @return the reply instance
      */
-    public static <T> Reply<T> failure(String message) {
-        return new Reply<>(false, null, message);
+    public static <T> Reply<T> success(T payload, String summary, String detailDescription) {
+        return new Reply<>(true, payload, summary, detailDescription);
     }
 
+    /**
+     * Creates a failed replay with an error summary.
+     *
+     * @param <T>     type of payload not needed
+     * @param summary the errormessage
+     * @return the reply instance
+     */
+    public static <T> Reply<T> failure(String summary) {
+        return new Reply<>(false, null, summary, null);
+    }
+
+    /**
+     * Creates a failed replay with an error summary.
+     *
+     * @param <T>     type of payload not needed
+     * @param summary the errormessage
+     * @return the reply instance
+     */
+    public static <T> Reply<T> failure(String summary, String detailDesciption) {
+        return new Reply<>(false, null, summary, detailDesciption);
+    }
 }

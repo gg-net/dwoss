@@ -29,25 +29,20 @@ import static eu.ggnet.saft.core.Client.lookup;
  *
  * @author oliver.guenther
  */
-public class ContractorExportAction extends AbstractAction {
+public class ManufacturerExportAction extends AbstractAction {
 
     private final TradeName contractor;
 
-    private final boolean missing;
-
-    public ContractorExportAction(TradeName contractor, boolean missing) {
-        super("Export " + (missing ? "fehlende " : "alle ") + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")");
-        this.contractor = contractor;
-        this.missing = missing;
+    public ManufacturerExportAction(TradeName manufacturer) {
+        super("Export fehlende " + manufacturer.getName() + " Daten (Hersteller)");
+        this.contractor = manufacturer;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Export " + (missing ? "Fehlende" : "Alle") + " Daten")
-                    .call(() -> (missing
-                                 ? lookup(ContractorPricePartNoExporter.class).toContractorMissingXls(contractor)
-                                 : lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor)).toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
+                    .call(() -> lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
         });
     }
 }

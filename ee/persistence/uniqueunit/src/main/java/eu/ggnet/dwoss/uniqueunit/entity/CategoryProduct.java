@@ -28,6 +28,7 @@ import eu.ggnet.dwoss.util.MathUtil;
 import lombok.*;
 
 import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * A human defined collection of products to be viewed together.
@@ -70,8 +71,8 @@ public class CategoryProduct implements Serializable {
     private String description;
 
     @NotNull
-    @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "categoryProduct")
-    List<Product> products = new ArrayList<>(); // Package private for bidirectional handling.
+    @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "categoryProduct", fetch = EAGER)
+    List<Product> products = new ArrayList<>(); // Package private for bidirectional handling. Eager as long as it doesn't slow down anything.
 
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ public class Desktop extends BasicSpec {
     /**
      * Allowed values for Memory Size.
      */
-    public final static Integer[] MEMORY_SIZES = {0, 512, 1024, 2048, 3072, 4096, 5120, 6144, 
+    public final static Integer[] MEMORY_SIZES = {0, 512, 1024, 2048, 3072, 4096, 5120, 6144,
         7268, 8192, 10240, 12288, 16384, 24576, 32768, 65536};
 
     public static enum OsCategory {
@@ -93,7 +93,10 @@ public class Desktop extends BasicSpec {
                 Os.WINDOWS_10_HOME_32,
                 Os.WINDOWS_10_HOME_64,
                 Os.WINDOWS_10_PRO_32,
-                Os.WINDOWS_10_PRO_64);
+                Os.WINDOWS_10_PRO_64,
+                Os.WINDOWS_10_S_32,
+                Os.WINDOWS_10_S_64
+        );
 
         private Os[] oss;
 
@@ -150,7 +153,9 @@ public class Desktop extends BasicSpec {
         WINDOWS_10_PRO_32("Windows 10 Professional 32"),
         WINDOWS_10_PRO_64("Windows 10 Professional 64"),
         WINDOWS_8_1_PROFESSIONAL_32("Windows 8.1 Professional 32"),
-        WINDOWS_8_1_PROFESSIONAL_64("Windows 8.1 Professional 64");
+        WINDOWS_8_1_PROFESSIONAL_64("Windows 8.1 Professional 64"),
+        WINDOWS_10_S_32("Windows 10 S 32"),
+        WINDOWS_10_S_64("Windows 10 S 64");
 
         private final String note;
 

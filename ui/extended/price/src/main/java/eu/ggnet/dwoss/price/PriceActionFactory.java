@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,15 @@
  */
 package eu.ggnet.dwoss.price;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.ActionFactory;
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-
-import eu.ggnet.dwoss.price.imex.ContractorExportAction;
-import eu.ggnet.dwoss.price.imex.ContractorImportAction;
-
+import eu.ggnet.dwoss.price.imex.*;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.core.ActionFactory;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -44,7 +41,12 @@ public class PriceActionFactory implements ActionFactory {
         List<MetaAction> actions = new ArrayList<>();
 
         for (TradeName contractor : lookup(MandatorSupporter.class).loadContractors().all()) {
-            actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ContractorExportAction(contractor)));
+            if ( contractor.isManufacturer() ) {
+                actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ManufacturerExportAction(contractor)));
+            } else {
+                actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ContractorExportAction(contractor, true)));
+                actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ContractorExportAction(contractor, false)));
+            }
             actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ContractorImportAction(contractor)));
         }
 

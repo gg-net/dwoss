@@ -25,7 +25,8 @@ import javax.persistence.*;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.entity.ReportLine;
@@ -224,11 +225,30 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                 .setParameter(1, productId).setParameter(2, contractor).getResultList();
     }
 
+    /**
+     * Returns all lines, which have no contractorPartNo and are oft the type of the supplied contractor.
+     *
+     * @param contractor the contractor.
+     * @return all lines, which have no contractorPartNo and are oft the type of the supplied contractor.
+     */
     public List<ReportLine> findMissingContractorPartNo(TradeName contractor) {
         return new JPAQuery(em).from(reportLine)
                 .where(reportLine.positionType.eq(UNIT)
                         .and(reportLine.contractorPartNo.isNull())
                         .and(reportLine.contractor.eq(contractor)))
+                .list(reportLine);
+    }
+
+    /**
+     * Returns all lines, which have no gtin.
+     *
+     * @param partNo the manufacturerPartNo
+     * @return all lines, which have no gtin.
+     */
+    public List<ReportLine> findMissingGtin(String partNo) {
+        return new JPAQuery(em).from(reportLine)
+                .where(reportLine.partNo.eq(partNo)
+                        .and(reportLine.gtin.eq(0l)))
                 .list(reportLine);
     }
 

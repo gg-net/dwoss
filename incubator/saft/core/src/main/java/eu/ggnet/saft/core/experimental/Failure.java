@@ -76,7 +76,7 @@ public class Failure {
         if ( reply.hasSucceded() ) return true;
         Alert.title("Fehler")
                 .parent(swingParent)
-                .message(reply.getErrorMessage())
+                .message(reply.getSummary())
                 .show(ERROR);
         return false;
     }

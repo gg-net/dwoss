@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,11 +41,4 @@ public class LenovoPartNoSupport implements PartNoSupport {
         return null;
     }
 
-    @Override
-    public String normalize(String partNo) {
-        if ( Pattern.matches(SHORT_PATTERN, partNo) && !Pattern.matches(LONG_PATTERN, partNo) ) {
-            partNo = "NB0" + partNo;
-        }
-        return partNo;
-    }
 }

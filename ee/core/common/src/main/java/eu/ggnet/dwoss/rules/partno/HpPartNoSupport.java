@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,8 +63,4 @@ public class HpPartNoSupport implements PartNoSupport {
         return null;
     }
 
-    @Override
-    public String normalize(String partNo) {
-        return partNo;
-    }
 }

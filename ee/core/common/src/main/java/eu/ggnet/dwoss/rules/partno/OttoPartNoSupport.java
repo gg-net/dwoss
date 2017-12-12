@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,6 @@ public class OttoPartNoSupport implements PartNoSupport {
                     + "does not match either one of the Patterns [0-9]{3}.[0-9]{3} and [0-9]{2}.[0-9]{3}.[0-9]{3}";
         }
         return null;
-    }
-
-    @Override
-    public String normalize(String partNo) {
-        if ( partNo != null && Pattern.matches("[0-9]{6}", partNo) ) { // Rebuild
-            return partNo.substring(0, 3) + "." + partNo.substring(3);
-        }
-
-        if ( partNo != null && Pattern.matches("[0-9]{8}", partNo) ) { // Rebuild
-            return partNo.substring(0, 2) + "." + partNo.substring(3, 6) + "." + partNo.substring(6);
-        }
-        return partNo;
     }
 
 }

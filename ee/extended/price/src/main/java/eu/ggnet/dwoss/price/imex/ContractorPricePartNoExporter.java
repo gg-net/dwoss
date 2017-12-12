@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,6 +35,14 @@ public interface ContractorPricePartNoExporter {
      * @param contractor the contractor as filter
      * @return a file jacket wrapping an XLS Document containing PartNo and Name of the incomplete products.
      */
+    FileJacket toContractorMissingXls(TradeName contractor);
+
+    /**
+     * Exports all Products of the supplied contractor.
+     *
+     * @param contractor the contractor as filter
+     * @return a file jacket wrapping an XLS Document containing PartNo and Name of the incomplete products.
+     */
     FileJacket toContractorXls(TradeName contractor);
 
     /**
@@ -43,5 +51,5 @@ public interface ContractorPricePartNoExporter {
      * @param contractor a contractor which is also a manufacturer.
      * @return a file jacket wrapping an XLS Document containing PartNo and Name of the incomplete products.
      */
-    FileJacket toManufacturerXls(TradeName contractor);
+    FileJacket toManufacturerMissingXls(TradeName contractor);
 }

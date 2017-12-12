@@ -604,6 +604,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                     l.setProductName(p.getName());
                     l.setProductGroup(p.getGroup());
                     l.setProductId(p.getId());
+                    l.setGtin(p.getGtin());
                     // Extra Information for Type Product Batch
                 } else if ( position.getType() == PositionType.PRODUCT_BATCH ) {
                     Product p = Objects.requireNonNull(productEao.findById(position.getUniqueUnitProductId()),
@@ -614,6 +615,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                     l.setProductGroup(p.getGroup());
                     l.setProductName(p.getName());
                     l.setProductId(p.getId());
+                    l.setGtin(p.getGtin());
                     l.setUniqueUnitId(position.getUniqueUnitId());
                     l.setSerial(position.getSerial());
                     l.setRefurbishId(position.getRefurbishedId());

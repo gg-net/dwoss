@@ -550,6 +550,10 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @UiLarge
     private String comment;
 
+    @Getter
+    @Setter
+    private long gtin;
+
     @Builder
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ReportLine(String name, String description, long dossierId, String dossierIdentifier, long documentId, String documentIdentifier,
@@ -1052,7 +1056,8 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
                 + ", manufacturerCostPrice=" + manufacturerCostPrice + ", productId=" + productId + ", refurbishId=" + refurbishId + ", serial=" + serial
                 + ", mfgDate=" + mfgDate + ", uniqueUnitId=" + uniqueUnitId + ", marginPercentage=" + marginPercentage + ", purchasePrice=" + purchasePrice
                 + ", salesChannel=" + salesChannel + ", salesChannelName=" + salesChannelName + ", contractor=" + contractor
-                + ", contractorName=" + contractorName + ", contractorPartNo=" + contractorPartNo + ", contractorReferencePrice=" + contractorReferencePrice + '}';
+                + ", contractorName=" + contractorName + ", contractorPartNo=" + contractorPartNo + ", contractorReferencePrice=" + contractorReferencePrice
+                + ", gtin=" + gtin + '}';
     }
 
     /**
@@ -1267,6 +1272,11 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append(contractorReferencePrice);
         sb.append("</li>");
 
+        sb.append("<li>");
+        sb.append("<b>gtin: </b>");
+        sb.append(gtin);
+        sb.append("</li>");
+
         sb.append("</ul>");
 
         return sb.toString();
@@ -1278,15 +1288,15 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * @return HTML on a Singleline view of the ReportLine.
      */
     public String toHtmlSingleLine() {
-        return "<ul><li>ReportLine{" + "</li><b><li>id: </li></b>" + id + "</li><b><li>, reportingDate: </li></b>" + reportingDate + "</li><b><li>, documentId: </li></b>" + documentId 
+        return "<ul><li>ReportLine{" + "</li><b><li>id: </li></b>" + id + "</li><b><li>, reportingDate: </li></b>" + reportingDate + "</li><b><li>, documentId: </li></b>" + documentId
                 + "</li><b><li>, documentType: </li></b>" + documentType
-                + "</li><b><li>, workflowStatus: </li></b>" + workflowStatus + "</li><b><li>, amount: </li></b>" + amount + "</li><b><li>, name: </li></b>" + name 
+                + "</li><b><li>, workflowStatus: </li></b>" + workflowStatus + "</li><b><li>, amount: </li></b>" + amount + "</li><b><li>, name: </li></b>" + name
                 + "</li><b><li>, description: </li></b>" + description
-                + "</li><b><li>, positionType: </li></b>" + positionType + "</li><b><li>, price: </li></b>" + price  + "</li><b><li>, manufacturerCostPrice: </li></b>" + manufacturerCostPrice 
-                + "</li><b><li>, productId: </li></b>" + productId + "</li><b><li>, refurbishId: </li></b>" + refurbishId 
+                + "</li><b><li>, positionType: </li></b>" + positionType + "</li><b><li>, price: </li></b>" + price + "</li><b><li>, manufacturerCostPrice: </li></b>" + manufacturerCostPrice
+                + "</li><b><li>, productId: </li></b>" + productId + "</li><b><li>, refurbishId: </li></b>" + refurbishId
                 + "</li><b><li>, serial: </li></b>" + serial + "</li><b><li>, uniqueUnitId: </li></b>" + uniqueUnitId + "</li><b><li>, purchasePrice: </li></b>" + purchasePrice
-                + "</li><b><li>, salesChannelName: </li></b>" + salesChannelName + "</li><b><li>, contractorName: </li></b>" + contractorName 
-                +"</li><b><li>, contractorReferencePrice: </li></b>" + contractorReferencePrice + "</ul>";
+                + "</li><b><li>, salesChannelName: </li></b>" + salesChannelName + "</li><b><li>, contractorName: </li></b>" + contractorName
+                + "</li><b><li>, contractorReferencePrice: </li></b>" + contractorReferencePrice + "</li><b><li>, gtin: </li></b>" + gtin + "</ul>";
 
     }
 

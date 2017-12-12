@@ -55,7 +55,7 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
     private MonitorFactory monitorFactory;
 
     @Override
-    public FileJacket toManufacturerXls(TradeName contractorManufacturer) {
+    public FileJacket toManufacturerMissingXls(TradeName contractorManufacturer) {
         if ( !contractorManufacturer.isManufacturer() ) throw new RuntimeException(contractorManufacturer + " is not a Manufacturer, wrong exporter");
         SubMonitor m = monitorFactory.newSubMonitor("Lieferanten und Hersteller Exporter");
         m.message("Loading Units").start();
@@ -83,28 +83,37 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
 
     @Override
     public FileJacket toContractorXls(TradeName contractor) {
+        return toContractorXls(contractor, false);
+    }
+
+    @Override
+    public FileJacket toContractorMissingXls(TradeName contractor) {
+        return toContractorXls(contractor, true);
+    }
+
+    // Manufacturer PartNo | GTIN | Name | Contractor Reference Price | ContractorPartNo
+    private FileJacket toContractorXls(TradeName contractor, final boolean missing) {
         SubMonitor m = monitorFactory.newSubMonitor("Lieferanten Exporter", 100);
         m.message("Loading Units").start();
 
         List<Object[]> rows = productEao.findByContractor(contractor)
                 .stream()
-                .filter(p -> p.getPrice(CONTRACTOR_REFERENCE) <= 0.01)
+                .filter(p -> missing ? !p.hasPrice(CONTRACTOR_REFERENCE) : true)
                 .sorted()
-                .map(p -> new Object[]{"", p.getPartNo(), p.getTradeName().getName(), p.getName(), 0.0, p.getGtin()})
+                .map(p -> new Object[]{p.getPartNo(), p.getGtin(), p.getTradeName() + " " + p.getName(), p.getPrice(CONTRACTOR_REFERENCE), p.getAdditionalPartNo(contractor)})
                 .collect(Collectors.toList());
 
         m.worked(5, "Generating File");
         STable table = new STable();
         table.setTableFormat(new CFormat(BLACK, WHITE));
         table.setHeadlineFormat(new CFormat(BOLD_ITALIC));
-        table.add(new STableColumn("Contractor PartNo", 18)).add(new STableColumn("Hersteller PartNo", 20));
-        table.add(new STableColumn("Brand", 15)).add(new STableColumn("Bezeichnung", 25))
-                .add(new STableColumn("Reference Preis", 12, new CFormat(CURRENCY_EURO))).add(new STableColumn("GTIN/EAN", 14));
+        table.add(new STableColumn("Herstellerartikelnummer", 18)).add(new STableColumn("Gtin/Ean", 15));
+        table.add(new STableColumn("Bezeichnung", 25)).add(new STableColumn("Reference Preis", 12, new CFormat(CURRENCY_EURO))).add(new STableColumn("Lieferantenartikelnummer", 14));
         table.setModel(new STableModelList(rows));
         CCalcDocument cdoc = new TempCalcDocument();
         cdoc.add(new CSheet(contractor.getName(), table));
 
-        FileJacket result = new FileJacket("Fehlende " + contractor.getName() + " Preise und Artikelnummern vom " + ISO.format(new Date()), ".xls",
+        FileJacket result = new FileJacket((missing ? "Fehlende " : "Alle ") + contractor.getName() + " Preise und Artikelnummern vom " + ISO.format(new Date()), ".xls",
                 new JExcelLucidCalcWriter().write(cdoc));
         m.finish();
         return result;

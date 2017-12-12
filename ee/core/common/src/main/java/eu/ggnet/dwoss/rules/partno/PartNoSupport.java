@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,14 +40,5 @@ public interface PartNoSupport extends Serializable {
      * @return a string representation of the violation of the partNo or null if the partNo is valid.
      */
     String violationMessages(String partNo);
-
-    /**
-     * Tries to normalise a partNo.
-     * This might be punkations or else.
-     * <p>
-     * @param partNo the partNo to normalize
-     * @return even if nothing matches, at least the parameter.
-     */
-    String normalize(String partNo);
 
 }
