@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,6 +73,7 @@ public class ProductFormater {
         if ( product.getPartNo() != null ) re += var + ".setPartNo(\"" + product.getPartNo() + "\");\n";
         re += var + ".setGroup(ProductGroup." + product.getGroup() + ");\n";
         re += var + ".setTradeName(TradeName." + product.getTradeName() + ");\n";
+        re += var + ".setGtin(" + product.getGtin() + ");\n";
         return re;
     }
 

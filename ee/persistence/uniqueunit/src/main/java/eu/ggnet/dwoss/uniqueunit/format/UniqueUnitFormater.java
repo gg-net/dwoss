@@ -106,7 +106,7 @@ public abstract class UniqueUnitFormater {
             re += "<b>Keine ProductBeschreibung (UniqueUnit.product == null)</b>";
         } else {
 //            re += " - <u>Product.id:</u> " + p.getId() + "<br />";
-            re += "<b>" + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + " (" + p.getPartNo() + ")" + "</b>";
+            re += "<b>" + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + " (" + p.getPartNo() + ", Gtin:" + p.getGtin() + ")" + "</b>";
 //            re += (p.getEol() == null ? "" : "<u>Artikel End of Life:</u> " + DateFormats.ISO.format(p.getEol()) + "</br>");
 //            re += (p.getGtin() == null ? "" : "<u>GTIN (EAN):</u> " + p.getGtin() + "</br>");
             re += "<p>" + p.getDescription() + "</p>";
