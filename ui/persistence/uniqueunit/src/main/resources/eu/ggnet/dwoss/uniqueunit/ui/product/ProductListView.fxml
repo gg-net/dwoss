@@ -11,31 +11,31 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="796.0" BorderPane.alignment="CENTER">
          <children>
-            <ComboBox fx:id="menuTradeName" onAction="#onActionFilter" prefHeight="25.0" prefWidth="120.0" promptText="Trade Name">
+            <ComboBox fx:id="menuTradeName" onAction="#onActionFilter" promptText="Trade Name">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </ComboBox>
-            <ComboBox fx:id="menuProductGroup" onAction="#onActionFilter" prefHeight="25.0" prefWidth="134.0" promptText="Product Group">
+            <ComboBox fx:id="menuProductGroup" onAction="#onActionFilter" promptText="Product Group">
                <HBox.margin>
                   <Insets bottom="5.0" top="5.0" />
                </HBox.margin>
             </ComboBox>
-            <DatePicker fx:id="eolDatePicker" onAction="#onActionFilter" prefHeight="25.0" prefWidth="112.0">
+            <DatePicker fx:id="eolDatePicker" onAction="#onActionFilter" prefWidth="150.0">
                <HBox.margin>
                   <Insets left="5.0" />
                </HBox.margin>
             </DatePicker>
-            <CheckBox fx:id="menuEol" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#onActionFilter" prefHeight="17.0" prefWidth="48.0" text="EOL">
+            <CheckBox fx:id="menuEol" alignment="TOP_RIGHT" mnemonicParsing="false" onAction="#onActionFilter" text="EOL">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" top="5.0" />
                </HBox.margin>
             </CheckBox>
-            <Button mnemonicParsing="false" onAction="#onActionResetFilter" prefHeight="25.0" prefWidth="127.0" text="Filter zurücksetzen" textAlignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#onActionResetFilter" text="Filter zurücksetzen" textAlignment="CENTER">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
