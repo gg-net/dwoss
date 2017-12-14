@@ -166,7 +166,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
 
     /**
      * Display customer values in UI.
-     * <p/>
+     * <p>
      * @param customerId id of the current customer
      */
     public void setCustomerValues(long customerId) {
@@ -276,6 +276,8 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         resetAddressesButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         addressesArea = new javax.swing.JTextPane();
+        jSeparator3 = new javax.swing.JSeparator();
+        taxChangeButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         positionPanelFx = new javax.swing.JPanel();
         convertToWarrantyPositionButton = new javax.swing.JButton();
@@ -467,7 +469,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(editInvoiceAddressButton, gridBagConstraints);
 
@@ -479,7 +481,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 13;
+        gridBagConstraints.gridy = 15;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(editShippingAddress, gridBagConstraints);
 
@@ -492,7 +494,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridy = 16;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(resetAddressesButton, gridBagConstraints);
 
@@ -502,17 +504,36 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridy = 17;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         add(jScrollPane3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(jSeparator3, gridBagConstraints);
+
+        taxChangeButton.setText("<html>Steuern und Fibukonten<br />anpassen</html>");
+        taxChangeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        taxChangeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                taxChangeButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 12;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(taxChangeButton, gridBagConstraints);
 
         jSeparator2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 13;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 5, 0);
@@ -673,6 +694,17 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
         }
     }//GEN-LAST:event_convertToWarrantyPositionButtonActionPerformed
 
+    private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
+        Ui.fx().parent(this).eval(() -> new TaxChangePane()).ifPresent(t -> {
+            document.getPositions().values().forEach(p -> {
+                // Set Tax
+                // set AfterTax
+                //
+            });
+        });
+
+    }//GEN-LAST:event_taxChangeButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addCommentButton;
     private javax.swing.JButton addProductBatchButton;
@@ -687,6 +719,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
     private javax.swing.JButton moveDownButton;
     private javax.swing.JButton moveUpButton;
     private javax.swing.JLabel paymentMethodLabel;
@@ -695,6 +728,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
     private javax.swing.JButton removePositionButton;
     private javax.swing.JButton resetAddressesButton;
     private javax.swing.JButton shippingCostButton;
+    private javax.swing.JButton taxChangeButton;
     private javax.swing.JTextField unitInputField;
     // End of variables declaration//GEN-END:variables
 

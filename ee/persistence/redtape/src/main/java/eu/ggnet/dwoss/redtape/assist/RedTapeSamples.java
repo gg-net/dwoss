@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,10 @@
  */
 package eu.ggnet.dwoss.redtape.assist;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.PositionType;
-
 import java.util.Collection;
 
 import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.*;
 
 /**
  *
@@ -30,7 +27,7 @@ import eu.ggnet.dwoss.redtape.entity.*;
  */
 public class RedTapeSamples {
 
-    private final static String loremIpsum = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
+    private final static String LOREM_IPSUM = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
             + " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et"
             + " ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, "
             + "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
@@ -66,7 +63,7 @@ public class RedTapeSamples {
                 setDescription("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").createPosition();
         Position p3 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
                 setTax(0.19).setAfterTaxPrice(50.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(loremIpsum).createPosition();
+                setDescription(LOREM_IPSUM).createPosition();
         Position p4 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
                 setTax(0.19).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
                 setDescription("Ein Menge an Info").createPosition();
@@ -173,7 +170,7 @@ public class RedTapeSamples {
         //Create Positions
         Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
                 setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(loremIpsum).createPosition();
+                setDescription(LOREM_IPSUM).createPosition();
         document.append(p1);
         return document.getPositions().values();
     }
@@ -196,10 +193,10 @@ public class RedTapeSamples {
         //Create Positions
         Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
                 setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(loremIpsum).createPosition();
+                setDescription(LOREM_IPSUM).createPosition();
         Position p2 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
                 setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(loremIpsum).createPosition();
+                setDescription(LOREM_IPSUM).createPosition();
         document.append(p1);
         document.append(p2);
         return document.getPositions().values();
