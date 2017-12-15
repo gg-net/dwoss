@@ -1,10 +1,10 @@
 package tryout;
 
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
+
 import java.util.Arrays;
 
 import net.sf.jasperreports.engine.JasperPrint;
-
-import org.junit.Test;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
@@ -24,9 +24,10 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import tryout.stub.*;
@@ -39,11 +40,9 @@ import static org.mockito.Mockito.when;
  *
  * @author oliver.guenther
  */
-public class RedTape {
+public class RedTapeTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
-
+    public static void main(String[] args) {
         Client.addSampleStub(RedTapeAgent.class, new RedTapeAgentStub());
         Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
         Client.addSampleStub(UniversalSearcher.class, new UniversalSearcherStub());
@@ -92,22 +91,12 @@ public class RedTape {
         CustomerCos ccos = mock(CustomerCos.class);
         when(ccos.createCustomer()).thenReturn(0L);
         when(ccos.updateCustomer(anyLong())).thenReturn(true);
-
         Client.addSampleStub(CustomerCos.class, ccos);
 
-        RedTapeModel model = new RedTapeModel();
-        RedTapeController controller = new RedTapeController();
-        RedTapeView view = new RedTapeView();
-        controller.setModel(model);
-        controller.setView(view);
-        view.setModel(model);
-        view.setController(controller);
-        view.pack();
-        view.setVisible(true);
-        UiCore.continueSwing(view);
-        while (view.isVisible()) {
-            Thread.sleep(500);
-        }
+        UiCore.startSwing(() -> new MainPanel());
+        Ui.exec(() -> {
+            Ui.swing().show(() -> RedTapeController.build().getView());
+        });
     }
 
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ui.cao;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -53,8 +53,7 @@ import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.UserPreferences;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.all.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.*;
 
@@ -66,11 +65,12 @@ import static eu.ggnet.saft.core.Client.lookup;
  * <p/>
  * @author pascal.perau
  */
-public class RedTapeView extends javax.swing.JFrame {
+@eu.ggnet.saft.api.ui.Frame
+@Title("Kunden und Aufträge")
+@StoreLocation
+public class RedTapeView extends JPanel implements ClosedListener {
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
-
-    private static RedTapeView instance;
 
     DossierTableView dossierTableView;
 
@@ -79,26 +79,26 @@ public class RedTapeView extends javax.swing.JFrame {
     /**
      * Returns a single Instance of this view, initialising and showing it.
      */
-    public static void showSingleInstance() {
-        if ( instance == null ) {
-            instance = new RedTapeView();
-            RedTapeModel model = new RedTapeModel();
-            RedTapeController controller = new RedTapeController();
-            instance.setController(controller);
-            instance.setModel(model);
-            controller.setModel(model);
-            controller.setView(instance);
-            instance.setSize(1150, 900);
-            instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
-            instance.setVisible(true);
-        } else {
-            instance.toFront();
-            if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
-        }
-    }
+//    public static void showSingleInstance() {
+//        if ( instance == null ) {
+//            instance = new RedTapeView();
+//            RedTapeModel model = new RedTapeModel();
+//            RedTapeController controller = new RedTapeController();
+//            instance.setController(controller);
+//            instance.setModel(model);
+//            controller.setModel(model);
+//            controller.setView(instance);
+//            instance.setSize(1150, 900);
+//            instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
+//            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
+//            instance.setVisible(true);
+//        } else {
+//            instance.toFront();
+//            if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
+//        }
+//    }
 
-    private PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
+    private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             final RedTapeModel m = (RedTapeModel)evt.getSource();
@@ -113,13 +113,9 @@ public class RedTapeView extends javax.swing.JFrame {
                     documentList.setListData(m.getDocuments().toArray());
                     break;
                 case RedTapeModel.PROP_POSITIONS:
-                    Platform.runLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            positions.clear(); // This could also be done with javaFX style (use the list of the model)
-                            positions.addAll(m.getPositions());
-                        }
+                    Platform.runLater(() -> {
+                        positions.clear(); // This could also be done with javaFX style (use the list of the model)
+                        positions.addAll(m.getPositions());
                     });
                     break;
                 case RedTapeModel.PROP_SEARCH_RESULT:
@@ -144,9 +140,9 @@ public class RedTapeView extends javax.swing.JFrame {
         dossierTableViewPanel.add(dossierTableView, BorderLayout.CENTER);
 
         initFxComponents();
-        setIconImage(new ImageIcon(loadImage()).getImage());
-
-        setTitle("Kunden und Aufträge");
+//        setIconImage(new ImageIcon(loadImage()).getImage());
+//
+//        setTitle("Kunden und Aufträge");
         documentList.setModel(new DefaultListModel());
         documentList.setCellRenderer(new DocumentStringRenderer());
         searchResultList.setModel(new DefaultListModel());
@@ -340,14 +336,7 @@ public class RedTapeView extends javax.swing.JFrame {
         editCommentButton = new JButton();
         actionBar = new JToolBar();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Kunden und Aufträge");
-        addWindowListener(new WindowAdapter() {
-            public void windowClosed(WindowEvent evt) {
-                formWindowClosed(evt);
-            }
-        });
-        getContentPane().setLayout(new GridBagLayout());
+        setLayout(new GridBagLayout());
 
         jLabel1.setFont(new Font("DejaVu Sans", 0, 14)); // NOI18N
         jLabel1.setText("Kundensuche");
@@ -355,7 +344,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
-        getContentPane().add(jLabel1, gridBagConstraints);
+        add(jLabel1, gridBagConstraints);
 
         jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         jScrollPane1.setToolTipText("");
@@ -382,7 +371,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 10.0;
         gridBagConstraints.insets = new Insets(45, 0, 0, 0);
-        getContentPane().add(jScrollPane1, gridBagConstraints);
+        add(jScrollPane1, gridBagConstraints);
 
         searchCommandField.setName(""); // NOI18N
         searchCommandField.addActionListener(new ActionListener() {
@@ -395,7 +384,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 2.0;
-        getContentPane().add(searchCommandField, gridBagConstraints);
+        add(searchCommandField, gridBagConstraints);
 
         positionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black), "Positionen"));
         positionPanel.setMaximumSize(new Dimension(400, 32767));
@@ -419,8 +408,7 @@ public class RedTapeView extends javax.swing.JFrame {
 
         GroupLayout positionPanelLayout = new GroupLayout(positionPanel);
         positionPanel.setLayout(positionPanelLayout);
-        positionPanelLayout.setHorizontalGroup(
-            positionPanelLayout.createParallelGroup(Alignment.LEADING)
+        positionPanelLayout.setHorizontalGroup(positionPanelLayout.createParallelGroup(Alignment.LEADING)
             .addGroup(Alignment.TRAILING, positionPanelLayout.createSequentialGroup()
                 .addGroup(positionPanelLayout.createParallelGroup(Alignment.LEADING, false)
                     .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -432,12 +420,11 @@ public class RedTapeView extends javax.swing.JFrame {
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(positionPanelLayout.createParallelGroup(Alignment.LEADING)
                     .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(positionAmountLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE))
+                    .addComponent(positionAmountLabel, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(positionFxPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        positionPanelLayout.setVerticalGroup(
-            positionPanelLayout.createParallelGroup(Alignment.LEADING)
+        positionPanelLayout.setVerticalGroup(positionPanelLayout.createParallelGroup(Alignment.LEADING)
             .addGroup(Alignment.TRAILING, positionPanelLayout.createSequentialGroup()
                 .addComponent(positionFxPanel, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
                 .addPreferredGap(ComponentPlacement.RELATED)
@@ -461,7 +448,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridheight = 10;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 5.0;
-        getContentPane().add(positionPanel, gridBagConstraints);
+        add(positionPanel, gridBagConstraints);
 
         documentCreationPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black), "Dokumente"));
         documentCreationPanel.setMaximumSize(new Dimension(400, 2147483647));
@@ -506,7 +493,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridheight = 4;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 5.0;
-        getContentPane().add(documentCreationPanel, gridBagConstraints);
+        add(documentCreationPanel, gridBagConstraints);
 
         dossierTableViewPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black));
         dossierTableViewPanel.setLayout(new BorderLayout());
@@ -518,7 +505,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.weightx = 10.0;
         gridBagConstraints.weighty = 8.0;
         gridBagConstraints.insets = new Insets(7, 0, 2, 0);
-        getContentPane().add(dossierTableViewPanel, gridBagConstraints);
+        add(dossierTableViewPanel, gridBagConstraints);
 
         customerDetailArea.setEditable(false);
         customerDetailArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black));
@@ -533,7 +520,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.weightx = 10.0;
         gridBagConstraints.weighty = 10.0;
         gridBagConstraints.insets = new Insets(5, 0, 0, 0);
-        getContentPane().add(jScrollPane8, gridBagConstraints);
+        add(jScrollPane8, gridBagConstraints);
 
         newCustomerButton.setText("Neuer Kunde");
         newCustomerButton.addActionListener(new ActionListener() {
@@ -545,7 +532,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = GridBagConstraints.NORTHEAST;
-        getContentPane().add(newCustomerButton, gridBagConstraints);
+        add(newCustomerButton, gridBagConstraints);
 
         dossierButtonPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black), "Auftrag fortführen"));
         dossierButtonPanel.setMaximumSize(new Dimension(400, 32767));
@@ -558,7 +545,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 3.0;
-        getContentPane().add(dossierButtonPanel, gridBagConstraints);
+        add(dossierButtonPanel, gridBagConstraints);
 
         jPanel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED, new Color(204, 204, 255), Color.black)));
         jPanel2.setMaximumSize(new Dimension(300, 32767));
@@ -583,15 +570,13 @@ public class RedTapeView extends javax.swing.JFrame {
 
         GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        jPanel2Layout.setHorizontalGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
             .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
             .addGroup(Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 238, Short.MAX_VALUE)
                 .addComponent(editCommentButton, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane4, GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addPreferredGap(ComponentPlacement.RELATED)
@@ -606,7 +591,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new Insets(7, 0, 2, 0);
-        getContentPane().add(jPanel2, gridBagConstraints);
+        add(jPanel2, gridBagConstraints);
 
         actionBar.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
         actionBar.setFloatable(false);
@@ -619,7 +604,7 @@ public class RedTapeView extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
         gridBagConstraints.insets = new Insets(5, 0, 0, 0);
-        getContentPane().add(actionBar, gridBagConstraints);
+        add(actionBar, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void documentListSelectionChanged(ListSelectionEvent evt) {//GEN-FIRST:event_documentListSelectionChanged
@@ -655,12 +640,6 @@ public class RedTapeView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_editDocumentMouseActionPerformed
 
-    private void formWindowClosed(WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        lookup(UserPreferences.class).storeLocation(this.getClass(), this);
-        selector.clear();
-        instance = null;
-    }//GEN-LAST:event_formWindowClosed
-
     private void editCommentButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editCommentButtonActionPerformed
         if ( controller == null ) return;
         controller.openEditComment(model.getSelectedDossier());
@@ -693,5 +672,11 @@ public class RedTapeView extends javax.swing.JFrame {
     JTextField searchCommandField;
     JList searchResultList;
     // End of variables declaration//GEN-END:variables
+
+
+    @Override
+    public void closed() {
+        selector.clear();
+    }
 
 }

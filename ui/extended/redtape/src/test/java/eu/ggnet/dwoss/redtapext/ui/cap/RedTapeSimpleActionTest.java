@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.redtape.action;
+package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +11,7 @@ public class RedTapeSimpleActionTest {
 
     @Test
     public void testLoadImage() {
-        Assert.assertNotNull(RedTapeSimpleAction.loadLargeIcon());
-        Assert.assertNotNull(RedTapeSimpleAction.loadSmallIcon());
+        Assert.assertNotNull(RedTapeAction.loadLargeIcon());
+        Assert.assertNotNull(RedTapeAction.loadSmallIcon());
     }
 }

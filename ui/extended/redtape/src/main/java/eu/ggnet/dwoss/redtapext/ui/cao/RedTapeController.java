@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ui.cao;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.redtape.action.*;
+import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.dossiertable.DossierTableController;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
@@ -44,6 +44,9 @@ import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtape.state.*;
+import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
+import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
+import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -61,18 +64,15 @@ import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
- * <p/>
+ * <p>
  * @author pascal.perau
  */
 public class RedTapeController implements IDossierSelectionHandler {
 
-    @Override
-    public void selected(Dossier dossier) {
-        model.setSelectedDossier(dossier);
-    }
-
+    @Getter
     private RedTapeModel model;
 
+    @Getter
     private RedTapeView view;
 
     @Getter
@@ -80,11 +80,13 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     private Set<Action> accessDependentActions;
 
+    @Getter(lazy = true)
     private final NavigableSet<Long> viewOnlyCustomerIds = Client.lookup(MandatorSupporter.class).loadSalesdata().getViewOnlyCustomerIds();
 
     private SwingWorker<Void, Dossier> closedLoader;
 
-    private final boolean isShippingCostUiHelpEnabled = Client.hasFound(ShippingCostService.class);
+    @Getter(lazy = true)
+    private final boolean shippingCostUiHelpEnabled = Client.hasFound(ShippingCostService.class);
 
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
@@ -142,14 +144,14 @@ public class RedTapeController implements IDossierSelectionHandler {
                                 // Now this implies a legacy wrapped dossier, so no actions are possible.
                             } else if ( (model.getSelectedDocument().getType() == DocumentType.ORDER
                                          && !model.getSelectedDossier().getActiveDocuments(DocumentType.INVOICE).isEmpty())
-                                    || viewOnlyCustomerIds.contains(model.getPurchaseCustomer().getId()) ) {
+                                    || getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
                             } else {
                                 for (StateTransition<CustomerDocument> originalStateTransition : transitions) {
                                     RedTapeStateTransition stateTransition = (RedTapeStateTransition)originalStateTransition;
-                                    if ( RedTapeStateTransitions.ADD_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled ) {
+                                    if ( RedTapeStateTransitions.ADD_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled() ) {
                                         Action a = new ModifyShippingCostStateAction(parent(), RedTapeController.this, cdoc, stateTransition);
                                         stateActions.add(a);
-                                    } else if ( RedTapeStateTransitions.REMOVE_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled ) {
+                                    } else if ( RedTapeStateTransitions.REMOVE_SHIPPING_COSTS.contains(stateTransition) && isShippingCostUiHelpEnabled() ) {
                                         stateActions.add(new RemoveShippingCostStateAction(parent(), RedTapeController.this, cdoc, stateTransition));
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_CREDIT_MEMO) ) {
                                         CreditMemoAction creditMemoAction = new CreditMemoAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
@@ -165,12 +167,12 @@ public class RedTapeController implements IDossierSelectionHandler {
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else if ( stateTransition.getEnablingRight() != null && stateTransition.getEnablingRight().equals(AtomicRight.CREATE_ANNULATION_INVOICE) ) {
-                                        StateTransitionAction action = new StateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition);
+                                        DefaultStateTransitionAction action = new DefaultStateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition);
                                         lookup(Guardian.class).add(action, AtomicRight.CREATE_ANNULATION_INVOICE);
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else {
-                                        stateActions.add(new StateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition));
+                                        stateActions.add(new DefaultStateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition));
                                     }
                                 }
                                 if ( model.getSelectedDocument().getType() == DocumentType.BLOCK ) {
@@ -203,10 +205,21 @@ public class RedTapeController implements IDossierSelectionHandler {
         }
     };
 
+    public static RedTapeController build() {
+        RedTapeView view = new RedTapeView();
+        RedTapeModel model = new RedTapeModel();
+        RedTapeController controller = new RedTapeController();
+        view.setController(controller);
+        view.setModel(model);
+        controller.setModel(model);
+        controller.setView(view);
+        return controller;
+    }
+
     public RedTapeController() {
         this.accessDependentActions = new HashSet<>();
         this.dossierTableController = new DossierTableController();
-        dossierTableController.setSelectionHandler(RedTapeController.this);
+        dossierTableController.setSelectionHandler(this);
     }
 
     /**
@@ -219,24 +232,6 @@ public class RedTapeController implements IDossierSelectionHandler {
         this.model = model;
         dossierTableController.setModel(model.getDossierTableModel());
         this.model.addPropertyChangeListener(redTapeViewListener);
-    }
-
-    /**
-     * Get the model from the controller.
-     * <p/>
-     * @return The recent model of the view
-     */
-    public RedTapeModel getModel() {
-        return model;
-    }
-
-    /**
-     * Get the value of view
-     *
-     * @return the value of view
-     */
-    public RedTapeView getView() {
-        return view;
     }
 
     /**
@@ -390,6 +385,11 @@ public class RedTapeController implements IDossierSelectionHandler {
         dialog.setVisible(true);
     }
 
+    @Override
+    public void selected(Dossier dossier) {
+        model.setSelectedDossier(dossier);
+    }
+
     /**
      * Fills the toolbar as well as organizing the popupmenus.
      * <p/>
@@ -406,7 +406,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         }));
 
         //build customer dependant actions.
-        if ( viewOnlyCustomerIds.contains(model.getPurchaseCustomer().getId()) ) {
+        if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
             // Don't allow anything here.
         } else if ( model.getPurchaseCustomer().getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
             view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));
@@ -419,9 +419,9 @@ public class RedTapeController implements IDossierSelectionHandler {
         sep.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         view.actionBar.add(sep);
 
-        if ( model.getSelectedDocument() != null && !viewOnlyCustomerIds.contains(model.getPurchaseCustomer().getId()) ) {
+        if ( model.getSelectedDocument() != null && !getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
             Document selDocument = model.getSelectedDocument();
-            UpdateDocumentAction action = new UpdateDocumentAction(parent(), this, model.getPurchaseCustomer().getId(), model.getSelectedDocument());
+            DossierUpdateAction action = new DossierUpdateAction(parent(), this, model.getPurchaseCustomer().getId(), model.getSelectedDocument());
             view.actionBar.add(new JButton(action));
 
             //Deactivate Button if a Update isn't possible or allowed.
@@ -470,7 +470,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     /**
      * Return weither the selected Document is editable or not.
      * <p/>
-     * @return true if its possible to fire the {@link UpdateDocumentAction}.
+     * @return true if its possible to fire the {@link DossierUpdateAction}.
      */
     private boolean isSelectedDocumentEditable() {
         //Document is canceled.
@@ -500,25 +500,8 @@ public class RedTapeController implements IDossierSelectionHandler {
         return true;
     }
 
-//    /**
-//     * Generates a html formated String with detailed information for a {@link Position}.
-//     * <p/>
-//     * @param p the {@link Position} entity
-//     * @return a html formated String with detailed information for a {@link Position}.
-//     */
-//    @Deprecated // remove
-//    public String getDetailedPositionToHtml(Position p) {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(PositionFormater.toHtmlDetailed(p)).append("<br />");
-//        if ( p.getType() == PositionType.UNIT ) {
-//            StockUnit su = lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(p.getUniqueUnitId());
-//            UniqueUnit uu = lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, p.getUniqueUnitId());
-//            if ( su != null ) sb.append(StockUnitFormater.detailedTransactionToHtml(su));
-//            if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu)).append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));
-//        }
-//        return sb.toString();
-//    }
     private Window parent() {
         return SwingCore.windowAncestor(view).orElse(SwingCore.mainFrame());
     }
+
 }

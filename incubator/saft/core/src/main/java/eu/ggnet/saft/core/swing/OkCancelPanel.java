@@ -21,10 +21,11 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.all.VetoableOnOk;
 
-public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProducer<V> & Consumer<U>> extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<V>, Consumer<U> {
+public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProducer<V> & Consumer<U>> extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Reply<V>>, Consumer<U> {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -73,10 +74,11 @@ public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProduce
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 
-    private T panel;
+    private final T panel;
 
     private boolean ok = false;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public OkCancelPanel(T panel) {
         initComponents();
         add(panel);
@@ -84,8 +86,8 @@ public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProduce
     }
 
     @Override
-    public V getResult() {
-        return ok ? panel.getResult() : null;
+    public Reply<V> getResult() {
+        return ok ? Reply.success(panel.getResult()) : Reply.failure("Cancel pressed");
     }
 
     @Override

@@ -22,9 +22,13 @@ import eu.ggnet.saft.api.ui.FxController;
 public class FxSaft {
 
     public static <R extends FxController> URL loadView(Class<R> controllerClazz) {
-        if ( !controllerClazz.getSimpleName().endsWith("Controller") )
-            throw new IllegalArgumentException(controllerClazz + " does not end with Controller");
-        String head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Controller".length());
+        String head = null;
+        if ( controllerClazz.getSimpleName().endsWith("Controller") ) {
+            head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Controller".length());
+        } else if ( controllerClazz.getSimpleName().endsWith("Presenter") ) {
+            head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Presenter".length());
+        }
+        if ( head == null ) throw new IllegalArgumentException(controllerClazz + " does not end with Controller or Presenter");
         return controllerClazz.getResource(head + "View.fxml");
     }
 

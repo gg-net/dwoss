@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ui.cap;
+
+import eu.ggnet.dwoss.redtape.OpenSearchAction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +41,7 @@ public class RedTapeActionFactory implements ActionFactory {
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
                 new MetaAction("Kunden und Aufträge", new OpenSearchAction()),
-                new MetaAction("Kunden und Aufträge", new RedTapeSimpleAction(), true),
+                new MetaAction("Kunden und Aufträge", new RedTapeAction(), true),
                 new MetaAction("Kunden und Aufträge", new DossierFilterAction()),
                 new MetaAction("Kunden und Aufträge", new ShowUnitViewAction()),
                 new MetaAction("Artikelstamm", new SalesProductAction()),

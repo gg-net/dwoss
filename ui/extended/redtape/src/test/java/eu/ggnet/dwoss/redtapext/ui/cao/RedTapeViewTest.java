@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ui.cao;
 
 import org.junit.Assert;
 import org.junit.Test;

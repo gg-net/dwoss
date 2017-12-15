@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.action;
+package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
@@ -26,7 +25,7 @@ import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.redtape.RedTapeController;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtape.document.DocumentUpdateController;
@@ -35,9 +34,11 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -55,6 +56,7 @@ public class DossierCreateAction extends AbstractAction {
 
     private final CustomerMetaData customer;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public DossierCreateAction(Window parent, boolean dispatch, RedTapeController controller, long customerId) {
         this.parent = parent;
         this.dispatch = dispatch;
@@ -70,32 +72,37 @@ public class DossierCreateAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Dossier dos = lookup(RedTapeWorker.class).create(customer.getId(), dispatch, lookup(Guardian.class).getUsername());
-        // This is safe, as a create will return exactly one document.
-        Document doc = dos.getDocuments().iterator().next();
+        Ui.exec(() -> {
+            Dossier dos = lookup(RedTapeWorker.class).create(customer.getId(), dispatch, lookup(Guardian.class).getUsername());
+            Document doc = dos.getDocuments().iterator().next();  // This is safe, as a create will return exactly one document.
 
-        //document view
-        DocumentUpdateView docView = new DocumentUpdateView(doc);
-        docView.setController(new DocumentUpdateController(docView, doc));
-        docView.setCustomerValues(customer.getId());
+            Addresses addresses = lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
+            doc.setInvoiceAddress(addresses.getInvoice());
+            doc.setShippingAddress(addresses.getShipping());
 
-        //document addresses
-        Addresses addresses = lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
-        doc.setInvoiceAddress(addresses.getInvoice());
-        doc.setShippingAddress(addresses.getShipping());
+            Ui.swing().parent(controller.getView()).eval(() -> {
+                DocumentUpdateView docView = new DocumentUpdateView(doc);
+                docView.setController(new DocumentUpdateController(docView, doc));
+                docView.setCustomerValues(customer.getId());
+                return OkCancel.wrap(docView);
+            }).filter(r -> handleFailure(r, doc))
+                    .map(Reply::getPayload)
+                    .ifPresent(this::handleSuccesses);
+        });
+    }
 
-        OkCancelDialog<DocumentUpdateView> dialog = new OkCancelDialog<>(controller.getView(), Dialog.ModalityType.DOCUMENT_MODAL, "Auftrag erstellen", docView);
-        dialog.setLocationRelativeTo(controller.getView());
-        dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            Document updatedDoc = lookup(RedTapeWorker.class).update(doc, null, lookup(Guardian.class).getUsername());
-            controller.getDossierTableController().getModel().add(updatedDoc.getDossier());
-        } else {
-            try {
-                lookup(RedTapeWorker.class).revertCreate(doc);
-            } catch (UserInfoException ex) {
-                Ui.handle(ex);
-            }
+    private void handleSuccesses(Document doc) {
+        Document updatedDoc = lookup(RedTapeWorker.class).update(doc, null, lookup(Guardian.class).getUsername());
+        controller.getDossierTableController().getModel().add(updatedDoc.getDossier());
+    }
+
+    private boolean handleFailure(Reply<?> reply, Document doc) {
+        if ( reply.hasSucceded() ) return true;
+        try {
+            lookup(RedTapeWorker.class).revertCreate(doc);
+        } catch (UserInfoException ex) {
+            Ui.handle(ex);
         }
+        return false;
     }
 }

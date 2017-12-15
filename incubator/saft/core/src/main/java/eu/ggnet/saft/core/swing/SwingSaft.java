@@ -18,9 +18,9 @@ import javafx.stage.Modality;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.UiUtil;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.core.all.OkCancelResult;
-import eu.ggnet.saft.UiUtil;
 
 /**
  *
@@ -41,7 +41,7 @@ public class SwingSaft {
      */
     private final static class IconConfig {
 
-        private final static java.util.List<String> VIEW_SUFFIXES = Arrays.asList("Controller", "View", "ViewCask");
+        private final static java.util.List<String> VIEW_SUFFIXES = Arrays.asList("Controller", "View", "ViewCask", "Presenter");
 
         private final static java.util.List<String> ICON_SUFFIXES = Arrays.asList("Icon");
 

@@ -14,25 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
-
-import eu.ggnet.saft.Ui;
+package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.SelectionEnhancer;
 import eu.ggnet.saft.core.authorisation.Guardian;
@@ -114,7 +111,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         searchCommand = new javax.swing.JTextField();
         searchButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        resultList = new javax.swing.JList<UnitShard>();
+        resultList = new javax.swing.JList<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -123,7 +120,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
         add(jLabel1, gridBagConstraints);
 
-        searchCommand.setPreferredSize(new java.awt.Dimension(100, 23));
+        searchCommand.setPreferredSize(new java.awt.Dimension(100, 30));
         searchCommand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchActionPerformed(evt);
@@ -202,54 +199,4 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
     private javax.swing.JTextField searchCommand;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) {
-        Client.addSampleStub(UnitOverseer.class, new UnitOverseer() {
-            private Map<String, Tuple2<UnitShard, String>> data = new HashMap<>();
-
-            {
-                data.put("1", new Tuple2<>(new UnitShard("1", 1, "SopoNr.: 1", Boolean.TRUE, 1), "Details zu Unit 1"));
-                data.put("2", new Tuple2<>(new UnitShard("2", 2, "SopoNr.: 2", Boolean.FALSE, 1), "Details zu Unit 2"));
-                data.put("3", new Tuple2<>(new UnitShard("3", 3, "SopoNr.: 3", Boolean.TRUE, 1), "Details zu Unit 3"));
-                data.put("4", new Tuple2<>(new UnitShard("4", 4, "SopoNr.: 4", Boolean.FALSE, 1), "Details zu Unit 4"));
-                data.put("5", new Tuple2<>(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null, null), "Existiert Nicht"));
-                data.put("6", new Tuple2<>(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE, null), "Details zu Unit 6"));
-            }
-
-            @Override
-            public String toDetailedHtml(String refurbishId, String username) {
-                if ( !data.containsKey(refurbishId) ) return refurbishId + " existiert nicht";
-                return data.get(refurbishId)._2;
-            }
-
-            @Override
-            public UnitShard find(String refurbishId) {
-                if ( !data.containsKey(refurbishId) ) return new UnitShard(refurbishId, 0, "SopoNr.: " + refurbishId + " exitiert nicht", null, null);
-                return data.get(refurbishId)._1;
-            }
-
-            @Override
-            public boolean isAvailable(String refurbishId) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void lockStockUnit(long dossierId, String refurbishedId) throws IllegalStateException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String toDetailedHtml(int uniqueUnitId, String username) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        });
-
-        OkCancelDialog<UnitAvailabilityViewCask> view = new OkCancelDialog<>("blub", new UnitAvailabilityViewCask());
-        view.setVisible(true);
-        view.dispose();
-    }
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
 import java.awt.Cursor;
 import java.awt.HeadlessException;
@@ -28,13 +28,12 @@ import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRViewer;
 
-import eu.ggnet.dwoss.redtape.entity.Document;
-
-import eu.ggnet.dwoss.redtape.DocumentSupporter;
-
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-
+import eu.ggnet.dwoss.redtape.DocumentSupporter;
+import eu.ggnet.dwoss.redtape.MailInfoDialog;
+import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ResultProducer;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -44,7 +43,9 @@ import static eu.ggnet.saft.core.Client.lookup;
  * <p/>
  * @author bastian.venz
  */
-public class JRViewerCask extends JRViewer {
+// TODO: JRViewer is deprecated, but the new version makes our print button handling more complicated. So if we every what to change something, move to our own
+// javafx implementation. (Or if someone else did this)
+public class JRViewerCask extends JRViewer implements ResultProducer<JRViewerCask> {
 
     private boolean correctlyBriefed = false;
 
@@ -130,5 +131,10 @@ public class JRViewerCask extends JRViewer {
 
     public boolean isCorrectlyBriefed() {
         return correctlyBriefed;
+    }
+
+    @Override
+    public JRViewerCask getResult() {
+        return this;
     }
 }

@@ -17,14 +17,15 @@ Architecture
 In the core the application has a simple layer model.
 
 1. Library
-2. EE (for the Server), UI (for the Client)
-	1. Core
+2. EE (for the Server), UI (for the Client) -> layer
+	1. Core -> sublayer
 		- Non Persistence Projects, APIs.
 	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
 		- Only one data source per project.
 	2. Extended
 		- Projects that use more than one persistence source
+3. No module name may stretch over a layer. (For now, redtape ignores that rule, but this is wrong. [DWOSS-133](https://jira.cybertron.global/browse/DWOSS-137])
 
 There are also some more rules to consider, which we were not yet able to represent.
 See the developed Graph in
@@ -40,13 +41,24 @@ See the developed Graph in
  - Incubator projects have the same groupId, but might have a completely
    different artifact architecture.
 
-**Package tree**: eu.ggnet.dwoss."project"
+**Package tree**: eu.ggnet.dwoss."project".("layer")
 
- - Represent each main project. To get more information start looking into these first.
- - If a project stretches over multiple layers, the same package tree can be used.
- - The developer has to ensure, that only one ```package-info.java``` exists.
+ - If a project stretches over multiple layers, the layer must be in the package tree.
+ -- Most project violate this rule right now [DWOSS-133](https://jira.cybertron.global/browse/DWOSS-137])
+ -- But everything new must honor it at least.
  - The validation of overlapping class names is happening in the assembly projects,
    so it's recommended that the developer watches out for this.
+
+Examples:
+ - progress (only in one layer)
+ -- dwoss-ee-core-progress : eu.ggnet.dwoss.progress.(ee)
+ - redtape (everythere)
+ -- dwoss-ee-persistence-redtape : eu.ggnet.dwoss.redtape.ee
+ -- dwoss-ee-extended-redtape    : eu.ggnet.dwoss.redtapext.ee
+ -- dwoss-web-extended-redtape    : eu.ggnet.dwoss.redtapext.web
+ -- dwoss-web-persistence-redtape    : eu.ggnet.dwoss.redtape.web
+ -- dwoss-ui-persistence-redtape : eu.ggnet.dwoss.redtape.ui
+ -- dwoss-ui-extended-redtape    : eu.ggnet.dwoss.redtapext.ui
 
 #### Typical Packages, Classes and Methods with their Nature ####
 
@@ -75,6 +87,9 @@ Most of these are not self invented but seen in other projects and reused.
           context of one entity.
 		- request\* | Either finds a requested instance or if non exists,
                   creates one.
+ - *.op | Operations. Businesslogic that ist more that a "simple" emo
+ - *.cap | ActionFactories, MetaActions and eveything that connects to the ui
+   Framework via services.
 
 #### Local and Remote Service Names ####
 
@@ -95,11 +110,13 @@ findXXX methodes and supply fetch eager versions.
 
 #### Ui Class and Method Names ####
 
- - Model-View-Controller Implementations:
-	- Full: \*View, \*Model, \*Controller (Special Case, if the Model is
-          another class: Create Empty Model with comment)
-	- Embedded (All in one Class): \*ViewCask
- - CRUD Implementations:
+- UI Implementations (MVC, MVP, mixed, missing):
+	- \*Model, \*View, \*Controller, \*Presenter
+		- Controller and Presenter are syndonymes, just to represent the pattern
+		- Model may be missing.
+		- View may be a description file (fxml)
+	- Embedded (All in one Class): \*View or \*ViewCask
+- CRUD Implementations:
 	- Operation/View for creating,building,first time usage of something: Create\*
 	- Operation/View for modifying, editing, updating of something: Update\*
 
