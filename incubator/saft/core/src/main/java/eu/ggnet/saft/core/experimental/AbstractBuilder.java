@@ -30,8 +30,7 @@ import javafx.stage.Modality;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiUtil;
-import eu.ggnet.saft.api.ui.Frame;
-import eu.ggnet.saft.api.ui.IdSupplier;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
@@ -148,7 +147,8 @@ public abstract class AbstractBuilder {
         return false;
     }
 
-    protected Window constructAndShow(JComponent component, Params params) throws ExecutionException, InterruptedException, InvocationTargetException {
+    protected Window constructAndShow(JComponent component, Params params, Class<?> key) throws ExecutionException, InterruptedException, InvocationTargetException {
+        boolean storeLocation = (key.getAnnotation(StoreLocation.class) != null);
         Window window = SwingSaft.dispatch(() -> {
             Window w = null;
             if ( params.framed ) {
@@ -170,7 +170,7 @@ public abstract class AbstractBuilder {
             w.setIconImages(SwingSaft.loadIcons(params.panelClazz));
             w.pack();
             w.setLocationRelativeTo(swingParent);
-            Client.lookup(UserPreferences.class).loadLocation(params.panelClazz, params.id, w);
+            if ( storeLocation ) Client.lookup(UserPreferences.class).loadLocation(key, w);
             w.setVisible(true);
             return w;
         });
@@ -182,7 +182,7 @@ public abstract class AbstractBuilder {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(params.key());
                 // Store location.
-                Client.lookup(UserPreferences.class).storeLocation(params.panelClazz, params.id, window);
+                if ( storeLocation ) Client.lookup(UserPreferences.class).storeLocation(key, window);
             }
         });
         return window;

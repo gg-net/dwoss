@@ -16,8 +16,6 @@
  */
 package eu.ggnet.saft.runtime;
 
-import eu.ggnet.saft.UiCore;
-
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.*;
@@ -33,9 +31,10 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.Accessable;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.ActionFactory.MetaAction;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.Guardian;
 import eu.ggnet.saft.core.authorisation.UserChangeListener;
 import eu.ggnet.saft.core.ops.Ops;
@@ -190,14 +189,14 @@ public class SwingClient {
         es.scheduleAtFixedRate(new HiddenMonitorDisplayer(view), 2, 2, TimeUnit.SECONDS);
 
         view.setLocationByPlatform(true);
-        lookup(UserPreferences.class).loadLocation(view);
+        lookup(UserPreferences.class).loadLocation(view.getClass(), view);
 
         Workspace ws = lookup(Workspace.class);
         ws.setMainFrame(view);
         ws.addShutdownListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                lookup(UserPreferences.class).storeLocation(view);
+                lookup(UserPreferences.class).storeLocation(view.getClass(), view);
                 es.shutdownNow();
                 try {
                     boolean result = es.awaitTermination(10, TimeUnit.SECONDS);

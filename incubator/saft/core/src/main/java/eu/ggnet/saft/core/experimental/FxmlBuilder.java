@@ -160,7 +160,7 @@ public class FxmlBuilder extends AbstractBuilder {
             Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, null);
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p);
+            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
             SwingSaft.enableCloser(window, loader.getController());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -187,7 +187,7 @@ public class FxmlBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, preResult); // Relevent for preproducer
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p);
+            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
             SwingSaft.enableCloser(window, loader.getController());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -210,7 +210,7 @@ public class FxmlBuilder extends AbstractBuilder {
             Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, null);
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             ResultProducer<T> controller = loader.getController();
             SwingSaft.enableCloser(window, controller);
             wait(window);             // Relevant for the result.
@@ -240,7 +240,7 @@ public class FxmlBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, preResult); // Relevent for preproducer
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p);
+            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
             ResultProducer<T> controller = loader.getController();
             SwingSaft.enableCloser(window, controller);
             wait(window);            // Relevant for the result.

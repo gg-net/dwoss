@@ -158,7 +158,7 @@ public class SwingBuilder extends AbstractBuilder {
             V panel = SwingSaft.dispatch(swingPanelProducer);
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, panel);
         } catch (ExecutionException | InterruptedException | InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -185,7 +185,7 @@ public class SwingBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
             panel.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, panel);
         } catch (InterruptedException | InvocationTargetException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -208,7 +208,7 @@ public class SwingBuilder extends AbstractBuilder {
             V panel = SwingSaft.dispatch(swingPanelProducer);  // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(panel.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
-            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, panel);
             wait(window);
             return Optional.ofNullable(panel.getResult());
@@ -238,7 +238,7 @@ public class SwingBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             panel.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(panel, p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, panel);
             wait(window);
             return Optional.ofNullable(panel.getResult());

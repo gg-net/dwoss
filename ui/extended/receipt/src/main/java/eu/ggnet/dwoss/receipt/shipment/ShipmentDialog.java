@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,11 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.saft.core.UserPreferences;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.Client;
-
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.util.ComboBoxController;
+import eu.ggnet.saft.core.*;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -46,7 +42,6 @@ public class ShipmentDialog extends javax.swing.JDialog {
         this(lookup(Workspace.class).getMainFrame(), controller);
     }
 
-    /** Creates new form UiShipmentBasic */
     public ShipmentDialog(java.awt.Window parent, ShipmentController controller) {
         super(parent);
         initComponents();
@@ -59,7 +54,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
         filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
         filterOwner = new ComboBoxController<>(filterOwnerbox, Client.lookup(MandatorSupporter.class).loadContractors().all().toArray());
         if ( parent != null ) setLocationRelativeTo(parent);
-        lookup(UserPreferences.class).loadLocation(this);
+        lookup(UserPreferences.class).loadLocation(this.getClass(), this);
     }
 
     /** This method is called from within the constructor to
@@ -356,7 +351,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_exitButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        lookup(UserPreferences.class).storeLocation(this);
+        lookup(UserPreferences.class).storeLocation(this.getClass(), this);
     }//GEN-LAST:event_formWindowClosing
 
     /**

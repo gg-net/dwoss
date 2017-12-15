@@ -1,15 +1,15 @@
 package eu.ggnet.saft.sample;
 
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Ui;
-
 import java.util.Random;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.IdSupplier;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.api.ui.StoreLocation;
+import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.experimental.SwingBuilder;
 import eu.ggnet.saft.sample.support.*;
 
@@ -89,21 +89,25 @@ public class OpenWithSwing {
 
             menu = new JMenu("JavaFxDialogs");
 
-            b = new JMenuItem("Once");
+            b = new JMenuItem("Once + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
                 Ui.fx().show(() -> new SimplePane());
             }));
             menu.add(b);
 
-            b = new JMenuItem("Mutiple 1 with Title");
+            b = new JMenuItem("Mutiple 1 with Title + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
                 Ui.fx().id("1").show(() -> new SimplePane());
             }));
             menu.add(b);
 
-            b = new JMenuItem("Mutiple 2 with Title");
+            b = new JMenuItem("Mutiple 2 with Title + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().id("2").show(() -> new SimplePane());
+
+                SimplePane pane = new SimplePane();
+                System.out.println("test2 = " + pane.getClass().getAnnotation(StoreLocation.class) != null);
+
+                Ui.fx().id("2").show(() -> pane);
             }));
             menu.add(b);
 

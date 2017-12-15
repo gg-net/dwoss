@@ -1,7 +1,5 @@
 package eu.ggnet.saft.core.swing;
 
-import eu.ggnet.saft.Ui;
-
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
@@ -13,11 +11,13 @@ import javax.swing.*;
 
 import javafx.stage.Modality;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiUtil;
 import eu.ggnet.saft.api.ui.Frame;
 import eu.ggnet.saft.api.ui.IdSupplier;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.SwingCore;
+import eu.ggnet.saft.core.UserPreferences;
 import eu.ggnet.saft.core.all.OnceCaller;
-import eu.ggnet.saft.UiUtil;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -99,7 +99,7 @@ public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
             w.setIconImages(SwingSaft.loadIcons(creatorClass));
             w.pack();
             w.setLocationRelativeTo(parent);
-            lookup(UserPreferences.class).loadLocation(creatorClass, localId, w);
+            lookup(UserPreferences.class).loadLocation(w.getClass(), w);
             w.setVisible(true);
             return w;
         });
@@ -114,7 +114,7 @@ public abstract class AbstractSwingOpen<T, R> implements Callable<Window> {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(key);
                 // Store location.
-                lookup(UserPreferences.class).storeLocation(creatorClass, localId, window);
+                lookup(UserPreferences.class).storeLocation(window.getClass(), window);
 
             }
 

@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -49,8 +50,10 @@ import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.Alert;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.all.VetoableOnOk;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import lombok.Getter;
@@ -62,7 +65,7 @@ import static eu.ggnet.saft.core.Client.lookup;
  *
  * @author pascal.perau
  */
-public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose {
+public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose, Consumer<Void>, VetoableOnOk, ResultProducer<Document> {
 
     static URL loadPlus() {
         return DocumentUpdateView.class.getResource("plus.png");
@@ -749,6 +752,21 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose 
             }
         }
         return true;
+    }
+
+    @Override
+    public void accept(Void t) {
+        // Ignoere
+    }
+
+    @Override
+    public boolean mayClose() {
+        return pre(CloseType.OK);
+    }
+
+    @Override
+    public Document getResult() {
+        return document;
     }
 
 }

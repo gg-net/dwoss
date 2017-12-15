@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import eu.ggnet.saft.Ui;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -54,7 +52,9 @@ import eu.ggnet.dwoss.redtape.renderer.PositionListCell;
 import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.UserPreferences;
+import eu.ggnet.saft.core.Workspace;
 import eu.ggnet.saft.core.all.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.*;
 
@@ -90,7 +90,7 @@ public class RedTapeView extends javax.swing.JFrame {
             controller.setView(instance);
             instance.setSize(1150, 900);
             instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-            lookup(UserPreferences.class).loadLocation(instance);
+            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
             instance.setVisible(true);
         } else {
             instance.toFront();
@@ -656,7 +656,7 @@ public class RedTapeView extends javax.swing.JFrame {
     }//GEN-LAST:event_editDocumentMouseActionPerformed
 
     private void formWindowClosed(WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        lookup(UserPreferences.class).storeLocation(this);
+        lookup(UserPreferences.class).storeLocation(this.getClass(), this);
         selector.clear();
         instance = null;
     }//GEN-LAST:event_formWindowClosed

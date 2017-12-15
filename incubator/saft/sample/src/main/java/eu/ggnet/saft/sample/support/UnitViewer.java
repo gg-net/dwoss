@@ -7,10 +7,13 @@ package eu.ggnet.saft.sample.support;
 
 import java.util.function.Consumer;
 
+import eu.ggnet.saft.api.ui.StoreLocation;
+
 /**
  *
  * @author oliver.guenther
  */
+@StoreLocation
 public class UnitViewer extends javax.swing.JPanel implements Consumer<String> {
 
     /**

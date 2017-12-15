@@ -107,7 +107,7 @@ public class UnitView extends javax.swing.JDialog {
         initComponents();
         setModalityType(ModalityType.APPLICATION_MODAL);
         setLocationRelativeTo(window);
-        Client.lookup(UserPreferences.class).loadLocation(this);
+        Client.lookup(UserPreferences.class).loadLocation(this.getClass(), this);
         // Setting the change also in the subcomponent. FocusListener does not work completely.
         mfgDateChooser.addPropertyChangeListener(mfgProperty);
         mfgDateChooser.getDateEditor().getUiComponent().addPropertyChangeListener(mfgProperty);
@@ -814,7 +814,7 @@ public class UnitView extends javax.swing.JDialog {
     }//GEN-LAST:event_warrantyTypeChooserActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        Client.lookup(UserPreferences.class).storeLocation(this);
+        Client.lookup(UserPreferences.class).storeLocation(this.getClass(), this);
     }//GEN-LAST:event_formWindowClosing
 
     private void messagesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_messagesButtonActionPerformed

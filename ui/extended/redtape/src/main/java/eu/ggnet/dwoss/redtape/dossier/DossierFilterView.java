@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,18 +24,14 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.core.UserPreferences;
-import eu.ggnet.saft.core.Workspace;
-
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
-
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
-
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.saft.core.UserPreferences;
+import eu.ggnet.saft.core.Workspace;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -56,7 +52,7 @@ public class DossierFilterView extends javax.swing.JFrame {
             DossierFilterModel model = new DossierFilterModel();
             DossierFilterController controller = new DossierFilterController();
             instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-            lookup(UserPreferences.class).loadLocation(instance);
+            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
             instance.setController(controller);
             controller.setView(instance);
             instance.setModel(model);
@@ -579,7 +575,7 @@ public class DossierFilterView extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if ( controller != null ) controller.cancelLoader();
-        lookup(UserPreferences.class).storeLocation(instance);
+        lookup(UserPreferences.class).storeLocation(instance.getClass(), instance);
         instance = null;
     }//GEN-LAST:event_formWindowClosing
 

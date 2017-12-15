@@ -6,8 +6,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.junit.Test;
-
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
@@ -21,11 +19,12 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.MapBuilder;
-import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.swing.OkCancel;
 
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
@@ -37,10 +36,9 @@ import static eu.ggnet.dwoss.rules.PositionType.*;
  *
  * @author oliver.guenther
  */
-public class DocumentUpdate {
+public class DocumentUpdateViewTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
+    public static void main(String[] args) {
         Client.addSampleStub(CustomerService.class, new CustomerServiceStub());
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -183,13 +181,16 @@ public class DocumentUpdate {
             }
         });
 
-        DocumentUpdateView cd = new DocumentUpdateView(doc);
-        DocumentUpdateController controller = new DocumentUpdateController(cd, doc);
+        DocumentUpdateView view = new DocumentUpdateView(doc);
+        DocumentUpdateController controller = new DocumentUpdateController(view, doc);
 
-        cd.setController(controller);
-        cd.setCustomerValues(1);
-        OkCancelDialog<DocumentUpdateView> cdDialog = new OkCancelDialog<>("Auftrag anlegen", cd);
-        cdDialog.setVisible(true);
+        view.setController(controller);
+        view.setCustomerValues(1);
+
+        Ui.swing().title("Dokument bearbeiten").eval(() -> OkCancel.wrap(view)).ifPresent(System.out::println);
+
+//        OkCancelDialog<DocumentUpdateView> cdDialog = new OkCancelDialog<>("Auftrag anlegen", view);
+//        cdDialog.setVisible(true);
     }
 
 }

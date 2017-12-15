@@ -160,7 +160,7 @@ public class FxBuilder extends AbstractBuilder {
             V pane = javafxPaneProducer.call();
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            Window window = constructAndShow(SwingCore.wrap(pane), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -187,7 +187,7 @@ public class FxBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
             pane.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(SwingCore.wrap(pane), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
         } catch (InterruptedException | InvocationTargetException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -210,7 +210,7 @@ public class FxBuilder extends AbstractBuilder {
             V pane = SwingSaft.dispatch(javafxPaneProducer);  // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
-            Window window = constructAndShow(SwingCore.wrap(pane), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
             wait(window);
             return Optional.ofNullable(pane.getResult());
@@ -240,7 +240,7 @@ public class FxBuilder extends AbstractBuilder {
             p.optionalSupplyId(preResult);
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             pane.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(SwingCore.wrap(pane), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
             wait(window);
             return Optional.ofNullable(pane.getResult());

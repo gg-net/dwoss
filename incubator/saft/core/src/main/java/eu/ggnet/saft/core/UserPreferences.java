@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ public interface UserPreferences {
      * <p/>
      * @param c the component.
      */
-    void loadLocation(Component c);
+    void loadLocation(Class<?> key, Component c);
 
     /**
      * Sets the reset mode.
@@ -52,7 +52,7 @@ public interface UserPreferences {
      * <p/>
      * @param c the component.
      */
-    void storeLocation(Component c);
+    void storeLocation(Class<?> key, Component c);
 
     /**
      * Loads the className of the LAF from the Preferences Store.
@@ -68,14 +68,4 @@ public interface UserPreferences {
      */
     void storeLaf(String className);
 
-    void loadLocation(Class<?> key, String id, Component c);
-
-    /**
-     * Store a screen location under key/id, id may be null.
-     * <p>
-     * @param key the key to store
-     * @param id  the optional id to store even deeper
-     * @param c   the component to get the screen location from
-     */
-    void storeLocation(Class<?> key, String id, Component c);
 }

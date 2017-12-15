@@ -139,7 +139,7 @@ public class DialogBuilder extends AbstractBuilder {
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
                 ((Button)b).setOnAction(e -> {
                     System.out.println("Close called");
@@ -176,7 +176,7 @@ public class DialogBuilder extends AbstractBuilder {
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             dialog.accept(preResult); // Calling the preproducer and setting the result in the panel
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
                 ((Button)b).setOnAction(e -> Ui.closeWindowOf(window));
             });
