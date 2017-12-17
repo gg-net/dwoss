@@ -15,6 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Actionfactorys, menu actions, Ui, that are wrapped in the main window.
+ * Default package for Actionfactorys, menu actions, Ui, that are wrapped in the main window.
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;

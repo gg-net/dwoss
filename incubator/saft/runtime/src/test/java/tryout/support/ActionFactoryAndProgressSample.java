@@ -1,7 +1,5 @@
 package tryout.support;
 
-import eu.ggnet.saft.Ui;
-
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +8,10 @@ import javax.swing.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.progress.ProgressObserver;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.ActionFactory;
+import eu.ggnet.saft.core.Client;
 
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;
@@ -28,7 +28,7 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
     public ActionFactoryAndProgressSample() {
         Client.addSampleStub(ProgressObserver.class, progressObserver);
     }
-    
+
     @Override
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
@@ -46,10 +46,12 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
                 new MetaAction("System", new AbstractAction("Saft Progress 4s") {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Ui.call(() -> {
-                            Thread.sleep(4000);
-                            return null;
-                        }).exec();
+                        Ui.exec(() -> {
+                            Ui.progress().call(() -> {
+                                Thread.sleep(4000);
+                                return null;
+                            });
+                        });
                     }
                 }),
                 new MetaAction("System", new BackgroundProgressAction(progressObserver))

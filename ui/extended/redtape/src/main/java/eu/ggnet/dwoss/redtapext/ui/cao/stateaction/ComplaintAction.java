@@ -38,8 +38,8 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.dwoss.redtape.document.AfterInvoicePosition;
-import eu.ggnet.dwoss.redtape.document.complaint.ComplaintView;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.ComplaintView;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 

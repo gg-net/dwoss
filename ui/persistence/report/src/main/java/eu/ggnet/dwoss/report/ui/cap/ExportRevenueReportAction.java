@@ -16,19 +16,18 @@
  */
 package eu.ggnet.dwoss.report.ui.cap;
 
-import eu.ggnet.saft.Ui;
-
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.RevenueReportSelectorPane;
 import eu.ggnet.dwoss.report.op.RevenueReporter;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.dwoss.report.ui.cap.aux.RevenueReportSelectionView;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
+ * Opens the revenue report selector.
  *
  * @author pascal.perau
  */
@@ -40,12 +39,9 @@ public class ExportRevenueReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(
-                Ui.choiceFx(RevenueReportSelectorPane.class)
-                .onOk(p -> lookup(RevenueReporter.class)
-                        .toXls(p.getStart(), p.getEnd(), p.getStep(), p.isExtraReported())
-                        .toTemporaryFile())
-                .osOpen()
-        );
+        Ui.exec(() -> {
+            Ui.fx().eval(() -> new RevenueReportSelectionView())
+                    .ifPresent(v -> Ui.osOpen(Ui.progress().call(() -> lookup(RevenueReporter.class).toXls(v.getStart(), v.getEnd(), v.getStep(), v.isExtraReported()).toTemporaryFile())));
+        });
     }
 }

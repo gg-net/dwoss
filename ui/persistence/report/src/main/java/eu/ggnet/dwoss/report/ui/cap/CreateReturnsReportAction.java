@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,23 @@
  */
 package eu.ggnet.dwoss.report.ui.cap;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.util.List;
-
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
 
 import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ui.cap.aux.DateRangeChooserView;
+import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.report.returns.ReturnsCask;
-
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
 import static eu.ggnet.dwoss.rules.DocumentType.RETURNS;
+import static eu.ggnet.saft.core.Client.lookup;
 
+/**
+ * Opens the Returns report view to select lines to be exported.
+ *
+ * @author oliver.guenther
+ */
 public class CreateReturnsReportAction extends AccessableAction {
 
     public CreateReturnsReportAction() {
@@ -43,15 +41,13 @@ public class CreateReturnsReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        Window mainFrame = lookup(Workspace.class).getMainFrame();
-        DateRangeChooserDialog chooserDialog = new DateRangeChooserDialog(mainFrame);
-        chooserDialog.setVisible(true);
-        if ( !chooserDialog.isOk() ) return;
-        List<ReportLine> findReportLinesByCustomer = lookup(ReportAgent.class).findReportLinesByDocumentType(
-                RETURNS, chooserDialog.getStart(), chooserDialog.getEnd());
-        ReturnsCask cask = new ReturnsCask(findReportLinesByCustomer);
-        OkCancelDialog<ReturnsCask> ocd = new OkCancelDialog<>(mainFrame, NAME, cask);
-        ocd.setVisible(true);
+        Ui.exec(() -> {
+            Ui.fx().eval(() -> new DateRangeChooserView())
+                    .ifPresent(r -> {
+                        Ui.swing().show(() -> lookup(ReportAgent.class).findReportLinesByDocumentType(
+                                RETURNS, r.getStartAsDate(), r.getEndAsDate()), () -> new ReturnsReportView());
+                    });
+        });
     }
 
 }

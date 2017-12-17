@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
+import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -36,7 +40,7 @@ import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.*;
-import eu.ggnet.dwoss.redtape.dossiertable.DossierTableController;
+import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
@@ -378,7 +382,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param dos the {@link Dossier} entity.
      */
     public void openDossierDetailViewer(Dossier dos) {
-        new HtmlDialog(parent(), Dialog.ModalityType.MODELESS).setText(RedTapeUiUtil.toHtmlDetailed(dos)).setVisible(true);
+        new HtmlDialog(parent(), Dialog.ModalityType.MODELESS).setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
     }
 
     /**

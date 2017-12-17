@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.dwoss.redtape.ShippingCostHelper;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 
 import eu.ggnet.statemachine.StateTransition;
 

@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.redtape.OpenSearchAction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,10 +23,8 @@ import java.util.function.Consumer;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtape.action.*;
-import eu.ggnet.dwoss.redtape.position.PositionViewAction;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewAction;
 import eu.ggnet.dwoss.redtape.reporting.*;
-import eu.ggnet.dwoss.redtape.unit.ShowUnitViewAction;
 import eu.ggnet.saft.core.ActionFactory;
 
 /**
@@ -42,7 +39,7 @@ public class RedTapeActionFactory implements ActionFactory {
         return Arrays.asList(
                 new MetaAction("Kunden und Aufträge", new OpenSearchAction()),
                 new MetaAction("Kunden und Aufträge", new RedTapeAction(), true),
-                new MetaAction("Kunden und Aufträge", new DossierFilterAction()),
+                new MetaAction("Kunden und Aufträge", new DossiersByStatusAction()),
                 new MetaAction("Kunden und Aufträge", new ShowUnitViewAction()),
                 new MetaAction("Artikelstamm", new SalesProductAction()),
                 new MetaAction("Geschäftsführung", "Allgemeine Reporte", new ExportDossierToXlsAction()),

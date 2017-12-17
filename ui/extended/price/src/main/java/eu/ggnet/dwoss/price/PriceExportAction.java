@@ -25,6 +25,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
+ * Export the price management xls.
  *
  * @author pascal.perau
  */
@@ -36,9 +37,7 @@ public class PriceExportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(
-                Ui.call(() -> lookup(Exporter.class).toXls().toTemporaryFile()).osOpen()
-        );
+        Ui.exec(() -> Ui.osOpen(Ui.progress().call(() -> lookup(Exporter.class).toXls().toTemporaryFile())));
     }
 
 }

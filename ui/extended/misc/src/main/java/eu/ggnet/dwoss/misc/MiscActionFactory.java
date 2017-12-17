@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.search.OpenSearchAction;
+import eu.ggnet.dwoss.search.ui.OpenSearchAction;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.saft.core.ActionFactory;

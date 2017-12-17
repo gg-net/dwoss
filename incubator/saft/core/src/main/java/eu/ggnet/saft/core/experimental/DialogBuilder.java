@@ -41,10 +41,11 @@ public class DialogBuilder extends AbstractBuilder {
 
     public DialogBuilder() {
         SwingCore.ensurePlatformIsRunning();
+        once = false;
     }
 
     /**
-     * Sets the once mode.
+     * Sets the once mode, default for dialogs is false.
      * If set to true, an once mode is enable. This ensures that one one window of the same type is created and show.
      * If minimised it becomes reopend, if in the back it becomes moved to the front.
      *

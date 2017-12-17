@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="mainPane" prefHeight="376.0" prefWidth="735.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.report.ui.main.ReportController">
+    <children>
+        <VBox prefHeight="80.0" style="-fx-background-color: #4488AA;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <HBox layoutX="16.0" layoutY="14.0" AnchorPane.bottomAnchor="499.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                    <children>
+                        <Label layoutX="16.0" layoutY="14.0" prefHeight="25.0" prefWidth="48.0" text="Name: ">
+                            <padding>
+                                <Insets right="5.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label fx:id="nameLabel" layoutX="54.0" layoutY="14.0" maxWidth="1.7976931348623157E308" prefHeight="25.0" text="no text set" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets />
+                            </HBox.margin>
+                        </Label>
+                        <Button fx:id="createButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleCreateButtonAction" text="Erstellen">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="exportButton" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleExportButtonAction" text="Export">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </Button>
+                        <Button fx:id="fullExportButton" mnemonicParsing="false" onAction="#handleFullExportButtonAction" text="Full Export">
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0" />
+                            </HBox.margin>
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                        </Button>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0" top="10.0" />
+                    </VBox.margin>
+                </HBox>
+                <HBox layoutX="16.0" layoutY="41.0" prefHeight="25.0" prefWidth="489.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <Label layoutX="16.0" layoutY="41.0" prefHeight="25.0" text="Vom: ">
+                            <padding>
+                                <Insets right="5.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label fx:id="fromDateLabel" layoutX="47.0" layoutY="41.0" prefHeight="25.0" prefWidth="115.0" text="from date">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label layoutX="162.0" layoutY="41.0" prefHeight="25.0" text="Bis: ">
+                            <padding>
+                                <Insets right="5.0" />
+                            </padding>
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label fx:id="toDateLabel" layoutX="183.0" layoutY="41.0" prefHeight="25.0" prefWidth="115.0" text="to date">
+                            <HBox.margin>
+                                <Insets left="5.0" />
+                            </HBox.margin>
+                        </Label>
+                    </children>
+                    <VBox.margin>
+                        <Insets bottom="5.0" />
+                    </VBox.margin>
+                </HBox>
+                <TabPane fx:id="tabPane" prefHeight="200.0" style="-fx-background-color: lightgrey;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

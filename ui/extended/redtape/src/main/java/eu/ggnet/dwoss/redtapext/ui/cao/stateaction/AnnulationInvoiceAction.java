@@ -37,8 +37,8 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.dwoss.redtape.document.AfterInvoicePosition;
-import eu.ggnet.dwoss.redtape.document.creditmemo.CreditMemoView;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 

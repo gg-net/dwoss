@@ -16,17 +16,17 @@
  */
 package tryout;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
+import javax.swing.JLabel;
 
-import org.junit.Test;
+import javafx.scene.control.ChoiceDialog;
 
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+
+import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
 
 /**
  *
@@ -34,33 +34,23 @@ import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
  */
 public class ResolveRepayment {
 
-    private boolean complete = false;
+    public static void main(String[] args) {
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        // selector();
+        run();
+    }
 
-    @Test
-    public void runTryout() throws InterruptedException {
-        new JFXPanel();    // To start the platform
+    public static void selector() {
+        Ui.dialog().eval(() -> {
+            ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(ACER, TradeName.values());
+            dialog.setTitle("Gutschriften");
+            dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
+            dialog.setContentText("Lieferant auswählen:");
+            return dialog;
+        }).ifPresent(System.out::println);
+    }
 
-        Platform.runLater(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Stage stage = new Stage();
-                    stage.setTitle("Resolve Repayment");
-                    GridPane page = (GridPane)FXMLLoader.load(ResolveRepaymentController.loadFxml());
-                    Scene scene = new Scene(page, Color.ALICEBLUE);
-                    stage.setScene(scene);
-                    stage.showAndWait();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                complete = true;
-            }
-        });
-
-        while (!complete) {
-            Thread.sleep(500);
-        }
-
+    public static void run() {
+        Ui.fxml().show(ResolveRepaymentController.class);
     }
 }

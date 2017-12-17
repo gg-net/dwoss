@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ReportController;
+import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;

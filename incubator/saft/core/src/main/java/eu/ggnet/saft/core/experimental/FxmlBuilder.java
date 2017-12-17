@@ -147,7 +147,7 @@ public class FxmlBuilder extends AbstractBuilder {
     }
 
     /**
-     * Creates the JPanel via the producer and shows it on the correct thread.
+     * Creates a fxml view/controller via the controllerClass and shows it on the correct thread.
      * <p>
      * Case: Ia.
      *
@@ -168,7 +168,7 @@ public class FxmlBuilder extends AbstractBuilder {
     }
 
     /**
-     * Creates the JPanel via the producer, supplies the consumer part with the result of the preProducer and shows it.
+     * Creates a fxml view/controller via the controllerClass, supplies the consumer part with the result of the preProducer and shows it.
      * <p>
      * Case: Ib
      *
@@ -195,7 +195,7 @@ public class FxmlBuilder extends AbstractBuilder {
     }
 
     /**
-     * Creates the JPanel via the producer, shows it and returns the evaluated result as Optional.
+     * Creates a fxml view/controller via the controllerClass, shows it and returns the evaluated result as Optional.
      * <p>
      * Case: Ic
      *
@@ -221,7 +221,8 @@ public class FxmlBuilder extends AbstractBuilder {
     }
 
     /**
-     * Creates the JPanel via the producer, supplies the consumer part with the result of the preProducer, shows it and returns the evaluated result as
+     * Creates a fxml view/controller via the controllerClass, supplies the consumer part with the result of the preProducer, shows it and returns the evaluated
+     * result as
      * Optional.
      *
      * @param <T>                 type of the result

@@ -26,6 +26,7 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAG
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
+ * Executing the price management generator and stores the generated values.
  *
  * @author pascal.perau
  */
@@ -37,9 +38,9 @@ public class PriceExportImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.call(() -> {
+        Ui.exec(() -> Ui.progress().call(() -> {
             lookup(Importer.class).direct(lookup(Guardian.class).getUsername());
             return null;
-        }).exec();
+        }));
     }
 }

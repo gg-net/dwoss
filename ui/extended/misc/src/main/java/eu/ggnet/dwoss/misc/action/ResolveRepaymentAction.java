@@ -17,11 +17,13 @@
 package eu.ggnet.dwoss.misc.action;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+
+import javafx.scene.control.ChoiceDialog;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.misc.repayment.ContractorSelectorPane;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
@@ -42,11 +44,17 @@ public class ResolveRepaymentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.call(() -> new ArrayList<>(lookup(MandatorSupporter.class).loadContractors().all()))
-                .choiceFx(ContractorSelectorPane.class)
-                .onOk(x -> x.selectedContactor())
-                .openFxml(ResolveRepaymentController.class)
-                .exec();
+        Ui.exec(() -> {
+            Contractors contractors = Ui.progress().call(() -> lookup(MandatorSupporter.class).loadContractors());
+            Ui.dialog().eval(() -> {
+                ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());
+                dialog.setTitle("Gutschriften");
+                dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
+                dialog.setContentText("Lieferant auswählen:");
+                return dialog;
+            }).ifPresent(c -> Ui.fxml().show(() -> c, ResolveRepaymentController.class));
+
+        });
     }
 
 }

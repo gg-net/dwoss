@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.entity.Position;
 
-import eu.ggnet.dwoss.redtape.dossiertable.DossierTableModel;
+import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 
 import eu.ggnet.dwoss.util.Tuple2;
 

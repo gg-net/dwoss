@@ -1,27 +1,21 @@
 package tryout;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import org.junit.Test;
+import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.SimpleReportLinePane;
+import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Client;
 
@@ -31,9 +25,7 @@ import eu.ggnet.saft.core.Client;
  */
 public class SimpleReportLineTryout {
 
-    @Test
-    @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    public void tryout() throws InterruptedException {
+    public static void main(String[] args) {
         ReportAgent rastub = new ReportAgent() {
 
             List<eu.ggnet.dwoss.report.entity.partial.SimpleReportLine> all
@@ -192,26 +184,13 @@ public class SimpleReportLineTryout {
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
-        new JFXPanel(); // To start the platform
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        final CountDownLatch B = new CountDownLatch(1);
-
-        Platform.runLater(() -> {
-
-            Stage stage = new Stage();
-            stage.setTitle("SimpleReportLine Tryout");
-
-            SimpleReportLinePane srl = new SimpleReportLinePane();
+        Ui.fx().show(() -> {
+            RawReportView srl = new RawReportView();
             srl.load(new SearchParameter());
-            Scene scene = new Scene(srl, Color.ALICEBLUE);
-            stage.setScene(scene);
-            stage.showAndWait();
-
-            B.countDown();
+            return srl;
         });
-
-        B.await();
-
     }
 
 }

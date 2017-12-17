@@ -2,8 +2,6 @@ package eu.ggnet.saft.sample;
 
 import java.util.Optional;
 
-import eu.ggnet.saft.Ui;
-
 /**
  * Shows a chain,that is broken through a null result.
  *
@@ -31,22 +29,6 @@ public class BrokenChain {
             return "X";
         }).ifPresent(v -> System.out.print("Ende"));
 
-    }
-
-    public static void saftChain() throws Exception {
-        Ui.call(() -> {
-            System.out.println("One");
-            return "X";
-        }).call(() -> {
-            System.out.println("Two");
-            return "Y";
-        }).call(() -> {
-            System.out.println("Three");
-            return null; // Return null, breaks the chain/stream
-        }).call(() -> {
-            System.out.println("Will never be shown");
-            return "X";
-        }).call();
     }
 
 }

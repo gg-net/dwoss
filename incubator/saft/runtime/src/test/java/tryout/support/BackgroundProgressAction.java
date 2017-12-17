@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.api.progress.HiddenMonitor;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.progress.HiddenMonitor;
 
 /**
  *
@@ -30,27 +30,28 @@ import eu.ggnet.saft.Ui;
 public class BackgroundProgressAction extends AbstractAction {
 
     private final ProgressObserverStub progressObserver;
-    
+
     public BackgroundProgressAction(ProgressObserverStub progressObserver) {
         super("Saft and Background Progress 10s");
         this.progressObserver = progressObserver;
     }
 
-    
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.call(() -> {
-            HiddenMonitor m = new HiddenMonitor();
-            m.title("TestMonitor");
-            progressObserver.add(m);
-            m.start();
-            for (int i = 0; i < 20; i++) {
-                m.worked(5, "Working on " + i);
-                Thread.sleep(500);
-            }
-            m.finish();            
-            return null;
-        }).exec();
+        Ui.exec(() -> {
+            Ui.progress().call(() -> {
+                HiddenMonitor m = new HiddenMonitor();
+                m.title("TestMonitor");
+                progressObserver.add(m);
+                m.start();
+                for (int i = 0; i < 20; i++) {
+                    m.worked(5, "Working on " + i);
+                    Thread.sleep(500);
+                }
+                m.finish();
+                return null;
+            });
+        });
     }
-    
+
 }

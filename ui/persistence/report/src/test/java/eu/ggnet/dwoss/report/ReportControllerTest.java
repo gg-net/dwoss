@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.report;
 
+import eu.ggnet.dwoss.report.ui.main.ReportController;
+
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 

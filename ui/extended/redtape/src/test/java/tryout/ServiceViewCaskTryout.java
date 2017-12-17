@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.position.ServiceViewCask;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;

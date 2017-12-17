@@ -7,7 +7,7 @@ import org.jdesktop.beansbinding.AutoBinding;
 import org.junit.Test;
 import org.metawidget.swing.SwingMetawidget;
 
-import eu.ggnet.dwoss.report.returns.Summary;
+import eu.ggnet.dwoss.report.ui.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 
 /**

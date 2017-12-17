@@ -36,7 +36,7 @@ import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.returns.Summary;
+import eu.ggnet.dwoss.report.ui.returns.Summary;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.*;

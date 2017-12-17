@@ -38,10 +38,8 @@ public class AllSalesListingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(
-                Ui.call(() -> lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT))
-                .osOpen()
-        );
-
+        Ui.exec(() -> {
+            Ui.osOpen(Ui.progress().call(() -> lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT)));
+        });
     }
 }

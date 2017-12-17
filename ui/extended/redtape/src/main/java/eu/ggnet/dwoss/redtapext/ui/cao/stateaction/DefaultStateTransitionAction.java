@@ -24,7 +24,6 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.SettlementViewCask;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;

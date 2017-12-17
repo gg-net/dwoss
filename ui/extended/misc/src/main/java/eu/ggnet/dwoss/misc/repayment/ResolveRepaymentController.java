@@ -24,7 +24,8 @@ import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
@@ -156,10 +157,6 @@ public class ResolveRepaymentController implements Initializable, FxController, 
             sopoField.setText("");
             commentField.setText("");
         });
-    }
-
-    public static URL loadFxml() {
-        return ResolveRepaymentController.class.getResource("ResolveRepaymentView.fxml");
     }
 
 }

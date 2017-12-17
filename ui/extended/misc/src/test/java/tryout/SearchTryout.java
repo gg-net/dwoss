@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.search.SearchCask;
+import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.op.Searcher;

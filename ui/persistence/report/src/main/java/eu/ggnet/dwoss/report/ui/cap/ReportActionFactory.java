@@ -29,9 +29,9 @@ public class ReportActionFactory implements ActionFactory {
     @Override
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
-                new MetaAction("Geschäftsführung", "Abschluss Reporte", new ShowRawReportLinesAction()),
-                new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReportAction()),
-                new MetaAction("Geschäftsführung", "Abschluss Reporte", new ShowExistingReportAction()),
+                new MetaAction("Geschäftsführung", "Abschluss Reporte", new OpenRawReportLinesAction()),
+                new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateNewReportAction()),
+                new MetaAction("Geschäftsführung", "Abschluss Reporte", new SelectExistingReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReturnsReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new ExportRevenueReportAction()));
     }

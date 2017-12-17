@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,6 @@
  */
 package eu.ggnet.dwoss.report.assist.gen;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.gen.Name;
-import eu.ggnet.dwoss.util.gen.NameGenerator;
-import eu.ggnet.dwoss.util.gen.GeneratedAddress;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,7 +23,8 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.gen.*;
 
 public class ReportLineGenerator {
 
@@ -87,7 +81,6 @@ public class ReportLineGenerator {
         double price = Math.abs(R.nextDouble() * R.nextInt(1500));
         line.setManufacturerCostPrice(price * 1.10);
         line.setContractorReferencePrice(price * 1.10);
-        line.setAfterTaxPrice(price + (price * tax));
         line.setPrice(price);
         line.setTax(tax);
 
@@ -119,6 +112,7 @@ public class ReportLineGenerator {
     public ReportLine makeReportLine() {
         ReportLine reportLine = new ReportLine();
         Date pastFiveYears = DateUtils.setYears(new Date(), 2009);
+        reportLine.setActual(new Date());
         reportLine.setName("ReportLine-" + getRandomInt());
         reportLine.setDescription("desription-" + getRandomInt());
         reportLine.setDossierId(getRandomLong());
@@ -133,7 +127,6 @@ public class ReportLineGenerator {
         double tax = GlobalConfig.TAX;
         double price = Math.abs(R.nextDouble() * R.nextInt(1500));
         reportLine.setManufacturerCostPrice(price + 15);
-        reportLine.setAfterTaxPrice(price + (price * tax));
         reportLine.setPrice(price);
         reportLine.setTax(tax);
 
