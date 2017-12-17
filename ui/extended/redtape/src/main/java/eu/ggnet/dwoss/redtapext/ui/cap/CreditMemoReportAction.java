@@ -16,15 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
+import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
 
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -35,16 +33,16 @@ import static eu.ggnet.saft.core.Client.lookup;
  */
 public class CreditMemoReportAction extends AbstractAction {
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public CreditMemoReportAction() {
         putValue(NAME, "Stornoreport lang");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DateRangeChooserDialog dialog = new DateRangeChooserDialog(lookup(Workspace.class).getMainFrame());
-        dialog.setVisible(true);
-        if ( dialog.isOk() ) {
-            Ui.call(() -> lookup(CreditMemoReporter.class).toXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile()).osOpen();
-        }
+        Ui.exec(() -> {
+            Ui.fx().title("Stornoreport Zeitraum").eval(() -> new DateRangeChooserView())
+                    .ifPresent(r -> Ui.osOpen(Ui.progress().call(() -> lookup(CreditMemoReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile())));
+        });
     }
 }

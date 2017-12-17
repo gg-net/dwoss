@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.report.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.ui.cap.aux.DateRangeChooserView;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 

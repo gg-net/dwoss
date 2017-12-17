@@ -149,7 +149,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
 
         this.position = position;
-        this.positionTypeField.setText(position.getType().getName());
+        this.positionTypeField.setText(position.getType() != null ? position.getType().getName() : "Nicht angegeben");
         this.taxField.setText(TAX.format(position.getTax()));
         this.setPositionName(position.getName());
         this.setPrice(position.getPrice());

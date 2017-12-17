@@ -34,7 +34,9 @@ public class OpenSearchAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.openFx(SearchCask.class).exec();
+        Ui.exec(() -> {
+            Ui.fx().show(() -> new SearchCask());
+        });
     }
 
 }

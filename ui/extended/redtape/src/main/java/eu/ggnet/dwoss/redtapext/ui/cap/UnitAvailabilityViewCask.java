@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.all.SelectionEnhancer;
@@ -171,9 +171,9 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         if ( evt.getClickCount() != 2 ) return;
         UnitShard us = resultList.getSelectedValue();
         if ( us == null || us.getAvailable() == null ) return;
-        Ui.call(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()))
-                .openFx(HtmlPane.class, us.getRefurbishedId())
-                .exec();
+        Ui.exec(() -> {
+            Ui.fx().id(us.getRefurbishedId()).show(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()), () -> new HtmlPane());
+        });
     }//GEN-LAST:event_resultListMouseClicked
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed

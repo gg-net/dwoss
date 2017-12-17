@@ -21,11 +21,8 @@ import eu.ggnet.saft.Ui;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.CountDownLatch;
 
-import javax.swing.JButton;
-
-import org.junit.Test;
+import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
@@ -38,6 +35,7 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.api.AuthenticationException;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.swing.OkCancel;
 
 /**
  *
@@ -45,18 +43,8 @@ import eu.ggnet.saft.core.authorisation.Guardian;
  */
 public class ServiceViewCaskTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
-        final CountDownLatch cdl = new CountDownLatch(1);
-        UiCore.startSwing(() -> new JButton("Shutdown") {
-
-            {
-                addActionListener(e -> {
-                    cdl.countDown();
-                });
-            }
-
-        });
+    public static void main(String[] args) {
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Client.addSampleStub(Guardian.class, new AbstractGuardian() {
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
@@ -108,14 +96,8 @@ public class ServiceViewCaskTryout {
             }
         });
 
-        Ui.call(() -> Position.builder().type(PositionType.SERVICE).price(30.).build())
-                .choiceSwing(ServiceViewCask.class)
-                .onOk(x -> {
-                    System.out.println(x.getPosition());
-                    return null;
-                })
-                .exec();
-        cdl.await();
+        Ui.swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask()))
+                .ifPresent(System.out::println);
     }
 
 }

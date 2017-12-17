@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.all.VetoableOnOk;
 
+import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
 
@@ -47,7 +48,7 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
         if ( hasFound(PositionService.class) ) {
             templateList.setListData(lookup(PositionService.class).servicePositionTemplates().toArray());
         } else {
-            templateList.setListData(new Position[]{Position.builder().name("ServicePosition").description("").price(0.).build()});
+            templateList.setListData(new Position[]{Position.builder().name("ServicePosition").type(SERVICE).description("").price(0.).build()});
         }
     }
 

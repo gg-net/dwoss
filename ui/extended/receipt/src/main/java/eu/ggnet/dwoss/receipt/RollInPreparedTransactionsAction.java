@@ -1,4 +1,4 @@
-    /*
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,10 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.PREPARED;
@@ -41,9 +43,12 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.call(() -> lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED))
-                .choiceSwing(RollInPreparedTransactionViewCask.class)
-                .onOk(v -> lookup(StockTransactionProcessor.class).rollIn(v.getStockTransactions(), lookup(Guardian.class).getUsername()))
-                .exec();
+        Ui.exec(() -> {
+            Ui.swing().title("Stock Transactionen einrollen ?")
+                    .eval(() -> lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancel.wrap(new RollInPreparedTransactionViewCask()))
+                    .filter(Reply::hasSucceded)
+                    .map(Reply::getPayload)
+                    .ifPresent(sts -> Ui.progress().call(() -> lookup(StockTransactionProcessor.class).rollIn(sts, lookup(Guardian.class).getUsername())));
+        });
     }
 }

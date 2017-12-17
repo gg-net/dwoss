@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -47,10 +44,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.state.*;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
+import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
@@ -287,7 +286,9 @@ public class RedTapeView extends JPanel implements ClosedListener {
 
         JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
         showNewDetails.addActionListener(e -> {
-            Ui.call(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId())).openFx(HtmlPane.class, "Customer").exec();
+            Ui.exec(() -> {
+                Ui.fx().title("Customer").show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
+            });
         });
 
         menu.add(newCustomerItem);

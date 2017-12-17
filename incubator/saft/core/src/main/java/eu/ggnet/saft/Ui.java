@@ -13,14 +13,13 @@ import javafx.scene.layout.Pane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.core.FxCore;
 import eu.ggnet.saft.core.SwingCore;
 import eu.ggnet.saft.core.all.UiCreator;
 import eu.ggnet.saft.core.all.UiOk;
 import eu.ggnet.saft.core.experimental.*;
 import eu.ggnet.saft.core.fx.FxCreator;
-import eu.ggnet.saft.core.swing.*;
+import eu.ggnet.saft.core.swing.SwingCreator;
 
 /*
  Notes of olli:
@@ -233,14 +232,6 @@ public class Ui {
     }
 
     /**
-     * @deprecated use show or eval with preProcesor
-     */
-    @Deprecated
-    public static <R> UiCreator<R> call(Callable<R> callable) {
-        return creator().call(callable);
-    }
-
-    /**
      * @deprecated use fx() oder dialog()
      */
     @Deprecated
@@ -249,100 +240,11 @@ public class Ui {
     }
 
     /**
-     * @deprecated use fxml()
-     */
-    @Deprecated
-    public static <T, R extends FxController> UiOk<R> choiceFxml(Class<R> controllerClass) {
-        return Ui.<T>creator().choiceFxml(controllerClass);
-    }
-
-    /**
      * @deprecated use swing()
      */
     @Deprecated
     public static <T, R extends JPanel> UiOk<R> choiceSwing(Class<R> panelClazz) {
         return Ui.<T>creator().choiceSwing(panelClazz);
-    }
-
-    /**
-     * @deprecated use filechooser().title().open()
-     */
-    @Deprecated
-    public static UiOk<File> openFileChooser(String title) {
-        return Ui.<File>creator().openFileChooser(title);
-
-    }
-
-    /**
-     * @deprecated use filechooser().open()
-     */
-    @Deprecated
-    public static UiOk<File> openFileChooser() {
-        return Ui.<File>creator().openFileChooser();
-    }
-
-    /**
-     * @deprecated use swing().show()
-     */
-    @Deprecated
-    public static <T, R extends JPanel> SwingOpenPanel<T, R> openSwing(Class<R> panelClass) {
-        return openSwing(panelClass, null);
-    }
-
-    /**
-     * @deprecated use swing().id(key).show()
-     */
-    @Deprecated
-    public static <T, R extends JPanel> SwingOpenPanel<T, R> openSwing(Class<R> panelClass, String key) {
-        return new SwingCreator<T>(null, SwingCore.mainFrame(), null).openSwing(panelClass, key);
-    }
-
-    /**
-     * @deprecated use swing().show()
-     */
-    @Deprecated
-    public static <T, R extends JPanel> SwingOpenPanel<T, R> showSwing(Class<R> panelClass) {
-        return showSwing(panelClass, null);
-    }
-
-    /**
-     * @deprecated use swing().id(key).show()
-     */
-    @Deprecated
-    public static <T, R extends JPanel> SwingOpenPanel<T, R> showSwing(Class<R> panelClass, String key) {
-        return new SwingCreator<T>(null, SwingCore.mainFrame(), null).openSwing(panelClass, key);
-    }
-
-    /**
-     * @deprecated use fx() oder dialog()
-     */
-    @Deprecated
-    public static <T, R extends Pane> SwingOpenPane<T, R> openFx(Class<R> panelClass) {
-        return openFx(panelClass, null);
-    }
-
-    /**
-     * @deprecated use fx() oder dialog()
-     */
-    @Deprecated
-    public static <T, R extends Pane> SwingOpenPane<T, R> openFx(Class<R> panelClass, String id) {
-        return new SwingCreator<T>(null, SwingCore.mainFrame(), null).openFx(panelClass, id);
-    }
-
-    /**
-     * @deprecated use fxml()
-     */
-    @Deprecated
-    public static <T, R extends FxController> SwingOpenFxml<T, R> openFxml(Class<R> controllerClass) {
-        return openFxml(controllerClass, null);
-    }
-
-    /**
-     * @deprecated use fxml()
-     */
-    @Deprecated
-    public static <T, R extends FxController> SwingOpenFxml<T, R> openFxml(Class<R> controllerClass, String id) {
-        return new SwingCreator<T>(null, SwingCore.mainFrame(), null).openFxml(controllerClass, id);
     }
 
 }

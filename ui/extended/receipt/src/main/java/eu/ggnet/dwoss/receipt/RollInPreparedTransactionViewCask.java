@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.all.VetoableOnOk;
 
 import lombok.Getter;
 
@@ -29,8 +30,7 @@ import lombok.Getter;
  *
  * @author oliver.guenther
  */
-@Title("Stock Transactionen einrollen ?")
-public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implements Consumer<List<StockTransaction>> {
+public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implements Consumer<List<StockTransaction>>, ResultProducer<List<StockTransaction>>, VetoableOnOk {
 
     @Getter
     private List<StockTransaction> stockTransactions;
@@ -83,5 +83,15 @@ public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implem
     private javax.swing.JTextPane htmlPane;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public List<StockTransaction> getResult() {
+        return stockTransactions;
+    }
+
+    @Override
+    public boolean mayClose() {
+        return true;
+    }
 
 }
