@@ -31,6 +31,7 @@ import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.SwingCore;
+import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.swing.SwingSaft;
 
 import lombok.experimental.Accessors;
@@ -181,7 +182,7 @@ public class FxBuilder extends AbstractBuilder {
         try {
             Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = SwingSaft.dispatch(javafxPaneProducer);
+            V pane = FxSaft.dispatch(javafxPaneProducer);
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             P preResult = callWithProgress(preProducer);
             p.optionalSupplyId(preResult);
@@ -207,7 +208,7 @@ public class FxBuilder extends AbstractBuilder {
     public <T, V extends Pane & ResultProducer<T>> Optional<T> eval(Callable<V> javafxPaneProducer) {
         try {
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = SwingSaft.dispatch(javafxPaneProducer);  // Creating the panel on the right thread
+            V pane = FxSaft.dispatch(javafxPaneProducer);  // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
             Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
@@ -234,7 +235,7 @@ public class FxBuilder extends AbstractBuilder {
         try {
             Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = SwingSaft.dispatch(javafxPaneProducer); // Creating the panel on the right thread
+            V pane = FxSaft.dispatch(javafxPaneProducer); // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             P preResult = callWithProgress(preProducer);
             p.optionalSupplyId(preResult);

@@ -230,7 +230,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                             pos.getAmount(),
                             pos.getName(),
                             pos.getPrice(),
-                            pos.getAfterTaxPrice(),
+                            pos.toAfterTaxPrice(),
                             DateFormats.ISO.format(uu.getMfgDate()),
                             uu.getProduct().getPrice(PriceType.MANUFACTURER_COST)
                         });
@@ -240,7 +240,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                             pos.getAmount(),
                             pos.getName(),
                             pos.getPrice(),
-                            pos.getAfterTaxPrice(),
+                            pos.toAfterTaxPrice(),
                             null,
                             null
                         });
@@ -313,7 +313,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         for (Position position : document.getPositions().values()) {
             nettoPrice += position.getPrice() * position.getAmount();
-            bruttoPrice += position.getAfterTaxPrice() * position.getAmount();
+            bruttoPrice += position.toAfterTaxPrice() * position.getAmount();
         }
 
         // Setting Defaults.

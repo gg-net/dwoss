@@ -698,14 +698,16 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
     }//GEN-LAST:event_convertToWarrantyPositionButtonActionPerformed
 
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
-        Ui.fx().parent(this).eval(() -> new TaxChangePane()).ifPresent(t -> {
-            document.getPositions().values().forEach(p -> {
-                // Set Tax
-                // set AfterTax
-                //
+        Ui.exec(() -> {
+            Ui.fx().parent(this).eval(() -> new TaxChangePane()).ifPresent(t -> {
+                document.getPositions().values().forEach(p -> {
+                    // Set Tax
+                    // set AfterTax
+                    // Whatevers
+                });
+                Alert.show(this, "Tax change not yet implemented");
             });
         });
-
     }//GEN-LAST:event_taxChangeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

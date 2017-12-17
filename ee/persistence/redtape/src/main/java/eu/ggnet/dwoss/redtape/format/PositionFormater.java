@@ -59,7 +59,7 @@ public class PositionFormater {
             if ( Math.abs(position.getPrice()) > 0.0001 ) {
                 formatted.append("<tr><td>");
                 formatted.append("netto: ").append(CUR.format(position.getPrice()));
-                formatted.append(" | brutto: ").append(CUR.format(position.getAfterTaxPrice()));
+                formatted.append(" | brutto: ").append(CUR.format(position.toAfterTaxPrice()));
                 formatted.append("</td></tr>");
             }
         } else {
@@ -69,7 +69,7 @@ public class PositionFormater {
                 formatted.append("<tr><td>");
                 formatted.append("Menge: ").append(A.format(position.getAmount()));
                 formatted.append(" | netto: ").append(CUR.format(position.getPrice() * position.getAmount()));
-                formatted.append(" | brutto: ").append(CUR.format(position.getAfterTaxPrice() * position.getAmount()));
+                formatted.append(" | brutto: ").append(CUR.format(position.toAfterTaxPrice() * position.getAmount()));
                 formatted.append("</td></tr>");
             }
         }
@@ -94,7 +94,7 @@ public class PositionFormater {
             if ( Math.abs(position.getPrice()) > 0.0001 ) {
                 formatted.append("<tr><td>");
                 formatted.append("netto: ").append(CUR.format(position.getPrice()));
-                formatted.append(" | brutto: ").append(CUR.format(position.getAfterTaxPrice()));
+                formatted.append(" | brutto: ").append(CUR.format(position.toAfterTaxPrice()));
                 formatted.append("</td></tr>");
             }
         } else {
@@ -104,7 +104,7 @@ public class PositionFormater {
                 formatted.append("<tr><td>");
                 formatted.append("Menge: ").append(A.format(position.getAmount()));
                 formatted.append(" | netto: ").append(CUR.format(position.getPrice() * position.getAmount()));
-                formatted.append(" | brutto: ").append(CUR.format(position.getAfterTaxPrice() * position.getAmount()));
+                formatted.append(" | brutto: ").append(CUR.format(position.toAfterTaxPrice() * position.getAmount()));
                 formatted.append("</td></tr>");
             }
         }
@@ -118,7 +118,7 @@ public class PositionFormater {
         res += pos.getName() + "<br />";
         res += pos.getDescription() == null ? "Keine beschreibung vorhanden<br />" : pos.getDescription() + "<br />";
         if ( pos.getType() != PositionType.COMMENT ) {
-            res += "Netto: " + CUR.format(pos.getPrice() * pos.getAmount()) + " | Brutto: " + CUR.format(pos.getAfterTaxPrice() * pos.getAmount()) + "| Buchungskonto: " + pos.getBookingAccount() + "<br />";
+            res += "Netto: " + CUR.format(pos.getPrice() * pos.getAmount()) + " | Brutto: " + CUR.format(pos.toAfterTaxPrice() * pos.getAmount()) + "| Buchungskonto: " + pos.getBookingAccount() + "<br />";
         }
         return res;
     }

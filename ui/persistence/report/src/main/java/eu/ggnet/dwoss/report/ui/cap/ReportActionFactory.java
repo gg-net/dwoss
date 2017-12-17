@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.action;
+package eu.ggnet.dwoss.report.ui.cap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,8 +33,6 @@ public class ReportActionFactory implements ActionFactory {
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new ShowExistingReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new CreateReturnsReportAction()),
-                // Disabled for now. Web in Client not yet optimized.
-                //                new MetaAction("Geschäftsführung", "Abschluss Reporte", new RevenueReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new ExportRevenueReportAction()));
     }
 }

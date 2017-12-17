@@ -1,17 +1,8 @@
 package tryout;
 
-import java.io.IOException;
 import java.util.*;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import org.junit.Test;
+import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
@@ -19,6 +10,8 @@ import eu.ggnet.dwoss.report.ReportController;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.INVOICED;
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.REPAYMENTS;
@@ -29,11 +22,9 @@ import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.REPAYMENTS
  */
 public class ReportViewTryout {
 
-    private TradeName tradeName = TradeName.FUJITSU;
-
-    @Test
-    public void show() {
-        TryoutUtil.initAndShow();
+    public static void main(String[] args) {
+        TradeName tradeName = TradeName.FUJITSU;
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
         EnumMap<ViewReportResult.Type, NavigableSet<ReportLine>> lines = new EnumMap<>(ViewReportResult.Type.class);
         ReportLineGenerator op = new ReportLineGenerator();
@@ -54,23 +45,7 @@ public class ReportViewTryout {
                         .end(new Date())
                         .build());
 
-        new JFXPanel();
-        Platform.runLater(() -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(ReportController.loadFxml());
-                Stage stage = new Stage();
-                stage.setTitle("Report Tryout");
-                AnchorPane page = (AnchorPane)loader.load();
-                loader.<ReportController>getController().initReportData(result, false);
-                Scene scene = new Scene(page, Color.ALICEBLUE);
-                stage.setScene(scene);
-                stage.showAndWait();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        TryoutUtil.waitForClose();
+        Ui.fxml().show(() -> new ReportController.In(result, false), ReportController.class);
     }
 
 }

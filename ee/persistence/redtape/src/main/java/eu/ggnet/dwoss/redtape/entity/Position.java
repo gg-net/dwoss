@@ -29,6 +29,7 @@ import javax.validation.groups.Default;
 import eu.ggnet.dwoss.redtape.entity.Position.Key;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.util.MathUtil;
 
 import lombok.*;
 
@@ -121,6 +122,7 @@ public class Position implements Serializable, Comparable<Position> {
     @Size(min = 1, max = 255, groups = {Default.class, Returns.class, DefaultUi.class, Blocks.class})
     private String name;
 
+    @Deprecated // Will be removed
     private double afterTaxPrice;
 
     private double price;
@@ -207,10 +209,16 @@ public class Position implements Serializable, Comparable<Position> {
         this.name = name;
     }
 
-    public double getAfterTaxPrice() {
-        return afterTaxPrice;
+    /**
+     * Returns price * tax optimized to 0.00 look. (+0.01 and .99 are changed)
+     *
+     * @return price * tax.
+     */
+    public double toAfterTaxPrice() {
+        return MathUtil.roundedApply(getPrice(), getTax(), 0.01);
     }
 
+    @Deprecated // be removed
     public void setAfterTaxPrice(double afterTaxPrice) {
         this.afterTaxPrice = afterTaxPrice;
     }
@@ -308,7 +316,6 @@ public class Position implements Serializable, Comparable<Position> {
         if ( !Objects.equals(this.name, p.name) ) return false;
         if ( !Objects.equals(this.description, p.description) ) return false;
         if ( Math.abs(this.price - p.price) > 0.00001 ) return false;
-        if ( Math.abs(this.afterTaxPrice - p.afterTaxPrice) > 0.00001 ) return false;
         if ( Math.abs(this.tax - p.tax) > 0.00001 ) return false;
         if ( Math.abs(this.amount - p.amount) > 0.00001 ) return false;
         if ( !Objects.equals(this.bookingAccount, p.bookingAccount) ) return false;
@@ -332,7 +339,7 @@ public class Position implements Serializable, Comparable<Position> {
 
     @Override
     public String toString() {
-        return "Position{" + "id=" + id + ", document.id=" + (document == null ? "null" : document.getId()) + ", type=" + type + ", name=" + name + ", afterTaxPrice=" + afterTaxPrice + ", price=" + price + ", amount=" + amount + ", tax=" + tax + ", description=" + description + ", bookingAccount=" + bookingAccount + ", uniqueUnitId=" + uniqueUnitId + '}';
+        return "Position{" + "id=" + id + ", document.id=" + (document == null ? "null" : document.getId()) + ", type=" + type + ", name=" + name + ", price=" + price + ", amount=" + amount + ", tax=" + tax + ", description=" + description + ", bookingAccount=" + bookingAccount + ", uniqueUnitId=" + uniqueUnitId + '}';
     }
 
     @Null(groups = Blocks.class)
@@ -353,7 +360,6 @@ public class Position implements Serializable, Comparable<Position> {
             case SHIPPING_COST:
                 return "Versandkosten sind für Blocker nicht erlaubt.";
             case COMMENT:
-                if ( afterTaxPrice != 0 ) violations.add("Brutto Preis muss 0 sein, ist aber " + afterTaxPrice);
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);
         }
         if ( violations.isEmpty() ) return null;
@@ -367,14 +373,12 @@ public class Position implements Serializable, Comparable<Position> {
         ArrayList<String> violations = new ArrayList<>();
         switch (type) {
             case UNIT: // Differs
-                if ( afterTaxPrice != 0 ) violations.add("Brutto Preis muss 0 sein, ist aber " + afterTaxPrice);
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
                 if ( uniqueUnitId == 0 ) violations.add("UniqueUnitId ist nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SERVICE: // Default
-                if ( afterTaxPrice == 0 ) violations.add("Brutto Preis ist nicht gesetzt!");
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( amount < 1 ) violations.add("Die Menge muss größer als 0 sein.");
@@ -384,7 +388,6 @@ public class Position implements Serializable, Comparable<Position> {
             case SHIPPING_COST:
                 return "Versandkosten sind für Rückläufer nicht erlaubt.";
             case COMMENT:
-                if ( afterTaxPrice != 0 ) violations.add("Brutto Preis muss 0 sein, ist aber " + afterTaxPrice);
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);
         }
         if ( violations.isEmpty() ) return null;
@@ -399,7 +402,6 @@ public class Position implements Serializable, Comparable<Position> {
         ArrayList<String> violations = new ArrayList<>();
         switch (type) {
             case UNIT:
-                if ( afterTaxPrice == 0 ) violations.add("Brutto Preis ist nicht gesetzt!");
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
                 if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
@@ -407,26 +409,22 @@ public class Position implements Serializable, Comparable<Position> {
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SERVICE:
-                if ( afterTaxPrice == 0 ) violations.add("Brutto Preis ist nicht gesetzt!");
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( amount <= 0 ) violations.add("Die Menge muss größer als 0 sein.");
                 break;
             case PRODUCT_BATCH:
-                if ( afterTaxPrice == 0 ) violations.add("Brutto Preis ist nicht gesetzt!");
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount < 1 ) violations.add("Die Menge muss größer als 0 sein.");
                 if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SHIPPING_COST:
-                if ( afterTaxPrice == 0 ) violations.add("Brutto Preis ist nicht gesetzt!");
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
                 if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 break;
             case COMMENT:
-                if ( afterTaxPrice != 0 ) violations.add("Brutto Preis muss 0 sein, ist aber " + afterTaxPrice);
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);
         }
         if ( violations.isEmpty() ) return null;

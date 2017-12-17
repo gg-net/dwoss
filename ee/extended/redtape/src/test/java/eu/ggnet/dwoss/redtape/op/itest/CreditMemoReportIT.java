@@ -136,7 +136,6 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
         for (Position pos : new ArrayList<>(doc.getPositions().values())) {
             if ( pos.getUniqueUnitId() == uu1.getId() || pos.getType() == PRODUCT_BATCH || pos.getType() == SHIPPING_COST ) {
                 pos.setPrice(pos.getPrice() * -1);
-                pos.setPrice(pos.getAfterTaxPrice() * -1);
             } else {
                 doc.remove(pos);
             }
@@ -167,7 +166,7 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
         // HINT: Not a complete test, but some fileds at least.
         assertThat(positions.stream().map(Position::getPrice).collect(toSet()))
                 .containsOnly(read.stream().map(l -> l.netto).toArray((v) -> new Double[v]));
-        assertThat(positions.stream().map(Position::getAfterTaxPrice).collect(toSet()))
+        assertThat(positions.stream().map(Position::toAfterTaxPrice).collect(toSet()))
                 .containsOnly(read.stream().map(l -> l.brutto).toArray((v) -> new Double[v]));
         assertThat(positions.stream().map(Position::getName).collect(toSet()))
                 .containsOnly(read.stream().map(l -> l.name).toArray((v) -> new String[v]));

@@ -1,10 +1,10 @@
 package tryout;
 
+import java.awt.Font;
 import java.util.Arrays;
 
-import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -50,7 +50,12 @@ public class DocumentUpdateViewTryout {
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             // If Nimbus is not available, you can set the GUI to another look and feel.
         }
-        UiCore.startSwing(() -> new MainPanel());
+
+        UiCore.startSwing(() -> {
+            JLabel l = new JLabel("Main Application");
+            l.setFont(new Font("DejaVu Sans", 0, 48));
+            return l;
+        });
 
         Dossier dos = new Dossier();
         dos.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);

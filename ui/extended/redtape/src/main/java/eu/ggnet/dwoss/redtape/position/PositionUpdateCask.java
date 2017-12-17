@@ -17,14 +17,19 @@
 package eu.ggnet.dwoss.redtape.position;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
@@ -33,25 +38,22 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.saft.api.ui.OnOk;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.core.all.VetoableOnOk;
 import eu.ggnet.saft.core.authorisation.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.*;
-
-import eu.ggnet.dwoss.util.*;
-
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
  * @author pascal.perau
  */
-@Title("Position bearbeiten")
-public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Consumer<Position> {
+public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<Position>, ResultProducer<Position>, VetoableOnOk {
 
     private class CurrencyConverter extends Converter<Double, String> {
 
@@ -81,6 +83,8 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
             }
         }
     };
+
+    private final static DecimalFormat TAX = new DecimalFormat("##0 %");
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
@@ -124,13 +128,11 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     public PositionUpdateCask() {
         initComponents();
         ((JSpinner.DefaultEditor)postDecimalSpinner.getEditor()).getTextField().setEditable(false);
-//        ((JSpinner.DefaultEditor)preDecimalSpinner.getEditor()).getTextField().setEditable(false);
         PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
         List bookingAccounts = new ArrayList();
         bookingAccounts.add(postLedger.get(SERVICE).orElse(-1));
         bookingAccounts.addAll(postLedger.getPossible(SERVICE).orElse(Collections.EMPTY_LIST));
         bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
-
     }
 
     public Position getPosition() {
@@ -140,14 +142,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     @Override
     public void accept(Position position) {
         if ( position == null ) return;
-        
         PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
         List bookingAccounts = new ArrayList();
         bookingAccounts.add(postLedger.get(position.getType()).orElse(-1));
         bookingAccounts.addAll(postLedger.getPossible(position.getType()).orElse(Collections.EMPTY_LIST));
         bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
-        
+
         this.position = position;
+        this.positionTypeField.setText(position.getType().getName());
+        this.taxField.setText(TAX.format(position.getTax()));
         this.setPositionName(position.getName());
         this.setPrice(position.getPrice());
         this.setDescription(position.getDescription());
@@ -155,9 +158,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
         this.setPostDecimal((int)((position.getAmount() % 1) * 100));
         this.setBookingAccount(position.getBookingAccount());
-
-        System.out.println("Pre: " + this.getPreDecimal());
-        System.out.println("Post: " + this.getPostDecimal());
 
         this.accessCos = lookup(Guardian.class);
 
@@ -334,7 +334,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     }
 
     @Override
-    public boolean onOk() {
+    public boolean mayClose() {
         if ( StringUtils.isBlank(description) ) {
             Alert.show(this, "Beschreibung darf nich leer sein.");
             return false;
@@ -367,6 +367,11 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         return true;
     }
 
+    @Override
+    public Position getResult() {
+        return position;
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -375,32 +380,34 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
+        bindingGroup = new BindingGroup();
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        preDecimalSpinner = new javax.swing.JSpinner();
-        jLabel4 = new javax.swing.JLabel();
-        bookingAccountBox = new javax.swing.JComboBox();
-        jLabel5 = new javax.swing.JLabel();
-        priceField = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        afterTaxPriceField = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        descriptionArea = new javax.swing.JTextArea();
-        jLabel9 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        nameArea = new javax.swing.JTextArea();
-        priceSumField = new javax.swing.JTextField();
-        afterTaxSumField = new javax.swing.JTextField();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        postDecimalSpinner = new javax.swing.JSpinner();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jLabel3 = new JLabel();
+        preDecimalSpinner = new JSpinner();
+        jLabel4 = new JLabel();
+        bookingAccountBox = new JComboBox();
+        jLabel5 = new JLabel();
+        priceField = new JTextField();
+        jLabel7 = new JLabel();
+        afterTaxPriceField = new JTextField();
+        jLabel8 = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        descriptionArea = new JTextArea();
+        positionTypeField = new JLabel();
+        jScrollPane2 = new JScrollPane();
+        nameArea = new JTextArea();
+        priceSumField = new JTextField();
+        afterTaxSumField = new JTextField();
+        jSeparator1 = new JSeparator();
+        jLabel6 = new JLabel();
+        jLabel10 = new JLabel();
+        postDecimalSpinner = new JSpinner();
+        taxLabel = new JLabel();
+        taxField = new JLabel();
 
-        setMinimumSize(new java.awt.Dimension(328, 572));
+        setMinimumSize(new Dimension(328, 572));
 
         jLabel1.setText("Positionsname/Überschrift:");
 
@@ -409,35 +416,33 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         jLabel3.setText("Menge / Zeit:");
         jLabel3.setToolTipText("<html>Zeit in decimalformat <br /> z.B. 1.35 = 1 stunde 35 minuten</html>");
 
-        preDecimalSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 0, null, 1));
+        preDecimalSpinner.setModel(new SpinnerNumberModel(1, 0, null, 1));
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${preDecimal}"), preDecimalSpinner, org.jdesktop.beansbinding.BeanProperty.create("value"), "amountBinding");
+        Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${preDecimal}"), preDecimalSpinner, BeanProperty.create("value"), "amountBinding");
         bindingGroup.addBinding(binding);
 
         jLabel4.setText("Buchungskonto:");
 
         bookingAccountBox.setEnabled(false);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bookingAccount}"), bookingAccountBox, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"), "bookingAccountBinding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${bookingAccount}"), bookingAccountBox, BeanProperty.create("selectedItem"), "bookingAccountBinding");
         binding.setSourceNullValue(null);
         bindingGroup.addBinding(binding);
 
-        bookingAccountBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        bookingAccountBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 bookingAccountBoxActionPerformed(evt);
             }
         });
 
         jLabel5.setText("Nettopreis:");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${price}"), priceField, org.jdesktop.beansbinding.BeanProperty.create("text"), "priceBinding");
-        binding.setConverter(getStringConverter());
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${price}"), priceField, BeanProperty.create("text"), "priceBinding");
         bindingGroup.addBinding(binding);
 
         jLabel7.setText("Bruttopreis:");
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${price}"), afterTaxPriceField, org.jdesktop.beansbinding.BeanProperty.create("text"), "afterTaxPriceBinding");
-        binding.setConverter(getTaxedConverter());
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${price}"), afterTaxPriceField, BeanProperty.create("text"), "afterTaxPriceBinding");
         bindingGroup.addBinding(binding);
 
         jLabel8.setText("Beschreibung:");
@@ -447,15 +452,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         descriptionArea.setRows(5);
         descriptionArea.setWrapStyleWord(true);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${description}"), descriptionArea, org.jdesktop.beansbinding.BeanProperty.create("text"), "positionDescriptionBinding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${description}"), descriptionArea, BeanProperty.create("text"), "positionDescriptionBinding");
         bindingGroup.addBinding(binding);
 
         jScrollPane1.setViewportView(descriptionArea);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${position.type.name}"), jLabel9, org.jdesktop.beansbinding.BeanProperty.create("text"), "positionTypeBinding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${position.type.name}"), positionTypeField, BeanProperty.create("text"), "positionTypeBinding");
         bindingGroup.addBinding(binding);
 
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         nameArea.setEditable(false);
         nameArea.setColumns(20);
@@ -463,123 +468,132 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
         nameArea.setRows(5);
         nameArea.setWrapStyleWord(true);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${positionName}"), nameArea, org.jdesktop.beansbinding.BeanProperty.create("text"), "nameBinding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${positionName}"), nameArea, BeanProperty.create("text"), "nameBinding");
         bindingGroup.addBinding(binding);
 
         jScrollPane2.setViewportView(nameArea);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${amount * price  }"), priceSumField, org.jdesktop.beansbinding.BeanProperty.create("text"), "priceSumBinding");
-        binding.setConverter(getStringConverter());
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${amount * price  }"), priceSumField, BeanProperty.create("text"), "priceSumBinding");
         bindingGroup.addBinding(binding);
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${amount *price }"), afterTaxSumField, org.jdesktop.beansbinding.BeanProperty.create("text"), "afterTaxSumBinding");
-        binding.setConverter(getTaxedConverter());
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${amount *price }"), afterTaxSumField, BeanProperty.create("text"), "afterTaxSumBinding");
         bindingGroup.addBinding(binding);
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jSeparator1.setOrientation(SwingConstants.VERTICAL);
         jSeparator1.setToolTipText("");
 
         jLabel6.setText("Summe");
 
         jLabel10.setText(",");
 
-        postDecimalSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 75, 25));
+        postDecimalSpinner.setModel(new SpinnerNumberModel(0, 0, 75, 25));
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${postDecimal}"), postDecimalSpinner, org.jdesktop.beansbinding.BeanProperty.create("value"), "decimalBounding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${postDecimal}"), postDecimalSpinner, BeanProperty.create("value"), "decimalBounding");
         bindingGroup.addBinding(binding);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        taxLabel.setText("Steuer:");
+
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
+            .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
                     .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(bookingAccountBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(109, 109, 109))
+                    .addComponent(jScrollPane2, Alignment.LEADING)
+                    .addGroup(Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                            .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.TRAILING)
+                            .addComponent(bookingAccountBox, Alignment.LEADING, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(preDecimalSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(preDecimalSpinner)
+                                .addPreferredGap(ComponentPlacement.RELATED)
                                 .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(postDecimalSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(postDecimalSpinner, GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel6)
                                 .addGap(68, 68, 68))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(Alignment.LEADING)
                                     .addComponent(priceField)
                                     .addComponent(afterTaxPriceField))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(priceSumField, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                                    .addComponent(afterTaxSumField)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 6, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                                    .addComponent(priceSumField, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                    .addComponent(afterTaxSumField)))
+                            .addGroup(Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(positionTypeField, GroupLayout.PREFERRED_SIZE, 165, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(taxLabel)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addComponent(taxField)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.TRAILING)
+                            .addComponent(jLabel1, Alignment.LEADING)
+                            .addComponent(jLabel8, Alignment.LEADING))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(4, 4, 4)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 53, GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(5, 5, 5)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(bookingAccountBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(preDecimalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(postDecimalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(afterTaxPriceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                            .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(positionTypeField, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(bookingAccountBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(preDecimalSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)
+                            .addComponent(postDecimalSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(priceSumField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(afterTaxSumField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(priceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(afterTaxPriceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(priceSumField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(afterTaxSumField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jSeparator1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(Alignment.BASELINE)
+                            .addComponent(taxLabel)
+                            .addComponent(taxField))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -591,29 +605,31 @@ public class PositionUpdateCask extends javax.swing.JPanel implements OnOk, Cons
     }//GEN-LAST:event_bookingAccountBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    javax.swing.JTextField afterTaxPriceField;
-    javax.swing.JTextField afterTaxSumField;
-    javax.swing.JComboBox bookingAccountBox;
-    javax.swing.JTextArea descriptionArea;
-    javax.swing.JLabel jLabel1;
-    javax.swing.JLabel jLabel10;
-    javax.swing.JLabel jLabel2;
-    javax.swing.JLabel jLabel3;
-    javax.swing.JLabel jLabel4;
-    javax.swing.JLabel jLabel5;
-    javax.swing.JLabel jLabel6;
-    javax.swing.JLabel jLabel7;
-    javax.swing.JLabel jLabel8;
-    javax.swing.JLabel jLabel9;
-    javax.swing.JScrollPane jScrollPane1;
-    javax.swing.JScrollPane jScrollPane2;
-    javax.swing.JSeparator jSeparator1;
-    javax.swing.JTextArea nameArea;
-    javax.swing.JSpinner postDecimalSpinner;
-    javax.swing.JSpinner preDecimalSpinner;
-    javax.swing.JTextField priceField;
-    javax.swing.JTextField priceSumField;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
+    JTextField afterTaxPriceField;
+    JTextField afterTaxSumField;
+    JComboBox bookingAccountBox;
+    JTextArea descriptionArea;
+    JLabel jLabel1;
+    JLabel jLabel10;
+    JLabel jLabel2;
+    JLabel jLabel3;
+    JLabel jLabel4;
+    JLabel jLabel5;
+    JLabel jLabel6;
+    JLabel jLabel7;
+    JLabel jLabel8;
+    JScrollPane jScrollPane1;
+    JScrollPane jScrollPane2;
+    JSeparator jSeparator1;
+    JTextArea nameArea;
+    JLabel positionTypeField;
+    JSpinner postDecimalSpinner;
+    JSpinner preDecimalSpinner;
+    JTextField priceField;
+    JTextField priceSumField;
+    JLabel taxField;
+    JLabel taxLabel;
+    private BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     @Override

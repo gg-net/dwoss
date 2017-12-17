@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,16 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.document;
+package eu.ggnet.dwoss.report.ui.cap;
 
+import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.report.SimpleReportLinePane;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import eu.ggnet.dwoss.redtape.entity.Document;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
 
-/**
- * {@link Document} Entity is used as Model.
- * @author pascal.perau
- */
-public class DocumentUpdateModel {
+public class ShowRawReportLinesAction extends AccessableAction {
 
+    public ShowRawReportLinesAction() {
+        super(READ_RAW_REPORT_DATA);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Ui.openFx(SimpleReportLinePane.class).exec();
+    }
 }

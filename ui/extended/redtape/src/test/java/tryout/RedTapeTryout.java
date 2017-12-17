@@ -1,8 +1,8 @@
 package tryout;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-
 import java.util.Arrays;
+
+import javax.swing.JLabel;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -17,6 +17,7 @@ import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;
@@ -93,7 +94,7 @@ public class RedTapeTryout {
         when(ccos.updateCustomer(anyLong())).thenReturn(true);
         Client.addSampleStub(CustomerCos.class, ccos);
 
-        UiCore.startSwing(() -> new MainPanel());
+        UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Ui.exec(() -> {
             Ui.swing().show(() -> RedTapeController.build().getView());
         });

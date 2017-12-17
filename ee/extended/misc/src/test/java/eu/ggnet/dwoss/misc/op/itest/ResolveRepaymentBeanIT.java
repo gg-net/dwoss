@@ -150,7 +150,7 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         for (Position value : doc.getPositions().values()) {
             //          if ( value.getType() == UNIT ) positions.add(value);
             value.setPrice(value.getPrice() * -1);
-            value.setAfterTaxPrice(value.getAfterTaxPrice() * -1);
+            value.setAfterTaxPrice(value.toAfterTaxPrice() * -1);
 
         }
         redTapeWorker.update(doc, activeStock.getId(), "JUnit Test");

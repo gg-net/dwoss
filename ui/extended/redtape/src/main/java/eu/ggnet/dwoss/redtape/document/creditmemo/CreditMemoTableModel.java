@@ -112,7 +112,7 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
         addColumn(new Column<AfterInvoicePosition>("Brutto", true, 50, Double.class, new IColumnGetSetAction() {
             @Override
             public Object getValue(int row) {
-                return lines.get(row).getPosition().getAfterTaxPrice();
+                return lines.get(row).getPosition().toAfterTaxPrice();
             }
 
             @Override

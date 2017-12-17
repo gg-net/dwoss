@@ -72,8 +72,8 @@ public interface GsOfficeSupport {
                     bookingRates.put(position.getBookingAccount(), new Row(r));
                     row = bookingRates.get(position.getBookingAccount());
                     row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.getAfterTaxPrice()));
-                    row.setBetrag((position.getAmount() * position.getPrice()), (position.getAmount() * position.getAfterTaxPrice()));
+                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.toAfterTaxPrice()));
+                    row.setBetrag((position.getAmount() * position.getPrice()), (position.getAmount() * position.toAfterTaxPrice()));
                     row.setStProz(position.getTax() * 100);
                     row.setStNumeric(position.getTax() * 100);
                     if ( doc.getType() == DocumentType.CREDIT_MEMO ) {
@@ -88,7 +88,7 @@ public interface GsOfficeSupport {
                     if ( row.getStNumeric() != (position.getTax() * 100) )
                         throw new RuntimeException("Document enthält Positionen mit unterschiedlicher UmSt. Rechnung: " + doc.getIdentifier() + ", aktuelle UmSt.: " + row.getStProz() + ", abweichung in Position: " + position.getName() + " mit UmSt. von " + (position.getTax() * 100));
                     row.setNettoSumme(row.getNettoSumme() + (position.getAmount() * position.getPrice()));
-                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.getAfterTaxPrice()));
+                    row.setBruttoSumme(row.getBruttoSumme() + (position.getAmount() * position.toAfterTaxPrice()));
                     row.setBetrag(row.getNettoSumme(), row.getBruttoSumme());
                 }
             }

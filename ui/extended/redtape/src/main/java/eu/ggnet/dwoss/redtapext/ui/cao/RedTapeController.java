@@ -80,13 +80,21 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     private Set<Action> accessDependentActions;
 
-    @Getter(lazy = true)
-    private final NavigableSet<Long> viewOnlyCustomerIds = Client.lookup(MandatorSupporter.class).loadSalesdata().getViewOnlyCustomerIds();
+    private NavigableSet<Long> viewOnlyCustomerIds;
 
     private SwingWorker<Void, Dossier> closedLoader;
 
-    @Getter(lazy = true)
-    private final boolean shippingCostUiHelpEnabled = Client.hasFound(ShippingCostService.class);
+    private Boolean shippingCostUiHelpEnabled = null;
+
+    private boolean isShippingCostUiHelpEnabled() {
+        if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = Client.hasFound(ShippingCostService.class);
+        return shippingCostUiHelpEnabled;
+    }
+
+    private NavigableSet<Long> getViewOnlyCustomerIds() {
+        if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Client.lookup(MandatorSupporter.class).loadSalesdata().getViewOnlyCustomerIds();
+        return viewOnlyCustomerIds;
+    }
 
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override

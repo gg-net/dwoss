@@ -21,10 +21,9 @@ import java.util.function.Consumer;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.api.PositionService;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.api.ui.OnOk;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.all.VetoableOnOk;
 
 import static eu.ggnet.saft.core.Client.hasFound;
 import static eu.ggnet.saft.core.Client.lookup;
@@ -33,8 +32,7 @@ import static eu.ggnet.saft.core.Client.lookup;
  *
  * @author pascal.perau
  */
-@Title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
-public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consumer<Position> {
+public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Position>, ResultProducer<Position>, VetoableOnOk {
 
     private Position position;
 
@@ -72,8 +70,13 @@ public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consume
     }
 
     @Override
-    public boolean onOk() {
-        return positionView.onOk();
+    public Position getResult() {
+        return position;
+    }
+
+    @Override
+    public boolean mayClose() {
+        return positionView.mayClose();
     }
 
     /** This method is called from within the constructor to
@@ -128,18 +131,11 @@ public class ServiceViewCask extends javax.swing.JPanel implements OnOk, Consume
     private void templateListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_templateListMouseClicked
         if ( evt.getClickCount() == 2 ) {
             position = (Position)templateList.getSelectedValue();
-            position = Position.builder().afterTaxPrice(position.getAfterTaxPrice()).amount(position.getAmount()).bookingAccount(position.getBookingAccount())
+            position = Position.builder().afterTaxPrice(position.toAfterTaxPrice()).amount(position.getAmount()).bookingAccount(position.getBookingAccount())
                     .description(position.getDescription()).name(position.getName()).price(position.getPrice()).tax(position.getTax())
                     .type(position.getType()).uniqueUnitId(position.getUniqueUnitId()).uniqueUnitProductId(position.getUniqueUnitProductId()).build();
 
             positionView.accept(position);
-//            positionView.setPositionName(position.getName());
-//            positionView.setDescription(position.getDescription());
-//            positionView.setPrice(position.getPrice());
-//            positionView.setAmount(position.getAmount());
-//            positionView.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
-//            positionView.setPostDecimal((int)((position.getAmount() % 1) * 100));
-//            positionView.bookingAccountBox.getModel().setSelectedItem(position.getBookingAccount());
         }
     }//GEN-LAST:event_templateListMouseClicked
 

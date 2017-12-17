@@ -28,6 +28,9 @@ import javax.swing.*;
 
 import javafx.stage.Modality;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiUtil;
 import eu.ggnet.saft.api.ui.*;
@@ -45,6 +48,8 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString
 public abstract class AbstractBuilder {
+
+    protected static final Logger L = LoggerFactory.getLogger(AbstractBuilder.class);
 
     /**
      * Calls the callable in the same thread, while sending progress information into the ui.
@@ -189,6 +194,8 @@ public abstract class AbstractBuilder {
     }
 
     protected Params buildParameterBackedUpByDefaults(Class<?> panelClazz) {
+        Once onceAnnotation = panelClazz.getAnnotation(Once.class);
+        if ( onceAnnotation != null ) once = onceAnnotation.value();
         return Params.builder()
                 .panelClazz(panelClazz)
                 .id(AbstractBuilder.this.id)

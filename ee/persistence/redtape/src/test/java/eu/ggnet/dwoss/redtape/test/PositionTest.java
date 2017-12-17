@@ -86,12 +86,6 @@ public class PositionTest {
         posCopy.setPrice(posUnit.getPrice());
         assertTrue(posCopy.equalsContent(posUnit));
 
-        //afterTaxPrice equality test
-        posCopy.setAfterTaxPrice(posCopy.getPrice() * posCopy.getTax());
-        assertFalse(posCopy.equalsContent(posUnit));
-        posCopy.setAfterTaxPrice(posUnit.getAfterTaxPrice());
-        assertTrue(posCopy.equalsContent(posUnit));
-
         //description equality test
         posCopy.setDescription("Neue Despcription");
         assertFalse(posCopy.equalsContent(posUnit));
@@ -129,8 +123,6 @@ public class PositionTest {
         p.setType(PositionType.UNIT);
         assertFalse("Position must be invalid.", V.validate(p).isEmpty());
         p.setPrice(1);
-        assertFalse("Position must be invalid.", V.validate(p).isEmpty());
-        p.setAfterTaxPrice(1);
         assertFalse("Position must be invalid.", V.validate(p).isEmpty());
         p.setAmount(1);
         assertFalse("Position must be invalid.", V.validate(p).isEmpty());
@@ -175,13 +167,6 @@ public class PositionTest {
     }
 
     @Test
-    public void testDefaultUiUnitInvalidAfterTaxPriceZero() {
-        Position p = makeValidDefaultUiUnit();
-        p.setAfterTaxPrice(0);
-        assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
-    }
-
-    @Test
     public void testDefaultUiUnitInvalidAmount() {
         Position p = makeValidDefaultUiUnit();
         p.setAmount(2);
@@ -206,13 +191,6 @@ public class PositionTest {
     public void testDefaultUiServiceInvalidPriceZero() {
         Position p = makeValidDefaultUiService();
         p.setPrice(0);
-        assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
-    }
-
-    @Test
-    public void testDefaultUiServiceInvalidAfterTaxPriceZero() {
-        Position p = makeValidDefaultUiService();
-        p.setAfterTaxPrice(0);
         assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
     }
 
@@ -274,13 +252,6 @@ public class PositionTest {
     }
 
     @Test
-    public void testReturnsUnitInvalidAfterTaxPriceNotZero() {
-        Position p = makeValidReturnsUnit();
-        p.setAfterTaxPrice(1);
-        assertFalse("Position must be invalid for group " + Returns.class + ", but is valid.", V.validate(p, Returns.class).isEmpty());
-    }
-
-    @Test
     public void testReturnsUnitInvalidAmount() {
         Position p = makeValidReturnsUnit();
         p.setAmount(2);
@@ -305,13 +276,6 @@ public class PositionTest {
     public void testReturnsServiceInvalidPriceZero() {
         Position p = makeValidReturnsService();
         p.setPrice(0);
-        assertFalse("Position must be invalid for group " + Returns.class + ", but is valid.", V.validate(p, Returns.class).isEmpty());
-    }
-
-    @Test
-    public void testReturnsServiceInvalidAfterTaxPriceZero() {
-        Position p = makeValidReturnsService();
-        p.setAfterTaxPrice(0);
         assertFalse("Position must be invalid for group " + Returns.class + ", but is valid.", V.validate(p, Returns.class).isEmpty());
     }
 
@@ -349,7 +313,6 @@ public class PositionTest {
         Position p = new Position();
         p.setType(PositionType.UNIT);
         p.setPrice(1);
-        p.setAfterTaxPrice(1);
         p.setAmount(1);
         p.setTax(1);
         p.setUniqueUnitId(1);
@@ -363,7 +326,6 @@ public class PositionTest {
         Position p = new Position();
         p.setType(PositionType.SERVICE);
         p.setPrice(1);
-        p.setAfterTaxPrice(1);
         p.setAmount(1);
         p.setTax(1);
         p.setName("Name");
@@ -375,7 +337,6 @@ public class PositionTest {
         Position p = new Position();
         p.setType(PositionType.UNIT);
         p.setPrice(0);
-        p.setAfterTaxPrice(0);
         p.setAmount(1);
         p.setTax(0);
         p.setUniqueUnitId(1);
@@ -389,7 +350,6 @@ public class PositionTest {
         Position p = new Position();
         p.setType(PositionType.SERVICE);
         p.setPrice(1);
-        p.setAfterTaxPrice(1);
         p.setAmount(1);
         p.setTax(1);
         p.setName("Name");

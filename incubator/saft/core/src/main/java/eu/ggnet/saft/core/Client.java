@@ -16,12 +16,7 @@
  */
 package eu.ggnet.saft.core;
 
-import java.awt.*;
-import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.swing.JOptionPane;
 
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
@@ -29,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import static java.awt.TrayIcon.MessageType.WARNING;
 
 /**
  * This is the global entry point for fat clients.
@@ -49,11 +42,18 @@ public class Client {
 
     private final static Map<Class<?>, ? super Object> CACHE = new HashMap<>();
 
-    private static TrayIcon sampleStubTrayIcon;
-
     @Getter
     @Setter
     private static RemoteLookup remoteLookup;
+
+    /**
+     * Returns the sample stub for inspection.
+     *
+     * @return the sample stub for inspection.
+     */
+    public static Map<String, Object> getSampleStub() {
+        return Collections.unmodifiableMap(SAMPLE_STUB);
+    }
 
     /**
      * Tries to lookup an implementation of the supplied class/interface.
@@ -129,22 +129,6 @@ public class Client {
     public static <T> void addSampleStub(Class<T> clazz, T t) {
         SAMPLE_STUB.put(clazz.getName(), t);
         L.warn("Client lookup Sample Stub filled with {}. If this is happening in the productive system, this is definitivly wrong", clazz.getName());
-        if ( !SystemTray.isSupported() ) return;
-        if ( sampleStubTrayIcon == null ) {
-            Image img = Toolkit.getDefaultToolkit().getImage(loadWarningIcon());
-            sampleStubTrayIcon = new TrayIcon(img);
-            sampleStubTrayIcon.addActionListener(e -> JOptionPane.showMessageDialog(null,
-                    "Elements in the Sample Stub\n - " + SAMPLE_STUB.keySet().stream().collect(Collectors.joining("\n - ")),
-                    "Elements in the Sample Stub",
-                    JOptionPane.WARNING_MESSAGE));
-            try {
-                SystemTray.getSystemTray().add(sampleStubTrayIcon);
-                sampleStubTrayIcon.displayMessage("Deutsche Warenwirtschaft Sample Stub Active",
-                        "SampleStubs were added to the Client, use only in non productive mode.", WARNING);
-            } catch (AWTException ex) {
-                L.error("Could not add to SystemTray", ex);
-            }
-        }
     }
 
     /**
@@ -163,11 +147,4 @@ public class Client {
         return result;
     }
 
-    static URL loadProperties() {
-        return Client.class.getResource("project.properties");
-    }
-
-    static URL loadWarningIcon() {
-        return Client.class.getResource("warning-icon.png");
-    }
 }

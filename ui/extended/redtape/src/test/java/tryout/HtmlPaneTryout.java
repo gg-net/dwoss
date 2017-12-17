@@ -16,12 +16,7 @@
  */
 package tryout;
 
-import java.awt.Dimension;
-import java.util.concurrent.CountDownLatch;
-
-import javax.swing.JButton;
-
-import org.junit.Test;
+import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
@@ -33,21 +28,12 @@ import eu.ggnet.saft.UiCore;
  */
 public class HtmlPaneTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
-        JButton b = new JButton("Press to close");
-        b.setPreferredSize(new Dimension(200, 50));
-        CountDownLatch l = new CountDownLatch(1);
-        b.addActionListener(e -> {
-            l.countDown();
+    public static void main(String[] args) {
+        UiCore.startSwing(() -> new JLabel("Main Application"));
+
+        Ui.exec(() -> {
+            Ui.fx().show(() -> "<h1>Hallo HTML Pane</h1>", () -> new HtmlPane());
         });
-        UiCore.startSwing(() -> b);
-
-        Ui.call(() -> "<b>Bold Text</b>")
-                .openFx(HtmlPane.class)
-                .exec();
-
-        l.await();
     }
 
 }

@@ -22,9 +22,11 @@ import javax.swing.JPanel;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.api.ui.Once;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.all.VetoableOnOk;
 
+@Once(false)
 public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProducer<V> & Consumer<U>> extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Reply<V>>, Consumer<U> {
 
     @SuppressWarnings("unchecked")

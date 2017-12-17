@@ -18,8 +18,7 @@ package eu.ggnet.saft.api;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
 /**
  * Simple form of a Response handling.
@@ -28,6 +27,7 @@ import lombok.Getter;
  * @author oliver.guenther
  */
 @AllArgsConstructor
+@ToString
 public final class Reply<T> implements Serializable {
 
     private final boolean success;

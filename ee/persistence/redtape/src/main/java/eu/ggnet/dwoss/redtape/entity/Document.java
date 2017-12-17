@@ -761,7 +761,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     public double getAfterTaxPrice() {
         double afterTax = 0.;
         for (Position position : positions.values()) {
-            afterTax += (position.getAmount() * position.getAfterTaxPrice());
+            afterTax += (position.getAmount() * position.toAfterTaxPrice());
         }
         return afterTax;
     }

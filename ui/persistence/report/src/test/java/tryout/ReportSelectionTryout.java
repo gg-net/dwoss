@@ -17,13 +17,9 @@
 package tryout;
 
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
 import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
@@ -47,8 +43,7 @@ import eu.ggnet.saft.core.Client;
  */
 public class ReportSelectionTryout {
 
-    @Test
-    public void tryout() throws Exception {
+    public static void main(String[] args) {
         ReportAgent rastub = new ReportAgent() {
 
             private int counter = 0;
@@ -165,16 +160,10 @@ public class ReportSelectionTryout {
 
         };
         Client.addSampleStub(ReportAgent.class, rastub);
-        CountDownLatch l = new CountDownLatch(1);
-        JButton a = new JButton("Close");
-        a.addActionListener(ev -> l.countDown());
 
         JButton b = new JButton("Show ReportList");
-        JPanel p = new JPanel();
-        p.add(a);
-        p.add(b);
 
-        UiCore.startSwing(() -> p);
+        UiCore.startSwing(() -> b);
 
         b.addActionListener((evt) -> {
             final Date today = new Date();
@@ -202,7 +191,5 @@ public class ReportSelectionTryout {
 
             Ui.fx().show(() -> allReports, () -> new ReportSelectionPane());
         });
-
-        l.await();
     }
 }

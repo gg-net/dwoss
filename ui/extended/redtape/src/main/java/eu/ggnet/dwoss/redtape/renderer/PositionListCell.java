@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,8 +24,10 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.*;
-import javafx.scene.input.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
@@ -33,7 +35,8 @@ import javafx.util.Callback;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
 
-import static javafx.scene.text.TextAlignment.*;
+import static javafx.scene.text.TextAlignment.JUSTIFY;
+import static javafx.scene.text.TextAlignment.RIGHT;
 
 /**
  *
@@ -50,6 +53,8 @@ public class PositionListCell extends ListCell<Position> {
     }
 
     private static final DecimalFormat CUR = new DecimalFormat("#,##0.00 €");
+
+    private static final DecimalFormat TAX = new DecimalFormat("##0 %");
 
     private static final DecimalFormat A = new DecimalFormat("0.##");
 
@@ -158,7 +163,7 @@ public class PositionListCell extends ListCell<Position> {
          If we ever find out, how to change this behavior, uncoment the following code.
          */
 
-        /*
+ /*
          ObservableList<Node> children = pane.getChildren();
          if ( children.contains(body) ) {
          children.remove(body);
@@ -191,12 +196,13 @@ public class PositionListCell extends ListCell<Position> {
                 foot.setText("");
                 break;
             case UNIT:
-                foot.setText("netto: " + CUR.format(item.getPrice()) + " | brutto: " + CUR.format(item.getAfterTaxPrice()));
+                foot.setText("Steuer: " + TAX.format(item.getTax()) + " | netto: " + CUR.format(item.getPrice()) + " | brutto: " + CUR.format(item.toAfterTaxPrice()));
                 break;
             default:
                 foot.setText("Menge: " + A.format(item.getAmount())
+                        + " | Steuer: " + TAX.format(item.getTax())
                         + " | netto: " + CUR.format(item.getPrice() * item.getAmount())
-                        + " | brutto: " + CUR.format(item.getAfterTaxPrice() * item.getAmount()));
+                        + " | brutto: " + CUR.format(item.toAfterTaxPrice() * item.getAmount()));
         }
     }
 

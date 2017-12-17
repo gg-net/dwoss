@@ -77,7 +77,7 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
 
     public ReportSelectionPane() {
         Label reportTypeLabel = new Label("Reporttyp:");
-        reportTypeLabel.setStyle("-fx-font-weight: bold;");
+        //    reportTypeLabel.setStyle("-fx-font-weight: bold;");
 
         typeBox = new ComboBox<>();
         yearBox = new ComboBox<>();
@@ -155,7 +155,7 @@ public class ReportSelectionPane extends BorderPane implements Consumer<List<Rep
         Ui.exec(() -> {
             Ui.dialog().parent(this).eval(() -> dialog)
                     .map(r -> Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
-                    .filter(Ui.failure()::handle)
+                    .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {
                         reportListView.getSelectionModel().getSelectedItem().setName(r.getPayload());
                         reportListView.refresh();

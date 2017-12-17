@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.metawidget.inspector.annotation.*;
 
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
@@ -333,7 +334,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     /**
      * The price with tax of this position, normally the sales price of a unit.
      */
-    @Getter
+    @Deprecated
     private double afterTaxPrice;
 
     @Transient
@@ -613,11 +614,17 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         return priceProperty;
     }
 
+    @Deprecated // Fällt weg
     public void setAfterTaxPrice(double price) {
         if ( afterTaxPriceProperty != null ) afterTaxPriceProperty.set(price);
         else this.afterTaxPrice = price;
     }
 
+    public double toAfterTaxPrice() {
+        return MathUtil.roundedApply(getPrice(), getTax(), 0.00);
+    }
+
+    @Deprecated // Fällt weg
     public DoubleProperty afterTaxPriceProperty() {
         if ( afterTaxPriceProperty == null ) {
             afterTaxPriceProperty = new SimpleDoubleProperty(afterTaxPrice);

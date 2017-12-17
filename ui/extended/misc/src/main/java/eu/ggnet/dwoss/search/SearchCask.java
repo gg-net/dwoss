@@ -144,8 +144,8 @@ public class SearchCask extends BorderPane implements ClosedListener {
         resultListView.setOnMouseClicked((MouseEvent click) -> {
             if ( click.getClickCount() == 2 ) {
                 ShortSearchResult selectedItem = resultListView.getSelectionModel().getSelectedItem();
-                Ui.parent(SearchCask.this)
-                        .call(() -> searcher.details(selectedItem.getKey())).openFx(HtmlPane.class, selectedItem.getKey().toString()).exec();
+                Ui.fx().parent(SearchCask.this).title(selectedItem.getKey().toString())
+                        .show(() -> searcher.details(selectedItem.getKey()), () -> new HtmlPane());
             }
         });
 

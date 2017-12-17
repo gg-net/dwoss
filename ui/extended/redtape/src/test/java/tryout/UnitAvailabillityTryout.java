@@ -18,12 +18,17 @@ package tryout;
 
 import java.util.*;
 
+import javax.swing.JLabel;
+
 import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.Tuple2;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.Client;
 
 /**
@@ -78,8 +83,8 @@ public class UnitAvailabillityTryout {
             }
         });
 
-        OkCancelDialog<UnitAvailabilityViewCask> view = new OkCancelDialog<>("blub", new UnitAvailabilityViewCask());
-        view.setVisible(true);
-        view.dispose();
+        UiCore.startSwing(() -> new JLabel("Main Application"));
+
+        Ui.swing().show(() -> new UnitAvailabilityViewCask());
     }
 }

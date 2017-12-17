@@ -133,7 +133,7 @@ public class DialogBuilder extends AbstractBuilder {
      */
     public <T, V extends Dialog<T>> Optional<T> eval(Callable<V> dialogProducer) {
         try {
-            Objects.requireNonNull(dialogProducer, "The swingPanelProducer is null, not allowed");
+            Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
 
             V dialog = FxSaft.dispatch(dialogProducer);
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
@@ -142,7 +142,7 @@ public class DialogBuilder extends AbstractBuilder {
             Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
                 ((Button)b).setOnAction(e -> {
-                    System.out.println("Close called");
+                    L.debug("Close on Dialog called");
                     Ui.closeWindowOf(window);
                 });
             });
@@ -167,7 +167,7 @@ public class DialogBuilder extends AbstractBuilder {
      */
     public <T, P, V extends Dialog<T> & Consumer<P>> Optional<T> eval(Callable<P> preProducer, Callable<V> dialogProducer) {
         try {
-            Objects.requireNonNull(dialogProducer, "The swingPanelProducer is null, not allowed");
+            Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
 
             V dialog = FxSaft.dispatch(dialogProducer);
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
@@ -178,7 +178,10 @@ public class DialogBuilder extends AbstractBuilder {
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
             Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
-                ((Button)b).setOnAction(e -> Ui.closeWindowOf(window));
+                ((Button)b).setOnAction(e -> {
+                    L.debug("Close on Dialog called");
+                    Ui.closeWindowOf(window);
+                });
             });
             wait(window);
             return Optional.ofNullable(dialog.getResult());

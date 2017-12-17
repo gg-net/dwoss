@@ -158,7 +158,7 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
                 contractor,
                 fullOrPartial,
                 position.getPrice(),
-                position.getAfterTaxPrice(),
+                position.toAfterTaxPrice(),
                 position.getDocument().getDossier().getIdentifier(),
                 doc.getActual(),
                 position.getDocument().getIdentifier(),
@@ -233,7 +233,7 @@ public class CreditMemoReporterOperation implements CreditMemoReporter {
                     }
                 }
                 price += position.getPrice();
-                afterTaxPrice += position.getAfterTaxPrice();
+                afterTaxPrice += position.toAfterTaxPrice();
             }
             rows.add(new Object[]{
                 document.getDossier().getIdentifier(),

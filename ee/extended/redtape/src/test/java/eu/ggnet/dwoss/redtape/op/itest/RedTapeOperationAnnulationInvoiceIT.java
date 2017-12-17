@@ -111,7 +111,6 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         for (Position pos : new ArrayList<>(doc.getPositions().values())) {
             if ( pos.getUniqueUnitId() == uu1.getId() ) {
                 pos.setPrice(pos.getPrice() * -1);
-                pos.setPrice(pos.getAfterTaxPrice() * -1);
             } else {
                 doc.remove(pos);
             }
@@ -173,7 +172,6 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
             else if ( pos.getUniqueUnitId() != uu2.getId() ) invoice.remove(pos);
             else {
                 pos.setPrice(pos.getPrice() * -1);
-                pos.setPrice(pos.getAfterTaxPrice() * -1);
             }
         }
 

@@ -14,40 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.action;
+package eu.ggnet.dwoss.report.ui.cap;
+
+import eu.ggnet.saft.Ui;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.*;
-import eu.ggnet.dwoss.report.ReportController.In;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.dwoss.report.RevenueReportSelectorPane;
+import eu.ggnet.dwoss.report.op.RevenueReporter;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
 import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
  * @author pascal.perau
  */
-public class ShowExistingReportAction extends AccessableAction {
+public class ExportRevenueReportAction extends AccessableAction {
 
-    public ShowExistingReportAction() {
-        super(READ_STORED_REPORTS);
+    public ExportRevenueReportAction() {
+        super(EXPORT_REVENUE_REPORT);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.call(() -> lookup(ReportAgent.class).findAll(Report.class))
-                .choiceFx(ReportSelectionPane.class)
-                .onOk(r -> new In(lookup(ReportAgent.class).findReportResult(r.selected().getId()), true))
-                .openFxml(ReportController.class)
-                .exec();
-
-//        Platform.runLater(() -> {
-//            ReportSelectionPane stage = new ReportSelectionPane();
-//            stage.show();
-//        });
+        Ui.exec(
+                Ui.choiceFx(RevenueReportSelectorPane.class)
+                .onOk(p -> lookup(RevenueReporter.class)
+                        .toXls(p.getStart(), p.getEnd(), p.getStep(), p.isExtraReported())
+                        .toTemporaryFile())
+                .osOpen()
+        );
     }
 }

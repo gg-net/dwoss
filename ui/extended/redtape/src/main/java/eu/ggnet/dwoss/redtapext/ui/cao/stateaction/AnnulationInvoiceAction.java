@@ -97,7 +97,7 @@ public class AnnulationInvoiceAction extends AccessableAction {
             doc.removeAllPositions();
             for (Position position : view.getPositions()) {
                 position.setPrice(position.getPrice() * (-1));
-                position.setAfterTaxPrice(position.getAfterTaxPrice() * (-1));
+                position.setAfterTaxPrice(position.toAfterTaxPrice() * (-1));
                 doc.append(position);
             }
             doc.setType(DocumentType.ANNULATION_INVOICE);

@@ -33,7 +33,9 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -108,12 +110,10 @@ public class DocumentUpdateController {
      * @return the updated Position.
      */
     public Position editPosition(final Position pos) {
-        try {
-            return Ui.parent(view).call(() -> pos).choiceSwing(PositionUpdateCask.class).onOk(x -> x.getPosition()).call();
-        } catch (Exception ex) {
-            Ui.handle(ex);
-            return null;
-        }
+        return Ui.swing().parent(view).title("Position bearbeiten")
+                .eval(() -> pos, () -> OkCancel.wrap(new PositionUpdateCask()))
+                .map(Reply::getPayload)
+                .orElse(null);
     }
 
     public eu.ggnet.dwoss.redtape.entity.Position createCommentPosition() {
@@ -130,14 +130,11 @@ public class DocumentUpdateController {
     }
 
     public Position createServicePosition() {
-        try {
-            // Hint: Unusual usage, but works if we need a return type and use null for cancel.
-            return Ui.parent(view).call(() -> Position.builder().type(PositionType.SERVICE).build())
-                    .choiceSwing(ServiceViewCask.class).onOk(x -> x.getPosition()).call();
-        } catch (Exception ex) {
-            Ui.handle(ex);
-            return null;
-        }
+        // Hint: Unusual usage, but works if we need a return type and use null for cancel.
+        return Ui.swing().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
+                .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask()))
+                .map(Reply::getPayload)
+                .orElse(null);
     }
 
     public SalesProduct createProductBatchPosition(List<SalesProduct> products) {

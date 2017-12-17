@@ -14,24 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.action;
+package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.SimpleReportLinePane;
+import eu.ggnet.dwoss.report.*;
+import eu.ggnet.dwoss.report.ReportController.In;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
+import static eu.ggnet.saft.core.Client.lookup;
 
-public class ShowRawReportLinesAction extends AccessableAction {
+/**
+ *
+ * @author pascal.perau
+ */
+public class CreateReportAction extends AccessableAction {
 
-    public ShowRawReportLinesAction() {
-        super(READ_RAW_REPORT_DATA);
+    public CreateReportAction() {
+        super(CREATE_SALES_REPORT);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.openFx(SimpleReportLinePane.class).exec();
+        Ui.choiceSwing(CreateViewCask.class)
+                .onOk(r -> new In(lookup(ReportAgent.class).prepareReport(r.getParameter(), r.loadUnreported()), false))
+                .openFxml(ReportController.class)
+                .exec();
     }
+
 }

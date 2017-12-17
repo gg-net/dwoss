@@ -17,7 +17,8 @@
 package eu.ggnet.dwoss.report;
 
 import java.net.URL;
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -25,12 +26,13 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.*;
-import javafx.fxml.*;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.*;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
@@ -40,13 +42,15 @@ import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.Ui;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Value;
 
 import static eu.ggnet.dwoss.util.DateFormats.ISO;
+import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 
 /**
  *
@@ -76,21 +80,24 @@ public class ReportController implements Initializable, FxController, Consumer<R
     }
 
     @Title("Wollen Sie wirklich diesen Report erstellen?")
-    public static class ResultPane extends Pane implements Consumer<ViewReportResult> {
+    public static class ResultPane extends Dialog<ViewReportResult> implements Consumer<ViewReportResult> {
 
-        private Label l;
+        private ViewReportResult reportResult;
 
         public ResultPane() {
-            l = new Label();
-            getChildren().add(l);
+            setHeaderText("Report erstellen ?");
+            getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
+            setResizable(true);
+            setResultConverter((type) -> type.getButtonData() == OK_DONE ? reportResult : null);
         }
 
         @Override
         public void accept(ViewReportResult reportResult) {
+            this.reportResult = reportResult;
             String infoLine = "Name: " + reportResult.getParameter().getReportName();
             infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
             infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
-            l.setText(infoLine);
+            setContentText(infoLine);
         }
 
     }
@@ -365,44 +372,17 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleCreateButtonAction() {
-        Ui.parent(mainPane)
-                .call(() -> reportResult)
-                .choiceFx(ResultPane.class)
-                .onOk(r -> {
-                    Client.lookup(ReportAgent.class).store(
-                            reportResult.getParameter().toNewReport(),
-                            reportResult.getRelevantLines()
-                                    .values()
-                                    .stream()
-                                    .flatMap(Collection::stream)
-                                    .map(ReportLine::toStorable)
-                                    .collect(Collectors.toList())
-                    );
-                    Platform.runLater(() -> viewmode.set(true));
-                    return null;
-                }).exec();
-        /*
-         String infoLine = "Name: " + reportResult.getParameter().getReportName();
-         infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
-         infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
-
-         Pane pane = new Pane(new Label(infoLine));
-         OkCancelStage<Pane> stage = new OkCancelStage<>("Wollen Sie wirklich diesen Report erstellen?", pane);
-         stage.setWidth(500);
-         stage.showAndWait();
-         if ( stage.isCancel() ) return;
-
-         Client.lookup(ReportAgent.class).store(
-         reportResult.getParameter().toNewReport(),
-         reportResult.getRelevantLines()
-         .values()
-         .stream()
-         .flatMap(Collection::stream)
-         .map(ReportLine::toStorable)
-         .collect(Collectors.toList())
-         );
-         viewmode.set(true);
-         */
+        Ui.exec(() -> {
+            Ui.dialog().parent(mainPane)
+                    .eval(() -> reportResult, () -> new ResultPane())
+                    .ifPresent(r -> Ui.progress().call(() -> {
+                Client.lookup(ReportAgent.class).store(
+                        r.getParameter().toNewReport(),
+                        r.getRelevantLines().values().stream().flatMap(Collection::stream).map(ReportLine::toStorable).collect(Collectors.toList()));
+                Platform.runLater(() -> viewmode.set(true));
+                return null;
+            }));
+        });
     }
 
     @FXML

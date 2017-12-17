@@ -16,27 +16,30 @@
  */
 package eu.ggnet.dwoss.redtape.document;
 
-import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.*;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
-
+import eu.ggnet.saft.api.ui.Title;
 
 /**
  *
  * @author oliver.guenther
  */
-public class TaxChangePane extends FlowPane implements ResultProducer<Tax> {
+@Title("Steuer anpassen")
+public class TaxChangePane extends StackPane implements ResultProducer<Tax> {
 
     private Tax result = null;
 
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public TaxChangePane() {
-        super(Orientation.VERTICAL);
-        Button _19Percent = new Button(Tax._19PERCENT.getButtonText());
+        VBox p = new VBox(10);
+        p.setAlignment(Pos.CENTER);
+        Button _19Percent = new Button(Tax.DEFAULT_TAX.getButtonText());
         _19Percent.setOnAction(e -> {
-            result = Tax._19PERCENT;
+            result = Tax.DEFAULT_TAX;
             close();
         });
         Button reverseCharge = new Button(Tax.REVERSE_CHARGE.getButtonText());
@@ -46,6 +49,10 @@ public class TaxChangePane extends FlowPane implements ResultProducer<Tax> {
         });
         Button cancel = new Button("Abbrechen");
         cancel.setOnAction(e -> close());
+        p.getChildren().addAll(_19Percent, reverseCharge, cancel);
+        setPrefHeight(120);
+        setPrefWidth(300);
+        getChildren().add(p);
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.util.concurrent.ForkJoinPool;
 import javax.swing.JPanel;
 
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import eu.ggnet.saft.core.all.UiCreator;
 import eu.ggnet.saft.core.all.UiOk;
 import eu.ggnet.saft.core.experimental.*;
 import eu.ggnet.saft.core.fx.FxCreator;
-import eu.ggnet.saft.core.fx.FxSaft;
 import eu.ggnet.saft.core.swing.*;
 
 /*
@@ -225,26 +223,6 @@ public class Ui {
     }
 
     // starting from here comes old. will be deprecated in the future
-    @Deprecated
-    public static <R> UiCreator<R> parent(Component parent) {
-        if ( UiCore.isRunning() && UiCore.isFx() ) {
-            L.warn("Using a swing component as parent in JavaFx Mode is not yet implemented");
-            return new FxCreator<>(null, FxCore.mainStage(), null); // TODO: Find a way to get a Stage from a Swing embedded component.
-        }
-        if ( UiCore.isRunning() && UiCore.isSwing() )
-            return new SwingCreator<>(null, SwingCore.windowAncestor(parent).orElse(SwingCore.mainFrame()), null);
-        throw new IllegalStateException("UiCore not initalized");
-    }
-
-    @Deprecated
-    public static <R> UiCreator<R> parent(Parent parent) {
-        if ( UiCore.isRunning() && UiCore.isFx() )
-            return new FxCreator<>(null, FxSaft.windowAncestor(parent), null);
-        if ( UiCore.isRunning() && UiCore.isSwing() )
-            return new SwingCreator<>(null, SwingCore.windowAncestor(parent).orElse(SwingCore.mainFrame()), null);
-        throw new IllegalStateException("UiCore not initalized");
-    }
-
     @Deprecated
     private static <R> UiCreator<R> creator() {
         if ( UiCore.isRunning() && UiCore.isFx() )

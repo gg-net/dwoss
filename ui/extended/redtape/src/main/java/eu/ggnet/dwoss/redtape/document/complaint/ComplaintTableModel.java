@@ -69,7 +69,7 @@ public class ComplaintTableModel extends SimpleTableModel<AfterInvoicePosition>{
             addColumn(new Column<AfterInvoicePosition>("Brutto", false, 50, Double.class, new IColumnGetSetAction() {
                 @Override
                 public Object getValue(int row) {
-                    return lines.get(row).getPosition().getAfterTaxPrice();
+                    return lines.get(row).getPosition().toAfterTaxPrice();
                 }
 
                 @Override

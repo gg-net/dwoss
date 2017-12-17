@@ -97,7 +97,6 @@ public class RedTapeView extends JPanel implements ClosedListener {
 //            if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
 //        }
 //    }
-
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -255,12 +254,12 @@ public class RedTapeView extends JPanel implements ClosedListener {
                             customer.getShippingCondition(),
                             customer.getPaymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
-                    Ui.parent(jLabel1)
-                            .call(() -> "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
-                            + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
-                            + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>")
-                            .openFx(HtmlPane.class, "StateInfo")
-                            .exec();
+                    Ui.fx().parent(jLabel1).title("StageInfo")
+                            .show(() -> {
+                                return "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
+                                        + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
+                                        + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>";
+                            }, () -> new HtmlPane());
                 }
             }
         });
@@ -672,7 +671,6 @@ public class RedTapeView extends JPanel implements ClosedListener {
     JTextField searchCommandField;
     JList searchResultList;
     // End of variables declaration//GEN-END:variables
-
 
     @Override
     public void closed() {
