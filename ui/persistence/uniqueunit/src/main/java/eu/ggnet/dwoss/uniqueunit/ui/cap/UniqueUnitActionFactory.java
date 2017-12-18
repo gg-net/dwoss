@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.ActionFactory;
-import eu.ggnet.saft.core.ActionFactory.MetaAction;
+import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
 
 /**
  *

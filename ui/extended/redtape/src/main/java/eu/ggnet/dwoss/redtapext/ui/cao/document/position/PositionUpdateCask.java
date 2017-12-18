@@ -40,14 +40,14 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.all.VetoableOnOk;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.*;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -336,11 +336,11 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     @Override
     public boolean mayClose() {
         if ( StringUtils.isBlank(description) ) {
-            Alert.show(this, "Beschreibung darf nich leer sein.");
+            UiAlert.show(this, "Beschreibung darf nich leer sein.");
             return false;
         }
         if ( StringUtils.isBlank(positionName) ) {
-            Alert.show(this, "Name darf nich leer sein.");
+            UiAlert.show(this, "Name darf nich leer sein.");
             return false;
         }
         position.setDescription(description);
@@ -352,7 +352,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
             position.setAfterTaxPrice(Double.valueOf(afterTaxPriceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
-            Alert.show(this, "Preisformat ist nicht lesbar");
+            UiAlert.show(this, "Preisformat ist nicht lesbar");
         }
         for (Binding binding : bindingGroup.getBindings()) {
             binding.save();

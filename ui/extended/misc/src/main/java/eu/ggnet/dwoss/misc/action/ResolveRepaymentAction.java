@@ -25,10 +25,10 @@ import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

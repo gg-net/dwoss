@@ -26,7 +26,7 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 // TODO: Ok,Canel Button richtig einbinden.
 // Return Values

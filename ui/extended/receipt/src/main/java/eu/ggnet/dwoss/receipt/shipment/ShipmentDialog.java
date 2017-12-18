@@ -16,13 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.saft.core.*;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

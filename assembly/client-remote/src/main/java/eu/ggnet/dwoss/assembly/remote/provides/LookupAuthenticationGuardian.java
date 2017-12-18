@@ -21,10 +21,10 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.rights.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.api.AuthenticationException;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Implementation of an IAuthenticator using the GG-Net Imap Server

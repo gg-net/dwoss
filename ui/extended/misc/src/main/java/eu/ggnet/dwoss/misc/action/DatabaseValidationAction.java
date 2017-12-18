@@ -24,7 +24,7 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.misc.op.PersistenceValidator;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class DatabaseValidationAction extends AbstractAction {
 

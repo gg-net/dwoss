@@ -24,8 +24,8 @@ import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.util.IPreClose;
 import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.saft.core.authorisation.JComponentEnabler;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.JComponentEnabler;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import java.awt.Component;
 import java.util.*;
@@ -40,7 +40,7 @@ import eu.ggnet.dwoss.customer.priv.OldCustomer;
 
 import lombok.Getter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 import static eu.ggnet.dwoss.rules.AddressType.*;
 

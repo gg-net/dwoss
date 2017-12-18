@@ -24,9 +24,9 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.price.imex.*;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.saft.core.ActionFactory;
+import eu.ggnet.saft.core.cap.ActionFactory;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * ActionFactory for Prices.

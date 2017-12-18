@@ -22,11 +22,11 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
 import static eu.ggnet.dwoss.rules.DocumentType.RETURNS;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens the Returns report view to select lines to be exported.

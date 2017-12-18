@@ -2,7 +2,7 @@ package tryout.support;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.ToolbarComponent;
+import eu.ggnet.saft.core.cap.ToolbarComponent;
 
 /**
  *

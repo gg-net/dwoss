@@ -16,6 +16,8 @@
  */
 package eu.ggnet.saft.sample.search;
 
+import eu.ggnet.saft.Ops;
+
 import java.util.*;
 
 import javafx.collections.FXCollections;
@@ -25,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.all.SelectionEnhancer;
+import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.*;
 
 /**

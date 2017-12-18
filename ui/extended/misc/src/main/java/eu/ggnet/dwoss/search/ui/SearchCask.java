@@ -41,8 +41,8 @@ import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;

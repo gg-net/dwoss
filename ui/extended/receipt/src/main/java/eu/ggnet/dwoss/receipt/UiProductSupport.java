@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.util.OkCancelDialog;
 
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Support Class for creation or edit of Products.

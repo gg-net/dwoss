@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

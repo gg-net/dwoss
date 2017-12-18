@@ -17,8 +17,7 @@ import javax.swing.*;
 
 import org.junit.Test;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.misc.op.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
 
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelManagerDialog;

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_RAW_REPORT_DATA;
 

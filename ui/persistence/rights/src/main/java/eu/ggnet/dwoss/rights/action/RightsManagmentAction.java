@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.rights.action;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-
+import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.dwoss.rights.RightsManagmentController;
 
 import eu.ggnet.saft.Ui;

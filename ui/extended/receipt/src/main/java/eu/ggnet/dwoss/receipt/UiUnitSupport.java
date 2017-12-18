@@ -29,8 +29,8 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
 
 import eu.ggnet.dwoss.receipt.product.ComboBoxDialog;
@@ -45,7 +45,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 
 import lombok.Value;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Ui support for the unit Operations.

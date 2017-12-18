@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.receipt.unit.chain.refurbishId;
 
 import java.util.Objects;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;

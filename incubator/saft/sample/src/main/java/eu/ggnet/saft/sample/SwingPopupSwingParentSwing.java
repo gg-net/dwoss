@@ -1,5 +1,6 @@
 package eu.ggnet.saft.sample;
 
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.Ui;
 
@@ -8,7 +9,6 @@ import java.awt.Label;
 
 import javax.swing.JDialog;
 
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.sample.support.DocumentAdressUpdateViewOkCanceler;
 import eu.ggnet.saft.sample.support.MainPanel;
 

@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  *

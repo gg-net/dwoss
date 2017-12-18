@@ -38,8 +38,8 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.UserPreferences;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.UserPreferences;
 
 import lombok.Getter;
 import lombok.Setter;

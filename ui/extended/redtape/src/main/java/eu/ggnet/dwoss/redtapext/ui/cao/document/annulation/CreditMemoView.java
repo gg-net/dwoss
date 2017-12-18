@@ -31,10 +31,10 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

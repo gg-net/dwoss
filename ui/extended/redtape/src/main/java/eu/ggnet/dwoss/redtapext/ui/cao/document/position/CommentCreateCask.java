@@ -23,8 +23,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 
 import eu.ggnet.dwoss.redtape.entity.Position;

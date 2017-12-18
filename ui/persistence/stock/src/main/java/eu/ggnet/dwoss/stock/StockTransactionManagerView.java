@@ -28,7 +28,7 @@ import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_REMOVE_UNIT;

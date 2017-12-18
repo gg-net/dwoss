@@ -16,10 +16,12 @@
  */
 package eu.ggnet.saft.sample.search;
 
+import eu.ggnet.saft.api.ops.DefaultAction;
+
 import java.util.function.Consumer;
 
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.UiAlert;
 
 /**
  *
@@ -31,7 +33,7 @@ public class DossierAction implements Consumer<MicroDossier> {
 
     @Override
     public void accept(MicroDossier t) {
-        Alert.show("Showing " + t);
+        UiAlert.show("Showing " + t);
     }
 
 }

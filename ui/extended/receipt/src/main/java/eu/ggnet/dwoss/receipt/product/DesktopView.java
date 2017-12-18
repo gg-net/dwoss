@@ -45,7 +45,7 @@ import eu.ggnet.dwoss.util.IPreClose;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

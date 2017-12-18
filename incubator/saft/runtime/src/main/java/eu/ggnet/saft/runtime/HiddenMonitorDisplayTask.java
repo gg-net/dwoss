@@ -30,7 +30,7 @@ import eu.ggnet.saft.api.progress.ProgressObserver;
 import eu.ggnet.saft.runtime.HiddenMonitorDisplayTask.Progress;
 import lombok.Data;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDisplayTask.Progress> {
 

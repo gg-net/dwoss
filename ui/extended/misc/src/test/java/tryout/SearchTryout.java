@@ -32,9 +32,9 @@ import eu.ggnet.dwoss.search.ui.SearchCask;
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.op.Searcher;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  *

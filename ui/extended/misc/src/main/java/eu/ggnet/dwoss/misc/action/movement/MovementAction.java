@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

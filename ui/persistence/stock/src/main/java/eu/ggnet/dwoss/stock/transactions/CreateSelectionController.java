@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * FXML Controller class

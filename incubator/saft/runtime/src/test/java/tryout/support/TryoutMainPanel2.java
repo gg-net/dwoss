@@ -8,7 +8,7 @@ import java.awt.BorderLayout;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.MainComponent;
+import eu.ggnet.saft.core.cap.MainComponent;
 
 /**
  *

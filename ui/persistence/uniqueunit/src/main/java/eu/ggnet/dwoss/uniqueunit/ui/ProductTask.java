@@ -7,9 +7,11 @@ package eu.ggnet.dwoss.uniqueunit.ui;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;

@@ -17,7 +17,7 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  *

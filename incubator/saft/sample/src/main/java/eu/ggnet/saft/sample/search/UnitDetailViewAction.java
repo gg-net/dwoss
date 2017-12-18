@@ -18,7 +18,7 @@ package eu.ggnet.saft.sample.search;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.DefaultAction;
+import eu.ggnet.saft.api.ops.DefaultAction;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.Ui;
 

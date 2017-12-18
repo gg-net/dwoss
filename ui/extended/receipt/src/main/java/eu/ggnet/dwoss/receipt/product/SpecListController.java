@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.util.table.PojoColumn;
 import eu.ggnet.dwoss.util.table.PojoFilter;
 import eu.ggnet.dwoss.util.table.PojoTableModel;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 
 /*

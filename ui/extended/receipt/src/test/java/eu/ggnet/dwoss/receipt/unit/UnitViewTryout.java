@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  * Tryout Test for Unit View.

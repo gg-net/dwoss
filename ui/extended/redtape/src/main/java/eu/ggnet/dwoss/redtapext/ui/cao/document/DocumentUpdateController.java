@@ -39,12 +39,12 @@ import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

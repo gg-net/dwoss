@@ -22,9 +22,9 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.customer.priv.SearchSingleton;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Alert;
+import eu.ggnet.saft.UiAlert;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -40,7 +40,7 @@ public class RecreateSearchIndex extends AbstractAction {
     public void actionPerformed(ActionEvent event) {
         Ui.exec(() -> {
             Ui.progress().wrap(() -> lookup(SearchSingleton.class).reindexSearch()).run();
-            Alert.show("Suchindex wurde neu erzeugt");
+            UiAlert.show("Suchindex wurde neu erzeugt");
         });
     }
 }

@@ -33,12 +33,12 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.model.SalesChannelLine;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens the SalesChannelManager with all available units and optional executes the changes.

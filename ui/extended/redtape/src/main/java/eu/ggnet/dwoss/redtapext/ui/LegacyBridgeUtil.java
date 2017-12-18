@@ -16,14 +16,14 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 

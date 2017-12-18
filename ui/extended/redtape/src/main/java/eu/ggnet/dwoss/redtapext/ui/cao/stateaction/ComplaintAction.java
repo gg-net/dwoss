@@ -26,8 +26,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.entity.Position;
@@ -46,7 +45,7 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

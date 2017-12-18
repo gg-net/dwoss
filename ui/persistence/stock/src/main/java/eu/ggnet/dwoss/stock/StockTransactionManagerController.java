@@ -32,13 +32,13 @@ import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

@@ -20,8 +20,7 @@ import java.awt.Window;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.receipt.UnitProcessor;
 
 import eu.ggnet.dwoss.receipt.UiUnitSupport;

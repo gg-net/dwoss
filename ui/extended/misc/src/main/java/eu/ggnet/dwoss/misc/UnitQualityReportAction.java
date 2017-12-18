@@ -30,8 +30,7 @@ import org.metawidget.inspector.annotation.UiLabel;
 import org.metawidget.swing.SwingMetawidget;
 import org.metawidget.swing.widgetprocessor.binding.beansbinding.BeansBindingProcessor;
 
-import eu.ggnet.saft.core.Workspace;
-
+import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
@@ -41,7 +40,7 @@ import eu.ggnet.saft.Ui;
 
 import lombok.Data;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

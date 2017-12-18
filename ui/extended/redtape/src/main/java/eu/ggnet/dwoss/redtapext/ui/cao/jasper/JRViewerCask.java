@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * This Class is to view a Jasper Report with a modified {@link JRViewerToolbar}.

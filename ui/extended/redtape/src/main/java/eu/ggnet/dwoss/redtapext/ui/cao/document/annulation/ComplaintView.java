@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 
