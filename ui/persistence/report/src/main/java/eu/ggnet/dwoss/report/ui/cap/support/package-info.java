@@ -17,4 +17,4 @@
 /**
  * Auxilary views and models for cap, like a date range selection for an xls export.
  */
-package eu.ggnet.dwoss.report.ui.cap.aux;
+package eu.ggnet.dwoss.report.ui.cap.support;

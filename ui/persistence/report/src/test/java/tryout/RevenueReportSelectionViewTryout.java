@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.report.ui.cap.aux.RevenueReportSelectionView;
+import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

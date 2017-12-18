@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.report.ui.cap.aux;
+package eu.ggnet.dwoss.report.ui.cap.support;
 
 import java.time.Instant;
 import java.time.LocalDate;

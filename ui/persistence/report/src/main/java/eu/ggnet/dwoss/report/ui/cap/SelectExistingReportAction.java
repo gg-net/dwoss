@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.ui.cap.aux.SelectExistingReportView;
+import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
 import eu.ggnet.saft.Ui;

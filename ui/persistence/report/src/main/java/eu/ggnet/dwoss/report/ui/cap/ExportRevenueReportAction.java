@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.report.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.op.RevenueReporter;
-import eu.ggnet.dwoss.report.ui.cap.aux.RevenueReportSelectionView;
+import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.authorisation.AccessableAction;
 

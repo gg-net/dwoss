@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.report.ui.cap.aux.SelectExistingReportView;
+import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
