@@ -61,6 +61,7 @@ public class ReportHtmlTryout {
     @Test
     public void tryout() throws InterruptedException, InvocationTargetException, MalformedURLException {
         Report report = new Report("TestReport", ALSO, _2011_10_01, _2011_10_07);
+        report.setComment("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.");
 
         new JFXPanel(); // Implicit start the platform.
 

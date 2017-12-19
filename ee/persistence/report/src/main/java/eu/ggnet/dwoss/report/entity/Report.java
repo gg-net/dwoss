@@ -339,39 +339,39 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
      * @return HTML view of the Report.
      */
     public String toHtml() {
-        StringBuilder sb = new StringBuilder("<table>");
+        StringBuilder sb = new StringBuilder("<table style='width: 100%; background-color: #e8e8e8; font-family: Sans-Serif;' border='0'><tbody>");
         sb.append("<tr>");
-        sb.append("<td><p><b>Report</b></p>");
+        sb.append("<td><b>Report</b>");
         sb.append("<b>id: </b>");
         sb.append(id);
         sb.append("</td>");
-        sb.append("<td><p><b>Name</b></p>");
+        sb.append("<td><b>Name</b>");
         sb.append(name);
         sb.append("</td>");
         sb.append("</tr>");
 
         sb.append("<tr>");
-        sb.append("<td><p><b>Type:</b></p>");
-        sb.append(type);
-        sb.append("<td><p><b>Typename</b></p>");
-        sb.append(typeName);
-        sb.append("</td>");
+        sb.append("<td><b>Type:</b>");
+        sb.append(type.getName());
+        sb.append("<td>&nbsp;</td>");
         sb.append("</td></tr>");
 
         sb.append("<tr>");
-        sb.append("<td><p><b>StartingDate:</b></p>");
+        sb.append("<td><b>Starting Date:</b><br>");
         sb.append(startingDate);
-        sb.append("<td><p><b>EndingDate</b></p>");
+        sb.append("<td><p><b>Ending Date</b><br>");
         sb.append(endingDate);
         sb.append("</td>");
         sb.append("</td></tr>");
 
         sb.append("<tr>");
-        sb.append("<td colspan=\"2\"><p><b>comment:</b></p>");
+        sb.append("<td colspan='2'><b>Comment:</b><br>");
+        sb.append("<textarea  rows='5' cols='70' disabled>");
         sb.append(comment);
+        sb.append("</textarea>");
         sb.append("</td></tr>");
 
-        sb.append("</ul>");
+        sb.append("</tbody></table>");
 
         return sb.toString();
 
