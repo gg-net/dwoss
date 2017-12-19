@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.report.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.*;
@@ -1082,11 +1083,12 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * @return HTML view of the ReportLine.
      */
     public String toHtml() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
         StringBuilder sb = new StringBuilder("");
+        sb.append("<h1><b>ReportLine </b></h1>");
 
-        sb.append("<div style='font-family: Sans-Serif;' border='0'>");
-        sb.append("<b>ReportLine </b>");
-        sb.append("<br>");
+        sb.append("<div style='font-family: Sans-Serif; background-color: #e8e8e8;' border='0'>");
         sb.append("<b>id: </b>");
         sb.append(id);
         sb.append("<br>");
@@ -1123,7 +1125,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<table style='width: 100%; background-color: #e8e8e8; font-family: Sans-Serif;' border='0'><tbody>");
         sb.append("<tr>");
 
-        sb.append("<td valign='top'>");
+        sb.append("<td valign='top' colspan='2'>");
         sb.append("<font size='4'><b><u>Postition</u></b></font><br>");
         sb.append("<b>Amount: </b>");
         sb.append(amount);
@@ -1134,7 +1136,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<br>");
 
         sb.append("<b>Description: </b><br>");
-        sb.append("<textarea  rows='5' cols='50' disabled>");
+        sb.append("<textarea  rows='5' cols='70' disabled>");
         sb.append(description);
         sb.append("</textarea>");
         sb.append("<br>");
@@ -1157,34 +1159,11 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
 
         sb.append("<b>Booking Account: </b>");
         sb.append(bookingAccount);
-        sb.append("</td>");
-
-        //customer
-        sb.append("<td valign='top'>");
-        sb.append("<font size='4'><b><u>Customer</u></b></font><br>");
-        sb.append("<b>CustomerId: </b>");
-        sb.append(customerId);
-        sb.append("<br>");
-
-        sb.append("<b>Customer Name: </b>");
-        sb.append(customerName);
-        sb.append("<br>");
-
-        sb.append("<b>Customer Company: </b>");
-        sb.append(customerCompany);
-        sb.append("<br>");
-
-        sb.append("<b>Invoice Address: </b><br>");
-        sb.append("<textarea  rows='3' cols='40' disabled>");
-        sb.append(invoiceAddress);
-        sb.append("</textarea>");
-        sb.append("</td>");
-
+        sb.append("</td>");  
         sb.append("</tr>");
 
         //product
         sb.append("<tr>");
-
         sb.append("<td valign='top'>");
         sb.append("<font size='4'><b><u>Product</u></b></font><br>");
 
@@ -1211,8 +1190,32 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<b>Manufacturer CostPrice: </b>");
         sb.append(manufacturerCostPrice);
         sb.append("</td>");
+        
+         //customer
+        sb.append("<td valign='top'>");
+        sb.append("<font size='4'><b><u>Customer</u></b></font><br>");
+        sb.append("<b>CustomerId: </b>");
+        sb.append(customerId);
+        sb.append("<br>");
 
+        sb.append("<b>Customer Name: </b>");
+        sb.append(customerName);
+        sb.append("<br>");
+
+        sb.append("<b>Customer Company: </b>");
+        sb.append(customerCompany);
+        sb.append("<br>");
+
+        sb.append("<b>Invoice Address: </b><br>");
+        sb.append("<textarea  rows='3' cols='40' disabled>");
+        sb.append(invoiceAddress);
+        sb.append("</textarea>");
+        sb.append("</td>");          
+        sb.append("</tr>");
+
+        
         //unit
+        sb.append("<tr>");
         sb.append("<td valign='top'>");
         sb.append("<font size='4'><b><u>Unit</u></b></font><br>");
         sb.append("<b>RefurbishId: </b>");
@@ -1224,7 +1227,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<br>");
 
         sb.append("<b>mfg Date: </b>");
-        sb.append(mfgDate);
+        sb.append( simpleDateFormat.format(mfgDate) );
         sb.append("<br>");
 
         sb.append("<b>UniqueUnitId: </b>");
@@ -1243,12 +1246,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append(salesChannel.getName());
 
         sb.append("</td>");
-
-        sb.append("</tr>");
-
         //contractor
-        sb.append("<tr>");
-
         sb.append("<td valign='top'>");
         sb.append("<font size='4'><b><u>Contractor</u></b></font><br>");
         sb.append("<b>Contractor: </b>");
@@ -1267,7 +1265,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append(gtin);
 
         sb.append("</td>");
-        sb.append("<td>&nbsp;</td>");
+
         sb.append("</tr>");
         sb.append("</tbody></table>");
 
