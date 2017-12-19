@@ -118,10 +118,10 @@ public class ProductListController implements Initializable, FxController {
      */
     public void initialize(URL url, ResourceBundle rb) {
 
+        ProductTask productsTask = new ProductTask();
+
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
-
-        setCellValues();
 
         tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
@@ -137,7 +137,7 @@ public class ProductListController implements Initializable, FxController {
             }
         });
 
-        ProductTask productsTask = new ProductTask();
+        setCellValues();
 
         progressBar.progressProperty()
                 .bind(productsTask.progressProperty());
@@ -209,7 +209,7 @@ public class ProductListController implements Initializable, FxController {
     private Predicate<Product> getPredicate() {
 
         Predicate<Product> onlyEol = product -> !menuEol.isSelected()
-                || (menuEol.isSelected() && getSelectedDate().before(product.getEol()));
+                || (menuEol.isSelected() && (product.getEol() == null || getSelectedDate().before(product.getEol())));
 
         onlyEol = onlyEol.and(product -> getSelectedTradeName() == null || product.getTradeName() == getSelectedTradeName());
 

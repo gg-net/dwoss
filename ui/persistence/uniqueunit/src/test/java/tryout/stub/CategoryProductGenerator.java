@@ -24,8 +24,11 @@ public class CategoryProductGenerator {
     private final Random rand = new Random();
 
     private final List<String> names = new ArrayList<>(Arrays.asList("A41515CP", "D85412CP", "B5458CP", "F65487CP", "S45656CP", "P464CP", "I4445CP", "V5461CP", "C4785CP"));
+
     private final List<SalesChannel> salesChannels = new ArrayList<>(Arrays.asList(SalesChannel.values()));
+
     private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
+
     private final List<String> descriptions = new ArrayList<>(Arrays.asList("test", "aaaaaa", "bbbbbb", "ccccccc", "ddddddd"));
 
     private ProductGenerator pGen = new ProductGenerator();
