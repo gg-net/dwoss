@@ -35,7 +35,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
@@ -82,7 +81,7 @@ public class RawReportView extends BorderPane {
 
     private final DoubleProperty referencePriceProperty = new SimpleDoubleProperty(0);
 
-    private boolean deleteConfirmed = false;
+    private Tooltip tooltip = new Tooltip();
 
     public RawReportView() {
         model = FXCollections.observableArrayList();
@@ -181,7 +180,6 @@ public class RawReportView extends BorderPane {
         });
         //adding a RowFactory to show the Comment of a SimpleReportLine as a Tooltip
         table.setRowFactory((view) -> new TableRow<SimpleReportLine>() {
-            private Tooltip tooltip = new Tooltip();
 
             @Override
             protected void updateItem(SimpleReportLine item, boolean empty) {
@@ -269,18 +267,6 @@ public class RawReportView extends BorderPane {
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
         okButton.setText("Save");
-
-        // TODO: Noch mal mit Jens discutieren.
-        textarea.textProperty().addListener((event, oldValue, newValue) -> {
-            if ( oldValue != null && newValue != null ) {
-                if ( oldValue.length() > newValue.length() && newValue.length() <= 3 && !deleteConfirmed ) {
-                    Alert alert = new Alert(AlertType.INFORMATION, "Do you really want to delete the comment?", ButtonType.OK);
-                    alert.showAndWait().filter(response -> response == ButtonType.OK).ifPresent(response -> {
-                        deleteConfirmed = true;
-                    });
-                }
-            }
-        });
 
         Platform.runLater(() -> {
             textarea.requestFocus();
