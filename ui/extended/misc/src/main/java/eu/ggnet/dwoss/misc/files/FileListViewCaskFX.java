@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.files;
 import java.io.File;
 import java.util.concurrent.*;
 
-import eu.ggnet.saft.core.MainComponent;
+import eu.ggnet.saft.core.cap.MainComponent;
 
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;

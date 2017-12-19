@@ -16,6 +16,13 @@
  */
 package eu.ggnet.saft.runtime;
 
+import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.cap.ToolbarComponent;
+import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.core.cap.MainComponent;
+import eu.ggnet.saft.core.auth.AutoLoginLogout;
+
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.*;
@@ -32,14 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.api.Accessable;
-import eu.ggnet.saft.core.ActionFactory.MetaAction;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.UserChangeListener;
-import eu.ggnet.saft.core.ops.Ops;
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.UserChangeListener;
+import eu.ggnet.saft.Ops;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class SwingClient {
 

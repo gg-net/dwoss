@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.api.progress.ProgressObserver;
 import lombok.Data;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * HiddenMonitorDisplayer, considered for usage in a {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)

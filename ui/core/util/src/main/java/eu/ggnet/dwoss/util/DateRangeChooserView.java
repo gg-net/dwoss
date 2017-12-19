@@ -92,7 +92,7 @@ public class DateRangeChooserView extends BorderPane implements ResultProducer<D
         ok.setOnAction((e) -> {
             result = new Range(start.getValue(), end.getValue());
             if ( result.isValid() ) Ui.closeWindowOf(this);
-            else eu.ggnet.saft.core.Alert.show(this, result.violationMessages());
+            else eu.ggnet.saft.UiAlert.show(this, result.violationMessages());
         });
 
         FlowPane flowPane = new FlowPane(10, 10, ok, cancel);

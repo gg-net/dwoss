@@ -22,8 +22,8 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import eu.ggnet.dwoss.receipt.AbstractController;
 
@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import javafx.application.Platform;
 import javafx.stage.Modality;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class ShipmentController extends AbstractController {
 

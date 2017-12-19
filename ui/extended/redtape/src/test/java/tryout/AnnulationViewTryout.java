@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import static org.mockito.Mockito.mock;
 

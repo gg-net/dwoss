@@ -32,14 +32,14 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 import lombok.AllArgsConstructor;
 
-import static eu.ggnet.saft.core.Client.lookup;
-import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
+import static eu.ggnet.saft.Client.lookup;
+import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
 
 /**
  *
@@ -65,7 +65,7 @@ public class DossierUpdateAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ( doc.getDossier().getId() == 0 ) {
-            Alert.show(parent, "Fehler", "Sopo Aufträge können nicht bearbeitet werden.", ERROR);
+            UiAlert.show(parent, "Fehler", "Sopo Aufträge können nicht bearbeitet werden.", ERROR);
             return;
         }
 

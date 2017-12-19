@@ -36,7 +36,7 @@ import eu.ggnet.saft.Ui;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

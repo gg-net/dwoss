@@ -26,9 +26,9 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.Action.NAME;
 
 public class OptimizedCreditMemoReportAction extends AbstractAction {

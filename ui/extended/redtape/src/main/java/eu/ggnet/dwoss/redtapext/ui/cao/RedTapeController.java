@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
@@ -56,15 +59,14 @@ import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
@@ -307,7 +309,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openCreateCustomer() {
         long customerId = lookup(CustomerCos.class).createCustomer();
         if ( customerId == 0 ) {
-            Alert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+            UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
         }
         model.setPurchaseCustomer(customerId);

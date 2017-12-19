@@ -21,16 +21,16 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.saft.api.auth.Authorisation;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import eu.ggnet.dwoss.util.HtmlDialog;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * An Action, that opens a HtmlDialog to show all active Rights.

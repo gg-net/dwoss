@@ -24,11 +24,11 @@ import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Create a new sales report.

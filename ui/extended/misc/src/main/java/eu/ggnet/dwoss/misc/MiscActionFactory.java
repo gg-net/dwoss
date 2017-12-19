@@ -40,10 +40,10 @@ import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.search.ui.OpenSearchAction;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.saft.core.ActionFactory;
+import eu.ggnet.saft.core.cap.ActionFactory;
 
-import static eu.ggnet.saft.core.Client.hasFound;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.hasFound;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

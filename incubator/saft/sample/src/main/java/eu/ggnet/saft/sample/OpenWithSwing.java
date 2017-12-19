@@ -9,8 +9,8 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.api.ui.StoreLocation;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.experimental.SwingBuilder;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.builder.SwingBuilder;
 import eu.ggnet.saft.sample.support.*;
 
 import lombok.Value;
@@ -119,7 +119,7 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once InputPane via Fxml ");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fxml().eval(SimpleFxmlController.class).ifPresent(t -> Alert.show("Ok pressed with Input: " + t));
+                Ui.fxml().eval(SimpleFxmlController.class).ifPresent(t -> UiAlert.show("Ok pressed with Input: " + t));
             }));
             menu.add(b);
             main.getMenuBar().add(menu);

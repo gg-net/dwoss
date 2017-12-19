@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.all.VetoableOnOk;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import lombok.Getter;
 

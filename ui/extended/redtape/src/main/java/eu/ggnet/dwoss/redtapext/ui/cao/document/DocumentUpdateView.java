@@ -50,15 +50,15 @@ import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.all.VetoableOnOk;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -152,7 +152,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                         controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
                         positionsFxList.refresh();
                     } else {
-                        Alert.show("Änderung an Positionen ist nicht erlaubt.");
+                        UiAlert.show("Änderung an Positionen ist nicht erlaubt.");
                     }
                 }
             });
@@ -704,7 +704,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                     // set AfterTax
                     // Whatevers
                 });
-                Alert.show(this, "Tax change not yet implemented");
+                UiAlert.show(this, "Tax change not yet implemented");
             });
         });
     }//GEN-LAST:event_taxChangeButtonActionPerformed

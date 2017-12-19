@@ -23,7 +23,7 @@ import javax.swing.JFrame;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.util.MailTo;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  *

@@ -22,11 +22,11 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.gsoffice.GsOfficeExporter;
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_GSOFFICE_IN_XML;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Action to create the GsOfficeXml.

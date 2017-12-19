@@ -24,10 +24,10 @@ import eu.ggnet.dwoss.misc.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
 import eu.ggnet.dwoss.util.OkCancelStage;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

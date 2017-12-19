@@ -26,8 +26,8 @@ import org.openide.util.lookup.ServiceProvider;
 import eu.ggnet.dwoss.stock.action.*;
 import eu.ggnet.dwoss.stock.transactions.ConsumerFactoryOfStockTransactions;
 import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
-import eu.ggnet.saft.core.ActionFactory;
-import eu.ggnet.saft.core.all.DescriptiveConsumerFactory;
+import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
 
 /**
  * ActionFactory for Stock.

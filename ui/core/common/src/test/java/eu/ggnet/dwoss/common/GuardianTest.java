@@ -1,6 +1,6 @@
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.saft.core.authorisation.UserChangeListener;
+import eu.ggnet.saft.core.auth.UserChangeListener;
 
 import java.util.Arrays;
 

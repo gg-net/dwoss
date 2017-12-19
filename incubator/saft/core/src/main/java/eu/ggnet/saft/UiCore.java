@@ -1,5 +1,7 @@
 package eu.ggnet.saft;
 
+import eu.ggnet.saft.core.ui.TitleUtil;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,12 +22,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.core.FxCore;
-import eu.ggnet.saft.core.SwingCore;
+import eu.ggnet.saft.core.ui.FxCore;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.exception.ExceptionUtil;
 import eu.ggnet.saft.core.exception.SwingExceptionDialog;
-import eu.ggnet.saft.core.fx.FxSaft;
-import eu.ggnet.saft.core.swing.SwingSaft;
+import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.core.ui.SwingSaft;
 
 /**
  * The Core of the Saft UI, containing methods for startup or registering things.
@@ -36,21 +38,13 @@ public class UiCore {
 
     private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
 
-    private static JFrame mainFrame = null; // Frame in Swing Mode
-
-    private static Stage mainStage = null; // Frame in Fx Mode
-
-    public static JFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public static Stage getMainStage() {
-        return mainStage;
-    }
-
     // We need the raw type here. Otherwise we cannot get different typs of cosumers in and out.
     @SuppressWarnings("unchecked")
     private static final Map<Class, Consumer> EXCEPTION_CONSUMER = new HashMap<>();
+
+    private static JFrame mainFrame = null; // Frame in Swing Mode
+
+    private static Stage mainStage = null; // Frame in Fx Mode
 
     private static Consumer<Throwable> finalConsumer = (b) -> {
         Runnable r = () -> {
@@ -69,6 +63,29 @@ public class UiCore {
 
     };
 
+    /**
+     * Returns the mainFrame in swing mode, otherwise null.
+     *
+     * @return the mainFrame in swing mode, otherwise null
+     */
+    public static JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    /**
+     * Returns the mainStage in fx mode, otherwise null.
+     *
+     * @return the mainStage in fx mode, otherwise null
+     */
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
+    /**
+     * Returns a property that represents background activity.
+     *
+     * @return a property that represents background activity
+     */
     public static BooleanProperty backgroundActivityProperty() {
         return BACKGROUND_ACTIVITY;
     }
@@ -76,7 +93,7 @@ public class UiCore {
     /**
      * interim Mode, Saft connects to a running environment.
      *
-     * @param mainView
+     * @param mainView the mainView to continue on.
      */
     public static void continueSwing(JFrame mainView) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
@@ -105,7 +122,7 @@ public class UiCore {
      * Starts the Core in Swing mode, may only be called once.
      *
      * @param <T>
-     * @param builder
+     * @param builder the builder for swing.
      */
     public static <T extends Component> void startSwing(final Callable<T> builder) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
@@ -114,7 +131,7 @@ public class UiCore {
             JFrame panel = SwingSaft.dispatch(() -> {
                 T node = builder.call();
                 JFrame p = new JFrame();
-                p.setTitle(UiUtil.title(node.getClass()));
+                p.setTitle(TitleUtil.title(node.getClass()));
                 p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 p.getContentPane().add(builder.call());
                 p.pack();
@@ -146,7 +163,7 @@ public class UiCore {
         mainStage = primaryStage;
         FxSaft.dispatch(() -> {
             T node = builder.call();
-            primaryStage.setTitle(UiUtil.title(node.getClass()));
+            primaryStage.setTitle(TitleUtil.title(node.getClass()));
             primaryStage.setScene(new Scene(node));
             primaryStage.centerOnScreen();
             primaryStage.sizeToScene();

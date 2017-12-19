@@ -21,8 +21,7 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.ActionFactory;
-
+import eu.ggnet.saft.core.cap.ActionFactory;
 import eu.ggnet.dwoss.receipt.product.CpuManagementAction;
 import eu.ggnet.dwoss.receipt.product.UpdateProductAction;
 import eu.ggnet.dwoss.receipt.product.GpuManagementAction;

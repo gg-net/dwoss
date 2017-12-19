@@ -17,7 +17,9 @@
 package eu.ggnet.saft.api.ui;
 
 /**
- * If implemented in some parameter, which is given from a Ui.call to a Ui.openXX than the id is added to the internal window key to identify this instance.
+ * Id Supplier interface.
+ * If implemented in the result of a callable in Ui.xx().show(callable,builder) or Ui.xx().eval(callable,builder),X than the id is added to the internal window
+ * key to identify this instance.
  * <p>
  * @author oliver.guenther
  */

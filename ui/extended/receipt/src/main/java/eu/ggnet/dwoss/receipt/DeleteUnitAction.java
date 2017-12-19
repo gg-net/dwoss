@@ -23,18 +23,18 @@ import javax.swing.JOptionPane;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import eu.ggnet.dwoss.receipt.UnitDestroyer;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
 import static javax.swing.JOptionPane.*;
 

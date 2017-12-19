@@ -27,7 +27,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.*;
 
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.SwingCore;
+import eu.ggnet.saft.core.ui.SwingCore;
 
 /**
  * Client View, Main Frame.

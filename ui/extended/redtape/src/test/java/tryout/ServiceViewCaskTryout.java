@@ -16,6 +16,7 @@
  */
 package tryout;
 
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.Ui;
 
@@ -32,9 +33,8 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.saft.api.AuthenticationException;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 /**

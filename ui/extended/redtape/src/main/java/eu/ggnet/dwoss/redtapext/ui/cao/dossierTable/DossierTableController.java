@@ -31,13 +31,13 @@ import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

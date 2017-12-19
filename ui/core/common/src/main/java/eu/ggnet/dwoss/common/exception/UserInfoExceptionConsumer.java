@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.UiAlert;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  *
@@ -32,20 +32,20 @@ public class UserInfoExceptionConsumer implements Consumer<UserInfoException> {
 
     @Override
     public void accept(UserInfoException ex) {
-        Alert.title(ex.getHead()).message(ex.getMessage())
+        UiAlert.title(ex.getHead()).message(ex.getMessage())
                 .parent(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
                 .show(map(ex.getType()));
     }
 
-    private static UiAlert.Type map(UserInfoException.Type t1) {
+    private static UiAlertBuilder.Type map(UserInfoException.Type t1) {
         switch (t1) {
             case ERROR:
-                return UiAlert.Type.ERROR;
+                return UiAlertBuilder.Type.ERROR;
             case WARNING:
-                return UiAlert.Type.WARNING;
+                return UiAlertBuilder.Type.WARNING;
             case INFO:
             default:
-                return UiAlert.Type.INFO;
+                return UiAlertBuilder.Type.INFO;
         }
     }
 

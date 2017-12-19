@@ -27,13 +27,13 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.all.DescriptiveConsumer;
-import eu.ggnet.saft.core.all.DescriptiveConsumerFactory;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ops.DescriptiveConsumer;
+import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Supplies dependent actions of Stock.
@@ -62,7 +62,7 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                                     v.destination.getId(),
                                     lookup(Guardian.class).getUsername(),
                                     v.comment)))
-                                    .filter(Ui.failure()::handle).ifPresent(u -> Alert.show("Umfuhr angelegt"));
+                                    .filter(Ui.failure()::handle).ifPresent(u -> UiAlert.show("Umfuhr angelegt"));
                         });
 
 // OLD Style

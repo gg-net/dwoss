@@ -25,7 +25,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewAction;
 import eu.ggnet.dwoss.redtape.reporting.*;
-import eu.ggnet.saft.core.ActionFactory;
+import eu.ggnet.saft.core.cap.ActionFactory;
 
 /**
  *

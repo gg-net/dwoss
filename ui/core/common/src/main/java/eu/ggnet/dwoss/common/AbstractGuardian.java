@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.common;
 
+import eu.ggnet.saft.core.auth.UserChangeListener;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.AccessEnabler;
+
 import java.util.*;
 
 import javax.swing.Action;
@@ -24,9 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.api.Accessable;
-import eu.ggnet.saft.api.Authorisation;
-import eu.ggnet.saft.core.authorisation.*;
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.api.auth.Authorisation;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.

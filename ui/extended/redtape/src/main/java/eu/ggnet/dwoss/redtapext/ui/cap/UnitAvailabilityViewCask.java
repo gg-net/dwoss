@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.cap.MainComponent;
+import eu.ggnet.saft.Client;
+
 import java.awt.*;
 import java.util.*;
 
@@ -30,13 +34,12 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.all.SelectionEnhancer;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.ops.Ops;
+import eu.ggnet.saft.core.ops.SelectionEnhancer;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.Ops;
 import eu.ggnet.saft.core.ops.Selector;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * View that is used to quickly check availability.

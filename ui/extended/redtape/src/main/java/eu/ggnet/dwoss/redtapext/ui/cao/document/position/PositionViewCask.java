@@ -35,9 +35,9 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.text.Font.font;
 

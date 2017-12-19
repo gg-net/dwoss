@@ -27,17 +27,17 @@ import javax.swing.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.Workspace;
 
 import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.saft.core.ToolbarComponent;
+import eu.ggnet.saft.core.cap.ToolbarComponent;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

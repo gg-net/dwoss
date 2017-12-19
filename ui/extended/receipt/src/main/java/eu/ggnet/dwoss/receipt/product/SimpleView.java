@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.spec.format.SpecFormater;
 
 import lombok.Getter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 

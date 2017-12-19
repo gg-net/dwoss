@@ -46,7 +46,7 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import lombok.Getter;
 import lombok.Value;

@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.CreateSelectionController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  *

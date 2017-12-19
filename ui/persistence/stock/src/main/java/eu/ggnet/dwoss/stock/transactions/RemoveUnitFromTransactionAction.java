@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.stock.transactions;
 
-import eu.ggnet.saft.Ui;
-
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Removes a unit from a Transaction.
@@ -42,12 +41,12 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     @Override
     @SuppressWarnings("UseSpecificCatch")
     public void actionPerformed(ActionEvent e) {
-        Ui.choiceFx(RemoveQuestionView.class)
-                .onOk(v -> {
-                    lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), lookup(Guardian.class).getUsername(), v.comment());
-                    Alert.show("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt");
-                    return null;
-                })
-                .exec();
+        Ui.exec(() -> {
+            Ui.fx().eval(() -> new RemoveQuestionView()).ifPresent(v -> Ui.progress().call(() -> {
+                lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), lookup(Guardian.class).getUsername(), v.comment());
+                UiAlert.show("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt");
+                return null;
+            }));
+        });
     }
 }

@@ -28,12 +28,12 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Creates or uses a Transfer Transaction to move a Unit from one stock to another.
@@ -56,7 +56,7 @@ public class CreateSimpleAction extends AccessableAction {
                     .map(v -> ReplyUtil.wrap(() -> lookup(StockTransactionProcessor.class)
                     .perpareTransfer(v.stockUnits, v.destination.getId(), lookup(Guardian.class).getUsername(), v.comment))
                     ).filter(Ui.failure()::handle)
-                    .ifPresent(t -> Alert.show("Umfuhr angelegt")));
+                    .ifPresent(t -> UiAlert.show("Umfuhr angelegt")));
         });
 
 // OLD Style

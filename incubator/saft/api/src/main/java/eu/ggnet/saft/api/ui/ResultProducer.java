@@ -20,6 +20,7 @@ package eu.ggnet.saft.api.ui;
  * Indicates, that the implementor will return a somehow computed result.
  *
  * @author oliver.guenther
+ * @param <T>
  */
 public interface ResultProducer<T> {
 

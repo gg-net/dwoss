@@ -15,8 +15,8 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.UiAlert;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 import java.net.URL;
 import java.util.*;
@@ -154,7 +154,7 @@ public class CategoryProductEditorController implements Initializable, FxControl
         categoryProductDto = new CategoryProductDto();
 
         if ( StringUtils.isBlank(name.getText()) ) {
-            Alert.message("Es muss ein Name gesetzt werden").show(UiAlert.Type.WARNING);
+            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
 

@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.entity.Dossier;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.TableColumnChooserPopup;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

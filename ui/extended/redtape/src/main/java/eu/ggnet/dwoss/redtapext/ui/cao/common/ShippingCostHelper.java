@@ -27,7 +27,7 @@ import java.util.SortedMap;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;

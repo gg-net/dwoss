@@ -54,8 +54,8 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.saft.api.ui.Frame;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.Workspace;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;

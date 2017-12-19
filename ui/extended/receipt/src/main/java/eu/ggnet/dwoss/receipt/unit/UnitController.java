@@ -46,7 +46,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static eu.ggnet.dwoss.rules.ReceiptOperation.IN_SALE;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 public class UnitController {

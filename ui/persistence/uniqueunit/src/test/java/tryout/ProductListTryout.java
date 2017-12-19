@@ -1,17 +1,16 @@
 package tryout;
 
-import tryout.stub.UniqueUnitAgentStub;
-
 import java.awt.Dimension;
 
 import javax.swing.*;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
-import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
+import tryout.stub.UniqueUnitAgentStub;
 
 /**
  * Test the ListView with Sample data.
@@ -28,7 +27,7 @@ public class ProductListTryout {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
 

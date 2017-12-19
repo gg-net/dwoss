@@ -5,8 +5,8 @@ import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import javafx.event.ActionEvent;
 

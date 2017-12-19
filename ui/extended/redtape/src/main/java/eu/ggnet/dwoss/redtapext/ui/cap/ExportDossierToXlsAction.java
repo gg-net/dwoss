@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.Workspace;
+
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -27,11 +30,10 @@ import javax.swing.SwingWorker;
 import eu.ggnet.dwoss.redtape.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.*;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -56,7 +58,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
             protected void done() {
                 try {
                     FileJacket fj = get();
-                    if ( fj == null ) Alert.show("Keine Rückgabewerte");
+                    if ( fj == null ) UiAlert.show("Keine Rückgabewerte");
                     else Desktop.getDesktop().open(fj.toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
                     Ui.handle(ex);

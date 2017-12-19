@@ -17,10 +17,12 @@
 package eu.ggnet.dwoss.stock.transactions;
 
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
 
 /**
@@ -28,19 +30,34 @@ import eu.ggnet.saft.api.ui.Title;
  * @author oliver.guenther
  */
 @Title("Einzelnes Gerät aus Transaktion entfernen")
-public class RemoveQuestionView extends VBox {
+public class RemoveQuestionView extends VBox implements ResultProducer<RemoveQuestionView> {
 
     private final TextField refurbishIdField;
 
     private final TextField commentField;
 
+    private boolean ok = false;
+
     public RemoveQuestionView() {
         setPadding(new Insets(5));
         refurbishIdField = new TextField();
         commentField = new TextField();
+
+        Button cancel = new Button("Abbrechen");
+        cancel.setOnAction((e) -> Ui.closeWindowOf(this));
+        Button okButton = new Button("Ok");
+        okButton.setOnAction((e) -> {
+            ok = true;
+            Ui.closeWindowOf(this);
+        });
+
+        FlowPane flowPane = new FlowPane(10, 10, okButton, cancel);
+        flowPane.setAlignment(Pos.BOTTOM_RIGHT);
+
         getChildren().addAll(
                 new HBox(5, new Label("SopoNr:"), refurbishIdField),
-                new HBox(5, new Label("Kommentar:"), commentField)
+                new HBox(5, new Label("Kommentar:"), commentField),
+                flowPane
         );
     }
 
@@ -50,6 +67,12 @@ public class RemoveQuestionView extends VBox {
 
     public String comment() {
         return commentField.getText();
+    }
+
+    @Override
+    public RemoveQuestionView getResult() {
+        if ( ok ) return this;
+        return null;
     }
 
 }

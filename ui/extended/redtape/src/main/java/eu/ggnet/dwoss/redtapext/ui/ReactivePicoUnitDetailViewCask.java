@@ -29,10 +29,10 @@ import eu.ggnet.dwoss.redtape.UnitOverseer;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.fx.FxSaft;
-import eu.ggnet.saft.core.ops.Ops;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.Ops;
 
 import static javafx.scene.text.Font.font;
 

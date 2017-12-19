@@ -10,7 +10,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.rights.RightsAgent;
 import eu.ggnet.dwoss.rights.action.RightsManagmentAction;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import tryout.stub.RightsAgentStub;
 
