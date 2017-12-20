@@ -26,11 +26,7 @@ import eu.ggnet.dwoss.util.MetawidgetConfig;
  */
 public class ReportLineMetaWidgetTryout {
 
-    private boolean run = true;
-
-    @Test
-    @SuppressWarnings("SleepWhileInLoop")
-    public void tryUi() throws InterruptedException {
+    public static void main(String[] args) {
         ReportLine rl = new ReportLine();
         rl.setActual(new Date());
         rl.setContractor(TradeName.EBAY);
@@ -68,16 +64,5 @@ public class ReportLineMetaWidgetTryout {
         view.setSize(view.getSize().width, view.getSize().height + 50);
         view.setLocation(300, 300);
         view.setVisible(true);
-        view.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                run = false;
-            }
-        });
-
-        while (run) {
-            Thread.sleep(500);
-        }
-
     }
 }

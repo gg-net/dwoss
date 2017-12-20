@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.report.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.persistence.*;
@@ -1082,229 +1083,193 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * @return HTML view of the ReportLine.
      */
     public String toHtml() {
-        StringBuilder sb = new StringBuilder("ReportLine: ");
-        sb.append("<ul>");
-        sb.append("<li>");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        
+        StringBuilder sb = new StringBuilder("");
+        sb.append("<h1><b>ReportLine </b></h1>");
+
+        sb.append("<div style='font-family: Sans-Serif; background-color: #e8e8e8;' border='0'>");
         sb.append("<b>id: </b>");
         sb.append(id);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>reportingDate: </b>");
+        sb.append("<b>ReportingDate: </b>");
         sb.append(reportingDate);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>dossierId: </b>");
+        sb.append("<b>DossierId: </b>");
         sb.append(dossierId);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>dossierIdentifier: </b>");
+        sb.append("<b>DossierIdentifier: </b>");
         sb.append(dossierIdentifier);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>documentId: </b>");
+        sb.append("<b>DocumentId: </b>");
         sb.append(documentId);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>documentIdentifier: </b>");
+        sb.append("<b>DocumentIdentifier: </b>");
         sb.append(documentIdentifier);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>documentType: </b>");
-        sb.append(documentType);
-        sb.append("</li>");
+        sb.append("<b>DocumentType: </b>");
+        sb.append(documentType.getName());
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>workflowStatus: </b>");
-        sb.append(workflowStatus);
-        sb.append("</li>");
+        sb.append("<b>WorkflowStatus: </b>");
+        sb.append(workflowStatus.getSign());
+        sb.append("</div>");
 
-        sb.append("<li>");
-        sb.append("<b>amount: </b>");
+        //postition
+        sb.append("<table style='width: 100%; background-color: #e8e8e8; font-family: Sans-Serif;' border='0'><tbody>");
+        sb.append("<tr>");
+
+        sb.append("<td valign='top' colspan='2'>");
+        sb.append("<font size='4'><b><u>Postition</u></b></font><br>");
+        sb.append("<b>Amount: </b>");
         sb.append(amount);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>name: </b>");
+        sb.append("<b>Name: </b>");
         sb.append(name);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>description: </b>");
+        sb.append("<b>Description: </b><br>");
+        sb.append("<textarea  rows='5' cols='70' disabled>");
         sb.append(description);
-        sb.append("</li>");
+        sb.append("</textarea>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>positionType: </b>");
-        sb.append(positionType);
-        sb.append("</li>");
+        sb.append("<b>PositionType: </b>");
+        sb.append(positionType.getName());
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>positionTypeName: </b>");
-        sb.append(positionTypeName);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>price: </b>");
+        sb.append("<b>Price (in Euro): </b>");
         sb.append(price);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>tax: </b>");
+        sb.append("<b>Tax: </b>");
         sb.append(tax);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>afterTaxPrice: </b>");
+        sb.append("<b>after Tax Price: </b>");
         sb.append(afterTaxPrice);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>bookingAccount: </b>");
+        sb.append("<b>Booking Account: </b>");
         sb.append(bookingAccount);
-        sb.append("</li>");
+        sb.append("</td>");  
+        sb.append("</tr>");
 
-        sb.append("<li>");
-        sb.append("<b>customerId: </b>");
-        sb.append(customerId);
-        sb.append("</li>");
+        //product
+        sb.append("<tr>");
+        sb.append("<td valign='top'>");
+        sb.append("<font size='4'><b><u>Product</u></b></font><br>");
 
-        sb.append("<li>");
-        sb.append("<b>invoiceAddress: </b>");
-        sb.append(invoiceAddress);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productGroup: </b>");
-        sb.append(productGroup);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productGroupName: </b>");
-        sb.append(productGroupName);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productBrand: </b>");
-        sb.append(productBrand);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productBrandName: </b>");
-        sb.append(productBrandName);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productName: </b>");
-        sb.append(productName);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>partNo: </b>");
-        sb.append(partNo);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>manufacturerCostPrice: </b>");
-        sb.append(manufacturerCostPrice);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>productId: </b>");
+        sb.append("<b>ProductId: </b>");
         sb.append(productId);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>refurbishId: </b>");
+        sb.append("<b>ProductGroup: </b>");
+        sb.append(productGroup.getName());
+        sb.append("<br>");
+
+        sb.append("<b>ProductBrand: </b>");
+        sb.append(productBrand.getName());
+        sb.append("<br>");
+
+        sb.append("<b>ProductName: </b>");
+        sb.append(productName);
+        sb.append("<br>");
+
+        sb.append("<b>PartNo: </b>");
+        sb.append(partNo);
+        sb.append("<br>");
+
+        sb.append("<b>Manufacturer CostPrice: </b>");
+        sb.append(manufacturerCostPrice);
+        sb.append("</td>");
+        
+         //customer
+        sb.append("<td valign='top'>");
+        sb.append("<font size='4'><b><u>Customer</u></b></font><br>");
+        sb.append("<b>CustomerId: </b>");
+        sb.append(customerId);
+        sb.append("<br>");
+
+        sb.append("<b>Customer Name: </b>");
+        sb.append(customerName);
+        sb.append("<br>");
+
+        sb.append("<b>Customer Company: </b>");
+        sb.append(customerCompany);
+        sb.append("<br>");
+
+        sb.append("<b>Invoice Address: </b><br>");
+        sb.append("<textarea  rows='3' cols='40' disabled>");
+        sb.append(invoiceAddress);
+        sb.append("</textarea>");
+        sb.append("</td>");          
+        sb.append("</tr>");
+
+        
+        //unit
+        sb.append("<tr>");
+        sb.append("<td valign='top'>");
+        sb.append("<font size='4'><b><u>Unit</u></b></font><br>");
+        sb.append("<b>RefurbishId: </b>");
         sb.append(refurbishId);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>serial: </b>");
+        sb.append("<b>Serial: </b>");
         sb.append(serial);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>mfgDate: </b>");
-        sb.append(mfgDate);
-        sb.append("</li>");
+        sb.append("<b>mfg Date: </b>");
+        sb.append( simpleDateFormat.format(mfgDate) );
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>uniqueUnitId: </b>");
+        sb.append("<b>UniqueUnitId: </b>");
         sb.append(uniqueUnitId);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>marginPercentage: </b>");
+        sb.append("<b>Margin Percentage: </b>");
         sb.append(marginPercentage);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>purchasePrice: </b>");
+        sb.append("<b>Purchase Price: </b>");
         sb.append(purchasePrice);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>salesChannel: </b>");
-        sb.append(salesChannel);
-        sb.append("</li>");
+        sb.append("<b>SalesChannel: </b>");
+        sb.append(salesChannel.getName());
 
-        sb.append("<li>");
-        sb.append("<b>salesChannelName: </b>");
-        sb.append(salesChannelName);
-        sb.append("</li>");
+        sb.append("</td>");
+        //contractor
+        sb.append("<td valign='top'>");
+        sb.append("<font size='4'><b><u>Contractor</u></b></font><br>");
+        sb.append("<b>Contractor: </b>");
+        sb.append(contractor.getName());
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>contractor: </b>");
-        sb.append(contractor);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>contractorName: </b>");
-        sb.append(contractorName);
-        sb.append("</li>");
-
-        sb.append("<li>");
-        sb.append("<b>contractorPartNo: </b>");
+        sb.append("<b>Contractor PartNo: </b>");
         sb.append(contractorPartNo);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>contractorReferencePrice: </b>");
+        sb.append("<b>Contractor ReferencePrice: </b>");
         sb.append(contractorReferencePrice);
-        sb.append("</li>");
+        sb.append("<br>");
 
-        sb.append("<li>");
-        sb.append("<b>gtin: </b>");
+        sb.append("<b>GTIN: </b>");
         sb.append(gtin);
-        sb.append("</li>");
 
-        sb.append("</ul>");
+        sb.append("</td>");
+
+        sb.append("</tr>");
+        sb.append("</tbody></table>");
 
         return sb.toString();
-    }
-
-    /**
-     * toHtmlSingleLine HTML representation.
-     *
-     * @return HTML on a Singleline view of the ReportLine.
-     */
-    public String toHtmlSingleLine() {
-        return "<ul><li>ReportLine{" + "</li><b><li>id: </li></b>" + id + "</li><b><li>, reportingDate: </li></b>" + reportingDate + "</li><b><li>, documentId: </li></b>" + documentId
-                + "</li><b><li>, documentType: </li></b>" + documentType
-                + "</li><b><li>, workflowStatus: </li></b>" + workflowStatus + "</li><b><li>, amount: </li></b>" + amount + "</li><b><li>, name: </li></b>" + name
-                + "</li><b><li>, description: </li></b>" + description
-                + "</li><b><li>, positionType: </li></b>" + positionType + "</li><b><li>, price: </li></b>" + price + "</li><b><li>, manufacturerCostPrice: </li></b>" + manufacturerCostPrice
-                + "</li><b><li>, productId: </li></b>" + productId + "</li><b><li>, refurbishId: </li></b>" + refurbishId
-                + "</li><b><li>, serial: </li></b>" + serial + "</li><b><li>, uniqueUnitId: </li></b>" + uniqueUnitId + "</li><b><li>, purchasePrice: </li></b>" + purchasePrice
-                + "</li><b><li>, salesChannelName: </li></b>" + salesChannelName + "</li><b><li>, contractorName: </li></b>" + contractorName
-                + "</li><b><li>, contractorReferencePrice: </li></b>" + contractorReferencePrice + "</li><b><li>, gtin: </li></b>" + gtin + "</ul>";
-
     }
 
 }
