@@ -124,7 +124,8 @@ public class CategoryProductListController implements Initializable, FxControlle
      */
     private void editCategoryProduct(ActionEvent event) {
         if ( categoryProductsTableView.getSelectionModel().getSelectedItem() != null ) {
-            openEdit(categoryProductsTableView.getSelectionModel().getSelectedItem());
+            CategoryProduct cp = categoryProductsTableView.getSelectionModel().getSelectedItem();
+            openEdit(cp);
         }
     }
 

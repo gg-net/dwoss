@@ -3,21 +3,22 @@ package eu.ggnet.dwoss.uniqueunit.ui.product;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Predicate;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.transformation.SortedList;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -34,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ClosedListener;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -41,11 +44,13 @@ import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
  *
  * @author lucas.huelsen
  */
-public class ProductListController implements Initializable, FxController {
+public class ProductListController implements Initializable, FxController, ClosedListener {
 
     public static final DataFormat df = new DataFormat("dw/product");
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
+
+    private ProductTask productsTask = new ProductTask();
 
     // is used to filter the list of products
     private FilteredList<Product> filteredProducts;
@@ -54,25 +59,25 @@ public class ProductListController implements Initializable, FxController {
     private TableView<Product> tableView;
 
     @FXML
-    private TableColumn<Product, String> productId;
+    private TableColumn<Product, Long> productId;
 
     @FXML
     private TableColumn<Product, String> productName;
 
     @FXML
-    private TableColumn<Product, String> productTradeName;
+    private TableColumn<Product, TradeName> productTradeName;
 
     @FXML
-    private TableColumn<Product, String> productGroup;
+    private TableColumn<Product, ProductGroup> productGroup;
 
     @FXML
     private TableColumn<Product, String> productPartNo;
 
     @FXML
-    private TableColumn<Product, String> productImageId;
+    private TableColumn<Product, Integer> productImageId;
 
     @FXML
-    private TableColumn<Product, String> productGtin;
+    private TableColumn<Product, Long> productGtin;
 
     @FXML
     private TableColumn<Product, String> productEol;
@@ -118,8 +123,6 @@ public class ProductListController implements Initializable, FxController {
      */
     public void initialize(URL url, ResourceBundle rb) {
 
-        ProductTask productsTask = new ProductTask();
-
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
 
@@ -145,7 +148,12 @@ public class ProductListController implements Initializable, FxController {
                 .bind(productsTask.runningProperty());
 
         filteredProducts = new FilteredList<>(productsTask.getPartialResults(), p -> true);
-        tableView.setItems(filteredProducts);
+
+        // filteredList does not allow sorting so it needs to be wrapped in a sortedList
+        SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
+        sortedProducts.comparatorProperty().bind(tableView.comparatorProperty());
+
+        tableView.setItems(sortedProducts);
 
         Ui.progress().observe(productsTask);
         Ui.exec(productsTask);
@@ -163,7 +171,13 @@ public class ProductListController implements Initializable, FxController {
         productPartNo.setCellValueFactory(new PropertyValueFactory<>("partNo"));
         productImageId.setCellValueFactory(new PropertyValueFactory<>("imageId"));
         productGtin.setCellValueFactory(new PropertyValueFactory<>("gtin"));
-        productEol.setCellValueFactory(new PropertyValueFactory<>("eol"));
+        productEol.setCellValueFactory(p -> {
+            SimpleStringProperty property = new SimpleStringProperty();
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            property.setValue(dateFormat.format(p.getValue().getEol()));
+            return property;
+        });
+
     }
 
     /**
@@ -217,4 +231,8 @@ public class ProductListController implements Initializable, FxController {
         return onlyEol;
     }
 
+    @Override
+    public void closed() {
+        if ( productsTask.isRunning() ) productsTask.cancel();
+    }
 }

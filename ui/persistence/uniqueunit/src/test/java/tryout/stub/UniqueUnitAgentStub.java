@@ -19,15 +19,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author lucas.huelsen
  */
 public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
-    private final int AMOUNT = 200;
+    private final int AMOUNT = 75;
 
-    private final int SLOW = 20;
+    private final int SLOW = 30;
+
+    private final Logger L = LoggerFactory.getLogger(UniqueUnitAgentStub.class);
 
     private final CategoryProductGenerator CPGEN = new CategoryProductGenerator();
 
@@ -86,6 +91,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
             }
             try {
                 Thread.sleep(SLOW * limit);
+                L.info("Collecting Products..");
                 return (List<T>)(PGEN.generateProduct(limit));
             } catch (InterruptedException ex) {
                 return Collections.emptyList();

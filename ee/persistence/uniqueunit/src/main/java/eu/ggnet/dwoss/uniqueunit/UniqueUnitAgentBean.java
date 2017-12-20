@@ -92,18 +92,27 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     @Override
     public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) {
         Objects.requireNonNull(dto, "DTO is null, not allowed");
+        L.info("Trying to store category product from DTO: {}", dto);
         CategoryProduct cp;
         if ( dto.getId() == 0 ) {
             cp = new CategoryProduct();
+            L.info("Creating new CategoryProduct");
         } else {
             cp = findById(CategoryProduct.class, dto.getId());
+            L.info("updating existing CategoryProduct");
         }
         cp.setName(dto.getName());
         cp.setDescription(dto.getDescription());
         if ( dto.getSalesChannel() != null ) cp.setSalesChannel(dto.getSalesChannel());
-        cp.getProducts().forEach(p -> p.setCategoryProduct(null));
+
+        for (Product p : new ArrayList<>(cp.getProducts())) {
+            p.setCategoryProduct(null);
+            cp.remove(p);
+        }
+
         for (PicoProduct pp : dto.getProducts()) {
             cp.add(findById(Product.class, pp.getId()));
+            L.info("added Product: {} to CategoryProduct: {}", findById(Product.class, pp.getId()), cp);
         }
         for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
             cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);

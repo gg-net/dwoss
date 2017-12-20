@@ -46,13 +46,12 @@ public class ProductTask extends Task<ObservableList<Product>> {
         long count = agent.count(Product.class);
         int batch = 20;
 
-        for (int start = 0; start <= count; start += batch) {
+        for (int start = 0; start <= count && !isCancelled(); start += batch) {
             List<Product> partialResult = agent.findAll(Product.class, start, batch);
             Platform.runLater(() -> {
                 getPartialResults().addAll(partialResult);
             });
             updateProgress(start, count);
-
         }
         return partialResults.get();
     }
