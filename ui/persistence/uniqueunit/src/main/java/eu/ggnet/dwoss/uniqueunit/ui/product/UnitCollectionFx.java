@@ -177,7 +177,7 @@ public class UnitCollectionFx {
         this.pricesProperty = pricesProperty;
     }
 
-    public ObservableList<PriceHistory> getpriceHistoriesProperty() {
+    public ObservableList<PriceHistory> getPriceHistoriesProperty() {
         return priceHistoriesProperty;
     }
 

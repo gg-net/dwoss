@@ -20,19 +20,28 @@ import eu.ggnet.saft.api.ui.FxController;
 
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.assist.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -45,11 +54,17 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 @Title("uniqueUnitCollection Editor")
-public class UnitCollectionEditorController implements Initializable, FxController, ClosedListener {
+public class UnitCollectionEditorController implements Initializable, FxController, Consumer<UnitCollection>, ResultProducer<UnitCollectionDto> {
+
+    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
 
     public static final DataFormat df = new DataFormat("dw/uniqueUnitCollection");
 
     private static final Logger L = LoggerFactory.getLogger(UnitCollectionEditorController.class);
+
+    private UnitCollectionFx unitCollectionFx;
+
+    private UnitCollectionDto unitCollectionDto;
 
     private final ProductTask productsTask = new ProductTask();
 
@@ -75,9 +90,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     private ListView<PicoUnit> listViewUnits;
 
     @FXML
-    private ListView<PicoUnit> listViewRemainingUnits;
-
-    @FXML
     /**
      * Close the Editor window and discard all changes.
      */
@@ -91,20 +103,25 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      */
     private void save(ActionEvent event) {
 
+        unitCollectionDto = new UnitCollectionDto();
+
         if ( StringUtils.isBlank(name.getText()) ) {
             UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-    }
 
-    @FXML
-    private void removeUnit(ActionEvent event) {
+        unitCollectionDto.setId(unitCollectionFx.getId());
+        unitCollectionDto.setNameExtension(unitCollectionFx.getNameExtensionProperty().get());
+        unitCollectionDto.setDescriptionExtension(unitCollectionFx.getDescriptionExtensionProperty().get());
+        unitCollectionDto.setPartNoExtension(unitCollectionFx.getPartNoExtensionProperty().get());
+        //product will not be alterable
+        unitCollectionDto.setUnits(new ArrayList<>(unitCollectionFx.getUnitsProperty()));
+        unitCollectionDto.setPrices(new HashMap<>(unitCollectionFx.getPricesProperty()));        
+        unitCollectionDto.setPriceHistories(new ArrayList<>(unitCollectionFx.getPriceHistoriesProperty()));
+        unitCollectionDto.setSalesChannel(unitCollectionFx.getSalesChannelProperty().get());
 
-    }
 
-    @FXML
-    private void removePrice(ActionEvent event) {
-
+        Ui.closeWindowOf(name);
     }
 
     @Override
@@ -115,22 +132,86 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     public void initialize(URL url, ResourceBundle rb) {
         salesChannel.getItems().addAll(SalesChannel.values());
         salesChannel.getSelectionModel().selectFirst();
-        
+
         producatnamefix.setText("");
-        
-        
-        
+
+        listViewUnits.setCellFactory(new Callback<ListView<PicoUnit>, ListCell<PicoUnit>>() {
+            @Override
+            public ListCell<PicoUnit> call(ListView<PicoUnit> p) {
+                ListCell<PicoUnit> cell = new ListCell<PicoUnit>() {
+                    @Override
+                    protected void updateItem(PicoUnit t, boolean bln) {
+                        super.updateItem(t, bln);
+                        if ( t != null ) {
+                            setText(t.getShortDescription());
+                        } else {
+                            setText("");
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+
+        // force the field to be numeric only
+        priceInput.textFormatterProperty().set(new TextFormatter<>(changeed -> {
+            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
+                return changeed;
+            } else {
+                return null;
+            }
+        }));
+
         Ui.progress().observe(productsTask);
         Ui.exec(productsTask);
 
     }
 
-    @Override
     public void closed() {
         FxSaft.dispatch(() -> {
             if ( productsTask.isRunning() ) productsTask.cancel();
             return null;
         });
+    }
+
+    /**
+     * Create a UnitCollectionFx based on the values from cp. Bind the
+     * UnitCollectionFx with the ui components.
+     *
+     * @param uc received UnitCollection.
+     */
+    public void setUnitCollection(UnitCollection uc) {
+        unitCollectionFx = new UnitCollectionFx(uc.getId(),
+                uc.getNameExtension(),
+                uc.getDescriptionExtension(),
+                uc.getPartNoExtension(),
+                new PicoProduct(uc.getProduct().getId(), uc.getProduct().getName()),
+                uc.getUnits().stream().map(u -> new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL) + " || " + u.getCondition().getNote()))
+                        .collect(Collectors.toList()),
+                uc.getPrices(),
+                uc.getPriceHistory(),
+                uc.getSalesChannel());
+
+        name.textProperty().bindBidirectional(unitCollectionFx.getNameExtensionProperty());
+        partNo.textProperty().bindBidirectional(unitCollectionFx.getPartNoExtensionProperty());
+        description.textProperty().bindBidirectional(unitCollectionFx.getDescriptionExtensionProperty());
+        salesChannel.valueProperty().bindBidirectional(unitCollectionFx.getSalesChannelProperty());
+
+        listViewUnits.setItems(unitCollectionFx.getUnitsProperty());
+
+    }
+
+    @Override
+    public void accept(UnitCollection t) {
+        setUnitCollection(t);
+    }
+
+    @Override
+    public UnitCollectionDto getResult() {
+        if ( unitCollectionDto == null ) {
+            return null;
+        }
+        return unitCollectionDto;
     }
 
 }
