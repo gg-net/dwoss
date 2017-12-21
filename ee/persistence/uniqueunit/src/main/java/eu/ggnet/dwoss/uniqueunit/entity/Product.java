@@ -230,6 +230,10 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         unitCollection.setProduct(null);
     }
 
+    public List<UnitCollection> getUnitCollections() {
+        return Collections.unmodifiableList(unitCollections);
+    }
+
     public void setAdditionalPartNo(TradeName tradeName, String partNo) {
         additionalPartNo.put(tradeName, partNo);
     }
