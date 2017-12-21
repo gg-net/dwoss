@@ -6,13 +6,13 @@ import eu.ggnet.saft.api.ui.FxController;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -130,12 +130,21 @@ public class AssignmentController implements Initializable, FxController, Closed
                 if ( newValue != null ) {
 
                     unassignedUnitsList.getItems().clear();
+                    newValue.getProduct().getUniqueUnits().stream().filter(u -> u.getProduct() != null).forEach(u -> unassignedUnitsList.getItems().add(new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL))));
 
-                    List<UniqueUnit> unassigned = newValue.getUnits().stream()
-                            .filter(u -> u.getUnitCollection() != null)
-                            .collect(Collectors.toList());
+                } else {
+                    unitCollectionList.setItems(FXCollections.emptyObservableList());
+                }
+            }
+        });
 
-                    unassigned.stream().forEach(u -> unassignedUnitsList.getItems().add(new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL))));
+        unitCollectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UnitCollection>() {
+            @Override
+            public void changed(ObservableValue<? extends UnitCollection> observable, UnitCollection oldValue, UnitCollection newValue) {
+                if ( newValue != null ) {
+
+                    assignedUnitsList.getItems().clear();
+                    newValue.getUnits().stream().forEach(u -> assignedUnitsList.getItems().add(new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL))));
 
                 } else {
                     unitCollectionList.setItems(FXCollections.emptyObservableList());
@@ -161,6 +170,45 @@ public class AssignmentController implements Initializable, FxController, Closed
                 }
             }
         });
+
+        unitCollectionList.setCellFactory(lv -> new ListCell<UnitCollection>() {
+            @Override
+            public void updateItem(UnitCollection uc, boolean empty) {
+                super.updateItem(uc, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = uc.getNameExtension();
+                    setText(text);
+                }
+            }
+        });
+
+        unassignedUnitsList.setCellFactory(lv -> new ListCell<PicoUnit>() {
+            @Override
+            public void updateItem(PicoUnit p, boolean empty) {
+                super.updateItem(p, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = p.getShortDescription();
+                    setText(text);
+                }
+            }
+        });
+
+        assignedUnitsList.setCellFactory(lv -> new ListCell<PicoUnit>() {
+            @Override
+            public void updateItem(PicoUnit p, boolean empty) {
+                super.updateItem(p, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = p.getShortDescription();
+                    setText(text);
+                }
+            }
+        });
     }
 
     @Override
@@ -173,44 +221,46 @@ public class AssignmentController implements Initializable, FxController, Closed
 
     private void dragAndDropHandling() {
 
-//        unassignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                UniqueUnit selectedUnit = unassignedUnitsList.getSelectionModel().getSelectedItem();
-//                if ( selectedUnit == null ) return;
-//                Dragboard db = unassignedUnitsList.startDragAndDrop(TransferMode.ANY);
-//                ClipboardContent content = new ClipboardContent();
-//                content.put(df, selectedUnit);
-//                db.setContent(content);
-//                L.info("DnD of {} started", selectedUnit.getId());
-//                event.consume();
-//            }
-//        });
-//
-//        // accept drag Over for the products list
-//        assignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
-//            @Override
-//            public void handle(DragEvent event) {
-//                if ( event.getGestureSource() != assignedUnitsList && event.getDragboard().hasContent(df) ) {
-//                    event.acceptTransferModes(TransferMode.ANY);
-//                }
-//                event.consume();
-//            }
-//        });
-//
-//        // handle dropped objets onto the products list
-//        assignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
-//            @Override
-//            public void handle(DragEvent event) {
-//                Dragboard db = event.getDragboard();
-//                boolean success = false;
-//                if ( db.hasContent(df) ) {
-//                    //add Unit
-//                    success = true;
-//                }
-//                event.setDropCompleted(success);
-//                event.consume();
-//            }
-//        });
+        unassignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                PicoUnit selectedUnit = unassignedUnitsList.getSelectionModel().getSelectedItem();
+                if ( selectedUnit == null ) return;
+                Dragboard db = unassignedUnitsList.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(df, selectedUnit);
+                db.setContent(content);
+                L.info("DnD of {} started", selectedUnit.getUniqueUnitId());
+                event.consume();
+            }
+        });
+
+        // accept drag Over for the products list
+        assignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if ( event.getGestureSource() != assignedUnitsList && event.getDragboard().hasContent(df) ) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+        // handle dropped objets onto the products list
+        assignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if ( db.hasContent(df) ) {
+                    assignedUnitsList.getItems().add((PicoUnit)db.getContent(df));
+
+                    success = true;
+
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
     }
 }

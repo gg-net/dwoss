@@ -9,6 +9,7 @@ import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
+import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
 
 /**
  * A class that allows to create products with random predefined values.
@@ -43,6 +46,8 @@ public class ProductGenerator {
 
     private final UnitCollectionGenerator ucGen = new UnitCollectionGenerator();
 
+    private final UniqueUnitGenerator uuGen = new UniqueUnitGenerator();
+
     /**
      * Generate a specific amount of products with random data.
      *
@@ -64,7 +69,11 @@ public class ProductGenerator {
 
             ucGen.generateUnitCollections().stream().forEach(uc -> p.addUnitCollections(uc));
 
-            p.getUnitCollections().get(0).getUnits().get(0).setProduct(p);
+            p.getUnitCollections().stream().forEach(uc -> uc.getUnits().stream().forEach(u -> u.setProduct(p)));
+
+            for (int j = 0; j < 5; j++) {
+                p.addUnit(uuGen.makeUniqueUnit(p.getTradeName(), p.getGroup()));
+            }
 
             products.add(p);
         }
