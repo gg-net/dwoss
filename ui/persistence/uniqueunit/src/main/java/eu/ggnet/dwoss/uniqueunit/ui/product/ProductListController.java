@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -233,6 +234,9 @@ public class ProductListController implements Initializable, FxController, Close
 
     @Override
     public void closed() {
-        if ( productsTask.isRunning() ) productsTask.cancel();
+        FxSaft.dispatch(() -> {
+            if ( productsTask.isRunning() ) productsTask.cancel();
+            return null;
+        });
     }
 }

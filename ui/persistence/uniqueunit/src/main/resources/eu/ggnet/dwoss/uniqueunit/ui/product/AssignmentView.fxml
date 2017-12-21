@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.AssignmentController">
+   <left>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label minHeight="18.0" minWidth="18.0" text="Produkte" />
+            <ListView fx:id="productList" prefHeight="427.0" prefWidth="215.0" VBox.vgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets right="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="18.0" minHeight="18.0" prefHeight="18.0" vgrow="NEVER" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="18.0" minHeight="18.0" prefHeight="18.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <ListView fx:id="unitCollectionList" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <Label text="Unit Collections" />
+            <Label text="Bereits zugewiesene Einheiten" GridPane.columnIndex="1" />
+            <ListView fx:id="assignedUnitsList" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <Label text="Anders zugewiesene Einheiten" GridPane.rowIndex="2" />
+            <Label text="Noch nicht zugewiesene Einheiten" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ListView fx:id="differentAssignedUnitsList" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <ListView fx:id="unassignedUnitsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+         </children>
+      </GridPane>
+   </center>
+   <top>
+      <HBox BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <ComboBox fx:id="productGroupFilter" onAction="#filterProductGroup" prefHeight="25.0" prefWidth="138.0" promptText="Produktgruppe" />
+            <ComboBox prefHeight="25.0" prefWidth="162.0" promptText="Filter für UniqueUnits" />
+            <Button mnemonicParsing="false" onAction="#removeFilter" text="Filter zurücksetzen" />
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="214.0" progress="0.0" BorderPane.alignment="CENTER_LEFT" />
+   </bottom>
+</BorderPane>

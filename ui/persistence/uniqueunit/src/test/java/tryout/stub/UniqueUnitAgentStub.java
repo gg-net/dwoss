@@ -9,7 +9,6 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.ProductGenerator;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
@@ -28,9 +27,9 @@ import org.slf4j.LoggerFactory;
  */
 public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
-    private final int AMOUNT = 75;
+    private final int AMOUNT = 200;
 
-    private final int SLOW = 30;
+    private final int SLOW = 40;
 
     private final Logger L = LoggerFactory.getLogger(UniqueUnitAgentStub.class);
 
