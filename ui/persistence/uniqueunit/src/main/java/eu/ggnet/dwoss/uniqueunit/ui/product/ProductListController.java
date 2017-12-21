@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -21,12 +22,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 
@@ -39,6 +35,8 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.core.ui.FxSaft;
 
+import static javafx.scene.control.SelectionMode.MULTIPLE;
+
 /**
  * Defines the displayed products in the table. Handles the filtering of the
  * table.
@@ -47,7 +45,7 @@ import eu.ggnet.saft.core.ui.FxSaft;
  */
 public class ProductListController implements Initializable, FxController, ClosedListener {
 
-    public static final DataFormat df = new DataFormat("dw/product");
+    public static final DataFormat dataFormatPicoProduct = new DataFormat("dw/product");
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
 
@@ -117,6 +115,16 @@ public class ProductListController implements Initializable, FxController, Close
         eolDatePicker.setValue(null);
     }
 
+    @FXML
+    /**
+     * Reset the TradeName and the ProductGroup filter.
+     */
+    private void openAssignment(ActionEvent event) {
+        Ui.exec(() -> {
+            Ui.fxml().show(AssignmentController.class);
+        });
+    }
+
     @Override
     /**
      * Adding the filters to the combo box. Setting the cell values and the
@@ -124,19 +132,23 @@ public class ProductListController implements Initializable, FxController, Close
      */
     public void initialize(URL url, ResourceBundle rb) {
 
+        tableView.getSelectionModel().setSelectionMode(MULTIPLE);
+
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
 
         tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
-                if ( selectedProduct == null ) return;
+                ArrayList<Product> selectedProducts = new ArrayList<>();
+                selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
+                ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
+                if ( selectedProducts.isEmpty() ) return;
                 Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-                content.put(df, new PicoProduct(selectedProduct.getId(), selectedProduct.getName()));
+                selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
+                content.put(dataFormatPicoProduct, selectedPicoProducts);
                 db.setContent(content);
-                L.info("DnD of {} started", selectedProduct.getName());
                 event.consume();
             }
         });

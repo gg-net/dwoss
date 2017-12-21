@@ -1,17 +1,13 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.saft.api.ui.FxController;
 
 import java.net.URL;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,14 +17,12 @@ import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.FxSaft;
+
+import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -37,59 +31,26 @@ import eu.ggnet.saft.core.ui.FxSaft;
  * @author lucas.huelsen
  */
 @Title("Zuweisungsansicht")
-public class AssignmentController implements Initializable, FxController, ClosedListener {
+public class AssignmentController implements Initializable, FxController {
 
     public static final DataFormat df = new DataFormat("dw/uniqueUnit");
 
     private static final Logger L = LoggerFactory.getLogger(AssignmentController.class);
 
-    private final ProductTask productsTask = new ProductTask();
-
-    // is used to filter the list of products
-    private FilteredList<Product> filteredProducts;
-
     @FXML
-    private ListView<Product> productList;
+    private ListView<PicoProduct> productList;
 
     @FXML
     private ListView<UnitCollection> unitCollectionList;
 
     @FXML
-    private ListView<PicoUnit> assignedUnitsList;
+    private ListView<UniqueUnit> assignedUnitsList;
 
     @FXML
-    private ListView<PicoUnit> unassignedUnitsList;
+    private ListView<UniqueUnit> unassignedUnitsList;
 
     @FXML
-    private ListView<PicoUnit> differentAssignedUnitsList;
-
-    @FXML
-    private ComboBox<ProductGroup> productGroupFilter;
-
-    @FXML
-    private ProgressBar progressBar;
-
-    @FXML
-    private void filterProductGroup(ActionEvent event) {
-
-        Predicate<Product> predicate = product
-                -> productGroupFilter.getSelectionModel().getSelectedItem() == null
-                || product.getGroup() == productGroupFilter.getSelectionModel().getSelectedItem();
-
-        filteredProducts.setPredicate(predicate);
-    }
-
-    @FXML
-    private void removeFilter(ActionEvent event) {
-        productGroupFilter.getSelectionModel().clearSelection();
-        //        System.out.println(differentAssignedUnitsList.setItems(productList.getItems().stream().filter(p -> p != productList.getSelectionModel().getSelectedItem()).collect(Collectors.toList())));
-        //        productList
-        //                .getItems()
-        //                .stream()
-        //                .filter(p -> p != productList.getSelectionModel().getSelectedItem())
-        //                .forEach(s -> System.out.println(s));
-        ;
-    }
+    private ListView<UniqueUnit> differentAssignedUnitsList;
 
     @Override
     /**
@@ -100,72 +61,24 @@ public class AssignmentController implements Initializable, FxController, Closed
 
         dragAndDropHandling();
 
-        productGroupFilter.getItems().addAll(ProductGroup.values());
+        setCellFactories();
 
-        setCellValues();
-
-        progressBar.progressProperty()
-                .bind(productsTask.progressProperty());
-        progressBar.visibleProperty()
-                .bind(productsTask.runningProperty());
-
-        filteredProducts = new FilteredList<>(productsTask.getPartialResults(), p -> true);
-
-        productList.setItems(filteredProducts);
-
-        productList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
-            @Override
-            public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-                if ( newValue != null ) {
-                    unitCollectionList.setItems(FXCollections.observableArrayList(newValue.getUnitCollections()));
-                } else {
-                    unitCollectionList.setItems(FXCollections.emptyObservableList());
-                }
-            }
-        });
-
-        unitCollectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UnitCollection>() {
-            @Override
-            public void changed(ObservableValue<? extends UnitCollection> observable, UnitCollection oldValue, UnitCollection newValue) {
-                if ( newValue != null ) {
-
-                    unassignedUnitsList.getItems().clear();
-                    newValue.getProduct().getUniqueUnits().stream().filter(u -> u.getProduct() != null).forEach(u -> unassignedUnitsList.getItems().add(new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL))));
-
-                } else {
-                    unitCollectionList.setItems(FXCollections.emptyObservableList());
-                }
-            }
-        });
-
-        unitCollectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UnitCollection>() {
-            @Override
-            public void changed(ObservableValue<? extends UnitCollection> observable, UnitCollection oldValue, UnitCollection newValue) {
-                if ( newValue != null ) {
-
-                    assignedUnitsList.getItems().clear();
-                    newValue.getUnits().stream().forEach(u -> assignedUnitsList.getItems().add(new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL))));
-
-                } else {
-                    unitCollectionList.setItems(FXCollections.emptyObservableList());
-                }
-            }
-        });
-
-        Ui.progress().observe(productsTask);
-        Ui.exec(productsTask);
+        actionListenerHandling();
     }
 
-    private void setCellValues() {
+    /**
+     * Setting the Cell Factories for each Listview
+     */
+    private void setCellFactories() {
 
-        productList.setCellFactory(lv -> new ListCell<Product>() {
+        productList.setCellFactory(lv -> new ListCell<PicoProduct>() {
             @Override
-            public void updateItem(Product p, boolean empty) {
+            public void updateItem(PicoProduct p, boolean empty) {
                 super.updateItem(p, empty);
                 if ( empty ) {
                     setText(null);
                 } else {
-                    String text = p.getName();
+                    String text = p.getShortDescription();
                     setText(text);
                 }
             }
@@ -184,38 +97,43 @@ public class AssignmentController implements Initializable, FxController, Closed
             }
         });
 
-        unassignedUnitsList.setCellFactory(lv -> new ListCell<PicoUnit>() {
+        unassignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
             @Override
-            public void updateItem(PicoUnit p, boolean empty) {
+            public void updateItem(UniqueUnit p, boolean empty) {
                 super.updateItem(p, empty);
                 if ( empty ) {
                     setText(null);
                 } else {
-                    String text = p.getShortDescription();
+                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
                     setText(text);
                 }
             }
         });
 
-        assignedUnitsList.setCellFactory(lv -> new ListCell<PicoUnit>() {
+        assignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
             @Override
-            public void updateItem(PicoUnit p, boolean empty) {
+            public void updateItem(UniqueUnit p, boolean empty) {
                 super.updateItem(p, empty);
                 if ( empty ) {
                     setText(null);
                 } else {
-                    String text = p.getShortDescription();
+                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
                     setText(text);
                 }
             }
         });
-    }
 
-    @Override
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( productsTask.isRunning() ) productsTask.cancel();
-            return null;
+        differentAssignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
+            @Override
+            public void updateItem(UniqueUnit p, boolean empty) {
+                super.updateItem(p, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
+                    setText(text);
+                }
+            }
         });
     }
 
@@ -224,18 +142,58 @@ public class AssignmentController implements Initializable, FxController, Closed
         unassignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                PicoUnit selectedUnit = unassignedUnitsList.getSelectionModel().getSelectedItem();
+                UniqueUnit selectedUnit = unassignedUnitsList.getSelectionModel().getSelectedItem();
                 if ( selectedUnit == null ) return;
                 Dragboard db = unassignedUnitsList.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
                 content.put(df, selectedUnit);
                 db.setContent(content);
-                L.info("DnD of {} started", selectedUnit.getUniqueUnitId());
+                L.info("DnD of {} started", selectedUnit.getId());
                 event.consume();
             }
         });
 
-        // accept drag Over for the products list
+        unassignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if ( event.getGestureSource() != unassignedUnitsList && event.getDragboard().hasContent(df) ) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+        unassignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if ( db.hasContent(df) ) {
+                    unassignedUnitsList.getItems().add((UniqueUnit)db.getContent(df));
+                    assignedUnitsList.getItems().remove((UniqueUnit)db.getContent(df));
+
+                    success = true;
+
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+        assignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                UniqueUnit selectedUnit = assignedUnitsList.getSelectionModel().getSelectedItem();
+                if ( selectedUnit == null ) return;
+                Dragboard db = assignedUnitsList.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(df, selectedUnit);
+                db.setContent(content);
+                L.info("DnD of {} started", selectedUnit.getId());
+                event.consume();
+            }
+        });
+
         assignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -246,14 +204,14 @@ public class AssignmentController implements Initializable, FxController, Closed
             }
         });
 
-        // handle dropped objets onto the products list
         assignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if ( db.hasContent(df) ) {
-                    assignedUnitsList.getItems().add((PicoUnit)db.getContent(df));
+                    assignedUnitsList.getItems().add((UniqueUnit)db.getContent(df));
+                    unassignedUnitsList.getItems().remove((UniqueUnit)db.getContent(df));
 
                     success = true;
 
@@ -262,5 +220,90 @@ public class AssignmentController implements Initializable, FxController, Closed
                 event.consume();
             }
         });
+
+        /**
+         * Receive Products from ListView
+         */
+        productList.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if ( event.getGestureSource() != productList && event.getDragboard().hasContent(ProductListController.dataFormatPicoProduct) ) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+        productList.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if ( db.hasContent(ProductListController.dataFormatPicoProduct) ) {
+                    ArrayList<PicoProduct> products = (ArrayList<PicoProduct>)db.getContent(ProductListController.dataFormatPicoProduct);
+                    productList.getItems().addAll(products.stream().filter(p -> !productList.getItems().contains(p)).collect(Collectors.toList()));
+                    success = true;
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
     }
+
+    private void actionListenerHandling() {
+
+        // update the UI if the Product changes
+        productList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PicoProduct>() {
+            @Override
+            public void changed(ObservableValue<? extends PicoProduct> observable, PicoProduct oldValue, PicoProduct newValue) {
+                if ( newValue != null ) {
+
+//                    Product product;
+//                    unitCollectionList.getItems().clear();
+//                    unitCollectionList.setItems(FXCollections.observableArrayList(product.getUnitCollections()));
+//
+//                    // show unassignedUnits
+//                    unassignedUnitsList.getItems().clear();
+//                    unassignedUnitsList.getItems().addAll((List<UniqueUnit>)product
+//                            .getUniqueUnits()
+//                            .stream()
+//                            .filter(u -> u.getProduct() != null).collect(Collectors.toList()));
+//                } else {
+//                    unitCollectionList.getItems().clear();
+//                    unassignedUnitsList.getItems().clear();
+//                    assignedUnitsList.getItems().clear();
+                }
+            }
+        });
+        unitCollectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UnitCollection>() {
+            @Override
+            public void changed(ObservableValue<? extends UnitCollection> observable, UnitCollection oldValue, UnitCollection newValue) {
+                if ( newValue != null ) {
+
+                    // show assigned Units
+                    assignedUnitsList.getItems().clear();
+                    assignedUnitsList.getItems().addAll(newValue.getUnits());
+
+                    // show different assigned units
+                    differentAssignedUnitsList.getItems().clear();
+
+                    List<UnitCollection> notSelected = newValue.getProduct()
+                            .getUnitCollections()
+                            .stream()
+                            .filter(uc -> uc != newValue)
+                            .collect(Collectors.toList());
+                    for (UnitCollection unitCollection : notSelected) {
+                        differentAssignedUnitsList.getItems().addAll(unitCollection.getUnits());
+                    }
+
+                } else {
+                    assignedUnitsList.getItems().clear();
+                    unitCollectionList.getItems().clear();
+                    differentAssignedUnitsList.getItems().clear();
+                }
+            }
+        });
+
+    }
+
 }

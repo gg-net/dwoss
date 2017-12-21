@@ -40,9 +40,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
@@ -211,7 +209,7 @@ public class CategoryProductEditorController implements Initializable, FxControl
         listViewProducts.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.df) ) {
+                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.dataFormatPicoProduct) ) {
                     event.acceptTransferModes(TransferMode.ANY);
                 }
                 event.consume();
@@ -224,10 +222,9 @@ public class CategoryProductEditorController implements Initializable, FxControl
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                if ( db.hasContent(ProductListController.df) ) {
-                    if ( !categoryProductFx.getProductsProperty().contains((PicoProduct)db.getContent(ProductListController.df)) ) {
-                        categoryProductFx.getProductsProperty().add((PicoProduct)db.getContent(ProductListController.df));
-                    }
+                if ( db.hasContent(ProductListController.dataFormatPicoProduct) ) {
+                    ArrayList<PicoProduct> picos = (ArrayList<PicoProduct>)db.getContent(ProductListController.dataFormatPicoProduct);
+                    picos.stream().filter(p -> !categoryProductFx.getProductsProperty().contains(p)).forEach(p -> categoryProductFx.getProductsProperty().add(p));
                     success = true;
                 }
                 event.setDropCompleted(success);

@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 /**
  * A class that allows to create products with random predefined values.
@@ -67,9 +68,15 @@ public class ProductGenerator {
             p.setEol(dates.get(rand.nextInt(dates.size())));
             p.setPrice(priceTypes.get(rand.nextInt(priceTypes.size())), rand.nextInt(9999), "");
 
-            ucGen.generateUnitCollections().stream().forEach(uc -> p.addUnitCollections(uc));
+            ucGen.generateUnitCollections().forEach((generateUnitCollection) -> {
+                p.addUnitCollections(generateUnitCollection);
+            });
 
-            p.getUnitCollections().stream().forEach(uc -> uc.getUnits().stream().forEach(u -> u.setProduct(p)));
+            for (UnitCollection collection : p.getUnitCollections()) {
+                for (UniqueUnit unit : collection.getUnits()) {
+                    unit.setProduct(p);
+                }
+            }
 
             for (int j = 0; j < 5; j++) {
                 p.addUnit(uuGen.makeUniqueUnit(p.getTradeName(), p.getGroup()));
