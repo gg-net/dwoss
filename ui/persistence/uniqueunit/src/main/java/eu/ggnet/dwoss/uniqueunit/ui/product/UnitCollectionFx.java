@@ -46,8 +46,6 @@ public class UnitCollectionFx {
 
     private StringProperty partNoExtensionProperty;
 
-    private ObjectProperty<PicoProduct> productProperty;
-
     private ObservableList<PicoUnit> unitsProperty;
 
     private ObservableMap<PriceType, Double> pricesProperty;
@@ -56,12 +54,10 @@ public class UnitCollectionFx {
 
     private ObjectProperty<SalesChannel> salesChannelProperty;
 
-    public UnitCollectionFx(long id, String nameExtension, String descriptionExtension, String partNoExtension, PicoProduct product, List<PicoUnit> units, Map<PriceType, Double> prices, List<PriceHistory> priceHistories, SalesChannel salesChannel) {
-        this.idProperty = new SimpleLongProperty(id);
+    public UnitCollectionFx(long id, String nameExtension, String descriptionExtension, String partNoExtension, List<PicoUnit> units, Map<PriceType, Double> prices, List<PriceHistory> priceHistories, SalesChannel salesChannel) {
         this.nameExtensionProperty = new SimpleStringProperty(nameExtension);
         this.descriptionExtensionProperty = new SimpleStringProperty(descriptionExtension);
         this.partNoExtensionProperty = new SimpleStringProperty(partNoExtension);
-        this.productProperty = new SimpleObjectProperty<>(product);
         this.unitsProperty = FXCollections.observableList(units);
         this.pricesProperty = FXCollections.observableHashMap();
         pricesProperty.putAll(prices);
@@ -147,18 +143,6 @@ public class UnitCollectionFx {
 
     public void setPartNoExtensionProperty(StringProperty partNoExtension) {
         this.partNoExtensionProperty = partNoExtension;
-    }
-
-    public ObjectProperty<PicoProduct> getProductProperty() {
-        return productProperty;
-    }
-
-    public void setProductProperty(ObjectProperty<PicoProduct> productProperty) {
-        this.productProperty = productProperty;
-    }
-
-    public PicoProduct getProduct() {
-        return productProperty.getValue();
     }
 
     public ObservableList<PicoUnit> getUnitsProperty() {

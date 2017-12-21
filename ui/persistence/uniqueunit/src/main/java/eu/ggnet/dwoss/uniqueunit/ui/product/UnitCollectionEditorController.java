@@ -20,11 +20,14 @@ import eu.ggnet.saft.api.ui.FxController;
 
 import java.net.URL;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javafx.collections.FXCollections;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.UnitCollectionDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
@@ -57,8 +59,6 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 public class UnitCollectionEditorController implements Initializable, FxController, Consumer<UnitCollection>, ResultProducer<UnitCollectionDto> {
 
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
-
-    public static final DataFormat df = new DataFormat("dw/uniqueUnitCollection");
 
     private static final Logger L = LoggerFactory.getLogger(UnitCollectionEditorController.class);
 
@@ -81,10 +81,19 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     private ChoiceBox<SalesChannel> salesChannel;
 
     @FXML
+    private TextField partNo;
+
+    @FXML
+    private ChoiceBox<PriceType> priceType;
+
+    @FXML
     private TextField priceInput;
 
     @FXML
-    private TextField partNo;
+    private ListView<Entry<PriceType, Double>> listViewPrices;
+
+    @FXML
+    private Button deletePrice;
 
     @FXML
     private ListView<PicoUnit> listViewUnits;
@@ -110,18 +119,42 @@ public class UnitCollectionEditorController implements Initializable, FxControll
             return;
         }
 
-        unitCollectionDto.setId(unitCollectionFx.getId());
         unitCollectionDto.setNameExtension(unitCollectionFx.getNameExtensionProperty().get());
         unitCollectionDto.setDescriptionExtension(unitCollectionFx.getDescriptionExtensionProperty().get());
         unitCollectionDto.setPartNoExtension(unitCollectionFx.getPartNoExtensionProperty().get());
         //product will not be alterable
         unitCollectionDto.setUnits(new ArrayList<>(unitCollectionFx.getUnitsProperty()));
-        unitCollectionDto.setPrices(new HashMap<>(unitCollectionFx.getPricesProperty()));        
+        unitCollectionDto.setPrices(new HashMap<>(unitCollectionFx.getPricesProperty()));
         unitCollectionDto.setPriceHistories(new ArrayList<>(unitCollectionFx.getPriceHistoriesProperty()));
         unitCollectionDto.setSalesChannel(unitCollectionFx.getSalesChannelProperty().get());
 
-
         Ui.closeWindowOf(name);
+    }
+
+    @FXML
+    /**
+     * Add a price to the CategoryProduct based on the selected PriceType and
+     * the value in priceInput. Both values must be set to be able to add a
+     * price.
+     */
+    private void addPrice(ActionEvent event) {
+        if ( priceType.getSelectionModel().getSelectedItem() != null && !priceInput.getText().isEmpty() ) {
+            unitCollectionFx.getPricesProperty().put(priceType.getSelectionModel().getSelectedItem(), Double.parseDouble(priceInput.getText().replace(",", ".")));
+            L.info("added Price {}={}", priceType.getSelectionModel().getSelectedItem(), Double.parseDouble(priceInput.getText().replace(",", ".")));
+        }
+    }
+
+    @FXML
+    /**
+     * Removes a Price from the CategoryProduct. A remove simply means setting
+     * the value to 0.
+     */
+    private void removePrice(ActionEvent event) {
+        if ( listViewPrices.getSelectionModel().getSelectedItem() != null ) {
+            L.info("Removed Price {}", listViewPrices.getSelectionModel().getSelectedItem());
+            unitCollectionFx.getPricesProperty().put(listViewPrices.getSelectionModel().getSelectedItem().getKey(), 0d);
+            L.info("All Prices {}", unitCollectionFx.getPricesProperty().entrySet());
+        }
     }
 
     @Override
@@ -132,8 +165,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     public void initialize(URL url, ResourceBundle rb) {
         salesChannel.getItems().addAll(SalesChannel.values());
         salesChannel.getSelectionModel().selectFirst();
-
-        producatnamefix.setText("");
 
         listViewUnits.setCellFactory(new Callback<ListView<PicoUnit>, ListCell<PicoUnit>>() {
             @Override
@@ -161,6 +192,19 @@ public class UnitCollectionEditorController implements Initializable, FxControll
                 return null;
             }
         }));
+        
+        
+        // enable the deletePriceButton only if a price is selected
+        listViewPrices.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if ( newValue.intValue() < 0 ) {
+                    deletePrice.disableProperty().setValue(Boolean.TRUE);
+                } else {
+                    deletePrice.disableProperty().setValue(Boolean.FALSE);
+                }
+            }
+        });
 
         Ui.progress().observe(productsTask);
         Ui.exec(productsTask);
@@ -185,7 +229,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
                 uc.getNameExtension(),
                 uc.getDescriptionExtension(),
                 uc.getPartNoExtension(),
-                new PicoProduct(uc.getProduct().getId(), uc.getProduct().getName()),
                 uc.getUnits().stream().map(u -> new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL) + " || " + u.getCondition().getNote()))
                         .collect(Collectors.toList()),
                 uc.getPrices(),
@@ -195,8 +238,9 @@ public class UnitCollectionEditorController implements Initializable, FxControll
         name.textProperty().bindBidirectional(unitCollectionFx.getNameExtensionProperty());
         partNo.textProperty().bindBidirectional(unitCollectionFx.getPartNoExtensionProperty());
         description.textProperty().bindBidirectional(unitCollectionFx.getDescriptionExtensionProperty());
-        salesChannel.valueProperty().bindBidirectional(unitCollectionFx.getSalesChannelProperty());
 
+        //producatnamefix.textProperty().bind(unitCollectionFx.getProduct().getShortDescription().);
+        salesChannel.valueProperty().bindBidirectional(unitCollectionFx.getSalesChannelProperty());
         listViewUnits.setItems(unitCollectionFx.getUnitsProperty());
 
     }
