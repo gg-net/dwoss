@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,9 +18,11 @@ import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.api.ui.*;
 
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -258,20 +261,21 @@ public class AssignmentController implements Initializable, FxController {
             public void changed(ObservableValue<? extends PicoProduct> observable, PicoProduct oldValue, PicoProduct newValue) {
                 if ( newValue != null ) {
 
-//                    Product product;
-//                    unitCollectionList.getItems().clear();
-//                    unitCollectionList.setItems(FXCollections.observableArrayList(product.getUnitCollections()));
-//
-//                    // show unassignedUnits
-//                    unassignedUnitsList.getItems().clear();
-//                    unassignedUnitsList.getItems().addAll((List<UniqueUnit>)product
-//                            .getUniqueUnits()
-//                            .stream()
-//                            .filter(u -> u.getProduct() != null).collect(Collectors.toList()));
-//                } else {
-//                    unitCollectionList.getItems().clear();
-//                    unassignedUnitsList.getItems().clear();
-//                    assignedUnitsList.getItems().clear();
+                    Product product = Client.lookup(UniqueUnitAgent.class).findProductByPartNo("s");
+
+                    unitCollectionList.getItems().clear();
+                    unitCollectionList.setItems(FXCollections.observableArrayList(product.getUnitCollections()));
+
+                    // show unassignedUnits
+                    unassignedUnitsList.getItems().clear();
+                    unassignedUnitsList.getItems().addAll((List<UniqueUnit>)product
+                            .getUniqueUnits()
+                            .stream()
+                            .filter(u -> u.getProduct() != null).collect(Collectors.toList()));
+                } else {
+                    unitCollectionList.getItems().clear();
+                    unassignedUnitsList.getItems().clear();
+                    assignedUnitsList.getItems().clear();
                 }
             }
         });
