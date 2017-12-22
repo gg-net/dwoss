@@ -20,22 +20,23 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-
 /**
- * Defines the displayed products in the table. Handles the filtering of the
- * table.
+ * A ui that can show all UnitCollections of different Products. The UniqueUnits of a Product are also shown in different categorys(assigned to the selected
+ * UnitCollection, assigned to a different UnitCollection than the selected, not assigned to any UnitCollection). These Units can be added or removed via Drag
+ * and Drop from the selected UnitCollection.
  *
  * @author lucas.huelsen
  */
 @Title("Zuweisungsansicht")
 public class AssignmentController implements Initializable, FxController {
 
+    // Dataformat used for UniqueUnits
     public static final DataFormat df = new DataFormat("dw/uniqueUnit");
 
     private static final Logger L = LoggerFactory.getLogger(AssignmentController.class);
@@ -57,8 +58,9 @@ public class AssignmentController implements Initializable, FxController {
 
     @Override
     /**
-     * Adding the filters to the combo box. Setting the cell values and the
-     * filtered list containing the data.
+     * Drag and Drop handling.
+     * CellValueFactories
+     * ActionListener
      */
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -74,6 +76,7 @@ public class AssignmentController implements Initializable, FxController {
      */
     private void setCellFactories() {
 
+        // List containing the Products
         productList.setCellFactory(lv -> new ListCell<PicoProduct>() {
             @Override
             public void updateItem(PicoProduct p, boolean empty) {
@@ -87,6 +90,7 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        // List containing the UnitCollections of the current selected Product
         unitCollectionList.setCellFactory(lv -> new ListCell<UnitCollection>() {
             @Override
             public void updateItem(UnitCollection uc, boolean empty) {
@@ -100,48 +104,21 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
-        unassignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
-            @Override
-            public void updateItem(UniqueUnit p, boolean empty) {
-                super.updateItem(p, empty);
-                if ( empty ) {
-                    setText(null);
-                } else {
-                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
-                    setText(text);
-                }
-            }
-        });
+        // List containing the unassigned Units.
+        unassignedUnitsList.setCellFactory(SimpleUnitListCell.factory());
 
-        assignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
-            @Override
-            public void updateItem(UniqueUnit p, boolean empty) {
-                super.updateItem(p, empty);
-                if ( empty ) {
-                    setText(null);
-                } else {
-                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
-                    setText(text);
-                }
-            }
-        });
+        // List containing the assigned Units of the Selected UnitCollection
+        assignedUnitsList.setCellFactory(SimpleUnitListCell.factory());
 
-        differentAssignedUnitsList.setCellFactory(lv -> new ListCell<UniqueUnit>() {
-            @Override
-            public void updateItem(UniqueUnit p, boolean empty) {
-                super.updateItem(p, empty);
-                if ( empty ) {
-                    setText(null);
-                } else {
-                    String text = p.getIdentifier(Identifier.SERIAL) + " || " + p.getIdentifier(REFURBISHED_ID) + " || " + p.getCondition().getNote();
-                    setText(text);
-                }
-            }
-        });
+        // list containg all Units that are assigned to different UnitCollections than the selected
+        differentAssignedUnitsList.setCellFactory(SimpleUnitListCell.factory());
     }
 
     private void dragAndDropHandling() {
 
+        /**
+         * Start of the Drag an Drop from the unassigned units List.
+         */
         unassignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -156,6 +133,9 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        /**
+         * Handling the DragOver for only UniqueUnits with the right dataformat.
+         */
         unassignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -166,23 +146,36 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        /**
+         * Handling the Dropped UniqueUnit and saving it.
+         */
         unassignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
-            public void handle(DragEvent event) {
+            public void handle(final DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if ( db.hasContent(df) ) {
-                    unassignedUnitsList.getItems().add((UniqueUnit)db.getContent(df));
-                    assignedUnitsList.getItems().remove((UniqueUnit)db.getContent(df));
-
-                    success = true;
-
+                    UniqueUnit draggedUnit = (UniqueUnit)db.getContent(df);
+                    Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId())))
+                            .filter(r -> {
+                                if ( !r.hasSucceded() ) event.setDropCompleted(false);
+                                return Ui.failure().handle(r);
+                            })
+                            .ifPresent(c -> {
+                                unassignedUnitsList.getItems().add(draggedUnit);
+                                assignedUnitsList.getItems().remove(draggedUnit);
+                                event.setDropCompleted(true);
+                            });
+                } else {
+                    event.setDropCompleted(false);
                 }
-                event.setDropCompleted(success);
                 event.consume();
             }
         });
 
+        /**
+         * Start of the Drag an Drop from the assigned units List.
+         */
         assignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -197,6 +190,9 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        /**
+         * Handling the DragOver for only UniqueUnits with the right dataformat.
+         */
         assignedUnitsList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -207,25 +203,36 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        /**
+         * Handling the Dropped UniqueUnit and saving it.
+         */
         assignedUnitsList.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
                 if ( db.hasContent(df) ) {
-                    assignedUnitsList.getItems().add((UniqueUnit)db.getContent(df));
-                    unassignedUnitsList.getItems().remove((UniqueUnit)db.getContent(df));
-
-                    success = true;
-
+                    UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
+                    UniqueUnit draggedUnit = (UniqueUnit)db.getContent(df);
+                    Optional.of(Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId()), selectedCollection.getId()))
+                            .filter(r -> {
+                                if ( !r.hasSucceded() ) event.setDropCompleted(false);
+                                return Ui.failure().handle(r);
+                            })
+                            .ifPresent(c -> {
+                                assignedUnitsList.getItems().add(draggedUnit);
+                                unassignedUnitsList.getItems().remove(draggedUnit);
+                                event.setDropCompleted(true);
+                            });
+                } else {
+                    event.setDropCompleted(false);
                 }
-                event.setDropCompleted(success);
                 event.consume();
             }
         });
 
         /**
-         * Receive Products from ListView
+         * Handling the DragOver for only PicoProducts with the right dataformat.
          */
         productList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
@@ -237,6 +244,9 @@ public class AssignmentController implements Initializable, FxController {
             }
         });
 
+        /**
+         * Handling the Dropped PicoProduct
+         */
         productList.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -255,30 +265,40 @@ public class AssignmentController implements Initializable, FxController {
 
     private void actionListenerHandling() {
 
-        // update the UI if the Product changes
+        /**
+         * Loading the Product from the selected PicoProduct. Updating the Selected UnitCollection
+         */
         productList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PicoProduct>() {
             @Override
             public void changed(ObservableValue<? extends PicoProduct> observable, PicoProduct oldValue, PicoProduct newValue) {
                 if ( newValue != null ) {
 
-                    Product product = Client.lookup(UniqueUnitAgent.class).findProductByPartNo("s");
+                    // get the Product based on the id of the PicoProduct
+                    Product product = Client.lookup(UniqueUnitAgent.class).findByIdEager(Product.class, newValue.getId());
 
+                    //Fill the list with UnitCollections of the Product
                     unitCollectionList.getItems().clear();
                     unitCollectionList.setItems(FXCollections.observableArrayList(product.getUnitCollections()));
 
                     // show unassignedUnits
                     unassignedUnitsList.getItems().clear();
-                    unassignedUnitsList.getItems().addAll((List<UniqueUnit>)product
+                    unassignedUnitsList.getItems().addAll(product
                             .getUniqueUnits()
                             .stream()
-                            .filter(u -> u.getProduct() != null).collect(Collectors.toList()));
+                            .filter(u -> u.getProduct() != null)
+                            .collect(Collectors.toList()));
                 } else {
+                    // clear the lists if no Product is selected
                     unitCollectionList.getItems().clear();
                     unassignedUnitsList.getItems().clear();
                     assignedUnitsList.getItems().clear();
                 }
             }
         });
+
+        /**
+         * Change the UniqueUnit Lists based on the selected Collection
+         */
         unitCollectionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UnitCollection>() {
             @Override
             public void changed(ObservableValue<? extends UnitCollection> observable, UnitCollection oldValue, UnitCollection newValue) {
@@ -291,16 +311,14 @@ public class AssignmentController implements Initializable, FxController {
                     // show different assigned units
                     differentAssignedUnitsList.getItems().clear();
 
-                    List<UnitCollection> notSelected = newValue.getProduct()
+                    differentAssignedUnitsList.getItems().addAll(newValue.getProduct()
                             .getUnitCollections()
                             .stream()
                             .filter(uc -> uc != newValue)
-                            .collect(Collectors.toList());
-                    for (UnitCollection unitCollection : notSelected) {
-                        differentAssignedUnitsList.getItems().addAll(unitCollection.getUnits());
-                    }
-
+                            .flatMap(t -> t.getUnits().stream())
+                            .collect(Collectors.toList()));
                 } else {
+                    // clear the lists if no cellection is selected
                     assignedUnitsList.getItems().clear();
                     unitCollectionList.getItems().clear();
                     differentAssignedUnitsList.getItems().clear();

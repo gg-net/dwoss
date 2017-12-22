@@ -20,6 +20,7 @@ import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.api.Reply;
@@ -242,6 +243,16 @@ public class UnitViewTryout {
 
             @Override
             public Reply<Void> deleteCategoryProduct(long id) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Reply<Void> unsetUnitCollection(PicoUnit unit) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

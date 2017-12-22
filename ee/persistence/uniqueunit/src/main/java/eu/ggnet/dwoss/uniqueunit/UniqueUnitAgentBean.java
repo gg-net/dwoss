@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
@@ -131,4 +132,25 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
         em.remove(cp);
         return Reply.success(null);
     }
+
+    @Override
+    public Reply<Void> addToUnitCollection(PicoUnit punit, long unitCollectionId) {
+        if ( punit == null ) return Reply.failure("PicoUnit is null");
+        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
+        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
+        UnitCollection uc = em.find(UnitCollection.class, unitCollectionId);
+        if ( uc == null ) return Reply.failure("No UnitCollection found with " + unitCollectionId);
+        uc.addUnit(uu);
+        return Reply.success(null);
+    }
+
+    @Override
+    public Reply<Void> unsetUnitCollection(PicoUnit punit) {
+        if ( punit == null ) return Reply.failure("PicoUnit is null");
+        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
+        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
+        uu.setUnitCollection(null);
+        return Reply.success(null);
+    }
+
 }

@@ -309,8 +309,8 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     @Override
     public void fetchEager() {
-        getPriceHistory().size();
-        units.size();
+        categoryProduct.fetchEager();
+        units.forEach(u -> u.fetchEager());
     }
 
     @Override

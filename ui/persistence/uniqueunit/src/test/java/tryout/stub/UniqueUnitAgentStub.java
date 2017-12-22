@@ -21,6 +21,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+
 /**
  *
  * @author lucas.huelsen
@@ -121,13 +123,18 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public Product findProductByPartNo(String partNo) {
-        return PGEN.generateProduct(1).get(0);
+    public Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId) {
+        return Reply.success(null);
     }
 
     @Override
-    public Reply<Void> deleteCategoryProduct(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Reply<Void> unsetUnitCollection(PicoUnit unit) {
+        return Reply.success(null);
+    }
+
+    @Override
+    public <T> T findByIdEager(Class<T> entityClass, Object id) {
+        return (T)PGEN.generateProduct(1).get(0);
     }
 
 //<editor-fold defaultstate="collapsed" desc="Unused Methods">
@@ -152,22 +159,27 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public <T> T findById(Class<T> entityClass, Object id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public <T> T findById(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> T findByIdEager(Class<T> entityClass, Object id) {
+    public <T> T findById(Class<T> entityClass, Object id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Product findProductByPartNo(String partNo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Reply<Void> deleteCategoryProduct(long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>

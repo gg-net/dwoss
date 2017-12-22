@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
@@ -42,7 +43,7 @@ import static javax.persistence.FetchType.EAGER;
 @Entity
 @SuppressWarnings("PersistenceUnitPresent")
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class CategoryProduct implements Serializable {
+public class CategoryProduct implements Serializable, EagerAble {
 
     @Getter
     @Id
@@ -142,13 +143,20 @@ public class CategoryProduct implements Serializable {
      * @return unmodifiable list of products.
      */
     public List<Product> getProducts() {
-        //TODO: maybe grab them from the database instead?
         return Collections.unmodifiableList(products);
     }
 
     @Override
     public String toString() {
         return "CategoryProduct{" + "id=" + id + ", optLock=" + optLock + ", name=" + name + ", description=" + description + '}';
+    }
+
+    @Override
+    public void fetchEager() {
+        priceHistories.size();
+        for (Product product : products) {
+            product.fetchEager();
+        }
     }
 
 }
