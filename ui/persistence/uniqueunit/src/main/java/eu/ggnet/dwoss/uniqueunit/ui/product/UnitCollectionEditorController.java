@@ -93,9 +93,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     private ListView<Entry<PriceType, Double>> listViewPrices;
 
     @FXML
-    private Button deletePrice;
-
-    @FXML
     private ListView<PicoUnit> listViewUnits;
 
     @FXML
@@ -104,6 +101,14 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      */
     private void cancel(ActionEvent event) {
         Ui.closeWindowOf(name);
+    }
+    
+    
+    public void closed() {
+        FxSaft.dispatch(() -> {
+            if ( productsTask.isRunning() ) productsTask.cancel();
+            return null;
+        });
     }
 
     @FXML
@@ -149,7 +154,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      * Removes a Price from the CategoryProduct. A remove simply means setting
      * the value to 0.
      */
-    private void removePrice(ActionEvent event) {
+    private void removePrice() {
         if ( listViewPrices.getSelectionModel().getSelectedItem() != null ) {
             L.info("Removed Price {}", listViewPrices.getSelectionModel().getSelectedItem());
             unitCollectionFx.getPricesProperty().put(listViewPrices.getSelectionModel().getSelectedItem().getKey(), 0d);
@@ -159,29 +164,29 @@ public class UnitCollectionEditorController implements Initializable, FxControll
 
     @Override
     /**
-     * Adding the filters to the combo box. Setting the cell values and the
-     * filtered list containing the data.
+     * Fill all ChoiceBoxes adding the Conetex Menu to the price list
+     * froce the input in the price input
      */
     public void initialize(URL url, ResourceBundle rb) {
         salesChannel.getItems().addAll(SalesChannel.values());
         salesChannel.getSelectionModel().selectFirst();
 
-        listViewUnits.setCellFactory(new Callback<ListView<PicoUnit>, ListCell<PicoUnit>>() {
-            @Override
-            public ListCell<PicoUnit> call(ListView<PicoUnit> p) {
-                ListCell<PicoUnit> cell = new ListCell<PicoUnit>() {
-                    @Override
-                    protected void updateItem(PicoUnit t, boolean bln) {
-                        super.updateItem(t, bln);
-                        if ( t != null ) {
-                            setText(t.getShortDescription());
-                        } else {
-                            setText("");
-                        }
+        priceType.getItems().addAll(PriceType.values());
+        priceType.getSelectionModel().selectFirst();
+
+        listViewUnits.setCellFactory((ListView<PicoUnit> p) -> {
+            ListCell<PicoUnit> cell = new ListCell<PicoUnit>() {
+                @Override
+                protected void updateItem(PicoUnit t, boolean bln) {
+                    super.updateItem(t, bln);
+                    if ( t != null ) {
+                        setText(t.getShortDescription());
+                    } else {
+                        setText("");
                     }
-                };
-                return cell;
-            }
+                }
+            };
+            return cell;
         });
 
         // force the field to be numeric only
@@ -192,31 +197,25 @@ public class UnitCollectionEditorController implements Initializable, FxControll
                 return null;
             }
         }));
-        
-        
-        // enable the deletePriceButton only if a price is selected
-        listViewPrices.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if ( newValue.intValue() < 0 ) {
-                    deletePrice.disableProperty().setValue(Boolean.TRUE);
-                } else {
-                    deletePrice.disableProperty().setValue(Boolean.FALSE);
-                }
-            }
+
+        //Create a ContextMenu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem delete = new MenuItem("Delete Preis");
+        //actions for the context menu
+        delete.setOnAction((ActionEvent event) -> {
+            removePrice();
         });
+
+        // Add MenuItem to ContextMenu
+        contextMenu.getItems().addAll(delete);
+
+        //add contextmenu to listview
+        listViewPrices.setContextMenu(contextMenu);
 
         Ui.progress().observe(productsTask);
         Ui.exec(productsTask);
-
     }
 
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( productsTask.isRunning() ) productsTask.cancel();
-            return null;
-        });
-    }
 
     /**
      * Create a UnitCollectionFx based on the values from cp. Bind the
@@ -242,6 +241,11 @@ public class UnitCollectionEditorController implements Initializable, FxControll
         //producatnamefix.textProperty().bind(unitCollectionFx.getProduct().getShortDescription().);
         salesChannel.valueProperty().bindBidirectional(unitCollectionFx.getSalesChannelProperty());
         listViewUnits.setItems(unitCollectionFx.getUnitsProperty());
+
+        unitCollectionFx.getPricesProperty().addListener((MapChangeListener<PriceType, Double>)change -> {
+            listViewPrices.getItems().clear();
+            listViewPrices.getItems().addAll(unitCollectionFx.getPricesProperty().entrySet());
+        });
 
     }
 
