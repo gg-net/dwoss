@@ -33,14 +33,4 @@ public class CategoryProductDto implements Serializable {
 
     private Map<PriceType, Double> prices = new HashMap<>();
 
-    public List<PicoProduct> getProducts() {
-        if ( products == null ) return Collections.emptyList();
-        return products;
-    }
-
-    public Map<PriceType, Double> getPrices() {
-        if ( prices == null ) return Collections.emptyMap();
-        return prices;
-    }
-
 }

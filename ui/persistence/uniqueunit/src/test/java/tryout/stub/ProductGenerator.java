@@ -5,19 +5,12 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 
@@ -69,7 +62,7 @@ public class ProductGenerator {
             p.setPrice(priceTypes.get(rand.nextInt(priceTypes.size())), rand.nextInt(9999), "");
 
             ucGen.generateUnitCollections().forEach((generateUnitCollection) -> {
-                p.addUnitCollections(generateUnitCollection);
+                p.getUnitCollections().add(generateUnitCollection);
             });
 
             for (UnitCollection collection : p.getUnitCollections()) {
@@ -79,7 +72,7 @@ public class ProductGenerator {
             }
 
             for (int j = 0; j < 5; j++) {
-                p.addUnit(uuGen.makeUniqueUnit(p.getTradeName(), p.getGroup()));
+                p.getUniqueUnits().add(uuGen.makeUniqueUnit(p.getTradeName(), p.getGroup()));
             }
 
             products.add(p);

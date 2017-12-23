@@ -5,20 +5,15 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
+import java.util.*;
+
+import javafx.beans.property.*;
+import javafx.collections.*;
+
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import java.util.List;
-import java.util.Map;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+
 import lombok.ToString;
 
 /**
@@ -29,21 +24,28 @@ import lombok.ToString;
 @ToString
 public class CategoryProductFx {
 
-    private LongProperty idProperty;
-    private StringProperty nameProperty;
-    private StringProperty descriptionProperty;
-    private ObjectProperty<SalesChannel> salesChannelProperty;
-    private ObservableList<PicoProduct> productsProperty;
-    private ObservableMap<PriceType, Double> pricesProperty;
+    private LongProperty idProperty = new SimpleLongProperty();
+
+    private StringProperty nameProperty = new SimpleStringProperty();
+
+    private StringProperty descriptionProperty = new SimpleStringProperty();
+
+    private ObjectProperty<SalesChannel> salesChannelProperty = new SimpleObjectProperty<>(SalesChannel.UNKNOWN);
+
+    private ObservableList<PicoProduct> productsProperty = FXCollections.observableList(new ArrayList<>());
+
+    private ObservableMap<PriceType, Double> pricesProperty = FXCollections.observableHashMap();
+
+    public CategoryProductFx() {
+    }
 
     public CategoryProductFx(long id, String name, String description, SalesChannel salesChannel, List<PicoProduct> products, Map<PriceType, Double> prices) {
-        this.idProperty = new SimpleLongProperty(id);
-        this.nameProperty = new SimpleStringProperty(name);
-        this.descriptionProperty = new SimpleStringProperty(description);
-        this.salesChannelProperty = new SimpleObjectProperty<>(salesChannel);
-        this.productsProperty = FXCollections.observableList(products);
-        this.pricesProperty = FXCollections.observableHashMap();
-        pricesProperty.putAll(prices);
+        this.idProperty.set(id);
+        this.nameProperty.set(name);
+        this.descriptionProperty.set(description);
+        this.salesChannelProperty.set(salesChannel);
+        this.productsProperty.addAll(products);
+        this.pricesProperty.putAll(prices);
     }
 
     public LongProperty getIdProperty() {
@@ -110,8 +112,8 @@ public class CategoryProductFx {
         return salesChannelProperty;
     }
 
-    public void setSalesChannelProperty(ObjectProperty<SalesChannel> salesChannelProperty) {
-        this.salesChannelProperty = salesChannelProperty;
+    public void setSalesChannel(SalesChannel salesChannel) {
+        this.salesChannelProperty.set(salesChannel);
     }
 
     public SalesChannel getSalesChannel() {
@@ -122,16 +124,16 @@ public class CategoryProductFx {
         return productsProperty;
     }
 
-    public void setProductsProperty(ObservableList<PicoProduct> productsProperty) {
-        this.productsProperty = productsProperty;
+    public List<PicoProduct> getProducts() {
+        return productsProperty;
     }
 
     public ObservableMap<PriceType, Double> getPricesProperty() {
         return pricesProperty;
     }
 
-    public void setPricesProperty(ObservableMap<PriceType, Double> pricesProperty) {
-        this.pricesProperty = pricesProperty;
+    public Map<PriceType, Double> getPrices() {
+        return pricesProperty;
     }
 
 }

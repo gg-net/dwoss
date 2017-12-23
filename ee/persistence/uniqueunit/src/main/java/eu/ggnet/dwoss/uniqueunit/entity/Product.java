@@ -176,6 +176,16 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
+    public Product() {
+    }
+
+    public Product(ProductGroup group, TradeName tradeName, String partNo, String name) {
+        this.group = group;
+        this.tradeName = tradeName;
+        this.partNo = partNo;
+        this.name = name;
+    }
+
     public void setPrice(PriceType type, double price, String comment) {
         if ( MathUtil.equals(getPrice(type), price) ) {
             return; // Don't set the same price
@@ -200,42 +210,34 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         return priceHistories;
     }
 
-    public Product() {
-    }
-
-    public Product(ProductGroup group, TradeName tradeName, String partNo, String name) {
-        this.group = group;
-        this.tradeName = tradeName;
-        this.partNo = partNo;
-        this.name = name;
-    }
-
-    public void addUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setProduct(this);
-    }
-
-    public void removeUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setProduct(null);
-    }
-
+    /**
+     * Returns a bidirectional wrapper List, mapping changes to the UniqueUnit.
+     *
+     * @return a bidirectional wrapper List
+     */
     public List<UniqueUnit> getUniqueUnits() {
-        return Collections.unmodifiableList(units);
+        return new AbstractBidirectionalListWrapper<UniqueUnit>(units) {
+            @Override
+            protected void update(UniqueUnit e, boolean add) {
+                if ( add ) e.setProduct(Product.this);
+                else e.setProduct(null);
+            }
+        };
     }
 
-    public void addUnitCollections(UnitCollection unitCollection) {
-        if ( unitCollection == null ) return;
-        unitCollection.setProduct(this);
-    }
-
-    public void removeUnitCollection(UnitCollection unitCollection) {
-        if ( unitCollection == null ) return;
-        unitCollection.setProduct(null);
-    }
-
+    /**
+     * Returns a bidirectional wrapper List, mapping changes to the UnitCollection.
+     *
+     * @return a bidirectional wrapper List
+     */
     public List<UnitCollection> getUnitCollections() {
-        return Collections.unmodifiableList(unitCollections);
+        return new AbstractBidirectionalListWrapper<UnitCollection>(unitCollections) {
+            @Override
+            protected void update(UnitCollection e, boolean add) {
+                if ( add ) e.setProduct(Product.this);
+                else e.setProduct(null);
+            }
+        };
     }
 
     public void setAdditionalPartNo(TradeName tradeName, String partNo) {
