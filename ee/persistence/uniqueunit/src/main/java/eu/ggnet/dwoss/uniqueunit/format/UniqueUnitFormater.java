@@ -28,6 +28,7 @@ import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.INoteModel;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static java.util.Locale.GERMANY;
 
 /**
  * Formatter for UniqueUnits.
@@ -62,30 +63,6 @@ public abstract class UniqueUnitFormater {
     }
 
     /**
-     * Returns a String containing prices and the {@link PriceHistory} of a {@link UniqueUnit} formated in html.
-     *
-     * @param uu the unit to format
-     * @return the formated String.
-     */
-    public static String toHtmlPriceInformation(UniqueUnit uu) {
-        String res = "";
-        if ( uu != null ) {
-            res += "<p>Preise:<br />";
-            res += "Endkundenpreis (Netto): " + (NumberFormat.getCurrencyInstance().format(uu.getPrice(PriceType.CUSTOMER))) + "<br />";
-            res += "Händlerpreis (Netto): " + (NumberFormat.getCurrencyInstance().format(uu.getPrice(PriceType.RETAILER))) + "<br />";
-            if ( !uu.getPriceHistory().isEmpty() ) {
-                res += "<p>Preishistorie:<ul>";
-                for (PriceHistory priceHistory : uu.getPriceHistory()) {
-                    res += "<li>Datum: " + priceHistory.getDate() + " | Preis: " + priceHistory.getType()
-                            + " - " + NumberFormat.getCurrencyInstance().format(priceHistory.getPrice()) + "<br />" + "Bemerkung: " + priceHistory.getComment() + "</li>";
-                }
-                res += "</ul></p>";
-            }
-        }
-        return res;
-    }
-
-    /**
      * Displays all supplied prices and if supplied, the corresponding histories.
      *
      * @param prices
@@ -95,7 +72,7 @@ public abstract class UniqueUnitFormater {
     public static String toHtmlPriceInformation(Map<PriceType, Double> prices, List<PriceHistory> optionalHistories) {
         if ( prices == null ) return "<b>Fehler, Map of Price is null</b>";
         List<PriceHistory> histories = Optional.ofNullable(optionalHistories).orElse(new ArrayList<>());
-        final NumberFormat CUR = NumberFormat.getCurrencyInstance();
+        final NumberFormat CUR = NumberFormat.getCurrencyInstance(GERMANY);
         StringBuilder sb = new StringBuilder("<table><tr><th>Preistyp</th><th>Preis(netto)</th>");
         if ( !histories.isEmpty() ) sb.append("<th>History</th>");
         sb.append("</tr>");

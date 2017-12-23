@@ -26,13 +26,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.redtape.UnitOverseer;
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.Ops;
 
 import static javafx.scene.text.Font.font;
 
@@ -77,7 +76,7 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
             head.setText("(" + pu.id() + ") " + pu.shortDescription);
         });
         Ui.exec(() -> {
-            String content = Client.lookup(UnitOverseer.class).toDetailedHtml(pu.uniqueUnitId, Client.lookup(Guardian.class).getUsername());
+            String content = Css.toHtml5WithStyle(Client.lookup(UnitOverseer.class).toDetailedHtml(pu.uniqueUnitId, Client.lookup(Guardian.class).getUsername()));
             Platform.runLater(() -> {
                 webView.getEngine().loadContent(content);
                 progressIndicator.setVisible(false);

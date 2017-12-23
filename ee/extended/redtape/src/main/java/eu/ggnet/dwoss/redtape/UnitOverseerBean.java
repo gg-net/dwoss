@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -68,7 +67,6 @@ import eu.ggnet.dwoss.util.interactiveresult.Result;
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static java.util.Locale.GERMANY;
 
 import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
@@ -223,16 +221,7 @@ public class UnitOverseerBean implements UnitOverseer {
         if ( !showPrices ) return re;
         re += "<hr />";
         re += "<b>Preis-Informationen</b>";
-        NumberFormat nf = NumberFormat.getCurrencyInstance(GERMANY);
-        re += "<ul><li>Unit Preise:";
-        re += uniqueUnit.getPrices().entrySet().stream()
-                .map(e -> e.getKey() + " : " + nf.format(e.getValue()))
-                .collect(Collectors.joining("</li><li>", "<ul><li>", "</li></ul>"));
-        re += "</li><li>Produkt Preise:";
-        re += uniqueUnit.getProduct().getPrices().entrySet().stream()
-                .map(e -> e.getKey() + " : " + nf.format(e.getValue()))
-                .collect(Collectors.joining("</li><li>", "<ul><li>", "</li></ul>"));
-        re += "</li>";
+        re += UniqueUnitFormater.toHtmlPriceInformation(uniqueUnit.getPrices(), uniqueUnit.getPriceHistory());
         return re;
     }
 

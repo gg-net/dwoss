@@ -46,13 +46,7 @@ import static javax.persistence.CascadeType.*;
  */
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NamedQueries({
-    @NamedQuery(name = "Product.byTradeNames", query = "select p from Product p where p.tradeName in (?1)")
-    ,
-    @NamedQuery(name = "Product.byPartNos", query = "select p from Product p where p.partNo in (?1)")
-    ,
-    @NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
-})
+@NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
 @SuppressWarnings("PersistenceUnitPresent")
 public class Product implements Serializable, EagerAble, Comparable<Product> {
 
@@ -311,7 +305,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     @Override
     public void fetchEager() {
-        categoryProduct.fetchEager();
+        if ( categoryProduct != null ) categoryProduct.fetchEager();
         units.forEach(u -> u.fetchEager());
     }
 

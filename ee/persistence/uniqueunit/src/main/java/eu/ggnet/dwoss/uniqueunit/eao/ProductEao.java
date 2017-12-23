@@ -78,7 +78,7 @@ public class ProductEao extends AbstractEao<Product> {
 
     public List<Product> findByPartNos(Collection<String> partNos) {
         if ( partNos == null || partNos.isEmpty() ) return new ArrayList<>();
-        return em.createNamedQuery("Product.byPartNos", Product.class).setParameter(1, partNos).getResultList();
+        return new JPAQuery(em).from(product).where(product.partNo.in(partNos)).list(product);
     }
 
     /**
@@ -89,7 +89,7 @@ public class ProductEao extends AbstractEao<Product> {
      */
     public List<Product> findByTradeNames(Collection<TradeName> tradenames) {
         if ( tradenames == null || tradenames.isEmpty() ) return new ArrayList<>();
-        return em.createNamedQuery("Product.byTradeNames", Product.class).setParameter(1, tradenames).getResultList();
+        return new JPAQuery(em).from(product).where(product.tradeName.in(tradenames)).list(product);
     }
 
     /**
