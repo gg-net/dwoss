@@ -112,7 +112,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
             cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
 
         }
-
+        System.out.println("Storing " + cp);
         return cp;
     }
 
