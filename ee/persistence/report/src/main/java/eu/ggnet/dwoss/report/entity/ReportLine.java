@@ -28,7 +28,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import org.apache.commons.lang3.StringUtils;
-import org.metawidget.inspector.annotation.*;
 
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.MathUtil;
@@ -265,7 +264,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     private DocumentType documentType;
 
     @Getter
-    @UiHidden
     private String documentTypeName;
 
     /**
@@ -284,7 +282,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     //PositionData
     @Getter
     @Setter
-    @UiSection("Position")
     private double amount;
 
     /**
@@ -301,7 +298,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Lob
     @Getter
     @Setter
-    @UiLarge
     @Column(length = 65536)
     private String description;
 
@@ -316,7 +312,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * The type of the position that referend the {@link ReportLine}.
      */
     @Getter
-    @UiHidden
     private String positionTypeName;
 
     /**
@@ -351,7 +346,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Min(0)
     @Getter
     @Setter
-    @UiSection("Customer")
     private long customerId;
 
     /**
@@ -370,7 +364,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Lob
     @Getter
     @Setter
-    @UiLarge
     @Column(length = 65536)
     private String invoiceAddress;
 
@@ -379,7 +372,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * This is a referenz to the ProductGroup of the Product, if this ReportLine represent a Unit oder Product.
      */
     @Getter
-    @UiSection("Product")
     private ProductGroup productGroup;
 
     /**
@@ -387,7 +379,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * This String exist because the possibility that a Product Group will change his name or will be deleted.
      */
     @Getter
-    @UiHidden
     private String productGroupName;
 
     /**
@@ -401,7 +392,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * This String exist because the possibility that a Product Brand will change his name or will be deleted.
      */
     @Getter
-    @UiHidden
     private String productBrandName;
 
     /**
@@ -441,7 +431,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      */
     @Getter
     @Setter
-    @UiSection("Unit")
     private String refurbishId;
 
     /**
@@ -488,14 +477,12 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     private SalesChannel salesChannel;
 
     @Getter
-    @UiHidden
     private String salesChannelName;
 
     /**
      * This is a referenz to the contractor of the Product, if this ReportLine represent a Unit oder Product.
      */
     @Getter
-    @UiSection("Contractor")
     private TradeName contractor;
 
     /**
@@ -503,7 +490,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * This String exist because the possibility that a contractor name will change his name or will be deleted.
      */
     @Getter
-    @UiHidden
     private String contractorName;
 
     /**
@@ -532,7 +518,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * This set contains the ReportsLines of the Reports, where is the mapping unidirectional.
      */
     @ManyToMany(mappedBy = "lines")
-    @UiHidden
     Set<Report> reports = new HashSet<>();
 
     @NotNull
@@ -549,7 +534,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Setter
     @Column(length = 65536)
     @Lob
-    @UiLarge
     private String comment;
 
     @Getter
@@ -1084,7 +1068,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      */
     public String toHtml() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         StringBuilder sb = new StringBuilder("");
         sb.append("<h1><b>ReportLine </b></h1>");
 
@@ -1159,7 +1143,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
 
         sb.append("<b>Booking Account: </b>");
         sb.append(bookingAccount);
-        sb.append("</td>");  
+        sb.append("</td>");
         sb.append("</tr>");
 
         //product
@@ -1190,8 +1174,8 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<b>Manufacturer CostPrice: </b>");
         sb.append(manufacturerCostPrice);
         sb.append("</td>");
-        
-         //customer
+
+        //customer
         sb.append("<td valign='top'>");
         sb.append("<font size='4'><b><u>Customer</u></b></font><br>");
         sb.append("<b>CustomerId: </b>");
@@ -1210,10 +1194,9 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<textarea  rows='3' cols='40' disabled>");
         sb.append(invoiceAddress);
         sb.append("</textarea>");
-        sb.append("</td>");          
+        sb.append("</td>");
         sb.append("</tr>");
 
-        
         //unit
         sb.append("<tr>");
         sb.append("<td valign='top'>");
@@ -1227,7 +1210,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<br>");
 
         sb.append("<b>mfg Date: </b>");
-        sb.append( simpleDateFormat.format(mfgDate) );
+        sb.append(simpleDateFormat.format(mfgDate));
         sb.append("<br>");
 
         sb.append("<b>UniqueUnitId: </b>");

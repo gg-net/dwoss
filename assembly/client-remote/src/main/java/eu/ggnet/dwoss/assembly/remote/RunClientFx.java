@@ -36,10 +36,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.remote.lookup.*;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.ui.returns.Summary;
-import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.runtime.SwingClient;
 
@@ -107,8 +103,6 @@ public class RunClientFx extends Application {
         Client.setRemoteLookup(new WildflyLookup(lookupConfig));
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
-
-        MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
 
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());

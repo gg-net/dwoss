@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.Map.Entry;
 import java.util.*;
 
-import org.metawidget.inspector.annotation.UiLarge;
-
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -43,7 +41,6 @@ public class DocumentIntermix implements Serializable {
 
     @Getter
     @Setter
-    @UiLarge
     private String footer;
 
     private final Map<DocumentViewType, UrlLocation> viewTypeDocumentTemplates = new HashMap<>();

@@ -14,32 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.reporting;
+package eu.ggnet.dwoss.misc.ui.cap;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.DateRangeChooserView;
+import eu.ggnet.dwoss.misc.ui.cap.support.DateRangeAndContractorChooserView;
+import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
 import eu.ggnet.saft.Ui;
 
 import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
- * @author oliver.guenther
+ * @author pascal.perau
  */
-public class AuditReportByRangeAction extends AbstractAction {
+public class UnitQualityReportAction extends AbstractAction {
 
-    public AuditReportByRangeAction() {
-        super("Audit Report nach Datum erzeugen");
+    public UnitQualityReportAction() {
+        super("Gerätequalitätsreport");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fx().title("Audit Report nach Datum").eval(() -> new DateRangeChooserView()).ifPresent(r -> {
-                Ui.osOpen(Ui.progress().title("Auditreport").call(() -> lookup(AuditReporter.class).byRange(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+            Ui.fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(rp -> {
+                Ui.osOpen(Ui.progress().call(() -> lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor()).toTemporaryFile()));
             });
         });
     }

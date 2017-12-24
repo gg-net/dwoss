@@ -23,7 +23,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.metawidget.inspector.annotation.UiLarge;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
@@ -138,7 +137,6 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
     @Lob
     @Getter
     @Setter
-    @UiLarge
     @Column(length = 65536)
     private String comment;
 

@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.misc;
+package eu.ggnet.dwoss.misc.ui.cap;
+
+import eu.ggnet.dwoss.misc.ui.cap.UnitQualityReportAction;
 
 import java.util.*;
 import java.util.stream.Collectors;

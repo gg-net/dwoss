@@ -16,14 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ui.returns;
 
-import java.awt.BorderLayout;
-
-import org.jdesktop.beansbinding.AutoBinding;
-import org.metawidget.swing.SwingMetawidget;
-
-import eu.ggnet.dwoss.report.ui.ReportLineDetailView;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.Ui;
 
 /**
  *
@@ -65,9 +59,6 @@ public class ReturnsReportViewComponent extends javax.swing.JPanel {
     public void setModel(ReturnsReportTableModel model) {
         this.model = model;
         reportLineTable.setModel(model);
-        SwingMetawidget mw = MetawidgetConfig.builder().updateStrategy(AutoBinding.UpdateStrategy.READ_WRITE).numberOfColums(6).readOnly(true).build();
-        mw.setToInspect(model.getSummary());
-        summaryPanel.add(mw, BorderLayout.CENTER);
     }
 
     /** This method is called from within the constructor to
@@ -81,7 +72,6 @@ public class ReturnsReportViewComponent extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         reportLineTable = new javax.swing.JTable();
-        summaryPanel = new javax.swing.JPanel();
 
         setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         setLayout(new java.awt.BorderLayout());
@@ -94,23 +84,16 @@ public class ReturnsReportViewComponent extends javax.swing.JPanel {
         jScrollPane1.setViewportView(reportLineTable);
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        summaryPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        summaryPanel.setPreferredSize(new java.awt.Dimension(20, 28));
-        summaryPanel.setLayout(new java.awt.BorderLayout());
-        add(summaryPanel, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
     private void reportLineTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportLineTableMouseClicked
         if ( evt.getClickCount() != 2 ) return;
         int convertRowIndexToModel = reportLineTable.convertRowIndexToModel(reportLineTable.getSelectedRow());
-        ReportLine rl = model.getLines().get(convertRowIndexToModel).getReportLine();
-        ReportLineDetailView.show(this, rl);
+        Ui.fx().parent(this).show(() -> model.getLines().get(convertRowIndexToModel).getReportLine().toHtml(), () -> new HtmlPane());
     }//GEN-LAST:event_reportLineTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable reportLineTable;
-    private javax.swing.JPanel summaryPanel;
     // End of variables declaration//GEN-END:variables
 }

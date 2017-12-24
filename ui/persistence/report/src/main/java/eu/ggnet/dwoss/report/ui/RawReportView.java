@@ -16,14 +16,7 @@
  */
 package eu.ggnet.dwoss.report.ui;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-
-import java.awt.EventQueue;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -42,19 +35,19 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
-import org.metawidget.swing.SwingMetawidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.MetawidgetConfig;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.Frame;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.ui.Workspace;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -268,15 +261,9 @@ public class RawReportView extends BorderPane {
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
         okButton.setText("Save");
 
-        Platform.runLater(() -> {
-            textarea.requestFocus();
-            textarea.end();
-        });
-
-        dialog.showAndWait()
+        Ui.dialog().parent(this).eval(() -> dialog)
                 .filter(result -> result == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), textarea.getText()));
-
     }
 
     /**
@@ -294,7 +281,7 @@ public class RawReportView extends BorderPane {
         dialogPane.setContent(grid);
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
-        dialog.showAndWait().filter(response -> response == ButtonType.OK)
+        Ui.dialog().parent(this).eval(() -> dialog).filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), input));
 
     }
@@ -306,37 +293,7 @@ public class RawReportView extends BorderPane {
      * @param reportLineId
      */
     public void openDetailView(final long reportLineId) {
-        // Merge with a new view ReportLineDetailView
-        CompletableFuture
-                .supplyAsync(() -> {
-                    ReportLine rl = Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId);
-                    SwingMetawidget mw = MetawidgetConfig.newSwingMetaWidget(true, 2, ProductGroup.class,
-                            TradeName.class,
-                            SalesChannel.class,
-                            DocumentType.class,
-                            PositionType.class,
-                            ReportLine.WorkflowStatus.class
-                    );
-                    mw.setReadOnly(true);
-                    mw.setToInspect(rl);
-                    return mw;
-                })
-                .handle((mw, u) -> {
-                    EventQueue.invokeLater(() -> {
-                        if ( u != null ) {
-                            u.printStackTrace(); // FIXME !!!!
-                        }
-
-                        JDialog dialog = new JDialog(Client.lookup(Workspace.class).getMainFrame(), "Details für Reportline");
-                        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                        dialog.getContentPane().add(mw);
-                        dialog.pack();
-                        dialog.setSize(dialog.getSize().width, dialog.getSize().height + 50);
-                        dialog.setLocationRelativeTo(SwingUtilities.getWindowAncestor(Client.lookup(Workspace.class).getMainFrame()));
-                        dialog.setVisible(true);
-                    });
-                    return null;
-                });
+        Ui.fx().parent(this).show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
     }
 
     /**
