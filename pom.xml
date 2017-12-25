@@ -652,11 +652,6 @@
                 <artifactId>querydsl-jpa</artifactId>
                 <version>3.7.4</version>
             </dependency>
-            <dependency>
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.9.9</version>
-            </dependency>
             <!-- Runtime EE - Extended Dependencise -->
             <dependency>
                 <groupId>net.sf.jasperreports</groupId>

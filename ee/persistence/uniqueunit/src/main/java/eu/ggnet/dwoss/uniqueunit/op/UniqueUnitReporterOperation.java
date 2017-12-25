@@ -18,23 +18,29 @@ package eu.ggnet.dwoss.uniqueunit.op;
 
 import java.awt.Color;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Map.Entry;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.joda.time.LocalDate;
+import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.rules.Step;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
 import lombok.Data;
@@ -43,11 +49,6 @@ import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static java.awt.Color.*;
-
-import java.util.*;
-
-import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.lucidcalc.*;
 
 /**
  *
@@ -78,6 +79,8 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
         }
     }
 
+    private static final DateFormat YEAR_MONTH = new SimpleDateFormat("yyyy-MM");
+
     private static final String MONTH_PATTERN = "yyyy-MM";
 
     @Inject
@@ -98,18 +101,16 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
         m.start();
         m.message("Loading reciepted Units");
 
-        LocalDate current = new LocalDate(start.getTime());
-        LocalDate endDate = new LocalDate(end.getTime());
-
         List<UniqueUnit> units = new UniqueUnitEao(em).findBetweenInputDatesAndContractor(start, end, contractor);
         m.worked(5, "Sorting Data");
 
         Set<String> months = new HashSet<>();
 
-        //prepare set of months
-        while (current.isBefore(endDate)) {
-            months.add(current.toString(MONTH_PATTERN));
-            current = current.plusDays(1);
+        Date actual = start;
+
+        while (actual.before(end)) {
+            months.add(YEAR_MONTH.format(actual));
+            actual = DateUtils.addDays(actual, 1);
         }
 
         //prepare Map sorted by months that contains a map sorted by condition
@@ -121,16 +122,16 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
 
         //count monthly receipted units sorted by condition
         for (UniqueUnit uniqueUnit : units) {
-            current = new LocalDate(uniqueUnit.getInputDate().getTime());
+            actual = uniqueUnit.getInputDate();
             switch (uniqueUnit.getCondition()) {
                 case AS_NEW:
-                    unitMap.get(current.toString(MONTH_PATTERN)).incrementAsNew();
+                    unitMap.get(YEAR_MONTH.format(actual)).incrementAsNew();
                     break;
                 case ALMOST_NEW:
-                    unitMap.get(current.toString(MONTH_PATTERN)).incrementAlmostNew();
+                    unitMap.get(YEAR_MONTH.format(actual)).incrementAlmostNew();
                     break;
                 case USED:
-                    unitMap.get(current.toString(MONTH_PATTERN)).incrementUsed();
+                    unitMap.get(YEAR_MONTH.format(actual)).incrementUsed();
                     break;
             }
         }
