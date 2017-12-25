@@ -16,13 +16,12 @@
  */
 package tryout;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionEditorController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.*;
 
 import tryout.stub.UniqueUnitAgentStub;
 
@@ -43,8 +42,7 @@ public class UnitCollectionEditorTryout {
      */
     public static void main(String[] args) throws InterruptedException {
 
-       
-       Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+        Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

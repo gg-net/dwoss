@@ -30,6 +30,8 @@ import lombok.Value;
 @Value
 public class PicoUnit implements IdSupplier, Serializable {
 
+    public static final String MIME_TYPE = "dw-api/picounit";
+
     public final int uniqueUnitId;
 
     public final String shortDescription;

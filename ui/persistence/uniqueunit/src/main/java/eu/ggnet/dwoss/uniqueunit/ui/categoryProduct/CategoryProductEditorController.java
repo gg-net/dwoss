@@ -198,7 +198,7 @@ public class CategoryProductEditorController implements Initializable, FxControl
         listViewProducts.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.dataFormatPicoProduct) ) {
+                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
                     event.acceptTransferModes(TransferMode.ANY);
                 }
                 event.consume();
@@ -211,8 +211,8 @@ public class CategoryProductEditorController implements Initializable, FxControl
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                if ( db.hasContent(ProductListController.dataFormatPicoProduct) ) {
-                    ArrayList<PicoProduct> picos = (ArrayList<PicoProduct>)db.getContent(ProductListController.dataFormatPicoProduct);
+                if ( db.hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
+                    ArrayList<PicoProduct> picos = (ArrayList<PicoProduct>)db.getContent(ProductListController.PICO_PRODUCT_DATA_FORMAT);
                     picos.stream().filter(p -> !categoryProductFx.getProductsProperty().contains(p)).forEach(p -> categoryProductFx.getProductsProperty().add(p));
                     success = true;
                 }

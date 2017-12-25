@@ -28,6 +28,8 @@ import lombok.Value;
 @Value
 public class PicoProduct implements Serializable {
 
+    public static final String MIME_TYPE = "dw-api/picoproduct";
+
     private long id;
 
     private final String shortDescription;

@@ -237,7 +237,7 @@ public class AssignmentController implements Initializable, FxController {
         productList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                if ( event.getGestureSource() != productList && event.getDragboard().hasContent(ProductListController.dataFormatPicoProduct) ) {
+                if ( event.getGestureSource() != productList && event.getDragboard().hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
                     event.acceptTransferModes(TransferMode.ANY);
                 }
                 event.consume();
@@ -252,8 +252,8 @@ public class AssignmentController implements Initializable, FxController {
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                if ( db.hasContent(ProductListController.dataFormatPicoProduct) ) {
-                    ArrayList<PicoProduct> products = (ArrayList<PicoProduct>)db.getContent(ProductListController.dataFormatPicoProduct);
+                if ( db.hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
+                    ArrayList<PicoProduct> products = (ArrayList<PicoProduct>)db.getContent(ProductListController.PICO_PRODUCT_DATA_FORMAT);
                     productList.getItems().addAll(products.stream().filter(p -> !productList.getItems().contains(p)).collect(Collectors.toList()));
                     success = true;
                 }

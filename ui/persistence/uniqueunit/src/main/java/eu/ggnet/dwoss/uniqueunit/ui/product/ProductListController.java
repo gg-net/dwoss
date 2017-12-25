@@ -1,16 +1,9 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.api.ui.FxController;
-
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -19,7 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -29,10 +23,14 @@ import javafx.scene.input.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -45,11 +43,11 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  */
 public class ProductListController implements Initializable, FxController, ClosedListener {
 
-    public static final DataFormat dataFormatPicoProduct = new DataFormat("dw/product");
+    public static final DataFormat PICO_PRODUCT_DATA_FORMAT = Optional.ofNullable(DataFormat.lookupMimeType(PicoProduct.MIME_TYPE)).orElse(new DataFormat(PicoProduct.MIME_TYPE));
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
 
-    private ProductTask productsTask = new ProductTask();
+    private final ProductTask LOADING_TASK = new ProductTask();
 
     // is used to filter the list of products
     private FilteredList<Product> filteredProducts;
@@ -147,7 +145,7 @@ public class ProductListController implements Initializable, FxController, Close
                 Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
                 selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
-                content.put(dataFormatPicoProduct, selectedPicoProducts);
+                content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
                 db.setContent(content);
                 event.consume();
             }
@@ -156,11 +154,11 @@ public class ProductListController implements Initializable, FxController, Close
         setCellValues();
 
         progressBar.progressProperty()
-                .bind(productsTask.progressProperty());
+                .bind(LOADING_TASK.progressProperty());
         progressBar.visibleProperty()
-                .bind(productsTask.runningProperty());
+                .bind(LOADING_TASK.runningProperty());
 
-        filteredProducts = new FilteredList<>(productsTask.getPartialResults(), p -> true);
+        filteredProducts = new FilteredList<>(LOADING_TASK.getPartialResults(), p -> true);
 
         // filteredList does not allow sorting so it needs to be wrapped in a sortedList
         SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
@@ -168,8 +166,8 @@ public class ProductListController implements Initializable, FxController, Close
 
         tableView.setItems(sortedProducts);
 
-        Ui.progress().observe(productsTask);
-        Ui.exec(productsTask);
+        Ui.progress().observe(LOADING_TASK);
+        Ui.exec(LOADING_TASK);
     }
 
     /**
@@ -247,7 +245,7 @@ public class ProductListController implements Initializable, FxController, Close
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
-            if ( productsTask.isRunning() ) productsTask.cancel();
+            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
             return null;
         });
     }
