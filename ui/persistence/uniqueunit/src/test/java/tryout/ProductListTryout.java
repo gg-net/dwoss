@@ -1,14 +1,11 @@
 package tryout;
 
-import java.awt.Dimension;
-
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.*;
 
 import tryout.stub.UniqueUnitAgentStub;
 
@@ -40,16 +37,8 @@ public class ProductListTryout {
 
         });
 
-        JTextField textField = new JTextField();
-        textField.setPreferredSize(new Dimension(200, 30));
-        textField.setDragEnabled(true);
-        textField.setTransferHandler(new TransferHandler("dw/product") {
-
-        });
-
         JPanel p = new JPanel();
         p.add(run);
-        p.add(textField);
         p.add(close);
 
         UiCore.startSwing(() -> p);
