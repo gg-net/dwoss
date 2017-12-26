@@ -728,12 +728,12 @@
                 <version>2.4.12</version>
             </dependency>
             <!-- Runtime UI -->
-            <dependency>
+            <dependency> <!-- Candidat for removal after switch to JDK9 as Services are declared in module.info -->
                 <groupId>org.netbeans.api</groupId>
                 <artifactId>org-netbeans-api-annotations-common</artifactId>
                 <version>${netbeans.version}</version>
             </dependency>
-            <dependency>
+            <dependency> <!-- Candidat for removal after switch to JDK9 as Services are declared in module.info -->
                 <groupId>org.netbeans.api</groupId>
                 <artifactId>org-openide-util-lookup</artifactId>
                 <version>${netbeans.version}</version>

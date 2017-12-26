@@ -16,27 +16,36 @@
  */
 package eu.ggnet.saft;
 
-import eu.ggnet.saft.core.cap.CachedProxy;
-import eu.ggnet.saft.core.cap.RemoteLookup;
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.saft.core.ui.WorkspaceService;
-
 import java.util.*;
 
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.core.cap.CachedProxy;
+import eu.ggnet.saft.core.cap.RemoteLookup;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.ui.WorkspaceService;
+
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This is the global entry point for fat clients.
+ * This is the global entry point for fat clients, see in Code for future.
  * The usage for now is only the lookup.
  * <p/>
  * @author oliver.guenther
  */
-//HINT: Name is not perfekt, but we stick with it for now. Alternatives are Lookup, Service, ServiceBus , Valet ...
+// FIXME: Split this class in WorkspaceServiceDiscovery, LocalLookup and Remotelookup.
+// TODO: Find the local lookuped Classes. Should be that mutch.
+/*
+Folgendes Gedankenexperiment. Wie würde die Leistung dieser Class mit CDI funktionieren.
+1. CDI würde nur das lokale Lookup machen -> LocalLookup potentialer Wrapper für CDI
+2. Mit CDI würde man das RemoteLookup discovern, wäre aber eh ein Singleton -> Direktimplementation von Remotelookup. Könnte sich ja selbst über CDI finden.
+   Methode RemoteLookup.getInstance() {CDI.current().select(RemoteLookup).get() } Alle statischen Methoden wrappen einfach das getInstance().
+   Cache ist halt ein Feature von RemoteLookup. Und addSample ist das selbe wie mit CDI den container zu manipulieren.
+3. Workspace ist auch ein SingleTon. -> Kann also auch als selbstdiscovernde CDI Singleton betrachtet werden. Sieh oben.
+ */
 public class Client {
 
     private final static Logger L = LoggerFactory.getLogger(Client.class);
