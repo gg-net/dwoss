@@ -29,13 +29,15 @@ import org.hibernate.search.annotations.*;
 import eu.ggnet.dwoss.rules.AddressType;
 
 import lombok.*;
-import lombok.experimental.Builder;
 
 import static javax.persistence.CascadeType.ALL;
 
 /**
  * Represents a company.
  * <p>
+ * @has 0..1 - 0..n Address
+ * @has 0..1 - 0..n Contact
+ * @has 0..1 - 0..n Communication
  * @author oliver.guenther
  */
 @Entity

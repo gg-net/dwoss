@@ -226,7 +226,7 @@ public class CustomerGenerator {
     public Customer makeOldCustomer(String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
         Name name = GEN.makeName();
         GeneratedAddress address = GEN.makeAddress();
-        OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
+        OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
         if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
         for (CustomerFlag f : ALLOWED_FLAG) {
             if ( R.nextInt(10) < 3 ) old.addFlag(f);

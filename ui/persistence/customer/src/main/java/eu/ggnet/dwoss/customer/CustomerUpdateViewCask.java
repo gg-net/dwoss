@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,33 +16,27 @@
  */
 package eu.ggnet.dwoss.customer;
 
-import eu.ggnet.dwoss.rules.PaymentCondition;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.saft.core.authorisation.JComponentEnabler;
-import eu.ggnet.saft.core.authorisation.Guardian;
-
 import java.awt.Component;
 import java.util.*;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.authorisation.JComponentEnabler;
 
 import lombok.Getter;
 
-import static eu.ggnet.saft.core.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
-import static eu.ggnet.dwoss.rules.AddressType.*;
+import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static eu.ggnet.saft.core.Client.lookup;
 
 /**
  *
@@ -216,8 +210,6 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         invoiceStreetField = new javax.swing.JTextField();
         invoiceZipcodeField = new javax.swing.JTextField();
         InvoiceCityField = new javax.swing.JTextField();
-        invoiceContactField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         payCountryBox = new javax.swing.JComboBox();
@@ -322,8 +314,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         add(jLabel6, gridBagConstraints);
 
-        firstNameField.setMinimumSize(new java.awt.Dimension(125, 25));
-        firstNameField.setPreferredSize(new java.awt.Dimension(125, 25));
+        firstNameField.setMinimumSize(new java.awt.Dimension(125, 32));
+        firstNameField.setPreferredSize(new java.awt.Dimension(125, 32));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.vorname}"), firstNameField, org.jdesktop.beansbinding.BeanProperty.create("text"), "bindFirstName");
         bindingGroup.addBinding(binding);
@@ -336,8 +328,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         gridBagConstraints.weightx = 0.1;
         add(firstNameField, gridBagConstraints);
 
-        lastNameField.setMinimumSize(new java.awt.Dimension(125, 25));
-        lastNameField.setPreferredSize(new java.awt.Dimension(125, 25));
+        lastNameField.setMinimumSize(new java.awt.Dimension(125, 32));
+        lastNameField.setPreferredSize(new java.awt.Dimension(125, 32));
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.nachname}"), lastNameField, org.jdesktop.beansbinding.BeanProperty.create("text"), "bindLastName");
         bindingGroup.addBinding(binding);
@@ -393,26 +385,6 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.1;
         invoicePanel.add(InvoiceCityField, gridBagConstraints);
-
-        invoiceContactField.setToolTipText("Kontakt (Rechnung)");
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.REKontakt}"), invoiceContactField, org.jdesktop.beansbinding.BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "bindInvoiceContact");
-        bindingGroup.addBinding(binding);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        invoicePanel.add(invoiceContactField, gridBagConstraints);
-
-        jLabel2.setText("RE Kontakt:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        invoicePanel.add(jLabel2, gridBagConstraints);
 
         jLabel12.setText("RE Straße:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -805,7 +777,6 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
     private javax.swing.JTextField emailField;
     private javax.swing.JCheckBox endUserChannelAllowedCheck;
     private javax.swing.JTextField firstNameField;
-    private javax.swing.JTextField invoiceContactField;
     private javax.swing.JPanel invoicePanel;
     private javax.swing.JTextField invoiceStreetField;
     private javax.swing.JTextField invoiceZipcodeField;
@@ -819,7 +790,6 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;

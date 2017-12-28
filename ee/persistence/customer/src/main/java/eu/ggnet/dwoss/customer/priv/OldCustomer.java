@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.priv;
 
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.rules.PaymentCondition;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
@@ -32,10 +26,13 @@ import javax.validation.constraints.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
+import eu.ggnet.dwoss.rules.*;
+
 import lombok.Getter;
 import lombok.Setter;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OldCustomer implements Serializable {
 
@@ -69,8 +66,6 @@ public class OldCustomer implements Serializable {
 
     private String LIAdresse;
 
-    private String LIKontakt;
-
     private String LIOrt;
 
     private String LIPlz;
@@ -80,8 +75,6 @@ public class OldCustomer implements Serializable {
 
     @Pattern(regexp = NO_WHITESPACE_AT_START_OR_END, message = "Muss mit Buchstabe/Zahl beginnen und enden")
     private String REAdresse;
-
-    private String REKontakt;
 
     @Pattern(regexp = NO_WHITESPACE_AT_START_OR_END, message = "Muss mit Buchstabe/Zahl beginnen und enden")
     private String REOrt;
@@ -148,12 +141,10 @@ public class OldCustomer implements Serializable {
         this.haendler = oldCustomer.haendler;
         this.handynummer = oldCustomer.handynummer;
         this.LIAdresse = oldCustomer.LIAdresse;
-        this.LIKontakt = oldCustomer.LIKontakt;
         this.LIOrt = oldCustomer.LIOrt;
         this.LIPlz = oldCustomer.LIPlz;
         this.nachname = oldCustomer.nachname;
         this.REAdresse = oldCustomer.REAdresse;
-        this.REKontakt = oldCustomer.REKontakt;
         this.REOrt = oldCustomer.REOrt;
         this.REPlz = oldCustomer.REPlz;
         this.telefonnummer = oldCustomer.telefonnummer;
@@ -173,12 +164,11 @@ public class OldCustomer implements Serializable {
         this.vorname = vorname;
     }
 
-    public OldCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REKontakt, String REAdresse, String REPlz, String REOrt) {
+    public OldCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt) {
         this();
         this.anmerkung = anmerkung;
         this.firma = firma;
         this.nachname = nachname;
-        this.REKontakt = REKontakt;
         this.REAdresse = REAdresse;
         this.REOrt = REOrt;
         this.REPlz = REPlz;
@@ -186,17 +176,15 @@ public class OldCustomer implements Serializable {
         this.vorname = vorname;
     }
 
-    public OldCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REKontakt, String REAdresse, String REPlz, String REOrt, String LIKontakt, String LIAdresse, String LIPlz, String LIOrt) {
+    public OldCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt, String LIAdresse, String LIPlz, String LIOrt) {
         this();
         this.anmerkung = anmerkung;
         this.firma = firma;
         this.LIAdresse = LIAdresse;
-        this.LIKontakt = LIKontakt;
         this.LIOrt = LIOrt;
         this.LIPlz = LIPlz;
         this.nachname = nachname;
         this.REAdresse = REAdresse;
-        this.REKontakt = REKontakt;
         this.REOrt = REOrt;
         this.REPlz = REPlz;
         this.titel = titel;
@@ -316,14 +304,6 @@ public class OldCustomer implements Serializable {
         this.LIAdresse = LIAdresse;
     }
 
-    public String getLIKontakt() {
-        return this.LIKontakt;
-    }
-
-    public void setLIKontakt(String LIKontakt) {
-        this.LIKontakt = LIKontakt;
-    }
-
     public String getLIOrt() {
         return this.LIOrt;
     }
@@ -356,14 +336,6 @@ public class OldCustomer implements Serializable {
 
     public void setREAdresse(String REAdresse) {
         this.REAdresse = REAdresse;
-    }
-
-    public String getREKontakt() {
-        return this.REKontakt;
-    }
-
-    public void setREKontakt(String REKontakt) {
-        this.REKontakt = REKontakt;
     }
 
     public String getREOrt() {
@@ -466,8 +438,8 @@ public class OldCustomer implements Serializable {
     public String toString() {
         return "OldCustomer{" + "kundenID=" + kundenID + ", anmerkung=" + anmerkung + ", eMail=" + email
                 + ", faxnummer=" + faxnummer + ", firma=" + firma + ", haendler=" + haendler + ", handynummer=" + handynummer
-                + ", LIAdresse=" + LIAdresse + ", LIKontakt=" + LIKontakt + ", LIOrt=" + LIOrt + ", LIPlz=" + LIPlz + ", nachname=" + nachname
-                + ", REAdresse=" + REAdresse + ", REKontakt=" + REKontakt + ", REOrt=" + REOrt + ", REPlz=" + REPlz + ", telefonnummer=" + telefonnummer
+                + ", LIAdresse=" + LIAdresse + ", LIOrt=" + LIOrt + ", LIPlz=" + LIPlz + ", nachname=" + nachname
+                + ", REAdresse=" + REAdresse + ", REOrt=" + REOrt + ", REPlz=" + REPlz + ", telefonnummer=" + telefonnummer
                 + ", titel=" + titel + ", vorname=" + vorname + ", flags=" + flags + ", paymentMethod=" + paymentMethod + ", shippingCondition="
                 + shippingCondition + ", paymentCondition=" + paymentCondition + ", allowedSalesChannels=" + allowedSalesChannels
                 + ", taxId=" + taxId + ", ledger=" + ledger + ", isoCountry=" + shipIsoCountry + '}';
@@ -504,13 +476,11 @@ public class OldCustomer implements Serializable {
                 + (getTitel() == null ? "" : getTitel() + " ") + (getVorname() == null ? "" : getVorname() + " ")
                 + (getNachname() == null ? "" : getNachname()) + "<br />";
         String invoiceAddress = "Rechnungsadresse:<br />"
-                + (getREKontakt() == null ? "" : getREKontakt() + "<br />")
                 + (getREAdresse() == null ? "" : getREAdresse() + "<br />")
                 + (getREPlz() == null ? "" : getREPlz() + " " + getPayCountry().getCountry() + "<br />")
                 + (getREOrt() == null ? "" : getREOrt() + "<br />");
         String shippingAddress = "Lieferadresse:<br />"
-                + (getLIAdresse() == null ? "<b>wie Rechnungsadresse</b>"
-                   : ((getLIKontakt() == null ? "" : getLIKontakt() + "<br />") + getLIAdresse() + "<br />")
+                + (getLIAdresse() == null ? "<b>wie Rechnungsadresse</b>" : getLIAdresse() + "<br />"
                    + (getLIPlz() == null ? "" : getLIPlz() + " " + getShipCountry().getCountry() + "<br />")
                    + (getLIOrt() == null ? "" : getLIOrt() + "<br />"));
 

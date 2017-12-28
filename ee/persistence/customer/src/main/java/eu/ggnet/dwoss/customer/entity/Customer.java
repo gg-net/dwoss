@@ -33,6 +33,11 @@ import static javax.persistence.CascadeType.ALL;
 /**
  * The datamodel of a purchaser from the view of GG-Net.
  * <p>
+ * @has 0..1 - 0..n Company
+ * @has 0..1 - 0..n Contact
+ * @has 0..1 - 0..n MandatorMetadata
+ * @has 0..m - 0..n CustomerFlag
+ *
  * @author pascal.perau
  */
 @Entity

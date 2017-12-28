@@ -37,6 +37,10 @@ import static javax.persistence.CascadeType.ALL;
  * <p>
  * All contact relevant information is held here.
  * <p>
+ * @has 0..n - 0..1 Sex
+ * @has 0..1 - 0..n Address
+ * @has 0..1 - 0..n Communication
+ *
  * @author pascal.perau
  */
 @Entity

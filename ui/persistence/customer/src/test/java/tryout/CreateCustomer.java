@@ -35,7 +35,7 @@ public class CreateCustomer {
             @Override
             public OldCustomer findById(long id) {
                 OldCustomer customer = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen die ganz lang sein muss um zu testen ob die tabelle richtig funzt, was erst bei richtig richtig langem text auffällt und olli sicher nervt xD",
-                        "Friedbert Ockenkopp", "Helle Strasse 22", "12345", "Musterhausen", "Hein Doofy", "LIStraße", "LIPLZ", "LIOrt");
+                        "Helle Strasse 22", "12345", "Musterhausen", "LIStraße", "LIPLZ", "LIOrt");
                 customer.setKundenID(1);
                 customer.setTelefonnummer("0190 666666");
                 customer.setHandynummer("0123456789");

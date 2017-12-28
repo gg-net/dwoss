@@ -39,21 +39,21 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
 
     @Test
     public void testFind() {
-        OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", null, "Helle Strasse 22", "12345", "Musterhausen");
-        OldCustomer c2 = new OldCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", null, "Dunkle Allee 7", "12345", "Musterhausen", "Der Abnehmer", "Dünne Gasse 2", "22222", "Wolfsstaaad");
+        OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
+        OldCustomer c2 = new OldCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen", "Dünne Gasse 2", "22222", "Wolfsstaaad");
         c2.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         c2.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
         c1.setPaymentCondition(PaymentCondition.CUSTOMER);
 
         //by pp
-        OldCustomer c3 = new OldCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "John \"Die Rechte\" Jefferson", "Adamsweg 3", "00666", "Eisenhüttenstadt", null, null, null, null);
+        OldCustomer c3 = new OldCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
         c3.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
         c3.addFlag(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         c3.setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
         c3.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER));
         c3.setPaymentCondition(PaymentCondition.DEALER_3_PERCENT_DISCOUNT);
         c3.setShippingCondition(ShippingCondition.DEALER_ONE);
-        OldCustomer c4 = new OldCustomer(null, "Frau", "Lisa", "Lüstling", null, null, "Freie Straße 2", "98745", "Heimwehrhausen", "GanzSchnell GmbH", "Dünne Gasse 2", "22222", "Heimwehrhausen");
+        OldCustomer c4 = new OldCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen", "Dünne Gasse 2", "22222", "Heimwehrhausen");
         c4.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
         c4.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER));
         c4.setPaymentCondition(PaymentCondition.EMPLOYEE);
