@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.uniqueunit.format;
 
 import java.text.*;
+import java.util.Map.Entry;
 import java.util.*;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
@@ -27,6 +28,7 @@ import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.INoteModel;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static java.util.Locale.GERMANY;
 
 /**
  * Formatter for UniqueUnits.
@@ -61,27 +63,36 @@ public abstract class UniqueUnitFormater {
     }
 
     /**
-     * Returns a String containing prices and the {@link PriceHistory} of a {@link UniqueUnit} formated in html.
+     * Displays all supplied prices and if supplied, the corresponding histories.
      *
-     * @param uu the unit to format
-     * @return the formated String.
+     * @param prices
+     * @param optionalHistories
+     * @return
      */
-    public static String toHtmlPriceInformation(UniqueUnit uu) {
-        String res = "";
-        if ( uu != null ) {
-            res += "<p>Preise:<br />";
-            res += "Endkundenpreis (Netto): " + (NumberFormat.getCurrencyInstance().format(uu.getPrice(PriceType.CUSTOMER))) + "<br />";
-            res += "Händlerpreis (Netto): " + (NumberFormat.getCurrencyInstance().format(uu.getPrice(PriceType.RETAILER))) + "<br />";
-            if ( !uu.getPriceHistory().isEmpty() ) {
-                res += "<p>Preishistorie:<ul>";
-                for (PriceHistory priceHistory : uu.getPriceHistory()) {
-                    res += "<li>Datum: " + priceHistory.getDate() + " | Preis: " + priceHistory.getType()
-                            + " - " + NumberFormat.getCurrencyInstance().format(priceHistory.getPrice()) + "<br />" + "Bemerkung: " + priceHistory.getComment() + "</li>";
-                }
-                res += "</ul></p>";
+    public static String toHtmlPriceInformation(Map<PriceType, Double> prices, List<PriceHistory> optionalHistories) {
+        if ( prices == null ) return "<b>Fehler, Map of Price is null</b>";
+        List<PriceHistory> histories = Optional.ofNullable(optionalHistories).orElse(new ArrayList<>());
+        final NumberFormat CUR = NumberFormat.getCurrencyInstance(GERMANY);
+        StringBuilder sb = new StringBuilder("<table><tr><th>Preistyp</th><th>Preis(netto)</th>");
+        if ( !histories.isEmpty() ) sb.append("<th>History</th>");
+        sb.append("</tr>");
+        for (Entry<PriceType, Double> entry : prices.entrySet()) {
+            PriceType type = entry.getKey();
+            Double price = entry.getValue();
+            sb.append("<tr>");
+            sb.append("<td>").append(type).append("</td>");
+            sb.append("<td>").append(CUR.format(entry.getValue())).append("</td>");
+            if ( !histories.isEmpty() ) {
+                sb.append("<td><ul>");
+                histories.stream()
+                        .filter(ph -> ph.getType() == type)
+                        .sorted(Comparator.comparing(PriceHistory::getDate))
+                        .forEach(ph -> sb.append(DateFormats.ISO.format(ph.getDate())).append(" - ").append(CUR.format(ph.getPrice())).append(" - ").append(ph.getComment()));
+                sb.append("</ul></td>");
             }
         }
-        return res;
+        sb.append("</tr></table>");
+        return sb.toString();
     }
 
     /**
@@ -169,11 +180,11 @@ public abstract class UniqueUnitFormater {
                 + "<td><b>Verkaufskanal: </b></td>"
                 + "<td align=\"left\">" + salesChannel + "</td>"
                 + "</tr>"
-//                + "<tr>"
-//                + "<td><b>Verkaufspreis: </b></td>"
-//                + "<td align=\"right\">" + decFormat.format(salePrice) + " €</td>"
-//                + "<td align=\"right\">" + decFormat.format((salePrice * (1 + GlobalConfig.TAX))) + " €</td>"
-//                + "</tr>"
+                //                + "<tr>"
+                //                + "<td><b>Verkaufspreis: </b></td>"
+                //                + "<td align=\"right\">" + decFormat.format(salePrice) + " €</td>"
+                //                + "<td align=\"right\">" + decFormat.format((salePrice * (1 + GlobalConfig.TAX))) + " €</td>"
+                //                + "</tr>"
                 + "</table>";
         return re;
     }

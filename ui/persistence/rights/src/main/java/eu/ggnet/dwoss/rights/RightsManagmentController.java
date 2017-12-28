@@ -43,7 +43,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * This is the FXML Controller Class for the RightsManagmentView in which {@link Operator}'s get {@link AtomicRight}'s and {@link Persona}.

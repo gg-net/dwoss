@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.uniqueunit;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
@@ -74,4 +75,22 @@ public interface UniqueUnitAgent extends RemoteAgent {
      * @return a reply
      */
     Reply<Void> deleteCategoryProduct(long id);
+
+    /**
+     * Adds a Unit do the unitCollection.
+     *
+     * @param unit             the unit.
+     * @param unitCollectionId the unitCollectionId
+     * @return reply of success.
+     */
+    Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId);
+
+    /**
+     * Sets the UnitCollection null on the unit.
+     *
+     * @param unit the unit
+     * @return reply of success.
+     */
+    Reply<Void> unsetUnitCollection(PicoUnit unit);
+
 }

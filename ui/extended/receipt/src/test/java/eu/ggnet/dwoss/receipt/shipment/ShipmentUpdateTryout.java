@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 /**
  *

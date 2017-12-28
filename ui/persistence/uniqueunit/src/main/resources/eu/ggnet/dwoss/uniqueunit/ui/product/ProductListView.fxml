@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="358.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController">
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="796.0" BorderPane.alignment="CENTER">
          <children>
@@ -40,6 +40,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </Button>
+            <Button mnemonicParsing="false" onAction="#openAssignment" text="Zuweisungsansicht" />
          </children>
       </HBox>
    </top>

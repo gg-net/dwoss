@@ -19,15 +19,15 @@ package eu.ggnet.dwoss.receipt.unit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import eu.ggnet.dwoss.uniqueunit.op.AddUnitHistory;
 
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
 
 /**

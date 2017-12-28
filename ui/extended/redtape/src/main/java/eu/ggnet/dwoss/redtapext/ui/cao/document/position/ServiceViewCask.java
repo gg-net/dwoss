@@ -23,11 +23,11 @@ import eu.ggnet.dwoss.redtape.api.PositionService;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.all.VetoableOnOk;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
-import static eu.ggnet.saft.core.Client.hasFound;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.hasFound;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

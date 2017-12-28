@@ -77,6 +77,15 @@ public class ProductFormater {
         return re;
     }
 
+    public static String toHtml(Product p) {
+        if ( p == null ) return "Product is null";
+        return "<p><b>Product</b></br>"
+                + toNameWithPartNo(p) + "<br /><br />"
+                + p.getDescription() + "<br />"
+                + "EAN/GTIN: " + p.getGtin()
+                + "</p>";
+    }
+
     private static String randomVar() {
         return "" + (char)(97 + (Math.random() * ((122 - 97) + 1)))
                 + (char)(97 + (Math.random() * ((122 - 97) + 1)))

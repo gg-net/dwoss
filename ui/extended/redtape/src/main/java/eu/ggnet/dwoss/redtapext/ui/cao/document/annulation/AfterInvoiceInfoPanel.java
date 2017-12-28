@@ -26,7 +26,7 @@ import javax.swing.JList;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

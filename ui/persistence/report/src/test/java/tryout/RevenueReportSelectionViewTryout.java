@@ -10,7 +10,7 @@ import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -20,11 +20,10 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -38,11 +37,10 @@ public class AuditReportByRangeAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final DateRangeChooserDialog dialog = new DateRangeChooserDialog(lookup(Workspace.class).getMainFrame());
-        dialog.setVisible(true);
-        if ( !dialog.isOk() ) return;
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Auditreport").call(() -> lookup(AuditReporter.class).byRange(dialog.getStart(), dialog.getEnd()).toTemporaryFile()));
+            Ui.fx().title("Audit Report nach Datum").eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+                Ui.osOpen(Ui.progress().title("Auditreport").call(() -> lookup(AuditReporter.class).byRange(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+            });
         });
     }
 }

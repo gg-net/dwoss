@@ -23,8 +23,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.core.Workspace;
-
+import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.misc.op.StockTaking;
 
 import eu.ggnet.dwoss.stock.entity.Stock;
@@ -34,7 +33,7 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.FileUtil;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**

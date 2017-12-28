@@ -35,10 +35,10 @@ import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

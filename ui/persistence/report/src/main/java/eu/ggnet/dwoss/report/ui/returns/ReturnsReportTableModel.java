@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,17 @@
  */
 package eu.ggnet.dwoss.report.ui.returns;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.ui.returns.Summary;
-
-import java.text.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                  //
@@ -54,27 +54,10 @@ public abstract class ReturnsReportTableModel extends AbstractTableModel {
     private Date reportEnd;
 
     @Getter
-    protected final Summary summary = new Summary();
-
-    @Getter
     protected final List<TableLine> lines = new ArrayList<>();
 
     public ReturnsReportTableModel(Object[][] columns) {
         this.columns = columns;
-    }
-
-    public final void recalcSums() {
-        double referencePrices = 0;
-        double purchasePrices = 0;
-        double margins = 0;
-        double prices = 0;
-        for (TableLine reportTableLine : getSelectedTableLines()) {
-            referencePrices += reportTableLine.getReportLine().getManufacturerCostPrice();
-            purchasePrices += reportTableLine.getReportLine().getPurchasePrice();
-            margins += reportTableLine.getMargin();
-            prices += reportTableLine.getReportLine().getPrice();
-        }
-        summary.update(referencePrices, prices, purchasePrices, margins);
     }
 
     @Override
@@ -107,7 +90,6 @@ public abstract class ReturnsReportTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if ( getColumnCount() - 1 != columnIndex ) return;
         getLines().get(rowIndex).setShouldReported((boolean)aValue);
-        recalcSums();
     }
 
     @Override
@@ -120,7 +102,6 @@ public abstract class ReturnsReportTableModel extends AbstractTableModel {
     public void add(TableLine line) {
         this.lines.add(line);
         fireTableRowsInserted(lines.size() - 2, lines.size() - 1);
-        recalcSums();
     }
 
     public void addAll(List<TableLine> lines) {

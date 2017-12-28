@@ -20,16 +20,15 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.Workspace;
-
+import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.receipt.UnitProcessor;
 
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT;
 
 /**

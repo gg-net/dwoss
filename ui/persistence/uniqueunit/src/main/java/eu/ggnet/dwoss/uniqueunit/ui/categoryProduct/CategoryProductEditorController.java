@@ -1,29 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.UiAlert;
-
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,21 +15,24 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  * Controller class for the editor view of a categoryProduct. Allows the user to
@@ -151,19 +136,21 @@ public class CategoryProductEditorController implements Initializable, FxControl
      * At least the name field must be set to save the categoryProduct.
      */
     private void save(ActionEvent event) {
-        categoryProductDto = new CategoryProductDto();
 
         if ( StringUtils.isBlank(name.getText()) ) {
-            Alert.message("Es muss ein Name gesetzt werden").show(UiAlert.Type.WARNING);
+            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
+// Old without mapper --- show all
+//        categoryProductDto = new CategoryProductDto();
+//        categoryProductDto.setId(categoryProductFx.getId());
+//        categoryProductDto.setName(categoryProductFx.getNameProperty().get());
+//        categoryProductDto.setDescription(categoryProductFx.getDescriptionProperty().get());
+//        categoryProductDto.setSalesChannel(categoryProductFx.getSalesChannelProperty().get());
+//        categoryProductDto.setPrices(new HashMap<>(categoryProductFx.getPricesProperty()));
+//        categoryProductDto.setProducts(new ArrayList<>(categoryProductFx.getProductsProperty()));
 
-        categoryProductDto.setId(categoryProductFx.getId());
-        categoryProductDto.setName(categoryProductFx.getNameProperty().get());
-        categoryProductDto.setDescription(categoryProductFx.getDescriptionProperty().get());
-        categoryProductDto.setSalesChannel(categoryProductFx.getSalesChannelProperty().get());
-        categoryProductDto.setPrices(new HashMap<>(categoryProductFx.getPricesProperty()));
-        categoryProductDto.setProducts(new ArrayList<>(categoryProductFx.getProductsProperty()));
+        categoryProductDto = CategoryProductFxMapper.INSTANCE.to(categoryProductFx);
 
         Ui.closeWindowOf(name);
     }
@@ -211,7 +198,7 @@ public class CategoryProductEditorController implements Initializable, FxControl
         listViewProducts.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.df) ) {
+                if ( event.getGestureSource() != listViewProducts && event.getDragboard().hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
                     event.acceptTransferModes(TransferMode.ANY);
                 }
                 event.consume();
@@ -224,10 +211,9 @@ public class CategoryProductEditorController implements Initializable, FxControl
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
                 boolean success = false;
-                if ( db.hasContent(ProductListController.df) ) {
-                    if ( !categoryProductFx.getProductsProperty().contains((PicoProduct)db.getContent(ProductListController.df)) ) {
-                        categoryProductFx.getProductsProperty().add((PicoProduct)db.getContent(ProductListController.df));
-                    }
+                if ( db.hasContent(ProductListController.PICO_PRODUCT_DATA_FORMAT) ) {
+                    ArrayList<PicoProduct> picos = (ArrayList<PicoProduct>)db.getContent(ProductListController.PICO_PRODUCT_DATA_FORMAT);
+                    picos.stream().filter(p -> !categoryProductFx.getProductsProperty().contains(p)).forEach(p -> categoryProductFx.getProductsProperty().add(p));
                     success = true;
                 }
                 event.setDropCompleted(success);
@@ -268,19 +254,24 @@ public class CategoryProductEditorController implements Initializable, FxControl
      */
     public void setCategoryProduct(CategoryProduct cp) {
 
-        categoryProductFx = new CategoryProductFx(cp.getId(), cp.getName(),
-                cp.getDescription(),
-                cp.getSalesChannel(),
-                cp.getProducts()
-                        .stream()
-                        .map(p -> new PicoProduct(p.getId(), p.getName()))
-                        .collect(Collectors.toList()),
-                cp.getPrices());
+        // Bind in initialze and update via mapper would be much better.
+        // CategoryProductFxMapper.INSTANCE.update(categoryProductFx, cp);
+        categoryProductFx = CategoryProductFxMapper.INSTANCE.from(cp);
 
+// Old show lucas, jens and jacob
+//        categoryProductFx = new CategoryProductFx(cp.getId(), cp.getName(),
+//                cp.getDescription(),
+//                cp.getSalesChannel(),
+//                cp.getProducts()
+//                        .stream()
+//                        .map(p -> new PicoProduct(p.getId(), p.getName()))
+//                        .collect(Collectors.toList()),
+//                cp.getPrices());
         name.textProperty().bindBidirectional(categoryProductFx.getNameProperty());
         description.textProperty().bindBidirectional(categoryProductFx.getDescriptionProperty());
         salesChannel.valueProperty().bindBidirectional(categoryProductFx.getSalesChannelProperty());
 
+// TODO: Looks wrong. must be binded ? - ask lucas.
         listViewProducts.setItems(categoryProductFx.getProductsProperty());
 
         listViewPrices.setItems(FXCollections.observableArrayList(categoryProductFx.getPricesProperty().entrySet()));

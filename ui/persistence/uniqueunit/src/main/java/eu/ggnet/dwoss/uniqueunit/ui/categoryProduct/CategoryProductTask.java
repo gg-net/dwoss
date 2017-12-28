@@ -7,8 +7,10 @@ package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
+
 import java.util.List;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

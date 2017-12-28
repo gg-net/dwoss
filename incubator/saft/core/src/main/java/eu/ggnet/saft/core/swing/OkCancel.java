@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import javax.swing.JPanel;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.all.VetoableOnOk;
 
 /**
  * Wrapper and Helper for the old Ok/Cancel construct

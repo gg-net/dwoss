@@ -10,8 +10,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.progress.ProgressObserver;
-import eu.ggnet.saft.core.ActionFactory;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.Client;
 
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;

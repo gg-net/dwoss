@@ -30,10 +30,10 @@ import eu.ggnet.dwoss.redtape.UniversalSearcher;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 public class UniversalSearchViewCask extends javax.swing.JFrame {
 

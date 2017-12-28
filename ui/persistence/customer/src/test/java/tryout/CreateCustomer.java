@@ -12,9 +12,9 @@ import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.api.AuthenticationException;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
 
 /**
  *

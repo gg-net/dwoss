@@ -33,7 +33,7 @@ public class GlobalKey implements Serializable {
      * If this changes in the future, we must convert the componets to some string representation.
      */
     public static enum Component {
-        CUSTOMER, UNIQUE_UNIT
+        CUSTOMER, UNIQUE_UNIT, UNIQUE_PRODUCT
     }
 
     private final Component component;

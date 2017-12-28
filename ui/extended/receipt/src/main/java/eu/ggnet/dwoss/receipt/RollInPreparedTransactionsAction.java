@@ -22,14 +22,14 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.PREPARED;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionType.ROLL_IN;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

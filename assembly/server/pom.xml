@@ -43,14 +43,6 @@
             <version>6.1.0</version>
         </dependency>
         <dependency>
-            <groupId>org.metawidget.modules.faces</groupId>
-            <artifactId>metawidget-primefaces</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.metawidget.modules.faces</groupId>
-            <artifactId>metawidget-facesannotation</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>3.16</version>

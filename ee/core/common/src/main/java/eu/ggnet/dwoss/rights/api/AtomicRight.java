@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.rights.api;
 
-import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.saft.api.auth.Authorisation;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

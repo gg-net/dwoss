@@ -66,4 +66,5 @@ public class PriceHistory implements Serializable {
         this.price = price;
         this.comment = comment;
     }
+
 }

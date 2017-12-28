@@ -22,11 +22,11 @@ import java.util.concurrent.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.AutoLoginLogout;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.AutoLoginLogout;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static java.awt.AWTEvent.*;
 
 @ServiceProvider(service = AutoLoginLogout.class)

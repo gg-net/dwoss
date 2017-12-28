@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.swing.DialogButtonPanel;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 

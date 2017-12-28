@@ -31,8 +31,7 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
@@ -47,7 +46,7 @@ import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.PojoFilter;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * @author bastian.venz

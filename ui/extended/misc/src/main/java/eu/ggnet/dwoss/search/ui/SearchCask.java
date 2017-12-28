@@ -21,6 +21,7 @@ import java.util.List;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -37,13 +38,15 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.HtmlPane;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.core.ops.Selector;
+import eu.ggnet.saft.core.ui.FxSaft;
 
+import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
 
@@ -149,6 +152,17 @@ public class SearchCask extends BorderPane implements ClosedListener {
             }
         });
 
+        final Selector<PicoUnit> seletor = Ops.seletor(PicoUnit.class);
+
+        resultListView.getSelectionModel().getSelectedItems().addListener((Change<? extends ShortSearchResult> c) -> {
+            while (c.next()) {
+                // Call the selector of PicoUnit if the slected element is of picounit.
+                if ( c.getAddedSubList().isEmpty() ) continue;
+                ShortSearchResult selectedResult = c.getAddedSubList().get(0);
+                if ( selectedResult.getKey().getComponent() != UNIQUE_UNIT ) continue;
+                seletor.selected(new PicoUnit((int)selectedResult.getKey().getId(), selectedResult.getShortDescription()));
+            }
+        });
     }
 
     private void search() {

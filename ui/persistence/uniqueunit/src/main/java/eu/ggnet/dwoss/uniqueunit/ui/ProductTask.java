@@ -7,9 +7,11 @@ package eu.ggnet.dwoss.uniqueunit.ui;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -44,13 +46,12 @@ public class ProductTask extends Task<ObservableList<Product>> {
         long count = agent.count(Product.class);
         int batch = 20;
 
-        for (int start = 0; start <= count; start += batch) {
+        for (int start = 0; start <= count && !isCancelled(); start += batch) {
             List<Product> partialResult = agent.findAll(Product.class, start, batch);
             Platform.runLater(() -> {
                 getPartialResults().addAll(partialResult);
             });
             updateProgress(start, count);
-
         }
         return partialResults.get();
     }

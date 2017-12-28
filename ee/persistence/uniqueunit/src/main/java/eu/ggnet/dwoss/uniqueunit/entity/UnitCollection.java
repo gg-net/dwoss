@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
@@ -45,7 +46,7 @@ import static javax.persistence.FetchType.EAGER;
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @SuppressWarnings("PersistenceUnitPresent")
-public class UnitCollection implements Serializable {
+public class UnitCollection implements Serializable, EagerAble {
 
     @Id
     @GeneratedValue
@@ -160,6 +161,14 @@ public class UnitCollection implements Serializable {
     public void removeUnit(UniqueUnit unit) {
         if ( unit == null ) return;
         unit.setUnitCollection(null);
+    }
+
+    @Override
+    public void fetchEager() {
+        priceHistories.size();
+        for (UniqueUnit unit : units) {
+            unit.fetchEager();
+        }
     }
 
     @Override

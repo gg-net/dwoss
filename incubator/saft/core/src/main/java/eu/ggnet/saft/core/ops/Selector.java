@@ -23,7 +23,6 @@ import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.all.SelectionEnhancer;
 
 /**
  * Handles the selections.
@@ -40,7 +39,7 @@ public class Selector<T> {
 
     private final SelectionEnhancer<T> selectionEnhancer;
 
-    Selector(Class<T> clazz, Map<Class, List<Consumer>> listeners, SelectionEnhancer<T> selectionEnhancer) {
+    public Selector(Class<T> clazz, Map<Class, List<Consumer>> listeners, SelectionEnhancer<T> selectionEnhancer) {
         L = LoggerFactory.getLogger(this.getClass().getName() + "<" + clazz.getName() + ">");
         this.clazz = clazz;
         this.allListeners = listeners;

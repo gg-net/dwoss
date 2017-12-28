@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

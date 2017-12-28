@@ -28,9 +28,9 @@ import eu.ggnet.dwoss.redtape.RedTapeWorker;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_DOSSIER;
 
 /**

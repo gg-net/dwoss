@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Action to create the CreditMemo Report.

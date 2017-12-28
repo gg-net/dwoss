@@ -23,18 +23,17 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
-import eu.ggnet.saft.core.Workspace;
-
+import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.misc.op.ImageIdHandler;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import eu.ggnet.dwoss.util.FileJacket;
 
 import eu.ggnet.dwoss.util.FileUtil;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
 import static javax.swing.JOptionPane.*;
 

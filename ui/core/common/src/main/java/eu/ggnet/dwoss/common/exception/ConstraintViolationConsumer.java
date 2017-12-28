@@ -24,7 +24,7 @@ import javax.validation.ConstraintViolationException;
 
 import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
-import eu.ggnet.saft.core.swing.SwingSaft;
+import eu.ggnet.saft.core.ui.SwingSaft;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
 

@@ -6,8 +6,8 @@ import tryout.stub.GuardianStub;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import java.awt.Dimension;
 

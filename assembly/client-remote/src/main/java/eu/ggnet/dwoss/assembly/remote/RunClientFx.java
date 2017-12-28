@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 
@@ -34,16 +36,11 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.remote.lookup.*;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.ui.returns.Summary;
-import eu.ggnet.dwoss.util.MetawidgetConfig;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.runtime.SwingClient;
 
-import static eu.ggnet.saft.core.Client.lookup;
-import static eu.ggnet.saft.core.UiAlert.Type.ERROR;
+import static eu.ggnet.saft.Client.lookup;
+import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
 
 /**
  * JavaFx entry Point.
@@ -73,7 +70,7 @@ public class RunClientFx extends Application {
         System.out.println("JavaFx start");
 
         if ( error != null ) {
-            Alert.title("Fehler im Init")
+            UiAlert.title("Fehler im Init")
                     .nl("Fehler in der Initialisierung oder Verbindung")
                     .nl("Später noch mal probieren oder Technik kontaktieren")
                     .nl()
@@ -106,8 +103,6 @@ public class RunClientFx extends Application {
         Client.setRemoteLookup(new WildflyLookup(lookupConfig));
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
-
-        MetawidgetConfig.enhancedMetawidget(ReportLine.class, Mandator.class, Summary.class);
 
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());

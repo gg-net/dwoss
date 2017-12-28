@@ -30,10 +30,10 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.saft.core.UserPreferences;
-import eu.ggnet.saft.core.Workspace;
+import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

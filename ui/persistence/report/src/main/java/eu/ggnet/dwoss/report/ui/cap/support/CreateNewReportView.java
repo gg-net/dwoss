@@ -30,17 +30,16 @@ import eu.ggnet.dwoss.report.entity.Report.ViewMode;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.saft.api.ui.OnOk;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.all.VetoableOnOk;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 /**
  * View to create new sales report based on mandator contractors.
  * <p>
  * @author oliver.guenther
  */
-public class CreateNewReportView extends javax.swing.JPanel implements OnOk, VetoableOnOk, ResultProducer<CreateNewReportView>, Consumer<Void> {
+public class CreateNewReportView extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<CreateNewReportView>, Consumer<Void> {
 
     public CreateNewReportView() {
         initComponents();
@@ -50,7 +49,7 @@ public class CreateNewReportView extends javax.swing.JPanel implements OnOk, Vet
     }
 
     @Override
-    public boolean onOk() {
+    public boolean mayClose() {
         if ( !StringUtils.isNotBlank(nameTextField.getText()) ) {
             JOptionPane.showMessageDialog(this, "Der Name ist leer.");
             return false;
@@ -68,11 +67,6 @@ public class CreateNewReportView extends javax.swing.JPanel implements OnOk, Vet
             return false;
         }
         return true;
-    }
-
-    @Override
-    public boolean mayClose() {
-        return onOk();
     }
 
     @Override

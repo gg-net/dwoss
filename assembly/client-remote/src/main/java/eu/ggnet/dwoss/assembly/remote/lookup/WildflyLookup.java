@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.api.IsStateful;
 import eu.ggnet.dwoss.discover.Discovery;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-import eu.ggnet.saft.core.RemoteLookup;
+import eu.ggnet.saft.core.cap.RemoteLookup;
 
 import lombok.*;
 

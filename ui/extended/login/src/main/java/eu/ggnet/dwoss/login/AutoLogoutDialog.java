@@ -23,19 +23,17 @@ import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
-import eu.ggnet.saft.api.AuthenticationException;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.AuthenticationException;
 
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Workspace;
-
+import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

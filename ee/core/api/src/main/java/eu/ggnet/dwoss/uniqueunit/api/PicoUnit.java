@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api;
 
+import java.io.Serializable;
+
 import eu.ggnet.saft.api.ui.IdSupplier;
 
 import lombok.Value;
@@ -26,7 +28,9 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
-public class PicoUnit implements IdSupplier {
+public class PicoUnit implements IdSupplier, Serializable {
+
+    public static final String MIME_TYPE = "dw-api/picounit";
 
     public final int uniqueUnitId;
 

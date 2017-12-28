@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.AssignmentController">
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="18.0" minHeight="18.0" prefHeight="18.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+            <RowConstraints maxHeight="18.0" minHeight="18.0" prefHeight="18.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
+        </rowConstraints>
+         <children>
+            <ListView fx:id="unitCollectionList" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <Label text="Unit Collections" GridPane.columnIndex="1" />
+            <Label text="Bereits zugewiesene Einheiten" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <ListView fx:id="assignedUnitsList" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <Label text="Anders zugewiesene Einheiten" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Label text="Noch nicht zugewiesene Einheiten" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+            <ListView fx:id="differentAssignedUnitsList" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <ListView fx:id="unassignedUnitsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+               <GridPane.margin>
+                  <Insets right="5.0" />
+               </GridPane.margin>
+            </ListView>
+            <ListView fx:id="productList" prefHeight="427.0" prefWidth="215.0" GridPane.rowIndex="1" GridPane.rowSpan="2" />
+            <Label minHeight="18.0" minWidth="18.0" text="Produkte" />
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>

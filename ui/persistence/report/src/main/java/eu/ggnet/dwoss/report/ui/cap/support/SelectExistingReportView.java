@@ -40,7 +40,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 
 import lombok.Value;
 

@@ -28,15 +28,15 @@ import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.JComponentEnabler;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.JComponentEnabler;
 
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

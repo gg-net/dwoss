@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,6 @@ package eu.ggnet.dwoss.mandator.api.value.partial;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
-
-import org.metawidget.inspector.annotation.UiLarge;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,7 +44,6 @@ public class ListingMailConfiguration implements Serializable {
     @NotNull
     private String subject;
 
-    @UiLarge
     @NotNull
     private String message;
 

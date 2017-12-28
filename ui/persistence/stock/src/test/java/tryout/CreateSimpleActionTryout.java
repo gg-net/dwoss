@@ -16,6 +16,10 @@
  */
 package tryout;
 
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.api.auth.Authorisation;
+
 import java.awt.Dimension;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -33,9 +37,9 @@ import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.*;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.authorisation.UserChangeListener;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.auth.UserChangeListener;
 
 /**
  *

@@ -24,7 +24,6 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
-import org.metawidget.inspector.annotation.UiLarge;
 
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -44,7 +43,6 @@ public class Mandator implements Serializable {
     /**
      * The default Signature below mails.
      */
-    @UiLarge
     @NotNull
     private final String defaultMailSignature;
 

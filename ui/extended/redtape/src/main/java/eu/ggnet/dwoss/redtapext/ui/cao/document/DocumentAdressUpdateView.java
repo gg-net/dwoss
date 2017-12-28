@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.redtape.entity.Address;
 
 import eu.ggnet.dwoss.rules.AddressType;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

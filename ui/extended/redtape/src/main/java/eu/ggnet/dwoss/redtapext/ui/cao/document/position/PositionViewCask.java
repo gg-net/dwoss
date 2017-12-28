@@ -34,10 +34,10 @@ import eu.ggnet.dwoss.stock.format.StockUnitFormater;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.text.Font.font;
 
@@ -74,7 +74,8 @@ public class PositionViewCask extends BorderPane implements Consumer<Position> {
                 StockUnit su = Client.lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(pos.getUniqueUnitId());
                 UniqueUnit uu = Client.lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, pos.getUniqueUnitId());
                 if ( su != null ) sb.append(StockUnitFormater.detailedTransactionToHtml(su));
-                if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu)).append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));
+                if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu.getPrices(), uu.getPriceHistory()))
+                            .append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));
             }
             Platform.runLater(() -> {
                 webView.getEngine().loadContent(sb.toString());

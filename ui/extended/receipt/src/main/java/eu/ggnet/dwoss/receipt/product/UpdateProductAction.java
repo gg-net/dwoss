@@ -25,11 +25,11 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Allow the modification of a Product/Part.

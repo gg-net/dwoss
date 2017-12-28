@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.util.Tuple2;
 
 import lombok.Getter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * The RedTape main component model containing all selection and list information needed.

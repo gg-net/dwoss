@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.report.op.RevenueReporter;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens the revenue report selector.

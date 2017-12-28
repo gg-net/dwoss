@@ -16,6 +16,8 @@
  */
 package eu.ggnet.saft.core.ops;
 
+import eu.ggnet.saft.Ops;
+
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
@@ -26,12 +28,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.saft.api.Accessable;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.all.DescriptiveConsumerRunner;
-import eu.ggnet.saft.core.all.SelectionEnhancer;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.fx.FxSaft;
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  * Java Fx features of Ops.

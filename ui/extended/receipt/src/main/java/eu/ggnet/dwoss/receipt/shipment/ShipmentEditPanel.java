@@ -25,8 +25,7 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.rules.TradeName;

@@ -21,8 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.dwoss.redtape.entity.Document;
 
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
@@ -33,7 +32,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

@@ -5,19 +5,17 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.ProductGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.saft.api.Reply;
+import java.util.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -27,7 +25,9 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     private final int AMOUNT = 200;
 
-    private final int SLOW = 20;
+    private final int SLOW = 40;
+
+    private final Logger L = LoggerFactory.getLogger(UniqueUnitAgentStub.class);
 
     private final CategoryProductGenerator CPGEN = new CategoryProductGenerator();
 
@@ -86,6 +86,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
             }
             try {
                 Thread.sleep(SLOW * limit);
+                L.info("Collecting Products..");
                 return (List<T>)(PGEN.generateProduct(limit));
             } catch (InterruptedException ex) {
                 return Collections.emptyList();
@@ -105,27 +106,32 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
         for (PicoProduct pp : dto.getProducts()) {
             Product p = new Product();
             p.setName(pp.getShortDescription());
-            cp.add(p);
+            cp.getProducts().add(p);
         }
         for (Map.Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
             cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
 
         }
-
+        System.out.println("Storing " + cp);
         return cp;
     }
 
     @Override
-    public Reply<Void> deleteCategoryProduct(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId) {
+        return Reply.success(null);
+    }
+
+    @Override
+    public Reply<Void> unsetUnitCollection(PicoUnit unit) {
+        return Reply.success(null);
+    }
+
+    @Override
+    public <T> T findByIdEager(Class<T> entityClass, Object id) {
+        return (T)PGEN.generateProduct(1).get(0);
     }
 
 //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-    @Override
-    public Product findProductByPartNo(String partNo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public UniqueUnit findUnitByIdentifierEager(UniqueUnit.Identifier type, String identifier) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -147,22 +153,27 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public <T> T findById(Class<T> entityClass, Object id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public <T> T findById(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public <T> T findByIdEager(Class<T> entityClass, Object id) {
+    public <T> T findById(Class<T> entityClass, Object id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, javax.persistence.LockModeType lockModeType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Product findProductByPartNo(String partNo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Reply<Void> deleteCategoryProduct(long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>

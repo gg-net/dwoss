@@ -6,7 +6,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotate Ui Class to indicate, that it should be a Frame not a Dialog.
+ * Annotate Ui Class to indicate, that only one window of this class must be open at any time.
  *
  * @author oliver.guenther
  */
@@ -15,5 +15,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(TYPE)
 public @interface Once {
 
+    /**
+     * Returns and sets the once mode
+     *
+     * @return the once mode
+     */
     boolean value() default true;
 }

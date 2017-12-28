@@ -1,39 +1,39 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-
 import java.net.URL;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.ResourceBundle;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.core.ui.FxSaft;
+
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  * Defines the displayed products in the table. Handles the filtering of the
@@ -41,11 +41,13 @@ import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
  *
  * @author lucas.huelsen
  */
-public class ProductListController implements Initializable, FxController {
+public class ProductListController implements Initializable, FxController, ClosedListener {
 
-    public static final DataFormat df = new DataFormat("dw/product");
+    public static final DataFormat PICO_PRODUCT_DATA_FORMAT = Optional.ofNullable(DataFormat.lookupMimeType(PicoProduct.MIME_TYPE)).orElse(new DataFormat(PicoProduct.MIME_TYPE));
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
+
+    private final ProductTask LOADING_TASK = new ProductTask();
 
     // is used to filter the list of products
     private FilteredList<Product> filteredProducts;
@@ -54,25 +56,25 @@ public class ProductListController implements Initializable, FxController {
     private TableView<Product> tableView;
 
     @FXML
-    private TableColumn<Product, String> productId;
+    private TableColumn<Product, Long> productId;
 
     @FXML
     private TableColumn<Product, String> productName;
 
     @FXML
-    private TableColumn<Product, String> productTradeName;
+    private TableColumn<Product, TradeName> productTradeName;
 
     @FXML
-    private TableColumn<Product, String> productGroup;
+    private TableColumn<Product, ProductGroup> productGroup;
 
     @FXML
     private TableColumn<Product, String> productPartNo;
 
     @FXML
-    private TableColumn<Product, String> productImageId;
+    private TableColumn<Product, Integer> productImageId;
 
     @FXML
-    private TableColumn<Product, String> productGtin;
+    private TableColumn<Product, Long> productGtin;
 
     @FXML
     private TableColumn<Product, String> productEol;
@@ -111,6 +113,16 @@ public class ProductListController implements Initializable, FxController {
         eolDatePicker.setValue(null);
     }
 
+    @FXML
+    /**
+     * Reset the TradeName and the ProductGroup filter.
+     */
+    private void openAssignment(ActionEvent event) {
+        Ui.exec(() -> {
+            Ui.fxml().show(AssignmentController.class);
+        });
+    }
+
     @Override
     /**
      * Adding the filters to the combo box. Setting the cell values and the
@@ -118,37 +130,44 @@ public class ProductListController implements Initializable, FxController {
      */
     public void initialize(URL url, ResourceBundle rb) {
 
+        tableView.getSelectionModel().setSelectionMode(MULTIPLE);
+
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
-
-        setCellValues();
 
         tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
-                if ( selectedProduct == null ) return;
+                ArrayList<Product> selectedProducts = new ArrayList<>();
+                selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
+                ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
+                if ( selectedProducts.isEmpty() ) return;
                 Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-                content.put(df, new PicoProduct(selectedProduct.getId(), selectedProduct.getName()));
+                selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
+                content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
                 db.setContent(content);
-                L.info("DnD of {} started", selectedProduct.getName());
                 event.consume();
             }
         });
 
-        ProductTask productsTask = new ProductTask();
+        setCellValues();
 
         progressBar.progressProperty()
-                .bind(productsTask.progressProperty());
+                .bind(LOADING_TASK.progressProperty());
         progressBar.visibleProperty()
-                .bind(productsTask.runningProperty());
+                .bind(LOADING_TASK.runningProperty());
 
-        filteredProducts = new FilteredList<>(productsTask.getPartialResults(), p -> true);
-        tableView.setItems(filteredProducts);
+        filteredProducts = new FilteredList<>(LOADING_TASK.getPartialResults(), p -> true);
 
-        Ui.progress().observe(productsTask);
-        Ui.exec(productsTask);
+        // filteredList does not allow sorting so it needs to be wrapped in a sortedList
+        SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
+        sortedProducts.comparatorProperty().bind(tableView.comparatorProperty());
+
+        tableView.setItems(sortedProducts);
+
+        Ui.progress().observe(LOADING_TASK);
+        Ui.exec(LOADING_TASK);
     }
 
     /**
@@ -163,7 +182,13 @@ public class ProductListController implements Initializable, FxController {
         productPartNo.setCellValueFactory(new PropertyValueFactory<>("partNo"));
         productImageId.setCellValueFactory(new PropertyValueFactory<>("imageId"));
         productGtin.setCellValueFactory(new PropertyValueFactory<>("gtin"));
-        productEol.setCellValueFactory(new PropertyValueFactory<>("eol"));
+        productEol.setCellValueFactory(p -> {
+            SimpleStringProperty property = new SimpleStringProperty();
+            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            property.setValue(dateFormat.format(p.getValue().getEol()));
+            return property;
+        });
+
     }
 
     /**
@@ -209,7 +234,7 @@ public class ProductListController implements Initializable, FxController {
     private Predicate<Product> getPredicate() {
 
         Predicate<Product> onlyEol = product -> !menuEol.isSelected()
-                || (menuEol.isSelected() && getSelectedDate().before(product.getEol()));
+                || (menuEol.isSelected() && (product.getEol() == null || getSelectedDate().before(product.getEol())));
 
         onlyEol = onlyEol.and(product -> getSelectedTradeName() == null || product.getTradeName() == getSelectedTradeName());
 
@@ -217,4 +242,11 @@ public class ProductListController implements Initializable, FxController {
         return onlyEol;
     }
 
+    @Override
+    public void closed() {
+        FxSaft.dispatch(() -> {
+            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
+            return null;
+        });
+    }
 }

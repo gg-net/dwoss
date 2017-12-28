@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit;
 
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,13 +26,13 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductMapper;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
@@ -49,6 +49,9 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     @Inject
     @UniqueUnits
     private EntityManager em;
+
+    @Inject
+    private CategoryProductMapper categoryProductMapper;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -92,19 +95,10 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     @Override
     public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) {
         Objects.requireNonNull(dto, "DTO is null, not allowed");
-        CategoryProduct cp;
-        if ( dto.getId() == 0 ) {
-            cp = new CategoryProduct();
-        } else {
-            cp = findById(CategoryProduct.class, dto.getId());
-        }
-        cp.setName(dto.getName());
-        cp.setDescription(dto.getDescription());
-        if ( dto.getSalesChannel() != null ) cp.setSalesChannel(dto.getSalesChannel());
-        cp.getProducts().forEach(p -> p.setCategoryProduct(null));
-        for (PicoProduct pp : dto.getProducts()) {
-            cp.add(findById(Product.class, pp.getId()));
-        }
+        L.info("Trying to store category product from DTO: {}", dto);
+        CategoryProduct cp = dto.getId() == 0 ? new CategoryProduct() : findById(CategoryProduct.class, dto.getId());
+        Objects.requireNonNull(cp, "No CategoryProduct found for id=" + dto.getId());
+        categoryProductMapper.update(cp, dto);
         for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
             cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
         }
@@ -116,10 +110,29 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     public Reply<Void> deleteCategoryProduct(long id) {
         CategoryProduct cp = em.find(CategoryProduct.class, id);
         if ( cp == null ) return Reply.failure("No Instance of CategoryProduct with id " + id + " found");
-        for (Product p : new ArrayList<>(cp.getProducts())) {
-            cp.remove(p);
-        }
+        cp.getProducts().clear();
         em.remove(cp);
         return Reply.success(null);
     }
+
+    @Override
+    public Reply<Void> addToUnitCollection(PicoUnit punit, long unitCollectionId) {
+        if ( punit == null ) return Reply.failure("PicoUnit is null");
+        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
+        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
+        UnitCollection uc = em.find(UnitCollection.class, unitCollectionId);
+        if ( uc == null ) return Reply.failure("No UnitCollection found with " + unitCollectionId);
+        uc.addUnit(uu);
+        return Reply.success(null);
+    }
+
+    @Override
+    public Reply<Void> unsetUnitCollection(PicoUnit punit) {
+        if ( punit == null ) return Reply.failure("PicoUnit is null");
+        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
+        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
+        uu.setUnitCollection(null);
+        return Reply.success(null);
+    }
+
 }

@@ -1,25 +1,24 @@
 package eu.ggnet.saft;
 
+import eu.ggnet.saft.core.ui.Failure;
+import eu.ggnet.saft.core.ui.builder.ProgressBuilder;
+import eu.ggnet.saft.core.ui.builder.SwingBuilder;
+import eu.ggnet.saft.core.ui.builder.FxmlBuilder;
+import eu.ggnet.saft.core.ui.builder.DialogBuilder;
+import eu.ggnet.saft.core.ui.builder.FileChooserBuilder;
+import eu.ggnet.saft.core.ui.builder.FxBuilder;
+
 import java.awt.*;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
-import javax.swing.JPanel;
-
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.FxCore;
-import eu.ggnet.saft.core.SwingCore;
-import eu.ggnet.saft.core.all.UiCreator;
-import eu.ggnet.saft.core.all.UiOk;
-import eu.ggnet.saft.core.experimental.*;
-import eu.ggnet.saft.core.fx.FxCreator;
-import eu.ggnet.saft.core.swing.SwingCreator;
+import eu.ggnet.saft.core.ui.SwingCore;
 
 /*
  Notes of olli:
@@ -219,32 +218,6 @@ public class Ui {
      */
     public static void handle(Throwable b) {
         UiCore.handle(b);
-    }
-
-    // starting from here comes old. will be deprecated in the future
-    @Deprecated
-    private static <R> UiCreator<R> creator() {
-        if ( UiCore.isRunning() && UiCore.isFx() )
-            return new FxCreator<>(null, FxCore.mainStage(), null);
-        if ( UiCore.isRunning() && UiCore.isSwing() )
-            return new SwingCreator<>(null, SwingCore.mainFrame(), null);
-        throw new IllegalStateException("UiCore not initalized");
-    }
-
-    /**
-     * @deprecated use fx() oder dialog()
-     */
-    @Deprecated
-    public static <T, R extends Pane> UiOk<R> choiceFx(Class<R> panelClazz) {
-        return Ui.<T>creator().choiceFx(panelClazz);
-    }
-
-    /**
-     * @deprecated use swing()
-     */
-    @Deprecated
-    public static <T, R extends JPanel> UiOk<R> choiceSwing(Class<R> panelClazz) {
-        return Ui.<T>creator().choiceSwing(panelClazz);
     }
 
 }

@@ -40,7 +40,7 @@ import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Ui for the Desktop Bundle.

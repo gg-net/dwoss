@@ -20,8 +20,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.saft.core.Client;
-
+import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.TradeName;
 

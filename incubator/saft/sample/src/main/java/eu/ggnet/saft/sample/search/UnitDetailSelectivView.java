@@ -26,7 +26,7 @@ import javafx.scene.layout.StackPane;
 
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.ops.Ops;
+import eu.ggnet.saft.Ops;
 
 import static java.lang.Double.MAX_VALUE;
 

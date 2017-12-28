@@ -25,8 +25,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.authorisation.Guardian;
-
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.entity.Position;
@@ -40,14 +39,14 @@ import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 
 /**

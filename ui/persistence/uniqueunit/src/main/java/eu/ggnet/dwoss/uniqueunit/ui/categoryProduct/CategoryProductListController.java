@@ -5,14 +5,16 @@ import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.Client;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import javafx.event.ActionEvent;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
@@ -122,7 +124,8 @@ public class CategoryProductListController implements Initializable, FxControlle
      */
     private void editCategoryProduct(ActionEvent event) {
         if ( categoryProductsTableView.getSelectionModel().getSelectedItem() != null ) {
-            openEdit(categoryProductsTableView.getSelectionModel().getSelectedItem());
+            CategoryProduct cp = categoryProductsTableView.getSelectionModel().getSelectedItem();
+            openEdit(cp);
         }
     }
 
@@ -179,8 +182,8 @@ public class CategoryProductListController implements Initializable, FxControlle
 
         categoryProductName.setCellValueFactory(new PropertyValueFactory<>("name"));
         categoryProductSalesChannel.setCellValueFactory(new PropertyValueFactory<>("salesChannel"));
-//        categoryProductProductList.setCellValueFactory((param) -> {
-//            return new SimpleStringProperty(param.getValue().getProducts().stream().map(p -> p.getName()).collect(Collectors.joining(", ")));
-//        });
+        categoryProductProductList.setCellValueFactory((param) -> {
+            return new SimpleStringProperty(param.getValue().getProducts().stream().map(p -> p.getName()).collect(Collectors.joining(", ")));
+        });
     }
 }

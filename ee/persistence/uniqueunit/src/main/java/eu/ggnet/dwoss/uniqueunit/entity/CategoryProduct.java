@@ -23,10 +23,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
 
@@ -42,7 +45,7 @@ import static javax.persistence.FetchType.EAGER;
 @Entity
 @SuppressWarnings("PersistenceUnitPresent")
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-public class CategoryProduct implements Serializable {
+public class CategoryProduct implements Serializable, EagerAble {
 
     @Getter
     @Id
@@ -86,7 +89,6 @@ public class CategoryProduct implements Serializable {
     private List<PriceHistory> priceHistories = new ArrayList<>();
 
     @Getter
-    @Setter
     @NotNull
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
@@ -116,7 +118,7 @@ public class CategoryProduct implements Serializable {
      * @return the setted price or 0 if no price is set.
      */
     public double getPrice(PriceType type) {
-        return prices.get(type) == null ? 0 : prices.get(type);
+        return prices.getOrDefault(type, 0.0);
     }
 
     public Map<PriceType, Double> getPrices() {
@@ -124,31 +126,59 @@ public class CategoryProduct implements Serializable {
     }
 
     public List<PriceHistory> getPriceHistory() {
-        return priceHistories;
-    }
-
-    public void add(Product product) {
-        if ( product == null ) return;
-        product.setCategoryProduct(this);
-    }
-
-    public void remove(Product product) {
-        if ( product == null ) return;
-        product.setCategoryProduct(null);
+        return Collections.unmodifiableList(priceHistories);
     }
 
     /**
+     * Sets the saleschanel, a null will set to unkonwn.
      *
-     * @return unmodifiable list of products.
+     * @param salesChannel the saleschanel.
+     */
+    public void setSalesChannel(SalesChannel salesChannel) {
+        if ( salesChannel == null ) this.salesChannel = UNKNOWN;
+        else this.salesChannel = salesChannel;
+    }
+
+    /**
+     * Returns a wrapped bidirectional list implementation, which executes all changes on the products collection and the product.
+     *
+     * @return a wrapped bidirectional list.
      */
     public List<Product> getProducts() {
-        //TODO: maybe grab them from the database instead?
-        return Collections.unmodifiableList(products);
+        return new AbstractBidirectionalListWrapper<Product>(this.products) {
+
+            @Override
+            protected void update(Product e, boolean add) {
+                if ( add ) e.setCategoryProduct(CategoryProduct.this);
+                else e.setCategoryProduct(null);
+            }
+        };
     }
 
     @Override
     public String toString() {
         return "CategoryProduct{" + "id=" + id + ", optLock=" + optLock + ", name=" + name + ", description=" + description + '}';
+    }
+
+    public String toHtml(EnumSet<PriceType> priceTypes, boolean history) {
+        if ( priceTypes == null ) return "Allowed PriceTypes are null";
+        StringBuilder sb = new StringBuilder("<p><b>CategoryProduct</b><br />");
+        sb.append("Name: ").append(name).append("<br />");
+        sb.append("Description: ").append(description).append("<br />");
+        sb.append("SalesChannel: ").append(salesChannel).append("<br />");
+        Map<PriceType, Double> showPrices = new HashMap<>(prices);
+        for (PriceType priceType : EnumSet.complementOf(priceTypes)) {
+            showPrices.remove(priceType);
+        }
+        return sb.toString() + UniqueUnitFormater.toHtmlPriceInformation(showPrices, priceHistories) + "</p";
+    }
+
+    @Override
+    public void fetchEager() {
+        priceHistories.size();
+        for (Product product : products) {
+            product.fetchEager();
+        }
     }
 
 }

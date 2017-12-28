@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.common.DetailDialog;
-import eu.ggnet.saft.core.SwingCore;
-import eu.ggnet.saft.core.authorisation.Guardian;
-import eu.ggnet.saft.core.swing.SwingSaft;
+import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.SwingSaft;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
 

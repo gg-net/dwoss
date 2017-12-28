@@ -46,13 +46,7 @@ import static javax.persistence.CascadeType.*;
  */
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NamedQueries({
-    @NamedQuery(name = "Product.byTradeNames", query = "select p from Product p where p.tradeName in (?1)")
-    ,
-    @NamedQuery(name = "Product.byPartNos", query = "select p from Product p where p.partNo in (?1)")
-    ,
-    @NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
-})
+@NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
 @SuppressWarnings("PersistenceUnitPresent")
 public class Product implements Serializable, EagerAble, Comparable<Product> {
 
@@ -176,6 +170,16 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
+    public Product() {
+    }
+
+    public Product(ProductGroup group, TradeName tradeName, String partNo, String name) {
+        this.group = group;
+        this.tradeName = tradeName;
+        this.partNo = partNo;
+        this.name = name;
+    }
+
     public void setPrice(PriceType type, double price, String comment) {
         if ( MathUtil.equals(getPrice(type), price) ) {
             return; // Don't set the same price
@@ -200,34 +204,34 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         return priceHistories;
     }
 
-    public Product() {
+    /**
+     * Returns a bidirectional wrapper List, mapping changes to the UniqueUnit.
+     *
+     * @return a bidirectional wrapper List
+     */
+    public List<UniqueUnit> getUniqueUnits() {
+        return new AbstractBidirectionalListWrapper<UniqueUnit>(units) {
+            @Override
+            protected void update(UniqueUnit e, boolean add) {
+                if ( add ) e.setProduct(Product.this);
+                else e.setProduct(null);
+            }
+        };
     }
 
-    public Product(ProductGroup group, TradeName tradeName, String partNo, String name) {
-        this.group = group;
-        this.tradeName = tradeName;
-        this.partNo = partNo;
-        this.name = name;
-    }
-
-    public void addUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setProduct(this);
-    }
-
-    public void removeUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setProduct(null);
-    }
-
-    public void addUnitCollections(UnitCollection unitCollection) {
-        if ( unitCollection == null ) return;
-        unitCollection.setProduct(this);
-    }
-
-    public void removeUnitCollection(UnitCollection unitCollection) {
-        if ( unitCollection == null ) return;
-        unitCollection.setProduct(null);
+    /**
+     * Returns a bidirectional wrapper List, mapping changes to the UnitCollection.
+     *
+     * @return a bidirectional wrapper List
+     */
+    public List<UnitCollection> getUnitCollections() {
+        return new AbstractBidirectionalListWrapper<UnitCollection>(unitCollections) {
+            @Override
+            protected void update(UnitCollection e, boolean add) {
+                if ( add ) e.setProduct(Product.this);
+                else e.setProduct(null);
+            }
+        };
     }
 
     public void setAdditionalPartNo(TradeName tradeName, String partNo) {
@@ -301,8 +305,8 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     @Override
     public void fetchEager() {
-        getPriceHistory().size();
-        units.size();
+        if ( categoryProduct != null ) categoryProduct.fetchEager();
+        units.forEach(u -> u.fetchEager());
     }
 
     @Override

@@ -37,10 +37,10 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.authorisation.Guardian;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

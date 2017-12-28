@@ -23,12 +23,12 @@ import javax.swing.JOptionPane;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.spec.SpecExporter;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.Alert;
-import eu.ggnet.saft.core.Workspace;
-import eu.ggnet.saft.core.authorisation.AccessableAction;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Action to Export the ProductSpecs to XML.
@@ -52,7 +52,7 @@ public class ProductSpecExportAction extends AccessableAction {
             });
 
         } catch (NumberFormatException ex) {
-            Alert.show("Die Eingabe '" + input + "' ist keine Zahl");
+            UiAlert.show("Die Eingabe '" + input + "' ist keine Zahl");
             return;
         }
     }

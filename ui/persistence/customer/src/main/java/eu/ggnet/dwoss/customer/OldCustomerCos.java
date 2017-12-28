@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
 
-import static eu.ggnet.saft.core.Client.lookup;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
