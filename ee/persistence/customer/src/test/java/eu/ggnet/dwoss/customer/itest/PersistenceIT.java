@@ -53,6 +53,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
         assertThat(c.getContacts()).describedAs("customer.getContacts()").isNotEmpty();
 
+        L.info("{}", c);
         L.info("===== Contacts");
         for (Contact contact : c.getContacts()) {
             L.info(contact.toString());

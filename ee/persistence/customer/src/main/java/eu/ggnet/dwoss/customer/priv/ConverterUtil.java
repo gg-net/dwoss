@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,22 @@
  */
 package eu.ggnet.dwoss.customer.priv;
 
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.SalesChannel;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.customer.entity.Communication.Type;
-
-
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.rules.SalesChannel;
 
 import static eu.ggnet.dwoss.customer.entity.Communication.Type.*;
-import static eu.ggnet.dwoss.customer.entity.Contact.Sex.*;
-import static eu.ggnet.dwoss.rules.AddressType.*;
+import static eu.ggnet.dwoss.customer.entity.Contact.Sex.FEMALE;
+import static eu.ggnet.dwoss.customer.entity.Contact.Sex.MALE;
+import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 
 /**
  * Utility Class to convert a (sopo)OldCustomer to New and visa verse.
@@ -56,6 +55,9 @@ public class ConverterUtil {
         for (CustomerFlag flag : c.getFlags()) {
             old.addFlag(flag);
         }
+        old.getAdditionalCustomerIds().putAll(c.getAdditionalCustomerIds());
+        old.setKeyAccounter(c.getKeyAccounter());
+        old.setSource(c.getSource());
         if ( !c.getCompanies().isEmpty() ) {
             Company company = c.getCompanies().get(0);
             old.setFirma(company.getName());
@@ -119,6 +121,10 @@ public class ConverterUtil {
         for (CustomerFlag customerFlag : old.getFlags()) {
             customer.add(customerFlag);
         }
+        customer.getAdditionalCustomerIds().clear();
+        customer.getAdditionalCustomerIds().putAll(old.getAdditionalCustomerIds());
+        customer.setSource(old.getSource());
+        customer.setKeyAccounter(old.getKeyAccounter());
         if ( customer.getContacts().isEmpty() ) customer.add(new Contact());
         Contact contact = customer.getContacts().get(0);
         contact.setFirstName(old.getVorname() == null ? "" : old.getVorname());

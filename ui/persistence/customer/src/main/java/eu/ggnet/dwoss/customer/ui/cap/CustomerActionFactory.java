@@ -14,17 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer;
+package eu.ggnet.dwoss.customer.ui.cap;
 
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import java.util.Arrays;
+import java.util.List;
+
+import org.openide.util.lookup.ServiceProvider;
+
+import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
 
 /**
- * Placeholder, the Model is {@link OldCustomer}
  *
+ * <p>
  * @author oliver.guenther
  */
-public abstract class CustomerCreateModel {
+@ServiceProvider(service = ActionFactory.class)
+public class CustomerActionFactory implements ActionFactory {
 
-    private CustomerCreateModel() {}
+    private static final String MENU_NAME = "System";
+
+    @Override
+    public List<MetaAction> createMetaActions() {
+        return Arrays.asList(
+                new MetaAction(MENU_NAME, "Datenbank", new RecreateSearchIndex())
+        );
+    }
 
 }

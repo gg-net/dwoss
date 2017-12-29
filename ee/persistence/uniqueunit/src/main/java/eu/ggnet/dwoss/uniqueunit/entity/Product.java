@@ -306,6 +306,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @Override
     public void fetchEager() {
         if ( categoryProduct != null ) categoryProduct.fetchEager();
+        unitCollections.forEach(u -> u.fetchEager());
         units.forEach(u -> u.fetchEager());
     }
 

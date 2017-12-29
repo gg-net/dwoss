@@ -35,7 +35,9 @@ public class CategoryProductListAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.fxml().show(CategoryProductListController.class);
+        Ui.exec(() -> {
+            Ui.fxml().show(CategoryProductListController.class);
+        });
     }
 
 }

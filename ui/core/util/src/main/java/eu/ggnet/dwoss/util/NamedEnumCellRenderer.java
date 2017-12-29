@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,7 @@ package eu.ggnet.dwoss.util;
 
 import java.awt.Component;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
-import javax.swing.JList;
-
-import eu.ggnet.dwoss.util.PojoUtil;
+import javax.swing.*;
 
 /**
  *
@@ -33,7 +29,11 @@ public class NamedEnumCellRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if (value == null) return label;        
+        if ( value == null ) {
+            label.setText("Nichts Ausgewählt");
+            return label;
+        }
+        label.setText(value.toString());
         try {
             label.setText((String)PojoUtil.getValue("note", value));
         } catch (RuntimeException e) {

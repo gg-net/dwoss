@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,35 @@
  */
 package eu.ggnet.dwoss.rules;
 
+import eu.ggnet.dwoss.util.INoteModel;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
+ * Flags set on the Customer, but used on multiple ocations.
  *
  * @author pascal.perau
  */
-public enum CustomerFlag {
-
+@Getter
+@AllArgsConstructor
+public enum CustomerFlag implements INoteModel {
     /**
-     * System Customer - Customer is special and has only Documents of Type Block.
+     * Has a special workflow assigned.
      */
-    SYSTEM_CUSTOMER("Systemkunde"),
-    /**
-     * Customer has confirmed the terms and conditions for cash on delivery.
-     */
-    CONFIRMED_CASH_ON_DELIVERY("Nachnahme bestätigt"), /**
-     * Customer wants to confirm the pickup or shipping of a Dossier.
-     */
-    CONFIRMS_DOSSIER("Kunde bestätigt Aufträge");
+    SYSTEM_CUSTOMER("Systemdatensatz"),
+    CONFIRMED_CASH_ON_DELIVERY("Nachnahme bestätigt"),
+    CONFIRMS_DOSSIER("Kunde bestätigt Aufträge"),
+    CS_UPDATE_CANDIDATE("Kandidat für CS Update"),
+    CS_UPDATE_CANDIDATE_NEXT("Kandidat für nächstes CS Update"),
+    ITC_CUSTOMER("Systemhauskunde"),
+    PRIO_A_CUSTOMER("Prio A Kunde");
 
-    private String name;
+    private final String name;
 
-    private CustomerFlag(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
+    @Override
+    public String getNote() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
 }

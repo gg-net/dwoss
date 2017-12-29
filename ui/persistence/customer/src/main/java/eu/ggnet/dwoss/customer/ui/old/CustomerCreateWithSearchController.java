@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer;
+package eu.ggnet.dwoss.customer.ui.old;
 
 import java.beans.*;
 import java.util.*;
@@ -33,13 +33,13 @@ import static eu.ggnet.saft.Client.lookup;
  *
  * @author oliver.guenther
  */
-public class CustomerCreateController {
+public class CustomerCreateWithSearchController {
 
-    private final static Logger L = LoggerFactory.getLogger(CustomerCreateController.class);
+    private final static Logger L = LoggerFactory.getLogger(CustomerCreateWithSearchController.class);
 
     private OldCustomer customer;
 
-    private CustomerCreateView view;
+    private CustomerCreateWithSearchView view;
 
     private Timer timer = new Timer();
 
@@ -90,11 +90,11 @@ public class CustomerCreateController {
         if ( customer != null ) customer.addPropertyChangeListener(customerListener);
     }
 
-    public CustomerCreateView getView() {
+    public CustomerCreateWithSearchView getView() {
         return view;
     }
 
-    public void setView(CustomerCreateView view) {
+    public void setView(CustomerCreateWithSearchView view) {
         this.view = view;
     }
 

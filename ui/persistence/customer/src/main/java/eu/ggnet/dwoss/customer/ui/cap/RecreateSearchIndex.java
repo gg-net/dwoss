@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,31 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.action;
+package eu.ggnet.dwoss.customer.ui.cap;
 
-import java.util.Arrays;
-import java.util.List;
+import java.awt.event.ActionEvent;
 
-import org.openide.util.lookup.ServiceProvider;
+import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
+import eu.ggnet.dwoss.customer.priv.SearchSingleton;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiAlert;
+
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
- * <p>
- * @author oliver.guenther
+ * @author pascal.perau
  */
-@ServiceProvider(service = ActionFactory.class)
-public class CustomerActionFactory implements ActionFactory {
+public class RecreateSearchIndex extends AbstractAction {
 
-    private static final String MENU_NAME = "System";
-
-    @Override
-    public List<MetaAction> createMetaActions() {
-        return Arrays.asList(
-                new MetaAction(MENU_NAME, "Datenbank", new RecreateSearchIndex())
-        );
+    public RecreateSearchIndex() {
+        super("Customer Suchindex neu erzeugen.");
     }
 
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        Ui.exec(() -> {
+            Ui.progress().wrap(() -> lookup(SearchSingleton.class).reindexSearch()).run();
+            UiAlert.show("Suchindex wurde neu erzeugt");
+        });
+    }
 }

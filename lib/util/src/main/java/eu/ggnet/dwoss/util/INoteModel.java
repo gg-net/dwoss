@@ -25,5 +25,10 @@ package eu.ggnet.dwoss.util;
  */
 public interface INoteModel {
 
+    /**
+     * Returns an info note of some relevance.
+     *
+     * @return an info note
+     */
     public String getNote();
 }

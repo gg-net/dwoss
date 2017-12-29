@@ -5,13 +5,11 @@
  */
 package tryout.stub;
 
-import eu.ggnet.saft.api.auth.Accessable;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.api.auth.Authorisation;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.auth.UserChangeListener;
-
 import java.util.Set;
+
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.api.auth.Authorisation;
+import eu.ggnet.saft.core.auth.*;
 
 /**
  *
@@ -85,5 +83,10 @@ public class GuardianStub implements Guardian {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Set<String> getAllUsernames() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     //</editor-fold>
+
 }

@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.common;
 
-import eu.ggnet.saft.core.auth.UserChangeListener;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.auth.AccessEnabler;
-
 import java.util.*;
 
 import javax.swing.Action;
@@ -30,6 +26,7 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.saft.api.auth.Accessable;
 import eu.ggnet.saft.api.auth.Authorisation;
+import eu.ggnet.saft.core.auth.*;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.
@@ -48,6 +45,8 @@ public abstract class AbstractGuardian implements Guardian {
     private Operator operator;
 
     private final Map<Integer, Operator> quickRights = new HashMap<>();
+
+    private final Set<String> allUsers = new HashSet<>();
 
     @Override
     public Set<String> getOnceLoggedInUsernames() {
@@ -79,6 +78,23 @@ public abstract class AbstractGuardian implements Guardian {
     @Override
     public String getUsername() {
         return (operator == null ? "" : operator.getUsername());
+    }
+
+    @Override
+    public Set<String> getAllUsernames() {
+        return Collections.unmodifiableSet(allUsers);
+    }
+
+    /**
+     * Sets all users.
+     *
+     * @param allUsers all users.
+     */
+    protected void setAllUsersnames(Collection<String> allUsers) {
+        Optional.ofNullable(allUsers).ifPresent(c -> {
+            this.allUsers.clear();
+            this.allUsers.addAll(c);
+        });
     }
 
     /**

@@ -2,29 +2,40 @@ package tryout;
 
 import java.util.*;
 
-import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.customer.CustomerCreateController;
-import eu.ggnet.dwoss.customer.CustomerCreateView;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchController;
+import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchView;
+import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
+
+import static org.mockito.Mockito.mock;
 
 /**
  *
  * @author oliver.guenther
  */
-public class CreateCustomer {
+public class CreateCustomerTryout {
 
-    @Test
-    public void tryout() {
+    public final static Logger L = LoggerFactory.getLogger(CreateCustomerTryout.class);
+
+    public static void main(String[] args) {
+
+        Client.addSampleStub(MandatorSupporter.class, mock(MandatorSupporter.class));
+
         Client.addSampleStub(Guardian.class, new AbstractGuardian() {
+            {
+                setAllUsersnames(Arrays.asList("hans", "claus", "peter"));
+            }
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
             }
@@ -57,6 +68,12 @@ public class CreateCustomer {
         Client.addSampleStub(CustomerService.class, new CustomerService() {
 
             @Override
+            public List<UiCustomer> asUiCustomers(String company, String firstName, String lastName, String email, boolean appendWildcard) {
+                L.info("call of asUiCustomers(company={},firstName={},lastName={},email={},wildCard={}", company, firstName, lastName, email, appendWildcard);
+                return new ArrayList<>();
+            }
+            //<editor-fold defaultstate="collapsed" desc="Unused Methods">
+            @Override
             public CustomerMetaData asCustomerMetaData(long customerId) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -69,12 +86,6 @@ public class CreateCustomer {
             @Override
             public List<UiCustomer> asUiCustomers(String search) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public List<UiCustomer> asUiCustomers(String company, String firstName, String lastName, String email, boolean appendWildcard) {
-                System.out.println("got called");
-                return new ArrayList<>();
             }
 
             @Override
@@ -106,16 +117,18 @@ public class CreateCustomer {
             public String asNewHtmlHighDetailed(long id) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
+            //</editor-fold>
         });
 
-        CustomerCreateView view = new CustomerCreateView();
-        CustomerCreateController controller = new CustomerCreateController();
+        CustomerCreateWithSearchView view = new CustomerCreateWithSearchView();
+        CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
         controller.setView(view);
         view.setController(controller);
 
-        OkCancelDialog<CustomerCreateView> dialog = new OkCancelDialog<>("Kundenmanagement", view);
+        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>("Kundenmanagement", view);
         dialog.setVisible(true);
         System.out.println(view.getCustomer());
+        System.exit(0);
     }
 
 }

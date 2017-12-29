@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.customer.itest;
 
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -14,6 +12,7 @@ import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
 import static org.junit.Assert.assertEquals;
@@ -53,7 +52,7 @@ public class CustomerEoaIT extends ArquillianProjectArchive {
 
         assertTrue(eao.findAllSystemCustomerIds().isEmpty());
         c = GEN.makeCustomer();
-        c.add(CustomerFlag.SYSTEM_CUSTOMER); // Make sure no systemcustomer.
+        c.add(CustomerFlag.SYSTEM_CUSTOMER); // Make sure it is a systemcustomer.
         em.persist(c);
         utx.commit();
 

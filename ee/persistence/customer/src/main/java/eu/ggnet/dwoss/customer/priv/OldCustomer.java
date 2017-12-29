@@ -24,21 +24,22 @@ import java.util.*;
 import javax.validation.constraints.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 
+import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.rules.*;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
+@ToString
 public class OldCustomer implements Serializable {
 
     private static final String NO_WHITESPACE_AT_START_OR_END = "^[^\\s].*[^\\s]$";
 
-    private final static String NL = SystemUtils.LINE_SEPARATOR;
+    private final static String NL = System.lineSeparator();
 
     public static final String PROP_FIRMA = "firma";
 
@@ -118,6 +119,17 @@ public class OldCustomer implements Serializable {
     @Size(min = 2, max = 2)
     private String payIsoCountry = "DE";
 
+    @Getter
+    @Setter
+    private Source source;
+
+    @Getter
+    private final Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
+
+    @Getter
+    @Setter
+    private String keyAccounter;
+
     /**
      * Default values of Customers.
      * - allowedSalesChannels = new HashSet<>();
@@ -154,6 +166,9 @@ public class OldCustomer implements Serializable {
         this.shippingCondition = oldCustomer.shippingCondition;
         this.paymentCondition = oldCustomer.paymentCondition;
         this.allowedSalesChannels = oldCustomer.allowedSalesChannels;
+        this.keyAccounter = oldCustomer.keyAccounter;
+        this.additionalCustomerIds.putAll(oldCustomer.additionalCustomerIds);
+        this.source = oldCustomer.source;
     }
 
     public OldCustomer(String firma, String vorname, String nachname, String anmerkung) {
@@ -432,17 +447,6 @@ public class OldCustomer implements Serializable {
 
     public void setFlags(Set<CustomerFlag> flags) {
         this.flags = flags;
-    }
-
-    @Override
-    public String toString() {
-        return "OldCustomer{" + "kundenID=" + kundenID + ", anmerkung=" + anmerkung + ", eMail=" + email
-                + ", faxnummer=" + faxnummer + ", firma=" + firma + ", haendler=" + haendler + ", handynummer=" + handynummer
-                + ", LIAdresse=" + LIAdresse + ", LIOrt=" + LIOrt + ", LIPlz=" + LIPlz + ", nachname=" + nachname
-                + ", REAdresse=" + REAdresse + ", REOrt=" + REOrt + ", REPlz=" + REPlz + ", telefonnummer=" + telefonnummer
-                + ", titel=" + titel + ", vorname=" + vorname + ", flags=" + flags + ", paymentMethod=" + paymentMethod + ", shippingCondition="
-                + shippingCondition + ", paymentCondition=" + paymentCondition + ", allowedSalesChannels=" + allowedSalesChannels
-                + ", taxId=" + taxId + ", ledger=" + ledger + ", isoCountry=" + shipIsoCountry + '}';
     }
 
     public String toInvoiceAddress() {

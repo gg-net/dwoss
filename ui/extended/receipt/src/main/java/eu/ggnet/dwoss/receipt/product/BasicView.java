@@ -22,8 +22,8 @@ import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.receipt.CheckBoxTableNoteModel;
-import eu.ggnet.dwoss.receipt.UiUtil;
+import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.util.SwingTraversalUtil;
 import eu.ggnet.dwoss.spec.entity.BasicSpec;
 import eu.ggnet.dwoss.spec.entity.BasicSpec.Color;
 import eu.ggnet.dwoss.spec.entity.BasicSpec.VideoPort;
@@ -59,8 +59,8 @@ public class BasicView extends AbstractView<BasicSpec> {
         colorBox.setRenderer(renderer);
         colorBox.setSelectedItem(null);
 
-        UiUtil.spaceSelection(extrasTable);
-        UiUtil.spaceSelection(videoPortTable);
+        SwingTraversalUtil.spaceSelection(extrasTable);
+        SwingTraversalUtil.spaceSelection(videoPortTable);
     }
 
     @Override

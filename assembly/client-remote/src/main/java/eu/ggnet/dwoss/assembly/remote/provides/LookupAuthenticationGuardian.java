@@ -16,9 +16,13 @@
  */
 package eu.ggnet.dwoss.assembly.remote.provides;
 
+import java.util.stream.Collectors;
+
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.rights.RightsAgent;
+import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.auth.AuthenticationException;
@@ -34,6 +38,10 @@ public class LookupAuthenticationGuardian extends AbstractGuardian implements Gu
 
     @Override
     public void login(String user, char[] pass) throws AuthenticationException {
+        if ( getAllUsernames().isEmpty() ) {
+            setAllUsersnames(lookup(RightsAgent.class).findAll(Operator.class).stream().map(Operator::getUsername).collect(Collectors.toSet()));
+        }
+
         try {
             setRights(lookup(Authentication.class).login(user, pass));
         } catch (UserInfoException ex) {

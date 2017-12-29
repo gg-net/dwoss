@@ -20,6 +20,8 @@ import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
@@ -228,6 +230,10 @@ public class CustomerGenerator {
         GeneratedAddress address = GEN.makeAddress();
         OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
         if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
+        if ( R.nextInt(10) < 3 ) old.setSource(Source.values()[R.nextInt(Source.values().length - 1)]);
+        if ( R.nextInt(10) < 3 ) {
+            old.getAdditionalCustomerIds().put(ExternalSystem.values()[R.nextInt(ExternalSystem.values().length - 1)], RandomStringUtils.randomAlphabetic(5, 10));
+        }
         for (CustomerFlag f : ALLOWED_FLAG) {
             if ( R.nextInt(10) < 3 ) old.addFlag(f);
         }

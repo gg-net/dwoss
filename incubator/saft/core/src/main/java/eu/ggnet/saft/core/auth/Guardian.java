@@ -16,14 +16,12 @@
  */
 package eu.ggnet.saft.core.auth;
 
-import eu.ggnet.saft.api.auth.Accessable;
-import eu.ggnet.saft.api.auth.Authorisation;
-
 import java.util.Set;
 
 import javax.swing.Action;
 
-import eu.ggnet.saft.api.*;
+import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.api.auth.Authorisation;
 
 /**
  * Simple Authentication Interface.
@@ -42,6 +40,12 @@ public interface Guardian {
      */
     Set<String> getOnceLoggedInUsernames();
 
+    /**
+     * Returns all usernames of the system, in a unmodifiable state.
+     *
+     * @return all usernames of the system.
+     */
+    Set<String> getAllUsernames();
     /**
      * Used to authenticate. Throws an exception if authentication is not successful.
      *

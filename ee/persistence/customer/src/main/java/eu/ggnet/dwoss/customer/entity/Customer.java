@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.entity;
 
 import java.io.Serializable;
+import java.util.Map.Entry;
 import java.util.*;
 
 import javax.persistence.*;
@@ -45,7 +46,24 @@ import static javax.persistence.CascadeType.ALL;
 @EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 @Indexed
+@SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
 public class Customer implements Serializable {
+
+    @AllArgsConstructor
+    @Getter
+    public static enum Source {
+        EXISITING("Bestandskunde"),
+        JH_CAM_TOOL("CAM Tool T&S"),
+        SOPO_STORE("Sonderposten Store"),
+        SOPO_ONLINE("Sonderposten Online"),
+        ONEADO("Oneado Online Shop");
+
+        private final String name;
+    }
+
+    public static enum ExternalSystem {
+        SAGE, LEXWARE
+    }
 
     @Id
     @Getter
@@ -81,6 +99,20 @@ public class Customer implements Serializable {
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<CustomerFlag> flags = new HashSet<>();
+
+    @Getter
+    @Setter
+    private Source source;
+
+    @Getter
+    @NotNull
+    @ElementCollection(fetch = FetchType.EAGER)
+    @MapKeyEnumerated
+    private Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
+
+    @Getter
+    @Setter
+    private String keyAccounter;  // Null is ok.
 
     @Lob
     @Column(length = 65535)
@@ -224,7 +256,23 @@ public class Customer implements Serializable {
     }
 
     public String toHtml() {
-        StringBuilder sb = new StringBuilder("<p><u>" + toName() + "</u></p>");
+        StringBuilder sb = new StringBuilder("<p>Id:<b>" + id + "</b>&nbsp;<u>" + toName() + "</u></p>");
+        sb.append("KeyAccounterId:").append(keyAccounter).append("<br />");
+        sb.append("Quelle:").append(source).append("<br />");
+        if ( !flags.isEmpty() ) {
+            sb.append("Kundenparameter:<ul>");
+            for (CustomerFlag flag : flags) {
+                sb.append("<li>").append(flag.getName()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        if ( !additionalCustomerIds.isEmpty() ) {
+            sb.append("Extra Kundennummern:<ul>");
+            for (Entry<ExternalSystem, String> e : additionalCustomerIds.entrySet()) {
+                sb.append("<li>").append(e.getKey()).append(" - ").append(e.getValue()).append("</li>");
+            }
+            sb.append("</ul>");
+        }
         if ( !companies.isEmpty() ) {
             sb.append("Firmen(n):<ul>");
             for (Company company : companies) {
@@ -243,13 +291,6 @@ public class Customer implements Serializable {
             sb.append("Mandantenspezifische Informationen:<ul>");
             for (MandatorMetadata mandatorMetadata : mandatorMetadata) {
                 sb.append("<li>").append(mandatorMetadata.toHtml()).append("</li>");
-            }
-            sb.append("</ul>");
-        }
-        if ( !flags.isEmpty() ) {
-            sb.append("Kundenparameter:<ul>");
-            for (CustomerFlag flag : flags) {
-                sb.append("<li>").append(flag.getName()).append("</li>");
             }
             sb.append("</ul>");
         }

@@ -26,8 +26,6 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.dwoss.receipt.CheckBoxTableNoteModel;
-import eu.ggnet.dwoss.receipt.UiUtil;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.Survey;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.Warranty;
@@ -37,8 +35,9 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticComment;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.ui.UserPreferences;
 
 import lombok.Getter;
@@ -134,12 +133,12 @@ public class UnitView extends javax.swing.JDialog {
         serialField.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
                 new HashSet<>(Arrays.asList(KeyStroke.getKeyStroke("pressed ENTER"), KeyStroke.getKeyStroke("pressed TAB"))));
 
-        UiUtil.forwardTab(partNoField, unitStateBox, internalCommentArea, commentArea);
-        UiUtil.backwardTab(refurbishedIdField, serialField, partNoField, unitStateBox);
+        SwingTraversalUtil.forwardTab(partNoField, unitStateBox, internalCommentArea, commentArea);
+        SwingTraversalUtil.backwardTab(refurbishedIdField, serialField, partNoField, unitStateBox);
 
-        UiUtil.spaceSelection(equipmentTable);
-        UiUtil.spaceSelection(internalCommentTable);
-        UiUtil.spaceSelection(commentTable);
+        SwingTraversalUtil.spaceSelection(equipmentTable);
+        SwingTraversalUtil.spaceSelection(internalCommentTable);
+        SwingTraversalUtil.spaceSelection(commentTable);
 
         refurbishedIdField.requestFocus();
         contractorBox.setRenderer(new NamedEnumCellRenderer());

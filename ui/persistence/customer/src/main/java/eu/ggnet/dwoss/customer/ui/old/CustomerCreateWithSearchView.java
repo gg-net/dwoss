@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,10 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer;
-
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.CloseType;
+package eu.ggnet.dwoss.customer.ui.old;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -30,22 +27,25 @@ import javax.swing.event.ListSelectionListener;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.util.CloseType;
+import eu.ggnet.dwoss.util.IPreClose;
 
 /**
  * View for create of a Customer, also inits an empty Model.
  *
  * @author pascal.perau, oliver.guenther
  */
-public class CustomerCreateView extends javax.swing.JPanel implements IPreClose {
+public class CustomerCreateWithSearchView extends javax.swing.JPanel implements IPreClose {
 
-    private CustomerUpdateViewCask customerDetails;
+    private CustomerEditView customerDetails;
 
-    private CustomerCreateController controller;
+    private CustomerCreateWithSearchController controller;
 
     /** Creates new form CreateOrEditCustomerView */
-    public CustomerCreateView() {
+    public CustomerCreateWithSearchView() {
         initComponents();
-        customerDetails = new CustomerUpdateViewCask();
+        customerDetails = new CustomerEditView();
+        customerDetailPanel.remove(uiPlaceHolder);
         customerDetailPanel.add(customerDetails);
         searchResultList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
@@ -77,7 +77,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
         // Hint: Do not set it in the controller here, may create a loop.
     }
 
-    public CustomerCreateController getController() {
+    public CustomerCreateWithSearchController getController() {
         return controller;
     }
 
@@ -86,7 +86,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
      *
      * @param controller the controller to be set.
      */
-    public void setController(CustomerCreateController controller) {
+    public void setController(CustomerCreateWithSearchController controller) {
         this.controller = controller;
         if ( controller != null ) controller.setCustomer(customerDetails.getCustomer());
     }
@@ -113,6 +113,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
         jScrollPane2 = new JScrollPane();
         searchResultList = new JList();
         customerDetailPanel = new JPanel();
+        uiPlaceHolder = new JLabel();
         jLabel1 = new JLabel();
         clearFieldsButton = new JButton();
 
@@ -122,7 +123,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 20;
+        gridBagConstraints.gridheight = GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = GridBagConstraints.VERTICAL;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         add(jSeparator1, gridBagConstraints);
@@ -137,6 +138,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.1;
         add(searchCommandField, gridBagConstraints);
 
         searchResultList.setMinimumSize(new Dimension(300, 125));
@@ -157,12 +159,18 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
         gridBagConstraints.weighty = 0.1;
         add(jScrollPane2, gridBagConstraints);
 
-        customerDetailPanel.setLayout(new GridBagLayout());
+        customerDetailPanel.setLayout(new BorderLayout());
+
+        uiPlaceHolder.setFont(new Font("DejaVu Sans", 0, 48)); // NOI18N
+        uiPlaceHolder.setText("CustomerEditor");
+        customerDetailPanel.add(uiPlaceHolder, BorderLayout.CENTER);
+
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 20;
+        gridBagConstraints.gridheight = GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.1;
         gridBagConstraints.weighty = 0.1;
         add(customerDetailPanel, gridBagConstraints);
 
@@ -209,6 +217,7 @@ public class CustomerCreateView extends javax.swing.JPanel implements IPreClose 
     JSeparator jSeparator1;
     JTextField searchCommandField;
     JList searchResultList;
+    JLabel uiPlaceHolder;
     // End of variables declaration//GEN-END:variables
 
 }

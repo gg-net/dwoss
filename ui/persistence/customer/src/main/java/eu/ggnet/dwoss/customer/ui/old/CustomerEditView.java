@@ -14,20 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer;
+package eu.ggnet.dwoss.customer.ui.old;
 
 import java.awt.Component;
 import java.util.*;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.auth.JComponentEnabler;
 
@@ -42,7 +45,7 @@ import static eu.ggnet.saft.Client.lookup;
  *
  * @author pascal.perau
  */
-public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreClose {
+public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
 
     class LocaleComboBoxRendere extends DefaultListCellRenderer {
 
@@ -61,6 +64,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         new Locale("de", "AT"),
         new Locale("de", "CH")};
 
+    private CheckBoxTableNoteModel<CustomerFlag> customerFlagsModel = new CheckBoxTableNoteModel(new ArrayList<>(EnumSet.allOf(CustomerFlag.class)), "Kundeneigenschaften");
+
     private OldCustomer customer;
 
     private OldCustomer original;
@@ -73,7 +78,7 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
     /** Creates new form EditCustomer
      * <p>
      */
-    public CustomerUpdateViewCask() {
+    public CustomerEditView() {
         initComponents();
 
         shippingTerms = lookup(MandatorSupporter.class).loadShippingTerms();
@@ -91,18 +96,31 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         paymentMethodBox.setRenderer(new NamedEnumCellRenderer());
         payCountryBox.setRenderer(new LocaleComboBoxRendere());
         shipCountryBox.setRenderer(new LocaleComboBoxRendere());
+        sourceComboBox.setRenderer(new NamedEnumCellRenderer());
+        keyAccounterComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                label.setText("Nichts Ausgewählt");
+                if ( value != null ) label.setText(value.toString());
+                return label;
+            }
+        });
 
         reteilerChannelAllowedCheck.setActionCommand(SalesChannel.RETAILER.toString());
         endUserChannelAllowedCheck.setActionCommand(SalesChannel.CUSTOMER.toString());
-        customerConfimationCheckBox.setActionCommand(CustomerFlag.CONFIRMS_DOSSIER.toString());
         isSystemCustomerCheck.setActionCommand(CustomerFlag.SYSTEM_CUSTOMER.toString());
 
-        Guardian accessCos = lookup(Guardian.class);
+        customerFlagTable.setModel(customerFlagsModel);
+        customerFlagsModel.setTable(customerFlagTable);
+        customerFlagsModel.setFiltered(EnumSet.complementOf(EnumSet.of(CustomerFlag.SYSTEM_CUSTOMER))); // Systemcustomer is special.
 
-        accessCos.add(new JComponentEnabler(UPDATE_CUSTOMER_TO_SYSTEM_CUSTOMER, isSystemCustomerCheck));
-        accessCos.add(new JComponentEnabler(UPDATE_CUSTOMER_PAYMENT_METHOD, paymentMethodBox));
-        accessCos.add(new JComponentEnabler(UPDATE_CUSTOMER_PAYMENT_CONDITION, paymentConditionBox));
-        accessCos.add(new JComponentEnabler(UPDATE_CUSTOMER_SHIPPING_CONDITION, shippingConditionBox));
+        Guardian guardian = lookup(Guardian.class);
+
+        guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_TO_SYSTEM_CUSTOMER, isSystemCustomerCheck));
+        guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_PAYMENT_METHOD, paymentMethodBox));
+        guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_PAYMENT_CONDITION, paymentConditionBox));
+        guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_SHIPPING_CONDITION, shippingConditionBox));
     }
 
     public OldCustomer getCustomer() {
@@ -116,14 +134,13 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         firePropertyChange("customer", oldCustomer, customer);
         reteilerChannelAllowedCheck.setSelected(customer.getAllowedSalesChannels().contains(SalesChannel.RETAILER));
         endUserChannelAllowedCheck.setSelected(customer.getAllowedSalesChannels().contains(SalesChannel.CUSTOMER));
-        cashOnDeliveryCheckBox.setSelected(customer.getFlags().contains(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY));
         isSystemCustomerCheck.setSelected(customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER));
-        customerConfimationCheckBox.setSelected(customer.getFlags().contains(CustomerFlag.CONFIRMS_DOSSIER));
         titleBox.setSelectedItem(customer.getTitel() != null ? customer.getTitel() : null);
         payCountryBox.setSelectedItem(customer.getPayCountry());
         shipCountryBox.setSelectedItem(customer.getPayCountry());
         ledgerField.setText(Integer.toString(customer.getLedger()));
         taxIdField.setText(customer.getTaxId());
+        customerFlagsModel.setMarked(customer.getFlags());
     }
 
     /**
@@ -153,6 +170,18 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         return Arrays.asList(ShippingCondition.values());
     }
 
+    public List<Source> getSources() {
+        List<Source> asList = new ArrayList<>(Arrays.asList(Source.values()));
+        asList.add(null);
+        return asList;
+    }
+
+    public List<String> getAllUsernames() {
+        List<String> allUsers = new ArrayList<>(lookup(Guardian.class).getAllUsernames());
+        allUsers.add(null);
+        return allUsers;
+    }
+
     @Override
     public boolean pre(CloseType type) {
         if ( type == CloseType.CANCEL ) {
@@ -164,6 +193,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         }
         if ( !ValidationUtil.isValidOrShow(SwingUtilities.getWindowAncestor(this), customer) ) return false;
         customer.setTitel(titleBox.getSelectedItem().toString());
+        customer.setFlags(customerFlagsModel.getMarked());
+
         if ( (PaymentCondition)paymentConditionBox.getSelectedItem() != PaymentCondition.CUSTOMER ) customer.setHaendler(true);
         // TODO: A Nullpointer here may be possible as I moved the Formater to the OldCustomer itself. If true add null check before.
         if ( !original.toInvoiceAddress().equals(customer.toInvoiceAddress()) ) {
@@ -222,13 +253,11 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         jLabel7 = new javax.swing.JLabel();
         paymentMethodBox = new javax.swing.JComboBox();
         isSystemCustomerCheck = new javax.swing.JCheckBox();
-        endUserChannelAllowedCheck = new javax.swing.JCheckBox();
-        reteilerChannelAllowedCheck = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
         shippingConditionBox = new javax.swing.JComboBox();
         jLabel9 = new javax.swing.JLabel();
         paymentConditionBox = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        commentAreaScrollPane = new javax.swing.JScrollPane();
         commentArea = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
         shippingPanel = new javax.swing.JPanel();
@@ -238,12 +267,20 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         shipCountryBox = new javax.swing.JComboBox();
-        cashOnDeliveryCheckBox = new javax.swing.JCheckBox();
-        customerConfimationCheckBox = new javax.swing.JCheckBox();
         jLabel20 = new javax.swing.JLabel();
         ledgerField = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         taxIdField = new javax.swing.JTextField();
+        customerFlagTableScrollPane = new javax.swing.JScrollPane();
+        customerFlagTable = new javax.swing.JTable();
+        salesChannelPanel = new javax.swing.JPanel();
+        reteilerChannelAllowedCheck = new javax.swing.JCheckBox();
+        endUserChannelAllowedCheck = new javax.swing.JCheckBox();
+        addAdditionalCustomerIds = new javax.swing.JButton();
+        sourceLabel = new javax.swing.JLabel();
+        keyAccounterLabel = new javax.swing.JLabel();
+        sourceComboBox = new javax.swing.JComboBox<>();
+        keyAccounterComboBox = new javax.swing.JComboBox<>();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -421,6 +458,7 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         gridBagConstraints.gridheight = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 3.0;
         add(invoicePanel, gridBagConstraints);
 
         jLabel13.setText("Telefon");
@@ -434,15 +472,15 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 14;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(phoneNumberField, gridBagConstraints);
 
         jLabel14.setText("Mobil");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 15;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         add(jLabel14, gridBagConstraints);
 
@@ -467,19 +505,20 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 17;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 16;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.5;
         add(emailField, gridBagConstraints);
 
         jLabel7.setText("Zahlungsmodalität");
+        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jLabel7, gridBagConstraints);
 
@@ -492,11 +531,11 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 2.0;
         add(paymentMethodBox, gridBagConstraints);
 
         isSystemCustomerCheck.setText("GG-Net Systemkunde");
@@ -507,42 +546,17 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
         add(isSystemCustomerCheck, gridBagConstraints);
 
-        endUserChannelAllowedCheck.setText("Endkundenkanal");
-        endUserChannelAllowedCheck.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                saleChannelAllowedActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(endUserChannelAllowedCheck, gridBagConstraints);
-
-        reteilerChannelAllowedCheck.setText("Händlerkanal");
-        reteilerChannelAllowedCheck.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                saleChannelAllowedActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(reteilerChannelAllowedCheck, gridBagConstraints);
-
         jLabel8.setText("Zahlungskondition");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jLabel8, gridBagConstraints);
 
@@ -555,9 +569,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(shippingConditionBox, gridBagConstraints);
@@ -565,8 +578,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         jLabel9.setText("Lieferkondition");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jLabel9, gridBagConstraints);
 
@@ -578,9 +591,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(paymentConditionBox, gridBagConstraints);
@@ -591,23 +603,23 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.anmerkung}"), commentArea, org.jdesktop.beansbinding.BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"), "bindComments");
         bindingGroup.addBinding(binding);
 
-        jScrollPane1.setViewportView(commentArea);
+        commentAreaScrollPane.setViewportView(commentArea);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 15;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 19;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.gridheight = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 0.2;
         gridBagConstraints.weighty = 0.1;
-        add(jScrollPane1, gridBagConstraints);
+        add(commentAreaScrollPane, gridBagConstraints);
 
         jLabel10.setText("Anmerkungen");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 18;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         add(jLabel10, gridBagConstraints);
 
@@ -690,35 +702,11 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         add(shippingPanel, gridBagConstraints);
 
-        cashOnDeliveryCheckBox.setText("Nachnahme bestätigt");
-        cashOnDeliveryCheckBox.setToolTipText("Der Kunde hat den Versand per Nachnahme bestätigt.");
-        cashOnDeliveryCheckBox.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(cashOnDeliveryCheckBox, gridBagConstraints);
-
-        customerConfimationCheckBox.setText("Kunde bestätigt Auftrag");
-        customerConfimationCheckBox.setToolTipText("Der Kunde segnet von uns angelegte aufträge vor der Ausgabe ab.");
-        customerConfimationCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                customerFlagActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.FIRST_LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 0);
-        add(customerConfimationCheckBox, gridBagConstraints);
-
         jLabel20.setText("FiBu Konto");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jLabel20, gridBagConstraints);
 
@@ -726,8 +714,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -736,8 +724,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         jLabel21.setText("USt-Nr.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jLabel21, gridBagConstraints);
 
@@ -745,12 +733,108 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
         bindingGroup.addBinding(binding);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 13;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(taxIdField, gridBagConstraints);
+
+        customerFlagTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        customerFlagTableScrollPane.setViewportView(customerFlagTable);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(customerFlagTableScrollPane, gridBagConstraints);
+
+        salesChannelPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Verkaufskanäle"));
+        salesChannelPanel.setLayout(new java.awt.BorderLayout());
+
+        reteilerChannelAllowedCheck.setText("Händlerkanal");
+        reteilerChannelAllowedCheck.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                saleChannelAllowedActionPerformed(evt);
+            }
+        });
+        salesChannelPanel.add(reteilerChannelAllowedCheck, java.awt.BorderLayout.CENTER);
+
+        endUserChannelAllowedCheck.setText("Endkundenkanal");
+        endUserChannelAllowedCheck.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                saleChannelAllowedActionPerformed(evt);
+            }
+        });
+        salesChannelPanel.add(endUserChannelAllowedCheck, java.awt.BorderLayout.PAGE_START);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 14;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        add(salesChannelPanel, gridBagConstraints);
+
+        addAdditionalCustomerIds.setText("Kundennummern hinzufügen");
+        addAdditionalCustomerIds.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addAdditionalCustomerIdsActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        add(addAdditionalCustomerIds, gridBagConstraints);
+
+        sourceLabel.setText("DatenQuelle");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(sourceLabel, gridBagConstraints);
+
+        keyAccounterLabel.setText("Betreuer");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(keyAccounterLabel, gridBagConstraints);
+
+        eLProperty = org.jdesktop.beansbinding.ELProperty.create("${sources}");
+        jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, sourceComboBox);
+        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.source}"), sourceComboBox, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(sourceComboBox, gridBagConstraints);
+
+        eLProperty = org.jdesktop.beansbinding.ELProperty.create("${allUsernames}");
+        jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, eLProperty, keyAccounterComboBox);
+        bindingGroup.addBinding(jComboBoxBinding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${customer.keyAccounter}"), keyAccounterComboBox, org.jdesktop.beansbinding.BeanProperty.create("selectedItem"));
+        bindingGroup.addBinding(binding);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(keyAccounterComboBox, gridBagConstraints);
 
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
@@ -763,16 +847,28 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
 
     private void customerFlagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerFlagActionPerformed
         if ( ((JCheckBox)evt.getSource()).isSelected() )
-            customer.getFlags().add(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
+        customer.getFlags().add(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
         else customer.getFlags().remove(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
     }//GEN-LAST:event_customerFlagActionPerformed
 
+    private void addAdditionalCustomerIdsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdditionalCustomerIdsActionPerformed
+        Ui.exec(() -> {
+            Ui.dialog().parent(this).eval(() -> customer.getAdditionalCustomerIds(), () -> new AdditionalCustomerIdsView())
+                    .ifPresent(out -> {
+                    customer.getAdditionalCustomerIds().clear();
+                    customer.getAdditionalCustomerIds().putAll(out);
+                    });
+        });
+    }//GEN-LAST:event_addAdditionalCustomerIdsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField InvoiceCityField;
-    private javax.swing.JCheckBox cashOnDeliveryCheckBox;
+    private javax.swing.JButton addAdditionalCustomerIds;
     private javax.swing.JTextArea commentArea;
+    private javax.swing.JScrollPane commentAreaScrollPane;
     private javax.swing.JTextField companyField;
-    private javax.swing.JCheckBox customerConfimationCheckBox;
+    private javax.swing.JTable customerFlagTable;
+    private javax.swing.JScrollPane customerFlagTableScrollPane;
     private javax.swing.JLabel customerIdLabel;
     private javax.swing.JTextField emailField;
     private javax.swing.JCheckBox endUserChannelAllowedCheck;
@@ -799,7 +895,8 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JComboBox<String> keyAccounterComboBox;
+    private javax.swing.JLabel keyAccounterLabel;
     private javax.swing.JTextField lastNameField;
     private javax.swing.JTextField ledgerField;
     private javax.swing.JTextField mobileNumberField;
@@ -808,12 +905,15 @@ public class CustomerUpdateViewCask extends javax.swing.JPanel implements IPreCl
     private javax.swing.JComboBox paymentMethodBox;
     private javax.swing.JTextField phoneNumberField;
     private javax.swing.JCheckBox reteilerChannelAllowedCheck;
+    private javax.swing.JPanel salesChannelPanel;
     private javax.swing.JComboBox shipCountryBox;
     private javax.swing.JTextField shippingCityField;
     private javax.swing.JComboBox shippingConditionBox;
     private javax.swing.JPanel shippingPanel;
     private javax.swing.JTextField shippingStreetField;
     private javax.swing.JTextField shippingZipcodeField;
+    private javax.swing.JComboBox<String> sourceComboBox;
+    private javax.swing.JLabel sourceLabel;
     private javax.swing.JTextField taxIdField;
     private javax.swing.JComboBox titleBox;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;

@@ -1,8 +1,6 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.*;
 import java.util.*;
 import java.util.function.Predicate;
@@ -28,6 +26,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
+import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.FxController;
@@ -119,7 +118,7 @@ public class ProductListController implements Initializable, FxController, Close
      */
     private void openAssignment(ActionEvent event) {
         Ui.exec(() -> {
-            Ui.fxml().show(AssignmentController.class);
+            Ui.fxml().parent(tableView).show(AssignmentController.class);
         });
     }
 
@@ -184,8 +183,7 @@ public class ProductListController implements Initializable, FxController, Close
         productGtin.setCellValueFactory(new PropertyValueFactory<>("gtin"));
         productEol.setCellValueFactory(p -> {
             SimpleStringProperty property = new SimpleStringProperty();
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            property.setValue(dateFormat.format(p.getValue().getEol()));
+            if ( p.getValue().getEol() != null ) property.setValue(DateFormats.ISO.format(p.getValue().getEol()));
             return property;
         });
 

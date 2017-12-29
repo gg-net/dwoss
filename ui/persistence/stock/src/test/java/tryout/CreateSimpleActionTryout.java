@@ -16,10 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.api.auth.Accessable;
-import eu.ggnet.saft.api.auth.Authorisation;
-
 import java.awt.Dimension;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -35,11 +31,12 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.api.*;
 import eu.ggnet.saft.Client;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.auth.UserChangeListener;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -198,77 +195,9 @@ public class CreateSimpleActionTryout {
             // </editor-fold>
 
         });
-
-        Client.addSampleStub(Guardian.class, new Guardian() {
-
-            @Override
-            public String getUsername() {
-                return "Testuser";
-            }
-
-            // <editor-fold defaultstate="collapsed" desc="Unused Methodes">
-            @Override
-            public void logout() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Set<String> getOnceLoggedInUsernames() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void login(String user, char[] pass) throws AuthenticationException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Set<Authorisation> getRights() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public boolean quickAuthenticate(int userId) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void remove(Object instance) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void addUserChangeListener(UserChangeListener listener) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void removeUserChangeListener(UserChangeListener listener) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void add(Accessable accessable) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void add(Object enableAble, Authorisation authorisation) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void remove(Accessable accessable) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public boolean hasRight(Authorisation authorisation) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-            // </editor-fold>
-
-        });
+        Guardian guardianMock = mock(Guardian.class);
+        given(guardianMock.getUsername()).willAnswer(i -> "Testuser");
+        Client.addSampleStub(Guardian.class, guardianMock);
 
         UiCore.startSwing(() -> p);
         l.await();

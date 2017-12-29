@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer;
+package eu.ggnet.dwoss.customer.ui.old;
 
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
@@ -44,12 +44,12 @@ public class OldCustomerCos implements CustomerCos {
 
     @Override
     public long createCustomer() {
-        CustomerCreateView view = new CustomerCreateView();
-        CustomerCreateController controller = new CustomerCreateController();
+        CustomerCreateWithSearchView view = new CustomerCreateWithSearchView();
+        CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
         view.setController(controller);
         controller.setView(view);
         // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerCreateView> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
+        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
         dialog.setVisible(true);
         if ( dialog.isOk() ) {
             return lookup(OldCustomerAgent.class).store(view.getCustomer()).getId();
@@ -60,10 +60,10 @@ public class OldCustomerCos implements CustomerCos {
     @Override
     public boolean updateCustomer(long customerId) {
         OldCustomer customer = lookup(OldCustomerAgent.class).findById(customerId);
-        CustomerUpdateViewCask ec = new CustomerUpdateViewCask();
+        CustomerEditView ec = new CustomerEditView();
         ec.setCustomer(customer);
         // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerUpdateViewCask> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
+        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
         dialog.setVisible(true);
 
         boolean changed = false;
