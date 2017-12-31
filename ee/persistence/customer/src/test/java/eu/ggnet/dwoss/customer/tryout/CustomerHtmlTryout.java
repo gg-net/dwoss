@@ -16,65 +16,54 @@
  */
 package eu.ggnet.dwoss.customer.tryout;
 
-import java.awt.EventQueue;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.concurrent.CountDownLatch;
+import java.lang.reflect.InvocationTargetException;
+import java.util.EnumSet;
 
-import javax.swing.JFrame;
-
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
-
-import org.junit.Test;
+import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.customer.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.priv.ConverterUtil;
+import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.*;
 
 /**
  *
  * @author oliver.guenther
  */
-public class CustomerHtmlTryout {
+public class CustomerHtmlTryout extends Application {
 
-    @Test
-    public void tryoutCustomer() throws Exception {
+    public static void main(String[] args) throws InterruptedException, InvocationTargetException {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
         CustomerGenerator gen = new CustomerGenerator();
         Customer c1 = gen.makeOldCustomer();
 
         Customer c2 = gen.makeCustomer();
 
-        CountDownLatch latch = new CountDownLatch(1);
+        DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
+                .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
+                .paymentCondition(PaymentCondition.CUSTOMER)
+                .shippingCondition(ShippingCondition.DEALER_ONE)
+                .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
 
-        EventQueue.invokeAndWait(() -> {
-            final JFXPanel jfxPanel = new JFXPanel();
-            Platform.runLater(() -> {
-                WebView view = new WebView();
-                view.getEngine().loadContent(Css.toHtml5WithStyle(c1.toHtml() + "<hr />" + c2.toHtml()));
-                BorderPane p = new BorderPane(view);
-                Scene sc = new Scene(p);
-                jfxPanel.setScene(sc);
-            });
-            JFrame f = new JFrame("Tryout");
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.getContentPane().add(jfxPanel);
-            f.setSize(500, 900);
-            f.setLocation(100, 100);
-            f.setVisible(true);
-            f.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    latch.countDown();
-                }
+        String MATCHCODE = c1.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
 
-            });
+        OldCustomer c0 = ConverterUtil.convert(c1, MATCHCODE, defaults);
 
-        });
-
-        latch.await();
+        WebView view = new WebView();
+        view.getEngine().loadContent(Css.toHtml5WithStyle(c0.toHtmlHighDetailed() + "<hr />" + c1.toHtml(MATCHCODE, defaults) + "<hr />" + c2.toHtml()));
+        primaryStage.setScene(new Scene(new BorderPane(view)));
+        primaryStage.sizeToScene();
+        primaryStage.show();
     }
 }

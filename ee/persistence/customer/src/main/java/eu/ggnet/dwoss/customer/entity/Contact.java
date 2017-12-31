@@ -49,14 +49,13 @@ import static javax.persistence.CascadeType.ALL;
 @Indexed
 public class Contact implements Serializable {
 
-    public static final String EMAIL_PATTERN = "^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
-
-    public static final String PHONE_PATTERN = "^[_0-9\\\\+]+(\\s?[0-9]+)";
-
     @RequiredArgsConstructor
     public enum Sex {
 
-        MALE, FEMALE;
+        MALE("m"), FEMALE("w");
+
+        @Getter
+        private final String sign;
     }
 
     @Id
@@ -193,9 +192,8 @@ public class Contact implements Serializable {
 
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
-        sb.append(prefered ? "<b>" : "");
         sb.append(title == null ? "" : title + "&nbsp;").append(firstName == null ? "" : firstName + "&nbsp;").append(lastName == null ? "" : lastName)
-                .append(sex == null ? "&nbsp;(?)" : "(" + sex + ")").append(prefered ? "&nbsp;(Bevorzugt)" : "").append("<br />");
+                .append(sex == null ? "" : "&nbsp;(" + sex.getSign() + ")").append(prefered ? "&nbsp;<b>&oplus;</b>" : "").append("<br />");
         if ( !addresses.isEmpty() ) {
             sb.append("Adresse(n):<ul>");
             for (Address address : addresses) {
@@ -204,13 +202,12 @@ public class Contact implements Serializable {
             sb.append("</ul>");
         }
         if ( !communications.isEmpty() ) {
-            sb.append("Com:<ul>");
+            sb.append("Kommunikationsinformationen:<ul>");
             for (Communication communication : communications) {
                 sb.append("<li>").append(communication.toHtml()).append("</li>");
             }
             sb.append("</ul>");
         }
-        sb.append(prefered ? "</b>" : "");
         return sb.toString();
     }
 

@@ -186,9 +186,13 @@ public class Company implements Serializable {
      */
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
-        sb.append(prefered ? "<b>" : "");
-        sb.append(name).append("&nbsp;(").append(prefered ? "Bevorzugt," : "").append("FiBu-Konto:").append(ledger).append(")<br />");
-        sb.append(taxId == null ? "" : "TaxId:" + taxId + "<br />");
+        sb.append(name);
+        if ( prefered ) sb.append("&nbsp;<b>&oplus;</b>");
+        if ( taxId != null || ledger > 0 ) sb.append("<br />");
+        if ( taxId != null ) sb.append("TaxId: " + taxId);
+        if ( taxId != null && ledger > 0 ) sb.append(", ");
+        if ( ledger > 0 ) sb.append("FiBu-Konto: ").append(ledger);
+        if ( taxId != null || ledger > 0 ) sb.append("<br />");
         if ( !contacts.isEmpty() ) {
             sb.append("Kontakt(e):<ul>");
             for (Contact contact : contacts) {
@@ -204,7 +208,7 @@ public class Company implements Serializable {
             sb.append("</ul>");
         }
         if ( !communications.isEmpty() ) {
-            sb.append("Com:<ul>");
+            sb.append("Kommunikationsinformationen:<ul>");
             for (Communication communication : communications) {
                 sb.append("<li>").append(communication.toHtml()).append("</li>");
             }

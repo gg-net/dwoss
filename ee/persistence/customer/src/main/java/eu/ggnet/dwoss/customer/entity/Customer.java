@@ -17,18 +17,23 @@
 package eu.ggnet.dwoss.customer.entity;
 
 import java.io.Serializable;
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static javax.persistence.CascadeType.ALL;
 
 /**
@@ -199,6 +204,49 @@ public class Customer implements Serializable {
     }
 
     /**
+     * Returns an addresslabel with prefered elements for invoice never null.
+     * This method returns never null, but all elements may be null.
+     * The following rules are applied;
+     * <ul>
+     * <li>Company: prefered</li>
+     * <li>Contact: prefered</li>
+     * <li>Adreess: preferedInvoice</li>
+     * </ul>
+     * TODO: The following scenarios are not considered for now, Contacts and Addresses assosiated with the company only. Multiple prefereds. e.t.c.
+     *
+     * @return an addresslabel with prefered elements for invoice.
+     */
+    public AddressLabel toPreferedInvoiceAddress() {
+        return new AddressLabel(
+                companies.stream().filter(Company::isPrefered).findFirst(),
+                contacts.stream().filter(Contact::isPrefered).findFirst(),
+                INVOICE);
+    }
+
+    /**
+     * Returns an addresslabel with prefered elements for shipping never null.
+     * If there is no sippingAddress explicitly set, the invoicelabel is returned.
+     * This method returns never null, but all elements may be null.
+     * The following rules are applied;
+     * <ul>
+     * <li>Company: prefered</li>
+     * <li>Contact: prefered</li>
+     * <li>Adreess: preferedShipping</li>
+     * </ul>
+     *
+     * @return an addresslabel with prefered elements for shipping.
+     */
+    public AddressLabel toPreferedShippingAddress() {
+        Optional<Contact> preferedContact = contacts.stream().filter(Contact::isPrefered).findFirst();
+        // Setting type to shipping if there exists a shipping address otherwise invoice.
+        AddressType type = preferedContact.map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
+        return new AddressLabel(
+                companies.stream().filter(Company::isPrefered).findFirst(),
+                preferedContact,
+                type);
+    }
+
+    /**
      * Generates a human readable representation of the customers name.
      * Works as follows:
      * If there is a company get the prefered otherwise the first.
@@ -256,47 +304,86 @@ public class Customer implements Serializable {
     }
 
     public String toHtml() {
-        StringBuilder sb = new StringBuilder("<p>Id:<b>" + id + "</b>&nbsp;<u>" + toName() + "</u></p>");
-        sb.append("KeyAccounterId:").append(keyAccounter).append("<br />");
-        sb.append("Quelle:").append(source).append("<br />");
-        if ( !flags.isEmpty() ) {
-            sb.append("Kundenparameter:<ul>");
-            for (CustomerFlag flag : flags) {
-                sb.append("<li>").append(flag.getName()).append("</li>");
-            }
-            sb.append("</ul>");
+        return toHtml(
+                mandatorMetadata.stream().map(m -> "<li>" + m.toHtml() + "</li>").reduce((u, t) -> u + t).map(s -> "<b>Mandantenspezifische Informationen</b>:<ul>" + s + "</ul>").orElse(""),
+                Optional.ofNullable(comment).map(c -> "<b>Kommentar</b>:<br />" + c).orElse("")
+        );
+    }
+
+    public String toHtml(String matchcode, DefaultCustomerSalesdata defaults) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<b>Verkaufsinformationen</b> <i>(mit Mandatenstandard)</i>:<ul>");
+
+        MandatorMetadata customerExtras = mandatorMetadata.stream().filter(m -> m.getMandatorMatchcode().equals(matchcode)).findFirst().orElse(new MandatorMetadata());
+
+        sb.append("<li>Versandkonditionen: ")
+                .append(customerExtras.getShippingCondition() == null ? defaults.getShippingCondition() + " <i>(Standard)</i>" : customerExtras.getShippingCondition())
+                .append("</li>");
+        sb.append("<li>Zahlungskonditionen: ")
+                .append(customerExtras.getPaymentCondition() == null ? defaults.getPaymentCondition().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentCondition().getNote())
+                .append("</li>");
+        sb.append("<li>Zahlungsmodalität: ")
+                .append(customerExtras.getPaymentMethod() == null ? defaults.getPaymentMethod().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentMethod().getNote())
+                .append("</li>");
+        sb.append("<li>Verkaufskanäle: ")
+                .append(customerExtras.getAllowedSalesChannels().isEmpty()
+                        ? defaults.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()) + " <i>(Standard)</i>"
+                        : customerExtras.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()))
+                .append("</li>");
+
+        sb.append("</ul>");
+
+        return toHtml(sb.toString(),
+                Optional.ofNullable(comment).map(c -> "<b>Kommentar</b>:<br />" + c).orElse("")
+        );
+    }
+
+    private String toHtml(String salesRow, String comment) {
+        final boolean misc = (!additionalCustomerIds.isEmpty() || source != null || keyAccounter != null);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("<table width=\"100%\"><tr>");
+        sb.append("<td colspan=2 ><b>Kid: ").append(id).append("&nbsp;-&nbsp;").append(toName()).append("</b></td>");
+        sb.append("</tr><tr>");
+
+        sb.append("<td valign=top>");
+        if ( toPreferedShippingAddress().getType() == INVOICE ) sb.append("<b>Bevorzugte Rechnungs- und Lieferadresse</b><br />");
+        else sb.append("<b>Bevorzugte Rechnungsadresse</b><br />");
+        sb.append(toPreferedInvoiceAddress().toHtml());
+        if ( toPreferedShippingAddress().getType() == SHIPPING ) {
+            sb.append("<br /><b>Bevorzugte Lieferadresse</b><br />");
+            sb.append(toPreferedShippingAddress().toHtml());
         }
-        if ( !additionalCustomerIds.isEmpty() ) {
-            sb.append("Extra Kundennummern:<ul>");
-            for (Entry<ExternalSystem, String> e : additionalCustomerIds.entrySet()) {
-                sb.append("<li>").append(e.getKey()).append(" - ").append(e.getValue()).append("</li>");
-            }
-            sb.append("</ul>");
-        }
-        if ( !companies.isEmpty() ) {
-            sb.append("Firmen(n):<ul>");
-            for (Company company : companies) {
-                sb.append("<li>").append(company.toHtml()).append("</li>");
-            }
-            sb.append("</ul>");
-        }
-        if ( !contacts.isEmpty() ) {
-            sb.append("Kontakt(e):<ul>");
-            for (Contact contact : contacts) {
-                sb.append("<li>").append(contact.toHtml()).append("</li>");
-            }
-            sb.append("</ul>");
-        }
-        if ( !mandatorMetadata.isEmpty() ) {
-            sb.append("Mandantenspezifische Informationen:<ul>");
-            for (MandatorMetadata mandatorMetadata : mandatorMetadata) {
-                sb.append("<li>").append(mandatorMetadata.toHtml()).append("</li>");
-            }
-            sb.append("</ul>");
-        }
-        if ( comment != null ) {
-            sb.append("<p>Kommentar: ").append(comment).append("</p>");
-        }
+        sb.append("</td>");
+
+        int rowSpan = 1;
+        if ( !flags.isEmpty() ) rowSpan++;
+        if ( misc ) rowSpan++;
+        if ( !StringUtils.isBlank(salesRow) ) rowSpan++;
+
+        sb.append("<td valign=top rowspan=").append(rowSpan).append(" >");
+        sb.append(companies.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Firmen(n)</b>:<ul>" + s + "</ul>").orElse(""));
+        sb.append(contacts.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Kontakt(e)</b>:<ul>" + s + "</ul>").orElse(""));
+        sb.append("</td>");
+        sb.append("</tr>");
+        sb.append(flags.stream().map(f -> "<li>" + f.getName() + "</li>").reduce((t, u) -> t + u)
+                .map(s -> "<tr><td valign=top><b>Kundeneigenschaften</b>:<ul>" + s + "</ul></td></tr>")
+                .orElse(""));
+        if ( misc ) sb.append("<tr><td valign=top><b>Sonstiges</b>:<br />");
+        if ( source != null ) sb.append("Datenquelle: ").append(source).append("<br />");
+        if ( keyAccounter != null ) sb.append("Betreuer: ").append(keyAccounter).append("<br />");
+        sb.append(additionalCustomerIds.entrySet().stream()
+                .map(e -> "<li>" + e.getKey() + ": " + e.getValue() + "</li>")
+                .reduce((t, u) -> t + u)
+                .map(s -> "Weitere Kundennummer(n):<ul>" + s + "</ul>")
+                .orElse(""));
+        if ( misc ) sb.append("</td></tr>");
+
+        if ( !StringUtils.isBlank(salesRow) ) sb.append("<tr><td valign=top>").append(salesRow).append("</tr></td>");
+        if ( !StringUtils.isAllBlank(comment) ) sb.append("<tr><td colspan=2>").append(comment).append("</tr></td>");
+        sb.append("</table>");
         return sb.toString();
     }
+
 }

@@ -257,6 +257,11 @@ public class CustomerGenerator {
 
         Customer c = new Customer();
         ConverterUtil.mergeFromOld(old, c, mandatorMatchCode, defaults);
+
+        MandatorMetadata makeMandatorMetadata = makeMandatorMetadata();
+        makeMandatorMetadata.setMandatorMatchcode(mandatorMatchCode);
+        c.add(makeMandatorMetadata);
+
         return c;
     }
 

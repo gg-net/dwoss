@@ -33,6 +33,7 @@ import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
 /**
@@ -55,7 +56,8 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public String asHtmlHighDetailed(long customerId) {
-        return convert(customerEao.findById(customerId)).toHtmlHighDetailed();
+        return Optional.ofNullable(customerEao.findById(customerId)).map(c -> Css.toHtml5WithStyle(c.toHtml(mandator.getMatchCode(), salesData))).orElse("Kein Kunde mit id " + customerId + " gefunden");
+//        return convert(customerEao.findById(customerId)).toHtmlHighDetailed();
     }
 
     @Override
@@ -141,6 +143,7 @@ public class CustomerServiceBean implements CustomerService {
         return customerEao.findAllSystemCustomerIds();
     }
 
+    @Deprecated // Useless merged it allready
     @Override
     public String asNewHtmlHighDetailed(long id) {
         return customerEao.findById(id).toHtml();

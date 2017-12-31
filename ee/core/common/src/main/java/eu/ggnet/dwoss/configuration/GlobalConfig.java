@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,5 +35,11 @@ public final class GlobalConfig {
      * Not really good here, but acceptable for now.
      */
     public static final double TAX = 0.19;
+
+    /**
+     * Default country, is used for printing information.
+     * Used in the Addresslabels, so if the country is equal to this one it is not printed.
+     */
+    public static final String LOCAL_ISO_COUNTRY = "DE";
 
 }

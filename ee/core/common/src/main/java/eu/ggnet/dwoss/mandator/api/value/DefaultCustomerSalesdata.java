@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,14 +18,15 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 
-import lombok.*;
-import lombok.experimental.Builder;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * Mandator Specific Metadata.
@@ -68,4 +69,15 @@ public class DefaultCustomerSalesdata implements Serializable {
 
     @NotNull
     private final NavigableSet<Long> viewOnlyCustomerIds;
+
+    public String toHtml() {
+        return "Mandantenstandard"
+                + "<ul>"
+                + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition + "</li>")
+                + (paymentCondition == null ? "" : "<li>Zahlungskonditionen:" + paymentCondition.getNote() + "</li>")
+                + (paymentMethod == null ? "" : "<li>Zahlungsmodalität:" + paymentMethod.getNote() + "</li>")
+                + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
+                + "</ul>";
+    }
+
 }

@@ -39,6 +39,10 @@ import lombok.*;
 @Indexed
 public class Communication implements Serializable {
 
+    public static final String EMAIL_PATTERN = "^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
+
+    public static final String PHONE_PATTERN = "^[_0-9\\\\+]+(\\s?[0-9]+)";
+
     /**
      * Represents some of the common ways to communicate nowadays.
      */

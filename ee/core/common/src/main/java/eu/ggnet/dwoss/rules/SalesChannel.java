@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,8 +28,8 @@ public enum SalesChannel {
 
     UNKNOWN("Unbekannt"),
     RETAILER("Händlerkanal"),
-    CUSTOMER( "Endkundenkanal");
-    
+    CUSTOMER("Endkundenkanal");
+
     private final String name;
 
 }

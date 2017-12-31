@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.entity;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -139,12 +140,12 @@ public class MandatorMetadata implements Serializable {
      */
     public String toHtml() {
         if ( !isSet() ) return "No Mandator Metadata";
-        return "ManadatorMatchCode:" + mandatorMatchcode
+        return "Mandant: " + mandatorMatchcode
                 + "<ul>"
                 + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition + "</li>")
                 + (paymentCondition == null ? "" : "<li>Zahlungskonditionen:" + paymentCondition.getNote() + "</li>")
                 + (paymentMethod == null ? "" : "<li>Zahlungsmodalität:" + paymentMethod.getNote() + "</li>")
-                + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels + "</li>")
+                + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
                 + "</ul>";
     }
 
