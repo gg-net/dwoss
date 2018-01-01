@@ -87,7 +87,7 @@ public abstract class UniqueUnitFormater {
                 histories.stream()
                         .filter(ph -> ph.getType() == type)
                         .sorted(Comparator.comparing(PriceHistory::getDate))
-                        .forEach(ph -> sb.append(DateFormats.ISO.format(ph.getDate())).append(" - ").append(CUR.format(ph.getPrice())).append(" - ").append(ph.getComment()));
+                        .forEach(ph -> sb.append("<li>").append(DateFormats.ISO.format(ph.getDate())).append(" - ").append(CUR.format(ph.getPrice())).append(" - ").append(ph.getComment()).append("</li>"));
                 sb.append("</ul></td>");
             }
         }
