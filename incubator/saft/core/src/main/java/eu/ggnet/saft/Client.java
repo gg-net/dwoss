@@ -48,6 +48,7 @@ Folgendes Gedankenexperiment. Wie würde die Leistung dieser Class mit CDI funkt
  */
 public class Client {
 
+    // Don't use info Logglevel here until the Progress is lookuped in a different way. e.g. keep the instance until the connection fails.
     private final static Logger L = LoggerFactory.getLogger(Client.class);
 
     private final static WorkspaceService WORKSPACE = new WorkspaceService();
@@ -88,7 +89,7 @@ public class Client {
      */
     public static <T> T lookup(Class<T> clazz) throws NullPointerException, IllegalArgumentException {
         Objects.requireNonNull(clazz, "clazz is null");
-        L.info("Looking Up {}", clazz.getName());
+        L.debug("Looking Up {}", clazz.getName());
         //HINT: The Workspace is a special case, we just handle it here. This could be optimized.
         if ( clazz.equals(Workspace.class) ) return (T)WORKSPACE;
         // Loading Cached Values
@@ -155,7 +156,7 @@ public class Client {
      */
     private static <T> T remoteLookupAndCache(Class<T> clazz) {
         if ( remoteLookup == null ) return null;
-        L.info("Trying RemoteLookup {}", remoteLookup);
+        L.debug("Trying RemoteLookup {}", remoteLookup);
         T result = remoteLookup.lookup(clazz);
         if ( CACHE.containsKey(clazz) ) CACHE.put(clazz, CachedProxy.create(clazz, result));
         return result;

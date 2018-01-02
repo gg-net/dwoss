@@ -103,8 +103,8 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -155,6 +155,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-persistence-uniqueunit</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.huxhorn.lilith</groupId>
+            <artifactId>de.huxhorn.lilith.logback.encoder.classic</artifactId>
+            <version>8.1.1</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
 
