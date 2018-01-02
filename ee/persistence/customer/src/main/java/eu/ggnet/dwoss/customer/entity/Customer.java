@@ -101,6 +101,7 @@ public class Customer implements Serializable {
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
 
+    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<CustomerFlag> flags = new HashSet<>();
@@ -137,10 +138,6 @@ public class Customer implements Serializable {
 
     public List<MandatorMetadata> getMandatorMetadata() {
         return new ArrayList<>(mandatorMetadata);
-    }
-
-    public Set<CustomerFlag> getFlags() {
-        return new HashSet<>(flags);
     }
 
     /**

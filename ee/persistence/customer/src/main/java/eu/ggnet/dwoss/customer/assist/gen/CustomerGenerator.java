@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.assist.gen;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -230,9 +231,9 @@ public class CustomerGenerator {
         GeneratedAddress address = GEN.makeAddress();
         OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
         if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
-        if ( R.nextInt(10) < 3 ) old.setSource(Source.values()[R.nextInt(Source.values().length - 1)]);
+        if ( R.nextInt(10) < 3 ) old.setSource(Source.values()[R.nextInt(Source.values().length)]);
         if ( R.nextInt(10) < 3 ) {
-            old.getAdditionalCustomerIds().put(ExternalSystem.values()[R.nextInt(ExternalSystem.values().length - 1)], RandomStringUtils.randomAlphabetic(5, 10));
+            old.getAdditionalCustomerIds().put(ExternalSystem.values()[R.nextInt(ExternalSystem.values().length)], RandomStringUtils.randomNumeric(5, 10));
         }
         for (CustomerFlag f : ALLOWED_FLAG) {
             if ( R.nextInt(10) < 3 ) old.addFlag(f);
@@ -261,6 +262,12 @@ public class CustomerGenerator {
         MandatorMetadata makeMandatorMetadata = makeMandatorMetadata();
         makeMandatorMetadata.setMandatorMatchcode(mandatorMatchCode);
         c.add(makeMandatorMetadata);
+
+        if ( R.nextInt(10) < 3 ) {
+            IntStream.range(0, R.nextInt(CustomerFlag.values().length)).forEach(i -> {
+                c.getFlags().add(CustomerFlag.values()[R.nextInt(CustomerFlag.values().length)]);
+            });
+        }
 
         return c;
     }

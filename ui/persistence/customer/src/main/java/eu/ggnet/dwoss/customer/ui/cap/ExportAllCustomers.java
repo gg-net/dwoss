@@ -16,30 +16,27 @@
  */
 package eu.ggnet.dwoss.customer.ui.cap;
 
-import java.util.Arrays;
-import java.util.List;
+import java.awt.event.ActionEvent;
 
-import org.openide.util.lookup.ServiceProvider;
+import eu.ggnet.dwoss.customer.ee.CustomerExporter;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
-import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_ALL_CUSTOMERS;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
- * <p>
- * @author oliver.guenther
+ * @author pascal.perau
  */
-@ServiceProvider(service = ActionFactory.class)
-public class CustomerActionFactory implements ActionFactory {
+public class ExportAllCustomers extends AccessableAction {
 
-    private static final String MENU_NAME = "System";
-
-    @Override
-    public List<MetaAction> createMetaActions() {
-        return Arrays.asList(
-                new MetaAction(MENU_NAME, "Datenbank", new RecreateSearchIndex()),
-                new MetaAction("Geschäftsführung", new ExportAllCustomers())
-        );
+    public ExportAllCustomers() {
+        super(EXPORT_ALL_CUSTOMERS);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        Ui.exec(Ui.progress().wrap(() -> Ui.osOpen(lookup(CustomerExporter.class).allToXls().toTemporaryFile())));
+    }
 }

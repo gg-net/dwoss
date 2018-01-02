@@ -100,8 +100,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Unused, can be reassigned.
      */
-    @Deprecated
-    UNUSED_3("Unused 3, kann neu verwendet werden"),
+    EXPORT_ALL_CUSTOMERS("Alle Kundendaten exportieren"),
     /**
      * Allows to prepare a Transfer for a single Unit.
      */
@@ -251,7 +250,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Allows to view cost an reference prices.
      */
-    VIEW_COST_AND_REFERENCE_PRICES("Darf Cost und Referencpreise sehen");
+    VIEW_COST_AND_REFERENCE_PRICES("Darf Cost und Referenzpreise sehen");
 
     private final String name;
 
