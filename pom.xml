@@ -72,7 +72,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <app.version>0.12</app.version>
         <slf4j.version>1.7.25</slf4j.version>
         <netbeans.version>RELEASE82</netbeans.version>
         <javaee.groupId>javax</javaee.groupId>
