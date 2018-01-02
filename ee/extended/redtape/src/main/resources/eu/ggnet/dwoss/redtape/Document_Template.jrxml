@@ -68,9 +68,6 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="afterTaxPrice" class="java.lang.Double">
-		<fieldDescription><![CDATA[afterTaxPrice]]></fieldDescription>
-	</field>
 	<field name="amount" class="java.lang.Double">
 		<fieldDescription><![CDATA[amount]]></fieldDescription>
 	</field>

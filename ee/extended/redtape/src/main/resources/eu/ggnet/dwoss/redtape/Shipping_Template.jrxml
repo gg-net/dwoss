@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Document" language="groovy" pageWidth="595" pageHeight="842" columnWidth="527" leftMargin="40" rightMargin="28" topMargin="40" bottomMargin="30" uuid="bd31a193-c9b0-4028-acf3-be07d14d37f5">
 	<property name="ireport.zoom" value="1.77156100000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="314"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RedTape.xml"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -66,9 +68,6 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="afterTaxPrice" class="java.lang.Double">
-		<fieldDescription><![CDATA[afterTaxPrice]]></fieldDescription>
-	</field>
 	<field name="amount" class="java.lang.Double">
 		<fieldDescription><![CDATA[amount]]></fieldDescription>
 	</field>

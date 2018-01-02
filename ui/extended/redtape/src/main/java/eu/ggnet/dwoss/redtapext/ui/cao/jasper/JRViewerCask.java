@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtape.DocumentSupporter;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.api.ui.*;
 
 import static eu.ggnet.saft.Client.lookup;
 
@@ -44,6 +44,8 @@ import static eu.ggnet.saft.Client.lookup;
  */
 // TODO: JRViewer is deprecated, but the new version makes our print button handling more complicated. So if we every what to change something, move to our own
 // javafx implementation. (Or if someone else did this)
+@Title("Dokumentenansicht")
+@StoreLocation
 public class JRViewerCask extends JRViewer implements ResultProducer<JRViewerCask> {
 
     private boolean correctlyBriefed = false;

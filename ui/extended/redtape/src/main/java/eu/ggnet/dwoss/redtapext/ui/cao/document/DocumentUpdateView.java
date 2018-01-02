@@ -48,12 +48,10 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import lombok.Getter;
 
@@ -613,37 +611,36 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                 Ui.handle(ex);
             }
         }
-        Platform.runLater(new Runnable() {
-
-            @Override
-            public void run() {
-                positions.clear();
-                positions.addAll(document.getPositions().values());
-            }
+        Platform.runLater(() -> {
+            positions.clear();
+            positions.addAll(document.getPositions().values());
         });
         unitInputField.setText("");
     }//GEN-LAST:event_addUnitAction
 
     private void addNonUnitPosition(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNonUnitPosition
-        PositionType type;
-        if ( ((JButton)evt.getSource()) == addProductBatchButton ) {
-            type = PositionType.PRODUCT_BATCH;
-        } else if ( ((JButton)evt.getSource()) == addServiceButton ) {
-            type = PositionType.SERVICE;
-        } else if ( ((JButton)evt.getSource()) == addCommentButton ) {
-            type = PositionType.COMMENT;
-        } else {
-            type = PositionType.SHIPPING_COST;
-        }
-        try {
-            controller.addPosition(document.getDossier().getId(), type, null, false);
-            Platform.runLater(() -> {
-                positions.clear();
-                positions.addAll(document.getPositions().values());
-            });
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
+        Ui.exec(() -> {
+            PositionType type;
+            if ( ((JButton)evt.getSource()) == addProductBatchButton ) {
+                type = PositionType.PRODUCT_BATCH;
+            } else if ( ((JButton)evt.getSource()) == addServiceButton ) {
+                type = PositionType.SERVICE;
+            } else if ( ((JButton)evt.getSource()) == addCommentButton ) {
+                type = PositionType.COMMENT;
+            } else {
+                type = PositionType.SHIPPING_COST;
+            }
+            try {
+                controller.addPosition(document.getDossier().getId(), type, null, false);
+                Platform.runLater(() -> {
+                    positions.clear();
+                    positions.addAll(document.getPositions().values());
+                });
+            } catch (UserInfoException ex) {
+                Ui.handle(ex);
+            }
+        });
+
     }//GEN-LAST:event_addNonUnitPosition
 
     private void removePositionAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removePositionAction

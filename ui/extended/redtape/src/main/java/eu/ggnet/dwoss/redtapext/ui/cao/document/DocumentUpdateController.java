@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionUpdateCask;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.SalesProductChooserCask;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.position.CommentCreateCask;
-
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.List;
@@ -34,12 +28,14 @@ import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.swing.OkCancel;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
@@ -57,6 +53,8 @@ public class DocumentUpdateController {
     private final Window parent;
 
     private final Document document;
+
+    private Position resultHelperPosition = null; // FIXME: Another workarround. The hole handling of results is not really multithreading able.
 
     public DocumentUpdateController(DocumentUpdateView view, Document model) {
         this.view = view;
@@ -87,7 +85,7 @@ public class DocumentUpdateController {
 
                 break;
             case SERVICE:
-                document.append(createServicePosition());
+                createServicePosition();
                 break;
             case PRODUCT_BATCH:
                 SalesProduct pb = createProductBatchPosition(lookup(RedTapeAgent.class).findAll(SalesProduct.class));
@@ -134,12 +132,11 @@ public class DocumentUpdateController {
         return null;
     }
 
-    public Position createServicePosition() {
-        // Hint: Unusual usage, but works if we need a return type and use null for cancel.
-        return Ui.swing().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
+    public void createServicePosition() {
+        document.append(Ui.swing().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
                 .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask()))
                 .map(Reply::getPayload)
-                .orElse(null);
+                .orElse(null));
     }
 
     public SalesProduct createProductBatchPosition(List<SalesProduct> products) {
