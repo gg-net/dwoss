@@ -373,7 +373,7 @@ public class RightsManagmentController implements Initializable, FxController {
      */
     @FXML
     private void handleSaveButton() {
-        handleCancleButton();
+        Ui.closeWindowOf(userlist);
     }
 
     // mach wech.
@@ -382,8 +382,7 @@ public class RightsManagmentController implements Initializable, FxController {
      */
     @FXML
     private void handleCancleButton() {
-        Stage stage = (Stage)userlist.getScene().getWindow();
-        stage.close();
+        Ui.closeWindowOf(userlist);
     }
 
     public static URL loadFxml() {

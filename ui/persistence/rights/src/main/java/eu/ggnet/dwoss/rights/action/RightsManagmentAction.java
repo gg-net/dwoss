@@ -18,10 +18,9 @@ package eu.ggnet.dwoss.rights.action;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.dwoss.rights.RightsManagmentController;
-
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 
@@ -37,7 +36,9 @@ public class RightsManagmentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.fxml().show(RightsManagmentController.class);
+        Ui.exec(() -> {
+            Ui.fxml().show(RightsManagmentController.class);
+        });
     }
 
 }
