@@ -23,7 +23,6 @@ import javafx.beans.property.*;
 import javafx.collections.*;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceHistory;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
@@ -32,7 +31,7 @@ import lombok.ToString;
 
 /**
  * The Fx variant of a UnitCollection.
- * 
+ *
  * @author jens.papenhagen
  */
 @ToString
@@ -53,6 +52,9 @@ public class UnitCollectionFx {
     private ObservableList<PriceHistory> priceHistoriesProperty;
 
     private ObjectProperty<SalesChannel> salesChannelProperty;
+
+    public UnitCollectionFx() {
+    }
 
     public UnitCollectionFx(long id, String nameExtension, String descriptionExtension, String partNoExtension, List<PicoUnit> units, Map<PriceType, Double> prices, List<PriceHistory> priceHistories, SalesChannel salesChannel) {
         this.nameExtensionProperty = new SimpleStringProperty(nameExtension);
@@ -180,5 +182,14 @@ public class UnitCollectionFx {
     public SalesChannel getSalesChannel() {
         return salesChannelProperty.getValue();
     }
+
+    public final void setSalesChannel(SalesChannel value) {
+        salesChannelProperty.set(value);
+    }
+
+    public ObjectProperty<SalesChannel> salesChannelProperty() {
+        return salesChannelProperty;
+    }
+    
 
 }

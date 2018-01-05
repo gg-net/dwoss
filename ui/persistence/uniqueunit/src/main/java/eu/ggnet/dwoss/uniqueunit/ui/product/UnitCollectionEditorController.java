@@ -25,15 +25,11 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -124,26 +120,21 @@ public class UnitCollectionEditorController implements Initializable, FxControll
             return;
         }
 
-        unitCollectionDto.setNameExtension(unitCollectionFx.getNameExtensionProperty().get());
-        unitCollectionDto.setDescriptionExtension(unitCollectionFx.getDescriptionExtensionProperty().get());
-        unitCollectionDto.setPartNoExtension(unitCollectionFx.getPartNoExtensionProperty().get());
-        //product will not be alterable
-        unitCollectionDto.setUnits(new ArrayList<>(unitCollectionFx.getUnitsProperty()));
-        unitCollectionDto.setPrices(new HashMap<>(unitCollectionFx.getPricesProperty()));
-        unitCollectionDto.setPriceHistories(new ArrayList<>(unitCollectionFx.getPriceHistoriesProperty()));
-        unitCollectionDto.setSalesChannel(unitCollectionFx.getSalesChannelProperty().get());
+        unitCollectionDto = UnitCollectionFxMapper.INSTANCE.to(unitCollectionFx);
 
         Ui.closeWindowOf(name);
     }
 
     @FXML
     /**
-     * Add a price to the CategoryProduct based on the selected PriceType and
+     * Add a price to the UnitCollection based on the selected PriceType and
      * the value in priceInput. Both values must be set to be able to add a
      * price.
      */
-    private void addPrice(ActionEvent event) {
+     private void addPrice(ActionEvent event) {
+
         if ( priceType.getSelectionModel().getSelectedItem() != null && !priceInput.getText().isEmpty() ) {
+
             unitCollectionFx.getPricesProperty().put(priceType.getSelectionModel().getSelectedItem(), Double.parseDouble(priceInput.getText().replace(",", ".")));
             L.info("added Price {}={}", priceType.getSelectionModel().getSelectedItem(), Double.parseDouble(priceInput.getText().replace(",", ".")));
         }
@@ -151,7 +142,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
 
     @FXML
     /**
-     * Removes a Price from the CategoryProduct. A remove simply means setting
+     * Removes a Price from the UnitCollection. A remove simply means setting
      * the value to 0.
      */
     private void removePrice() {
