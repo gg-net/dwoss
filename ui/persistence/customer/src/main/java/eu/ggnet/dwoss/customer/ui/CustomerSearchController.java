@@ -39,6 +39,7 @@ import javafx.scene.layout.BorderPane;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.op.CustomerSearchProvider;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
@@ -67,13 +68,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     TextField searchField;
 
     @FXML
-    CheckBox kid;
+    RadioButton kid;
 
     @FXML
-    CheckBox lastname;
+    RadioButton lastname;
 
     @FXML
-    CheckBox firstname;
+    RadioButton firstname;
 
     @FXML
     ListView<ShortSearchResult> resultListView;
@@ -89,7 +90,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     private Service<List<ShortSearchResult>> searchService;
 
-    private Searcher searcher;
+    private CustomerSearchProvider searcher;
 
     /**
      * Initializes the controller class.
@@ -118,16 +119,20 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                     protected List<ShortSearchResult> call() throws Exception {
                         updateProgress(-1, -1);
                         if ( StringUtils.isEmpty(searchProperty.get()) ) return Collections.EMPTY_LIST; // Empty check.
-                        searcher.initSearch(new SearchRequest(searchProperty.get()));
+                        List<ShortSearchResult> searchlist = searcher.search(new SearchRequest(searchProperty.get()), 0, searcher.estimateMaxResults(new SearchRequest(searchProperty.get())) );
                         List<ShortSearchResult> last = Collections.EMPTY_LIST;
+                        
                         int done = 0;
-                        while (!isCancelled() && searcher.hasNext()) {
-                            last = searcher.next();
+                        int i = 0;
+                        
+                        while (!isCancelled() && i < searchlist.size() ) {
+                            last.add(searchlist.get(i));
                             done = done + last.size();
                             updateValue(last);
-                            int estimate = searcher.estimateMaxResults();
+                            int estimate = searcher.estimateMaxResults(new SearchRequest(searchProperty.get()));
                             updateMessage("Searchresult " + done + " of " + estimate);
                             updateProgress(done, estimate);
+                            i++;
                         }
                         updateProgress(100, 100);
 
