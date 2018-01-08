@@ -16,13 +16,17 @@ package eu.ggnet.dwoss.customer.ui;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.awt.Checkbox;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Predicate;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -34,6 +38,7 @@ import javafx.scene.layout.BorderPane;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
@@ -59,13 +64,13 @@ public class CustomerSearchController implements Initializable {
     TextField searchField;
 
     @FXML
-    Checkbox kid;
+    CheckBox kid;
 
     @FXML
-    Checkbox lastname;
+    CheckBox lastname;
 
     @FXML
-    Checkbox fristname;
+    CheckBox firstname;
 
     @FXML
     ListView<ShortSearchResult> resultListView;
@@ -75,7 +80,7 @@ public class CustomerSearchController implements Initializable {
 
     @FXML
     ProgressIndicator progressIndicator;
-    
+
     @FXML
     BorderPane bottom;
 
@@ -98,7 +103,7 @@ public class CustomerSearchController implements Initializable {
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
-        
+
         // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
         searchService = new Service<List<ShortSearchResult>>() {
 
@@ -122,19 +127,12 @@ public class CustomerSearchController implements Initializable {
                             updateProgress(done, estimate);
                         }
                         updateProgress(100, 100);
+
                         return last;
                     }
                 };
             }
         };
-
-        // Binding all Ui Properties
-        Ui.progress().observe(searchService);
-        searchProperty.bind(searchField.textProperty());
-        resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
-        progressBar.progressProperty().bind(searchService.progressProperty());
-        progressIndicator.progressProperty().bind(searchService.progressProperty());
-        bottom.visibleProperty().bind(searchService.runningProperty());
 
         // Adding Actions and Listeners
         searchService.valueProperty().addListener((ob, o, n) -> {
@@ -147,10 +145,60 @@ public class CustomerSearchController implements Initializable {
             if ( ke.getCode() == KeyCode.ENTER ) search();
         });
 
-    }
+        // Binding all Ui Properties
+        Ui.progress().observe(searchService);
+        searchProperty.bind(searchField.textProperty());
+        resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
+
+        progressBar.progressProperty().bind(searchService.progressProperty());
+        progressIndicator.progressProperty().bind(searchService.progressProperty());
+        bottom.visibleProperty().bind(searchService.runningProperty());
+
+        //convert listview to a filter list, for the checkbox
+        FilteredList resultListFiltered = new FilteredList<>(resultProperty);
+        SortedList resultListSorted = new SortedList<>(resultListFiltered);
+        resultListSorted.comparatorProperty().bind(resultListView.itemsProperty());
+        resultListView.setItems(resultListSorted);
+
+        kid.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                resultListFiltered.setPredicate( getPredicate() );
+            }
+        });
+        
+    }    
 
     private void search() {
         if ( searchService.getState() == READY ) searchService.start();
         else searchService.restart();
     }
+
+    /**
+     * Creates the predicate based on the selected filters.
+     *
+     * @return Predicate.
+     */
+    private Predicate<Customer> getPredicate() {
+        //problems with the predicate
+
+        Predicate<Customer> searchfilter = c -> !kid.isSelected() || !lastname.isSelected() || !firstname.isSelected();
+//            searchfilter = searchfilter.and(c -> kid.isSelected() && searchField.getText().equals(c.getId()));
+//            searchfilter = searchfilter.and(c -> lastname.isSelected() && searchField.getText()
+//                    .equals(c.getContacts().stream()
+//                            .filter((customerContact) -> (customerContact.isPrefered()))
+//                            .forEachOrdered((customerContact) -> {
+//                                customerContact.getLastName();
+//                            })));
+//    
+//            searchfilter = searchfilter.and(c -> firstname.isSelected() && searchField.getText().equals(c.getContacts().stream()
+//                    .filter((customerContact) -> (customerContact.isPrefered()))
+//                    .forEachOrdered((customerContact) -> {
+//                        customerContact.getFirstName();
+//                    })));
+
+        return searchfilter;
+    }
+
 }
+
