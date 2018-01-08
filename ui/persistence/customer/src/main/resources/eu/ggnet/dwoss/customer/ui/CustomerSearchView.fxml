@@ -16,21 +16,30 @@
    <top>
       <BorderPane id="mainPane">
          <left>
-            <Label text="Kunden Suche;" BorderPane.alignment="CENTER" />
+            <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Kunden Suche:">
+               <padding>
+                  <Insets right="5.0" />
+               </padding></Label>
          </left>
          <right>
-            <Button fx:id="searchButton" mnemonicParsing="false" text="Suche" BorderPane.alignment="CENTER" />
+            <Button fx:id="searchButton" mnemonicParsing="false" text="Suche">
+               <BorderPane.margin>
+                  <Insets left="5.0" />
+               </BorderPane.margin></Button>
          </right>
          <center>
             <VBox>
                <children>
                   <TextField fx:id="searchField" promptText="Suche" />
-                  <HBox>
+                  <HBox spacing="5.0">
                      <children>
                         <CheckBox fx:id="kid" mnemonicParsing="false" text="Kunden ID" />
                         <CheckBox fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname" />
                         <CheckBox fx:id="firstname" mnemonicParsing="false" text="Vorname" />
                      </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
                   </HBox>
                </children>
             </VBox>
@@ -41,6 +50,9 @@
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
+         <BorderPane.margin>
+            <Insets top="3.0" />
+         </BorderPane.margin>
       </BorderPane>
    </top>
    <bottom>

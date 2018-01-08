@@ -44,7 +44,8 @@ import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.dwoss.search.ui.SearchListCell;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
@@ -55,7 +56,9 @@ import static javafx.concurrent.Worker.State.READY;
  * @author jens.papenhagen
  */
 @Title("Kunden Suche")
-public class CustomerSearchController implements Initializable {
+public class CustomerSearchController implements Initializable, FxController, ClosedListener {
+
+    private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
     Button searchButton;
@@ -154,20 +157,17 @@ public class CustomerSearchController implements Initializable {
         progressIndicator.progressProperty().bind(searchService.progressProperty());
         bottom.visibleProperty().bind(searchService.runningProperty());
 
-        //convert listview to a filter list, for the checkbox
-        FilteredList resultListFiltered = new FilteredList<>(resultProperty);
-        SortedList resultListSorted = new SortedList<>(resultListFiltered);
-        resultListSorted.comparatorProperty().bind(resultListView.itemsProperty());
-        resultListView.setItems(resultListSorted);
+//        //convert listview to a filter list, for the checkbox
+//        FilteredList resultListFiltered = new FilteredList<>(resultProperty);
+//        SortedList resultListSorted = new SortedList<>(resultListFiltered);
+//        resultListSorted.comparatorProperty().bind(resultListView.itemsProperty());
+//        
+//        //clear than set new soreted list
+//        resultListFiltered.setPredicate(getPredicate());
+//        resultListView.getItems().clear();
+//        resultListView.setItems(resultListSorted);
 
-        kid.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                resultListFiltered.setPredicate( getPredicate() );
-            }
-        });
-        
-    }    
+    }
 
     private void search() {
         if ( searchService.getState() == READY ) searchService.start();
@@ -200,5 +200,12 @@ public class CustomerSearchController implements Initializable {
         return searchfilter;
     }
 
-}
+    @Override
+    public void closed() {
+        FxSaft.dispatch(() -> {
+            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
+            return null;
+        });
+    }
 
+}
