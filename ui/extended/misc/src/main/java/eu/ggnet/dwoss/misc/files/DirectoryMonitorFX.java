@@ -85,9 +85,13 @@ public class DirectoryMonitorFX implements Runnable {
         TreeItem<Object> tree = new TreeItem<>(path.substring(path.lastIndexOf(File.separator)));
         //build a list for folder and for files
         List<TreeItem<Object>> folders = new ArrayList<>();
-        List<TreeItem<Object>> files = new ArrayList<>();
+        List<TreeItem<Object>> itemfiles = new ArrayList<>();
 
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(path))) {
+            //create path if not exist
+            if( !Files.exists(Paths.get(path)) ){
+                Files.createDirectories(Paths.get(path));
+            }
             for (Path p : directoryStream) {
                 if ( Files.isDirectory(p) ) {
                     //getting only the Foldername
@@ -95,12 +99,12 @@ public class DirectoryMonitorFX implements Runnable {
                     getSubLeafs(p, subDirectory);
                     folders.add(subDirectory);
                 } else {
-                    files.add(getLeafs(p));
+                    itemfiles.add(getLeafs(p));
                 }
             }
 
             tree.getChildren().addAll(folders);
-            tree.getChildren().addAll(files);
+            tree.getChildren().addAll(itemfiles);
         } catch (IOException ex) {
             Ui.handle(ex);
         }
