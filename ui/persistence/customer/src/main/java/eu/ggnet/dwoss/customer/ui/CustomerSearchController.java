@@ -92,7 +92,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
         ObservableList<ShortSearchResult> resultProperty = FXCollections.observableArrayList();
@@ -114,13 +113,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                     protected List<ShortSearchResult> call() throws Exception {
                         updateProgress(-1, -1);
                         if ( StringUtils.isEmpty(searchProperty.get()) ) return Collections.EMPTY_LIST; // Empty check.
-                        List<ShortSearchResult> searchlist = searcher.search(new SearchRequest(searchProperty.get()), 0, searcher.estimateMaxResults(new SearchRequest(searchProperty.get())) );
+                        List<ShortSearchResult> searchlist = searcher.search(new SearchRequest(searchProperty.get()), 0, searcher.estimateMaxResults(new SearchRequest(searchProperty.get())));
                         List<ShortSearchResult> last = Collections.EMPTY_LIST;
-                        
+
                         int done = 0;
                         int i = 0;
-                        
-                        while (!isCancelled() && i < searchlist.size() ) {
+
+                        while (!isCancelled() && i < searchlist.size()) {
                             last.add(searchlist.get(i));
                             done = done + last.size();
                             updateValue(last);
@@ -157,7 +156,10 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressIndicator.progressProperty().bind(searchService.progressProperty());
 
         bottom.visibleProperty().bind(searchService.runningProperty());
-
+        
+        
+        Ui.progress().observe(LOADING_TASK);
+        Ui.exec(LOADING_TASK);
 
     }
 

@@ -19,7 +19,7 @@ package tryout;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerSearchController;
+import eu.ggnet.dwoss.customer.ui.CustomerAddressController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -28,16 +28,25 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CustomerSearchTryout {
+public class CustomerAddressTryout {
 
     public static void main(String[] args) {
-
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
-        UiCore.startSwing(() -> new JLabel("Kundensuche"));
+        JButton close = new JButton("Schliessen");
+        close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        Ui.fxml().show(CustomerSearchController.class);
+        JButton run = new JButton("OpenUi");
+        run.addActionListener(ev -> {
+            Ui.fxml().show(CustomerAddressController.class);
+
+        });
+
+        JPanel p = new JPanel();
+        p.add(run);
+        p.add(close);
+
+        UiCore.startSwing(() -> p);
     }
-
 }

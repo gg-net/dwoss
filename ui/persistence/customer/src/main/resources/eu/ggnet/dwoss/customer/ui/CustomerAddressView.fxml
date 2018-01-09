@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="217.0" prefWidth="229.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.CustomerAddressController">
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="5.0">
+         <children>
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#closed" text="Abrechen" />
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Speichern" />
+         </children>
+      </HBox>
+   </bottom>
+   <top>
+      <Label text="Kunde:">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+   </top>
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="3.0" />
+          <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
+          <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
+          <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="20.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Adressenart:" />
+            <ChoiceBox fx:id="preferedtxpbox" prefWidth="150.0" GridPane.columnIndex="2" />
+            <Label text="Strasse:" GridPane.rowIndex="1" />
+            <Label text="Postlietzahl:" GridPane.rowIndex="2" />
+            <Label text="Stadt/Ort:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Land" GridPane.rowIndex="4" />
+            <ChoiceBox fx:id="countrybox" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="zipcode" GridPane.rowIndex="3" />
+            <TextField fx:id="city" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <TextField fx:id="street" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>
