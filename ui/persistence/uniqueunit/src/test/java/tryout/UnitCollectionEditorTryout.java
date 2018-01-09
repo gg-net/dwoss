@@ -44,20 +44,20 @@ public class UnitCollectionEditorTryout {
 
         Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
 
-        JButton close = new JButton("Schliessen");
-        close.addActionListener(e -> Ui.closeWindowOf(close));
+//        JButton close = new JButton("Schliessen");
+//        close.addActionListener(e -> Ui.closeWindowOf(close));
+//
+//        JButton run = new JButton("Öffne UI");
+//        run.addActionListener(ev -> {
+//            Ui.fxml().show(UnitCollectionEditorController.class);
+//
+//        });
+//
+//        JPanel p = new JPanel();
+//        p.add(run);
+//        p.add(close);
 
-        JButton run = new JButton("Öffne UI");
-        run.addActionListener(ev -> {
-            Ui.fxml().show(UnitCollectionEditorController.class);
-
-        });
-
-        JPanel p = new JPanel();
-        p.add(run);
-        p.add(close);
-
-        UiCore.startSwing(() -> p);
+        Ui.fxml().show(UnitCollectionEditorController.class);
     }
 
 }

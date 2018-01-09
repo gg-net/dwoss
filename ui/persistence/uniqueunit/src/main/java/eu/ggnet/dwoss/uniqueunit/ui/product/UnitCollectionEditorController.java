@@ -25,6 +25,9 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.event.*;
 import javafx.fxml.FXML;
@@ -98,8 +101,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     private void cancel(ActionEvent event) {
         Ui.closeWindowOf(name);
     }
-    
-    
+
     public void closed() {
         FxSaft.dispatch(() -> {
             if ( productsTask.isRunning() ) productsTask.cancel();
@@ -131,7 +133,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      * the value in priceInput. Both values must be set to be able to add a
      * price.
      */
-     private void addPrice(ActionEvent event) {
+    private void addPrice(ActionEvent event) {
 
         if ( priceType.getSelectionModel().getSelectedItem() != null && !priceInput.getText().isEmpty() ) {
 
@@ -191,7 +193,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
 
         //Create a ContextMenu
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem delete = new MenuItem("Delete Preis");
+        MenuItem delete = new MenuItem("Lösche Preis");
         //actions for the context menu
         delete.setOnAction((ActionEvent event) -> {
             removePrice();
@@ -206,7 +208,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
         Ui.progress().observe(productsTask);
         Ui.exec(productsTask);
     }
-
 
     /**
      * Create a UnitCollectionFx based on the values from cp. Bind the
@@ -233,6 +234,8 @@ public class UnitCollectionEditorController implements Initializable, FxControll
         salesChannel.valueProperty().bindBidirectional(unitCollectionFx.getSalesChannelProperty());
         listViewUnits.setItems(unitCollectionFx.getUnitsProperty());
 
+        listViewPrices.setItems(FXCollections.observableArrayList(unitCollectionFx.getPricesProperty().entrySet()));
+        
         unitCollectionFx.getPricesProperty().addListener((MapChangeListener<PriceType, Double>)change -> {
             listViewPrices.getItems().clear();
             listViewPrices.getItems().addAll(unitCollectionFx.getPricesProperty().entrySet());
