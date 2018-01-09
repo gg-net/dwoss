@@ -1,5 +1,3 @@
-package eu.ggnet.dwoss.customer.ui;
-
 /*
  * Copyright (C) 2018 GG-Net GmbH
  *
@@ -16,11 +14,11 @@ package eu.ggnet.dwoss.customer.ui;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package eu.ggnet.dwoss.customer.ui;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Pattern;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,8 +26,7 @@ import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.uniqueunit.assist.UnitCollectionDto;
+import eu.ggnet.dwoss.customer.entity.Communication;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -42,10 +39,8 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
-public class CustomerAddressController implements Initializable, FxController, ClosedListener {
+public class CustomerCommunicationController implements Initializable, FxController, ClosedListener {
 
-    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
-    
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
@@ -55,20 +50,13 @@ public class CustomerAddressController implements Initializable, FxController, C
     Button closeButton;
 
     @FXML
-    ChoiceBox preferedtxpbox;
+    ChoiceBox commtypbox;
 
     @FXML
-    ChoiceBox countrybox;
+    TextField identifer;
 
     @FXML
-    TextField zipcode;
-
-    @FXML
-    TextField city;
-
-    @FXML
-    TextField street;
-
+    Label warning;
 
     @Override
     public void closed() {
@@ -84,12 +72,26 @@ public class CustomerAddressController implements Initializable, FxController, C
      */
     private void save(ActionEvent event) {
 
-        if ( StringUtils.isBlank(street.getText()) ) {
-            UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+        if ( !StringUtils.isBlank(identifer.getText()) ) {
+            //check the pattern, display Warning (!)
+            if ( commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
+                    && !identifer.getText().matches(Communication.EMAIL_PATTERN)
+                    || (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
+                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
+                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
+                    && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
+
+                warning.setVisible(true);
+                return;
+            }
+        }
+
+        if ( StringUtils.isBlank(identifer.getText()) ) {
+            UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
 
-        Ui.closeWindowOf(street);
+        Ui.closeWindowOf(identifer);
     }
 
     /**
@@ -97,28 +99,13 @@ public class CustomerAddressController implements Initializable, FxController, C
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        warning.setVisible(false);
 
-        //the isoCountry is hardcoded to DE Enum more usefull. List: https://en.wikipedia.org/wiki/ISO_3166-1
-//        countrybox.getItems().addAll(isoCountry);
-//        countrybox.getSelectionModel().selectFirst();
-
-        preferedtxpbox.getItems().addAll( AddressType.values() );
-        preferedtxpbox.getSelectionModel().selectFirst();
-        
-        // force the field to be numeric only
-        zipcode.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-                return changeed;
-            } else {
-                return null;
-            }
-        }));
-        
-        
+        commtypbox.getItems().addAll(Communication.Type.values());
+        commtypbox.getSelectionModel().selectFirst();
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
-
     }
 
 }
