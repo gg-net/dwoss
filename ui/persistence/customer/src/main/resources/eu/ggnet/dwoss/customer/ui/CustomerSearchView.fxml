@@ -61,7 +61,7 @@
       </BorderPane>
    </top>
    <bottom>
-      <HBox alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="bottom" alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <ProgressBar fx:id="progressBar" progress="0.0" />
             <ProgressIndicator fx:id="progressIndicator" progress="0.0" />

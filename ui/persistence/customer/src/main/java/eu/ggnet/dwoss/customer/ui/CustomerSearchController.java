@@ -30,6 +30,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -79,7 +80,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     ProgressIndicator progressIndicator;
 
     @FXML
-    BorderPane bottom;
+    HBox bottom;
 
     private Service<List<ShortSearchResult>> searchService;
 
