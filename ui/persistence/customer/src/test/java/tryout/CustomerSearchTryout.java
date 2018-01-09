@@ -16,9 +16,9 @@
  */
 package tryout;
 
+import javax.swing.*;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.CustomerSearchController;
@@ -32,26 +32,14 @@ import tryout.stub.CustomerAgentStub;
  */
 public class CustomerSearchTryout {
 
-    
     public static void main(String[] args) {
 
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
-        JButton close = new JButton("Schliessen");
-        close.addActionListener(e -> Ui.closeWindowOf(close));
+        UiCore.startSwing(() -> new JLabel("Kundensuche"));
 
-        JButton run = new JButton("OpenUi");
-        run.addActionListener(ev -> {
-            Ui.fxml().show(CustomerSearchController.class);
-
-        });
-
-        JPanel p = new JPanel();
-        p.add(run);
-        p.add(close);
-
-        UiCore.startSwing(() -> p);
+        Ui.fxml().show(CustomerSearchController.class);
     }
-    
+
 }

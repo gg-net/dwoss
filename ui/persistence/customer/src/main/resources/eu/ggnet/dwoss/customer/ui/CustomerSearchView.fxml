@@ -61,14 +61,12 @@
       </BorderPane>
    </top>
    <bottom>
-      <BorderPane fx:id="bottom" BorderPane.alignment="CENTER">
-         <right>
-            <ProgressIndicator fx:id="progressIndicator" progress="0.0" BorderPane.alignment="CENTER" />
-         </right>
-         <center>
-            <ProgressBar fx:id="progressBar" progress="0.0" BorderPane.alignment="CENTER" />
-         </center>
-      </BorderPane>
+      <HBox alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="progressBar" progress="0.0" />
+            <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
+         </children>
+      </HBox>
    </bottom>
    <center>
       <ListView fx:id="resultListView" BorderPane.alignment="CENTER" />

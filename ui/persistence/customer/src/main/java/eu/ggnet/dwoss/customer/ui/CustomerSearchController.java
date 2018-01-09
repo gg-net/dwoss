@@ -18,15 +18,10 @@ package eu.ggnet.dwoss.customer.ui;
  */
 import java.net.URL;
 import java.util.*;
-import java.util.function.Predicate;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -38,11 +33,9 @@ import javafx.scene.layout.BorderPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.op.CustomerSearchProvider;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.dwoss.search.ui.SearchListCell;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
@@ -97,6 +90,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
 
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
@@ -160,49 +154,15 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         progressBar.progressProperty().bind(searchService.progressProperty());
         progressIndicator.progressProperty().bind(searchService.progressProperty());
+
         bottom.visibleProperty().bind(searchService.runningProperty());
 
-//        //convert listview to a filter list, for the checkbox
-//        FilteredList resultListFiltered = new FilteredList<>(resultProperty);
-//        SortedList resultListSorted = new SortedList<>(resultListFiltered);
-//        resultListSorted.comparatorProperty().bind(resultListView.itemsProperty());
-//        
-//        //clear than set new soreted list
-//        resultListFiltered.setPredicate(getPredicate());
-//        resultListView.getItems().clear();
-//        resultListView.setItems(resultListSorted);
 
     }
 
     private void search() {
         if ( searchService.getState() == READY ) searchService.start();
         else searchService.restart();
-    }
-
-    /**
-     * Creates the predicate based on the selected filters.
-     *
-     * @return Predicate.
-     */
-    private Predicate<Customer> getPredicate() {
-        //problems with the predicate
-
-        Predicate<Customer> searchfilter = c -> !kid.isSelected() || !lastname.isSelected() || !firstname.isSelected();
-//            searchfilter = searchfilter.and(c -> kid.isSelected() && searchField.getText().equals(c.getId()));
-//            searchfilter = searchfilter.and(c -> lastname.isSelected() && searchField.getText()
-//                    .equals(c.getContacts().stream()
-//                            .filter((customerContact) -> (customerContact.isPrefered()))
-//                            .forEachOrdered((customerContact) -> {
-//                                customerContact.getLastName();
-//                            })));
-//    
-//            searchfilter = searchfilter.and(c -> firstname.isSelected() && searchField.getText().equals(c.getContacts().stream()
-//                    .filter((customerContact) -> (customerContact.isPrefered()))
-//                    .forEachOrdered((customerContact) -> {
-//                        customerContact.getFirstName();
-//                    })));
-
-        return searchfilter;
     }
 
     @Override
