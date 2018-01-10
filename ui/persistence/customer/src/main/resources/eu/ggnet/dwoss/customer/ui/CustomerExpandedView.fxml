@@ -27,16 +27,12 @@
         </rowConstraints>
          <children>
             <Label prefHeight="30.0" prefWidth="107.0" text="Key Accounter:" />
-            <Label text="Label" GridPane.rowIndex="1" />
-            <Label text="Label" GridPane.rowIndex="2" />
-            <Label text="Label" GridPane.rowIndex="3" />
+            <Label text="Commenct:" GridPane.rowIndex="1" />
             <Label prefHeight="45.0" prefWidth="112.0" text="Source:" GridPane.columnIndex="2" />
             <TextField fx:id="keyAccounterTextField" GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextArea fx:id="commentTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <ComboBox fx:id="sourceComboBox" prefWidth="150.0" GridPane.columnIndex="3" />
-            <VBox fx:id="flagVbox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <VBox fx:id="flagVbox" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </center>
