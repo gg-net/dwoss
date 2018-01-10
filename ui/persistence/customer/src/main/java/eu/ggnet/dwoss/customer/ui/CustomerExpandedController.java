@@ -43,8 +43,8 @@ import eu.ggnet.saft.core.ui.FxSaft;
  *
  * @author jens.papenhagen
  */
-public class CustomerExpandedController implements Initializable, FxController, ClosedListener{
-    
+public class CustomerExpandedController implements Initializable, FxController, ClosedListener {
+
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
@@ -59,8 +59,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
-         
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
@@ -76,6 +74,31 @@ public class CustomerExpandedController implements Initializable, FxController, 
      * @return the filled VBox
      */
     private VBox fillCommunicationsBox(ObservableList<Communication> list, VBox vbox) {
+        Separator separator = new Separator();
+
+        HBox headerBox = new HBox();
+        headerBox.setAlignment(Pos.CENTER);
+        headerBox.setMinHeight(24.0);
+
+        Label headerLable = new Label("Kommunikationswege:");
+
+        Region headerFillregion = new Region();
+        headerFillregion.setMinHeight(24.0);
+        headerFillregion.setMinWidth(10.0);
+
+        ImageView addImg = new ImageView();
+        addImg.setFitHeight(24.0);
+        addImg.setFitWidth(24.0);
+        addImg.setImage(new Image("add_black_24dp.png"));
+        addImg.setPickOnBounds(true);
+        addImg.setPreserveRatio(true);
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addCommunication(new Communication()));
+        Tooltip.install(addImg, new Tooltip("Hinzufügen"));
+
+        headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
+
+        vbox.getChildren().addAll(separator, headerBox);
+
         if ( !list.isEmpty() ) {
             for (Communication communication : list) {
                 //the Togglegroup for this VBox
@@ -108,7 +131,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
                 editImg.setImage(new Image("edit_black_24dp.png"));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)openCommunicationView(communication.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editCommunication(communication.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -138,12 +161,37 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     /**
      * fill a VBox for a List of Address
-     * 
+     *
      * @param list of Address
      * @param vbox the given VBox
      * @return the filled VBox
      */
     private VBox fillAddressBox(ObservableList<Address> list, VBox vbox) {
+        Separator separator = new Separator();
+
+        HBox headerBox = new HBox();
+        headerBox.setAlignment(Pos.CENTER);
+        headerBox.setMinHeight(24.0);
+
+        Label headerLable = new Label("Adressen:");
+
+        Region headerFillregion = new Region();
+        headerFillregion.setMinHeight(24.0);
+        headerFillregion.setMinWidth(10.0);
+
+        ImageView addImg = new ImageView();
+        addImg.setFitHeight(24.0);
+        addImg.setFitWidth(24.0);
+        addImg.setImage(new Image("add_black_24dp.png"));
+        addImg.setPickOnBounds(true);
+        addImg.setPreserveRatio(true);
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addAddress(new Address()));
+        Tooltip.install(addImg, new Tooltip("Hinzufügen"));
+
+        headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
+
+        vbox.getChildren().addAll(separator, headerBox);
+
         if ( !list.isEmpty() ) {
             for (Address address : list) {
 
@@ -170,7 +218,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
                 editImg.setImage(new Image("edit_black_24dp.png"));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)openAddressView(address.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editAddress(address.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -197,7 +245,13 @@ public class CustomerExpandedController implements Initializable, FxController, 
     }
 
     //TODO
-    public ActionEvent openCommunicationView(long id) {
+    public ActionEvent addCommunication(Communication c) {
+        return null;
+
+    }
+
+    //TODO
+    public ActionEvent editCommunication(long id) {
         return null;
 
     }
@@ -210,7 +264,13 @@ public class CustomerExpandedController implements Initializable, FxController, 
     }
 
     //TODO
-    public ActionEvent openAddressView(long id) {
+    public ActionEvent addAddress(Address a) {
+        return null;
+
+    }
+
+    //TODO
+    public ActionEvent editAddress(long id) {
         return null;
 
     }
@@ -220,7 +280,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
         return null;
 
     }
-    
+
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
