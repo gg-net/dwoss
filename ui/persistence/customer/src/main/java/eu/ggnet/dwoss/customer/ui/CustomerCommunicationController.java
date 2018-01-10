@@ -71,19 +71,26 @@ public class CustomerCommunicationController implements Initializable, FxControl
      * Close the Editor window and discard all changes.
      */
     private void save(ActionEvent event) {
+         warning.setVisible(false);
 
         if ( !StringUtils.isBlank(identifer.getText()) ) {
-            //check the pattern, display Warning (!)
+            //check the email pattern, display Warning (!)
             if ( commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
                     && !identifer.getText().matches(Communication.EMAIL_PATTERN)
-                    || (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
-                    && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
+                    ) {
 
                 warning.setVisible(true);
                 return;
             }
+            //check the phone pattern, display Warning (!)
+            if( (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
+                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
+                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
+                    && !identifer.getText().matches(Communication.PHONE_PATTERN)){
+                warning.setVisible(true);
+                return;
+            }
+            
         }
 
         if ( StringUtils.isBlank(identifer.getText()) ) {
