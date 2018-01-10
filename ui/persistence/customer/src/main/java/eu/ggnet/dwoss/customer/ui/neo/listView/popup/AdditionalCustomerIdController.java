@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui;
+package eu.ggnet.dwoss.customer.ui.neo.listView.popup;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.ClosedListener;
