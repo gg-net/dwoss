@@ -19,7 +19,7 @@ package tryout;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerAddressController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerAddressController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;

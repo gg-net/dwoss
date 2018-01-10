@@ -13,62 +13,65 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.CustomerSearchController">
-   <top>
-      <BorderPane id="mainPane">
-         <left>
-            <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Kunden Suche:">
-               <padding>
-                  <Insets right="5.0" />
-               </padding></Label>
-         </left>
-         <right>
-            <Button fx:id="searchButton" mnemonicParsing="false" text="Suche">
-               <BorderPane.margin>
-                  <Insets left="5.0" />
-               </BorderPane.margin></Button>
-         </right>
-         <center>
-            <VBox>
-               <children>
-                  <TextField fx:id="searchField" promptText="Suche" />
-                  <HBox spacing="5.0">
-                     <children>
-                        <RadioButton fx:id="kid" mnemonicParsing="false" text="Kunden ID">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="radioGroup" />
-                           </toggleGroup></RadioButton>
-                        <RadioButton fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname" toggleGroup="$radioGroup" />
-                        <RadioButton fx:id="firstname" mnemonicParsing="false" text="Vorname" toggleGroup="$radioGroup" />
-                        <RadioButton fx:id="company" mnemonicParsing="false" text="Firma" toggleGroup="$radioGroup" />
-                     </children>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                  </HBox>
-               </children>
-            </VBox>
-         </center>
-         <padding>
-            <Insets left="5.0" right="5.0" />
-         </padding>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <BorderPane.margin>
-            <Insets top="3.0" />
-         </BorderPane.margin>
-      </BorderPane>
-   </top>
-   <bottom>
-      <HBox fx:id="bottom" alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-            <ProgressBar fx:id="progressBar" progress="0.0" />
-            <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
-         </children>
-      </HBox>
-   </bottom>
-   <center>
-      <ListView fx:id="resultListView" BorderPane.alignment="CENTER" />
-   </center>
+<BorderPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.mainView.CustomerSearchController">
+    <top>
+        <BorderPane id="mainPane">
+            <left>
+                <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Kunden Suche:">
+                    <padding>
+                        <Insets right="5.0" />
+                    </padding>
+                </Label>
+            </left>
+            <right>
+                <Button fx:id="searchButton" mnemonicParsing="false" text="Suche">
+                    <BorderPane.margin>
+                        <Insets left="5.0" />
+                    </BorderPane.margin>
+                </Button>
+            </right>
+            <center>
+                <VBox>
+                    <children>
+                        <TextField fx:id="searchField" promptText="Suche" />
+                        <HBox spacing="5.0">
+                            <children>
+                                <RadioButton fx:id="kid" mnemonicParsing="false" text="Kunden ID">
+                                    <toggleGroup>
+                                        <ToggleGroup fx:id="radioGroup" />
+                                    </toggleGroup>
+                                </RadioButton>
+                                <RadioButton fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname" toggleGroup="$radioGroup" />
+                                <RadioButton fx:id="firstname" mnemonicParsing="false" text="Vorname" toggleGroup="$radioGroup" />
+                                <RadioButton fx:id="company" mnemonicParsing="false" text="Firma" toggleGroup="$radioGroup" />
+                            </children>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </HBox>
+                    </children>
+                </VBox>
+            </center>
+            <padding>
+                <Insets left="5.0" right="5.0" />
+            </padding>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <BorderPane.margin>
+                <Insets top="3.0" />
+            </BorderPane.margin>
+        </BorderPane>
+    </top>
+    <bottom>
+        <HBox fx:id="bottom" alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+            <children>
+                <ProgressBar fx:id="progressBar" progress="0.0" />
+                <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
+            </children>
+        </HBox>
+    </bottom>
+    <center>
+        <ListView fx:id="resultListView" BorderPane.alignment="CENTER" />
+    </center>
 </BorderPane>

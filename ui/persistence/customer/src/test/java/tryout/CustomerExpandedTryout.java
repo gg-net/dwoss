@@ -20,7 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerExpandedController;
+import eu.ggnet.dwoss.customer.ui.neo.mainView.CustomerExpandedController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;

@@ -4,7 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerCommunicationController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerCommunicationController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
