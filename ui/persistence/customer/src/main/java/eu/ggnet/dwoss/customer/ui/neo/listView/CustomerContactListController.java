@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui;
+package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,7 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Communication;
+import eu.ggnet.dwoss.customer.entity.Contact;
 
 import lombok.*;
 
@@ -39,12 +39,12 @@ import lombok.*;
  *
  * @author jens.papenhagen
  */
-public class CustomerCommunicationListController extends VBox implements Initializable {
+public class CustomerContactListController extends VBox implements Initializable {
 
     @FXML
     @Getter
     @Setter
-    ObservableList<Communication> list;
+    ObservableList<Contact> list;
 
     @FXML
     VBox vbox;
@@ -53,8 +53,9 @@ public class CustomerCommunicationListController extends VBox implements Initial
     public void initialize(URL location, ResourceBundle resources) {
 
         /**
-         * fill a VBox for a List of Communication
-         * select the Prefered CommunicationTyp
+         * fill a VBox for a List of Contact
+         * select the Prefered Contact
+         * <p>
          */
         Separator separator = new Separator();
 
@@ -62,7 +63,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
         headerBox.setAlignment(Pos.CENTER);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Kommunikationswege:");
+        Label headerLable = new Label("Kontakte:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -74,15 +75,14 @@ public class CustomerCommunicationListController extends VBox implements Initial
         addImg.setImage(new Image("add_black_24dp.png"));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addCommunication(new Communication()));
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addContact(new Contact()));
         Tooltip.install(addImg, new Tooltip("Hinzufügen"));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
-
         if ( !list.isEmpty() ) {
-            for (Communication communication : list) {
+            for (Contact contact : list) {
                 //the Togglegroup for this VBox
                 ToggleGroup togglegroup = new ToggleGroup();
 
@@ -92,16 +92,14 @@ public class CustomerCommunicationListController extends VBox implements Initial
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                RadioButton commButton = new RadioButton();
-                commButton.setToggleGroup(togglegroup);
-                if ( communication.isPrefered() ) {
-                    commButton.setSelected(true);
+                RadioButton contactButton = new RadioButton();
+                contactButton.setToggleGroup(togglegroup);
+                if ( contact.isPrefered() ) {
+                    contactButton.setSelected(true);
                 }
-
-                Label commtype = new Label(communication.getType().name());
-                commtype.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
-
-                Label commfield = new Label(communication.getIdentifier());
+                Label title = new Label(contact.getTitle());
+                Label firstname = new Label(contact.getFirstName());
+                Label lastname = new Label(contact.getLastName());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
@@ -113,7 +111,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
                 editImg.setImage(new Image("edit_black_24dp.png"));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editCommunication(communication.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editContact(contact.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -123,34 +121,36 @@ public class CustomerCommunicationListController extends VBox implements Initial
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
                 //disable the click on the prefered entry
-                if ( communication.isPrefered() ) {
+                if ( contact.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delCommunication(communication.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delContact(contact.getId()));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                hbox.getChildren().addAll(commButton, commtype, commfield, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(contactButton, title, firstname, lastname, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
                 //add the first entrie
                 vbox.getChildren().add(hbox);
             }
         }
+
     }
 
     //TODO
-    public ActionEvent addCommunication(Communication c) {
+    public ActionEvent addContact(Contact c) {
         return null;
     }
 
     //TODO
-    public ActionEvent editCommunication(long id) {
+    public ActionEvent editContact(long id) {
         return null;
     }
 
     //TODO
-    public ActionEvent delCommunication(long id) {
+    public ActionEvent delContact(long id) {
         return null;
     }
+
 }

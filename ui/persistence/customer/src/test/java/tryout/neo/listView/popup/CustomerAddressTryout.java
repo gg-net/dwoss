@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout;
+package tryout.neo.listView.popup;
 
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerAddressController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerAddressController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;

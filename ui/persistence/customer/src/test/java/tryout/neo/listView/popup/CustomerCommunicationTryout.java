@@ -1,3 +1,14 @@
+package tryout.neo.listView.popup;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerCommunicationController;
+import eu.ggnet.saft.*;
+
+import tryout.stub.CustomerAgentStub;
+
 /*
  * Copyright (C) 2018 GG-Net GmbH
  *
@@ -14,24 +25,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.CustomerExpandedController;
-import eu.ggnet.saft.*;
-
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerExpandedTryout {
+public class CustomerCommunicationTryout {
     
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
@@ -40,7 +41,7 @@ public class CustomerExpandedTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CustomerExpandedController.class);
+            Ui.fxml().show(CustomerCommunicationController.class);
 
         });
 
@@ -50,4 +51,5 @@ public class CustomerExpandedTryout {
 
         UiCore.startSwing(() -> p);
     }
+    
 }

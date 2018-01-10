@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui;
+package eu.ggnet.dwoss.customer.ui.neo.mainView;
+
+import eu.ggnet.dwoss.customer.ui.CustomerTask;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.ui;
+package eu.ggnet.dwoss.customer.ui.neo.mainView;
 
 /*
  * Copyright (C) 2018 GG-Net GmbH
@@ -35,6 +35,7 @@ import javafx.scene.layout.HBox;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.op.CustomerSearchProvider;
+import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ui.SearchListCell;
