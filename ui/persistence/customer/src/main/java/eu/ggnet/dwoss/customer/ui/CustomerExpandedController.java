@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ui;
 
 import java.net.URL;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -34,13 +33,19 @@ import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.customer.entity.Communication;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ClosedListener;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  * FXML Controller class
  *
  * @author jens.papenhagen
  */
-public class CustomerExpandedController implements Initializable {
+public class CustomerExpandedController implements Initializable, FxController, ClosedListener{
+    
+    private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
     VBox comm;
@@ -54,6 +59,12 @@ public class CustomerExpandedController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+         
+
+        Ui.progress().observe(LOADING_TASK);
+        Ui.exec(LOADING_TASK);
+
     }
 
     /**
@@ -201,6 +212,14 @@ public class CustomerExpandedController implements Initializable {
     public ActionEvent delAddress(long id) {
         return null;
 
+    }
+    
+    @Override
+    public void closed() {
+        FxSaft.dispatch(() -> {
+            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
+            return null;
+        });
     }
 
 }
