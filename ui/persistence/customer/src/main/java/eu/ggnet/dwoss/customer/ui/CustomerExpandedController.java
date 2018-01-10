@@ -73,7 +73,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
      *
      * @param list of Communication
      * @param vbox the given VBox
-     * @return the filledVBox
+     * @return the filled VBox
      */
     private VBox fillCommunicationsBox(ObservableList<Communication> list, VBox vbox) {
         if ( !list.isEmpty() ) {
@@ -136,6 +136,13 @@ public class CustomerExpandedController implements Initializable, FxController, 
         return vbox;
     }
 
+    /**
+     * fill a VBox for a List of Address
+     * 
+     * @param list of Address
+     * @param vbox the given VBox
+     * @return the filled VBox
+     */
     private VBox fillAddressBox(ObservableList<Address> list, VBox vbox) {
         if ( !list.isEmpty() ) {
             for (Address address : list) {
