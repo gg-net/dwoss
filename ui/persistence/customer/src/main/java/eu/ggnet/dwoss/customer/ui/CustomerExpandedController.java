@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
+import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.customer.entity.Communication;
 
 /**
@@ -43,6 +45,9 @@ public class CustomerExpandedController implements Initializable {
     @FXML
     VBox comm;
 
+    @FXML
+    VBox addressVBox;
+
     /**
      * Initializes the controller class.
      */
@@ -51,6 +56,14 @@ public class CustomerExpandedController implements Initializable {
         // TODO
     }
 
+    /**
+     * fill a VBox for a List of Communication
+     * select the Prefered CommunicationTyp
+     *
+     * @param list of Communication
+     * @param vbox the given VBox
+     * @return the filledVBox
+     */
     private VBox fillCommunicationsBox(ObservableList<Communication> list, VBox vbox) {
         if ( !list.isEmpty() ) {
             for (Communication communication : list) {
@@ -58,26 +71,25 @@ public class CustomerExpandedController implements Initializable {
                 ToggleGroup togglegroup = new ToggleGroup();
 
                 //buildup the HBox
-                HBox firstEntry = new HBox();
-                firstEntry.setSpacing(5.0);
-                firstEntry.setAlignment(Pos.CENTER);
-                firstEntry.setMinHeight(24.0);
+                HBox hbox = new HBox();
+                hbox.setSpacing(5.0);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setMinHeight(24.0);
 
-                RadioButton firstCommTyp = new RadioButton();
-                firstCommTyp.setToggleGroup(togglegroup);
+                RadioButton commButton = new RadioButton();
+                commButton.setToggleGroup(togglegroup);
                 if ( communication.isPrefered() ) {
-                    firstCommTyp.setSelected(true);
+                    commButton.setSelected(true);
                 }
 
-                Label commtype = new Label();
-                commtype.setText(communication.getType().name());
+                Label commtype = new Label(communication.getType().name());
                 commtype.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-                Label commfield = new Label();
-                commfield.setText(communication.getIdentifier());
+                Label commfield = new Label(communication.getIdentifier());
 
                 Region fillregion = new Region();
-                fillregion.setPickOnBounds(true);
+                fillregion.setMinHeight(24.0);
+                fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ImageView();
                 editImg.setFitHeight(24.0);
@@ -94,16 +106,73 @@ public class CustomerExpandedController implements Initializable {
                 delImg.setImage(new Image("del_black_24dp.png"));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
+                //disable the click on the prefered entry
+                if ( communication.isPrefered() ) {
+                    delImg.setDisable(true);
+                }
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delCommunication(communication.getId()));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                firstEntry.getChildren().addAll(firstCommTyp, commtype, commfield, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(commButton, commtype, commfield, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
                 //add the first entrie
-                vbox.getChildren().add(firstEntry);
+                vbox.getChildren().add(hbox);
             }
+        }
+
+        return vbox;
+    }
+
+    private VBox fillAddressBox(ObservableList<Address> list, VBox vbox) {
+        if ( !list.isEmpty() ) {
+            for (Address address : list) {
+
+                //buildup the HBox
+                HBox hbox = new HBox();
+                hbox.setSpacing(5.0);
+                hbox.setAlignment(Pos.CENTER);
+                hbox.setMinHeight(24.0);
+
+                Label preferdType = new Label(address.getPreferedType().getName());
+                preferdType.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                Label street = new Label(address.getStreet());
+                Label zipcode = new Label(address.getZipCode());
+                Label city = new Label(address.getCity());
+
+                Region fillregion = new Region();
+                fillregion.setMinHeight(24.0);
+                fillregion.setMinWidth(10.0);
+
+                ImageView editImg = new ImageView();
+                editImg.setFitHeight(24.0);
+                editImg.setFitWidth(24.0);
+                editImg.setImage(new Image("edit_black_24dp.png"));
+                editImg.setPickOnBounds(true);
+                editImg.setPreserveRatio(true);
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)openAddressView(address.getId()));
+                Tooltip.install(editImg, new Tooltip("Bearbeiten"));
+
+                ImageView delImg = new ImageView();
+                delImg.setFitHeight(24.0);
+                delImg.setFitWidth(24.0);
+                delImg.setImage(new Image("del_black_24dp.png"));
+                delImg.setPickOnBounds(true);
+                delImg.setPreserveRatio(true);
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delAddress(address.getId()));
+                Tooltip.install(delImg, new Tooltip("Löschen"));
+
+                //fill the HBox
+                hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
+                HBox.setHgrow(fillregion, Priority.ALWAYS);
+
+                //add the first entrie
+                vbox.getChildren().add(hbox);
+
+            }
+
         }
 
         return vbox;
@@ -114,8 +183,22 @@ public class CustomerExpandedController implements Initializable {
         return null;
 
     }
+
     //TODO
+    //check if the id of the Communication is the Prefered One than display error
     public ActionEvent delCommunication(long id) {
+        return null;
+
+    }
+
+    //TODO
+    public ActionEvent openAddressView(long id) {
+        return null;
+
+    }
+
+    //TODO
+    public ActionEvent delAddress(long id) {
         return null;
 
     }
