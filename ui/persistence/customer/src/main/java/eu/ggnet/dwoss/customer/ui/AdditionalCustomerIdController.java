@@ -27,6 +27,7 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -39,7 +40,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
-public class CustomerCommunicationController implements Initializable, FxController, ClosedListener {
+public class AdditionalCustomerIdController implements Initializable, FxController, ClosedListener {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
@@ -50,13 +51,10 @@ public class CustomerCommunicationController implements Initializable, FxControl
     Button closeButton;
 
     @FXML
-    ChoiceBox commtypbox;
+    ChoiceBox externalsystembox;
 
     @FXML
     TextField identifer;
-
-    @FXML
-    Label warning;
 
     @Override
     public void closed() {
@@ -71,27 +69,6 @@ public class CustomerCommunicationController implements Initializable, FxControl
      * Close the Editor window and discard all changes.
      */
     private void save(ActionEvent event) {
-         warning.setVisible(false);
-
-        if ( !StringUtils.isBlank(identifer.getText()) ) {
-            //check the email pattern, display Warning (!)
-            if ( commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
-                    && !identifer.getText().matches(Communication.EMAIL_PATTERN)
-                    ) {
-
-                warning.setVisible(true);
-                return;
-            }
-            //check the phone pattern, display Warning (!)
-            if( (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
-                    && !identifer.getText().matches(Communication.PHONE_PATTERN)){
-                warning.setVisible(true);
-                return;
-            }
-            
-        }
 
         if ( StringUtils.isBlank(identifer.getText()) ) {
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
@@ -99,7 +76,6 @@ public class CustomerCommunicationController implements Initializable, FxControl
         }
 
         //TODO
-        
         Ui.closeWindowOf(identifer);
     }
 
@@ -108,10 +84,10 @@ public class CustomerCommunicationController implements Initializable, FxControl
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        warning.setVisible(false);
-
-        commtypbox.getItems().addAll(Communication.Type.values());
-        commtypbox.getSelectionModel().selectFirst();
+        
+        externalsystembox.getItems().addAll(Customer.ExternalSystem.values());
+        externalsystembox.getSelectionModel().selectFirst();
+        
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
