@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompanyController;
 import eu.ggnet.saft.*;
 
@@ -35,6 +36,8 @@ public class CustomerCompanyTryout {
     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+        
+        Company c = new Company();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

@@ -38,7 +38,7 @@ import eu.ggnet.saft.core.ui.FxSaft;
  *
  * @author jens.papenhagen
  */
-public class CustomerContactController implements Initializable, FxController, ClosedListener {
+public class CustomerContactController implements Initializable, FxController {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
@@ -60,12 +60,15 @@ public class CustomerContactController implements Initializable, FxController, C
     @FXML
     VBox communicationsBox;
 
-    @Override
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
+    Contact uicontact;
+
+    ObservableList<Address> addressList = FXCollections.observableArrayList();
+
+    ObservableList<Communication> communicationList = FXCollections.observableArrayList();
+
+     public CustomerContactController(Contact contact) {
+        this.uicontact = contact;
+        fillUI();
     }
 
     /**
@@ -73,21 +76,31 @@ public class CustomerContactController implements Initializable, FxController, C
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
         genderBox.getSelectionModel().selectFirst();
-
-        ObservableList<Address> addressList = FXCollections.observableArrayList();
-        ObservableList<Communication> communicationList = FXCollections.observableArrayList();
-
-        CustomerAddressListController customerAddressListController = new CustomerAddressListController(addressList);
-        addressBox.getChildren().add(customerAddressListController.getVbox());
-        
-        CustomerCommunicationListController customerCommunicationListController = new CustomerCommunicationListController(communicationList);
-        communicationsBox.getChildren().add(customerCommunicationListController.getVbox());
 
         // TODO
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
+    }
+
+    private void fillUI() {
+        titleField.setText(uicontact.getTitle());
+
+        firstnameField.setText(uicontact.getFirstName());
+        lastnameField.setText(uicontact.getLastName());
+        
+        addressList.addAll(uicontact.getAddresses());
+        communicationList.addAll(uicontact.getCommunications());
+        
+
+        CustomerAddressListController customerAddressListController = new CustomerAddressListController(addressList);
+        addressBox.getChildren().add(customerAddressListController.getVbox());
+
+        CustomerCommunicationListController customerCommunicationListController = new CustomerCommunicationListController(communicationList);
+        communicationsBox.getChildren().add(customerCommunicationListController.getVbox());
+
     }
 
 }
