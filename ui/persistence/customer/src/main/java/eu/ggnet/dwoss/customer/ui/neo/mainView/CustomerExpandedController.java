@@ -32,9 +32,7 @@ import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompanyListController;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContactController;
-import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.*;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -121,26 +119,27 @@ public class CustomerExpandedController implements Initializable, FxController, 
     private CustomerContactController customerContactController;
 
     @FXML
-    private AdditionalCustomerIdController additionalCustomerIdController;
+    private CustomerAdditionalCustomerIdListController additionalCustomerIdListController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setFlagVboxUp();
+        setUp();
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
 
     }
 
     public void setUp() {
-        setFlagVboxUp();
+        setFxElementsUp();
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
 
         customerCompanyListController = new CustomerCompanyListController(companies);
+        additionalCustomerIdListController = new CustomerAdditionalCustomerIdListController(this.getAdditionalCustomerIds());
 
         midGridPane.add(customerCompanyListController.getVbox(), 0, 3);
+        midGridPane.add(additionalCustomerIdListController.getVbox(), 3, 2);
 
-        setFlagVboxUp();
     }
 
     @Override
@@ -210,7 +209,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
     }
 
     private void setFlagVboxUp() {
-
         EventHandler customerFlagEventHandler = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

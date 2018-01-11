@@ -17,6 +17,8 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView.popup;
 
 import java.net.URL;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -26,8 +28,8 @@ import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.Communication;
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -57,6 +59,12 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
     @FXML
     TextField identifer;
 
+    Map.Entry<ExternalSystem, String> entry;
+
+    /**
+     * todo
+     * objekte passen mit saft
+     */
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
@@ -65,10 +73,18 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
         });
     }
 
-    @FXML
+    public AdditionalCustomerIdController(Entry<ExternalSystem, String> entry) {
+        this.entry = entry;
+        start();
+    }
+
     /**
      * Close the Editor window and discard all changes.
+     *
+     * @todo
+     * objekte passen mit saft
      */
+    @FXML
     private void save(ActionEvent event) {
 
         if ( StringUtils.isBlank(identifer.getText()) ) {
@@ -80,15 +96,20 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
         Ui.closeWindowOf(identifer);
     }
 
+    private void start() {
+        identifer.setText(entry.getValue());
+        if ( entry.getKey() != null )
+            externalsystembox.getSelectionModel().select(entry.getKey());
+    }
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         externalsystembox.getItems().addAll(Customer.ExternalSystem.values());
         externalsystembox.getSelectionModel().selectFirst();
-        
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
