@@ -53,7 +53,7 @@ public class CustomerContactController implements Initializable, FxController, C
     TextField lastnameField;
 
     @FXML
-    VBox additionalCustomerIdBox;
+    VBox addressBox;
     
     @FXML
     VBox communicationsBox;

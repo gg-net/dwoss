@@ -44,7 +44,7 @@
             <TextField fx:id="titleField" GridPane.columnIndex="1" />
             <TextField fx:id="firstnameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="lastnameField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <VBox fx:id="additionalCustomerIdBox" minHeight="30.0" minWidth="400.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
+            <VBox fx:id="addressBox" minHeight="30.0" minWidth="400.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="3" />
             <VBox fx:id="communicationsBox" minHeight="30.0" minWidth="400.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
          </children>
       </GridPane>
