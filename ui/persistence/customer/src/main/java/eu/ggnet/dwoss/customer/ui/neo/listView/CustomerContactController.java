@@ -19,11 +19,14 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.customer.entity.Contact;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
@@ -54,7 +57,7 @@ public class CustomerContactController implements Initializable, FxController, C
 
     @FXML
     VBox addressBox;
-    
+
     @FXML
     VBox communicationsBox;
 
@@ -71,12 +74,15 @@ public class CustomerContactController implements Initializable, FxController, C
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        genderBox.getItems().addAll( Contact.Sex.values() );
+        genderBox.getItems().addAll(Contact.Sex.values());
         genderBox.getSelectionModel().selectFirst();
-        
-        
-        // TODO
 
+        ObservableList<Address> list = FXCollections.observableArrayList();
+
+        CustomerAddressListController customerAddressListController = new CustomerAddressListController(list);
+        addressBox.getChildren().add(customerAddressListController.getVbox());
+
+        // TODO
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
     }
