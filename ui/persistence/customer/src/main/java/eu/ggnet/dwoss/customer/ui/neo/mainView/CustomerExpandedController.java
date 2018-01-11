@@ -20,15 +20,19 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompanyListController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -99,8 +103,27 @@ public class CustomerExpandedController implements Initializable, FxController, 
     @FXML
     private VBox flagVbox;
 
+    @FXML
+    private FlowPane listViewVbox;
+
+    @FXML
+    private CustomerCompanyListController customerCompanyListController;
+
+    @FXML
+    private BorderPane rootPane;
+
+    @FXML
+    private GridPane midGridPane;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        CustomerGenerator gen = new CustomerGenerator();
+        customerCompanyListController = new CustomerCompanyListController(FXCollections.observableArrayList(gen.makeCompanies(10)));
+
+        midGridPane.add(customerCompanyListController, 0, 2);
+
+        customerCompanyListController.setVisible(true);
+        setFlagVboxUp();
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
@@ -117,8 +140,32 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     private void setFlagVboxUp() {
 
-        flagVbox.getChildren().add(new ChoiceBox<CustomerFlag>(FXCollections.observableArrayList(Arrays.asList(CustomerFlag.values()))));
+        EventHandler customerFlagEventHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if ( event.getSource() instanceof CheckBox ) {
+                    CheckBox source = (CheckBox)event.getSource();
+                    if ( source.isSelected() )
+                        flags.add(CustomerFlag.valueOf(source.getText()));
 
+                    else
+                        flags.remove(CustomerFlag.valueOf(source.getText()));
+
+                }
+            }
+        };
+
+        List<CheckBox> list = new ArrayList<>(CustomerFlag.values().length);
+
+        CustomerFlag[] customerFlags = CustomerFlag.values();
+
+        for (int i = 0; i < CustomerFlag.values().length; i++) {
+            list.add(new CheckBox(customerFlags[i].name()));
+            list.get(i).setOnAction(customerFlagEventHandler);
+            list.get(i).allowIndeterminateProperty().setValue(Boolean.FALSE);
+
+        }
+        flagVbox.getChildren().addAll(list);
     }
 
 }

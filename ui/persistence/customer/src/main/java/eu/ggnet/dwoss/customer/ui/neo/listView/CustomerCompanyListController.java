@@ -48,7 +48,13 @@ public class CustomerCompanyListController extends VBox implements Initializable
     ObservableList<Company> list;
 
     @FXML
-    VBox vbox;
+    @Getter
+    @Setter
+    VBox vbox = new VBox();
+
+    public CustomerCompanyListController(ObservableList<Company> list) {
+        this.list = list;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
