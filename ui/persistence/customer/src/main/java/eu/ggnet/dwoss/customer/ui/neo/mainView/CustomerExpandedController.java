@@ -19,8 +19,7 @@ package eu.ggnet.dwoss.customer.ui.neo.mainView;
 import java.net.URL;
 import java.util.*;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -84,7 +83,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     @Getter
     @Setter
-    private Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
+    private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableMap(new EnumMap(ExternalSystem.class));
 
     @Getter
     @Setter
@@ -152,6 +151,64 @@ public class CustomerExpandedController implements Initializable, FxController, 
         });
     }
 
+    public void setControllerState(MainControllerDto dto) {
+        this.setAdditionalCustomerIds(FXCollections.observableMap(dto.getAdditionalCustomerIds()));
+        this.setComment(dto.getComment());
+        this.setCompanies(FXCollections.observableList(dto.getCompanies()));
+        this.setContacts(FXCollections.observableList(dto.getContacts()));
+        this.setFlags(dto.getFlags());
+        this.setId(dto.getId());
+        this.setKeyAccounter(dto.getKeyAccounter());
+        this.setMandatorMetadata(FXCollections.observableList(dto.getMandatorMetadata()));
+        this.setOptLock(dto.getOptLock());
+        this.setSource(dto.getSource());
+        setFxElementsUp
+
+    }
+
+    public MainControllerDto getCustomerDto() {
+        MainControllerDto dto = new MainControllerDto();
+
+        dto.setAdditionalCustomerIds(new EnumMap(this.getAdditionalCustomerIds()));
+        dto.setComment(this.getComment());
+        dto.setCompanies(new ArrayList(this.getCompanies()));
+        dto.setContacts(new ArrayList(this.getContacts()));
+        dto.setFlags(flags);
+        dto.setId(this.getId());
+        dto.setKeyAccounter(this.getKeyAccounter());
+        dto.setMandatorMetadata(this.getMandatorMetadata());
+        dto.setOptLock(this.getOptLock());
+        dto.setSource(this.getSource());
+        return null;
+    }
+
+    private void setFxElementsUp() {
+        setSourceBoxUp();
+
+        setKeyAccounterUp();
+        setCommentUp();
+        setFlagVboxUp();
+
+    }
+
+    private void setSourceBoxUp() {
+
+        sourceComboBox.getItems().addAll(Source.values());
+        if ( this.source != null )
+            sourceComboBox.getSelectionModel().select(source);
+
+    }
+
+    private void setKeyAccounterUp() {
+        if ( this.keyAccounter != null )
+            keyAccounterTextField.setText(keyAccounter);
+    }
+
+    private void setCommentUp() {
+        if ( this.comment != null )
+            commentTextArea.setText(comment);
+    }
+
     private void setFlagVboxUp() {
 
         EventHandler customerFlagEventHandler = new EventHandler<ActionEvent>() {
@@ -182,24 +239,5 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
         }
         flagVbox.getChildren().addAll(list);
-    }
-
-    public void setControllerState(MainControllerDto dto) {
-        this.setAdditionalCustomerIds(dto.getAdditionalCustomerIds());
-        this.setComment(dto.getComment());
-        this.setCompanies(FXCollections.observableList(dto.getCompanies()));
-        this.setContacts(FXCollections.observableList(dto.getContacts()));
-        this.setFlags(dto.getFlags());
-        this.setId(dto.getId());
-        this.setKeyAccounter(dto.getKeyAccounter());
-        this.setMandatorMetadata(FXCollections.observableList(dto.getMandatorMetadata()));
-        this.setOptLock(dto.getOptLock());
-        this.setSource(dto.getSource());
-        setFlagVboxUp();
-
-    }
-
-    public MainControllerDto getCustomerDto() {
-        return null;
     }
 }
