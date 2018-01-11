@@ -47,10 +47,20 @@ public class CustomerCommunicationListController extends VBox implements Initial
     ObservableList<Communication> list;
 
     @FXML
+    @Getter
+    @Setter
     VBox vbox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    public CustomerCommunicationListController(ObservableList<Communication> list) {
+        this.list = list;
+        start();
+    }
+
+    private void start() {
 
         /**
          * fill a VBox for a List of Communication
@@ -59,7 +69,8 @@ public class CustomerCommunicationListController extends VBox implements Initial
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
-        headerBox.setAlignment(Pos.CENTER);
+        headerBox.setSpacing(5.0);
+        headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
         Label headerLable = new Label("Kommunikationswege:");
@@ -71,7 +82,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
         ImageView addImg = new ImageView();
         addImg.setFitHeight(24.0);
         addImg.setFitWidth(24.0);
-        addImg.setImage(new Image("add_black_24dp.png"));
+        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
         addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addCommunication(new Communication()));
@@ -84,7 +95,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
         if ( !list.isEmpty() ) {
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
-            
+
             for (Communication communication : list) {
                 //buildup the HBox
                 HBox hbox = new HBox();
@@ -110,7 +121,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
                 ImageView editImg = new ImageView();
                 editImg.setFitHeight(24.0);
                 editImg.setFitWidth(24.0);
-                editImg.setImage(new Image("edit_black_24dp.png"));
+                editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editCommunication(communication.getId()));
@@ -119,7 +130,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
                 ImageView delImg = new ImageView();
                 delImg.setFitHeight(24.0);
                 delImg.setFitWidth(24.0);
-                delImg.setImage(new Image("del_black_24dp.png"));
+                delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
                 //disable the click on the prefered entry

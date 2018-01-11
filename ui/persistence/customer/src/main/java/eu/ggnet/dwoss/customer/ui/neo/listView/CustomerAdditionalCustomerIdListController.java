@@ -48,13 +48,22 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
     ObservableMap<ExternalSystem, String> map;
 
     @FXML
+    @Getter
+    @Setter
     VBox vbox;
 
+    public CustomerAdditionalCustomerIdListController(ObservableMap<ExternalSystem, String> map) {
+        this.map = map;
+        start();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
-         /**
+    }
+
+    private void start() {
+
+        /**
          * fill a VBox for a List of Contact
          * select the Prefered Contact
          * <p>
@@ -62,7 +71,8 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
-        headerBox.setAlignment(Pos.CENTER);
+        headerBox.setSpacing(5.0);
+        headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
         Label headerLable = new Label("Externe Kunden Ids:");
@@ -74,7 +84,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
         ImageView addImg = new ImageView();
         addImg.setFitHeight(24.0);
         addImg.setFitWidth(24.0);
-        addImg.setImage(new Image("add_black_24dp.png"));
+        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
         addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addAdditionalCutomerId(""));
@@ -84,8 +94,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
 
         vbox.getChildren().addAll(separator, headerBox);
         if ( !map.isEmpty() ) {
- 
-                        
+
             for (Map.Entry<ExternalSystem, String> entry : map.entrySet()) {
 
                 //buildup the HBox
@@ -93,9 +102,9 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
-               
+
                 Label externalSystem = new Label(entry.getKey().toString());
-                Label idFormExternalSystem = new Label(entry.getValue() );
+                Label idFormExternalSystem = new Label(entry.getValue());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
@@ -104,7 +113,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 ImageView editImg = new ImageView();
                 editImg.setFitHeight(24.0);
                 editImg.setFitWidth(24.0);
-                editImg.setImage(new Image("edit_black_24dp.png"));
+                editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editAdditionalCutomerId(entry.getKey()));
@@ -113,7 +122,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 ImageView delImg = new ImageView();
                 delImg.setFitHeight(24.0);
                 delImg.setFitWidth(24.0);
-                delImg.setImage(new Image("del_black_24dp.png"));
+                delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delAdditionalCutomerId(entry.getKey()));
@@ -127,13 +136,10 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 vbox.getChildren().add(hbox);
             }
         }
-        
-        
+
     }
-    
-        
-    
-     //TODO
+
+    //TODO
     public ActionEvent addAdditionalCutomerId(String c) {
         return null;
     }
@@ -147,5 +153,5 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
     public ActionEvent delAdditionalCutomerId(ExternalSystem id) {
         return null;
     }
-    
+
 }
