@@ -30,6 +30,7 @@ import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.uniqueunit.assist.UnitCollectionDto;
 import eu.ggnet.saft.Ui;
@@ -45,33 +46,34 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 public class CustomerAddressController implements Initializable, FxController, ClosedListener {
-
+    
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
     
     private final CustomerTask LOADING_TASK = new CustomerTask();
-
+    
     @FXML
     Button saveButton;
-
+    
     @FXML
     Button closeButton;
-
+    
     @FXML
     ChoiceBox preferedtxpbox;
-
+    
     @FXML
     ChoiceBox countrybox;
-
+    
     @FXML
     TextField zipcode;
-
+    
     @FXML
     TextField city;
-
+    
     @FXML
     TextField street;
-
-
+    
+    Address adresse;
+    
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
@@ -79,18 +81,26 @@ public class CustomerAddressController implements Initializable, FxController, C
             return null;
         });
     }
-
+    
+    public CustomerAddressController(Address adresse) {
+        this.adresse = adresse;
+        start();
+    }
+    
     @FXML
     /**
      * Close the Editor window and discard all changes.
+     *
+     * @todo
+     * objekte passen mit saft
      */
     private void save(ActionEvent event) {
-
+        
         if ( StringUtils.isBlank(street.getText()) ) {
             UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-
+        
         Ui.closeWindowOf(street);
     }
 
@@ -99,14 +109,10 @@ public class CustomerAddressController implements Initializable, FxController, C
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        //the isoCountry is hardcoded to DE Enum more usefull. List: https://en.wikipedia.org/wiki/ISO_3166-1
-//        countrybox.getItems().addAll(isoCountry);
-//        countrybox.getSelectionModel().selectFirst();
-
-        preferedtxpbox.getItems().addAll( AddressType.values() );
-        preferedtxpbox.getSelectionModel().selectFirst();
         
+        preferedtxpbox.getItems().addAll(AddressType.values());
+        preferedtxpbox.getSelectionModel().selectFirst();
+
         // force the field to be numeric only
         zipcode.textFormatterProperty().set(new TextFormatter<>(changeed -> {
             if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
@@ -116,11 +122,25 @@ public class CustomerAddressController implements Initializable, FxController, C
             }
         }));
         
-        
-
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
-
+        
     }
+    
+    private void start() {
+        if ( adresse != null ) {
+            preferedtxpbox.getSelectionModel().select(adresse.getPreferedType());
+        }
 
+        //the isoCountry is hardcoded to DE
+        //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
+        countrybox.getItems().addAll(adresse.getIsoCountry());
+        countrybox.getSelectionModel().selectFirst();
+        
+        zipcode.setText(adresse.getZipCode());
+        city.setText(adresse.getCity());
+        
+        street.setText(adresse.getStreet());
+    }
+    
 }

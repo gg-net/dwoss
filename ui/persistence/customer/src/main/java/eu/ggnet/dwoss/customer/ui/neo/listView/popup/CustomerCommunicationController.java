@@ -59,6 +59,8 @@ public class CustomerCommunicationController implements Initializable, FxControl
     @FXML
     Label warning;
 
+    Communication communication;
+
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
@@ -67,31 +69,38 @@ public class CustomerCommunicationController implements Initializable, FxControl
         });
     }
 
+    public CustomerCommunicationController(Communication communication) {
+        this.communication = communication;
+        start();
+    }
+
     @FXML
     /**
      * Close the Editor window and discard all changes.
+     *
+     * @todo
+     * objekte passen mit saft
      */
     private void save(ActionEvent event) {
-         warning.setVisible(false);
+        warning.setVisible(false);
 
         if ( !StringUtils.isBlank(identifer.getText()) ) {
             //check the email pattern, display Warning (!)
             if ( commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
-                    && !identifer.getText().matches(Communication.EMAIL_PATTERN)
-                    ) {
+                    && !identifer.getText().matches(Communication.EMAIL_PATTERN) ) {
 
                 warning.setVisible(true);
                 return;
             }
             //check the phone pattern, display Warning (!)
-            if( (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
-                        || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
-                    && !identifer.getText().matches(Communication.PHONE_PATTERN)){
+            if ( (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
+                  || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
+                  || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
+                    && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
                 warning.setVisible(true);
                 return;
             }
-            
+
         }
 
         if ( StringUtils.isBlank(identifer.getText()) ) {
@@ -114,6 +123,14 @@ public class CustomerCommunicationController implements Initializable, FxControl
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
+    }
+
+    private void start() {
+        identifer.setText(communication.getIdentifier());
+
+        if ( communication != null ) {
+            commtypbox.getSelectionModel().select(communication.getType());
+        }
     }
 
 }
