@@ -50,7 +50,7 @@ public class CustomerCompanyListController extends VBox implements Initializable
     @FXML
     @Getter
     @Setter
-    VBox vbox;
+    VBox vbox = new VBox();
 
     public CustomerCompanyListController(ObservableList<Company> list) {
         this.list = list;

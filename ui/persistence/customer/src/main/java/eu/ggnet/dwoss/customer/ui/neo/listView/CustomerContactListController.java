@@ -49,7 +49,7 @@ public class CustomerContactListController extends VBox implements Initializable
     @FXML
     @Getter
     @Setter
-    VBox vbox;
+    VBox vbox = new VBox();;
 
     public CustomerContactListController(ObservableList<Contact> list) {
         this.list = list;

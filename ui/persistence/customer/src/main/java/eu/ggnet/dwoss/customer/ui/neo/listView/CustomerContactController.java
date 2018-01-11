@@ -26,8 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Address;
-import eu.ggnet.dwoss.customer.entity.Contact;
+import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -77,10 +76,14 @@ public class CustomerContactController implements Initializable, FxController, C
         genderBox.getItems().addAll(Contact.Sex.values());
         genderBox.getSelectionModel().selectFirst();
 
-        ObservableList<Address> list = FXCollections.observableArrayList();
+        ObservableList<Address> addressList = FXCollections.observableArrayList();
+        ObservableList<Communication> communicationList = FXCollections.observableArrayList();
 
-        CustomerAddressListController customerAddressListController = new CustomerAddressListController(list);
+        CustomerAddressListController customerAddressListController = new CustomerAddressListController(addressList);
         addressBox.getChildren().add(customerAddressListController.getVbox());
+        
+        CustomerCommunicationListController customerCommunicationListController = new CustomerCommunicationListController(communicationList);
+        communicationsBox.getChildren().add(customerCommunicationListController.getVbox());
 
         // TODO
         Ui.progress().observe(LOADING_TASK);

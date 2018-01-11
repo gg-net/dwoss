@@ -49,7 +49,7 @@ public class CustomerCommunicationListController extends VBox implements Initial
     @FXML
     @Getter
     @Setter
-    VBox vbox;
+    VBox vbox = new VBox();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

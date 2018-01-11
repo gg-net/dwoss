@@ -50,7 +50,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
     @FXML
     @Getter
     @Setter
-    VBox vbox;
+    VBox vbox = new VBox();;
 
     public CustomerAdditionalCustomerIdListController(ObservableMap<ExternalSystem, String> map) {
         this.map = map;
