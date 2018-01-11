@@ -29,9 +29,7 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  * FXML Controller class
