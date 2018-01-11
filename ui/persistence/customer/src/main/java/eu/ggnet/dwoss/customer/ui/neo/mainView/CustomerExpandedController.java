@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,6 +34,8 @@ import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompanyListController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContactController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -61,15 +64,15 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     @Getter
     @Setter
-    private List<Company> companies;
+    private ObservableList<Company> companies = FXCollections.observableArrayList();
 
     @Getter
     @Setter
-    private List<Contact> contacts;
+    private ObservableList<Contact> contacts;
 
     @Getter
     @Setter
-    private List<MandatorMetadata> mandatorMetadata;
+    private ObservableList<MandatorMetadata> mandatorMetadata;
 
     @Getter
     @Setter
@@ -107,27 +110,38 @@ public class CustomerExpandedController implements Initializable, FxController, 
     private FlowPane listViewVbox;
 
     @FXML
-    private CustomerCompanyListController customerCompanyListController;
-
-    @FXML
     private BorderPane rootPane;
 
     @FXML
     private GridPane midGridPane;
 
+    @FXML
+    private CustomerCompanyListController customerCompanyListController;
+
+    @FXML
+    private CustomerContactController customerContactController;
+
+    @FXML
+    private AdditionalCustomerIdController additionalCustomerIdController;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        CustomerGenerator gen = new CustomerGenerator();
-        customerCompanyListController = new CustomerCompanyListController(FXCollections.observableArrayList(gen.makeCompanies(10)));
-
-        midGridPane.add(customerCompanyListController, 0, 2);
-
-        customerCompanyListController.setVisible(true);
         setFlagVboxUp();
-
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
 
+    }
+
+    public void setUp() {
+        setFlagVboxUp();
+        CustomerGenerator gen = new CustomerGenerator();
+        companies.addAll(gen.makeCompanies(10));
+
+        customerCompanyListController = new CustomerCompanyListController(companies);
+
+        midGridPane.add(customerCompanyListController.getVbox(), 0, 3);
+
+        setFlagVboxUp();
     }
 
     @Override
@@ -163,9 +177,29 @@ public class CustomerExpandedController implements Initializable, FxController, 
             list.add(new CheckBox(customerFlags[i].name()));
             list.get(i).setOnAction(customerFlagEventHandler);
             list.get(i).allowIndeterminateProperty().setValue(Boolean.FALSE);
+            if ( flags.contains(customerFlags[i]) )
+                list.get(i).setSelected(true);
 
         }
         flagVbox.getChildren().addAll(list);
     }
 
+    public void setControllerState(MainControllerDto dto) {
+        this.setAdditionalCustomerIds(dto.getAdditionalCustomerIds());
+        this.setComment(dto.getComment());
+        this.setCompanies(FXCollections.observableList(dto.getCompanies()));
+        this.setContacts(FXCollections.observableList(dto.getContacts()));
+        this.setFlags(dto.getFlags());
+        this.setId(dto.getId());
+        this.setKeyAccounter(dto.getKeyAccounter());
+        this.setMandatorMetadata(FXCollections.observableList(dto.getMandatorMetadata()));
+        this.setOptLock(dto.getOptLock());
+        this.setSource(dto.getSource());
+        setFlagVboxUp();
+
+    }
+
+    public MainControllerDto getCustomerDto() {
+        return null;
+    }
 }

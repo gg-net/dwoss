@@ -137,7 +137,7 @@ public class CustomerCompanyListController extends VBox implements Initializable
                 hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
-                //add the first entrie
+                //add the first entry
                 vbox.getChildren().add(hbox);
 
             }

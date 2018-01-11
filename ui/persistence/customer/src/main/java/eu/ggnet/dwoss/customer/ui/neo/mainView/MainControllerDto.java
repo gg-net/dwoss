@@ -72,17 +72,4 @@ public class MainControllerDto {
     @Setter
     private String comment;
 
-    public static void setControllerState(CustomerExpandedController controller, MainControllerDto dto) {
-        controller.setId(dto.getId());
-        controller.setComment(dto.getComment());
-        controller.setCompanies(dto.getCompanies());
-        controller.setContacts(dto.getContacts());
-        controller.setFlags(dto.getFlags());
-        controller.setId(dto.getId());
-        controller.setKeyAccounter(dto.getKeyAccounter());
-        controller.setMandatorMetadata(dto.getMandatorMetadata());
-        controller.setOptLock(dto.getOptLock());
-        controller.setSource(dto.getSource());
-
-    }
 }
