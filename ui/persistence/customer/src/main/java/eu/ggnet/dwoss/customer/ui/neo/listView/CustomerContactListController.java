@@ -82,10 +82,9 @@ public class CustomerContactListController extends VBox implements Initializable
 
         vbox.getChildren().addAll(separator, headerBox);
         if ( !list.isEmpty() ) {
+            //the Togglegroup for this VBox
+            ToggleGroup togglegroup = new ToggleGroup();
             for (Contact contact : list) {
-                //the Togglegroup for this VBox
-                ToggleGroup togglegroup = new ToggleGroup();
-
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);

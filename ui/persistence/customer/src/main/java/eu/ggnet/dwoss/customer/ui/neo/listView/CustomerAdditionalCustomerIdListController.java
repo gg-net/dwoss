@@ -93,11 +93,9 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
-
                
                 Label externalSystem = new Label(entry.getKey().toString());
                 Label idFormExternalSystem = new Label(entry.getValue() );
-
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
