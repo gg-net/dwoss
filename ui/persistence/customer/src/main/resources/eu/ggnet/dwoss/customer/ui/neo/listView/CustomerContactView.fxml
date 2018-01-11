@@ -11,9 +11,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<BorderPane prefHeight="165.0" prefWidth="382.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContactController">
+<BorderPane prefHeight="175.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContactController">
    <top>
-      <Label text="Kontakt" BorderPane.alignment="CENTER">
+      <Label text="Kontakt" BorderPane.alignment="TOP_LEFT">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
