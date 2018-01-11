@@ -162,7 +162,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
         this.setMandatorMetadata(FXCollections.observableList(dto.getMandatorMetadata()));
         this.setOptLock(dto.getOptLock());
         this.setSource(dto.getSource());
-        setFxElementsUp
+        setFxElementsUp();
 
     }
 
