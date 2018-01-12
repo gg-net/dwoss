@@ -81,7 +81,6 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-
         addImg.setOnMousePressed(add(emptyEntry));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
@@ -122,7 +121,28 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
     //TODO
     @Override
     public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {
-        return null;
+        EventHandler<? super MouseEvent> editHandler = new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                // @todo
+                // how to get the selected entry instance
+                Ui.exec(() -> {
+                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class)
+                            .ifPresent((entry) -> map.put(entry.getKey(), entry.getValue()));
+
+                });
+
+                //TODO fx- node are only refresh after the event get triggert again.
+                Platform.runLater(() -> {
+                    vbox.getChildren().clear();
+                    fillList(FXCollections.observableArrayList(map));
+                });
+
+            }
+        };
+
+        return editHandler;
     }
 
     //TODO

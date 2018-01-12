@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView.popup;
 
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -74,7 +75,10 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        this.entry.setValue(identifier.getText());
+        if ( this.entry == null )
+            entry = new AbstractMap.SimpleEntry<ExternalSystem, String>((ExternalSystem)externalsystembox.getSelectionModel().getSelectedItem(), identifier.getText());
+        else
+            this.entry.setValue(identifier.getText());
 
         Ui.closeWindowOf(identifier);
     }
@@ -92,8 +96,10 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     @Override
     public void accept(Entry<ExternalSystem, String> entry) {
         this.entry = entry;
-        if ( entry.getKey() != null ) {
+        if ( entry != null ) {
+
             externalsystembox.getSelectionModel().select(entry.getKey());
+            externalsystembox.setDisable(true);
             identifier.setText(entry.getValue());
         }
     }
