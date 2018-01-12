@@ -33,8 +33,7 @@ import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
@@ -43,6 +42,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
+@Title("Externe Kunden Nummer bearbeiten")
 public class AdditionalCustomerIdController implements Initializable, FxController, ClosedListener {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
