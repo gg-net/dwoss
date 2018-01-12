@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javafx.application.Platform;
 import javafx.collections.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -132,15 +133,20 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
             @Override
             public void handle(MouseEvent event) {
-
                 // @todo
                 // how to get the selected entry instance
                 Ui.exec(() -> {
-                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class);
+                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class)
+                            .ifPresent((entry) -> map.put(entry.getKey(), entry.getValue()));
 
                 });
-                vbox.getChildren().clear();
-                fillList(FXCollections.observableArrayList(map));
+
+                //TODO fx- node are only refresh after the event get triggert again.
+                Platform.runLater(() -> {
+                    vbox.getChildren().clear();
+                    fillList(FXCollections.observableArrayList(map));
+                });
+
             }
         };
 
