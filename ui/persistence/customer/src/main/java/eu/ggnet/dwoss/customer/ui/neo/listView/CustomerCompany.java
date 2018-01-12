@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -114,19 +113,19 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
 
     //TODO
     @Override
-    public ActionEvent edit(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(Object entry) {
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent add(Object entry) {
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
 

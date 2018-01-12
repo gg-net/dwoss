@@ -17,10 +17,11 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView.popup;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
+import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,7 +44,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 @Title("Externe Kunden Nummer bearbeiten")
-public class AdditionalCustomerIdController implements Initializable, FxController, ClosedListener {
+public class AdditionalCustomerIdController implements Initializable, FxController, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
@@ -59,21 +60,17 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
     @FXML
     TextField identifer;
 
-    Map.Entry<ExternalSystem, String> entry;
+    ObservableMap.Entry<ExternalSystem, String> entry;
 
+   @FXML
     /**
-     * todo
-     * objekte passen mit saft
+     * Close the Editor window and discard all changes.
      */
-    @Override
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
+    private void cancel(ActionEvent event) {
+        Ui.closeWindowOf(identifer);
     }
 
-    public AdditionalCustomerIdController(Entry<ExternalSystem, String> entry) {
+    public AdditionalCustomerIdController(ObservableMap.Entry<ExternalSystem, String> entry) {
         this.entry = entry;
         start();
     }
@@ -113,6 +110,16 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
+    }
+
+    @Override
+    public void accept(Entry<ExternalSystem, String> entry) {
+        this.entry = entry;
+    }
+
+    @Override
+    public Entry<ExternalSystem, String> getResult() {
+        return this.entry;
     }
 
 }
