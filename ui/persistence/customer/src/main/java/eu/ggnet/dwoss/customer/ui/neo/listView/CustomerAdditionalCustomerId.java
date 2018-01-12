@@ -23,21 +23,26 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.Contact;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.FxController;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerAdditionalCustomerId extends VBox implements CustomerListViewCommand<Contact> {
+public class CustomerAdditionalCustomerId extends VBox implements CustomerListViewCommand<Contact>, FxController {
 
     ObservableMap<ExternalSystem, String> map;
 
@@ -124,6 +129,20 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
 
     //TODO
     public ActionEvent edit(ExternalSystem id) {
+
+//             Ui.exec(() -> {
+//            Ui.fxml().parent(root).eval(() -> cp, CategoryProductEditorController.class)
+//                    .map(dto -> Client.lookup(UniqueUnitAgent.class).createOrUpdate(dto, Client.lookup(Guardian.class).getUsername()))
+//                    .ifPresent(this::updateList);
+//        });
+        ObservableMap.Entry<ExternalSystem, String> entry = null;
+// @todo set selected entry
+
+        Ui.exec(() -> {
+            Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdController.class);
+            vbox.getChildren().clear();
+
+        });
         return null;
     }
 
