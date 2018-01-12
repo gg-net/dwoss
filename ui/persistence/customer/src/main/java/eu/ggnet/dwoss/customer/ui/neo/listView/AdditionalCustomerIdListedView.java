@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javafx.application.Platform;
 import javafx.collections.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -132,13 +131,8 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
                             .ifPresent((entry) -> map.put(entry.getKey(), entry.getValue()));
 
                 });
-
-                //TODO fx- node are only refresh after the event get triggert again.
-                Platform.runLater(() -> {
-                    vbox.getChildren().clear();
-                    fillList(FXCollections.observableArrayList(map));
-                });
-
+                vbox.getChildren().clear();
+                fillList(FXCollections.observableArrayList(map));
             }
         };
 
@@ -160,13 +154,8 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
                             .ifPresent((entry) -> map.put(entry.getKey(), entry.getValue()));
 
                 });
-
-                //TODO fx- node are only refresh after the event get triggert again.
-                Platform.runLater(() -> {
-                    vbox.getChildren().clear();
-                    fillList(FXCollections.observableArrayList(map));
-                });
-
+                vbox.getChildren().clear();
+                fillList(FXCollections.observableArrayList(map));
             }
         };
 
@@ -176,7 +165,21 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
     //TODO
     @Override
     public EventHandler<? super MouseEvent> del(Entry<ExternalSystem, String> entry) {
-        return null;
+
+        EventHandler<? super MouseEvent> editHandler = new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                map.remove(entry.getKey());
+                vbox.getChildren().clear();
+                fillList(FXCollections.observableArrayList(map));
+            }
+
+        };
+
+        return editHandler;
+
     }
 
 }
