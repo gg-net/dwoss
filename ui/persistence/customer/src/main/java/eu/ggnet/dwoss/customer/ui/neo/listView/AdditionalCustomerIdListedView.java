@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javafx.collections.*;
 import javafx.event.EventHandler;
@@ -27,7 +28,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Contact;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdEditorController;
 import eu.ggnet.saft.Ui;
@@ -39,7 +39,7 @@ import lombok.Getter;
  *
  * @author jens.papenhagen
  */
-public class AdditionalCustomerIdListedView extends VBox implements ListedViewCommandable<Contact>, FxController {
+public class AdditionalCustomerIdListedView extends VBox implements ListedViewCommandable<Map.Entry<ExternalSystem, String>>, FxController {
 
     ObservableMap<ExternalSystem, String> map;
 
@@ -81,7 +81,9 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(""));
+
+        Map.Entry<ExternalSystem, String> emptyentry = null;
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(emptyentry));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -121,7 +123,7 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> edit(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Entry<ExternalSystem, String> entry) {
 
         EventHandler<? super MouseEvent> editHandler = new EventHandler<MouseEvent>() {
 
@@ -144,13 +146,13 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> del(Object entry) {
+    public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> add(Object entry) {
+    public EventHandler<? super MouseEvent> del(Entry<ExternalSystem, String> entry) {
         return null;
     }
 

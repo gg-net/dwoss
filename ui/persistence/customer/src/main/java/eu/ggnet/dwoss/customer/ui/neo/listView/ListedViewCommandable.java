@@ -39,7 +39,7 @@ public interface ListedViewCommandable<T> {
      * @param entry for this List
      * @return
      */
-    public EventHandler<? super MouseEvent> add(Object entry);
+    public EventHandler<? super MouseEvent> add(T entry);
 
     /**
      * edit the entry in the VBox
@@ -47,7 +47,7 @@ public interface ListedViewCommandable<T> {
      * @param entry
      * @return
      */
-    public EventHandler<? super MouseEvent> edit(Object entry);
+    public EventHandler<? super MouseEvent> edit(T entry);
 
     /**
      * delete the entry in the VBox
@@ -55,6 +55,6 @@ public interface ListedViewCommandable<T> {
      * @param entry
      * @return
      */
-    public EventHandler<? super MouseEvent> del(Object entry);
+    public EventHandler<? super MouseEvent> del(T entry);
 
 }

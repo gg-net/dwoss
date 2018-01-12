@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
-
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,7 +28,6 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.entity.Communication;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
@@ -119,22 +117,21 @@ public class CommunicationListedView extends VBox implements ListedViewCommandab
         }
     }
 
-
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> edit(Object entry) {
+    public EventHandler<? super MouseEvent> add(Communication entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> del(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Communication entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> add(Object entry) {
+    public EventHandler<? super MouseEvent> del(Communication entry) {
         return null;
     }
 }

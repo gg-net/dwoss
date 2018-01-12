@@ -113,19 +113,19 @@ public class CompanyListedView extends VBox implements ListedViewCommandable<Com
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> edit(Object entry) {
+    public EventHandler<? super MouseEvent> add(Company entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> del(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Company entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> add(Object entry) {
+    public EventHandler<? super MouseEvent> del(Company entry) {
         return null;
     }
 

@@ -111,19 +111,19 @@ public class AddressListedView extends VBox implements ListedViewCommandable<Add
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> edit(Object entry) {
+    public EventHandler<? super MouseEvent> add(Address entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> del(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Address entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> add(Object entry) {
+    public EventHandler<? super MouseEvent> del(Address entry) {
         return null;
     }
 

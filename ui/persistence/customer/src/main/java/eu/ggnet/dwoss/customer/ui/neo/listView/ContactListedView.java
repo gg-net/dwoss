@@ -118,19 +118,19 @@ public class ContactListedView extends VBox implements ListedViewCommandable<Con
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> edit(Object entry) {
+    public EventHandler<? super MouseEvent> add(Contact entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> del(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Contact entry) {
         return null;
     }
 
     //TODO
     @Override
-    public EventHandler<? super MouseEvent> add(Object entry) {
+    public EventHandler<? super MouseEvent> del(Contact entry) {
         return null;
     }
 
