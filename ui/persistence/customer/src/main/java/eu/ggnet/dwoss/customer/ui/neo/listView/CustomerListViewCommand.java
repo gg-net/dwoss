@@ -45,17 +45,17 @@ public interface CustomerListViewCommand<T> {
     /**
      * edit the entry in the VBox
      *
-     * @param id of the entry
+     * @param entry
      * @return
      */
-    public ActionEvent edit(long id);
+    public ActionEvent edit(Object entry);
 
     /**
      * delete the entry in the VBox
      *
-     * @param id of the entry
+     * @param entry
      * @return
      */
-    public ActionEvent del(long id);
+    public ActionEvent del(Object entry);
 
 }

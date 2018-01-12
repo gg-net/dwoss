@@ -105,14 +105,14 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( communication.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
@@ -129,13 +129,13 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public ActionEvent edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public ActionEvent del(Object entry) {
         return null;
     }
 

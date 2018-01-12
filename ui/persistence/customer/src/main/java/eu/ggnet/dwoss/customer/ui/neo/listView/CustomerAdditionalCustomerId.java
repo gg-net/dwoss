@@ -104,10 +104,10 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry.getKey()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry.getKey()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry));
 
                 //fill the HBox
                 hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
@@ -123,12 +123,12 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
     }
 
     //TODO
-    public ActionEvent edit(ExternalSystem id) {
+    public ActionEvent edit(Object entry) {
         return null;
     }
 
     //TODO
-    public ActionEvent del(ExternalSystem id) {
+    public ActionEvent del(Object entry) {
         return null;
     }
 
@@ -138,16 +138,5 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
         return null;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-    @Override
-    public ActionEvent edit(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ActionEvent del(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    //</editor-fold>
-
+   
 }

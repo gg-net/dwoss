@@ -93,10 +93,10 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address));
 
                 //fill the HBox
                 hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
@@ -115,13 +115,13 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public ActionEvent edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public ActionEvent del(Object entry) {
         return null;
     }
 

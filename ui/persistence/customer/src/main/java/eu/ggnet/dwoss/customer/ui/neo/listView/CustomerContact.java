@@ -98,7 +98,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact));
 
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
@@ -106,7 +106,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
                 if ( contact.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact));
                 
 
                 //fill the HBox
@@ -124,13 +124,13 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public ActionEvent edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public ActionEvent del(Object entry) {
         return null;
     }
 
