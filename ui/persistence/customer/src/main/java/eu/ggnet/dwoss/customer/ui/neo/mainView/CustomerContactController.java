@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui.neo.listView;
+package eu.ggnet.dwoss.customer.ui.neo.mainView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,6 +28,8 @@ import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddressListController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunicationListController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
