@@ -44,7 +44,7 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
     }
 
     /**
-     * fill a VBox for a List of Address
+     * fill a VBox for a List of Address.
      * <p>
      * @param observableList
      */
