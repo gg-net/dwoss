@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import java.util.*;
 
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -47,8 +46,9 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
     @Setter
     VBox vbox = new VBox();
 
-    public CustomerAdditionalCustomerId(ObservableMap<ExternalSystem, String> map) {
-        this.map = map;
+    public CustomerAdditionalCustomerId() {
+        Map<ExternalSystem, String> hashmap = new HashMap<>();
+        this.map = FXCollections.observableMap(hashmap);
     }
 
     /**

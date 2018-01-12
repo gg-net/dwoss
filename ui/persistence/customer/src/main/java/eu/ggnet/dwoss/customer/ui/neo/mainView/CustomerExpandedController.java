@@ -135,10 +135,15 @@ public class CustomerExpandedController implements Initializable, FxController, 
         companies.addAll(gen.makeCompanies(10));
 
         customerCompany = new CustomerCompany();
-        additionalCustomerId = new CustomerAdditionalCustomerId(this.getAdditionalCustomerIds());
+        additionalCustomerId = new CustomerAdditionalCustomerId();
+        
+        //casting the Map into a List
+        ObservableList<Map<ExternalSystem, String>> listmap = FXCollections.observableArrayList();
+        listmap.add(additionalCustomerIds);
+                
 
-        midGridPane.add(customerCompany.getVbox(), 0, 3);
-        midGridPane.add(additionalCustomerId.getVbox(), 3, 2);
+        midGridPane.add(customerCompany.fillList(companies), 0, 3);
+        midGridPane.add(additionalCustomerId.fillList(listmap), 3, 2);
 
     }
 
