@@ -58,7 +58,7 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
 
         //only use the ObservableList for "transfering" the map here.
         if ( observableList != null ) {
@@ -117,17 +117,16 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
                 vbox.getChildren().add(hbox);
             }
         }
-
-        return vbox;
-
     }
 
     //TODO
+    @Override
     public ActionEvent edit(Object entry) {
         return null;
     }
 
     //TODO
+    @Override
     public ActionEvent del(Object entry) {
         return null;
     }

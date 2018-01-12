@@ -51,7 +51,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
 
         Separator separator = new Separator();
 
@@ -117,8 +117,6 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
                 vbox.getChildren().add(hbox);
             }
         }
-
-        return vbox;
 
     }
 

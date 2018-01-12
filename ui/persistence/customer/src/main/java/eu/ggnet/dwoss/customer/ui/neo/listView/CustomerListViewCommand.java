@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.layout.VBox;
 
 /**
  *
@@ -30,9 +29,8 @@ public interface CustomerListViewCommand<T> {
      * Fill a VBox with a given ObservableList of any Typ
      *
      * @param list
-     * @return
      */
-    public VBox fillList(ObservableList<?> list);
+    public void fillList(ObservableList<?> list);
 
     /**
      * add a new entry to the VBox

@@ -110,13 +110,16 @@ public class CustomerCompanyController implements Initializable, FxController {
         communicationList.addAll(uicomppany.getCommunications());        
         
         CustomerContact customerContact = new CustomerContact();
-        contactBox.getChildren().add(customerContact.fillList(contactList));
+        customerContact.fillList(contactList);
+        contactBox.getChildren().add(customerContact.getVbox());
         
         CustomerAddress customerAddress = new CustomerAddress();
-        addressBox.getChildren().add(customerAddress.fillList(addressList));
+        customerAddress.fillList(addressList);
+        addressBox.getChildren().add(customerAddress.getVbox());
 
         CustomerCommunication customerCommunication = new CustomerCommunication();
-        communicationsBox.getChildren().add(customerCommunication.fillList(communicationList));        
+        customerCommunication.fillList(communicationList);
+        communicationsBox.getChildren().add(customerCommunication.getVbox());        
         
     }
 }

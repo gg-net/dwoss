@@ -57,7 +57,7 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -123,8 +123,6 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
                 vbox.getChildren().add(hbox);
             }
         }
-
-        return vbox;
     }
 
     //TODO

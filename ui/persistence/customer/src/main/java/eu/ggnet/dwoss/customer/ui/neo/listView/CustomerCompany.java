@@ -52,7 +52,7 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -114,8 +114,6 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
             }
 
         }
-
-        return vbox;
     }
 
     //TODO
