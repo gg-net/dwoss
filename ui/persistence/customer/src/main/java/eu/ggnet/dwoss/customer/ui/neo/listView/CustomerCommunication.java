@@ -119,21 +119,22 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
         }
     }
 
+
     //TODO
     @Override
-    public ActionEvent edit(Object entry) {
+    public EventHandler<? super MouseEvent> edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(Object entry) {
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent add(Object entry) {
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
 }
