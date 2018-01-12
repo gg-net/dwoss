@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.customer.ui.neo.listView.popup;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,12 +28,9 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
@@ -40,9 +38,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
-public class CustomerCommunicationController implements Initializable, FxController, ClosedListener {
-
-    private final CustomerTask LOADING_TASK = new CustomerTask();
+public class CustomerCommunicationController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
     Button saveButton;
@@ -59,19 +55,14 @@ public class CustomerCommunicationController implements Initializable, FxControl
     @FXML
     Label warning;
 
-    Communication communication;
+    private Communication communication;
 
-    @Override
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
-    }
-
-    public CustomerCommunicationController(Communication communication) {
-        this.communication = communication;
-        start();
+    @FXML
+    /**
+     * Close the Editor window and discard all changes.
+     */
+    private void cancel(ActionEvent event) {
+        Ui.closeWindowOf(identifer);
     }
 
     @FXML
@@ -116,13 +107,6 @@ public class CustomerCommunicationController implements Initializable, FxControl
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        warning.setVisible(false);
-
-        commtypbox.getItems().addAll(Communication.Type.values());
-        commtypbox.getSelectionModel().selectFirst();
-
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
     }
 
     private void start() {
@@ -131,6 +115,20 @@ public class CustomerCommunicationController implements Initializable, FxControl
         if ( communication != null ) {
             commtypbox.getSelectionModel().select(communication.getType());
         }
+    }
+    
+    @Override
+    public void accept(Communication communication) {
+        this.communication = communication;
+        start();
+    }
+
+    @Override
+    public Communication getResult() {
+         if ( communication == null ) {
+            return null;
+        }
+        return communication;
     }
 
 }
