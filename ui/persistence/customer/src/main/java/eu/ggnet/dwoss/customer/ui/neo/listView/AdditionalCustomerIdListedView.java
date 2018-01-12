@@ -46,7 +46,7 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
     @Getter
     private VBox vbox = new VBox();
 
-    private Map.Entry<ExternalSystem, String> emptyentry = null;
+    private Map.Entry<ExternalSystem, String> emptyEntry = null;
 
     /**
      * fill a VBox for a List of Contact
@@ -81,13 +81,12 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
         ImageView addImg = new ListedViewUtil().addButton();
 
-        addImg.setOnMousePressed(add(emptyentry));
+        addImg.setOnMousePressed(add(emptyEntry));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
         if ( !map.isEmpty() ) {
-
             for (Map.Entry<ExternalSystem, String> entry : map.entrySet()) {
 
                 //buildup the HBox
@@ -137,7 +136,7 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
                 // @todo
                 // how to get the selected entry instance
                 Ui.exec(() -> {
-                    Ui.fxml().parent(vbox).eval(() -> emptyentry = entry, AdditionalCustomerIdEditorController.class);
+                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class);
 
                 });
                 vbox.getChildren().clear();

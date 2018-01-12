@@ -1,4 +1,4 @@
- f/*
+/*
  * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,8 +33,6 @@ import lombok.Getter;
  *
  * @author jens.papenhagen
  */
-
-
 public class CompanyListedView extends VBox implements ListedViewCommandable<Company> {
 
     @FXML

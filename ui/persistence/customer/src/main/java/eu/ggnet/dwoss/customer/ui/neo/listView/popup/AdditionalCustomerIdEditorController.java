@@ -90,11 +90,11 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     }
 
     @Override
-    public void accept(Entry<ExternalSystem, String> a) {
-        this.entry = a;
-        identifier.setText(entry.getValue());
+    public void accept(Entry<ExternalSystem, String> entry) {
+        this.entry = entry;
         if ( entry.getKey() != null ) {
             externalsystembox.getSelectionModel().select(entry.getKey());
+            identifier.setText(entry.getValue());
         }
     }
 

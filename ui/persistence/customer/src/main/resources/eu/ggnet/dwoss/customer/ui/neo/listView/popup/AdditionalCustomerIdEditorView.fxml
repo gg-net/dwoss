@@ -33,7 +33,7 @@
             <children>
                 <Label text="Externes System" />
                 <Label text="Eintrag" GridPane.rowIndex="1" />
-                <TextField fx:id="identifer" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                <TextField fx:id="identifier" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                 <ChoiceBox fx:id="externalsystembox" prefWidth="150.0" GridPane.columnIndex="2" />
             </children>
         </GridPane>
