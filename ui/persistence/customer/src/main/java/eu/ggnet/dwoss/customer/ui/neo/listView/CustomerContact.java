@@ -31,28 +31,27 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Company;
+import eu.ggnet.dwoss.customer.entity.Contact;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerCompanyListController extends VBox implements Initializable {
+public class CustomerContact extends VBox implements Initializable {
 
     @FXML
     @Getter
     @Setter
-    ObservableList<Company> list;
+    ObservableList<Contact> list;
 
     @FXML
     @Getter
     @Setter
-    VBox vbox = new VBox();
+    VBox vbox = new VBox();;
 
-    public CustomerCompanyListController(ObservableList<Company> list) {
+    public CustomerContact(ObservableList<Contact> list) {
         this.list = list;
         start();
     }
@@ -63,7 +62,9 @@ public class CustomerCompanyListController extends VBox implements Initializable
 
     private void start() {
         /**
-         * fill a VBox for a List of Company
+         * fill a VBox for a List of Contact
+         * select the Prefered Contact
+         * <p>
          */
         Separator separator = new Separator();
 
@@ -72,7 +73,7 @@ public class CustomerCompanyListController extends VBox implements Initializable
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Firmen:");
+        Label headerLable = new Label("Kontakte:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -84,32 +85,30 @@ public class CustomerCompanyListController extends VBox implements Initializable
         addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addCompany(new Company()));
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Contact()));
         Tooltip.install(addImg, new Tooltip("Hinzufügen"));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
-
         if ( !list.isEmpty() ) {
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
-
-            for (Company company : list) {
+            for (Contact contact : list) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                RadioButton companyButton = new RadioButton();
-                companyButton.setToggleGroup(togglegroup);
-                if ( company.isPrefered() ) {
-                    companyButton.setSelected(true);
+                RadioButton contactButton = new RadioButton();
+                contactButton.setToggleGroup(togglegroup);
+                if ( contact.isPrefered() ) {
+                    contactButton.setSelected(true);
                 }
-
-                Label name = new Label(company.getName());
-                name.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+                Label title = new Label(contact.getTitle());
+                Label firstname = new Label(contact.getFirstName());
+                Label lastname = new Label(contact.getLastName());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
@@ -121,7 +120,7 @@ public class CustomerCompanyListController extends VBox implements Initializable
                 editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editCompany(company.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -130,34 +129,36 @@ public class CustomerCompanyListController extends VBox implements Initializable
                 delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delCompany(company.getId()));
+                //disable the click on the prefered entry
+                if ( contact.isPrefered() ) {
+                    delImg.setDisable(true);
+                }
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact.getId()));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(contactButton, title, firstname, lastname, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
-                //add the first entry
+                //add the first entrie
                 vbox.getChildren().add(hbox);
-
             }
-
         }
 
     }
 
     //TODO
-    public ActionEvent addCompany(Company c) {
+    public ActionEvent add(Contact c) {
         return null;
     }
 
     //TODO
-    public ActionEvent editCompany(long id) {
+    public ActionEvent edit(long id) {
         return null;
     }
 
     //TODO
-    public ActionEvent delCompany(long id) {
+    public ActionEvent del(long id) {
         return null;
     }
 

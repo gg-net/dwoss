@@ -28,8 +28,8 @@ import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddressListController;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunicationListController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddress;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunication;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
@@ -95,10 +95,10 @@ public class CustomerContactController implements Initializable, FxController {
         communicationList.addAll(uicontact.getCommunications());
         
 
-        CustomerAddressListController customerAddressListController = new CustomerAddressListController(addressList);
+        CustomerAddress customerAddressListController = new CustomerAddress(addressList);
         addressBox.getChildren().add(customerAddressListController.getVbox());
 
-        CustomerCommunicationListController customerCommunicationListController = new CustomerCommunicationListController(communicationList);
+        CustomerCommunication customerCommunicationListController = new CustomerCommunication(communicationList);
         communicationsBox.getChildren().add(customerCommunicationListController.getVbox());
 
     }

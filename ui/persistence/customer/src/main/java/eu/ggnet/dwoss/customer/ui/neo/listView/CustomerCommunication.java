@@ -31,39 +31,40 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Address;
+import eu.ggnet.dwoss.customer.entity.Communication;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerAddressListController extends VBox implements Initializable {
+public class CustomerCommunication extends VBox implements Initializable {
 
     @FXML
     @Getter
     @Setter
-    ObservableList<Address> list;
+    ObservableList<Communication> list;
 
     @FXML
     @Getter
     @Setter
     VBox vbox = new VBox();
 
-    public CustomerAddressListController(ObservableList<Address> list) {
-        this.list = list;
-        start();
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    public CustomerCommunication(ObservableList<Communication> list) {
+        this.list = list;
+        start();
+    }
+
     private void start() {
+
         /**
-         * fill a VBox for a List of Address
+         * fill a VBox for a List of Communication
+         * select the Prefered CommunicationTyp
          */
         Separator separator = new Separator();
 
@@ -72,7 +73,7 @@ public class CustomerAddressListController extends VBox implements Initializable
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Adressen:");
+        Label headerLable = new Label("Kommunikationswege:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -81,10 +82,10 @@ public class CustomerAddressListController extends VBox implements Initializable
         ImageView addImg = new ImageView();
         addImg.setFitHeight(24.0);
         addImg.setFitWidth(24.0);
-        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png") ));
+        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addAddress(new Address()));
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Communication()));
         Tooltip.install(addImg, new Tooltip("Hinzufügen"));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
@@ -92,20 +93,26 @@ public class CustomerAddressListController extends VBox implements Initializable
         vbox.getChildren().addAll(separator, headerBox);
 
         if ( !list.isEmpty() ) {
-            for (Address address : list) {
+            //the Togglegroup for this VBox
+            ToggleGroup togglegroup = new ToggleGroup();
 
+            for (Communication communication : list) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                Label preferdType = new Label(address.getPreferedType().getName());
-                preferdType.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+                RadioButton commButton = new RadioButton();
+                commButton.setToggleGroup(togglegroup);
+                if ( communication.isPrefered() ) {
+                    commButton.setSelected(true);
+                }
 
-                Label street = new Label(address.getStreet());
-                Label zipcode = new Label(address.getZipCode());
-                Label city = new Label(address.getCity());
+                Label commtype = new Label(communication.getType().name());
+                commtype.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                Label commfield = new Label(communication.getIdentifier());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
@@ -117,7 +124,7 @@ public class CustomerAddressListController extends VBox implements Initializable
                 editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editAddress(address.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -126,35 +133,35 @@ public class CustomerAddressListController extends VBox implements Initializable
                 delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delAddress(address.getId()));
+                //disable the click on the prefered entry
+                if ( communication.isPrefered() ) {
+                    delImg.setDisable(true);
+                }
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication.getId()));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(commButton, commtype, commfield, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
                 //add the first entrie
                 vbox.getChildren().add(hbox);
-
             }
-
         }
-
     }
 
     //TODO
-    public ActionEvent addAddress(Address a) {
+    public ActionEvent add(Communication c) {
         return null;
     }
 
     //TODO
-    public ActionEvent editAddress(long id) {
+    public ActionEvent edit(long id) {
         return null;
     }
 
     //TODO
-    public ActionEvent delAddress(long id) {
+    public ActionEvent del(long id) {
         return null;
     }
-
 }

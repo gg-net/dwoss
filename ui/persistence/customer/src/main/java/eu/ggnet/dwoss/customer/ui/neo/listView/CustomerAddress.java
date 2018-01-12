@@ -17,10 +17,9 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import java.net.URL;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import javafx.collections.ObservableMap;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,28 +31,29 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.entity.Address;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerAdditionalCustomerIdListController extends VBox implements Initializable {
+public class CustomerAddress extends VBox implements Initializable {
 
     @FXML
     @Getter
     @Setter
-    ObservableMap<ExternalSystem, String> map;
+    ObservableList<Address> list;
 
     @FXML
     @Getter
     @Setter
-    VBox vbox = new VBox();;
+    VBox vbox = new VBox();
 
-    public CustomerAdditionalCustomerIdListController(ObservableMap<ExternalSystem, String> map) {
-        this.map = map;
+    public CustomerAddress(ObservableList<Address> list) {
+        this.list = list;
         start();
     }
 
@@ -62,11 +62,8 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
     }
 
     private void start() {
-
         /**
-         * fill a VBox for a List of Contact
-         * select the Prefered Contact
-         * <p>
+         * fill a VBox for a List of Address
          */
         Separator separator = new Separator();
 
@@ -75,7 +72,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Externe Kunden Ids:");
+        Label headerLable = new Label("Adressen:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -84,18 +81,18 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
         ImageView addImg = new ImageView();
         addImg.setFitHeight(24.0);
         addImg.setFitWidth(24.0);
-        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
+        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png") ));
         addImg.setPickOnBounds(true);
         addImg.setPreserveRatio(true);
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)addAdditionalCutomerId(""));
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Address()));
         Tooltip.install(addImg, new Tooltip("Hinzufügen"));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
-        if ( !map.isEmpty() ) {
 
-            for (Map.Entry<ExternalSystem, String> entry : map.entrySet()) {
+        if ( !list.isEmpty() ) {
+            for (Address address : list) {
 
                 //buildup the HBox
                 HBox hbox = new HBox();
@@ -103,8 +100,12 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                Label externalSystem = new Label(entry.getKey().toString());
-                Label idFormExternalSystem = new Label(entry.getValue());
+                Label preferdType = new Label(address.getPreferedType().getName());
+                preferdType.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                Label street = new Label(address.getStreet());
+                Label zipcode = new Label(address.getZipCode());
+                Label city = new Label(address.getCity());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
@@ -116,7 +117,7 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
                 editImg.setPickOnBounds(true);
                 editImg.setPreserveRatio(true);
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)editAdditionalCutomerId(entry.getKey()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address.getId()));
                 Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
                 ImageView delImg = new ImageView();
@@ -125,32 +126,34 @@ public class CustomerAdditionalCustomerIdListController extends VBox implements 
                 delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
                 delImg.setPickOnBounds(true);
                 delImg.setPreserveRatio(true);
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)delAdditionalCutomerId(entry.getKey()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address.getId()));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
                 //add the first entrie
                 vbox.getChildren().add(hbox);
+
             }
+
         }
 
     }
 
     //TODO
-    public ActionEvent addAdditionalCutomerId(String c) {
+    public ActionEvent add(Address a) {
         return null;
     }
 
     //TODO
-    public ActionEvent editAdditionalCutomerId(ExternalSystem id) {
+    public ActionEvent edit(long id) {
         return null;
     }
 
     //TODO
-    public ActionEvent delAdditionalCutomerId(ExternalSystem id) {
+    public ActionEvent del(long id) {
         return null;
     }
 

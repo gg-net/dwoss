@@ -30,9 +30,9 @@ import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddressListController;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunicationListController;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContactListController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddress;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunication;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerContact;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
@@ -109,13 +109,13 @@ public class CustomerCompanyController implements Initializable, FxController {
         addressList.addAll(uicomppany.getAddresses());
         communicationList.addAll(uicomppany.getCommunications());        
         
-        CustomerContactListController customerContactListController = new CustomerContactListController(contactList);
+        CustomerContact customerContactListController = new CustomerContact(contactList);
         contactBox.getChildren().add(customerContactListController.getVbox());
         
-        CustomerAddressListController customerAddressListController = new CustomerAddressListController(addressList);
+        CustomerAddress customerAddressListController = new CustomerAddress(addressList);
         addressBox.getChildren().add(customerAddressListController.getVbox());
 
-        CustomerCommunicationListController customerCommunicationListController = new CustomerCommunicationListController(communicationList);
+        CustomerCommunication customerCommunicationListController = new CustomerCommunication(communicationList);
         communicationsBox.getChildren().add(customerCommunicationListController.getVbox());        
         
     }
