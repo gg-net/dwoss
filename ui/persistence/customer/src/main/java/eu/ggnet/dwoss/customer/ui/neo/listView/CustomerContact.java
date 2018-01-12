@@ -16,17 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -39,33 +34,25 @@ import lombok.*;
  *
  * @author jens.papenhagen
  */
-public class CustomerContact extends VBox implements Initializable {
+public class CustomerContact extends VBox implements CustomerListViewCommand<Contact> {
 
     @FXML
     @Getter
     @Setter
-    ObservableList<Contact> list;
+    VBox vbox = new VBox();
 
-    @FXML
-    @Getter
-    @Setter
-    VBox vbox = new VBox();;
-
-    public CustomerContact(ObservableList<Contact> list) {
-        this.list = list;
-        start();
+    public CustomerContact() {
     }
 
+    /**
+     * fill a VBox for a List of Contact
+     * select the Prefered Contact
+     * <p>
+     * @param observableList
+     */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-    }
+    public VBox fillList(ObservableList<?> observableList) {
 
-    private void start() {
-        /**
-         * fill a VBox for a List of Contact
-         * select the Prefered Contact
-         * <p>
-         */
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -79,22 +66,18 @@ public class CustomerContact extends VBox implements Initializable {
         headerFillregion.setMinHeight(24.0);
         headerFillregion.setMinWidth(10.0);
 
-        ImageView addImg = new ImageView();
-        addImg.setFitHeight(24.0);
-        addImg.setFitWidth(24.0);
-        addImg.setImage(new Image(getClass().getResourceAsStream("../../add_black_24dp.png")));
-        addImg.setPickOnBounds(true);
-        addImg.setPreserveRatio(true);
+        ImageView addImg = new CustomerListViewUtil().addButton();
         addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Contact()));
-        Tooltip.install(addImg, new Tooltip("Hinzufügen"));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
-        if ( !list.isEmpty() ) {
+
+        if ( !observableList.isEmpty() ) {
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
-            for (Contact contact : list) {
+
+            for (Contact contact : (ObservableList<Contact>)observableList) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
@@ -114,27 +97,17 @@ public class CustomerContact extends VBox implements Initializable {
                 fillregion.setMinHeight(24.0);
                 fillregion.setMinWidth(10.0);
 
-                ImageView editImg = new ImageView();
-                editImg.setFitHeight(24.0);
-                editImg.setFitWidth(24.0);
-                editImg.setImage(new Image(getClass().getResourceAsStream("../../edit_black_24dp.png")));
-                editImg.setPickOnBounds(true);
-                editImg.setPreserveRatio(true);
+                ImageView editImg = new CustomerListViewUtil().editButton();
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact.getId()));
-                Tooltip.install(editImg, new Tooltip("Bearbeiten"));
 
-                ImageView delImg = new ImageView();
-                delImg.setFitHeight(24.0);
-                delImg.setFitWidth(24.0);
-                delImg.setImage(new Image(getClass().getResourceAsStream("../../del_black_24dp.png")));
-                delImg.setPickOnBounds(true);
-                delImg.setPreserveRatio(true);
+
+                ImageView delImg = new CustomerListViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( contact.isPrefered() ) {
                     delImg.setDisable(true);
                 }
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact.getId()));
-                Tooltip.install(delImg, new Tooltip("Löschen"));
+                
 
                 //fill the HBox
                 hbox.getChildren().addAll(contactButton, title, firstname, lastname, fillregion, editImg, delImg);
@@ -145,21 +118,28 @@ public class CustomerContact extends VBox implements Initializable {
             }
         }
 
+        return vbox;
+
     }
 
     //TODO
-    public ActionEvent add(Contact c) {
-        return null;
-    }
-
-    //TODO
+    @Override
     public ActionEvent edit(long id) {
         return null;
     }
 
     //TODO
+    @Override
     public ActionEvent del(long id) {
         return null;
     }
+
+    //TODO
+    @Override
+    public ActionEvent add(Object entry) {
+        return null;
+    }
+
+
 
 }

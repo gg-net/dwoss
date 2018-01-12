@@ -113,13 +113,13 @@ public class CustomerExpandedController implements Initializable, FxController, 
     private GridPane midGridPane;
 
     @FXML
-    private CustomerCompany customerCompanyListController;
+    private CustomerCompany customerCompany;
 
     @FXML
     private CustomerContactController customerContactController;
 
     @FXML
-    private CustomerAdditionalCustomerId additionalCustomerIdListController;
+    private CustomerAdditionalCustomerId additionalCustomerId;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -134,11 +134,11 @@ public class CustomerExpandedController implements Initializable, FxController, 
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
 
-        customerCompanyListController = new CustomerCompany(companies);
-        additionalCustomerIdListController = new CustomerAdditionalCustomerId(this.getAdditionalCustomerIds());
+        customerCompany = new CustomerCompany();
+        additionalCustomerId = new CustomerAdditionalCustomerId(this.getAdditionalCustomerIds());
 
-        midGridPane.add(customerCompanyListController.getVbox(), 0, 3);
-        midGridPane.add(additionalCustomerIdListController.getVbox(), 3, 2);
+        midGridPane.add(customerCompany.getVbox(), 0, 3);
+        midGridPane.add(additionalCustomerId.getVbox(), 3, 2);
 
     }
 
