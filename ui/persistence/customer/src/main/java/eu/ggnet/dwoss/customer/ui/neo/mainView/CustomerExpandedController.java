@@ -32,7 +32,8 @@ import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.*;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAdditionalCustomerId;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompany;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -136,12 +137,18 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
         customerCompany = new CustomerCompany();
         additionalCustomerId = new CustomerAdditionalCustomerId();
-        
+
         //casting the Map into a List
         ObservableList<Map<ExternalSystem, String>> listmap = FXCollections.observableArrayList();
+        additionalCustomerIds.put(ExternalSystem.SAGE, "test Kommentar");
         listmap.add(additionalCustomerIds);
-                
 
+        /**
+         * @todo
+         * refactor this into customerCompany.getAsFXEelement/View whatever and call filllist beforehand
+         * method names: createContent instead of fillList
+         *
+         */
         midGridPane.add(customerCompany.fillList(companies), 0, 3);
         midGridPane.add(additionalCustomerId.fillList(listmap), 3, 2);
 
