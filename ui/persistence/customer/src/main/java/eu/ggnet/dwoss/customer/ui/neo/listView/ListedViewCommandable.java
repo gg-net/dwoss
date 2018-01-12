@@ -24,7 +24,7 @@ import javafx.scene.input.MouseEvent;
  *
  * @author jens.papenhagen
  */
-public interface CustomerListViewCommand<T> {
+public interface ListedViewCommandable<T> {
 
     /**
      * Fill a VBox with a given ObservableList of any Typ

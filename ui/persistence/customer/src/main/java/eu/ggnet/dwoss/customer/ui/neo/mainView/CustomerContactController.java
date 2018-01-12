@@ -23,13 +23,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAddress;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCommunication;
+import eu.ggnet.dwoss.customer.ui.neo.listView.AddressListedView;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CommunicationListedView;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
@@ -94,13 +95,13 @@ public class CustomerContactController implements Initializable, FxController {
         addressList.addAll(uicontact.getAddresses());
         communicationList.addAll(uicontact.getCommunications());
 
-        CustomerAddress customerAddress = new CustomerAddress();
-        customerAddress.fillList(addressList);
-        addressBox.getChildren().add(customerAddress.getVbox());
+        AddressListedView addressListedView = new AddressListedView();
+        addressListedView.fillList(addressList);
+        addressBox.getChildren().add(addressListedView.getVbox());
 
-        CustomerCommunication customerCommunication = new CustomerCommunication();
-        customerCommunication.fillList(communicationList);
-        communicationsBox.getChildren().add(customerCommunication.getVbox());
+        CommunicationListedView communicationListedView = new CommunicationListedView();
+        communicationListedView.fillList(communicationList);
+        communicationsBox.getChildren().add(communicationListedView.getVbox());
 
     }
 

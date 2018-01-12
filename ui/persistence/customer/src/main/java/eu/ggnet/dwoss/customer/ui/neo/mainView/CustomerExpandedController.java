@@ -32,8 +32,8 @@ import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerAdditionalCustomerId;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CustomerCompany;
+import eu.ggnet.dwoss.customer.ui.neo.listView.AdditionalCustomerIdListedView;
+import eu.ggnet.dwoss.customer.ui.neo.listView.CompanyListedView;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -114,13 +114,13 @@ public class CustomerExpandedController implements Initializable, FxController, 
     private GridPane midGridPane;
 
     @FXML
-    private CustomerCompany customerCompany;
+    private CompanyListedView companyListedView;
 
     @FXML
     private CustomerContactController customerContactController;
 
     @FXML
-    private CustomerAdditionalCustomerId additionalCustomerId;
+    private AdditionalCustomerIdListedView additionalCustomerIdListedView;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,8 +135,8 @@ public class CustomerExpandedController implements Initializable, FxController, 
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
 
-        customerCompany = new CustomerCompany();
-        additionalCustomerId = new CustomerAdditionalCustomerId();
+        companyListedView = new CompanyListedView();
+        additionalCustomerIdListedView = new AdditionalCustomerIdListedView();
 
         //casting the Map into a List
         ObservableList<Map<ExternalSystem, String>> listmap = FXCollections.observableArrayList();
@@ -149,12 +149,11 @@ public class CustomerExpandedController implements Initializable, FxController, 
          * method names: createContent instead of fillList
          *
          */
-        
-        customerCompany.fillList(companies);
-        additionalCustomerId.fillList(listmap);
-        
-        midGridPane.add(customerCompany.getVbox(), 0, 3);
-        midGridPane.add(additionalCustomerId.getVbox(), 3, 2);
+        companyListedView.fillList(companies);
+        additionalCustomerIdListedView.fillList(listmap);
+
+        midGridPane.add(companyListedView.getVbox(), 0, 3);
+        midGridPane.add(additionalCustomerIdListedView.getVbox(), 3, 2);
 
     }
 

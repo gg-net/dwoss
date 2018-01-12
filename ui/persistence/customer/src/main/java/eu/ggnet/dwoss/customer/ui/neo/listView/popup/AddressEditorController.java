@@ -43,7 +43,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 @Title("Kunden Adresse bearbeiten")
-public class CustomerAddressController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
+public class AddressEditorController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
 
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
 

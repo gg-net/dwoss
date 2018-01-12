@@ -20,13 +20,12 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Address;
+import eu.ggnet.dwoss.customer.entity.Company;
 
 import lombok.Getter;
 
@@ -34,17 +33,17 @@ import lombok.Getter;
  *
  * @author jens.papenhagen
  */
-public class CustomerAddress extends VBox implements CustomerListViewCommand<Address> {
+public class CompanyListedView extends VBox implements ListedViewCommandable<Company> {
 
     @FXML
     @Getter
     private VBox vbox = new VBox();
 
-    public CustomerAddress() {
+    public CompanyListedView() {
     }
 
     /**
-     * fill a VBox for a List of Address.
+     * fill a VBox for a List of Company
      * <p>
      * @param observableList
      */
@@ -57,56 +56,59 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Adressen:");
+        Label headerLable = new Label("Firmen:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
         headerFillregion.setMinWidth(10.0);
 
-        ImageView addImg = new CustomerListViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Address()));
+        ImageView addImg = new ListedViewUtil().addButton();
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Company()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
 
         if ( !observableList.isEmpty() ) {
-            for (Address address : (ObservableList<Address>)observableList) {
+            //the Togglegroup for this VBox
+            ToggleGroup togglegroup = new ToggleGroup();
 
+            for (Company company : (ObservableList<Company>)observableList) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                Label preferdType = new Label(address.getPreferedType().getName());
-                preferdType.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+                RadioButton companyButton = new RadioButton();
+                companyButton.setToggleGroup(togglegroup);
+                if ( company.isPrefered() ) {
+                    companyButton.setSelected(true);
+                }
 
-                Label street = new Label(address.getStreet());
-                Label zipcode = new Label(address.getZipCode());
-                Label city = new Label(address.getCity());
+                Label name = new Label(company.getName());
+                name.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
                 fillregion.setMinWidth(10.0);
 
-                ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address));
+                ImageView editImg = new ListedViewUtil().editButton();
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company));
 
-                ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address));
+                ImageView delImg = new ListedViewUtil().deleteButton();
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company));
 
                 //fill the HBox
-                hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
-                //add the first entrie
+                //add the first entry
                 vbox.getChildren().add(hbox);
 
             }
 
         }
-
     }
 
     //TODO

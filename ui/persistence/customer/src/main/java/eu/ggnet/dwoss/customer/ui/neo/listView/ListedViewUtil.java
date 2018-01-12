@@ -25,10 +25,7 @@ import javafx.scene.image.ImageView;
  *
  * @author jens.papenhagen
  */
-public class CustomerListViewUtil {
-
-    public CustomerListViewUtil() {
-    }
+public class ListedViewUtil {
 
     public ImageView addButton() {
         ImageView addImg = new ImageView();

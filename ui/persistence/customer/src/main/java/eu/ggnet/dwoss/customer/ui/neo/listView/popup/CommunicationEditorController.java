@@ -38,7 +38,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
-public class CustomerCommunicationController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
+public class CommunicationEditorController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
     Button saveButton;

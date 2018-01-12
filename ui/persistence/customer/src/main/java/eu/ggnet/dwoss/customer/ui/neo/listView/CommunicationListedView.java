@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
+
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,25 +26,27 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Company;
+import eu.ggnet.dwoss.customer.entity.Communication;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerCompany extends VBox implements CustomerListViewCommand<Company> {
+public class CommunicationListedView extends VBox implements ListedViewCommandable<Communication> {
 
     @FXML
     @Getter
     private VBox vbox = new VBox();
 
-    public CustomerCompany() {
+    public CommunicationListedView() {
     }
 
     /**
-     * fill a VBox for a List of Company
+     * fill a VBox for a List of Communication
+     * select the Prefered Communication
      * <p>
      * @param observableList
      */
@@ -56,14 +59,14 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        Label headerLable = new Label("Firmen:");
+        Label headerLable = new Label("Kommunikationswege:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
         headerFillregion.setMinWidth(10.0);
 
-        ImageView addImg = new CustomerListViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Company()));
+        ImageView addImg = new ListedViewUtil().addButton();
+        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Communication()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -73,43 +76,49 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
 
-            for (Company company : (ObservableList<Company>)observableList) {
+            for (Communication communication : (ObservableList<Communication>)observableList) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
                 hbox.setAlignment(Pos.CENTER);
                 hbox.setMinHeight(24.0);
 
-                RadioButton companyButton = new RadioButton();
-                companyButton.setToggleGroup(togglegroup);
-                if ( company.isPrefered() ) {
-                    companyButton.setSelected(true);
+                RadioButton commButton = new RadioButton();
+                commButton.setToggleGroup(togglegroup);
+                if ( communication.isPrefered() ) {
+                    commButton.setSelected(true);
                 }
 
-                Label name = new Label(company.getName());
-                name.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+                Label commtype = new Label(communication.getType().name());
+                commtype.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
+
+                Label commfield = new Label(communication.getIdentifier());
 
                 Region fillregion = new Region();
                 fillregion.setMinHeight(24.0);
                 fillregion.setMinWidth(10.0);
 
-                ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company));
+                ImageView editImg = new ListedViewUtil().editButton();
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication));
 
-                ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company));
+                ImageView delImg = new ListedViewUtil().deleteButton();
+                //disable the click on the prefered entry
+                if ( communication.isPrefered() ) {
+                    delImg.setDisable(true);
+                }
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication));
+                Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
-                hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
+                hbox.getChildren().addAll(commButton, commtype, commfield, fillregion, editImg, delImg);
                 HBox.setHgrow(fillregion, Priority.ALWAYS);
 
-                //add the first entry
+                //add the first entrie
                 vbox.getChildren().add(hbox);
-
             }
-
         }
     }
+
 
     //TODO
     @Override
@@ -128,5 +137,4 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
     public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
-
 }

@@ -1,3 +1,14 @@
+package tryout.neo.listView.popup;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CommunicationEditorController;
+import eu.ggnet.saft.*;
+
+import tryout.stub.CustomerAgentStub;
+
 /*
  * Copyright (C) 2018 GG-Net GmbH
  *
@@ -14,23 +25,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout.neo.listView.popup;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdController;
-import eu.ggnet.saft.*;
-
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class AdditionalCustomerIdTryout {
-        public static void main(String[] args) {
+public class CommunicationEditorTryout {
+    
+     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
@@ -39,7 +41,7 @@ public class AdditionalCustomerIdTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(AdditionalCustomerIdController.class);
+            Ui.fxml().show(CommunicationEditorController.class);
 
         });
 
@@ -49,4 +51,5 @@ public class AdditionalCustomerIdTryout {
 
         UiCore.startSwing(() -> p);
     }
+    
 }

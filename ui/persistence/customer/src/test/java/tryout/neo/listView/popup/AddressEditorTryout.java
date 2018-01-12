@@ -19,7 +19,7 @@ package tryout.neo.listView.popup;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerAddressController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AddressEditorController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -28,7 +28,7 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CustomerAddressTryout {
+public class AddressEditorTryout {
 
     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
@@ -39,7 +39,7 @@ public class CustomerAddressTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CustomerAddressController.class);
+            Ui.fxml().show(AddressEditorController.class);
 
         });
 

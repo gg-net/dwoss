@@ -20,7 +20,6 @@ import java.util.*;
 
 import javafx.collections.*;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -30,27 +29,24 @@ import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.Contact;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdController;
+import eu.ggnet.dwoss.customer.ui.neo.listView.popup.AdditionalCustomerIdEditorController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CustomerAdditionalCustomerId extends VBox implements CustomerListViewCommand<Contact>, FxController {
+public class AdditionalCustomerIdListedView extends VBox implements ListedViewCommandable<Contact>, FxController {
 
     ObservableMap<ExternalSystem, String> map;
 
-    @FXML
     @Getter
-    @Setter
     private VBox vbox = new VBox();
 
-    public CustomerAdditionalCustomerId() {
+    public AdditionalCustomerIdListedView() {
         Map<ExternalSystem, String> hashmap = new HashMap<>();
         this.map = FXCollections.observableMap(hashmap);
     }
@@ -84,7 +80,7 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
         headerFillregion.setMinHeight(24.0);
         headerFillregion.setMinWidth(10.0);
 
-        ImageView addImg = new CustomerListViewUtil().addButton();
+        ImageView addImg = new ListedViewUtil().addButton();
         addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(""));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
@@ -107,10 +103,10 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
                 fillregion.setMinHeight(24.0);
                 fillregion.setMinWidth(10.0);
 
-                ImageView editImg = new CustomerListViewUtil().editButton();
+                ImageView editImg = new ListedViewUtil().editButton();
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry));
 
-                ImageView delImg = new CustomerListViewUtil().deleteButton();
+                ImageView delImg = new ListedViewUtil().deleteButton();
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry));
 
                 //fill the HBox
@@ -135,10 +131,11 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
 // @todo set selected entry
 
                 Ui.exec(() -> {
-                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdController.class);
-                    vbox.getChildren().clear();
-                    fillList(FXCollections.observableArrayList(map));
+                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class);
+
                 });
+                vbox.getChildren().clear();
+                fillList(FXCollections.observableArrayList(map));
             }
         };
 

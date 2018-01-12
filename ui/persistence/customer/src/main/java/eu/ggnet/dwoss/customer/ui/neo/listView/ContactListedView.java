@@ -33,13 +33,13 @@ import lombok.Getter;
  *
  * @author jens.papenhagen
  */
-public class CustomerContact extends VBox implements CustomerListViewCommand<Contact> {
+public class ContactListedView extends VBox implements ListedViewCommandable<Contact> {
 
     @FXML
     @Getter
     private VBox vbox = new VBox();
 
-    public CustomerContact() {
+    public ContactListedView() {
     }
 
     /**
@@ -64,7 +64,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
         headerFillregion.setMinHeight(24.0);
         headerFillregion.setMinWidth(10.0);
 
-        ImageView addImg = new CustomerListViewUtil().addButton();
+        ImageView addImg = new ListedViewUtil().addButton();
         addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Contact()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
@@ -95,10 +95,10 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
                 fillregion.setMinHeight(24.0);
                 fillregion.setMinWidth(10.0);
 
-                ImageView editImg = new CustomerListViewUtil().editButton();
+                ImageView editImg = new ListedViewUtil().editButton();
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact));
 
-                ImageView delImg = new CustomerListViewUtil().deleteButton();
+                ImageView delImg = new ListedViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( contact.isPrefered() ) {
                     delImg.setDisable(true);

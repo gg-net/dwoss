@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="217.0" prefWidth="229.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.listView.popup.CustomerAddressController">
+<BorderPane prefHeight="217.0" prefWidth="229.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.listView.popup.AddressEditorController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="5.0">
             <children>

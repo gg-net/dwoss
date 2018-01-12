@@ -35,7 +35,6 @@ import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
@@ -44,7 +43,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 @Title("Externe Kunden Nummer bearbeiten")
-public class AdditionalCustomerIdController implements Initializable, FxController, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
+public class AdditionalCustomerIdEditorController implements Initializable, FxController, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
@@ -63,53 +62,8 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
     ObservableMap.Entry<ExternalSystem, String> entry;
 
     @FXML
-    /**
-     * Close the Editor window and discard all changes.
-     */
-    private void cancel(ActionEvent event) {
-        Ui.closeWindowOf(identifer);
-    }
-
-    public AdditionalCustomerIdController(ObservableMap.Entry<ExternalSystem, String> entry) {
-        this.entry = entry;
-        start();
-    }
-
-    private void start() {
-        identifer.setText(entry.getValue());
-        if ( entry.getKey() != null )
-            externalsystembox.getSelectionModel().select(entry.getKey());
-    }
-
-    /**
-     * Initializes the controller class.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-
-        externalsystembox.getItems().addAll(Customer.ExternalSystem.values());
-        externalsystembox.getSelectionModel().selectFirst();
-
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
-    }
-
-    @Override
-    public void accept(Entry<ExternalSystem, String> entry) {
-        this.entry = entry;
-    }
-
-    @Override
-    public Entry<ExternalSystem, String> getResult() {
-        return this.entry;
-    }
-
-    @FXML
     private void handleCloseButtonAction(ActionEvent event) {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
+
         this.entry = null;
         Ui.closeWindowOf(identifer);
     }
@@ -123,6 +77,30 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
 
         //TODO
         Ui.closeWindowOf(identifer);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+
+        externalsystembox.getItems().addAll(Customer.ExternalSystem.values());
+        externalsystembox.getSelectionModel().selectFirst();
+
+        Ui.progress().observe(LOADING_TASK);
+        Ui.exec(LOADING_TASK);
+    }
+
+    @Override
+    public void accept(Entry<ExternalSystem, String> a) {
+        this.entry = a;
+        identifer.setText(entry.getValue());
+        if ( entry.getKey() != null ) {
+            externalsystembox.getSelectionModel().select(entry.getKey());
+        }
+    }
+
+    @Override
+    public Entry<ExternalSystem, String> getResult() {
+        return this.entry;
     }
 
 }
