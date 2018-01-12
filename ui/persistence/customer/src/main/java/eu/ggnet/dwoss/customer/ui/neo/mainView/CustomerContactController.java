@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.customer.ui.neo.mainView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,49 +29,42 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.customer.ui.neo.listView.AddressListedView;
 import eu.ggnet.dwoss.customer.ui.neo.listView.CommunicationListedView;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.*;
 
 /**
  * FXML Controller class
  *
  * @author jens.papenhagen
  */
-public class CustomerContactController implements Initializable, FxController {
-
-    private final CustomerTask LOADING_TASK = new CustomerTask();
-
-    @FXML
-    ChoiceBox genderBox;
+@Title("Kontakt eintragen")
+public class CustomerContactController implements Initializable, FxController, Consumer<Contact>, ResultProducer<Contact> {
 
     @FXML
-    TextField titleField;
+    private ChoiceBox genderBox;
 
     @FXML
-    TextField firstnameField;
+    private TextField titleField;
 
     @FXML
-    TextField lastnameField;
+    private TextField firstnameField;
 
     @FXML
-    VBox addressBox;
+    private TextField lastnameField;
 
     @FXML
-    VBox communicationsBox;
+    private VBox addressBox;
 
-    Contact uicontact;
+    @FXML
+    private VBox communicationsBox;
+
+    private Contact contact;
 
     ObservableList<Address> addressList = FXCollections.observableArrayList();
 
     ObservableList<Communication> communicationList = FXCollections.observableArrayList();
 
-    public CustomerContactController(Contact contact) {
-        this.uicontact = contact;
-        fillUI();
-    }
 
     /**
      * Initializes the controller class.
@@ -81,28 +75,36 @@ public class CustomerContactController implements Initializable, FxController {
         genderBox.getItems().addAll(Contact.Sex.values());
         genderBox.getSelectionModel().selectFirst();
 
-        // TODO
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
     }
 
-    private void fillUI() {
-        titleField.setText(uicontact.getTitle());
 
-        firstnameField.setText(uicontact.getFirstName());
-        lastnameField.setText(uicontact.getLastName());
+    @Override
+    public void accept(Contact contact) {
+        this.contact = contact;
 
-        addressList.addAll(uicontact.getAddresses());
-        communicationList.addAll(uicontact.getCommunications());
+        if ( contact != null ) {
+            titleField.setText(contact.getTitle());
 
-        AddressListedView addressListedView = new AddressListedView();
-        addressListedView.fillList(addressList);
-        addressBox.getChildren().add(addressListedView.getVbox());
+            firstnameField.setText(contact.getFirstName());
+            lastnameField.setText(contact.getLastName());
 
-        CommunicationListedView communicationListedView = new CommunicationListedView();
-        communicationListedView.fillList(communicationList);
-        communicationsBox.getChildren().add(communicationListedView.getVbox());
+            addressList.addAll(contact.getAddresses());
+            communicationList.addAll(contact.getCommunications());
 
+            AddressListedView addressListedView = new AddressListedView();
+            addressListedView.fillList(addressList);
+            addressBox.getChildren().add(addressListedView.getVbox());
+
+            CommunicationListedView communicationListedView = new CommunicationListedView();
+            communicationListedView.fillList(communicationList);
+            communicationsBox.getChildren().add(communicationListedView.getVbox());
+
+        }
+    }
+
+    @Override
+    public Contact getResult() {
+        return this.contact;
     }
 
 }

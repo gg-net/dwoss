@@ -48,25 +48,25 @@ public class AddressEditorController implements Initializable, FxController, Con
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
 
     @FXML
-    Button saveButton;
+    private Button saveButton;
 
     @FXML
-    Button closeButton;
+    private Button closeButton;
 
     @FXML
-    ChoiceBox preferedtxpbox;
+    private ChoiceBox preferedtxpbox;
 
     @FXML
-    ChoiceBox countrybox;
+    private ChoiceBox countrybox;
 
     @FXML
-    TextField zipcode;
+    private TextField zipcode;
 
     @FXML
-    TextField city;
+    private TextField city;
 
     @FXML
-    TextField street;
+    private TextField street;
 
     private Address adresse;
 
