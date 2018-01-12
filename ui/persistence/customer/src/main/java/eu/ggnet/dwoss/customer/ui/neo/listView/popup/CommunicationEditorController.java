@@ -61,7 +61,8 @@ public class CommunicationEditorController implements Initializable, FxControlle
     /**
      * Close the Editor window and discard all changes.
      */
-    private void cancel(ActionEvent event) {
+    private void handleCloseButtonAction(ActionEvent event) {
+        this.communication = null;
         Ui.closeWindowOf(identifer);
     }
 
@@ -72,7 +73,7 @@ public class CommunicationEditorController implements Initializable, FxControlle
      * @todo
      * objekte passen mit saft
      */
-    private void save(ActionEvent event) {
+    private void handleSaveButtonAction(ActionEvent event) {
         warning.setVisible(false);
 
         if ( !StringUtils.isBlank(identifer.getText()) ) {
@@ -102,30 +103,23 @@ public class CommunicationEditorController implements Initializable, FxControlle
         Ui.closeWindowOf(identifer);
     }
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    private void start() {
+    @Override
+    public void accept(Communication a) {
+        this.communication = a;
         identifer.setText(communication.getIdentifier());
 
         if ( communication != null ) {
             commtypbox.getSelectionModel().select(communication.getType());
         }
     }
-    
-    @Override
-    public void accept(Communication communication) {
-        this.communication = communication;
-        start();
-    }
 
     @Override
     public Communication getResult() {
-         if ( communication == null ) {
+        if ( communication == null ) {
             return null;
         }
         return communication;

@@ -64,7 +64,7 @@ public class AddressListedView extends VBox implements ListedViewCommandable<Add
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Address()));
+        addImg.setOnMousePressed(add(new Address()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -91,10 +91,10 @@ public class AddressListedView extends VBox implements ListedViewCommandable<Add
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address));
+                editImg.setOnMousePressed(edit(address));
 
                 ImageView delImg = new ListedViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address));
+                delImg.setOnMousePressed(del(address));
 
                 //fill the HBox
                 hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);

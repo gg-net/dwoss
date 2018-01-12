@@ -64,7 +64,7 @@ public class CommunicationListedView extends VBox implements ListedViewCommandab
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Communication()));
+        addImg.setOnMousePressed(add(new Communication()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -97,14 +97,14 @@ public class CommunicationListedView extends VBox implements ListedViewCommandab
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication));
+                editImg.setOnMousePressed(edit(communication));
 
                 ImageView delImg = new ListedViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( communication.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication));
+                delImg.setOnMousePressed(del(communication));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox

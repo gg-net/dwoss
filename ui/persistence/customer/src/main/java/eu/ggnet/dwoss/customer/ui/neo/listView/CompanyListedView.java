@@ -63,7 +63,7 @@ public class CompanyListedView extends VBox implements ListedViewCommandable<Com
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Company()));
+        addImg.setOnMousePressed(add(new Company()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -94,10 +94,10 @@ public class CompanyListedView extends VBox implements ListedViewCommandable<Com
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company));
+                editImg.setOnMousePressed(edit(company));
 
                 ImageView delImg = new ListedViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company));
+                delImg.setOnMousePressed(del(company));
 
                 //fill the HBox
                 hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
