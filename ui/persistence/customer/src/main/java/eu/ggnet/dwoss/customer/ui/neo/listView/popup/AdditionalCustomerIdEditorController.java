@@ -49,22 +49,21 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
-    Button saveButton;
+    private Button saveButton;
 
     @FXML
-    Button closeButton;
+    private Button closeButton;
 
     @FXML
-    ChoiceBox externalsystembox;
+    private ChoiceBox externalsystembox;
 
     @FXML
-    TextField identifier;
+    private TextField identifier;
 
-    ObservableMap.Entry<ExternalSystem, String> entry;
+    private ObservableMap.Entry<ExternalSystem, String> entry;
 
     @FXML
     private void handleCloseButtonAction(ActionEvent event) {
-
         this.entry = null;
         Ui.closeWindowOf(identifier);
     }

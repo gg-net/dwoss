@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.customer.ui.neo.mainView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
@@ -29,41 +29,38 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.customer.ui.neo.listView.*;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.*;
 
 /**
  * FXML Controller class
  *
  * @author jens.papenhagen
  */
-public class CustomerCompanyController implements Initializable, FxController {
+@Title("Firmen eintragen")
+public class CustomerCompanyController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
 
-    private final CustomerTask LOADING_TASK = new CustomerTask();
+    @FXML
+    private TextField nameField;
 
     @FXML
-    TextField nameField;
+    private TextField ledgerField;
 
     @FXML
-    TextField ledgerField;
+    private TextField taxIdField;
 
     @FXML
-    TextField taxIdField;
+    private VBox contactBox;
 
     @FXML
-    VBox contactBox;
+    private VBox addressBox;
 
     @FXML
-    VBox addressBox;
+    private VBox communicationsBox;
 
-    @FXML
-    VBox communicationsBox;
-
-    Company uicomppany;
+    private Company company;
 
     ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
@@ -71,52 +68,52 @@ public class CustomerCompanyController implements Initializable, FxController {
 
     ObservableList<Communication> communicationList = FXCollections.observableArrayList();
 
-    public CustomerCompanyController(Company comppany) {
-        this.uicomppany = comppany;
-        fillUI();
-    }
-
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
 
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
     }
 
-    private void fillUI() {
+    @Override
+    public void accept(Company company) {
+        this.company = company;
+        if ( company != null ) {
 
-        nameField.setText(uicomppany.getName());
-        ledgerField.setText("" + uicomppany.getLedger());
-        taxIdField.setText(uicomppany.getTaxId());
+            nameField.setText(company.getName());
+            ledgerField.setText("" + company.getLedger());
+            taxIdField.setText(company.getTaxId());
 
-        // force the field to be numeric only
-        ledgerField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-                return changeed;
-            } else {
-                return null;
-            }
-        }));
+            // force the field to be numeric only
+            ledgerField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
+                if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
+                    return changeed;
+                } else {
+                    return null;
+                }
+            }));
 
-        contactList.addAll(uicomppany.getContacts());
-        addressList.addAll(uicomppany.getAddresses());
-        communicationList.addAll(uicomppany.getCommunications());
+            contactList.addAll(company.getContacts());
+            addressList.addAll(company.getAddresses());
+            communicationList.addAll(company.getCommunications());
 
-        ContactListedView ContactListedView = new ContactListedView();
-        ContactListedView.fillList(contactList);
-        contactBox.getChildren().add(ContactListedView.getVbox());
+            ContactListedView ContactListedView = new ContactListedView();
+            ContactListedView.fillList(contactList);
+            contactBox.getChildren().add(ContactListedView.getVbox());
 
-        AddressListedView addressListedView = new AddressListedView();
-        addressListedView.fillList(addressList);
-        addressBox.getChildren().add(addressListedView.getVbox());
+            AddressListedView addressListedView = new AddressListedView();
+            addressListedView.fillList(addressList);
+            addressBox.getChildren().add(addressListedView.getVbox());
 
-        CommunicationListedView communicationListedView = new CommunicationListedView();
-        communicationListedView.fillList(communicationList);
-        communicationsBox.getChildren().add(communicationListedView.getVbox());
+            CommunicationListedView communicationListedView = new CommunicationListedView();
+            communicationListedView.fillList(communicationList);
+            communicationsBox.getChildren().add(communicationListedView.getVbox());
+        }
+    }
 
+    @Override
+    public Company getResult() {
+        return this.company;
     }
 }

@@ -41,19 +41,19 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 public class CommunicationEditorController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
-    Button saveButton;
+    private Button saveButton;
 
     @FXML
-    Button closeButton;
+    private Button closeButton;
 
     @FXML
-    ChoiceBox commtypbox;
+    private ChoiceBox commtypbox;
 
     @FXML
-    TextField identifer;
+    private TextField identifer;
 
     @FXML
-    Label warning;
+    private Label warning;
 
     private Communication communication;
 

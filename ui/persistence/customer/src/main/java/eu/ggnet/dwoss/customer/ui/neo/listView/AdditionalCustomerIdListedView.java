@@ -41,7 +41,7 @@ import lombok.Getter;
  */
 public class AdditionalCustomerIdListedView extends VBox implements ListedViewCommandable<Map.Entry<ExternalSystem, String>>, FxController {
 
-    ObservableMap<ExternalSystem, String> map;
+    private ObservableMap<ExternalSystem, String> map;
 
     @Getter
     private VBox vbox = new VBox();

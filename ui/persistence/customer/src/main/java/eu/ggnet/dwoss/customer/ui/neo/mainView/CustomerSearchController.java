@@ -57,39 +57,36 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
     @FXML
-    Button searchButton;
+    private Button searchButton;
 
     @FXML
-    TextField searchField;
+    private TextField searchField;
 
     @FXML
-    RadioButton kid;
+    private RadioButton kid;
 
     @FXML
-    RadioButton lastname;
+    private RadioButton lastname;
 
     @FXML
-    RadioButton firstname;
+    private RadioButton firstname;
 
     @FXML
-    ListView<ShortSearchResult> resultListView;
+    private ListView<ShortSearchResult> resultListView;
 
     @FXML
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     @FXML
-    ProgressIndicator progressIndicator;
+    private ProgressIndicator progressIndicator;
 
     @FXML
-    HBox bottom;
+    private HBox bottom;
 
     private Service<List<ShortSearchResult>> searchService;
 
     private CustomerSearchProvider searcher;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
