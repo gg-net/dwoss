@@ -44,7 +44,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  * @author jens.papenhagen
  */
 @Title("Externe Kunden Nummer bearbeiten")
-public class AdditionalCustomerIdController implements Initializable, FxController, ClosedListener, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
+public class AdditionalCustomerIdController implements Initializable, FxController, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
 
     private final CustomerTask LOADING_TASK = new CustomerTask();
 
@@ -62,39 +62,9 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
 
     ObservableMap.Entry<ExternalSystem, String> entry;
 
-    /**
-     * todo
-     * objekte passen mit saft
-     */
-    @Override
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
-    }
-
     public AdditionalCustomerIdController(ObservableMap.Entry<ExternalSystem, String> entry) {
         this.entry = entry;
         start();
-    }
-
-    /**
-     * Close the Editor window and discard all changes.
-     *
-     * @todo
-     * objekte passen mit saft
-     */
-    @FXML
-    private void save(ActionEvent event) {
-
-        if ( StringUtils.isBlank(identifer.getText()) ) {
-            UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
-
-        //TODO
-        Ui.closeWindowOf(identifer);
     }
 
     private void start() {
@@ -124,6 +94,27 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
     @Override
     public Entry<ExternalSystem, String> getResult() {
         return this.entry;
+    }
+
+    @FXML
+    private void handleCloseButtonAction(ActionEvent event) {
+        FxSaft.dispatch(() -> {
+            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
+            return null;
+        });
+        this.entry = null;
+        Ui.closeWindowOf(identifer);
+    }
+
+    @FXML
+    private void handleSaveButtonAction(ActionEvent event) {
+        if ( StringUtils.isBlank(identifer.getText()) ) {
+            UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
+        //TODO
+        Ui.closeWindowOf(identifer);
     }
 
 }
