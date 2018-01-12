@@ -65,7 +65,7 @@ public class ContactListedView extends VBox implements ListedViewCommandable<Con
         headerFillregion.setMinWidth(10.0);
 
         ImageView addImg = new ListedViewUtil().addButton();
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(new Contact()));
+        addImg.setOnMousePressed(add(new Contact()));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -96,14 +96,14 @@ public class ContactListedView extends VBox implements ListedViewCommandable<Con
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact));
+                editImg.setOnMousePressed(edit(contact));
 
                 ImageView delImg = new ListedViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( contact.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact));
+                delImg.setOnMousePressed(del(contact));
 
                 //fill the HBox
                 hbox.getChildren().addAll(contactButton, title, firstname, lastname, fillregion, editImg, delImg);
