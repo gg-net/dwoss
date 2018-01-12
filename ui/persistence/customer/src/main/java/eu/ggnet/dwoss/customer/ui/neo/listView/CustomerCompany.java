@@ -16,9 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
-
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -52,7 +50,7 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -77,7 +75,7 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
 
-            for (Company company : (ObservableList<Company>) observableList) {
+            for (Company company : (ObservableList<Company>)observableList) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
@@ -98,11 +96,10 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company.getId()));
-
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company));
 
                 //fill the HBox
                 hbox.getChildren().addAll(companyButton, name, fillregion, editImg, delImg);
@@ -114,25 +111,23 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
             }
 
         }
-
-        return vbox;
     }
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public EventHandler<? super MouseEvent> edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent add(Object entry) {
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
 

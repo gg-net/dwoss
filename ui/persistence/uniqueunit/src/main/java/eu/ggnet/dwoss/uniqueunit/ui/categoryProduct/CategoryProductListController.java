@@ -1,15 +1,5 @@
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.auth.Guardian;
-
-import javafx.event.ActionEvent;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -17,14 +7,10 @@ import java.util.stream.Collectors;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +18,14 @@ import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.auth.Guardian;
 
 /**
  * Controller for the list containing all CategoryProducts. If a categoryProduct
@@ -114,6 +108,7 @@ public class CategoryProductListController implements Initializable, FxControlle
                         .ifPresent((t) -> filteredCategoryProducts.getSource().remove(categoryProductsTableView.getSelectionModel().getSelectedItem()));
             });
         }
+
     }
 
     @FXML

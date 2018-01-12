@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ui.neo.listView;
 import java.util.*;
 
 import javafx.collections.*;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -49,7 +48,7 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
     @FXML
     @Getter
     @Setter
-    VBox vbox = new VBox();
+    private VBox vbox = new VBox();
 
     public CustomerAdditionalCustomerId() {
         Map<ExternalSystem, String> hashmap = new HashMap<>();
@@ -63,7 +62,7 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
 
         //only use the ObservableList for "transfering" the map here.
         if ( observableList != null ) {
@@ -109,10 +108,10 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry.getKey()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry.getKey()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry));
 
                 //fill the HBox
                 hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
@@ -122,51 +121,40 @@ public class CustomerAdditionalCustomerId extends VBox implements CustomerListVi
                 vbox.getChildren().add(hbox);
             }
         }
-
-        return vbox;
-
     }
 
     //TODO
-    public ActionEvent edit(ExternalSystem id) {
+    @Override
+    public EventHandler<? super MouseEvent> edit(Object entry) {
 
-//             Ui.exec(() -> {
-//            Ui.fxml().parent(root).eval(() -> cp, CategoryProductEditorController.class)
-//                    .map(dto -> Client.lookup(UniqueUnitAgent.class).createOrUpdate(dto, Client.lookup(Guardian.class).getUsername()))
-//                    .ifPresent(this::updateList);
-//        });
-        ObservableMap.Entry<ExternalSystem, String> entry = null;
+        EventHandler<? super MouseEvent> editHandler = new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+                ObservableMap.Entry<ExternalSystem, String> entry = null;
 // @todo set selected entry
 
-        Ui.exec(() -> {
-            Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdController.class);
-            vbox.getChildren().clear();
+                Ui.exec(() -> {
+                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdController.class);
+                    vbox.getChildren().clear();
+                    fillList(FXCollections.observableArrayList(map));
+                });
+            }
+        };
 
-        });
+        return editHandler;
+    }
+
+    //TODO
+    @Override
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
-    public ActionEvent del(ExternalSystem id) {
+    @Override
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
-
-    //TODO
-    @Override
-    public ActionEvent add(Object entry) {
-        return null;
-    }
-
-    //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-    @Override
-    public ActionEvent edit(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ActionEvent del(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    //</editor-fold>
 
 }

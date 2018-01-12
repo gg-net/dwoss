@@ -17,11 +17,11 @@
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -51,7 +51,7 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -93,10 +93,10 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(address));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(address));
 
                 //fill the HBox
                 hbox.getChildren().addAll(preferdType, street, zipcode, city, fillregion, editImg, delImg);
@@ -108,26 +108,24 @@ public class CustomerAddress extends VBox implements CustomerListViewCommand<Add
             }
 
         }
-        
-        return vbox;
 
     }
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public EventHandler<? super MouseEvent> edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent add(Object entry) {
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
 

@@ -66,7 +66,7 @@ public class CustomerContactController implements Initializable, FxController {
 
     ObservableList<Communication> communicationList = FXCollections.observableArrayList();
 
-     public CustomerContactController(Contact contact) {
+    public CustomerContactController(Contact contact) {
         this.uicontact = contact;
         fillUI();
     }
@@ -90,16 +90,17 @@ public class CustomerContactController implements Initializable, FxController {
 
         firstnameField.setText(uicontact.getFirstName());
         lastnameField.setText(uicontact.getLastName());
-        
+
         addressList.addAll(uicontact.getAddresses());
         communicationList.addAll(uicontact.getCommunications());
-        
 
         CustomerAddress customerAddress = new CustomerAddress();
-        addressBox.getChildren().add(customerAddress.fillList(addressList));
+        customerAddress.fillList(addressList);
+        addressBox.getChildren().add(customerAddress.getVbox());
 
         CustomerCommunication customerCommunication = new CustomerCommunication();
-        communicationsBox.getChildren().add(customerCommunication.fillList(communicationList));   
+        customerCommunication.fillList(communicationList);
+        communicationsBox.getChildren().add(customerCommunication.getVbox());
 
     }
 

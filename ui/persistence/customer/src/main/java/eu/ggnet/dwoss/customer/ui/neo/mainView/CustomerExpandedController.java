@@ -149,8 +149,12 @@ public class CustomerExpandedController implements Initializable, FxController, 
          * method names: createContent instead of fillList
          *
          */
-        midGridPane.add(customerCompany.fillList(companies), 0, 3);
-        midGridPane.add(additionalCustomerId.fillList(listmap), 3, 2);
+        
+        customerCompany.fillList(companies);
+        additionalCustomerId.fillList(listmap);
+        
+        midGridPane.add(customerCompany.getVbox(), 0, 3);
+        midGridPane.add(additionalCustomerId.getVbox(), 3, 2);
 
     }
 

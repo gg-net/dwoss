@@ -16,25 +16,19 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
-import eu.ggnet.dwoss.customer.entity.Company;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -57,7 +51,7 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
      * @param observableList
      */
     @Override
-    public VBox fillList(ObservableList<?> observableList) {
+    public void fillList(ObservableList<?> observableList) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -105,14 +99,14 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication.getId()));
+                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(communication));
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( communication.isPrefered() ) {
                     delImg.setDisable(true);
                 }
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication.getId()));
+                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(communication));
                 Tooltip.install(delImg, new Tooltip("Löschen"));
 
                 //fill the HBox
@@ -123,25 +117,23 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
                 vbox.getChildren().add(hbox);
             }
         }
-
-        return vbox;
     }
 
     //TODO
     @Override
-    public ActionEvent edit(long id) {
+    public EventHandler<? super MouseEvent> edit(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent del(long id) {
+    public EventHandler<? super MouseEvent> del(Object entry) {
         return null;
     }
 
     //TODO
     @Override
-    public ActionEvent add(Object entry) {
+    public EventHandler<? super MouseEvent> add(Object entry) {
         return null;
     }
 }
