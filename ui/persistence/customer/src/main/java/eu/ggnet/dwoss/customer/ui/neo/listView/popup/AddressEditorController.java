@@ -74,10 +74,10 @@ public class AddressEditorController implements Initializable, FxController, Con
     /**
      * Close the Editor window and discard all changes.
      */
-    private void cancel(ActionEvent event) {
+    private void handleCloseButtonAction(ActionEvent event) {
+        this.adresse = null;
         Ui.closeWindowOf(zipcode);
     }
-
 
     @FXML
     /**
@@ -86,7 +86,7 @@ public class AddressEditorController implements Initializable, FxController, Con
      * @todo
      * objekte passen mit saft
      */
-    private void save(ActionEvent event) {
+    private void handleSaveButtonAction(ActionEvent event) {
 
         if ( StringUtils.isBlank(street.getText()) ) {
             UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
@@ -114,10 +114,11 @@ public class AddressEditorController implements Initializable, FxController, Con
             }
         }));
 
-
     }
 
-    private void start() {
+    @Override
+    public void accept(Address a) {
+        this.adresse = a;
         if ( adresse != null ) {
             preferedtxpbox.getSelectionModel().select(adresse.getPreferedType());
         }
@@ -134,14 +135,8 @@ public class AddressEditorController implements Initializable, FxController, Con
     }
 
     @Override
-    public void accept(Address adresse) {
-        this.adresse = adresse;
-        start();
-    }
-
-    @Override
     public Address getResult() {
-         if ( adresse == null ) {
+        if ( adresse == null ) {
             return null;
         }
         return adresse;
