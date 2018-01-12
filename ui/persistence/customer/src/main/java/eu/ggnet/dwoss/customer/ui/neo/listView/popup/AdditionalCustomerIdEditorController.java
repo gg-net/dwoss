@@ -57,7 +57,7 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     ChoiceBox externalsystembox;
 
     @FXML
-    TextField identifer;
+    TextField identifier;
 
     ObservableMap.Entry<ExternalSystem, String> entry;
 
@@ -65,18 +65,18 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     private void handleCloseButtonAction(ActionEvent event) {
 
         this.entry = null;
-        Ui.closeWindowOf(identifer);
+        Ui.closeWindowOf(identifier);
     }
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
-        if ( StringUtils.isBlank(identifer.getText()) ) {
+        if ( StringUtils.isBlank(identifier.getText()) ) {
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
+        this.entry.setValue(identifier.getText());
 
-        //TODO
-        Ui.closeWindowOf(identifer);
+        Ui.closeWindowOf(identifier);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class AdditionalCustomerIdEditorController implements Initializable, FxCo
     @Override
     public void accept(Entry<ExternalSystem, String> a) {
         this.entry = a;
-        identifer.setText(entry.getValue());
+        identifier.setText(entry.getValue());
         if ( entry.getKey() != null ) {
             externalsystembox.getSelectionModel().select(entry.getKey());
         }

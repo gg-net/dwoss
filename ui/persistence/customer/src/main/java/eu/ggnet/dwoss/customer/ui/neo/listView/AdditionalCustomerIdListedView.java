@@ -46,10 +46,7 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
     @Getter
     private VBox vbox = new VBox();
 
-    public AdditionalCustomerIdListedView() {
-        Map<ExternalSystem, String> hashmap = new HashMap<>();
-        this.map = FXCollections.observableMap(hashmap);
-    }
+    private Map.Entry<ExternalSystem, String> emptyentry = null;
 
     /**
      * fill a VBox for a List of Contact
@@ -61,6 +58,8 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
     public void fillList(ObservableList<?> observableList) {
 
         //only use the ObservableList for "transfering" the map here.
+        Map<ExternalSystem, String> hashmap = new HashMap<>();
+        map = FXCollections.observableMap(hashmap);
         if ( observableList != null ) {
             for (Map<ExternalSystem, String> entymap : (List<Map<ExternalSystem, String>>)observableList) {
                 map.putAll(entymap);
@@ -82,8 +81,7 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
         ImageView addImg = new ListedViewUtil().addButton();
 
-        Map.Entry<ExternalSystem, String> emptyentry = null;
-        addImg.setOnMousePressed((EventHandler<? super MouseEvent>)add(emptyentry));
+        addImg.setOnMousePressed(add(emptyentry));
 
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
@@ -106,10 +104,10 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
                 fillregion.setMinWidth(10.0);
 
                 ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(entry));
+                editImg.setOnMousePressed(edit(entry));
 
                 ImageView delImg = new ListedViewUtil().deleteButton();
-                delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(entry));
+                delImg.setOnMousePressed(del(entry));
 
                 //fill the HBox
                 hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
@@ -123,17 +121,23 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
 
     //TODO
     @Override
+    public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {
+        return null;
+    }
+
+    //TODO
+    @Override
     public EventHandler<? super MouseEvent> edit(Entry<ExternalSystem, String> entry) {
 
         EventHandler<? super MouseEvent> editHandler = new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
-                ObservableMap.Entry<ExternalSystem, String> entry = null;
-// @todo set selected entry
 
+                // @todo
+                // how to get the selected entry instance
                 Ui.exec(() -> {
-                    Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class);
+                    Ui.fxml().parent(vbox).eval(() -> emptyentry = entry, AdditionalCustomerIdEditorController.class);
 
                 });
                 vbox.getChildren().clear();
@@ -142,12 +146,6 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
         };
 
         return editHandler;
-    }
-
-    //TODO
-    @Override
-    public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {
-        return null;
     }
 
     //TODO
