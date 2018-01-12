@@ -64,7 +64,7 @@ public class CategoryProductListController implements Initializable, FxControlle
     @FXML
     /**
      * When selecting a CategoryProduct via mouse click the description int the
-     * textarea gets updated.
+     * textarea gets updated. .
      */
     private void onMouseClickedTableView(MouseEvent event) {
         if ( categoryProductsTableView.getSelectionModel().getSelectedItem() != null ) {
