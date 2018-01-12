@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,7 +29,6 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.entity.Company;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
@@ -40,8 +38,7 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
 
     @FXML
     @Getter
-    @Setter
-    VBox vbox = new VBox();
+    private VBox vbox = new VBox();
 
     public CustomerCompany() {
     }
@@ -77,7 +74,7 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
             //the Togglegroup for this VBox
             ToggleGroup togglegroup = new ToggleGroup();
 
-            for (Company company : (ObservableList<Company>) observableList) {
+            for (Company company : (ObservableList<Company>)observableList) {
                 //buildup the HBox
                 HBox hbox = new HBox();
                 hbox.setSpacing(5.0);
@@ -99,7 +96,6 @@ public class CustomerCompany extends VBox implements CustomerListViewCommand<Com
 
                 ImageView editImg = new CustomerListViewUtil().editButton();
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(company));
-
 
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(company));

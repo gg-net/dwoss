@@ -38,8 +38,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
 
     @FXML
     @Getter
-    @Setter
-    VBox vbox = new VBox();
+    private VBox vbox = new VBox();
 
     public CustomerContact() {
     }
@@ -100,14 +99,12 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
                 ImageView editImg = new CustomerListViewUtil().editButton();
                 editImg.setOnMousePressed((EventHandler<? super MouseEvent>)edit(contact));
 
-
                 ImageView delImg = new CustomerListViewUtil().deleteButton();
                 //disable the click on the prefered entry
                 if ( contact.isPrefered() ) {
                     delImg.setDisable(true);
                 }
                 delImg.setOnMousePressed((EventHandler<? super MouseEvent>)del(contact));
-                
 
                 //fill the HBox
                 hbox.getChildren().addAll(contactButton, title, firstname, lastname, fillregion, editImg, delImg);
@@ -137,7 +134,5 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
     public ActionEvent add(Object entry) {
         return null;
     }
-
-
 
 }
