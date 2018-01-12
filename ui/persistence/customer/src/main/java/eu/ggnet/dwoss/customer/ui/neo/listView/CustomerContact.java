@@ -28,7 +28,6 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.entity.Contact;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
@@ -38,8 +37,7 @@ public class CustomerContact extends VBox implements CustomerListViewCommand<Con
 
     @FXML
     @Getter
-    @Setter
-    VBox vbox = new VBox();
+    private VBox vbox = new VBox();
 
     public CustomerContact() {
     }

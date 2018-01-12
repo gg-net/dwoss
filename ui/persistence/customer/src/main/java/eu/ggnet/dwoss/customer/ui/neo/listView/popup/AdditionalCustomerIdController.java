@@ -62,6 +62,14 @@ public class AdditionalCustomerIdController implements Initializable, FxControll
 
     ObservableMap.Entry<ExternalSystem, String> entry;
 
+    @FXML
+    /**
+     * Close the Editor window and discard all changes.
+     */
+    private void cancel(ActionEvent event) {
+        Ui.closeWindowOf(identifer);
+    }
+
     public AdditionalCustomerIdController(ObservableMap.Entry<ExternalSystem, String> entry) {
         this.entry = entry;
         start();

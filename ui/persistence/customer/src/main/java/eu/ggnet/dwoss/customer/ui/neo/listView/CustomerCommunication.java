@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.listView;
 
+
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,8 +39,7 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
 
     @FXML
     @Getter
-    @Setter
-    VBox vbox = new VBox();
+    private VBox vbox = new VBox();
 
     public CustomerCommunication() {
     }
@@ -118,6 +118,7 @@ public class CustomerCommunication extends VBox implements CustomerListViewComma
             }
         }
     }
+
 
     //TODO
     @Override
