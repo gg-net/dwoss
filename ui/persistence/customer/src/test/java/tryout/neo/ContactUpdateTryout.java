@@ -20,8 +20,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
+import eu.ggnet.dwoss.customer.entity.Contact;
+import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -30,21 +30,20 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CustomerCompanyTryout {
-    
-    //CustomerComapnyController
+public class ContactUpdateTryout {
     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
         
-        Company c = new Company();
+        Contact c = new Contact();
+        
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CompanyUpdateController.class);
+            Ui.fxml().show(ContactUpdateController.class);
 
         });
 
@@ -54,5 +53,4 @@ public class CustomerCompanyTryout {
 
         UiCore.startSwing(() -> p);
     }
-    
 }
