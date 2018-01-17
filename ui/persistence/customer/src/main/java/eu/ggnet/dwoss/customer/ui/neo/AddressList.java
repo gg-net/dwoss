@@ -58,6 +58,7 @@ public class AddressList implements Initializable {
     private ListView<Address> listView;
 
     @Getter
+    @Setter
      private ObservableList<Address> observableList;
 
     public AddressList() {
