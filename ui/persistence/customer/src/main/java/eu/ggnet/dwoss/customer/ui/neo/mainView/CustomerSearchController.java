@@ -63,13 +63,16 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private TextField searchField;
 
     @FXML
-    private RadioButton kid;
+    private CheckBox kid;
 
     @FXML
-    private RadioButton lastname;
+    private CheckBox lastname;
 
     @FXML
-    private RadioButton firstname;
+    private CheckBox firstname;
+
+    @FXML
+    private CheckBox company;
 
     @FXML
     private ListView<ShortSearchResult> resultListView;
@@ -154,14 +157,16 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressIndicator.progressProperty().bind(searchService.progressProperty());
 
         bottom.visibleProperty().bind(searchService.runningProperty());
-        
-        
+
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
 
     }
 
     private void search() {
+      // if(kid.isSelected()) { String kundennummer;}
+        
+        
         if ( searchService.getState() == READY ) searchService.start();
         else searchService.restart();
     }
