@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
@@ -36,14 +37,10 @@
                         <TextField fx:id="searchField" promptText="Suche" />
                         <HBox spacing="5.0">
                             <children>
-                                <RadioButton fx:id="kid" mnemonicParsing="false" text="Kunden ID">
-                                    <toggleGroup>
-                                        <ToggleGroup fx:id="radioGroup" />
-                                    </toggleGroup>
-                                </RadioButton>
-                                <RadioButton fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname" toggleGroup="$radioGroup" />
-                                <RadioButton fx:id="firstname" mnemonicParsing="false" text="Vorname" toggleGroup="$radioGroup" />
-                                <RadioButton fx:id="company" mnemonicParsing="false" text="Firma" toggleGroup="$radioGroup" />
+                                <CheckBox fx:id="kid" mnemonicParsing="false" text="Kunden ID" />
+                                <CheckBox fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname"  />
+                                <CheckBox fx:id="firstname" mnemonicParsing="false" text="Vorname"  />
+                                <CheckBox fx:id="company" mnemonicParsing="false" text="Firma"  />
                             </children>
                             <opaqueInsets>
                                 <Insets />

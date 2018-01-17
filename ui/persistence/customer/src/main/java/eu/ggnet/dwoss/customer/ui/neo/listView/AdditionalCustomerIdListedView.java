@@ -22,8 +22,7 @@ import java.util.Map.Entry;
 import javafx.collections.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -85,36 +84,41 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
         headerBox.getChildren().addAll(headerLable, headerFillregion, addImg);
 
         vbox.getChildren().addAll(separator, headerBox);
-        if ( !map.isEmpty() ) {
-            for (Map.Entry<ExternalSystem, String> entry : map.entrySet()) {
-
-                //buildup the HBox
-                HBox hbox = new HBox();
-                hbox.setSpacing(5.0);
-                hbox.setAlignment(Pos.CENTER);
-                hbox.setMinHeight(24.0);
-
-                Label externalSystem = new Label(entry.getKey().toString());
-                Label idFormExternalSystem = new Label(entry.getValue());
-
-                Region fillregion = new Region();
-                fillregion.setMinHeight(24.0);
-                fillregion.setMinWidth(10.0);
-
-                ImageView editImg = new ListedViewUtil().editButton();
-                editImg.setOnMousePressed(edit(entry));
-
-                ImageView delImg = new ListedViewUtil().deleteButton();
-                delImg.setOnMousePressed(del(entry));
-
-                //fill the HBox
-                hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
-                HBox.setHgrow(fillregion, Priority.ALWAYS);
-
-                //add the first entrie
-                vbox.getChildren().add(hbox);
-            }
-        }
+        
+//        ListView<Map.Entry<ExternalSystem, String>> liste = new ListView();
+//        liste.setCellFactory(customCell -> new AdditonalCustomerIdCell());
+//        
+//        
+//        if ( !map.isEmpty() ) {
+//            for (Map.Entry<ExternalSystem, String> entry : map.entrySet()) {
+//
+//                //buildup the HBox
+//                HBox hbox = new HBox();
+//                hbox.setSpacing(5.0);
+//                hbox.setAlignment(Pos.CENTER);
+//                hbox.setMinHeight(24.0);
+//
+//                Label externalSystem = new Label(entry.getKey().toString());
+//                Label idFormExternalSystem = new Label(entry.getValue());
+//
+//                Region fillregion = new Region();
+//                fillregion.setMinHeight(24.0);
+//                fillregion.setMinWidth(10.0);
+//
+//                ImageView editImg = new ListedViewUtil().editButton();
+//                editImg.setOnMousePressed(edit(entry));
+//
+//                ImageView delImg = new ListedViewUtil().deleteButton();
+//                delImg.setOnMousePressed(del(entry));
+//
+//                //fill the HBox
+//                hbox.getChildren().addAll(externalSystem, idFormExternalSystem, fillregion, editImg, delImg);
+//                HBox.setHgrow(fillregion, Priority.ALWAYS);
+//
+//                //add the first entrie
+//                vbox.getChildren().add(hbox);
+//            }
+//        }
     }
 
     //TODO
