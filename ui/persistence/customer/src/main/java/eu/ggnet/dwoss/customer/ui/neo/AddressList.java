@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -35,17 +32,14 @@ import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.customer.ui.neo.customListCell.AddressListCell;
 import eu.ggnet.saft.Ui;
 
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author jacob.weinhold
  */
-public class AddressList implements Initializable {
+public class AddressList {
 
     @FXML
-    @Getter
     private VBox vbox;
 
     @FXML
@@ -57,16 +51,10 @@ public class AddressList implements Initializable {
     @FXML
     private ListView<Address> listView;
 
-    @Getter
-    @Setter
-     private ObservableList<Address> observableList;
+    private ObservableList<Address> observableList;
 
-    public AddressList() {
-
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public AddressList(ObservableList<Address> observableLis) {
+        this.observableList = observableLis;
         vbox = new VBox();
 
         Separator separator = new Separator();
@@ -93,7 +81,7 @@ public class AddressList implements Initializable {
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
         observableList = FXCollections.observableArrayList();
-        
+
         listView.getItems().addAll(observableList);
         listView.setCellFactory((element) -> {
             AddressListCell listCell = new AddressListCell();
@@ -107,8 +95,8 @@ public class AddressList implements Initializable {
 
     }
 
-    public void fillList() {
-        listView.setItems(observableList);
+    public VBox getList() {
+        return vbox;
     }
 
     public EventHandler<? super MouseEvent> add(Address entry) {

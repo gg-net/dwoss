@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -40,10 +37,9 @@ import lombok.*;
  *
  * @author jens.papenhagen
  */
-public class ContactList implements Initializable {
+public class ContactList {
 
     @FXML
-    @Getter
     private VBox vbox;
 
     @FXML
@@ -58,15 +54,12 @@ public class ContactList implements Initializable {
     @Getter
     private ToggleGroup togglegroup;
 
-    @Getter
-    @Setter
     private ObservableList<Contact> observableList;
 
-    public ContactList() {
-    }
+    public ContactList(ObservableList<Contact> observableList) {
+        this.observableList = observableList;
+        vbox = new VBox();
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -90,9 +83,9 @@ public class ContactList implements Initializable {
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        observableList = FXCollections.observableArrayList();
-        
-        listView.getItems().addAll(observableList);
+        this.observableList = FXCollections.observableArrayList();
+
+        listView.getItems().addAll(this.observableList);
         listView.setCellFactory((element) -> {
             ContactListCell listCell = new ContactListCell();
             listCell.setDeleteHandler(del((Contact)listView.getSelectionModel().getSelectedItem()));
@@ -104,8 +97,8 @@ public class ContactList implements Initializable {
         vbox.getChildren().addAll(separator, headerBox, listView);
     }
 
-    public void fillList() {
-        listView.setItems(observableList);
+    public VBox getList() {
+        return vbox;
     }
 
     //TODO

@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -35,16 +32,14 @@ import eu.ggnet.dwoss.customer.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.customListCell.CompanyListCell;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CompanyList implements Initializable {
+public class CompanyList {
 
     @FXML
-    @Getter
     private VBox vbox;
 
     @FXML
@@ -59,19 +54,12 @@ public class CompanyList implements Initializable {
     @Getter
     private ToggleGroup togglegroup;
 
-    @Getter
-    @Setter
     private ObservableList<Company> observableList;
 
-    public CompanyList() {
-    }
-
-    public void fillList() {
-        listView.setItems(observableList);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public CompanyList(ObservableList<Company> observableList) {
+        this.observableList = observableList;
+        vbox = new VBox();
+        
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -107,6 +95,10 @@ public class CompanyList implements Initializable {
         });
 
         vbox.getChildren().addAll(separator, headerBox, listView);
+    }
+    
+    public VBox getList() {
+        return vbox;
     }
 
     //TODO

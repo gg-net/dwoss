@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -35,16 +32,14 @@ import eu.ggnet.dwoss.customer.entity.Communication;
 import eu.ggnet.dwoss.customer.ui.neo.customListCell.CommunicationListCell;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CommunicationList implements Initializable {
+public class CommunicationList {
 
     @FXML
-    @Getter
     private VBox vbox;
 
     @FXML
@@ -58,28 +53,12 @@ public class CommunicationList implements Initializable {
 
     @Getter
     private ToggleGroup togglegroup;
-    
-    @Getter
-    @Setter
+
     private ObservableList<Communication> observableList;
 
-    public CommunicationList() {
-    }
-
-    /**
-     * fill a VBox for a List of Communication
-     * select the Prefered Communication
-     * <p>
-     * @param observableList
-     */
-    public void fillList() {
-        listView.setItems(observableList);
-    }
-
-    
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public CommunicationList(ObservableList<Communication> observableList) {
+        this.observableList = observableList;
+        vbox = new VBox();
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -107,9 +86,9 @@ public class CommunicationList implements Initializable {
 
         togglegroup = new ToggleGroup();
 
-        observableList = FXCollections.observableArrayList();
+        this.observableList = FXCollections.observableArrayList();
 
-        listView.getItems().addAll(observableList);
+        listView.getItems().addAll(this.observableList);
         listView.setCellFactory((element) -> {
             CommunicationListCell listCell = new CommunicationListCell();
             listCell.setDeleteHandler(del((Communication)listView.getSelectionModel().getSelectedItem()));
@@ -120,7 +99,11 @@ public class CommunicationList implements Initializable {
 
         vbox.getChildren().addAll(separator, headerBox, listView);
     }
-    
+
+    public VBox getList() {
+        return vbox;
+    }
+
     //TODO
     public EventHandler<? super MouseEvent> add(Communication entry) {
         return null;

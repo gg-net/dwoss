@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 
 import eu.ggnet.dwoss.customer.ui.neo.customListCell.AdditionalCustomerIdListCell;
 
-import java.net.URL;
 import java.util.Map.Entry;
 import java.util.*;
 
@@ -26,7 +25,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -37,16 +35,14 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.saft.Ui;
 
-import lombok.*;
 
 /**
  *
  * @author jacob.weinhold
  */
-public class AdditionalCustomerIdList implements Initializable {
+public class AdditionalCustomerIdList {
 
     @FXML
-    @Getter
     private VBox vbox;
 
     @FXML
@@ -58,14 +54,12 @@ public class AdditionalCustomerIdList implements Initializable {
     @FXML
     private Label titleLabel;
 
-    @Getter
-    @Setter
     private ObservableMap<ExternalSystem, String> observableMap;
 
     private Map.Entry<ExternalSystem, String> emptyEntry = null;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public AdditionalCustomerIdList(ObservableMap<ExternalSystem, String> observableMap) {
+        this.observableMap = observableMap;
         vbox = new VBox();
 
         Separator separator = new Separator();
@@ -91,9 +85,9 @@ public class AdditionalCustomerIdList implements Initializable {
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        observableMap = FXCollections.observableMap(new HashMap());
+        this.observableMap = FXCollections.observableMap(new HashMap());
 
-        listView.getItems().addAll(FXCollections.observableSet(observableMap.entrySet()));
+        listView.getItems().addAll(FXCollections.observableSet(this.observableMap.entrySet()));
         listView.setCellFactory((element) -> {
             AdditionalCustomerIdListCell listCell = new AdditionalCustomerIdListCell();
             listCell.setDeleteHandler(del((Map.Entry<ExternalSystem, String>)listView.getSelectionModel().getSelectedItem()));
@@ -101,9 +95,13 @@ public class AdditionalCustomerIdList implements Initializable {
 
             return listCell;
         });
-        
+
         vbox.getChildren().addAll(separator, headerBox, listView);
 
+    }
+
+    public VBox getList() {
+        return vbox;
     }
 
     public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {

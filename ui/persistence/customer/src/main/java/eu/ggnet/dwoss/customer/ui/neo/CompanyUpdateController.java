@@ -101,18 +101,14 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             address.addAll(company.getAddresses());
             communications.addAll(company.getCommunications());
 
-            ContactList ContactListedView = new ContactList();
-            contactBox.getChildren().add(ContactListedView.getVbox());
+            ContactList contactList = new ContactList(contacts);
+            contactBox.getChildren().add(contactList.getList());
 
-            AddressList addressList = new AddressList();
-            addressList.setObservableList(address);
-            addressList.fillList();
-            addressBox.getChildren().add(addressList.getVbox());
+            AddressList addressList = new AddressList(address);
+            addressBox.getChildren().add(addressList.getList());
 
-            CommunicationList communicationList = new CommunicationList();
-            communicationList.setObservableList(communications);
-            communicationList.fillList();
-            communicationsBox.getChildren().add(communicationList.getVbox());
+            CommunicationList communicationList = new CommunicationList(communications);
+            communicationsBox.getChildren().add(communicationList.getList());
         }
     }
 

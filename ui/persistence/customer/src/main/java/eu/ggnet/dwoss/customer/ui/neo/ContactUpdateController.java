@@ -29,8 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.ui.neo.AddressList;
-import eu.ggnet.dwoss.customer.ui.neo.CommunicationList;
 import eu.ggnet.saft.api.ui.*;
 
 /**
@@ -89,15 +87,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
             address.addAll(contact.getAddresses());
             communications.addAll(contact.getCommunications());
 
-            AddressList addressList = new AddressList();
-            addressList.setObservableList(address);
-            addressList.fillList();
-            addressBox.getChildren().add(addressList.getVbox());
+            AddressList addressList = new AddressList(address);
+            addressBox.getChildren().add(addressList.getList());
 
-            CommunicationList communicationList = new CommunicationList();
-            communicationList.setObservableList(communications);
-            communicationList.fillList();
-            communicationsBox.getChildren().add(communicationList.getVbox());
+            CommunicationList communicationList = new CommunicationList(communications);
+            communicationsBox.getChildren().add(communicationList.getList());
 
         }
     }

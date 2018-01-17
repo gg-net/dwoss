@@ -129,9 +129,8 @@ public class CustomerExpandedController implements Initializable, FxController, 
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
         
-        companyList = new CompanyList();
-        companyList.setObservableList(FXCollections.observableArrayList(companies));
-        companyList.fillList();
+        companyList = new CompanyList(FXCollections.observableArrayList(companies));
+        
 
 //        ObservableMap<ExternalSystem, String> additionalCustomerIdMap = FXCollections.observableHashMap();
 //        additionalCustomerIdMap.put(LEXWARE, "hund");
@@ -140,12 +139,11 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
         List<Address> addressesList = gen.makeAddresses(5);
 
-        addressListedViewController = new AddressList();
-        addressListedViewController.setObservableList(FXCollections.observableArrayList(addressesList));
-        addressListedViewController.fillList();
+        addressListedViewController = new AddressList(FXCollections.observableArrayList(addressesList));
 
-        midGridPane.add(addressListedViewController.getVbox(), 2, 4);
-        midGridPane.add(companyList.getVbox(), 0, 3);
+
+        midGridPane.add(addressListedViewController.getList(), 2, 4);
+        midGridPane.add(companyList.getList(), 0, 3);
 
     }
 
