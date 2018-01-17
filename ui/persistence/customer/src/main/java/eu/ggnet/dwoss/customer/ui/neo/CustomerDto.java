@@ -30,7 +30,7 @@ import lombok.Setter;
  *
  * @author jacob.weinhold
  */
-public class MainControllerDto {
+public class CustomerDto {
 
     @Getter
     @Setter

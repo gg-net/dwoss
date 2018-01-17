@@ -157,7 +157,7 @@ public class CustomerExpandedController implements Initializable, FxController, 
         });
     }
 
-    public void setControllerState(MainControllerDto dto) {
+    public void setControllerState(CustomerDto dto) {
         this.setComment(dto.getComment());
         this.setCompanies(FXCollections.observableList(dto.getCompanies()));
         this.setContacts(FXCollections.observableList(dto.getContacts()));
@@ -171,8 +171,8 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     }
 
-    public MainControllerDto getCustomerDto() {
-        MainControllerDto dto = new MainControllerDto();
+    public CustomerDto getCustomerDto() {
+        CustomerDto dto = new CustomerDto();
         dto.setComment(this.getComment());
         dto.setCompanies(new ArrayList(this.getCompanies()));
         dto.setContacts(new ArrayList(this.getContacts()));
