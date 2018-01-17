@@ -152,10 +152,11 @@ public class AdditionalCustomerIdListedView extends VBox implements ListedViewCo
                 Ui.exec(() -> {
                     Ui.fxml().parent(vbox).eval(() -> entry, AdditionalCustomerIdEditorController.class)
                             .ifPresent((entry) -> map.put(entry.getKey(), entry.getValue()));
+                    vbox.getChildren().clear();
+                    fillList(FXCollections.observableArrayList(map));
 
                 });
-                vbox.getChildren().clear();
-                fillList(FXCollections.observableArrayList(map));
+
             }
         };
 

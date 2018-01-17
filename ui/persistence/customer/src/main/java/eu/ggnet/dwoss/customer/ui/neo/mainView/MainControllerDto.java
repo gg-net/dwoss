@@ -62,7 +62,7 @@ public class MainControllerDto {
 
     @Getter
     @Setter
-    private Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
+    private Map<ExternalSystem, String> additionalCustomerIdMap = new HashMap<ExternalSystem, String>();
 
     @Getter
     @Setter

@@ -29,7 +29,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +37,6 @@ import eu.ggnet.dwoss.customer.op.CustomerSearchProvider;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.ui.SearchListCell;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.FxSaft;
@@ -95,7 +93,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         ObservableList<ShortSearchResult> resultProperty = FXCollections.observableArrayList();
 
         resultListView = new ListView<>();
-        resultListView.setCellFactory(new SearchListCell.Factory());
+//        resultListView.setCellFactory(new SearchListCell.Factory());
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
@@ -154,8 +152,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressIndicator.progressProperty().bind(searchService.progressProperty());
 
         bottom.visibleProperty().bind(searchService.runningProperty());
-        
-        
+
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
 
