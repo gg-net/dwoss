@@ -16,7 +16,7 @@
  */
 package tryout.stub;
 
-import java.util.*;
+import java.util.List;
 
 import javax.persistence.LockModeType;
 
@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
 /**
  *
@@ -52,39 +51,11 @@ public class CustomerAgentStub implements CustomerAgent {
 
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
-        if ( entityClass.equals(Product.class) ) {
-            try {
-                Thread.sleep(SLOW * AMOUNT);
-                List<Customer> list = new ArrayList<>();
-                for (int i = 0; i < AMOUNT; i++) {
-                    list.add(CGEN.makeCustomer());
-                }
-
-                return (List<T>)list;
-            } catch (InterruptedException ex) {
-                return Collections.emptyList();
-            }
-
-        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public <T> List<T> findAll(Class< T> entityClass, int start, int amount) {
-        if ( entityClass.equals(Product.class) ) {
-            try {
-                Thread.sleep(SLOW * AMOUNT);
-                List<Customer> list = new ArrayList<>();
-                for (int i = start; i < AMOUNT; i++) {
-                    list.add(CGEN.makeCustomer());
-                }
-
-                return (List<T>)list;
-            } catch (InterruptedException ex) {
-                return Collections.emptyList();
-            }
-
-        }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -117,7 +88,7 @@ public class CustomerAgentStub implements CustomerAgent {
 
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id, LockModeType lockModeType) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates. 
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
 

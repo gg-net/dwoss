@@ -16,24 +16,23 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo.mainView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTask;
-import eu.ggnet.dwoss.customer.ui.neo.listView.AdditionalCustomerIdListedView;
-import eu.ggnet.dwoss.customer.ui.neo.listView.CompanyListedView;
+import eu.ggnet.dwoss.customer.ui.neo.listView.*;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ClosedListener;
@@ -82,10 +81,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     @Getter
     @Setter
-    private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableMap(new EnumMap(ExternalSystem.class));
-
-    @Getter
-    @Setter
     private String keyAccounter;  // Null is ok.
 
     @Getter
@@ -105,22 +100,18 @@ public class CustomerExpandedController implements Initializable, FxController, 
     private VBox flagVbox;
 
     @FXML
-    private FlowPane listViewVbox;
-
-    @FXML
     private BorderPane rootPane;
 
     @FXML
     private GridPane midGridPane;
 
-    @FXML
     private CompanyListedView companyListedView;
 
     @FXML
-    private CustomerContactController customerContactController;
+    private AdditionalCustomerIdListViewController additionalCustomerIdListViewController;
 
     @FXML
-    private AdditionalCustomerIdListedView additionalCustomerIdListedView;
+    private AddressListedViewController addressListedViewController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -134,26 +125,26 @@ public class CustomerExpandedController implements Initializable, FxController, 
         setFxElementsUp();
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
-
         companyListedView = new CompanyListedView();
-        additionalCustomerIdListedView = new AdditionalCustomerIdListedView();
 
-        //casting the Map into a List
-        ObservableList<Map<ExternalSystem, String>> listmap = FXCollections.observableArrayList();
-        additionalCustomerIds.put(ExternalSystem.SAGE, "test Kommentar");
-        listmap.add(additionalCustomerIds);
+//        ObservableMap<ExternalSystem, String> additionalCustomerIdMap = FXCollections.observableHashMap();
+//        additionalCustomerIdMap.put(LEXWARE, "hund");
+//        additionalCustomerIdListViewController.setObservableMap(additionalCustomerIdMap);
+        List<Address> addressesList = gen.makeAddresses(5);
+        FXMLLoader loader = new FXMLLoader(AddressListedViewController.class.getResource("AddressListedView.fxml"));
+        try {
+            loader.load();
+            midGridPane.add(loader.getRoot(), 2, 4);
 
-        /**
-         * @todo
-         * refactor this into customerCompany.getAsFXEelement/View whatever and call filllist beforehand
-         * method names: createContent instead of fillList
-         *
-         */
+            addressListedViewController = loader.getController();
+            addressListedViewController.setObservableList(FXCollections.observableArrayList(addressesList));
+            addressListedViewController.fillList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         companyListedView.fillList(companies);
-        additionalCustomerIdListedView.fillList(listmap);
-
         midGridPane.add(companyListedView.getVbox(), 0, 3);
-        midGridPane.add(additionalCustomerIdListedView.getVbox(), 3, 2);
 
     }
 
@@ -166,7 +157,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
     }
 
     public void setControllerState(MainControllerDto dto) {
-        this.setAdditionalCustomerIds(FXCollections.observableMap(dto.getAdditionalCustomerIds()));
         this.setComment(dto.getComment());
         this.setCompanies(FXCollections.observableList(dto.getCompanies()));
         this.setContacts(FXCollections.observableList(dto.getContacts()));
@@ -182,8 +172,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     public MainControllerDto getCustomerDto() {
         MainControllerDto dto = new MainControllerDto();
-
-        dto.setAdditionalCustomerIds(new EnumMap(this.getAdditionalCustomerIds()));
         dto.setComment(this.getComment());
         dto.setCompanies(new ArrayList(this.getCompanies()));
         dto.setContacts(new ArrayList(this.getContacts()));
