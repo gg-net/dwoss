@@ -128,6 +128,10 @@ public class Customer implements Serializable {
     @Boost(0.5f)
     private String comment;
 
+    @Getter
+    @Transient // Will be in the entity model later
+    private List<AddressLabel> addressLabels = new ArrayList<>();
+
     public List<Company> getCompanies() {
         return new ArrayList<>(companies);
     }
@@ -215,8 +219,9 @@ public class Customer implements Serializable {
      */
     public AddressLabel toPreferedInvoiceAddress() {
         return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst(),
-                contacts.stream().filter(Contact::isPrefered).findFirst(),
+                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(INVOICE)).orElse(null),
                 INVOICE);
     }
 
@@ -234,12 +239,11 @@ public class Customer implements Serializable {
      * @return an addresslabel with prefered elements for shipping.
      */
     public AddressLabel toPreferedShippingAddress() {
-        Optional<Contact> preferedContact = contacts.stream().filter(Contact::isPrefered).findFirst();
-        // Setting type to shipping if there exists a shipping address otherwise invoice.
-        AddressType type = preferedContact.map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
+        AddressType type = contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
         return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst(),
-                preferedContact,
+                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(type)).orElse(null),
                 type);
     }
 
