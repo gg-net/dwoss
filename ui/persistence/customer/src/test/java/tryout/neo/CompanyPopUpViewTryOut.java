@@ -44,7 +44,7 @@ public class CompanyPopUpViewTryOut {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().eval(CompanyPopUpController.class);
+            Ui.fxml().eval(() -> c, CompanyPopUpController.class);
 
         });
 
