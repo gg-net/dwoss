@@ -24,7 +24,6 @@ import java.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -42,24 +41,20 @@ import eu.ggnet.saft.Ui;
  */
 public class AdditionalCustomerIdList {
 
-    @FXML
     private VBox vbox;
 
-    @FXML
     private ListView<Map.Entry<ExternalSystem, String>> listView;
 
-    @FXML
     private ImageView addImage;
 
-    @FXML
-    private Label titleLabel;
+     private Label titleLabel;
 
     private ObservableMap<ExternalSystem, String> observableMap;
 
     private Map.Entry<ExternalSystem, String> emptyEntry = null;
 
-    public AdditionalCustomerIdList(ObservableMap<ExternalSystem, String> observableMap) {
-        this.observableMap = observableMap;
+    public AdditionalCustomerIdList(ObservableMap<ExternalSystem, String> om) {
+        this.observableMap = om;
         vbox = new VBox();
 
         Separator separator = new Separator();
@@ -85,9 +80,9 @@ public class AdditionalCustomerIdList {
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        this.observableMap = FXCollections.observableMap(new HashMap());
+        observableMap = FXCollections.observableMap(new HashMap());
 
-        listView.getItems().addAll(FXCollections.observableSet(this.observableMap.entrySet()));
+        listView.getItems().addAll(FXCollections.observableSet(observableMap.entrySet()));
         listView.setCellFactory((element) -> {
             AdditionalCustomerIdListCell listCell = new AdditionalCustomerIdListCell();
             listCell.setDeleteHandler(del((Map.Entry<ExternalSystem, String>)listView.getSelectionModel().getSelectedItem()));
@@ -136,8 +131,5 @@ public class AdditionalCustomerIdList {
 
     }
 
-    public void setObservableMap(ObservableMap<ExternalSystem, String> map) {
-        this.observableMap = FXCollections.observableMap(map);
-    }
 
 }

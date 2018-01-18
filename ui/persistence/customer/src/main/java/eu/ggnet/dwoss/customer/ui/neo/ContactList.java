@@ -20,7 +20,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -39,16 +38,12 @@ import lombok.*;
  */
 public class ContactList {
 
-    @FXML
     private VBox vbox;
 
-    @FXML
     private Label titleLabel;
 
-    @FXML
     private ImageView addImage;
 
-    @FXML
     private ListView<Contact> listView;
 
     @Getter
@@ -56,8 +51,8 @@ public class ContactList {
 
     private ObservableList<Contact> observableList;
 
-    public ContactList(ObservableList<Contact> observableList) {
-        this.observableList = observableList;
+    public ContactList(ObservableList<Contact> ol) {
+        this.observableList = ol;
         vbox = new VBox();
 
         Separator separator = new Separator();
@@ -83,9 +78,9 @@ public class ContactList {
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        this.observableList = FXCollections.observableArrayList();
+        observableList = FXCollections.observableArrayList();
 
-        listView.getItems().addAll(this.observableList);
+        listView.getItems().addAll(observableList);
         listView.setCellFactory((element) -> {
             ContactListCell listCell = new ContactListCell();
             listCell.setDeleteHandler(del((Contact)listView.getSelectionModel().getSelectedItem()));
