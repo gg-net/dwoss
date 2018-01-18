@@ -86,11 +86,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private ProgressIndicator progressIndicator;
 
     @FXML
-    private HBox bottom;
+    private HBox statusVBox;
 
     private Service<List<Customer>> searchService;
-    
+
     private Set<SearchField> customerFields;
+
+    private CustomerAgent searcher;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -98,7 +100,9 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
         ObservableList<Customer> resultProperty = FXCollections.observableArrayList();
-
+        
+        searcher = Client.lookup(CustomerAgent.class);
+        
         resultListView = new ListView<>();
 //        resultListView.setCellFactory(new SearchListCell.Factory());
 
@@ -106,24 +110,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
 
         customerFields = new HashSet<>();
-        
-        
-        //fill the Set
-        if ( kid.isSelected() ) {
-            customerFields.add(Customer.SearchField.ID);
-        }
-        if ( lastname.isSelected() ) {
-            customerFields.add(Customer.SearchField.LASTNAME);
-        }
-        if ( firstname.isSelected() ) {
-            customerFields.add(Customer.SearchField.FIRSTNAME);
-        }
-        if ( company.isSelected() ) {
-            customerFields.add(Customer.SearchField.COMPANY);
-        }
-        if ( address.isSelected() ) {
-            customerFields.add(Customer.SearchField.ADDRESS);
-        }
 
         // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
         searchService = new Service<List<Customer>>() {
@@ -133,13 +119,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 return new Task<List<Customer>>() {
                     @Override
                     protected List<Customer> call() throws Exception {
-                        CustomerAgent searcher = Client.lookup(CustomerAgent.class);
-                        searcher.search(searchProperty.get(), customerFields);
 
                         updateProgress(-1, -1);
-                        if ( StringUtils.isEmpty(searchProperty.get()) ){
+
+                        if ( StringUtils.isEmpty(searchProperty.get()) ) {
                             return Collections.EMPTY_LIST;
                         } // Empty check.
+                        fillSet();
                         List<Customer> searchlist = searcher.search(searchProperty.get(), customerFields, 0, searcher.countSearch(searchProperty.get(), customerFields));
                         List<Customer> last = Collections.EMPTY_LIST;
 
@@ -188,11 +174,29 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressBar.progressProperty().bind(searchService.progressProperty());
         progressIndicator.progressProperty().bind(searchService.progressProperty());
 
-        bottom.visibleProperty().bind(searchService.runningProperty());
+        statusVBox.visibleProperty().bind(searchService.runningProperty());
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
+    }
 
+    private void fillSet() {
+        //fill the Set
+        if ( kid.isSelected() ) {
+            customerFields.add(Customer.SearchField.ID);
+        }
+        if ( lastname.isSelected() ) {
+            customerFields.add(Customer.SearchField.LASTNAME);
+        }
+        if ( firstname.isSelected() ) {
+            customerFields.add(Customer.SearchField.FIRSTNAME);
+        }
+        if ( company.isSelected() ) {
+            customerFields.add(Customer.SearchField.COMPANY);
+        }
+        if ( address.isSelected() ) {
+            customerFields.add(Customer.SearchField.ADDRESS);
+        }
     }
 
     private void search() {
