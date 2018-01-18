@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -82,8 +81,6 @@ public class CommunicationList {
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        vbox.getChildren().addAll(separator, headerBox);
-
         togglegroup = new ToggleGroup();
 
         this.observableList = FXCollections.observableArrayList();
@@ -96,11 +93,13 @@ public class CommunicationList {
 
             return listCell;
         });
-
+        System.out.println("in constr before add " + vbox.getChildren().size());
         vbox.getChildren().addAll(separator, headerBox, listView);
+        System.out.println("in constr after add " + vbox.getChildren().size());
     }
 
     public VBox getList() {
+        System.out.println("in getList()" + vbox.getChildren().size());
         return vbox;
     }
 

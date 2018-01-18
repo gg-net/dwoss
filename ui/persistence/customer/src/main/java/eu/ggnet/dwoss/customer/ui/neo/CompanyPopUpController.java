@@ -16,52 +16,52 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ui.neo.AddressList;
-import eu.ggnet.dwoss.customer.ui.neo.ContactList;
-import eu.ggnet.dwoss.customer.ui.neo.CommunicationList;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import javafx.collections.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.FlowPane;
 
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  * FXML Controller class
  *
- * @author jens.papenhagen
+ * @author jacob.weinhold
  */
-@Title("Firmen eintragen")
-public class CompanyUpdateController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
+public class CompanyPopUpController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
     private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
 
     @FXML
-    private TextField nameField;
+    private Label idLabel;
 
     @FXML
-    private TextField ledgerField;
+    private TextField nameTextField;
 
     @FXML
-    private TextField taxIdField;
+    private TextField taxIdTextField;
 
     @FXML
-    private VBox contactBox;
+    private TextField ledgerTextField;
 
     @FXML
-    private VBox addressBox;
+    private FlowPane contactsPane;
 
     @FXML
-    private VBox communicationsBox;
+    private FlowPane addressesPane;
+
+    @FXML
+    private FlowPane communicationsPane;
 
     private Company company;
 
@@ -71,25 +71,28 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     ObservableList<Communication> communications = FXCollections.observableArrayList();
 
+    @FXML
+    private Button testButton;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        // TODO
     }
 
     @Override
-    public void accept(Company company) {
+    public void accept(Company t) {
         this.company = company;
         if ( company != null ) {
 
-            nameField.setText(company.getName());
-            ledgerField.setText("" + company.getLedger());
-            taxIdField.setText(company.getTaxId());
+            nameTextField.setText(company.getName());
+            ledgerTextField.setText("" + company.getLedger());
+            taxIdTextField.setText(company.getTaxId());
 
             // force the field to be numeric only
-            ledgerField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
+            ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
                 if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
                     return changeed;
                 } else {
@@ -102,13 +105,13 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             communications.addAll(company.getCommunications());
 
             ContactList contactList = new ContactList(contacts);
-            contactBox.getChildren().add(contactList.getList());
+            contactsPane.getChildren().add(contactList.getList());
 
             AddressList addressList = new AddressList(address);
-            addressBox.getChildren().add(addressList.getList());
+            addressesPane.getChildren().add(addressList.getList());
 
             CommunicationList communicationList = new CommunicationList(communications);
-            communicationsBox.getChildren().add(communicationList.getList());
+            communicationsPane.getChildren().add(communicationList.getList());
         }
     }
 
@@ -116,4 +119,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     public Company getResult() {
         return this.company;
     }
+
+    @FXML
+    private void handleTestButtonAction(ActionEvent event) {
+        System.out.println(contactsPane.getChildren().size());
+        contactsPane.getChildren().forEach(e -> System.out.println(e));
+    }
+
 }
