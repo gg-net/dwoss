@@ -16,7 +16,7 @@
  */
 package tryout.stub;
 
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.LockModeType;
 
@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
 
 /**
  *
@@ -49,6 +50,7 @@ public class CustomerAgentStub implements CustomerAgent {
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    //<editor-fold defaultstate="collapsed" desc="Unused Methods">
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -65,7 +67,6 @@ public class CustomerAgentStub implements CustomerAgent {
 
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Unused Methods">
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -91,5 +92,35 @@ public class CustomerAgentStub implements CustomerAgent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
+
+    @Override
+    public List<Customer> search(String search, Set<SearchField> customerFields) {
+        List<Customer> list = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            list.add(CGEN.makeCustomer() );
+        }
+       
+        return list;
+    }
+
+    @Override
+    public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
+        List<Customer> list = new ArrayList<>();
+        for (int i = 0; i < 25; i++) {
+            list.add(CGEN.makeCustomer() );
+        }
+        try {
+            Thread.sleep(1000L, SLOW);
+        } catch (InterruptedException ex) {
+            
+        }
+       
+        return list;
+    }
+
+    @Override
+    public int countSearch(String search, Set<SearchField> customerFields) {
+        return 25;
+    }
 
 }
