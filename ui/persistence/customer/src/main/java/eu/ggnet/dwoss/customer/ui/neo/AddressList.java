@@ -20,7 +20,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -39,22 +38,18 @@ import eu.ggnet.saft.Ui;
  */
 public class AddressList {
 
-    @FXML
     private VBox vbox;
 
-    @FXML
     private Label titleLabel;
 
-    @FXML
     private ImageView addImage;
 
-    @FXML
     private ListView<Address> listView;
 
     private ObservableList<Address> observableList;
 
-    public AddressList(ObservableList<Address> observableLis) {
-        this.observableList = observableLis;
+    public AddressList(ObservableList<Address> ol) {
+        this.observableList = ol;
         vbox = new VBox();
 
         Separator separator = new Separator();
