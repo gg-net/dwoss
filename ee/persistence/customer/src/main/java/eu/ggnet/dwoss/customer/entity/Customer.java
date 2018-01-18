@@ -54,6 +54,17 @@ import static javax.persistence.CascadeType.ALL;
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
 public class Customer implements Serializable {
 
+    /**
+     * Fields for detailed Search.
+     */
+    public static enum SearchField {
+        ID,
+        FIRSTNAME,
+        LASTNAME,
+        COMPANY,
+        ADDRESS
+    }
+    
     @AllArgsConstructor
     @Getter
     public static enum Source {

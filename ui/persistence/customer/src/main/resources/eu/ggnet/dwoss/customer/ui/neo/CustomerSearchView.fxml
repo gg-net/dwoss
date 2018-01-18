@@ -40,6 +40,7 @@
                                 <CheckBox fx:id="kid" mnemonicParsing="false" text="Kunden ID" />
                                 <CheckBox fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname"  />
                                 <CheckBox fx:id="firstname" mnemonicParsing="false" text="Vorname"  />
+                                <CheckBox fx:id="address" mnemonicParsing="false" text="Adresse"  />
                                 <CheckBox fx:id="company" mnemonicParsing="false" text="Firma"  />
                             </children>
                             <opaqueInsets>
