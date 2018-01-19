@@ -20,22 +20,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.web.WebView;
+import javafx.scene.control.*;
 
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  *
  * @author jacob.weinhold
  */
-public class PreferedAdressLabelsController implements Initializable, Consumer<Customer>, ResultProducer<Customer> {
+public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @FXML
     private ListView<Company> invoiceAdressCompanyListView;
@@ -44,7 +42,7 @@ public class PreferedAdressLabelsController implements Initializable, Consumer<C
     private ListView<Contact> invoiceAdressContactListView;
 
     @FXML
-    private ListView<Address> invocieAdressAdressListView;
+    private ListView<Address> invoiceAdressAdressListView;
 
     @FXML
     private ListView<Company> shippingAdressCompanyListView;
@@ -54,12 +52,6 @@ public class PreferedAdressLabelsController implements Initializable, Consumer<C
 
     @FXML
     private ListView<Address> shippingAdressAdressListView;
-
-    @FXML
-    private WebView invoiceAdressWebView;
-
-    @FXML
-    private WebView shippingAdressWebView;
 
     @FXML
     private Button invoiceAdressClearButton;
@@ -74,6 +66,12 @@ public class PreferedAdressLabelsController implements Initializable, Consumer<C
     private Button cancelButton;
 
     private Customer customer;
+
+    @FXML
+    private TextArea invoiceAdressTextArea;
+
+    @FXML
+    private TextArea shippingAdressTextArea;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,8 +88,15 @@ public class PreferedAdressLabelsController implements Initializable, Consumer<C
 
     @Override
     public void accept(Customer inputCustomer) {
-        this.customer = customer;
-        invoiceAdressCompanyListView.setItems(FXCollections.observableList(this.customer.getCompanies()));
+        this.customer = inputCustomer;
+
+        invoiceAdressCompanyListView.getItems().addAll(this.customer.getCompanies());
+        this.invoiceAdressCompanyListView.getItems().forEach(company -> this.invoiceAdressContactListView.getItems().addAll(company.getContacts()));
+        this.invoiceAdressContactListView.getItems().forEach(contact -> invoiceAdressAdressListView.getItems().addAll(contact.getAddresses()));
+
+        shippingAdressCompanyListView.getItems().addAll(this.customer.getCompanies());
+        this.shippingAdressCompanyListView.getItems().forEach(company -> this.shippingAdressContactListView.getItems().addAll(company.getContacts()));
+        this.shippingAdressContactListView.getItems().forEach(contact -> shippingAdressAdressListView.getItems().addAll(contact.getAddresses()));
 
     }
 

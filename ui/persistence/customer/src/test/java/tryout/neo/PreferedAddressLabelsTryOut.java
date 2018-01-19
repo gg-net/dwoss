@@ -19,25 +19,22 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyPopUpController;
-import eu.ggnet.saft.*;
-
-import tryout.stub.CustomerAgentStub;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
- * @author jens.papenhagen
+ * @author jacob.weinhold
  */
-public class CompanyPopUpViewTryOut {
+public class PreferedAddressLabelsTryOut {
 
-    //CustomerComapnyController
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
-        Company c = new Company();
+        CustomerGenerator gen = new CustomerGenerator();
+        Customer c = gen.makeCustomer();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -45,7 +42,7 @@ public class CompanyPopUpViewTryOut {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(CompanyPopUpController.class);
+                Ui.fxml().eval(() -> c, PreferedAddressLabelsController.class);
             });
         });
 
@@ -55,5 +52,4 @@ public class CompanyPopUpViewTryOut {
 
         UiCore.startSwing(() -> p);
     }
-
 }
