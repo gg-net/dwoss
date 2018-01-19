@@ -118,6 +118,9 @@ public class CustomerAgentStub implements CustomerAgent {
         //debug
         System.out.println("--------------------------------------");
         System.out.println("Debug from CustomerAgentStub");
+        if ( customerFields != null ) {
+            System.out.println("Set größe. " + customerFields.size());
+        }
         System.out.println("Listgröße: " + list.size());
         list.forEach((customer) -> {
             customer.getCompanies().forEach((company) -> {
