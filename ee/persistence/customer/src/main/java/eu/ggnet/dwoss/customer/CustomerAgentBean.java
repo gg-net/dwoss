@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.customer.assist.Customers;
 import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 
 /**
@@ -42,7 +43,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Inject
     private CustomerEao eao;
-    
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
@@ -50,17 +51,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields) {
-        return optionalFetchEager(eao.find(search));        
+        return optionalFetchEager(eao.find(search));
     }
 
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        return optionalFetchEager(eao.find(search,start,limit));        
+        return optionalFetchEager(eao.find(search,start,limit));
     }
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
         return eao.countFind(search);
+    }
+
+    @Override
+    public void store(SimpleCustomer simpleCustomer) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
