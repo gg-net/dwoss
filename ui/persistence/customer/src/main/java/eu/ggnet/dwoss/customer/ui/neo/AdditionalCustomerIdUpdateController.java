@@ -46,8 +46,6 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 @Title("Externe Kunden Nummer bearbeiten")
 public class AdditionalCustomerIdUpdateController implements Initializable, FxController, Consumer<ObservableMap.Entry<ExternalSystem, String>>, ResultProducer<ObservableMap.Entry<ExternalSystem, String>> {
 
-    private final CustomerTask LOADING_TASK = new CustomerTask();
-
     @FXML
     private Button saveButton;
 
@@ -84,12 +82,8 @@ public class AdditionalCustomerIdUpdateController implements Initializable, FxCo
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         externalsystembox.getItems().addAll(Customer.ExternalSystem.values());
         externalsystembox.getSelectionModel().selectFirst();
-
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
     }
 
     @Override

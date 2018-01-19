@@ -55,11 +55,21 @@ public class CompanyPopUpViewTryOut extends Application {
 //        UiCore.startSwing(() -> p);
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("src/main/resources/eu.ggnet.dwoss.customer.ui/neo/CompanyPopUpView.fxml"));
+    JButton run = new JButton("OpenUi");
 
-        Scene scene = new Scene(root);
+    run.addActionListener (ev
+        -> {
+            Ui.fxml().show(CompanyPopUpController.class);
+        @Override
+        public void start
+        (Stage stage) throws Exception {
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("src/main/resources/eu.ggnet.dwoss.customer.ui/neo/CompanyPopUpView.fxml"));
+             << << << < HEAD
+
+            Scene scene = new Scene(root);
+             == == == =
+        });
+         >>> >>> > origin / master
 
         stage.setScene(scene);
         stage.setResizable(false);
