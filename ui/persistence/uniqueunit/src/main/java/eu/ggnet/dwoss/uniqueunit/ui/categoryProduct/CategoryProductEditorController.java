@@ -172,7 +172,6 @@ public class CategoryProductEditorController implements Initializable, FxControl
      * field.
      */
     public void initialize(URL location, ResourceBundle resources) {
-
         salesChannel.getItems().addAll(SalesChannel.values());
         priceType.getItems().addAll(PriceType.values());
 

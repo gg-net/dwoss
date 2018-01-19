@@ -37,7 +37,7 @@ import eu.ggnet.saft.api.ui.ResultProducer;
  *
  * @author jacob.weinhold
  */
-public class CompanyPopUpController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
+public class CompanyUpdateController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
 //    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
     @FXML

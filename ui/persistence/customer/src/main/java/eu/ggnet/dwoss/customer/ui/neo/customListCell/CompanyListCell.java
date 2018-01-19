@@ -24,7 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.ListedViewUtil;
+import eu.ggnet.dwoss.customer.ui.neo.list.ListedViewUtil;
 
 import lombok.Setter;
 

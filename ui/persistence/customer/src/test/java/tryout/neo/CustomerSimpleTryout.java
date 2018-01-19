@@ -16,11 +16,12 @@
  */
 package tryout.neo;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.Dimension;
+
+import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerExpandedController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -29,9 +30,9 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CustomerExpandedTryout {
-    
+public class CustomerSimpleTryout {
     public static void main(String[] args) {
+
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
@@ -40,9 +41,9 @@ public class CustomerExpandedTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CustomerExpandedController.class);
-
+            Ui.fxml().show(CustomerSimpleController.class);
         });
+
 
         JPanel p = new JPanel();
         p.add(run);
@@ -50,4 +51,5 @@ public class CustomerExpandedTryout {
 
         UiCore.startSwing(() -> p);
     }
+    
 }

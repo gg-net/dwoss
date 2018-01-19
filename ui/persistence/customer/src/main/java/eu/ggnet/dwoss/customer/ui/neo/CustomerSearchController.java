@@ -86,7 +86,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private ProgressIndicator progressIndicator;
 
     @FXML
-    private HBox statusVBox;
+    private HBox statusHbox;
 
     private Service<List<Customer>> searchService;
 
@@ -188,7 +188,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         progressBar.progressProperty().bind(searchService.progressProperty());
         progressIndicator.progressProperty().bind(searchService.progressProperty());
 
-        statusVBox.visibleProperty().bind(searchService.runningProperty());
+        statusHbox.visibleProperty().bind(searchService.runningProperty());
 
         Ui.progress().observe(searchService);
         //Ui.exec(searchService);

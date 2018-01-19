@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.customer.ui.neo.list.AddressList;
+import eu.ggnet.dwoss.customer.ui.neo.list.CommunicationList;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;

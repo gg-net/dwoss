@@ -16,12 +16,10 @@
  */
 package tryout.neo;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyPopUpController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -30,23 +28,18 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CompanyPopUpViewTryOut {
+public class CustomerEnhanceTryout {
 
-    //CustomerComapnyController
     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
-        Company c = new Company();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.exec(() -> {
-                Ui.fxml().eval(CompanyPopUpController.class);
-            });
+            Ui.fxml().show(CustomerEnhanceController.class);
         });
 
         JPanel p = new JPanel();
@@ -54,6 +47,6 @@ public class CompanyPopUpViewTryOut {
         p.add(close);
 
         UiCore.startSwing(() -> p);
-    }
 
+    }
 }
