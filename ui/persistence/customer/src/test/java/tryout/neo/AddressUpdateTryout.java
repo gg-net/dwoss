@@ -19,6 +19,8 @@ package tryout.neo;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.Address;
 import eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController;
 import eu.ggnet.saft.*;
 
@@ -34,13 +36,17 @@ public class AddressUpdateTryout {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
+        CustomerGenerator gen = new CustomerGenerator();
+        Address address = gen.makeAddress();
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(AddressUpdateController.class);
-
+            Ui.exec(() -> {
+                Ui.fxml().eval(() -> address, AddressUpdateController.class);
+            });
         });
 
         JPanel p = new JPanel();

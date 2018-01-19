@@ -16,10 +16,14 @@
  */
 package tryout.neo;
 
+import java.util.Map;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ui.neo.AdditionalCustomerIdUpdateController;
 import eu.ggnet.saft.*;
 
@@ -30,17 +34,22 @@ import tryout.stub.CustomerAgentStub;
  * @author jens.papenhagen
  */
 public class AdditionalCustomerIdUpdateTryout {
-        public static void main(String[] args) {
+
+    public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+
+        CustomerGenerator gen = new CustomerGenerator();
+        Map<ExternalSystem, String> additionalCustomerId = gen.makeCustomer().getAdditionalCustomerIds();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(AdditionalCustomerIdUpdateController.class);
-
+            Ui.exec(() -> {
+               // Ui.fxml().eval(() -> additionalCustomerId, AdditionalCustomerIdUpdateController.class);
+            });
         });
 
         JPanel p = new JPanel();

@@ -19,6 +19,8 @@ package tryout.neo;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.saft.*;
 
@@ -33,13 +35,18 @@ public class CustomerEnhanceTryout {
     public static void main(String[] args) {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+        
+        CustomerGenerator gen = new CustomerGenerator();
+        Customer c = gen.makeCustomer();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
+        JButton run = new JButton("OpenUi");      
         run.addActionListener(ev -> {
-            Ui.fxml().show(CustomerEnhanceController.class);
+            Ui.exec(() -> {
+                Ui.fxml().eval(() -> c, CustomerEnhanceController.class);
+            });
         });
 
         JPanel p = new JPanel();
