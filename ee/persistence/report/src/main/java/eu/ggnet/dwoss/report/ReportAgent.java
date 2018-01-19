@@ -40,7 +40,6 @@ import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 
 import lombok.*;
-import lombok.experimental.Builder;
 
 import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.assist.ReportUtil.*;

@@ -12,17 +12,15 @@ import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger.LedgerValue;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.MapBuilder;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
@@ -95,7 +93,7 @@ public class DocumentUpdateViewTryout {
                         + " Kartenleser, WLAN b + g + n, Webcam, Videokonnektor(en) : HDMI, VGA, Windows 8.1 64")
                 .name("Acer Aspire E1-572P-74508G75Dnii (NX.MFSED.003) SopoNr:1234 SN:NXMFSED00312312122EF001S")
                 .price(100)
-                .tax(TAX)
+                .tax(0.07)
                 .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
@@ -106,7 +104,7 @@ public class DocumentUpdateViewTryout {
                         + " Kartenleser, WLAN b + g + n, Webcam, Videokonnektor(en) : HDMI, VGA, Windows 8.1 64")
                 .name("Service Acer Aspire E1-572P-74508G75Dnii")
                 .price(100)
-                .tax(TAX)
+                .tax(0)
                 .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
