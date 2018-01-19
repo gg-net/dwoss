@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -36,7 +34,7 @@ public class AboutAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        AboutDialog about = new AboutDialog(lookup(Workspace.class).getMainFrame());
+        AboutDialog about = new AboutDialog(UiCore.getMainFrame());
         about.setVisible(true);
     }
 }
