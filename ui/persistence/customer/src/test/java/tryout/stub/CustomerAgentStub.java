@@ -139,8 +139,12 @@ public class CustomerAgentStub implements CustomerAgent {
     }
 
     @Override
-    public void store(SimpleCustomer simpleCustomer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Customer store(SimpleCustomer simpleCustomer) {
+        System.out.println("Input form Stubs: " + simpleCustomer.toString());
+        Customer c = new Customer();
+        System.out.println("Output form Stubs: " + c.toString());
+
+        return c;
     }
 
 }
