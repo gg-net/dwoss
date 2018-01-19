@@ -17,9 +17,12 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,38 +31,43 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
+
+import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 
 /**
  *
  * @author jacob.weinhold
+ *
  */
-public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
+public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<InvoiceAddressLabelWithNullableShippingAddressLabel> {
 
     @FXML
-    private ListView<Company> invoiceAdressCompanyListView;
+    private ListView<Company> invoiceAddressCompanyListView;
 
     @FXML
-    private ListView<Contact> invoiceAdressContactListView;
+    private ListView<Contact> invoiceAddressContactListView;
 
     @FXML
-    private ListView<Address> invoiceAdressAdressListView;
+    private ListView<Address> invoiceAddressAddressListView;
 
     @FXML
-    private ListView<Company> shippingAdressCompanyListView;
+    private ListView<Company> shippingAddressCompanyListView;
 
     @FXML
-    private ListView<Contact> shippingAdressContactListView;
+    private ListView<Contact> shippingAddressContactListView;
 
     @FXML
-    private ListView<Address> shippingAdressAdressListView;
+    private ListView<Address> shippingAddressAddressListView;
 
     @FXML
-    private Button invoiceAdressClearButton;
+    private Button invoiceAddressClearButton;
 
     @FXML
-    private Button shippingAdressClearButton;
+    private Button shippingAddressClearButton;
 
     @FXML
     private Button saveButton;
@@ -67,59 +75,156 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @FXML
     private Button cancelButton;
 
+    @FXML
+    private TextArea invoiceAddressTextArea;
+
+    @FXML
+    private TextArea shippingAddressTextArea;
+
+    private InvoiceAddressLabelWithNullableShippingAddressLabel addressLabel;
+
     private Customer customer;
 
-    @FXML
-    private TextArea invoiceAdressTextArea;
+    InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
 
-    @FXML
-    private TextArea shippingAdressTextArea;
+        @Override
+        public void invalidated(Observable observable) {
+
+            if ( invoiceAddressAddressListView.getSelectionModel().isEmpty() ) {
+                saveButton.setDisable(true);
+
+            } else if ( invoiceAddressCompanyListView.getSelectionModel().isEmpty()
+                    && invoiceAddressContactListView.getSelectionModel().isEmpty() ) {
+                saveButton.setDisable(true);
+
+            } else if ( (!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
+                    || (!invoiceAddressContactListView.getSelectionModel().isEmpty()) ) {
+                saveButton.setDisable(false);
+
+            }
+        }
+
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
 
-    @FXML
-    private void handleinvoiceAdressClearButtonAction(ActionEvent event) {
-    }
-
-    @FXML
-    private void handleshippingAdressClearButtonAction(ActionEvent event) {
-    }
-
     @Override
     public void accept(Customer inputCustomer) {
         this.customer = inputCustomer;
 
-        invoiceAdressCompanyListView.getItems().addAll(this.customer.getCompanies());
-        this.invoiceAdressCompanyListView.getItems().forEach(company -> this.invoiceAdressContactListView.getItems().addAll(company.getContacts()));
-        this.invoiceAdressContactListView.getItems().forEach(contact -> invoiceAdressAdressListView.getItems().addAll(contact.getAddresses()));
+        invoiceAddressCompanyListView.getItems().addAll(this.customer.getCompanies());
+        this.invoiceAddressCompanyListView.getItems().forEach(company -> this.invoiceAddressContactListView.getItems().addAll(company.getContacts()));
+        invoiceAddressContactListView.getItems().addAll(this.customer.getContacts());
+        this.invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
-        shippingAdressCompanyListView.getItems().addAll(this.customer.getCompanies());
-        this.shippingAdressCompanyListView.getItems().forEach(company -> this.shippingAdressContactListView.getItems().addAll(company.getContacts()));
-        this.shippingAdressContactListView.getItems().forEach(contact -> shippingAdressAdressListView.getItems().addAll(contact.getAddresses()));
+        shippingAddressCompanyListView.getItems().addAll(this.customer.getCompanies());
+        this.shippingAddressCompanyListView.getItems().forEach(company -> this.shippingAddressContactListView.getItems().addAll(company.getContacts()));
+        shippingAddressContactListView.getItems().addAll(this.customer.getContacts());
+        this.shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
-        this.invoiceAdressAdressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
+        this.invoiceAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
             @Override
             public void changed(ObservableValue<? extends Address> observable, Address oldValue, Address newValue) {
-                invoiceAdressTextArea.setText(newValue.toHtml());
+                if ( newValue != null )
+                    invoiceAddressTextArea.setText(newValue.toHtml());
             }
         });
 
-        this.shippingAdressAdressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
+        this.shippingAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
             @Override
             public void changed(ObservableValue<? extends Address> observable, Address oldValue, Address newValue) {
-                shippingAdressTextArea.setText(newValue.toHtml());
+                if ( newValue != null )
+                    shippingAddressTextArea.setText(newValue.toHtml());
             }
         });
+
+        this.saveButton.setDisable(true);
+
+        invoiceAddressCompanyListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        invoiceAddressContactListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        invoiceAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
 
     }
 
     @Override
-    public Customer getResult() {
-        return this.customer;
+    public InvoiceAddressLabelWithNullableShippingAddressLabel getResult() {
 
+        return this.addressLabel;
+
+    }
+
+    /**
+     * AddressLabel.class allows it's company OR contact field to be null
+     *
+     * @todo
+     * close window etc
+     * @param event
+     */
+    @FXML
+    private void handleSaveButtonAction(ActionEvent event) {
+
+        Company invoiceLabelCompany = invoiceAddressCompanyListView.getSelectionModel().getSelectedItem();
+        Contact invoiceLabelContact = invoiceAddressContactListView.getSelectionModel().getSelectedItem();
+        Address invoiceLabelAddress = invoiceAddressAddressListView.getSelectionModel().getSelectedItem();
+
+        AddressLabel invoiceLabel = new AddressLabel(invoiceLabelCompany, invoiceLabelContact, invoiceLabelAddress, AddressType.INVOICE);
+
+        Address shippingAddress = shippingAddressAddressListView.getSelectionModel().getSelectedItem();
+        Company shippingLabelCompany = shippingAddressCompanyListView.getSelectionModel().getSelectedItem();
+        Contact shippingLabelContact = shippingAddressContactListView.getSelectionModel().getSelectedItem();
+
+        AddressLabel shippingLabel;
+        if ( shippingAddress == null || (shippingLabelCompany == null && shippingLabelContact == null) )
+            shippingLabel = null;
+
+        else
+            shippingLabel = new AddressLabel(shippingLabelCompany, invoiceLabelContact, shippingAddress, SHIPPING);
+
+        this.addressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
+
+        System.out.println(this.addressLabel);
+    }
+
+    @FXML
+    private void handleCancelButtonAction(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleinvoiceAddressClearButtonAction(ActionEvent event) {
+        invoiceAddressCompanyListView.getSelectionModel().clearSelection();
+        invoiceAddressContactListView.getSelectionModel().clearSelection();
+        invoiceAddressAddressListView.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void handleshippingAddressClearButtonAction(ActionEvent event) {
+        shippingAddressCompanyListView.getSelectionModel().clearSelection();
+        shippingAddressContactListView.getSelectionModel().clearSelection();
+        shippingAddressAddressListView.getSelectionModel().clearSelection();
+    }
+}
+
+class InvoiceAddressLabelWithNullableShippingAddressLabel {
+
+    private Optional<AddressLabel> shippingLabel;
+
+    private AddressLabel invoiceLabel;
+
+    public InvoiceAddressLabelWithNullableShippingAddressLabel(AddressLabel shippingLabel, AddressLabel invoiceLabel) {
+        if ( invoiceLabel == null )
+            throw new IllegalArgumentException("invoice Label can not be null");
+
+        this.shippingLabel = Optional.ofNullable(shippingLabel);
+
+        this.invoiceLabel = invoiceLabel;
+    }
+
+    @Override
+    public String toString() {
+        return "InvoiceAddressLabelWithNullableShippingAddressLabel{" + "shippingLabel=" + shippingLabel + ", invoiceLabel=" + invoiceLabel + '}';
     }
 
 }
