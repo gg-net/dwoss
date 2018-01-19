@@ -1,17 +1,3 @@
-package tryout.neo;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Communication;
-import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
-import eu.ggnet.saft.*;
-
-import tryout.stub.CustomerAgentStub;
-
 /*
  * Copyright (C) 2018 GG-Net GmbH
  *
@@ -28,19 +14,27 @@ import tryout.stub.CustomerAgentStub;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package tryout.neo;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+
 /**
  *
- * @author jens.papenhagen
+ * @author jacob.weinhold
  */
-public class CommunicationUpdateTryout {
+public class PreferedAddressLabelsTryOut {
 
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
         CustomerGenerator gen = new CustomerGenerator();
-        Company company = gen.makeCompany();
-        Communication communication = company.getCommunications().get(0);
+        Customer c = gen.makeCustomer();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -48,7 +42,7 @@ public class CommunicationUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class);
+                Ui.fxml().eval(() -> c, PreferedAddressLabelsController.class);
             });
         });
 
@@ -58,5 +52,4 @@ public class CommunicationUpdateTryout {
 
         UiCore.startSwing(() -> p);
     }
-
 }

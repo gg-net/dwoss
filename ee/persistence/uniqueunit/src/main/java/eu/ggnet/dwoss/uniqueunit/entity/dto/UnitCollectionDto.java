@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.uniqueunit.assist;
+package eu.ggnet.dwoss.uniqueunit.entity.dto;
 
 import java.io.Serializable;
 import java.util.*;
@@ -40,27 +40,8 @@ public class UnitCollectionDto implements Serializable {
 
     private String partNoExtension;
 
-    List<PicoUnit> units = new ArrayList<>();
-
     private Map<PriceType, Double> prices = new HashMap<>();
 
-    private List<PriceHistory> priceHistories = new ArrayList<>();
-
     private SalesChannel salesChannel;
-
-    public List<PicoUnit> getUnits() {
-        if ( units == null ) return Collections.emptyList();
-        return units;
-    }
-
-    public Map<PriceType, Double> getPrices() {
-        if ( prices == null ) return Collections.emptyMap();
-        return prices;
-    }
-
-    public List<PriceHistory> getPriceHistories() {
-        if ( priceHistories == null ) return Collections.emptyList();
-        return priceHistories;
-    }
 
 }

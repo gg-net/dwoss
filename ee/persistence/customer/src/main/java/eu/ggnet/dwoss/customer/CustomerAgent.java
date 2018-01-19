@@ -67,7 +67,8 @@ public interface CustomerAgent extends RemoteAgent {
      * Stores a simple customer.
      *
      * @param simpleCustomer
+     * @return returns the stored customer.
      */
-    void store(SimpleCustomer simpleCustomer);
+    Customer store(SimpleCustomer simpleCustomer);
 
 }

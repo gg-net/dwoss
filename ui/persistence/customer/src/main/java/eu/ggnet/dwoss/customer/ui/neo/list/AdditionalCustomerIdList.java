@@ -14,11 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui.neo;
+package eu.ggnet.dwoss.customer.ui.neo.list;
 
+import eu.ggnet.dwoss.customer.ui.neo.customListCell.AdditionalCustomerIdListCell;
+
+import java.util.Map.Entry;
+import java.util.*;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -27,8 +31,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Address;
-import eu.ggnet.dwoss.customer.ui.neo.customListCell.AddressListCell;
+import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ui.neo.AdditionalCustomerIdUpdateController;
 import eu.ggnet.saft.Ui;
 
 
@@ -36,20 +40,22 @@ import eu.ggnet.saft.Ui;
  *
  * @author jacob.weinhold
  */
-public class AddressList {
+public class AdditionalCustomerIdList {
 
     private VBox vbox;
 
-    private Label titleLabel;
+    private ListView<Map.Entry<ExternalSystem, String>> listView;
 
     private ImageView addImage;
 
-    private ListView<Address> listView;
+     private Label titleLabel;
 
-    private ObservableList<Address> observableList;
+    private ObservableMap<ExternalSystem, String> observableMap;
 
-    public AddressList(ObservableList<Address> ol) {
-        this.observableList = ol;
+    private Map.Entry<ExternalSystem, String> emptyEntry = null;
+
+    public AdditionalCustomerIdList(ObservableMap<ExternalSystem, String> om) {
+        this.observableMap = om;
         vbox = new VBox();
 
         Separator separator = new Separator();
@@ -59,7 +65,7 @@ public class AddressList {
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        titleLabel.setText("Adressen");
+        titleLabel.setText("Externe Kunden Nummern");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -71,17 +77,17 @@ public class AddressList {
         addImage.setPickOnBounds(true);
         addImage.setPreserveRatio(true);
         Tooltip.install(addImage, new Tooltip("Hinzufügen"));
-        addImage.setOnMousePressed(add(new Address()));
+        addImage.setOnMousePressed(add(emptyEntry));
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        observableList = FXCollections.observableArrayList();
+        observableMap = FXCollections.observableMap(new HashMap());
 
-        listView.getItems().addAll(observableList);
+        listView.getItems().addAll(FXCollections.observableSet(observableMap.entrySet()));
         listView.setCellFactory((element) -> {
-            AddressListCell listCell = new AddressListCell();
-            listCell.setDeleteHandler(del((Address)listView.getSelectionModel().getSelectedItem()));
-            listCell.setEditHandler(edit((Address)listView.getSelectionModel().getSelectedItem()));
+            AdditionalCustomerIdListCell listCell = new AdditionalCustomerIdListCell();
+            listCell.setDeleteHandler(del((Map.Entry<ExternalSystem, String>)listView.getSelectionModel().getSelectedItem()));
+            listCell.setEditHandler(edit((Map.Entry<ExternalSystem, String>)listView.getSelectionModel().getSelectedItem()));
 
             return listCell;
         });
@@ -94,34 +100,37 @@ public class AddressList {
         return vbox;
     }
 
-    public EventHandler<? super MouseEvent> add(Address entry) {
+    public EventHandler<? super MouseEvent> add(Entry<ExternalSystem, String> entry) {
         EventHandler<? super MouseEvent> editHandler = (MouseEvent event) -> {
             Ui.exec(() -> {
-                Ui.fxml().parent(titleLabel).eval(() -> entry, AddressUpdateController.class)
-                        .ifPresent(address -> observableList.add(address));
+                Ui.fxml().parent(titleLabel).eval(() -> entry, AdditionalCustomerIdUpdateController.class)
+                        .ifPresent((java.util.Map.Entry<ExternalSystem, String> entry1) -> observableMap.put(entry1.getKey(), entry1.getValue()));
             });
         };
 
         return editHandler;
     }
 
-    public EventHandler<? super MouseEvent> edit(Address entry) {
+    public EventHandler<? super MouseEvent> edit(Entry<ExternalSystem, String> entry) {
         EventHandler<? super MouseEvent> editHandler = (MouseEvent event) -> {
             Ui.exec(() -> {
-                Ui.fxml().parent(titleLabel).eval(() -> entry, AddressUpdateController.class);
+                Ui.fxml().parent(titleLabel).eval(() -> entry, AdditionalCustomerIdUpdateController.class)
+                        .ifPresent((java.util.Map.Entry<ExternalSystem, String> entry1) -> observableMap.put(entry1.getKey(), entry1.getValue()));
             });
         };
 
         return editHandler;
     }
 
-    public EventHandler<? super MouseEvent> del(Address entry) {
+    public EventHandler<? super MouseEvent> del(Entry<ExternalSystem, String> entry) {
 
         EventHandler<? super MouseEvent> editHandler = (MouseEvent event) -> {
-            observableList.remove(entry);
+            observableMap.remove(entry.getKey());
         };
 
         return editHandler;
 
     }
+
+
 }

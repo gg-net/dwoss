@@ -16,13 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ui.neo.CompanyList;
-import eu.ggnet.dwoss.customer.ui.neo.AdditionalCustomerIdList;
-import eu.ggnet.dwoss.customer.ui.neo.AddressList;
+import eu.ggnet.dwoss.customer.ui.neo.list.CompanyList;
+import eu.ggnet.dwoss.customer.ui.neo.list.AdditionalCustomerIdList;
+import eu.ggnet.dwoss.customer.ui.neo.list.AddressList;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,173 +35,115 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.core.ui.FxSaft;
-
-import lombok.Getter;
-import lombok.Setter;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  * FXML Controller class
  *
  * @author jens.papenhagen
  */
-public class CustomerExpandedController implements Initializable, FxController, ClosedListener {
-
-    @Getter
-    @Setter
-    private long id;
-
-    @Getter
-    @Setter
-    private short optLock;
-
-    @Getter
-    @Setter
-    private ObservableList<Company> companies = FXCollections.observableArrayList();
-
-    @Getter
-    @Setter
-    private ObservableList<Contact> contacts;
-
-    @Getter
-    @Setter
-    private ObservableList<MandatorMetadata> mandatorMetadata;
-
-    @Getter
-    @Setter
-    private Set<CustomerFlag> flags = new HashSet<>();
-
-    @Getter
-    @Setter
-    private Source source;
-
-    @Getter
-    @Setter
-    private String keyAccounter;  // Null is ok.
-
-    @Getter
-    @Setter
-    private String comment;
+public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @FXML
-    private TextField keyAccounterTextField;
+    private Button okButton;
 
     @FXML
-    private TextArea commentTextArea;
+    private Button cancelButton;
 
     @FXML
-    private ComboBox<Source> sourceComboBox;
+    private Label kid;
 
     @FXML
+    private Label kundenname;
+
+    @FXML
+    private ListView<?> contactList;
+
+    @FXML
+    private Button addButton;
+
+    @FXML
+    private Button delButton;
+
+    @FXML
+    private Button editButton;
+
+    @FXML
+    private Button mandatorInfoButton;
+
+    @FXML
+    private ChoiceBox<?> soruce;
+
+    @FXML
+    private TextField keyAccount;
+
+    private List<Company> companies;
+
     private VBox flagVbox;
 
-    @FXML
-    private BorderPane rootPane;
+    private Set<CustomerFlag> flags = new HashSet<>();
 
-    @FXML
+    private boolean bussines = false;
+
+    private Customer customer;
+
+    
+    
+    private TextField keyAccounterTextField;
+
+    private TextArea commentTextArea;
+
+    private ComboBox<Source> sourceComboBox;
+
     private GridPane midGridPane;
 
     private CompanyList companyList;
 
-    @FXML
-    private AdditionalCustomerIdList additionalCustomerIdListViewController;
-
-    @FXML
     private AddressList addressListedViewController;
+    
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        setUp();
+    public void initialize(URL url, ResourceBundle rb) {        
+        sourceComboBox.getItems().addAll(Source.values());
+        keyAccounterTextField.setText("");
+
+        commentTextArea.setText("");
+
+        setFlagVboxUp();
 
     }
 
-    public void setUp() {
+    public void setCustomer(Customer c) {
         setFxElementsUp();
+
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
-        
+
         companyList = new CompanyList(FXCollections.observableArrayList(companies));
-        
 
 //        ObservableMap<ExternalSystem, String> additionalCustomerIdMap = FXCollections.observableHashMap();
 //        additionalCustomerIdMap.put(LEXWARE, "hund");
 //        additionalCustomerIdListViewController.setObservableMap(additionalCustomerIdMap);
-
-
         List<Address> addressesList = gen.makeAddresses(5);
 
         addressListedViewController = new AddressList(FXCollections.observableArrayList(addressesList));
-
 
         midGridPane.add(addressListedViewController.getList(), 2, 4);
         midGridPane.add(companyList.getList(), 0, 3);
 
     }
 
-    @Override
     public void closed() {
-          this.companies = null;
+        this.companies = null;
         Ui.closeWindowOf(keyAccounterTextField);
     }
 
-    public void setControllerState(CustomerDto dto) {
-        this.setComment(dto.getComment());
-        this.setCompanies(FXCollections.observableList(dto.getCompanies()));
-        this.setContacts(FXCollections.observableList(dto.getContacts()));
-        this.setFlags(dto.getFlags());
-        this.setId(dto.getId());
-        this.setKeyAccounter(dto.getKeyAccounter());
-        this.setMandatorMetadata(FXCollections.observableList(dto.getMandatorMetadata()));
-        this.setOptLock(dto.getOptLock());
-        this.setSource(dto.getSource());
-        setFxElementsUp();
-
-    }
-
-    public CustomerDto getCustomerDto() {
-        CustomerDto dto = new CustomerDto();
-        dto.setComment(this.getComment());
-        dto.setCompanies(new ArrayList(this.getCompanies()));
-        dto.setContacts(new ArrayList(this.getContacts()));
-        dto.setFlags(flags);
-        dto.setId(this.getId());
-        dto.setKeyAccounter(this.getKeyAccounter());
-        dto.setMandatorMetadata(this.getMandatorMetadata());
-        dto.setOptLock(this.getOptLock());
-        dto.setSource(this.getSource());
-        return null;
-    }
-
     private void setFxElementsUp() {
-        setSourceBoxUp();
 
-        setKeyAccounterUp();
-        setCommentUp();
-        setFlagVboxUp();
-
-    }
-
-    private void setSourceBoxUp() {
-
-        sourceComboBox.getItems().addAll(Source.values());
-        if ( this.source != null )
-            sourceComboBox.getSelectionModel().select(source);
-
-    }
-
-    private void setKeyAccounterUp() {
-        if ( this.keyAccounter != null )
-            keyAccounterTextField.setText(keyAccounter);
-    }
-
-    private void setCommentUp() {
-        if ( this.comment != null )
-            commentTextArea.setText(comment);
     }
 
     private void setFlagVboxUp() {
@@ -233,5 +175,26 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
         }
         flagVbox.getChildren().addAll(list);
+    }
+
+    @Override
+    public void accept(Customer customer) {
+        if ( customer != null ) {
+            if ( customer.isBussines() ) {
+                bussines = true;
+            }
+            setCustomer(customer);
+        } else {
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+    }
+
+    @Override
+    public Customer getResult() {
+        if ( customer == null ) {
+            return null;
+        }
+        return customer;
     }
 }

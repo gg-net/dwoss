@@ -65,7 +65,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     }
 
     @Override
-    public void store(SimpleCustomer simpleCustomer) {
+    public Customer store(SimpleCustomer simpleCustomer) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

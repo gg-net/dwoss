@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.uniqueunit.entity.dto;
 
 import org.mapstruct.*;
 
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 
 /**

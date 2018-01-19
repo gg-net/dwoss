@@ -16,14 +16,20 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
+import javafx.collections.*;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 
 /**
  * MapStruct Mapper for UnitCollection and DTO.
@@ -44,5 +50,15 @@ public interface UnitCollectionFxMapper {
     default PicoUnit map(UniqueUnit u) {
         return new PicoUnit(u.getId(), (String)u.getIdentifier(Identifier.SERIAL) + " " + u.getCondition().getNote());
     }
-
+    
+    default ObservableList<Price> fromPriceMap(Map<PriceType,Double> prices) {
+        if (prices == null) return FXCollections.emptyObservableList();
+        return FXCollections.observableArrayList(prices.entrySet().stream().map(e -> new Price(e.getKey(),e.getValue())).collect(Collectors.toList()));
+    }
+    
+    default Map<PriceType,Double> toPriceMap( ObservableList<Price> prices) {
+        if (prices == null) return Collections.emptyMap();        
+        return prices.stream().collect(Collectors.toMap(Price::getType, Price::getValue));
+    }
+    
 }

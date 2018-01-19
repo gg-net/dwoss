@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package eu.ggnet.dwoss.uniqueunit.assist;
+package eu.ggnet.dwoss.uniqueunit.entity.dto;
 
 import java.io.Serializable;
 import java.util.*;

@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui.neo;
+package eu.ggnet.dwoss.customer.ui.neo.list;
+
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -27,37 +27,34 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.customer.entity.Communication;
-import eu.ggnet.dwoss.customer.ui.neo.customListCell.CommunicationListCell;
+import eu.ggnet.dwoss.customer.entity.Contact;
+import eu.ggnet.dwoss.customer.ui.neo.customListCell.ContactListCell;
 
-import lombok.Getter;
+import lombok.*;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CommunicationList {
+public class ContactList {
 
-    @FXML
     private VBox vbox;
 
-    @FXML
     private Label titleLabel;
 
-    @FXML
     private ImageView addImage;
 
-    @FXML
-    private ListView<Communication> listView;
+    private ListView<Contact> listView;
 
     @Getter
     private ToggleGroup togglegroup;
 
-    private ObservableList<Communication> observableList;
+    private ObservableList<Contact> observableList;
 
-    public CommunicationList(ObservableList<Communication> observableList) {
-        this.observableList = observableList;
+    public ContactList(ObservableList<Contact> ol) {
+        this.observableList = ol;
         vbox = new VBox();
+
         Separator separator = new Separator();
 
         HBox headerBox = new HBox();
@@ -65,7 +62,7 @@ public class CommunicationList {
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setMinHeight(24.0);
 
-        titleLabel = new Label("Kommunikationswege:");
+        titleLabel = new Label("Kontakte:");
 
         Region headerFillregion = new Region();
         headerFillregion.setMinHeight(24.0);
@@ -77,44 +74,41 @@ public class CommunicationList {
         addImage.setPickOnBounds(true);
         addImage.setPreserveRatio(true);
         Tooltip.install(addImage, new Tooltip("Hinzufügen"));
-        addImage.setOnMousePressed(add(new Communication()));
+        addImage.setOnMousePressed(add(new Contact()));
 
         headerBox.getChildren().addAll(titleLabel, headerFillregion, addImage);
 
-        togglegroup = new ToggleGroup();
+        observableList = FXCollections.observableArrayList();
 
-        this.observableList = FXCollections.observableArrayList();
-
-        listView.getItems().addAll(this.observableList);
+        listView.getItems().addAll(observableList);
         listView.setCellFactory((element) -> {
-            CommunicationListCell listCell = new CommunicationListCell();
-            listCell.setDeleteHandler(del((Communication)listView.getSelectionModel().getSelectedItem()));
-            listCell.setEditHandler(edit((Communication)listView.getSelectionModel().getSelectedItem()));
+            ContactListCell listCell = new ContactListCell();
+            listCell.setDeleteHandler(del((Contact)listView.getSelectionModel().getSelectedItem()));
+            listCell.setEditHandler(edit((Contact)listView.getSelectionModel().getSelectedItem()));
 
             return listCell;
         });
-        System.out.println("in constr before add " + vbox.getChildren().size());
+
         vbox.getChildren().addAll(separator, headerBox, listView);
-        System.out.println("in constr after add " + vbox.getChildren().size());
     }
 
     public VBox getList() {
-        System.out.println("in getList()" + vbox.getChildren().size());
         return vbox;
     }
 
     //TODO
-    public EventHandler<? super MouseEvent> add(Communication entry) {
+    public EventHandler<? super MouseEvent> add(Contact entry) {
         return null;
     }
 
     //TODO
-    public EventHandler<? super MouseEvent> edit(Communication entry) {
+    public EventHandler<? super MouseEvent> edit(Contact entry) {
         return null;
     }
 
     //TODO
-    public EventHandler<? super MouseEvent> del(Communication entry) {
+    public EventHandler<? super MouseEvent> del(Contact entry) {
         return null;
     }
+
 }

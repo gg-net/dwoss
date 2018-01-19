@@ -95,6 +95,7 @@ public class Customer implements Serializable {
     /**
      * A list of {@link Company}<code>s</code> represented by the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -103,6 +104,7 @@ public class Customer implements Serializable {
     /**
      * All contacts association with the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -111,6 +113,7 @@ public class Customer implements Serializable {
     /**
      * Optional Mandator Metadate.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
@@ -145,18 +148,6 @@ public class Customer implements Serializable {
     @Getter
     @Transient // Will be in the entity model later
     private List<AddressLabel> addressLabels = new ArrayList<>();
-
-    public List<Company> getCompanies() {
-        return new ArrayList<>(companies);
-    }
-
-    public List<Contact> getContacts() {
-        return new ArrayList<>(contacts);
-    }
-
-    public List<MandatorMetadata> getMandatorMetadata() {
-        return new ArrayList<>(mandatorMetadata);
-    }
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -301,10 +292,66 @@ public class Customer implements Serializable {
     public Optional<SimpleCustomer> toSimple() {
         if ( !isSimple() ) return Optional.empty();
         if ( isConsumer() ) {
-            return null; // Für Azubis.
+            SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(contacts.get(0).getTitle());
+            sc.setFirstName(contacts.get(0).getFirstName());
+            sc.setLastName(contacts.get(0).getLastName());
+            sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+            sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+            
+            contacts.get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(contacts.get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+
+            return Optional.of(sc);
         }
         if ( isBussines() ) {
-            return null; // Für Azubis.
+            SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
+            sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
+            sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
+            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+            companies.get(0).getContacts().get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(companies.get(0).getContacts().get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+            sc.setCompanyName(companies.get(0).getName());
+            sc.setTaxId(companies.get(0).getTaxId());
+
+            return Optional.of(sc);
         }
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
@@ -314,19 +361,23 @@ public class Customer implements Serializable {
         if ( isConsumer() ) {
             if ( contacts.size() > 1
                     || contacts.get(0).getAddresses().size() > 1
-                    || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() )
-                return false;
+                    || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ) {
+                return true;
+            }
 
             return true;
-        } else { // company must not be empty be definiton.
+        } else {
+            // company must not be empty be definiton.
             if ( companies.size() > 1
                     || companies.get(0).getAddresses().size() > 1
-                    || companies.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() )
-                return false;
+                    || companies.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ){
+                return true;
+            }
+                
             // TODO: More creterias are here.
-
-            return true;
+            return false;
         }
+ 
     }
 
     public boolean isConsumer() {
