@@ -52,8 +52,6 @@ import lombok.Setter;
  */
 public class CustomerExpandedController implements Initializable, FxController, ClosedListener {
 
-    private final CustomerTask LOADING_TASK = new CustomerTask();
-
     @Getter
     @Setter
     private long id;
@@ -119,8 +117,6 @@ public class CustomerExpandedController implements Initializable, FxController, 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setUp();
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
 
     }
 
@@ -149,10 +145,8 @@ public class CustomerExpandedController implements Initializable, FxController, 
 
     @Override
     public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
-            return null;
-        });
+          this.companies = null;
+        Ui.closeWindowOf(keyAccounterTextField);
     }
 
     public void setControllerState(CustomerDto dto) {

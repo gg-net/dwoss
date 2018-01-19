@@ -47,7 +47,6 @@ public class CompanyPopUpViewTryOut {
             Ui.fxml().show(CompanyPopUpController.class);
 
         });
-        
 
         JPanel p = new JPanel();
         p.add(run);

@@ -41,8 +41,25 @@ public interface CustomerAgent extends RemoteAgent {
      */
     List<Customer> search(String search, Set<Customer.SearchField> customerFields);
 
+    /**
+     * Returns a list of customers, based on the search parameter, reduced by the fields and a start/limit
+     *
+     * @param search search the search parameter
+     * @param customerFields optional fileds to be only used.
+     * @param start the starting result
+     * @param limit the ending result
+     * @return a list of customers.
+     */
     List<Customer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
 
+
+    /**
+     * Count the result of the search.
+     *
+     * @param search search the search parameter
+     * @param customerFields optional fileds to be only used.
+     * @return the estimated amount for the search
+     */
     int countSearch(String search, Set<Customer.SearchField> customerFields);
 
     /**

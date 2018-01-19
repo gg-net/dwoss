@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,8 +39,7 @@ import eu.ggnet.saft.api.ui.ResultProducer;
  */
 public class CompanyPopUpController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
-    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
-
+//    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
     @FXML
     private Label idLabel;
 
@@ -84,35 +82,34 @@ public class CompanyPopUpController implements Initializable, FxController, Cons
 
     @Override
     public void accept(Company t) {
-        this.company = company;
-        if ( company != null ) {
-
-            nameTextField.setText(company.getName());
-            ledgerTextField.setText("" + company.getLedger());
-            taxIdTextField.setText(company.getTaxId());
-
-            // force the field to be numeric only
-            ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-                if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-                    return changeed;
-                } else {
-                    return null;
-                }
-            }));
-
-            contacts.addAll(company.getContacts());
-            address.addAll(company.getAddresses());
-            communications.addAll(company.getCommunications());
-
-            ContactList contactList = new ContactList(contacts);
-            contactsPane.getChildren().add(contactList.getList());
-
-            AddressList addressList = new AddressList(address);
-            addressesPane.getChildren().add(addressList.getList());
-
-            CommunicationList communicationList = new CommunicationList(communications);
-            communicationsPane.getChildren().add(communicationList.getList());
-        }
+//        this.company = company;
+//        if ( company != null ) {
+//
+//            nameTextField.setText(company.getName());
+//            ledgerTextField.setText("" + company.getLedger());
+//            taxIdTextField.setText(company.getTaxId());
+//
+//            // force the field to be numeric only
+//            ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
+//                if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
+//                    return changeed;
+//                } else {
+//                    return null;
+//                }
+//            }));
+//
+//            contacts.addAll(company.getContacts());
+//            address.addAll(company.getAddresses());
+//            communications.addAll(company.getCommunications());
+//
+//            ContactList contactList = new ContactList(contacts);
+//            contactsPane.getChildren().add(contactList.getList());
+//
+//            AddressList addressList = new AddressList(address);
+//            addressesPane.getChildren().add(addressList.getList());
+//
+//            CommunicationList communicationList = new CommunicationList(communications);
+//            communicationsPane.getChildren().add(communicationList.getList());
     }
 
     @Override
@@ -122,8 +119,8 @@ public class CompanyPopUpController implements Initializable, FxController, Cons
 
     @FXML
     private void handleTestButtonAction(ActionEvent event) {
-        System.out.println(contactsPane.getChildren().size());
-        contactsPane.getChildren().forEach(e -> System.out.println(e));
+//        System.out.println(contactsPane.getChildren().size());
+//        contactsPane.getChildren().forEach(e -> System.out.println(e));
     }
 
 }

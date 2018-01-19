@@ -76,10 +76,10 @@
                 <Region prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="21" />
                 <Label prefHeight="54.0" prefWidth="138.0" text="Preferred: " GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <CheckBox mnemonicParsing="false" prefHeight="97.0" prefWidth="135.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                <FlowPane fx:id="contactsPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
-                <FlowPane fx:id="addressesPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
-                <FlowPane fx:id="communicationsPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="15" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="2147483647" />
-            <Button fx:id="testButton" mnemonicParsing="false" onAction="#handleTestButtonAction" text="test Button" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                <FlowPane fx:id="contactsPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="1" />
+                <FlowPane fx:id="addressesPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="8" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="1" />
+                <FlowPane fx:id="communicationsPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="15" GridPane.columnSpan="6" GridPane.rowIndex="3" GridPane.rowSpan="1" />
+                <Button fx:id="testButton" mnemonicParsing="false" onAction="#handleTestButtonAction" text="test Button" GridPane.columnIndex="9" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             </children>
         </GridPane>
     </center>
