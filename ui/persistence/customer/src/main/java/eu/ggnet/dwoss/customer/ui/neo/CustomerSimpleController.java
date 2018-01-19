@@ -17,7 +17,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -25,7 +24,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import org.apache.commons.lang3.StringUtils;
@@ -117,6 +115,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private RowConstraints companyRow;
 
+    public CustomerSimpleController() {
+    }
+
     /**
      * Initializes the controller class.
      */
@@ -127,7 +128,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         ustIdTextField.setDisable(true);
         //"hidde" the row
         companyRow.setMinHeight(0);
-        
 
         //fill the choiseBoxs
         genderChoiseBox.getItems().addAll(Sex.values());
@@ -141,10 +141,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             if ( customer.isBussines() ) {
                 bussines = true;
             }
-            setSimpleCustomer( customer.toSimple().get() );
+            simpleCustomer = customer.toSimple().get();
+            setSimpleCustomer(simpleCustomer);
         } else {
             UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar").show(UiAlertBuilder.Type.WARNING);
-            return;
         }
 
     }
@@ -179,8 +179,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @FXML
-    private void changeUI(ActionEvent event) {
-
+    private void changeUI(ActionEvent event) {      
+        bussines ^= true; //tournaround of the boolean
+        setSimpleCustomer(simpleCustomer);
     }
 
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
@@ -188,15 +189,14 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         if ( bussines ) {
             headerLabel.setText("Endkunde");
             changeUIButton.setText("Geschäftskunde");
-            
+
             companyNameTextFiled.setDisable(false);
             ustIdTextField.setDisable(false);
-            
+
             companyNameTextFiled.setText(simpleCustomer.getCompanyName());
             ustIdTextField.setText(simpleCustomer.getTaxId());
-            
+
             companyRow.setMinHeight(25.0);
-            
         } else {
             headerLabel.setText("Geschäftskunde");
             changeUIButton.setText("Endkunde");
