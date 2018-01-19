@@ -16,65 +16,43 @@
  */
 package tryout.neo;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.entity.Company;
+import eu.ggnet.dwoss.customer.ui.neo.CompanyPopUpController;
+import eu.ggnet.saft.*;
+
+import tryout.stub.CustomerAgentStub;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class CompanyPopUpViewTryOut extends Application {
+public class CompanyPopUpViewTryOut {
 
     //CustomerComapnyController
     public static void main(String[] args) {
+        //stub for the new Costumer modell with generator needed
+        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
-        launch(args);
+        Company c = new Company();
 
-//        //stub for the new Costumer modell with generator needed
-//        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-//
-//        Company c = new Company();
-//
-//        JButton close = new JButton("Schliessen");
-//        close.addActionListener(e -> Ui.closeWindowOf(close));
-//
-//        JButton run = new JButton("OpenUi");
-//        run.addActionListener(ev -> {
-//            Ui.fxml().show(() -> c, CompanyPopUpController.class);
-////            Ui.fxml().eval(() -> c, CompanyPopUpController.class);
-//
-//        });
-//a
-//        JPanel p = new JPanel();
-//        p.add(run);
-//        p.add(close);
-//
-//        UiCore.startSwing(() -> p);
-    }
+        JButton close = new JButton("Schliessen");
+        close.addActionListener(e -> Ui.closeWindowOf(close));
 
-    JButton run = new JButton("OpenUi");
-
-    run.addActionListener (ev
-        -> {
+        JButton run = new JButton("OpenUi");
+        run.addActionListener(ev -> {
             Ui.fxml().show(CompanyPopUpController.class);
-        @Override
-        public void start
-        (Stage stage) throws Exception {
-            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("src/main/resources/eu.ggnet.dwoss.customer.ui/neo/CompanyPopUpView.fxml"));
-             << << << < HEAD
 
-            Scene scene = new Scene(root);
-             == == == =
         });
-         >>> >>> > origin / master
 
-        stage.setScene(scene);
-        stage.setResizable(false);
+        JPanel p = new JPanel();
+        p.add(run);
+        p.add(close);
 
-        stage.show();
+        UiCore.startSwing(() -> p);
     }
 
 }

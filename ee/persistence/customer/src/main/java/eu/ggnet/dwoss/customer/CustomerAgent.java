@@ -16,8 +16,12 @@
  */
 package eu.ggnet.dwoss.customer;
 
+import java.util.List;
+import java.util.Set;
+
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
 /**
@@ -26,6 +30,37 @@ import eu.ggnet.dwoss.util.persistence.RemoteAgent;
  */
 @Remote
 public interface CustomerAgent extends RemoteAgent {
+
+    /**
+     * Returns a list of customers, based on the search parameter, reduced by the fields.
+     * 
+     * @param search the search parameter
+     * @param customerFields optional fileds to be only used.
+     * @return a list of customers.
+     */
+    List<Customer> search(String search, Set<Customer.SearchField> customerFields);
+
+
+    /**
+     * Returns a list of customers, based on the search parameter, reduced by the fields and a start/limit
+     * 
+     * @param search search the search parameter
+     * @param customerFields optional fileds to be only used.
+     * @param start the starting result
+     * @param limit the ending result
+     * @return a list of customers.
+     */
+    List<Customer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
     
+    
+    /**
+     * Count the result of the search.
+     * 
+     * @param search search the search parameter
+     * @param customerFields optional fileds to be only used.
+     * @return the estimated amount for the search
+     */
+    int countSearch(String search, Set<Customer.SearchField> customerFields);
+
     
 }
