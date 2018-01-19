@@ -27,7 +27,6 @@ import eu.ggnet.dwoss.customer.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.CFormat.FontStyle;
@@ -147,9 +146,9 @@ public class CustomerExporterOperation implements CustomerExporter {
     }
 
     private static String applyAddress(Customer c, Function<Address, String> func) {
-        Optional<Address> optAddress = c.toPreferedInvoiceAddress().getOptContact().map(oc -> oc.prefered(AddressType.INVOICE));
-        if ( !optAddress.isPresent() ) return "";
-        return func.apply(optAddress.get());
+        Address address = c.toPreferedInvoiceAddress().getAddress();
+        if ( address == null ) return "";
+        return func.apply(address);
     }
 
     private static String getComm(Customer c, Communication.Type type) {

@@ -92,7 +92,7 @@ import static eu.ggnet.dwoss.rules.PositionType.*;
     ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
-                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
+                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")  // Purchase price is indentifier, that it has been reported.
     ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"

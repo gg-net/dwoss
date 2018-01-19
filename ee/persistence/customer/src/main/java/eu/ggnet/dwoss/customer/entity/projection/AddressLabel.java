@@ -22,21 +22,45 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.rules.AddressType;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * A combination of address, optional company and contact.
  *
  * @author oliver.guenther
  */
-@Value
+// Class to be changed. For now it is a projection. will be an entity.
 public class AddressLabel {
 
-    private final Optional<Company> optCompany;
+    @Getter
+    private long id;
 
-    private final Optional<Contact> optContact;
+    @Getter
+    private short optLock;
 
-    private final AddressType type;
+    @Getter
+    @Setter
+    private Company company;
+
+    @Getter
+    @Setter
+    private Contact contact;
+
+    @Getter
+    @Setter
+    private Address address;
+
+    @Getter
+    @Setter
+    private AddressType type;
+
+    public AddressLabel(Company company, Contact contact, Address address, AddressType type) {
+        this.company = company;
+        this.contact = contact;
+        this.address = address;
+        this.type = type;
+    }
 
     /**
      * Returns a HTML representation of the address label.
@@ -47,9 +71,10 @@ public class AddressLabel {
      */
     public String toHtml() {
         if ( isEmpty() ) return "Keine bevorzugten Addresdaten hinterlegt";
-        return optCompany.map(c -> c.getName() + "<br />").orElse("")
-                + optContact.map(c -> c.toFullName() + "<br />").orElse("")
-                + optContact.map(c -> c.prefered(type)).map(a -> addressLine(a, "<br />")).orElse("");
+
+        return Optional.ofNullable(company).map(c -> c.getName() + "<br />").orElse("")
+                + Optional.ofNullable(contact).map(c -> c.toFullName() + "<br />").orElse("")
+                + Optional.ofNullable(address).map(a -> addressLine(a, "<br />")).orElse("");
     }
 
     /**
@@ -59,9 +84,9 @@ public class AddressLabel {
      */
     public String toLabel() {
         if ( isEmpty() ) return "Keine bevorzugten Addresdaten hinterlegt";
-        return optCompany.map(c -> c.getName() + System.lineSeparator()).orElse("")
-                + optContact.map(c -> c.toFullName() + System.lineSeparator()).orElse("")
-                + optContact.map(c -> c.prefered(type)).map(a -> addressLine(a, System.lineSeparator())).orElse("");
+        return Optional.ofNullable(company).map(c -> c.getName() + System.lineSeparator()).orElse("")
+                + Optional.ofNullable(contact).map(c -> c.toFullName() + System.lineSeparator()).orElse("")
+                + Optional.ofNullable(address).map(a -> addressLine(a, System.lineSeparator())).orElse("");
     }
 
     private String addressLine(Address address, String nl) {
@@ -75,8 +100,9 @@ public class AddressLabel {
      *
      * @return true if company,contact and address are empty.
      */
+    // Will be removed, as an entiy addresslabel can not be empty.
     public boolean isEmpty() {
-        return !optCompany.isPresent() && !optContact.isPresent();
+        return company != null && contact != null;
     }
 
 }

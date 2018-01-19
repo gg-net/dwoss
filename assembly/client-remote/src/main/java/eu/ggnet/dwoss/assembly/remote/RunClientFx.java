@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -33,10 +28,14 @@ import javafx.stage.Stage;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.assembly.remote.lookup.*;
+import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
+import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.cap.RemoteLookup;
 import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.Client.lookup;
@@ -100,7 +99,10 @@ public class RunClientFx extends Application {
         String key = discoverConfigParameters();
         if ( !Configurations.containsConfig(key) ) usage(key); // Go to default, but inform on console abaout usage.
         lookupConfig = Configurations.getConfigOrDefault(key);
-        Client.setRemoteLookup(new WildflyLookup(lookupConfig));
+
+        WildflyLookup wildflyLookup = new WildflyLookup(lookupConfig);
+        Client.setRemoteLookup(wildflyLookup);
+        Dl.local().add(RemoteLookup.class, wildflyLookup);
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
 

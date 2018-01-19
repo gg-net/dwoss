@@ -16,13 +16,24 @@
  */
 package eu.ggnet.saft.core.dl;
 
-import java.util.Optional;
+import java.util.*;
+
+import org.openide.util.Lookup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.Client;
 
 /**
  *
  * @author oliver.guenther
  */
 public class LocalDl {
+
+    // Don't use info Logglevel here until the Progress is lookuped in a different way. e.g. keep the instance until the connection fails.
+    private final static Logger L = LoggerFactory.getLogger(Client.class);
+
+    private final static Map<String, Object> DIRECT_LOOKUP = new HashMap<>();
 
     private static LocalDl instance;
 
@@ -32,15 +43,21 @@ public class LocalDl {
     }
 
     public <T> T lookup(Class<T> clazz) {
-        return null;
+        Objects.requireNonNull(clazz, "clazz is null");
+        L.debug("Looking Up {}", clazz.getName());
+        // The DIRECT_LOOKUP allows the usage of runtime injection direcly via the di light framework. This is normaly used ony for tryout and samples.
+        // This could be done better with a injection framework, but through this implementation, we don't need any server at all.
+        if ( DIRECT_LOOKUP.containsKey(clazz.getName()) ) return (T)DIRECT_LOOKUP.get(clazz.getName());
+        return Lookup.getDefault().lookup(clazz);
     }
 
     public <T> Optional<T> optional(Class<T> clazz) {
-        return Optional.empty();
+        return Optional.ofNullable(lookup(clazz));
     }
 
     public <T> void add(Class<T> clazz, T t) {
-
+        DIRECT_LOOKUP.put(clazz.getName(), t);
+        L.info("Remote dierct lookup filled with {}.", clazz.getName());
     }
 
 }

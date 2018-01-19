@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 
 /**
  *
@@ -135,6 +136,11 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
         return 50;
+    }
+
+    @Override
+    public void store(SimpleCustomer simpleCustomer) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
