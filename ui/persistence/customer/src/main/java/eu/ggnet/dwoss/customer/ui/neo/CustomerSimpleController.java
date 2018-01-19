@@ -214,6 +214,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         emailTextField.setText(simpleCustomer.getEmail());
 
         commentTextArea.setText(simpleCustomer.getComment());
+        
+        
+        //select the choicebox
+        genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
+        sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
 
     }
 

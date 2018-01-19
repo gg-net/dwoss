@@ -61,7 +61,7 @@ public class CustomerTest {
     @Test
     public void testToSimple() {
         CustomerGenerator gen = new CustomerGenerator();
-        Customer customer = gen.makeCustomer();        
+        Customer customer = gen.makeCustomer();
         assertThat(customer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
     }
 

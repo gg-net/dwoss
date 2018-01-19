@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.Client;

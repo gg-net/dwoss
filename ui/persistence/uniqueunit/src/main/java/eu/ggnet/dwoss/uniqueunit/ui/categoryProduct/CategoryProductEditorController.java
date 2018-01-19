@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;

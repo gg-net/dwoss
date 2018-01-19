@@ -95,6 +95,7 @@ public class Customer implements Serializable {
     /**
      * A list of {@link Company}<code>s</code> represented by the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -103,6 +104,7 @@ public class Customer implements Serializable {
     /**
      * All contacts association with the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -111,6 +113,7 @@ public class Customer implements Serializable {
     /**
      * Optional Mandator Metadate.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
@@ -145,18 +148,6 @@ public class Customer implements Serializable {
     @Getter
     @Transient // Will be in the entity model later
     private List<AddressLabel> addressLabels = new ArrayList<>();
-
-    public List<Company> getCompanies() {
-        return new ArrayList<>(companies);
-    }
-
-    public List<Contact> getContacts() {
-        return new ArrayList<>(contacts);
-    }
-
-    public List<MandatorMetadata> getMandatorMetadata() {
-        return new ArrayList<>(mandatorMetadata);
-    }
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -310,6 +301,8 @@ public class Customer implements Serializable {
             sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
             sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
             sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+            sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+            
             contacts.get(0).getCommunications().stream().map((communication) -> {
                 if ( communication.getType().equals(Communication.Type.MOBILE) ) {
                     sc.setMobilePhone(communication.getIdentifier());

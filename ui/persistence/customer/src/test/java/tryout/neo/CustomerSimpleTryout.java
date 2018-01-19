@@ -38,8 +38,9 @@ public class CustomerSimpleTryout {
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
         
         CustomerGenerator gen = new CustomerGenerator();
-        Customer c = gen.makeCustomer();
-
+        Customer customer = gen.makeCustomer();
+        customer.add(gen.makeCompany());
+        
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
@@ -47,7 +48,7 @@ public class CustomerSimpleTryout {
         
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> c, CustomerSimpleController.class);
+                Ui.fxml().eval(() -> customer, CustomerSimpleController.class);
             });
         });
 

@@ -24,8 +24,8 @@
                 <HBox HBox.hgrow="ALWAYS">
                     <children>
                         <Region HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#save" text="Speichern" />
-                        <Button mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
+                        <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" text="Speichern" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Abbrechen" />
                     </children>
                 </HBox>
                 <HBox />
