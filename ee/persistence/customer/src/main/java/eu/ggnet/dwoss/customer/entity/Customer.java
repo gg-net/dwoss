@@ -66,7 +66,7 @@ public class Customer implements Serializable {
         COMPANY,
         ADDRESS
     }
-
+    
     @AllArgsConstructor
     @Getter
     public static enum Source {
@@ -75,19 +75,19 @@ public class Customer implements Serializable {
         SOPO_STORE("Sonderposten Store"),
         SOPO_ONLINE("Sonderposten Online"),
         ONEADO("Oneado Online Shop");
-
+        
         private final String name;
     }
-
+    
     public static enum ExternalSystem {
         SAGE, LEXWARE
     }
-
+    
     @Id
     @Getter
     @GeneratedValue
     private long id;
-
+    
     @Getter
     @Version
     private short optLock;
@@ -114,22 +114,22 @@ public class Customer implements Serializable {
     @NotNull
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
-
+    
     @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<CustomerFlag> flags = new HashSet<>();
-
+    
     @Getter
     @Setter
     private Source source;
-
+    
     @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated
     private Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
-
+    
     @Getter
     @Setter
     private String keyAccounter;  // Null is ok.
@@ -141,19 +141,19 @@ public class Customer implements Serializable {
     @Field
     @Boost(0.5f)
     private String comment;
-
+    
     @Getter
     @Transient // Will be in the entity model later
     private List<AddressLabel> addressLabels = new ArrayList<>();
-
+    
     public List<Company> getCompanies() {
         return new ArrayList<>(companies);
     }
-
+    
     public List<Contact> getContacts() {
         return new ArrayList<>(contacts);
     }
-
+    
     public List<MandatorMetadata> getMandatorMetadata() {
         return new ArrayList<>(mandatorMetadata);
     }
@@ -209,11 +209,11 @@ public class Customer implements Serializable {
     public void add(CustomerFlag customerFlag) {
         if ( customerFlag != null ) flags.add(customerFlag);
     }
-
+    
     public void remove(CustomerFlag customerFlag) {
         flags.remove(customerFlag);
     }
-
+    
     public void clearFlags() {
         flags.clear();
     }
@@ -301,14 +301,68 @@ public class Customer implements Serializable {
     public Optional<SimpleCustomer> toSimple() {
         if ( !isSimple() ) return Optional.empty();
         if ( isConsumer() ) {
-            return null; // Für Azubis.
+            SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(contacts.get(0).getTitle());
+            sc.setFirstName(contacts.get(0).getFirstName());
+            sc.setLastName(contacts.get(0).getLastName());
+            sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+            contacts.get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(contacts.get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+            
+            return Optional.of(sc); 
         }
         if ( isBussines() ) {
-            return null; // Für Azubis.
+             SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
+            sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
+            sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
+            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+            companies.get(0).getContacts().get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(companies.get(0).getContacts().get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+            sc.setCompanyName(companies.get(0).getName());
+            sc.setTaxId(companies.get(0).getTaxId());
+            
+            return Optional.of(sc); 
         }
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
-
+    
     public boolean isSimple() {
         // Für Azubis
         if ( isConsumer() ) {
@@ -316,7 +370,7 @@ public class Customer implements Serializable {
                     || contacts.get(0).getAddresses().size() > 1
                     || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() )
                 return false;
-
+            
             return true;
         } else { // company must not be empty be definiton.
             if ( companies.size() > 1
@@ -328,15 +382,15 @@ public class Customer implements Serializable {
             return true;
         }
     }
-
+    
     public boolean isConsumer() {
         return !contacts.isEmpty();
     }
-
+    
     public boolean isBussines() {
         return !companies.isEmpty();
     }
-
+    
     public boolean isVaild() {
         return getViolationMessage() == null;
     }
@@ -346,21 +400,21 @@ public class Customer implements Serializable {
     public String getViolationMessage() {
         return null;
     }
-
+    
     public String toHtml() {
         return toHtml(
                 mandatorMetadata.stream().map(m -> "<li>" + m.toHtml() + "</li>").reduce((u, t) -> u + t).map(s -> "<b>Mandantenspezifische Informationen</b>:<ul>" + s + "</ul>").orElse(""),
                 Optional.ofNullable(comment).map(c -> "<b>Kommentar</b>:<br />" + c).orElse("")
         );
     }
-
+    
     public String toHtml(String matchcode, DefaultCustomerSalesdata defaults) {
-
+        
         StringBuilder sb = new StringBuilder();
         sb.append("<b>Verkaufsinformationen</b> <i>(mit Mandatenstandard)</i>:<ul>");
-
+        
         MandatorMetadata customerExtras = mandatorMetadata.stream().filter(m -> m.getMandatorMatchcode().equals(matchcode)).findFirst().orElse(new MandatorMetadata());
-
+        
         sb.append("<li>Versandkonditionen: ")
                 .append(customerExtras.getShippingCondition() == null ? defaults.getShippingCondition() + " <i>(Standard)</i>" : customerExtras.getShippingCondition())
                 .append("</li>");
@@ -375,22 +429,22 @@ public class Customer implements Serializable {
                         ? defaults.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()) + " <i>(Standard)</i>"
                         : customerExtras.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()))
                 .append("</li>");
-
+        
         sb.append("</ul>");
-
+        
         return toHtml(sb.toString(),
                 Optional.ofNullable(comment).map(c -> "<b>Kommentar</b>:<br />" + c).orElse("")
         );
     }
-
+    
     private String toHtml(String salesRow, String comment) {
         final boolean misc = (!additionalCustomerIds.isEmpty() || source != null || keyAccounter != null);
-
+        
         StringBuilder sb = new StringBuilder();
         sb.append("<table width=\"100%\"><tr>");
         sb.append("<td colspan=2 ><b>Kid: ").append(id).append("&nbsp;-&nbsp;").append(toName()).append("</b></td>");
         sb.append("</tr><tr>");
-
+        
         sb.append("<td valign=top>");
         if ( toPreferedShippingAddress().getType() == INVOICE ) sb.append("<b>Bevorzugte Rechnungs- und Lieferadresse</b><br />");
         else sb.append("<b>Bevorzugte Rechnungsadresse</b><br />");
@@ -400,12 +454,12 @@ public class Customer implements Serializable {
             sb.append(toPreferedShippingAddress().toHtml());
         }
         sb.append("</td>");
-
+        
         int rowSpan = 1;
         if ( !flags.isEmpty() ) rowSpan++;
         if ( misc ) rowSpan++;
         if ( !StringUtils.isBlank(salesRow) ) rowSpan++;
-
+        
         sb.append("<td valign=top rowspan=").append(rowSpan).append(" >");
         sb.append(companies.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Firmen(n)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append(contacts.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Kontakt(e)</b>:<ul>" + s + "</ul>").orElse(""));
@@ -423,11 +477,11 @@ public class Customer implements Serializable {
                 .map(s -> "Weitere Kundennummer(n):<ul>" + s + "</ul>")
                 .orElse(""));
         if ( misc ) sb.append("</td></tr>");
-
+        
         if ( !StringUtils.isBlank(salesRow) ) sb.append("<tr><td valign=top>").append(salesRow).append("</tr></td>");
         if ( !StringUtils.isAllBlank(comment) ) sb.append("<tr><td colspan=2>").append(comment).append("</tr></td>");
         sb.append("</table>");
         return sb.toString();
     }
-
+    
 }
