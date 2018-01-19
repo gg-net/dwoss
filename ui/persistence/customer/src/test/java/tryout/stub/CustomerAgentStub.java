@@ -40,7 +40,7 @@ public class CustomerAgentStub implements CustomerAgent {
 
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
 
-    private CustomerGenerator CGEN = new CustomerGenerator();
+    private final CustomerGenerator CGEN = new CustomerGenerator();
 
     @Override
     public <T> long count(Class<T> entityClass) {
@@ -115,12 +115,20 @@ public class CustomerAgentStub implements CustomerAgent {
             
         }
        
+        System.out.println("Listgröße" + list.size());
+        //debug
+        list.forEach((customer) -> {
+            customer.getCompanies().forEach((company) -> {
+                System.out.println("Company Name:" + company.getName());
+            });
+        });
+        
         return list;
     }
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
-        return 25;
+        return 50;
     }
 
 }

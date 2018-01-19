@@ -53,7 +53,7 @@ import static javafx.concurrent.Worker.State.READY;
 @Title("Kunden Suche")
 public class CustomerSearchController implements Initializable, FxController, ClosedListener {
 
-    private final CustomerTask LOADING_TASK = new CustomerTask();
+    private CustomerTask LOADING_TASK;
 
     @FXML
     private Button searchButton;
@@ -92,7 +92,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     private Set<SearchField> customerFields;
 
-    private CustomerAgent searcher;
+    private CustomerAgent agent = Client.lookup(CustomerAgent.class);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -100,16 +100,12 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
         ObservableList<Customer> resultProperty = FXCollections.observableArrayList();
-        
-        searcher = Client.lookup(CustomerAgent.class);
-        
+
         resultListView = new ListView<>();
-//        resultListView.setCellFactory(new SearchListCell.Factory());
+        //resultListView.setCellFactory(new SearchListCell.Factory());
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
-
-        customerFields = new HashSet<>();
 
         // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
         searchService = new Service<List<Customer>>() {
@@ -125,8 +121,12 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                         if ( StringUtils.isEmpty(searchProperty.get()) ) {
                             return Collections.EMPTY_LIST;
                         } // Empty check.
-                        fillSet();
-                        List<Customer> searchlist = searcher.search(searchProperty.get(), customerFields, 0, searcher.countSearch(searchProperty.get(), customerFields));
+
+                        customerFields = fillSet(new HashSet<>());
+                        System.out.println("Size of Set: " + customerFields.size());
+
+                        //fill the task
+                        List<Customer> searchlist = agent.search(searchProperty.get(), customerFields, 0, agent.countSearch(searchProperty.get(), customerFields));
                         List<Customer> last = Collections.EMPTY_LIST;
 
                         int done = 0;
@@ -136,9 +136,11 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                             last.add(searchlist.get(i));
                             done = done + last.size();
                             updateValue(last);
-                            int estimate = searcher.countSearch(searchProperty.get(), customerFields);
+                            int estimate = agent.countSearch(searchProperty.get(), customerFields);
+
                             updateMessage("Searchresult " + done + " of " + estimate);
                             updateProgress(done, estimate);
+
                             i++;
                         }
                         updateProgress(100, 100);
@@ -176,11 +178,11 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         statusVBox.visibleProperty().bind(searchService.runningProperty());
 
-        Ui.progress().observe(LOADING_TASK);
-        Ui.exec(LOADING_TASK);
+        Ui.progress().observe(searchService);
+        //Ui.exec(searchService);
     }
 
-    private void fillSet() {
+    private Set<SearchField> fillSet(Set<SearchField> customerFields) {
         //fill the Set
         if ( kid.isSelected() ) {
             customerFields.add(Customer.SearchField.ID);
@@ -197,6 +199,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         if ( address.isSelected() ) {
             customerFields.add(Customer.SearchField.ADDRESS);
         }
+
+        return customerFields;
     }
 
     private void search() {
@@ -210,11 +214,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
-            if ( LOADING_TASK.isRunning() ) {
-                LOADING_TASK.cancel();
+            if ( searchService.isRunning() ) {
+                searchService.cancel();
             }
             return null;
         });
+
+        Ui.closeWindowOf(kid);
     }
 
 }
