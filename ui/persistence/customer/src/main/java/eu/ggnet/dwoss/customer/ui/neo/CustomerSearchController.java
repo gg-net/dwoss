@@ -102,7 +102,19 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         ObservableList<Customer> resultProperty = FXCollections.observableArrayList();
 
         resultListView = new ListView<>();
-        //resultListView.setCellFactory(new SearchListCell.Factory());
+        resultListView.setCellFactory(listView -> {
+            return new ListCell<Customer>() {
+                @Override
+                protected void updateItem(Customer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        this.setGraphic(null);
+                    } else {
+                        this.setText(item.toName());
+                    }
+                }
+            };
+        });
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
@@ -122,7 +134,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                             return Collections.EMPTY_LIST;
                         } // Empty check.
 
-                        customerFields = fillSet(new HashSet<>());
+                        customerFields = fillSet();
                         System.out.println("Size of Set: " + customerFields.size());
 
                         //fill the task
@@ -182,25 +194,30 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         //Ui.exec(searchService);
     }
 
-    private Set<SearchField> fillSet(Set<SearchField> customerFields) {
-        //fill the Set
+    /**
+     * fill the Set for filter the Search
+     *
+     * @return a Set of Enums form Customer.SearchField
+     */
+    private Set<SearchField> fillSet() {
+        Set<SearchField> set = new HashSet<>();
         if ( kid.isSelected() ) {
-            customerFields.add(Customer.SearchField.ID);
+            set.add(Customer.SearchField.ID);
         }
         if ( lastname.isSelected() ) {
-            customerFields.add(Customer.SearchField.LASTNAME);
+            set.add(Customer.SearchField.LASTNAME);
         }
         if ( firstname.isSelected() ) {
-            customerFields.add(Customer.SearchField.FIRSTNAME);
+            set.add(Customer.SearchField.FIRSTNAME);
         }
         if ( company.isSelected() ) {
-            customerFields.add(Customer.SearchField.COMPANY);
+            set.add(Customer.SearchField.COMPANY);
         }
         if ( address.isSelected() ) {
-            customerFields.add(Customer.SearchField.ADDRESS);
+            set.add(Customer.SearchField.ADDRESS);
         }
 
-        return customerFields;
+        return set;
     }
 
     private void search() {

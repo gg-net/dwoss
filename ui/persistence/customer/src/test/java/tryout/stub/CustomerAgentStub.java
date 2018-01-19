@@ -97,9 +97,9 @@ public class CustomerAgentStub implements CustomerAgent {
     public List<Customer> search(String search, Set<SearchField> customerFields) {
         List<Customer> list = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
-            list.add(CGEN.makeCustomer() );
+            list.add(CGEN.makeCustomer());
         }
-       
+
         return list;
     }
 
@@ -107,22 +107,25 @@ public class CustomerAgentStub implements CustomerAgent {
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
         List<Customer> list = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
-            list.add(CGEN.makeCustomer() );
+            list.add(CGEN.makeCustomer());
         }
         try {
             Thread.sleep(1000L, SLOW);
         } catch (InterruptedException ex) {
-            
+
         }
-       
-        System.out.println("Listgröße" + list.size());
+
         //debug
+        System.out.println("--------------------------------------");
+        System.out.println("Debug from CustomerAgentStub");
+        System.out.println("Listgröße: " + list.size());
         list.forEach((customer) -> {
             customer.getCompanies().forEach((company) -> {
-                System.out.println("Company Name:" + company.getName());
+                System.out.println("Company Name: " + company.getName());
             });
         });
-        
+        System.out.println("--------------------------------------");
+
         return list;
     }
 
