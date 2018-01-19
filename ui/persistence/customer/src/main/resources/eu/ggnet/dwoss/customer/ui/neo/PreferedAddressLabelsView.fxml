@@ -11,34 +11,34 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="600.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController">
+<BorderPane prefHeight="778.0" prefWidth="1139.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController">
     <center>
         <VBox prefHeight="572.0" prefWidth="969.0">
             <children>
                 <Label prefHeight="39.0" prefWidth="144.0" style="-fx-font-weight: bold;" text="Rechnungsadresse" underline="true" />
-                <FlowPane hgap="15.0" vgap="5.0">
+                <FlowPane hgap="15.0" prefHeight="336.0" prefWidth="1139.0" vgap="5.0">
                     <children>
-                        <ListView fx:id="invoiceAdressCompanyListView" prefHeight="200.0" prefWidth="200.0" />
-                        <ListView fx:id="invoiceAdressContactListView" prefHeight="200.0" prefWidth="200.0" />
-                        <ListView fx:id="invoiceAdressAdressListView" prefHeight="200.0" prefWidth="200.0" />
-                        <VBox prefHeight="225.0" prefWidth="206.0">
+                        <ListView fx:id="invoiceAddressCompanyListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="invoiceAddressContactListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="invoiceAddressAddressListView" prefHeight="200.0" prefWidth="200.0" />
+                        <VBox prefHeight="314.0" prefWidth="481.0">
                             <children>
-                                <Button fx:id="invoiceAdressClearButton" mnemonicParsing="false" onAction="#handleinvoiceAdressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
-                        <TextArea fx:id="invoiceAdressTextArea" prefHeight="200.0" prefWidth="200.0" />
+                                <Button fx:id="invoiceAddressClearButton" mnemonicParsing="false" onAction="#handleinvoiceAddressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
+                                <TextArea fx:id="invoiceAddressTextArea" prefHeight="289.0" prefWidth="481.0" />
                             </children>
                         </VBox>
                     </children>
                 </FlowPane>
                 <Label prefHeight="35.0" prefWidth="137.0" text="Lieferadresse" />
-                <FlowPane hgap="15.0" vgap="5.0">
+                <FlowPane hgap="15.0" prefHeight="317.0" prefWidth="1139.0" vgap="5.0">
                     <children>
-                        <ListView fx:id="shippingAdressCompanyListView" prefHeight="200.0" prefWidth="200.0" />
-                        <ListView fx:id="shippingAdressContactListView" prefHeight="200.0" prefWidth="200.0" />
-                        <ListView fx:id="shippingAdressAdressListView" prefHeight="200.0" prefWidth="200.0" />
-                        <VBox prefHeight="225.0" prefWidth="206.0">
+                        <ListView fx:id="shippingAddressCompanyListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="shippingAddressContactListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="shippingAddressAddressListView" prefHeight="200.0" prefWidth="200.0" />
+                        <VBox prefHeight="312.0" prefWidth="474.0">
                             <children>
-                                <Button fx:id="shippingAdressClearButton" mnemonicParsing="false" onAction="#handleshippingAdressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
-                        <TextArea fx:id="shippingAdressTextArea" prefHeight="200.0" prefWidth="200.0" />
+                                <Button fx:id="shippingAddressClearButton" mnemonicParsing="false" onAction="#handleshippingAddressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
+                                <TextArea fx:id="shippingAddressTextArea" prefHeight="282.0" prefWidth="474.0" />
                             </children>
                         </VBox>
                     </children>
@@ -61,8 +61,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button fx:id="saveButton" mnemonicParsing="false" prefHeight="29.0" prefWidth="246.0" text="Speichern" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button fx:id="cancelButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="252.0" text="Abbrechen" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefHeight="29.0" prefWidth="246.0" text="Speichern" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" prefHeight="31.0" prefWidth="252.0" text="Abbrechen" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             </children>
         </GridPane>
     </bottom>
