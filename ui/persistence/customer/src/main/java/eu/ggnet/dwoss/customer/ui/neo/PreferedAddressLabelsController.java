@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -97,6 +99,20 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAdressCompanyListView.getItems().addAll(this.customer.getCompanies());
         this.shippingAdressCompanyListView.getItems().forEach(company -> this.shippingAdressContactListView.getItems().addAll(company.getContacts()));
         this.shippingAdressContactListView.getItems().forEach(contact -> shippingAdressAdressListView.getItems().addAll(contact.getAddresses()));
+
+        this.invoiceAdressAdressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
+            @Override
+            public void changed(ObservableValue<? extends Address> observable, Address oldValue, Address newValue) {
+                invoiceAdressTextArea.setText(newValue.toHtml());
+            }
+        });
+
+        this.shippingAdressAdressListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Address>() {
+            @Override
+            public void changed(ObservableValue<? extends Address> observable, Address oldValue, Address newValue) {
+                shippingAdressTextArea.setText(newValue.toHtml());
+            }
+        });
 
     }
 
