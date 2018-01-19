@@ -36,15 +36,13 @@ public class CustomerSimpleTryout {
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
 
-        UiCore.startSwing(() -> new JLabel("Kundensuche"));
-
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
-//        run.addActionListener(ev -> {
-//            Ui.fxml().show(CustomerSimpleController.class);
-//        });
+        run.addActionListener(ev -> {
+            Ui.fxml().show(CustomerSimpleController.class);
+        });
 
 
         JPanel p = new JPanel();

@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyPopUpController;
+import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -30,7 +30,7 @@ import tryout.stub.CustomerAgentStub;
  *
  * @author jens.papenhagen
  */
-public class CompanyPopUpViewTryOut {
+public class CompanyUpdateTryOut {
 
     //CustomerComapnyController
     public static void main(String[] args) {
@@ -44,7 +44,7 @@ public class CompanyPopUpViewTryOut {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CompanyPopUpController.class);
+            Ui.fxml().show(CompanyUpdateController.class);
 
         });
 

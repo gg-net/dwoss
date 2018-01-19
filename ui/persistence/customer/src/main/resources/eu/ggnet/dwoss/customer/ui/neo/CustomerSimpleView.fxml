@@ -27,7 +27,7 @@
         <rowConstraints>
             <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
           <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-          <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
+          <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" fx:id="companyRow"/>
             <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
             <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
             <RowConstraints maxHeight="50.0" minHeight="10.0" vgrow="ALWAYS" />

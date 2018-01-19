@@ -17,6 +17,7 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -24,12 +25,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 import eu.ggnet.dwoss.customer.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
@@ -41,11 +45,9 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  *
  * @author jens.papenhagen
  */
-public class CustomerSimpleController implements Initializable {
+public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<SimpleCustomer> {
 
-    //private SimpleCustomerDto simpleCustomerDto;
-
-    private SimpleCustomerFx simpleCustomerFx;
+    private SimpleCustomer simpleCustomer;
 
     @FXML
     private Button saveAndCloseButton;
@@ -110,29 +112,50 @@ public class CustomerSimpleController implements Initializable {
     @FXML
     private TextArea commentTextArea;
 
+    private boolean bussines = false;
+
+    @FXML
+    private RowConstraints companyRow;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //disable the TextField
+        companyNameTextFiled.setDisable(true);
+        ustIdTextField.setDisable(true);
+        //"hidde" the row
+        companyRow.setMinHeight(0);
+        
+
         //fill the choiseBoxs
         genderChoiseBox.getItems().addAll(Sex.values());
         sourceChoiseBox.getItems().addAll(Source.values());
 
     }
 
-//    @Override
-//    public void accept(SimpleCustomer sc) {
-//        setSimpleCustomer(sc);
-//    }
-//
-//    @Override
-//    public SimpleCustomerDto getResult() {
-//        if ( simpleCustomerDto == null ) {
-//            return null;
-//        }
-//        return simpleCustomerDto;
-//    }
+    @Override
+    public void accept(Customer customer) {
+        if ( customer != null || customer.isSimple() ) {
+            if ( customer.isBussines() ) {
+                bussines = true;
+            }
+            setSimpleCustomer( customer.toSimple().get() );
+        } else {
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
+    }
+
+    @Override
+    public SimpleCustomer getResult() {
+        if ( simpleCustomer == null ) {
+            return null;
+        }
+        return simpleCustomer;
+    }
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
@@ -141,8 +164,6 @@ public class CustomerSimpleController implements Initializable {
             UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-
-        //simpleCustomerDto = SimpleCustomerFxMapper.INSTANCE.to(simpleCustomerFx);
 
         Ui.closeWindowOf(kid);
     }
@@ -159,32 +180,41 @@ public class CustomerSimpleController implements Initializable {
 
     @FXML
     private void changeUI(ActionEvent event) {
-        
+
     }
 
-//    public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
-//       // simpleCustomerFx = SimpleCustomerFxMapper.INSTANCE.form(simpleCustomer);
-//
-//        //the button header
-//        headerLabel.textProperty().bindBidirectional(simpleCustomer.getModus().text());
-//        changeUIButton.textProperty().bindBidirectional(simpleCustomer.getModus().text());
-//
-//        //bind textfield
-//        companyNameTextFiled.textProperty().bindBidirectional(simpleCustomer.getCompanyName());
-//        ustIdTextField.textProperty().bindBidirectional(simpleCustomer.getUstId());
-//        titleTextField.textProperty().bindBidirectional(simpleCustomer.getTitle());
-//        firstNameTextField.textProperty().bindBidirectional(simpleCustomer.getFirstName());
-//        lastNameTextField.textProperty().bindBidirectional(simpleCustomer.getLastName());
-//        streetTextField.textProperty().bindBidirectional(simpleCustomer.getStreet());
-//        zipcodeTextField.textProperty().bindBidirectional(simpleCustomer.getZipCode());
-//        cityTextField.textProperty().bindBidirectional(simpleCustomer.getCity());
-//        countryTextField.textProperty().bindBidirectional(simpleCustomer.getCountry());
-//        landLineTextField.textProperty().bindBidirectional(simpleCustomer.getLandLine());
-//        mobileTextField.textProperty().bindBidirectional(simpleCustomer.getMobile());
-//        emailTextField.textProperty().bindBidirectional(simpleCustomer.getEmail());
-//
-//        commentTextArea.textProperty().bindBidirectional(simpleCustomer.getComment());
-//
-//    }
+    public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
+        //the button and the header
+        if ( bussines ) {
+            headerLabel.setText("Endkunde");
+            changeUIButton.setText("Geschäftskunde");
+            
+            companyNameTextFiled.setDisable(false);
+            ustIdTextField.setDisable(false);
+            
+            companyNameTextFiled.setText(simpleCustomer.getCompanyName());
+            ustIdTextField.setText(simpleCustomer.getTaxId());
+            
+            companyRow.setMinHeight(25.0);
+            
+        } else {
+            headerLabel.setText("Geschäftskunde");
+            changeUIButton.setText("Endkunde");
+        }
+
+        titleTextField.setText(simpleCustomer.getTitle());
+        firstNameTextField.setText(simpleCustomer.getFirstName());
+        lastNameTextField.setText(simpleCustomer.getLastName());
+        streetTextField.setText(simpleCustomer.getStreet());
+        zipcodeTextField.setText(simpleCustomer.getZipCode());
+        cityTextField.setText(simpleCustomer.getCity());
+        countryTextField.setText(simpleCustomer.getIsoCountry());
+        landLineTextField.setText(simpleCustomer.getLandlinePhone());
+        mobileTextField.setText(simpleCustomer.getMobilePhone());
+        emailTextField.setText(simpleCustomer.getEmail());
+
+        commentTextArea.setText(simpleCustomer.getComment());
+
+    }
 
 }
