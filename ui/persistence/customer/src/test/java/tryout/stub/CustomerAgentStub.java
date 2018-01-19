@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 
 /**
  *
@@ -99,7 +100,7 @@ public class CustomerAgentStub implements CustomerAgent {
         for (int i = 0; i < 25; i++) {
             list.add(CGEN.makeCustomer() );
         }
-       
+
         return list;
     }
 
@@ -112,15 +113,20 @@ public class CustomerAgentStub implements CustomerAgent {
         try {
             Thread.sleep(1000L, SLOW);
         } catch (InterruptedException ex) {
-            
+
         }
-       
+
         return list;
     }
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
         return 25;
+    }
+
+    @Override
+    public void store(SimpleCustomer simpleCustomer) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 
 /**
@@ -33,17 +34,22 @@ public interface CustomerAgent extends RemoteAgent {
 
     /**
      * Returns a list of customers, based on the search parameter, reduced by the fields.
-     * 
+     *
      * @param search the search parameter
      * @param customerFields optional fileds to be only used.
      * @return a list of customers.
      */
     List<Customer> search(String search, Set<Customer.SearchField> customerFields);
 
-
     List<Customer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
-    
+
     int countSearch(String search, Set<Customer.SearchField> customerFields);
 
-    
+    /**
+     * Stores a simple customer.
+     *
+     * @param simpleCustomer
+     */
+    void store(SimpleCustomer simpleCustomer);
+
 }

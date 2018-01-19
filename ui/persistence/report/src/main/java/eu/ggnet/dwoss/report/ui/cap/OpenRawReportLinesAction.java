@@ -37,6 +37,8 @@ public class OpenRawReportLinesAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.fx().show(() -> new RawReportView());
+        Ui.exec(() -> {
+            Ui.fx().show(() -> new RawReportView());
+        });
     }
 }

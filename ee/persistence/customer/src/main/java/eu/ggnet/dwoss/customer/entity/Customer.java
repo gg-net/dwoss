@@ -26,12 +26,14 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.customer.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static javax.persistence.CascadeType.ALL;
@@ -64,7 +66,7 @@ public class Customer implements Serializable {
         COMPANY,
         ADDRESS
     }
-    
+
     @AllArgsConstructor
     @Getter
     public static enum Source {
@@ -86,6 +88,7 @@ public class Customer implements Serializable {
     @GeneratedValue
     private long id;
 
+    @Getter
     @Version
     private short optLock;
 
@@ -289,30 +292,59 @@ public class Customer implements Serializable {
         return sb.toString();
     }
 
-    public String toMultiLine() {
-        String result = toString();
-        for (Company company : companies) {
-            result += "\n -" + company;
-            for (Address a : company.getAddresses()) {
-                result += "\n  -" + a;
-            }
-            for (Communication communication : company.getCommunications()) {
-                result += "\n  -" + communication;
-            }
+    /**
+     * Converts the customer to the simple dto form if possible.
+     * If the customer is to complex, it cannot be converted an therefor an empty optional is returned.
+     *
+     * @return an optional of the simple customer
+     */
+    public Optional<SimpleCustomer> toSimple() {
+        if ( !isSimple() ) return Optional.empty();
+        if ( isConsumer() ) {
+            return null; // Für Azubis.
         }
-        for (Contact contact : contacts) {
-            result += "\n -" + contact;
-            for (Address a : contact.getAddresses()) {
-                result += "\n  -" + a;
-            }
-            for (Communication communication : contact.getCommunications()) {
-                result += "\n  -" + communication;
-            }
+        if ( isBussines() ) {
+            return null; // Für Azubis.
         }
-        for (MandatorMetadata metadata : mandatorMetadata) {
-            result += "\n -" + metadata;
+        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
+    }
+
+    public boolean isSimple() {
+        // Für Azubis
+        if ( isConsumer() ) {
+            if ( contacts.size() > 1
+                    || contacts.get(0).getAddresses().size() > 1
+                    || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() )
+                return false;
+
+            return true;
+        } else { // company must not be empty be definiton.
+            if ( companies.size() > 1
+                    || companies.get(0).getAddresses().size() > 1
+                    || companies.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() )
+                return false;
+            // TODO: More creterias are here.
+
+            return true;
         }
-        return result;
+    }
+
+    public boolean isConsumer() {
+        return !contacts.isEmpty();
+    }
+
+    public boolean isBussines() {
+        return !companies.isEmpty();
+    }
+
+    public boolean isVaild() {
+        return getViolationMessage() == null;
+    }
+
+    // The null annotation can only be activated after the next big release, as the customers in the database are all invalid.
+    // @Null
+    public String getViolationMessage() {
+        return null;
     }
 
     public String toHtml() {
