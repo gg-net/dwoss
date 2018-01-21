@@ -122,9 +122,6 @@ public class Position implements Serializable, Comparable<Position> {
     @Size(min = 1, max = 255, groups = {Default.class, Returns.class, DefaultUi.class, Blocks.class})
     private String name;
 
-    @Deprecated // Will be removed
-    private double afterTaxPrice;
-
     private double price;
 
     private double amount;
@@ -173,10 +170,9 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Builder
-    Position(PositionType type, String name, double afterTaxPrice, double price, double amount, double tax, String description, int bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
+    Position(PositionType type, String name, double price, double amount, double tax, String description, int bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
         this.type = type;
         this.name = name;
-        this.afterTaxPrice = afterTaxPrice;
         this.price = price;
         this.amount = amount;
         this.tax = tax;
@@ -194,7 +190,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @return a copy with document == null
      */
     public Position partialClone() {
-        return new Position(type, name, afterTaxPrice, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
+        return new Position(type, name, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
     }
 
     public int getId() {
@@ -216,11 +212,6 @@ public class Position implements Serializable, Comparable<Position> {
      */
     public double toAfterTaxPrice() {
         return MathUtil.roundedApply(getPrice(), getTax(), 0.01);
-    }
-
-    @Deprecated // be removed
-    public void setAfterTaxPrice(double afterTaxPrice) {
-        this.afterTaxPrice = afterTaxPrice;
     }
 
     public double getPrice() {

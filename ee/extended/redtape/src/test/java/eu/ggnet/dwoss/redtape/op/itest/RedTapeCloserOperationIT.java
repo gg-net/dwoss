@@ -33,7 +33,6 @@ import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
@@ -61,7 +60,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                             .amount(p.getAmount())
                             .price(10.)
                             .tax(p.getTax())
-                            .afterTaxPrice(MathUtil.roundedApply(10, GlobalConfig.TAX, 0.))
                             .serialNumber(p.getSerial())
                             .refurbishedId(p.getRefurbishedId())
                             .bookingAccount(1000)
@@ -231,17 +229,17 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
         double price = uu.getPrice(PriceType.CUSTOMER);
         if ( price < 0.001 ) price = uu.getPrice(PriceType.RETAILER);
         if ( price < 0.001 ) price = 1111.11;
-        Position pos = new PositionBuilder()
-                .setType(PositionType.UNIT)
-                .setUniqueUnitId(uu.getId())
-                .setUniqueUnitProductId(uu.getProduct().getId())
-                .setPrice(price)
-                .setTax(GlobalConfig.TAX)
-                .setAfterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
-                .setDescription(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
-                .setName(UniqueUnitFormater.toPositionName(uu))
-                .setBookingAccount(-1)
-                .createPosition();
+        Position pos = Position.builder()
+                .amount(1)
+                .type(PositionType.UNIT)
+                .uniqueUnitId(uu.getId())
+                .uniqueUnitProductId(uu.getProduct().getId())
+                .price(price)
+                .tax(GlobalConfig.TAX)
+                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
+                .name(UniqueUnitFormater.toPositionName(uu))
+                .bookingAccount(-1)
+                .build();
         pos.setRefurbishedId(uu.getRefurbishId());
         doc.appendAll(new RedTapeHookStup().elaborateUnitPosition(pos, doc.getId()).getPayload());
 
@@ -295,7 +293,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .type(PositionType.SERVICE)
                 .price(100)
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(100, GlobalConfig.TAX, 0.))
                 .name("Service")
                 .description("Service")
                 .amount(1)
@@ -313,7 +310,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .uniqueUnitProductId(unit1.getProduct().getId())
                 .price(unit1.getPrice(PriceType.SALE))
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(unit1.getPrice(PriceType.SALE), GlobalConfig.TAX, 0.))
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(unit1))
                 .name(UniqueUnitFormater.toPositionName(unit1))
                 .bookingAccount(-1)
@@ -328,7 +324,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .uniqueUnitProductId(unit2.getProduct().getId())
                 .price(unit2.getPrice(PriceType.SALE))
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(unit2.getPrice(PriceType.SALE), GlobalConfig.TAX, 0.))
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(unit2))
                 .name(UniqueUnitFormater.toPositionName(unit2))
                 .bookingAccount(-1)

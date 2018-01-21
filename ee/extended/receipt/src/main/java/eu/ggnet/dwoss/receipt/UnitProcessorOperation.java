@@ -237,11 +237,12 @@ public class UnitProcessorOperation implements UnitProcessor {
     }
 
     private Position toPosition(UniqueUnit uniqueUnit, String operationComment) {
-        return new PositionBuilder().setType(PositionType.UNIT).setBookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
-                .setDescription(UniqueUnitFormater.toDetailedDiscriptionLine(uniqueUnit) + ", Aufnahme: " + operationComment)
-                .setName(UniqueUnitFormater.toPositionName(uniqueUnit))
-                .setUniqueUnitId(uniqueUnit.getId())
-                .setUniqueUnitProductId(uniqueUnit.getProduct().getId()).createPosition();
+        return Position.builder().type(PositionType.UNIT).bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
+                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uniqueUnit) + ", Aufnahme: " + operationComment)
+                .amount(1)
+                .name(UniqueUnitFormater.toPositionName(uniqueUnit))
+                .uniqueUnitId(uniqueUnit.getId())
+                .uniqueUnitProductId(uniqueUnit.getProduct().getId()).build();
     }
 
     private void validateReceipt(UniqueUnit receiptUnit) throws IllegalArgumentException {
@@ -367,7 +368,6 @@ public class UnitProcessorOperation implements UnitProcessor {
         position.setUniqueUnitId(0);
         position.setUniqueUnitProductId(0);
         position.setPrice(0);
-        position.setAfterTaxPrice(0);
         position.setDescription("Entfernt durch " + operation + ", war: " + position.getName());
         position.setName("Entfernt durch " + operation);
     }

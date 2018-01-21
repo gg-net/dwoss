@@ -34,13 +34,13 @@ public class DocumentTest {
 
         assertEquals("Document.posistion.size", 0, doc.getPositions().size());
 
-        Position p1 = doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        Position p1 = doc.append(new PositionBuilder().type(PositionType.UNIT).build());
 
         assertEquals("Document.posistion.size", 1, doc.getPositions().size());
         assertEquals(p1, doc.getPosition(p1.getId()));
 
-        doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        doc.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc.append(new PositionBuilder().type(PositionType.UNIT).build());
 
         assertEquals("Document.posistion.size", 3, doc.getPositions().size());
         assertEquals("Postions order", Arrays.asList(1, 2, 3), new ArrayList<>(doc.getPositions().keySet()));
@@ -49,16 +49,16 @@ public class DocumentTest {
     @Test
     public void testRemove() {
         Document doc = new Document();
-        Position p1 = doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        Position p1 = doc.append(new PositionBuilder().type(PositionType.UNIT).build());
         assertEquals("Document.posistion.size", 1, doc.getPositions().size());
 
         doc.remove(p1);
         assertEquals("Document.posistion.size", 0, doc.getPositions().size());
 
-        p1 = doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        Position p3 = doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        p1 = doc.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc.append(new PositionBuilder().type(PositionType.UNIT).build());
+        Position p3 = doc.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc.append(new PositionBuilder().type(PositionType.UNIT).build());
 
         assertEquals("Document.posistion.size", 4, doc.getPositions().size());
         assertEquals("Postions order", Arrays.asList(1, 2, 3, 4), new ArrayList<>(doc.getPositions().keySet()));
@@ -85,7 +85,7 @@ public class DocumentTest {
         doc1.setType(DocumentType.ORDER);
         doc1.add(Document.Flag.CUSTOMER_BRIEFED);
         dos.add(doc1);
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
 
         //copy and test equality
         Document doc2 = doc1.partialClone();
@@ -94,8 +94,8 @@ public class DocumentTest {
         assertTrue("The following Documents are not equal:\n" + doc1 + "\n" + doc2, doc1.equalsContent(doc2));
 
         //add and remove positions with equality test
-        Position p1 = doc2.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        Position p2 = doc2.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        Position p1 = doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
+        Position p2 = doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
         assertFalse("Should not be equals, but is.\n- " + doc1 + "\n- " + doc2,doc1.equalsContent(doc2));
 
         doc2.remove(p1);
@@ -126,12 +126,12 @@ public class DocumentTest {
     @Test
     public void testGetPositionsByType() {
         Document doc1 = new Document();
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.COMMENT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.COMMENT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.SHIPPING_COST).createPosition());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc1.append(new PositionBuilder().type(PositionType.COMMENT).build());
+        doc1.append(new PositionBuilder().type(PositionType.COMMENT).build());
+        doc1.append(new PositionBuilder().type(PositionType.SHIPPING_COST).build());
 
         assertEquals("Service Positions", 0, doc1.getPositions(PositionType.SERVICE).size());
         assertEquals("Service Positions", 1, doc1.getPositions(PositionType.SHIPPING_COST).size());

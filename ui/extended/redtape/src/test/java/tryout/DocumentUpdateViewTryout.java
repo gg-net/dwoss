@@ -72,7 +72,6 @@ public class DocumentUpdateViewTryout {
                 .name("Acer Aspire E1-572P-74508G75Dnii (NX.MFSED.003) SopoNr:123456 SN:NXMFSED00312312122EF001S")
                 .price(100)
                 .tax(TAX)
-                .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
                 .type(UNIT)
@@ -83,7 +82,6 @@ public class DocumentUpdateViewTryout {
                 .name("Acer Aspire E1-572P-74508G75Dnii (NX.MFSED.003) SopoNr:12345 SN:NXMFSED00312312122EF001S")
                 .price(100)
                 .tax(TAX)
-                .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
                 .type(UNIT)
@@ -94,7 +92,6 @@ public class DocumentUpdateViewTryout {
                 .name("Acer Aspire E1-572P-74508G75Dnii (NX.MFSED.003) SopoNr:1234 SN:NXMFSED00312312122EF001S")
                 .price(100)
                 .tax(0.07)
-                .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
                 .type(SERVICE)
@@ -105,7 +102,6 @@ public class DocumentUpdateViewTryout {
                 .name("Service Acer Aspire E1-572P-74508G75Dnii")
                 .price(100)
                 .tax(0)
-                .afterTaxPrice(119)
                 .bookingAccount(-1).build());
         doc.append(Position.builder()
                 .type(SHIPPING_COST)
@@ -114,7 +110,6 @@ public class DocumentUpdateViewTryout {
                 .name("Versandkosten")
                 .price(10)
                 .tax(TAX)
-                .afterTaxPrice(11.90)
                 .bookingAccount(-1)
                 .build()
         );

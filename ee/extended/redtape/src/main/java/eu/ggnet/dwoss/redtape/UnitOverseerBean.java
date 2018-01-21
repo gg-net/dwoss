@@ -34,6 +34,7 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.eao.PositionEao;
@@ -61,14 +62,13 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-
-import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
 /**
  * A EJB to supply Information about Units bimport eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
@@ -274,7 +274,6 @@ public class UnitOverseerBean implements UnitOverseer {
                 .amount(1)
                 .price(0.)
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(0., GlobalConfig.TAX, 0.))
                 .serialNumber(uu.getSerial())
                 .refurbishedId(uu.getRefurbishId())
                 .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))

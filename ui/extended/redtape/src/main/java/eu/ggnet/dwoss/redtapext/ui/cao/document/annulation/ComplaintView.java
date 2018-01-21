@@ -62,9 +62,9 @@ public class ComplaintView extends javax.swing.JPanel implements IPreClose {
             }
         }
         if ( afterInvoiceTablePanel.getComment() != null && !afterInvoiceTablePanel.getComment().trim().equals("") )
-            positions.add(new PositionBuilder().setType(PositionType.COMMENT).setName("Grund/Beschreibung")
-                    .setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
-                    .setDescription(afterInvoiceTablePanel.getComment()).createPosition());
+            positions.add(new PositionBuilder().type(PositionType.COMMENT).name("Grund/Beschreibung")
+                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
+                    .description(afterInvoiceTablePanel.getComment()).build());
         return positions;
     }
 

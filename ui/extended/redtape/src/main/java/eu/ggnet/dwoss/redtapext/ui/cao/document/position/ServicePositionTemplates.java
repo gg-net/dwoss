@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,9 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.entity.Position;
 
-import eu.ggnet.dwoss.rules.PositionType;
-
-import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
 import static eu.ggnet.dwoss.rules.TradeName.APPLE;
 
@@ -48,9 +44,7 @@ public class ServicePositionTemplates {
     }
 
     private static void service(List<Position> toAdd, String name, String description, double afterTaxPrice, int bookingAccount) {
-        Position build = Position.builder()
-                .name(name).description(description).bookingAccount(bookingAccount)
-                .afterTaxPrice(afterTaxPrice).tax(GlobalConfig.TAX).type(SERVICE).price(afterTaxPrice / (GlobalConfig.TAX + 1)).build();
+        Position build = Position.builder().name(name).description(description).bookingAccount(bookingAccount).build();
         toAdd.add(build);
     }
 

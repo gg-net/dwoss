@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,17 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-
 import java.util.SortedMap;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.saft.Client;
-
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.ShippingCondition;
+import eu.ggnet.saft.Client;
 
 /**
  * A helper class that provides methods to modify shipping costs.
@@ -58,15 +54,14 @@ public class ShippingCostHelper {
             costs = Client.lookup(ShippingCostService.class).calculate(amountOfPositions, doc.getDossier().getPaymentMethod(), shippingCondition);
         SortedMap<Integer, Position> positions = doc.getPositions(PositionType.SHIPPING_COST);
         if ( positions.isEmpty() ) {
-            PositionBuilder pb = new PositionBuilder().setType(PositionType.SHIPPING_COST)
-                    .setName("Versandkosten").setDescription("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
-                    .setPrice(costs).setTax(GlobalConfig.TAX).setAfterTaxPrice(costs + (costs * GlobalConfig.TAX))
-                    .setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST).orElse(-1));
-            doc.append(pb.createPosition());
+            PositionBuilder pb = new PositionBuilder().type(PositionType.SHIPPING_COST)
+                    .name("Versandkosten").description("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
+                    .price(costs).tax(GlobalConfig.TAX)
+                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST).orElse(-1));
+            doc.append(pb.build());
         } else {
             Position next = positions.values().iterator().next();
             next.setPrice(costs);
-            next.setAfterTaxPrice(costs + (costs * GlobalConfig.TAX));
         }
     }
 

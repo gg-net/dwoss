@@ -90,8 +90,7 @@ public class DocumentUpdateController {
             case PRODUCT_BATCH:
                 SalesProduct pb = createProductBatchPosition(lookup(RedTapeAgent.class).findAll(SalesProduct.class));
                 if ( pb != null ) {
-                    Position p = new PositionBuilder().setType(type).setDescription(pb.getDescription()).
-                            setName(pb.getName()).setUniqueUnitProductId(pb.getUniqueUnitProductId()).createPosition();
+                    Position p = new PositionBuilder().type(type).description(pb.getDescription()).name(pb.getName()).uniqueUnitProductId(pb.getUniqueUnitProductId()).build();
                     p.setPrice((pb.getPrice() == null) ? 0. : pb.getPrice());
                     p.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(p.getType()).orElse(-1));
                     document.append(editPosition(p));
@@ -120,7 +119,7 @@ public class DocumentUpdateController {
     }
 
     public eu.ggnet.dwoss.redtape.entity.Position createCommentPosition() {
-        eu.ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(PositionType.COMMENT).createPosition();
+        eu.ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().type(PositionType.COMMENT).build();
         CommentCreateCask commentView = new CommentCreateCask(p);
         OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Comment hinzufügen", commentView);
         dialog.setLocationRelativeTo(view);

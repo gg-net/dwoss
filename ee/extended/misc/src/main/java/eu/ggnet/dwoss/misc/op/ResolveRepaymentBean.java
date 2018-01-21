@@ -190,7 +190,6 @@ public class ResolveRepaymentBean implements ResolveRepayment {
         position.setUniqueUnitId(0);
         position.setUniqueUnitProductId(0);
         position.setPrice(0);
-        position.setAfterTaxPrice(0);
         position.setDescription("Entfernt durch Gutschrifstausgleich von " + arranger + ", war: " + position.getName() + ", Kommentar:" + comment);
         position.setName("Entfernt durch Gutschrifstausgleich von " + arranger);
     }

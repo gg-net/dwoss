@@ -544,7 +544,6 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                 l.setName(normalizeSpace(position.getName()));
                 l.setPositionType(position.getType());
                 l.setPrice(position.getPrice());
-                l.setAfterTaxPrice(position.toAfterTaxPrice());
                 l.setReportingDate(reporting);
                 l.setTax(position.getTax());
 
@@ -560,14 +559,12 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                 // A Credit Memo gets its prices inverted
                 if ( document.getType() == DocumentType.CREDIT_MEMO ) {
                     l.setPrice(position.getPrice() * (-1));
-                    l.setAfterTaxPrice(position.toAfterTaxPrice() * (-1));
                 }
 
                 // Special handling of complaints.
                 if ( document.getType() == DocumentType.COMPLAINT ) {
                     // A Complaint position has "tagging" effect, but shall never result in a plus or minus.
                     l.setPrice(0);
-                    l.setAfterTaxPrice(0);
                     if ( document.getConditions().contains(Condition.REJECTED) || document.getConditions().contains(Condition.WITHDRAWN) ) {
                         l.setWorkflowStatus(ReportLine.WorkflowStatus.DISCHARGED);
                     } else if ( document.getConditions().contains(Condition.ACCEPTED) ) {

@@ -18,10 +18,8 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.api.PositionService;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
 
@@ -55,7 +53,6 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
     public Position getPosition() {
         // TODO: Why not usding position.getPosition() asks OG
         position.setPrice(positionView.getPrice());
-        position.setAfterTaxPrice(MathUtil.roundedApply(position.getPrice(), GlobalConfig.TAX, 0.02));
         position.setAmount(positionView.getAmount());
         position.setDescription(positionView.getDescription());
         position.setName(positionView.getPositionName());
@@ -132,7 +129,7 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
     private void templateListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_templateListMouseClicked
         if ( evt.getClickCount() == 2 ) {
             position = (Position)templateList.getSelectedValue();
-            position = Position.builder().afterTaxPrice(position.toAfterTaxPrice()).amount(position.getAmount()).bookingAccount(position.getBookingAccount())
+            position = Position.builder().amount(position.getAmount()).bookingAccount(position.getBookingAccount())
                     .description(position.getDescription()).name(position.getName()).price(position.getPrice()).tax(position.getTax())
                     .type(position.getType()).uniqueUnitId(position.getUniqueUnitId()).uniqueUnitProductId(position.getUniqueUnitProductId()).build();
 

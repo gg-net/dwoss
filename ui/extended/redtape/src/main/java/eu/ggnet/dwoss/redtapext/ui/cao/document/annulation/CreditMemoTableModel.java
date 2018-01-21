@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,9 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.util.List;
 
-import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
-import eu.ggnet.dwoss.util.table.Column;
-import eu.ggnet.dwoss.util.table.IColumnGetAction;
-import eu.ggnet.dwoss.util.table.IColumnGetSetAction;
-import eu.ggnet.dwoss.util.table.SimpleTableModel;
+import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.util.table.*;
 
 /**
  *
@@ -43,7 +40,6 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
                     lines.get(row).setParticipate(bValue);
                     lines.get(row).setPartialCredit(!bValue);
                     lines.get(row).getPosition().setPrice(lines.get(row).getOriginalPrice());
-                    lines.get(row).getPosition().setAfterTaxPrice(lines.get(row).getOriginalPrice() * (lines.get(row).getPosition().getTax() + 1));
                 } else {
                     lines.get(row).setParticipate(bValue);
                     lines.get(row).setFullCredit(bValue);
@@ -72,7 +68,6 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
                     lines.get(row).setParticipate(bValue);
                     lines.get(row).setPartialCredit(bValue);
                     lines.get(row).getPosition().setPrice(lines.get(row).getOriginalPrice());
-                    lines.get(row).getPosition().setAfterTaxPrice(lines.get(row).getOriginalPrice() * (lines.get(row).getPosition().getTax() + 1));
                 }
                 fireTableRowsUpdated(row, row);
             }
@@ -95,11 +90,9 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
                     double dValue = (double)value;
                     if ( lines.get(row).isPartialCredit() ) {
                         lines.get(row).getPosition().setPrice(dValue);
-                        lines.get(row).getPosition().setAfterTaxPrice(dValue * (lines.get(row).getPosition().getTax() + 1));
                     }
                 } else {
                     lines.get(row).getPosition().setPrice(lines.get(row).getOriginalPrice());
-                    lines.get(row).getPosition().setAfterTaxPrice(lines.get(row).getOriginalPrice() * (lines.get(row).getPosition().getTax() + 1));
                 }
                 fireTableRowsUpdated(row, row);
             }
@@ -120,12 +113,10 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
                 if ( value != null ) {
                     double dValue = (double)value;
                     if ( lines.get(row).isPartialCredit() ) {
-                        lines.get(row).getPosition().setAfterTaxPrice(dValue);
                         lines.get(row).getPosition().setPrice(dValue / (lines.get(row).getPosition().getTax() + 1));
                     }
                 } else {
                     lines.get(row).getPosition().setPrice(lines.get(row).getOriginalPrice());
-                    lines.get(row).getPosition().setAfterTaxPrice(lines.get(row).getOriginalPrice() * (lines.get(row).getPosition().getTax() + 1));
                 }
                 fireTableRowsUpdated(row, row);
             }
@@ -156,12 +147,10 @@ public class CreditMemoTableModel extends SimpleTableModel<AfterInvoicePosition>
             shippingPos.setPartialCredit(false);
             shippingPos.setFullCredit(true);
             shippingPos.getPosition().setPrice(shippingPos.getOriginalPrice());
-            shippingPos.getPosition().setAfterTaxPrice(shippingPos.getOriginalPrice() * (shippingPos.getPosition().getTax() + 1));
         } else {
             shippingPos.setFullCredit(false);
             shippingPos.setPartialCredit(true);
             shippingPos.getPosition().setPrice(.0);
-            shippingPos.getPosition().setAfterTaxPrice(.0);
         }
     }
 }

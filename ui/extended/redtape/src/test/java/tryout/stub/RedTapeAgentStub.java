@@ -1,13 +1,5 @@
 package tryout.stub;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
@@ -16,6 +8,8 @@ import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
 
@@ -90,13 +84,6 @@ public class RedTapeAgentStub implements RedTapeAgent {
         p4.setPrice(40);
         p6.setPrice(60);
         p8.setPrice(80);
-
-        p1.setAfterTaxPrice(p1.getPrice() * tax);
-        p2.setAfterTaxPrice(p2.getPrice() * tax);
-        p3.setAfterTaxPrice(p3.getPrice() * tax);
-        p4.setAfterTaxPrice(p4.getPrice() * tax);
-        p6.setAfterTaxPrice(p6.getPrice() * tax);
-        p8.setAfterTaxPrice(p8.getPrice() * tax);
 
         doc1.appendAll(p1, p2, p3, p4, p5, p6, p7, p8);
 

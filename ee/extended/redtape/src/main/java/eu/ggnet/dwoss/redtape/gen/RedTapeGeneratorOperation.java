@@ -41,7 +41,6 @@ import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.statemachine.StateTransition;
 
@@ -127,7 +126,6 @@ public class RedTapeGeneratorOperation {
                             .uniqueUnitProductId(uu.getProduct().getId())
                             .price(price)
                             .tax(GlobalConfig.TAX)
-                            .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                             .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
                             .name(UniqueUnitFormater.toPositionName(uu))
                             .bookingAccount(-1)
@@ -154,7 +152,6 @@ public class RedTapeGeneratorOperation {
                                 .uniqueUnitProductId(p.getId())
                                 .price(price)
                                 .tax(GlobalConfig.TAX)
-                                .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                                 .name(p.getName())
                                 .description(p.getDescription())
                                 .bookingAccount(postLedger.get(PositionType.PRODUCT_BATCH).orElse(-1))
@@ -166,7 +163,6 @@ public class RedTapeGeneratorOperation {
                                 .type(PositionType.SERVICE)
                                 .price(price)
                                 .tax(GlobalConfig.TAX)
-                                .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                                 .name("Service")
                                 .description("Service")
                                 .bookingAccount(postLedger.get(PositionType.SERVICE).orElse(-1))
@@ -191,7 +187,6 @@ public class RedTapeGeneratorOperation {
                         .type(PositionType.SHIPPING_COST)
                         .price(price)
                         .tax(GlobalConfig.TAX)
-                        .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                         .name("Versandkosten")
                         .description("Versandkosten")
                         .bookingAccount(postLedger.get(PositionType.SHIPPING_COST).orElse(-1))

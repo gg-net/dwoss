@@ -1,18 +1,17 @@
 package eu.ggnet.dwoss.report.test;
 
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-
 import java.util.Date;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
+
 import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ReportLineTest {
 
@@ -24,7 +23,7 @@ public class ReportLineTest {
 
         ReportLine line1 = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).afterTaxPrice(119).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
 
         report.add(line1);
@@ -33,7 +32,7 @@ public class ReportLineTest {
         // Creditmemo unitAnnex.
         ReportLine line2 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).afterTaxPrice(-19).tax(0.19)
+                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
 
         line1.add(line2);
@@ -47,7 +46,7 @@ public class ReportLineTest {
         // Now add A Unit.
         ReportLine line3 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).afterTaxPrice(-100).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
 
         line1.add(line3);
