@@ -332,7 +332,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * <td>4</td>
      * <td>{@link Type#INVOICE} overwrites {@link Type#ORDER}</td>
      * <td>{@link PaymentMethod#DIRECT_DEBIT}</td>
-     * <td>({@link Condition#PAID} &amp; ( {@link Condition#SENT} | {@link Condition#PICKED_UP} ))</td>
+     * <td>{@link Condition#SENT} | {@link Condition#PICKED_UP}</td>
      * <td>*</td>
      * </tr>
      * <tr>
@@ -417,7 +417,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                             if ( conditions.contains(SENT) ) it.remove();
                             break;
                         case DIRECT_DEBIT:
-                            if ( conditions.contains(PAID) && (conditions.contains(SENT) || conditions.contains(PICKED_UP)) ) it.remove();
+                            if ( conditions.contains(SENT) || conditions.contains(PICKED_UP) ) it.remove();
                             break;
                         case INVOICE:
                             if ( conditions.contains(SENT) || conditions.contains(PICKED_UP) ) it.remove();
