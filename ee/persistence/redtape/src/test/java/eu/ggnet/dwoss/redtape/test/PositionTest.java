@@ -194,13 +194,6 @@ public class PositionTest {
     }
 
     @Test
-    public void testDefaultUiServiceInvalidTax() {
-        Position p = makeValidDefaultUiService();
-        p.setTax(0);
-        assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
-    }
-
-    @Test
     public void testDefaultUiServiceInvalidAmount() {
         Position p = makeValidDefaultUiService();
         p.setAmount(0);

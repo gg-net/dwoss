@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
@@ -118,7 +117,7 @@ public class UnitOverseerBean implements UnitOverseer {
         if ( username == null ) return false;
         Operator operator = operatorEao.findByUsername(username);
         if ( operator == null ) return false;
-        return operator.getAllActiveRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES);
+        return operator.getAllActiveRights().contains(right);
     }
 
     /**
@@ -263,22 +262,20 @@ public class UnitOverseerBean implements UnitOverseer {
      * @throws UserInfoException if the refurbishId is not available
      */
     @Override
-    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
+    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException {
         UnitShard us = internalFind(refurbishId);
         if ( !us.isAvailable() ) throwNotAvailable(refurbishId, us);
 
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
 
-        Position p = Position
-                .builder()
+        Position p = Position.builder()
                 .amount(1)
                 .price(0.)
-                .tax(GlobalConfig.TAX)
                 .serialNumber(uu.getSerial())
                 .refurbishedId(uu.getRefurbishId())
                 .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
                 .type(PositionType.UNIT)
-                .tax(GlobalConfig.TAX)
+                .tax(tax)
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .name(UniqueUnitFormater.toPositionName(uu))

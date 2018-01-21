@@ -42,12 +42,12 @@ import static javax.persistence.CascadeType.*;
  * Valid Positions are:
  * <table>
  * <tr><td>Type</td><td>Needed Values</td></tr>
- * <tr><td>Unit</td><td>name, afterTaxPrice, price, amount, tax, description, unitId, document, uniqueUnitProductId;</td></tr>
- * <tr><td>Service</td><td>name, afterTaxPrice, price, amount, tax, description, document;</td></tr>
- * <tr><td>Product_Batch</td><td>name, afterTaxPrice, price, amount, tax, description, document, uniqueUnitProductId;</td></tr>
+ * <tr><td>Unit</td><td>name, price, amount, tax, description, unitId, document, uniqueUnitProductId;</td></tr>
+ * <tr><td>Service</td><td>name, price, amount, tax, description, document;</td></tr>
+ * <tr><td>Product_Batch</td><td>name, price, amount, tax, description, document, uniqueUnitProductId;</td></tr>
  * <tr><td>Comment</td><td>name, description, document;</td></tr>
  * <tr><td>Temporary_Comment</td><td>name, description, document;</td></tr>
- * <tr><td>Transportation_Cost</td><td>name, afterTaxPrice, price, amount, tax, description, document;</td></tr>
+ * <tr><td>Transportation_Cost</td><td>name, price, amount, tax, description, document;</td></tr>
  * </table>
  * <p>
  * @has 1 - 1 Position.Key
@@ -395,25 +395,21 @@ public class Position implements Serializable, Comparable<Position> {
             case UNIT:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( uniqueUnitId == 0 ) violations.add("UniqueUnitId ist nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SERVICE:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( amount <= 0 ) violations.add("Die Menge muss größer als 0 sein.");
                 break;
             case PRODUCT_BATCH:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount < 1 ) violations.add("Die Menge muss größer als 0 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SHIPPING_COST:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 break;
             case COMMENT:
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);

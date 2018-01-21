@@ -27,7 +27,7 @@ import lombok.Getter;
 @Getter
 public enum Tax {
 
-    DEFAULT_TAX("19% Mwst", "19% Mwst", 0.19),
+    DEFAULT_TAX("19% Mwst", null, 0.19),
     REVERSE_CHARGE("Reverse Charge", "Steuerschuldnerschaft des Leistungsempfängers gemäß § 13b Abs. 2 Nr. 10 UStG (Reverse-Charge-Verfahren)", 0);
 
     private final String buttonText;

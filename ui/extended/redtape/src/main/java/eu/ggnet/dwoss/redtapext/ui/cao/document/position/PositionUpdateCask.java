@@ -32,7 +32,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.entity.Position;
@@ -339,7 +338,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         position.setDescription(description);
         position.setName(positionName);
         position.setAmount(amount);
-        position.setTax(GlobalConfig.TAX);
         position.setBookingAccount(bookingAccount);
         try {
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));

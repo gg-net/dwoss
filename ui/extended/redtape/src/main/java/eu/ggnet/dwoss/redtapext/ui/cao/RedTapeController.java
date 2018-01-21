@@ -200,7 +200,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                             model.setPositions(new TreeSet<>(model.getSelectedDocument().getPositions().values()));
                         }
                         view.priceSumLabel.setText(NumberFormat.getCurrencyInstance().format(model.getSelectedDocument().getPrice()));
-                        view.afterTaxSumLabel.setText(NumberFormat.getCurrencyInstance().format(model.getSelectedDocument().getAfterTaxPrice()));
+                        view.afterTaxSumLabel.setText(NumberFormat.getCurrencyInstance().format(model.getSelectedDocument().toAfterTaxPrice()));
                         int i = model.getSelectedDocument().getPositions().size();
                         view.positionAmountLabel.setText("" + i);
                         view.positionAmountLabel.setForeground(i >= 20 ? Color.red : Color.black);

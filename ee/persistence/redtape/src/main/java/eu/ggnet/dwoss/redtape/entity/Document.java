@@ -30,6 +30,9 @@ import eu.ggnet.dwoss.redtape.format.DocumentFormater;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
 import static javax.persistence.CascadeType.*;
 
@@ -47,13 +50,20 @@ import static javax.persistence.CascadeType.*;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Document.activeOpenByTypeDirective", query = "select d from Document d where d.active = TRUE and d.closed = FALSE and d.type = ?1 and d.directive = ?2"),
-    @NamedQuery(name = "Document.betweenDates", query = "select d from Document d where d.actual between ?1 and ?2 and d.type in (?3) and d.active = true ORDER BY d.identifier ASC"),
-    @NamedQuery(name = "Document.findActiveAndOpenByCustomerId", query = "SELECT d FROM Document d WHERE d.dossier.customerId = ?2 AND d.type = ?1 AND d.active = TRUE AND d.closed = FALSE ORDER BY d.dossier.id DESC"),
-    @NamedQuery(name = "Document.findActiveByDirective", query = "SELECT d FROM Document d WHERE d.active = TRUE AND d.directive = ?1"),
-    @NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true"),
-    @NamedQuery(name = "Document.findOpenInvoiceUnpaidByTypePaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = true AND d.type = ?1 AND d.dossier.paymentMethod = ?2"),
-    @NamedQuery(name = "Document.findOpenAnulationByCustomerPaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = TRUE AND d.dossier.customerId = ?1 AND d.type IN (?2) AND d.dossier.paymentMethod=?3 AND d.directive=?4"),
+    @NamedQuery(name = "Document.activeOpenByTypeDirective", query = "select d from Document d where d.active = TRUE and d.closed = FALSE and d.type = ?1 and d.directive = ?2")
+    ,
+    @NamedQuery(name = "Document.betweenDates", query = "select d from Document d where d.actual between ?1 and ?2 and d.type in (?3) and d.active = true ORDER BY d.identifier ASC")
+    ,
+    @NamedQuery(name = "Document.findActiveAndOpenByCustomerId", query = "SELECT d FROM Document d WHERE d.dossier.customerId = ?2 AND d.type = ?1 AND d.active = TRUE AND d.closed = FALSE ORDER BY d.dossier.id DESC")
+    ,
+    @NamedQuery(name = "Document.findActiveByDirective", query = "SELECT d FROM Document d WHERE d.active = TRUE AND d.directive = ?1")
+    ,
+    @NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true")
+    ,
+    @NamedQuery(name = "Document.findOpenInvoiceUnpaidByTypePaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = true AND d.type = ?1 AND d.dossier.paymentMethod = ?2")
+    ,
+    @NamedQuery(name = "Document.findOpenAnulationByCustomerPaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = TRUE AND d.dossier.customerId = ?1 AND d.type IN (?2) AND d.dossier.paymentMethod=?3 AND d.directive=?4")
+    ,
     @NamedQuery(name = "Document.productIdAndType", query = "SELECT DISTINCT p.document FROM Position p WHERE p.uniqueUnitProductId = ?1 AND p.document.active = TRUE AND p.document.type = ?2 ORDER BY p.document.actual DESC")
 })
 public class Document extends IdentifiableEntity implements Serializable, Comparable<Document> {
@@ -291,13 +301,17 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         }
     }
 
+    @Getter
     @Id
     @GeneratedValue
     private long id;
 
+    @Getter
     @Version
     private short optLock = 0;
 
+    @Getter
+    @Setter
     @Enumerated
     private DocumentType type;
 
@@ -307,16 +321,23 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @Valid
     Map<Integer, Position> positions = new TreeMap<>();
 
+    @Getter
+    @Setter
     private boolean active;
 
+    @Getter
+    @Setter
     @Valid
     @NotNull // May be removed if UI Validation problem
     @Embedded
     private DocumentHistory history;
 
+    @Getter
+    @Setter
     @OneToOne(cascade = {DETACH})
     private Document predecessor;
 
+    @Getter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Dossier dossier;
 
@@ -324,9 +345,13 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Flag> flags = EnumSet.noneOf(Flag.class);
 
+    @Getter
+    @Setter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Address invoiceAddress;
 
+    @Getter
+    @Setter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Address shippingAddress;
 
@@ -337,6 +362,8 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Settlement> settlements = EnumSet.noneOf(Settlement.class);
 
+    @Getter
+    @Setter
     @Enumerated
     @NotNull
     private Directive directive;
@@ -345,21 +372,34 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      * Represents this document as closed.
      * Only changes in changesAllowed are still possible.
      */
+    @Getter
+    @Setter
     private boolean closed;
 
     /**
      * The identifier, i.e. Invoice.
      */
+    @Getter
+    @Setter
     private String identifier;
 
     /**
      * The actual Date of the Document, only the day part is relevant.
-     *
+     * <p>
      * This Date should be set to the actual value on every new Type of Document.
      */
+    @Getter
+    @Setter
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date actual;
+
+    /**
+     * Extra text, that explains the tax values.
+     */
+    @Getter
+    @Setter
+    private String taxDescription;
 
     public Document() {
         actual = new Date();
@@ -403,6 +443,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         clone.setShippingAddress(shippingAddress);
         clone.setDirective(directive);
         clone.setClosed(closed);
+        clone.setTaxDescription(taxDescription);
         for (Settlement settlement : settlements) clone.add(settlement);
         for (Condition condition : conditions) clone.add(condition);
         for (Flag flag : flags) clone.add(flag);
@@ -413,106 +454,11 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         return clone;
     }
 
-    @Override
-    public long getId() {
-        return id;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public Document setActive(boolean isNewest) {
-        this.active = isNewest;
-        return this;
-    }
-
-    public Date getActual() {
-        return actual;
-    }
-
-    public void setActual(Date actual) {
-        this.actual = actual;
-    }
-
-    public Directive getDirective() {
-        return directive;
-    }
-
-    public void setDirective(Directive directive) {
-        this.directive = directive;
-    }
-
-    public Dossier getDossier() {
-        return dossier;
-    }
-
     public void setDossier(Dossier dossier) {
         if ( this.dossier == dossier ) return; // Implies both null
         if ( this.dossier != null ) this.dossier.documents.remove(this);
         if ( dossier != null ) dossier.documents.add(this);
         this.dossier = dossier;
-    }
-
-    public Address getInvoiceAddress() {
-        return invoiceAddress;
-    }
-
-    public void setInvoiceAddress(Address invoiceAddress) {
-        this.invoiceAddress = invoiceAddress;
-    }
-
-    public Address getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(Address shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
-    public DocumentType getType() {
-        return type;
-    }
-
-    public short getOptLock() {
-        return optLock;
-    }
-
-    public Document setType(DocumentType type) {
-        this.type = type;
-        return this;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public DocumentHistory getHistory() {
-        return history;
-    }
-
-    public void setHistory(DocumentHistory history) {
-        this.history = history;
-    }
-
-    public Document getPredecessor() {
-        return predecessor;
-    }
-
-    public void setPredecessor(Document predecessor) {
-        this.predecessor = predecessor;
-    }
-
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public void setClosed(boolean closed) {
-        this.closed = closed;
     }
 
     public Document add(Condition condition) {
@@ -758,12 +704,45 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         return price;
     }
 
-    public double getAfterTaxPrice() {
+    public double toAfterTaxPrice() {
         double afterTax = 0.;
         for (Position position : positions.values()) {
             afterTax += (position.getAmount() * position.toAfterTaxPrice());
         }
-        return afterTax;
+        double delta = 0.01;
+        double correct = Math.round(afterTax * 100.0) / 100.0;
+        double rounded = Math.round(correct);
+        if ( Math.abs(rounded - correct) < delta ) return rounded;
+        return correct;
+    }
+
+    /**
+     * Returns true if the document has only positions with one tax.
+     *
+     * @return true if the document has only positions with one tax
+     */
+    public boolean hasSingleTax() {
+        if ( positions.isEmpty() ) return true;
+        double refTax = positions.values().iterator().next().getTax();
+        for (Position pos : positions.values()) {
+            if ( Double.compare(refTax, pos.getTax()) != 0 ) return false;
+
+        }
+        return true;
+    }
+
+    /**
+     * Returns one value as tax, assuming all positions have the same tax value.
+     * This method is a safty net. If we ever create documents with different taxes, this method ensures, that all central
+     * usages must be redesigned.
+     *
+     * @return the tax of all positions if equal.
+     * @throws IllegalStateException if the document has different tax positions.
+     */
+    public double getSingleTax() throws IllegalStateException {
+        if ( positions.isEmpty() ) return 0;
+        if ( !hasSingleTax() ) throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes");
+        return positions.values().iterator().next().getTax();
     }
 
     /**
@@ -804,7 +783,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
 
     /**
      * Equals the content of the Document, not evaluating all parameters (nearly same goes for {@link Document#partialClone() }.
-     *
+     * <p>
      * The following parameters are ignored:
      * <ul>
      * <li>id</li>
@@ -864,7 +843,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
                 + ", directive=" + directive + ", positions=" + positions + "settlements=" + settlements
                 + ", active=" + active + ", history=" + history + ", predecessor.id=" + (predecessor == null ? null : predecessor.getId())
                 + ", dossier.id=" + (dossier == null ? null : dossier.getId()) + ", flags=" + flags + ", invoiceAddress=" + invoiceAddress
-                + ", shippingAddress=" + shippingAddress + ", identifier=" + identifier + '}';
+                + ", shippingAddress=" + shippingAddress + ", identifier=" + identifier + ", taxDescription=" + taxDescription + '}';
     }
 
     public String toSimpleLine() {

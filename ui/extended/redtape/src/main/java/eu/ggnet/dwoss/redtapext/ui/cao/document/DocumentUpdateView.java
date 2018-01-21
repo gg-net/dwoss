@@ -37,6 +37,8 @@ import javafx.scene.paint.Color;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openide.util.Lookup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
@@ -52,9 +54,11 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.ui.UiAlertBuilder.Type;
 
 import lombok.Getter;
 
+import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
 import static eu.ggnet.saft.Client.lookup;
 
@@ -88,6 +92,8 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         return DocumentUpdateView.class.getResource("add-coin-icon.png");
     }
 
+    private final static Logger L = LoggerFactory.getLogger(DocumentUpdateView.class);
+
     @Getter
     private long customerId;
 
@@ -114,6 +120,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         this.document = document;
         positions.addAll(document.getPositions().values());
         this.accessCos = Lookup.getDefault().lookup(Guardian.class);
+        accessCos.add(taxChangeButton, CHANGE_TAX);
         refreshAddressArea();
 
         if ( !Client.hasFound(WarrantyHook.class) ) convertToWarrantyPositionButton.setVisible(false);
@@ -572,26 +579,18 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         if ( evt.getSource() == moveUpButton ) {
             if ( index == 0 ) return; // Don't move at the beginning
             document.moveUp(selectedItem);
-            Platform.runLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    Position removed = positions.remove(index);
-                    positions.add(index - 1, removed);
-                    selection.select(index - 1);
-                }
+            Platform.runLater(() -> {
+                Position removed = positions.remove(index);
+                positions.add(index - 1, removed);
+                selection.select(index - 1);
             });
         } else {
             if ( index == positions.size() - 1 ) return; // Don't move at the end
             document.moveDown(selectedItem);
-            Platform.runLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    Position removed = positions.remove(index);
-                    positions.add(index + 1, removed);
-                    selection.select(index + 1);
-                }
+            Platform.runLater(() -> {
+                Position removed = positions.remove(index);
+                positions.add(index + 1, removed);
+                selection.select(index + 1);
             });
         }
     }//GEN-LAST:event_changePositionOrderAction
@@ -599,7 +598,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
     private void addUnitAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUnitAction
         if ( unitInputField.getText().isEmpty() ) return;
         if ( document.isClosed() ) {
-            JOptionPane.showMessageDialog(this, "Hinzufügen von Sopo Ware nicht erlaubt.", "Abgeschlossenes Dokument", JOptionPane.INFORMATION_MESSAGE);
+            UiAlert.show(this, "Nicht erlaubt", "Hinzufügen von Sopo Ware nicht erlaubt, abgeschlossenes Dokument", Type.INFO);
             return;
         }
 
@@ -611,10 +610,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                 Ui.handle(ex);
             }
         }
-        Platform.runLater(() -> {
-            positions.clear();
-            positions.addAll(document.getPositions().values());
-        });
+        refreshAll();
         unitInputField.setText("");
     }//GEN-LAST:event_addUnitAction
 
@@ -632,10 +628,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             }
             try {
                 controller.addPosition(document.getDossier().getId(), type, null, false);
-                Platform.runLater(() -> {
-                    positions.clear();
-                    positions.addAll(document.getPositions().values());
-                });
+                refreshAll();
             } catch (UserInfoException ex) {
                 Ui.handle(ex);
             }
@@ -650,11 +643,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         if ( index == -1 ) return;
         if ( isChangeAllowed() ) {
             document.removeAt(selectedItem.getId());
-            Platform.runLater(() -> {
-                positions.clear();
-                positions.addAll(document.getPositions().values());
-            });
-
+            refreshAll();
         } else {
             JOptionPane.showMessageDialog(this, "Änderungen am Dokument sind nicht erlaubt.");
         }
@@ -696,12 +685,11 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
         Ui.exec(() -> {
             Ui.fx().parent(this).eval(() -> new TaxChangePane()).ifPresent(t -> {
-                document.getPositions().values().forEach(p -> {
-                    // Set Tax
-                    // set AfterTax
-                    // Whatevers
-                });
-                UiAlert.show(this, "Tax change not yet implemented");
+                L.debug("Changeing Tax to {}", t);
+                document.getPositions().values().forEach(p -> p.setTax(t.getTax()));
+                L.debug("Fist tax: {}", positions.get(0).getTax());
+                document.setTaxDescription(t.getDocumentText());
+                refreshAll();
             });
         });
     }//GEN-LAST:event_taxChangeButtonActionPerformed
@@ -750,6 +738,13 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             }
         }
         return true;
+    }
+
+    private void refreshAll() {
+        Platform.runLater(() -> { // reload the ui.
+            positions.clear();
+            positions.addAll(document.getPositions().values());
+        });
     }
 
     @Override
