@@ -22,10 +22,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,8 +46,8 @@ import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- * FXML Controller for the UnitCollection Editor 
- * 
+ * FXML Controller for the UnitCollection Editor
+ *
  * @author jens.papenhagen
  */
 @Title("Geräte Sammlungen Editieren")
@@ -85,7 +83,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
 
     @FXML
     private Button cancelButton;
-    
+
     @FXML
     private Button removeButton;
 
