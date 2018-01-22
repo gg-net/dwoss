@@ -18,15 +18,21 @@ public class CustomerTest {
 
     private Customer customer;
 
-    private final Company company = gen.makeCompany();
+    private Company company;
 
-    private final Contact contact = gen.makeContact();
+    private Contact contact;
 
     @Before
     public void executedBeforeEach() {
         customer = gen.makeCustomer();
-        customer.getContacts().clear();
+        company = gen.makeCompany();
+        contact = gen.makeContact();
+
         customer.getCompanies().clear();
+        customer.getContacts().clear();
+
+        company.getCommunications().add(makeCommunication());
+        contact.getCommunications().add(makeCommunication());
     }
 
     @Test
@@ -46,12 +52,11 @@ public class CustomerTest {
         assertThat(customer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
     }
 
-    
-    //this test are commentout, because CustomerGenerator not allways generate EMAIL, PHONE, MOBILE for Communication, this is needed for the SimpleCustomer
+    //this test are commentout, because CustomerGenerator not allways generate EMAIL, PHONE OR MOBILE for Communication, this is needed for the SimpleCustomer
     @Test
     public void testIsSimplerBussniesCustomer() {
 //        customer.add(company);
-//        assertThat(customer.isBussines()).as("Customer is a BussinesCustomer").isTrue();       
+//        assertThat(customer.isBussines()).as("Customer is a BussinesCustomer").isTrue();
 //        assertThat(customer.isSimple()).as("Bussnis Customer is possible convert to SimpleCustomer").isTrue();
     }
 
@@ -60,11 +65,19 @@ public class CustomerTest {
 //        customer.add(contact);
 //        assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
 //        assertThat(customer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
-   }
+    }
 
     @Test
     public void testToSimple() {
         assertThat(customer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
+    }
+
+    private Communication makeCommunication() {
+        Communication communication = new Communication();
+        communication.setType(Communication.Type.PHONE);
+        communication.setIdentifier("01545452221");
+
+        return communication;
     }
 
 }

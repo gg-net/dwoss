@@ -27,7 +27,7 @@
         <rowConstraints>
             <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
           <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-          <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" fx:id="companyRow"/>
+          <RowConstraints fx:id="companyRow" fillHeight="false" minHeight="26.0" vgrow="NEVER" />
             <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
             <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
             <RowConstraints maxHeight="50.0" minHeight="10.0" vgrow="ALWAYS" />
@@ -49,17 +49,13 @@
                </font>
             </Label>
             <Label text="KId:" GridPane.rowIndex="1" />
-            <Label fx:id="kid" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="kid" text=" " GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Quelle:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Label text="Firma:" GridPane.rowIndex="2" />
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Straße:" GridPane.rowIndex="7" />
             <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" promptText="Anmerkung" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="15" GridPane.vgrow="ALWAYS" />
-            <Label text="UstId:" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-            <TextField fx:id="ustIdTextField" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" />
             <ChoiceBox fx:id="sourceChoiseBox" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
             <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Button" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <TextField fx:id="companyNameTextFiled" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="titleTextField" prefHeight="25.0" prefWidth="51.0" GridPane.rowIndex="4" />
             <TextField fx:id="firstNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="lastNameTextField" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
@@ -81,6 +77,7 @@
             <Label text="E-Mail:" GridPane.rowIndex="13" />
             <TextField fx:id="emailTextField" minHeight="25.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
             <Label text="Anmerkung:" GridPane.columnSpan="2" GridPane.rowIndex="14" />
+            <HBox fx:id="companyHBox" minHeight="26.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </center>
