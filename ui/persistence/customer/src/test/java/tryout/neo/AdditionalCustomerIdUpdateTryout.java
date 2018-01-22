@@ -36,11 +36,10 @@ import tryout.stub.CustomerAgentStub;
 public class AdditionalCustomerIdUpdateTryout {
 
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
         CustomerGenerator gen = new CustomerGenerator();
         Map<ExternalSystem, String> additionalCustomerId = gen.makeCustomer().getAdditionalCustomerIds();
+
+        //TODO AdditionalCustomerIdUpdateController.class need better Consumer/ResultProducer
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -48,7 +47,7 @@ public class AdditionalCustomerIdUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-               // Ui.fxml().eval(() -> additionalCustomerId, AdditionalCustomerIdUpdateController.class);
+               // Ui.fxml().eval(() -> additionalCustomerId, AdditionalCustomerIdUpdateController.class).ifPresent(System.out::println);;
             });
         });
 

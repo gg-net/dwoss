@@ -1,19 +1,20 @@
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
@@ -21,11 +22,13 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.FxSaft;
 
 /**
  * Controller for the list containing all CategoryProducts. If a categoryProduct
@@ -34,11 +37,21 @@ import eu.ggnet.saft.core.auth.Guardian;
  * @author lucas.huelsen
  */
 @Title("KategoryProdukte verwalten")
-public class CategoryProductListController implements Initializable, FxController {
+public class CategoryProductListController implements Initializable, FxController, ClosedListener {
+
+    private static final DataFormat df = new DataFormat("dw/product");
 
     private static final Logger L = LoggerFactory.getLogger(CategoryProductListController.class);
 
     private FilteredList<CategoryProduct> filteredCategoryProducts;
+
+    private FilteredList<Product> filteredProducts;
+
+    private ObservableList<Product> observableProducts = FXCollections.observableArrayList();
+
+    private final CategoryProductTask LOADING_CP_TASK = new CategoryProductTask();
+
+    private final ProductTask LOADING_PRODUCTS_TASK = new ProductTask();
 
     @FXML
     private TableColumn<CategoryProduct, String> categoryProductName;
@@ -47,10 +60,13 @@ public class CategoryProductListController implements Initializable, FxControlle
     private TableColumn<CategoryProduct, String> categoryProductSalesChannel;
 
     @FXML
-    private TableColumn<CategoryProduct, String> categoryProductProductList;
+    private TableView<CategoryProduct> categoryProductsTableView;
 
     @FXML
-    private TableView<CategoryProduct> categoryProductsTableView;
+    private ListView<Product> productsList;
+
+    @FXML
+    private ListView<Product> productsWithoutCpList;
 
     @FXML
     private ProgressBar progressBar;
@@ -130,17 +146,37 @@ public class CategoryProductListController implements Initializable, FxControlle
      * fill the filteredList with the categoryProducts.
      */
     public void initialize(URL url, ResourceBundle rb) {
+
         setCellValues();
+        dragAndDropHandling();
 
-        CategoryProductTask categoryProductsTask = new CategoryProductTask();
+        categoryProductsTableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CategoryProduct>() {
+            @Override
+            public void changed(ObservableValue<? extends CategoryProduct> observable, CategoryProduct oldValue, CategoryProduct newValue) {
+                if ( newValue != null ) {
+                    productsList.getItems().clear();
+                    productsList.getItems().addAll(newValue.getProducts());
+                } else {
+                    productsList.getItems().clear();
+                }
+            }
+        });
 
-        progressBar.progressProperty().bind(categoryProductsTask.progressProperty());
-        progressBar.visibleProperty().bind(categoryProductsTask.runningProperty());
+        observableProducts = LOADING_PRODUCTS_TASK.getPartialResults();
 
-        filteredCategoryProducts = new FilteredList<>(categoryProductsTask.getPartialResults(), p -> true);
+        filteredProducts = new FilteredList<>(observableProducts);
+        filteredProducts.setPredicate(p -> p.getCategoryProduct() == null);
+        productsWithoutCpList.setItems(filteredProducts);
+
+        filteredCategoryProducts = new FilteredList<>(LOADING_CP_TASK.getPartialResults(), p -> true);
         categoryProductsTableView.setItems(filteredCategoryProducts);
 
-        Ui.exec(categoryProductsTask);
+        progressBar.progressProperty().bind(LOADING_CP_TASK.progressProperty());
+        progressBar.visibleProperty().bind(LOADING_CP_TASK.runningProperty());
+        Ui.progress().observe(LOADING_CP_TASK);
+        Ui.progress().observe(LOADING_PRODUCTS_TASK);
+        Ui.exec(LOADING_CP_TASK);
+        Ui.exec(LOADING_PRODUCTS_TASK);
     }
 
     /**
@@ -170,6 +206,100 @@ public class CategoryProductListController implements Initializable, FxControlle
         categoryProductsTableView.getSelectionModel().select(newCp);
     }
 
+    private void dragAndDropHandling() {
+
+        productsWithoutCpList.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ArrayList<Product> selectedProducts = new ArrayList<>();
+                selectedProducts.addAll(productsWithoutCpList.getSelectionModel().getSelectedItems());
+                if ( selectedProducts.isEmpty() || categoryProductsTableView.getSelectionModel().getSelectedItem() == null ) return;
+                Dragboard db = productsWithoutCpList.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(df, selectedProducts);
+                db.setContent(content);
+                L.info("DnD of {} Products started", selectedProducts.size());
+                event.consume();
+            }
+        });
+
+        productsList.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ArrayList<Product> selectedProducts = new ArrayList<>();
+                selectedProducts.addAll(productsList.getSelectionModel().getSelectedItems());
+                if ( selectedProducts.isEmpty() ) return;
+                Dragboard db = productsList.startDragAndDrop(TransferMode.ANY);
+                ClipboardContent content = new ClipboardContent();
+                content.put(df, selectedProducts);
+                db.setContent(content);
+                L.info("DnD of {} Products started", selectedProducts.size());
+                event.consume();
+            }
+        });
+
+        productsList.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if ( event.getGestureSource() != productsList && event.getDragboard().hasContent(df) ) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+        productsWithoutCpList.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if ( event.getGestureSource() != productsWithoutCpList && event.getDragboard().hasContent(df) ) {
+                    event.acceptTransferModes(TransferMode.ANY);
+                }
+                event.consume();
+            }
+        });
+
+        productsList.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(final DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if ( db.hasContent(df) ) {
+                    final List<Product> draggedProducts = (List<Product>)db.getContent(df);
+                    CategoryProduct selected = categoryProductsTableView.getSelectionModel().getSelectedItem();
+                    for (Product p : draggedProducts) {
+                        selected.getProducts().add(p);
+                        productsList.getItems().add(p);
+                        observableProducts.remove(p);
+                    }
+                    success = true;
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+        productsWithoutCpList.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(final DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if ( db.hasContent(df) ) {
+                    final List<Product> draggedProducts = (List<Product>)db.getContent(df);
+                    CategoryProduct selected = categoryProductsTableView.getSelectionModel().getSelectedItem();
+                    for (Product p : draggedProducts) {
+                        selected.getProducts().remove(p);
+                        productsList.getItems().remove(p);
+                        observableProducts.add(p);
+                    }
+                    success = true;
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
+
+    }
+
     /**
      * Defining the cell values for each table column.
      */
@@ -177,8 +307,40 @@ public class CategoryProductListController implements Initializable, FxControlle
 
         categoryProductName.setCellValueFactory(new PropertyValueFactory<>("name"));
         categoryProductSalesChannel.setCellValueFactory(new PropertyValueFactory<>("salesChannel"));
-        categoryProductProductList.setCellValueFactory((param) -> {
-            return new SimpleStringProperty(param.getValue().getProducts().stream().map(p -> p.getName()).collect(Collectors.joining(", ")));
+
+        productsList.setCellFactory(lv -> new ListCell<Product>() {
+            @Override
+            public void updateItem(Product p, boolean empty) {
+                super.updateItem(p, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = p.getName();
+                    setText(text);
+                }
+            }
+        });
+
+        productsWithoutCpList.setCellFactory(lv -> new ListCell<Product>() {
+            @Override
+            public void updateItem(Product p, boolean empty) {
+                super.updateItem(p, empty);
+                if ( empty ) {
+                    setText(null);
+                } else {
+                    String text = p.getName();
+                    setText(text);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void closed() {
+        FxSaft.dispatch(() -> {
+            if ( LOADING_CP_TASK.isRunning() ) LOADING_CP_TASK.cancel();
+            if ( LOADING_PRODUCTS_TASK.isRunning() ) LOADING_PRODUCTS_TASK.cancel();
+            return null;
         });
     }
 }

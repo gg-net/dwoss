@@ -19,13 +19,11 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.saft.*;
 
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -33,13 +31,19 @@ import tryout.stub.CustomerAgentStub;
  */
 public class CustomerSimpleTryout {
     public static void main(String[] args) {
-
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
         
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
-        customer.add(gen.makeCompany());
+        Contact contact = gen.makeContact();
+        
+        Communication communication = new Communication();
+        communication.setType(Communication.Type.PHONE);
+        communication.setIdentifier("01545452221");        
+        contact.getCommunications().add(communication);
+        
+        customer.getCompanies().clear();
+        customer.add(contact);
+                
         
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -48,7 +52,7 @@ public class CustomerSimpleTryout {
         
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> customer, CustomerSimpleController.class);
+                Ui.fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 

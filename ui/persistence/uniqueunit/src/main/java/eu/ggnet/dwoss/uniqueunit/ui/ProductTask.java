@@ -9,12 +9,9 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.saft.Client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -26,16 +23,10 @@ import javafx.concurrent.Task;
  */
 public class ProductTask extends Task<ObservableList<Product>> {
 
-    private ReadOnlyObjectWrapper<ObservableList<Product>> partialResults
-            = new ReadOnlyObjectWrapper<>(this, "partialResults",
-                    FXCollections.observableArrayList(new ArrayList()));
+    private final ObservableList<Product> partialResults = FXCollections.observableArrayList();
 
     public final ObservableList<Product> getPartialResults() {
-        return partialResults.get();
-    }
-
-    public final ReadOnlyObjectProperty<ObservableList<Product>> partialResultsProperty() {
-        return partialResults.getReadOnlyProperty();
+        return partialResults;
     }
 
     @Override
@@ -53,7 +44,7 @@ public class ProductTask extends Task<ObservableList<Product>> {
             });
             updateProgress(start, count);
         }
-        return partialResults.get();
+        return partialResults;
     }
 
 }

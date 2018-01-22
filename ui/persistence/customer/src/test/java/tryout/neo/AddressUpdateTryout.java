@@ -33,9 +33,6 @@ import tryout.stub.CustomerAgentStub;
 public class AddressUpdateTryout {
 
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
         CustomerGenerator gen = new CustomerGenerator();
         Address address = gen.makeAddress();
 
@@ -45,7 +42,7 @@ public class AddressUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> address, AddressUpdateController.class);
+                Ui.fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);;
             });
         });
 

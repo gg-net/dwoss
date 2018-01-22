@@ -19,13 +19,11 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
 import eu.ggnet.saft.*;
 
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -35,9 +33,6 @@ public class CompanyUpdateTryOut {
 
     //CustomerComapnyController
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
         CustomerGenerator gen = new CustomerGenerator();
         Company company = gen.makeCompany();
         
@@ -47,7 +42,7 @@ public class CompanyUpdateTryOut {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> company, CompanyUpdateController.class);
+                Ui.fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);;
             });
         });
 
