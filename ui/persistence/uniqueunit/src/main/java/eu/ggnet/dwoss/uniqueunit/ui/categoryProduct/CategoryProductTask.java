@@ -37,7 +37,7 @@ public class CategoryProductTask extends Task<ObservableList<CategoryProduct>> {
         long count = agent.count(CategoryProduct.class);
         int batch = 20;
 
-        for (int start = 0; start <= count; start += batch) {
+        for (int start = 0; start <= count && !isCancelled(); start += batch) {
             List<CategoryProduct> partialResult = agent.findAll(CategoryProduct.class, start, batch);
             Platform.runLater(() -> {
                 getPartialResults().addAll(partialResult);

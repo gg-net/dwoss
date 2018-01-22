@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -302,20 +303,8 @@ public class Customer implements Serializable {
             sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
             sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
             sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
-            
-            contacts.get(0).getCommunications().stream().map((communication) -> {
-                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
-                    sc.setMobilePhone(communication.getIdentifier());
-                }
-                return communication;
-            }).map((communication) -> {
-                if ( communication.getType().equals(Communication.Type.PHONE) ) {
-                    sc.setLandlinePhone(communication.getIdentifier());
-                }
-                return communication;
-            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
-                sc.setEmail(communication.getIdentifier());
-            });
+            sc.setLandlinePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+            sc.setEmail(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
             sc.setSex(contacts.get(0).getSex());
             sc.setSource(source);
             sc.setComment(comment);
@@ -332,19 +321,9 @@ public class Customer implements Serializable {
             sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
             sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
             sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
-            companies.get(0).getContacts().get(0).getCommunications().stream().map((communication) -> {
-                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
-                    sc.setMobilePhone(communication.getIdentifier());
-                }
-                return communication;
-            }).map((communication) -> {
-                if ( communication.getType().equals(Communication.Type.PHONE) ) {
-                    sc.setLandlinePhone(communication.getIdentifier());
-                }
-                return communication;
-            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
-                sc.setEmail(communication.getIdentifier());
-            });
+            sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+            sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+            sc.setEmail(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
             sc.setSex(companies.get(0).getContacts().get(0).getSex());
             sc.setSource(source);
             sc.setComment(comment);
@@ -357,27 +336,57 @@ public class Customer implements Serializable {
     }
 
     public boolean isSimple() {
-        // Für Azubis
         if ( isConsumer() ) {
-            if ( contacts.size() > 1
-                    || contacts.get(0).getAddresses().size() > 1
-                    || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ) {
-                return true;
+            if ( contacts.size() >= 1 ) {
+                //Contacts of a Customer need an Address for the creation of a SimpleCustomer
+                //Contacts of a Customer need a Communication for the creation of a SimpleCustomer
+                for (Contact contact : contacts) {
+                    if ( contact.getAddresses().isEmpty() || contact.getCommunications().isEmpty() ) {
+                    } else {
+                        for (Communication communication : contact.getCommunications()) {
+                            Type type = communication.getType();
+                            if(type == EMAIL || type == PHONE || type ==  MOBILE){
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
-
-            return true;
+            return false;
         } else {
             // company must not be empty be definiton.
-            if ( companies.size() > 1
-                    || companies.get(0).getAddresses().size() > 1
-                    || companies.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ){
-                return true;
+            if ( companies.size() >= 1 ) {
+                //a company need a Address or a Contacts with an Address
+                for (Company company : companies) {
+                    if ( company.getAddresses().isEmpty() ) {
+                        if ( company.getContacts().isEmpty() ) {
+                            return false; //the Company of this Bussnis Customer have no Address and no Contacts with an Address
+                        } else {
+                            //Contacts of a Customer need an Address for the creation of a SimpleCustomer
+                            //Contacts of a Customer need a Communication for the creation of a SimpleCustomer
+                            if ( company.getContacts().stream()
+                                    .filter((contact) -> !(contact.getAddresses().isEmpty()))
+                                    .filter((contact) -> !(contact.getCommunications().isEmpty()))
+                                    .anyMatch((contact) -> (contact.getCommunications().stream()
+                                                            .map(Communication::getType)
+                                                            .filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE)
+                                                            .contains(t))
+                                                            .findAny().isPresent())) ) {
+                                return true;
+                            }
+                        }
+                    } else {
+                        return true; //the Company of this Bussnis Customer have an Address
+                    }
+                }
+
             }
-                
-            // TODO: More creterias are here.
+
             return false;
         }
- 
+
     }
 
     public boolean isConsumer() {

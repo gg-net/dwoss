@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,18 +35,23 @@ import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- * FXML Controller class
+ * FXML Controller for CustomerSimple Editor
  *
  * @author jens.papenhagen
  */
+@Title("Kunden Editieren")
 public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<SimpleCustomer> {
 
     private SimpleCustomer simpleCustomer;
+
+    private boolean bussines = false;
+
+    @FXML
+    private HBox companyHBox;
 
     @FXML
     private Button saveAndCloseButton;
@@ -57,22 +63,22 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private Button cancelButton;
 
     @FXML
+    private RowConstraints companyRow;
+
+    @FXML
     private Label headerLabel;
 
     @FXML
     private Label kid;
 
     @FXML
-    private TextField ustIdTextField;
+    private TextArea commentTextArea;
 
     @FXML
     private ChoiceBox<Source> sourceChoiseBox;
 
     @FXML
     private Button changeUIButton;
-
-    @FXML
-    private TextField companyNameTextFiled;
 
     @FXML
     private TextField titleTextField;
@@ -107,13 +113,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    @FXML
-    private TextArea commentTextArea;
+    private TextField companyNameTextFiled = new TextField();
 
-    private boolean bussines = false;
-
-    @FXML
-    private RowConstraints companyRow;
+    private TextField ustIdTextField = new TextField();
 
     public CustomerSimpleController() {
     }
@@ -123,16 +125,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //disable the TextField
-        companyNameTextFiled.setDisable(true);
-        ustIdTextField.setDisable(true);
-        //"hidde" the row
-        companyRow.setMinHeight(0);
+
+        //"hidde" the companyHBox
+        companyHBox.setDisable(bussines);
 
         //fill the choiseBoxs
         genderChoiseBox.getItems().addAll(Sex.values());
         sourceChoiseBox.getItems().addAll(Source.values());
-
     }
 
     @Override
@@ -159,14 +158,17 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-
         if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
             UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
 
+        getSimpleCustomer();
+        
         Ui.closeWindowOf(kid);
     }
+
+  
 
     @FXML
     private void saveAndEnhanceUIButtonHandling(ActionEvent event) {
@@ -179,29 +181,41 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @FXML
-    private void changeUI(ActionEvent event) {      
+    private void changeUI(ActionEvent event) {
         bussines ^= true; //tournaround of the boolean
+        
+        getSimpleCustomer();
         setSimpleCustomer(simpleCustomer);
+    }
+
+    public void showCompanyHBox() {
+        Label companyNameLable = new Label("Firma:");
+        Label ustIdLable = new Label("ustID:");
+
+        companyNameTextFiled.setText(simpleCustomer.getCompanyName());
+        ustIdTextField.setText(simpleCustomer.getTaxId());
+        companyHBox.setSpacing(5.0);
+
+        companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
+    }
+
+    public void hiddeCompanyHBox() {
+        companyHBox.getChildren().clear();
     }
 
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
         //the button and the header
         if ( bussines ) {
-            headerLabel.setText("Endkunde");
-            changeUIButton.setText("Geschäftskunde");
-
-            companyNameTextFiled.setDisable(false);
-            ustIdTextField.setDisable(false);
-
-            companyNameTextFiled.setText(simpleCustomer.getCompanyName());
-            ustIdTextField.setText(simpleCustomer.getTaxId());
-
-            companyRow.setMinHeight(25.0);
-        } else {
             headerLabel.setText("Geschäftskunde");
             changeUIButton.setText("Endkunde");
+            showCompanyHBox();
+        } else {
+            headerLabel.setText("Endkunde");
+            changeUIButton.setText("Geschäftskunde");
+            hiddeCompanyHBox();
         }
 
+        kid.setText("" + simpleCustomer.getId());
         titleTextField.setText(simpleCustomer.getTitle());
         firstNameTextField.setText(simpleCustomer.getFirstName());
         lastNameTextField.setText(simpleCustomer.getLastName());
@@ -214,12 +228,29 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         emailTextField.setText(simpleCustomer.getEmail());
 
         commentTextArea.setText(simpleCustomer.getComment());
-        
-        
+
         //select the choicebox
         genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
         sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
 
+    }
+    
+      private void getSimpleCustomer() {
+        simpleCustomer.setTitle(titleTextField.getText());
+        simpleCustomer.setFirstName(firstNameTextField.getText());
+        simpleCustomer.setLastName(lastNameTextField.getText());
+        simpleCustomer.setStreet(streetTextField.getText());
+        simpleCustomer.setZipCode(zipcodeTextField.getText());
+        simpleCustomer.setCity(cityTextField.getText());
+        simpleCustomer.setIsoCountry(countryTextField.getText());
+        simpleCustomer.setMobilePhone(mobileTextField.getText());
+        simpleCustomer.setLandlinePhone(landLineTextField.getText());
+        simpleCustomer.setEmail(emailTextField.getText());
+        simpleCustomer.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
+        simpleCustomer.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
+        simpleCustomer.setComment(commentTextArea.getText());
+        simpleCustomer.setCompanyName(companyNameTextFiled.getText());
+        simpleCustomer.setTaxId(ustIdTextField.getText());
     }
 
 }

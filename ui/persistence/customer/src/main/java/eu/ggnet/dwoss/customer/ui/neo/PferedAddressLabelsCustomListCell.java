@@ -14,33 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout.neo;
+package eu.ggnet.dwoss.customer.ui.neo;
 
-import javax.swing.*;
-
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSearchController;
-import eu.ggnet.saft.*;
-
-import tryout.stub.CustomerAgentStub;
+import javafx.scene.control.ListCell;
 
 /**
  *
- * @author jens.papenhagen
+ * @author jacob.weinhold
  */
-public class CustomerSearchTryout {
-
-    public static void main(String[] args) {
-
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
-        UiCore.startSwing(() -> new JLabel("Kundensuche"));
-
-        Ui.fxml().show(CustomerSearchController.class);
-        
-        
-        
-    }
+public class PferedAddressLabelsCustomListCell extends ListCell {
 
 }

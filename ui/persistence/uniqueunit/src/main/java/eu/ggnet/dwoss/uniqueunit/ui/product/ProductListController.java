@@ -94,6 +94,9 @@ public class ProductListController implements Initializable, FxController, Close
     private ProgressBar progressBar;
 
     @FXML
+    private Button editButton;
+
+    @FXML
     /**
      * Filter the displayed products based on the selected TradeName &&
      * ProductGroup && Eol.
@@ -164,6 +167,7 @@ public class ProductListController implements Initializable, FxController, Close
         sortedProducts.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedProducts);
+        editButton.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
         Ui.progress().observe(LOADING_TASK);
         Ui.exec(LOADING_TASK);
@@ -245,6 +249,22 @@ public class ProductListController implements Initializable, FxController, Close
         FxSaft.dispatch(() -> {
             if ( LOADING_TASK.isRunning() ) LOADING_TASK.cancel();
             return null;
+        });
+    }
+
+    @FXML
+    private void create() {
+        Ui.exec(() -> {
+            Ui.fxml().parent(tableView).eval(ProductEditorController.class)
+                    .ifPresent(System.out::println);
+        });
+    }
+
+    @FXML
+    private void edit() {
+        Ui.exec(() -> {
+            Ui.fxml().parent(tableView).eval(() -> tableView.getSelectionModel().getSelectedItem(), ProductEditorController.class)
+                    .ifPresent(System.out::println);
         });
     }
 }
