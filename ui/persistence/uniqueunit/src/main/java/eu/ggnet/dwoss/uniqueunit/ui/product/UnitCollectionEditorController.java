@@ -85,6 +85,9 @@ public class UnitCollectionEditorController implements Initializable, FxControll
 
     @FXML
     private Button cancelButton;
+    
+    @FXML
+    private Button removeButton;
 
     @FXML
     private TextField nameExtension;
@@ -148,6 +151,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      * Removes a Price from the UnitCollection. A remove simply means setting
      * the value to 0.
      */
+    @FXML
     private void removePrice() {
         if ( listViewPrices.getSelectionModel().getSelectedItem() == null ) return;
         L.info("Removed Price {}", listViewPrices.getSelectionModel().getSelectedItem());
