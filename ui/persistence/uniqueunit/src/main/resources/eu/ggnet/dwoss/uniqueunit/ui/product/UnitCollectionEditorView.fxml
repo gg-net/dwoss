@@ -58,9 +58,8 @@
                     </GridPane.margin>
                 </TextField>
                 <Label text="Verkaufskanal:" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                <TextArea fx:id="descriptionExtension" promptText="Erweiterung" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="4" />
-                <Label text="Produkt:" />
-                <Label fx:id="producatnamefix" text="Produktname" GridPane.columnIndex="1" />
+                <TextArea fx:id="descriptionExtension" promptText="Erweiterung" wrapText="true" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="4" />
+                <Label text="Geräte Sammlungen Editieren" GridPane.columnSpan="2" />
                 <TextField fx:id="partNoExtension" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                 <Label alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="37.0" prefWidth="120.0" text="Herrsteller Nummer Erweiterung:" wrapText="true" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                 <Label alignment="TOP_LEFT" text="Beschreibung Erweiterung:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
