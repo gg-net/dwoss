@@ -19,13 +19,11 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.saft.*;
 
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -36,7 +34,16 @@ public class CustomerSimpleTryout {
         
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
-        customer.add(gen.makeCompany());
+        Contact contact = gen.makeContact();
+        
+        Communication communication = new Communication();
+        communication.setType(Communication.Type.PHONE);
+        communication.setIdentifier("01545452221");        
+        contact.getCommunications().add(communication);
+        
+        customer.getCompanies().clear();
+        customer.add(contact);
+                
         
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
