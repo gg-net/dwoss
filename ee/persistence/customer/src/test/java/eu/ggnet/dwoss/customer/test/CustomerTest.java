@@ -47,7 +47,7 @@ public class CustomerTest {
     }
 
     
-    //this test are commentout, because CustomerGenerator not allways generate EMAIL, PHONE, MOBILE for Communication, this is needed for the SimpleCostumer
+    //this test are commentout, because CustomerGenerator not allways generate EMAIL, PHONE, MOBILE for Communication, this is needed for the SimpleCustomer
     @Test
     public void testIsSimplerBussniesCustomer() {
 //        customer.add(company);
