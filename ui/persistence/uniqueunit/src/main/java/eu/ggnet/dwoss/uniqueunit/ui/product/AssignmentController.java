@@ -113,7 +113,9 @@ public class AssignmentController implements Initializable, FxController {
 
     private void openEdit(UnitCollection uc) {
 
-        Ui.fxml().parent(root).eval(() -> uc, UnitCollectionEditorController.class);
+        Ui.exec(() -> {
+            Ui.fxml().eval(() -> uc, UnitCollectionEditorController.class);
+        });
 
     }
 
