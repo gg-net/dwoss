@@ -128,7 +128,12 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
-        return (T)PGEN.generateProduct(1).get(0);
+        if ( entityClass == Product.class ) {
+            return (T)PGEN.generateProduct(1).get(0);
+        } else if ( entityClass == UnitCollection.class ) {
+            return (T)PGEN.generateProduct(1).get(0).getUnitCollections().get(0);
+        }
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 //<editor-fold defaultstate="collapsed" desc="Unused Methods">

@@ -272,6 +272,8 @@ public class CategoryProductEditorController implements Initializable, FxControl
         salesChannel.valueProperty().bindBidirectional(categoryProductFx.getSalesChannelProperty());
 
 // TODO: Looks wrong. must be binded ? - ask lucas.
+        // listViewProducts.itemsProperty().bind(categoryProductFx.getProductsProperty());
+        // listViewPrices.itemsProperty().bind(categoryProductFx.getPricesProperty().entrySet());
         listViewProducts.setItems(categoryProductFx.getProductsProperty());
 
         listViewPrices.setItems(FXCollections.observableArrayList(categoryProductFx.getPricesProperty().entrySet()));
