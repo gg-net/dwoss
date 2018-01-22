@@ -92,7 +92,7 @@ import static eu.ggnet.dwoss.rules.PositionType.*;
     ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
-                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
+                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")  // Purchase price is indentifier, that it has been reported.
     ,
     @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
                 + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
@@ -327,15 +327,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Setter
     private double tax;
 
-    /**
-     * The price with tax of this position, normally the sales price of a unit.
-     */
-    @Deprecated
-    private double afterTaxPrice;
-
-    @Transient
-    private transient DoubleProperty afterTaxPriceProperty;
-
     @Getter
     @Setter
     private int bookingAccount;
@@ -543,7 +534,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Builder
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ReportLine(String name, String description, long dossierId, String dossierIdentifier, long documentId, String documentIdentifier,
-                      PositionType positionType, DocumentType documentType, long customerId, double amount, double tax, double price, double afterTaxPrice,
+                      PositionType positionType, DocumentType documentType, long customerId, double amount, double tax, double price,
                       int bookingAccount, String invoiceAddress, String refurbishId, long uniqueUnitId, String serial, Date mfgDate, long productId,
                       String partNo, String customerEmail) {
         this.name = name;
@@ -558,7 +549,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         this.amount = amount;
         this.tax = tax;
         this.price = price;
-        this.afterTaxPrice = afterTaxPrice;
         this.bookingAccount = bookingAccount;
         this.invoiceAddress = invoiceAddress;
         this.refurbishId = refurbishId;
@@ -599,29 +589,8 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         return priceProperty;
     }
 
-    @Deprecated // Fällt weg
-    public void setAfterTaxPrice(double price) {
-        if ( afterTaxPriceProperty != null ) afterTaxPriceProperty.set(price);
-        else this.afterTaxPrice = price;
-    }
-
     public double toAfterTaxPrice() {
         return MathUtil.roundedApply(getPrice(), getTax(), 0.00);
-    }
-
-    @Deprecated // Fällt weg
-    public DoubleProperty afterTaxPriceProperty() {
-        if ( afterTaxPriceProperty == null ) {
-            afterTaxPriceProperty = new SimpleDoubleProperty(afterTaxPrice);
-            afterTaxPriceProperty.addListener(new ChangeListener<Number>() {
-
-                @Override
-                public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-                    afterTaxPrice = newValue.doubleValue();
-                }
-            });
-        }
-        return afterTaxPriceProperty;
     }
 
     public void setManufacturerCostPrice(double value) {
@@ -1042,7 +1011,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
                 + ", documentTypeName=" + documentTypeName + ", actual=" + actual
                 + ", workflowStatus=" + workflowStatus + ", amount=" + amount + ", name=" + name + ", description=" + description
                 + ", positionType=" + positionType + ", positionTypeName=" + positionTypeName + ", price=" + price + ", tax=" + tax
-                + ", afterTaxPrice=" + afterTaxPrice + ", bookingAccount=" + bookingAccount + ", customerId=" + customerId
+                + ", bookingAccount=" + bookingAccount + ", customerId=" + customerId
                 + ", invoiceAddress=" + invoiceAddress + ", productGroup=" + productGroup + ", productGroupName=" + productGroupName
                 + ", productBrand=" + productBrand + ", productBrandName=" + productBrandName + ", productName=" + productName + ", partNo=" + partNo
                 + ", manufacturerCostPrice=" + manufacturerCostPrice + ", productId=" + productId + ", refurbishId=" + refurbishId + ", serial=" + serial
@@ -1135,10 +1104,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
 
         sb.append("<b>Tax: </b>");
         sb.append(tax);
-        sb.append("<br>");
-
-        sb.append("<b>after Tax Price: </b>");
-        sb.append(afterTaxPrice);
         sb.append("<br>");
 
         sb.append("<b>Booking Account: </b>");

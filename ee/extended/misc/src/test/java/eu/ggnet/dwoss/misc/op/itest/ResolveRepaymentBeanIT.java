@@ -46,7 +46,6 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.MathUtil;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
@@ -128,7 +127,6 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(uu.getPrice(CUSTOMER))
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(uu.getPrice(CUSTOMER), GlobalConfig.TAX, 0.))
                 .name(uu.getProduct().getName() + " | SN:" + uu.getSerial())
                 .description(uu.getProduct().getDescription())
                 .bookingAccount(-1)
@@ -150,7 +148,6 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
         for (Position value : doc.getPositions().values()) {
             //          if ( value.getType() == UNIT ) positions.add(value);
             value.setPrice(value.getPrice() * -1);
-            value.setAfterTaxPrice(value.toAfterTaxPrice() * -1);
 
         }
         redTapeWorker.update(doc, activeStock.getId(), "JUnit Test");

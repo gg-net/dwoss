@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.report.itest;
 
-import eu.ggnet.dwoss.report.itest.support.ArquillianProjectArchive;
-
 import java.text.ParseException;
 import java.util.Map.Entry;
 import java.util.*;
@@ -22,6 +20,7 @@ import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.eao.Revenue;
 import eu.ggnet.dwoss.report.entity.*;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.report.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.DateFormats;
 
@@ -185,17 +184,17 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         Date d1 = DateUtils.parseDate("2010-01-01", ISO);
 
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line1.setReportingDate(DateUtils.parseDate("2009-01-01", ISO));
         line1.setUniqueUnitId(10);
 
         ReportLine line2 = new ReportLine("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setReportingDate(DateUtils.parseDate("2009-07-10", ISO));
         line2.setUniqueUnitId(10);
 
         ReportLine line3 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setReportingDate(d1);
 
         utx.begin();
@@ -312,24 +311,24 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         String ISO = "yyyy-MM-dd";
 
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line1.setReportingDate(DateUtils.parseDate("2009-01-01", ISO));
         line1.setUniqueUnitId(10);
         line1.setContractor(TradeName.DELL);
 
         ReportLine line2 = new ReportLine("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setReportingDate(DateUtils.parseDate("2010-01-01", ISO));
         line2.setUniqueUnitId(10);
         line2.setContractor(TradeName.DELL);
 
         ReportLine line3 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setReportingDate(DateUtils.parseDate("2011-01-01", ISO));
         line3.setContractor(TradeName.DELL);
 
         ReportLine line4 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line4.setReportingDate(DateUtils.parseDate("2012-01-01", ISO));
         line4.setContractor(TradeName.OTTO);
 
@@ -430,7 +429,6 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
                 .amount(1)
                 .tax(0.19)
                 .price(price)
-                .afterTaxPrice(price * 0.19)
                 .uniqueUnitId(1).build();
         line.setActual(date);
         line.setReportingDate(date);

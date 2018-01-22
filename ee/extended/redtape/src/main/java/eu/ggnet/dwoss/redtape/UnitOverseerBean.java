@@ -29,11 +29,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
+import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.eao.PositionEao;
@@ -61,14 +61,13 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-
-import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 
 /**
  * A EJB to supply Information about Units bimport eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
@@ -118,7 +117,7 @@ public class UnitOverseerBean implements UnitOverseer {
         if ( username == null ) return false;
         Operator operator = operatorEao.findByUsername(username);
         if ( operator == null ) return false;
-        return operator.getAllActiveRights().contains(AtomicRight.VIEW_COST_AND_REFERENCE_PRICES);
+        return operator.getAllActiveRights().contains(right);
     }
 
     /**
@@ -263,23 +262,20 @@ public class UnitOverseerBean implements UnitOverseer {
      * @throws UserInfoException if the refurbishId is not available
      */
     @Override
-    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
+    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException {
         UnitShard us = internalFind(refurbishId);
         if ( !us.isAvailable() ) throwNotAvailable(refurbishId, us);
 
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
 
-        Position p = Position
-                .builder()
+        Position p = Position.builder()
                 .amount(1)
                 .price(0.)
-                .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(0., GlobalConfig.TAX, 0.))
                 .serialNumber(uu.getSerial())
                 .refurbishedId(uu.getRefurbishId())
                 .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
                 .type(PositionType.UNIT)
-                .tax(GlobalConfig.TAX)
+                .tax(tax)
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .name(UniqueUnitFormater.toPositionName(uu))

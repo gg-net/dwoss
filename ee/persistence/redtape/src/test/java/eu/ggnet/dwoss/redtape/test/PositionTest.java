@@ -27,15 +27,15 @@ public class PositionTest {
     @Test
     public void testEqualsContentBug() {
 
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setName("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE").setAfterTaxPrice(1428)
-                .setPrice(1200).setAmount(1).setTax(0.19)
-                .setDescription("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
-                .setBookingAccount(8401).setUniqueUnitId(9).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
+                .price(1200).amount(1).tax(0.19)
+                .description("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
+                .bookingAccount(8401).uniqueUnitId(9).build();
 
-        Position p2 = new PositionBuilder().setType(PositionType.UNIT).setName("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE").setAfterTaxPrice(1428)
-                .setPrice(1200).setAmount(1).setTax(0.19)
-                .setDescription("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
-                .setBookingAccount(8401).setUniqueUnitId(9).createPosition();
+        Position p2 = new PositionBuilder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
+                .price(1200).amount(1).tax(0.19)
+                .description("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
+                .bookingAccount(8401).uniqueUnitId(9).build();
 
         assertTrue(p1.equalsContent(p2));
     }
@@ -43,8 +43,7 @@ public class PositionTest {
     @Test
     public void testEqualsContent() {
 
-        Position posUnit = new PositionBuilder().setType(PositionType.UNIT).setBookingAccount(1).setName("TestUnit").
-                setTax(GlobalConfig.TAX).setPrice(50.0).setAfterTaxPrice(50.0).setDescription("TestUnit Description").setUniqueUnitId(1).createPosition();
+        Position posUnit = new PositionBuilder().type(PositionType.UNIT).bookingAccount(1).name("TestUnit").tax(GlobalConfig.TAX).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
 
         //copy and equality test
         Position posCopy = posUnit.partialClone();
@@ -191,13 +190,6 @@ public class PositionTest {
     public void testDefaultUiServiceInvalidPriceZero() {
         Position p = makeValidDefaultUiService();
         p.setPrice(0);
-        assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
-    }
-
-    @Test
-    public void testDefaultUiServiceInvalidTax() {
-        Position p = makeValidDefaultUiService();
-        p.setTax(0);
         assertFalse("Position must be invalid for group " + DefaultUi.class + ", but is valid.", V.validate(p, DefaultUi.class).isEmpty());
     }
 

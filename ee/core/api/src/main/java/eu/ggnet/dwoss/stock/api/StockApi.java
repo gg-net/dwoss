@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,32 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout;
+package eu.ggnet.dwoss.stock.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-import javax.swing.JLabel;
-
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.ui.old.AdditionalCustomerIdsView;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 
 /**
+ * Entwurf.
  *
  * @author oliver.guenther
  */
-public class AdditionalcustomerIdsViewTryout {
+public interface StockApi {
 
-    public static void main(String[] args) {
-        UiCore.startSwing(() -> new JLabel("Main"));
+    List<PicoStockUnit> findAll();
 
-        Map<ExternalSystem, String> in = new HashMap<>();
-        in.put(ExternalSystem.SAGE, "123412");
-
-        Ui.dialog().eval(() -> in, () -> new AdditionalCustomerIdsView()).ifPresent(System.out::println);
-
-    }
+    /**
+     * Returns only the picounits which have a correspondig stockunit.
+     *
+     * @param units
+     * @return
+     */
+    List<PicoUnit> filterAvailable(List<PicoUnit> units);
 
 }

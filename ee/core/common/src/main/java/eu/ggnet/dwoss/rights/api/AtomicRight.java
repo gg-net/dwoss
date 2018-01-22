@@ -54,7 +54,7 @@ public enum AtomicRight implements Authorisation {
      */
     READ_PRODUCT_SPEC_FOR_XML_EXPORT("ProductSpecs zu XML exportieren"),
     /**
-     * Allows to createthe old Sales Report.
+     * Allows to create the old Sales Report.
      */
     CREATE_OLD_SALES_REPORT("Verkaufsmeldung erstellen, Legacy Version"),
     /**
@@ -134,10 +134,9 @@ public enum AtomicRight implements Authorisation {
      */
     UPDATE_ANNULATION_INVOICE_TO_BALANCED("Reklamation ausgeglichen"),
     /**
-     * Unused, can be reassigned.
+     * Change taxes in positions.
      */
-    @Deprecated
-    UNUSED_1("Unused 1, Kann umbenannt und neu verwendet werden."),
+    CHANGE_TAX("Steuer ändern"),
     /**
      * Allows to Create a Creditmemo.
      */

@@ -195,7 +195,6 @@ public class CustomerGeneratorOperation {
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             Customer c = CGEN.makeOldCustomer(mandator.getMatchCode(), defaults);
-            if ( L.isDebugEnabled() ) L.debug("Persisting {}", c.toMultiLine());
             cem.persist(c);
             ids.add(c.getId());
         }

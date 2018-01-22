@@ -332,7 +332,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * <td>4</td>
      * <td>{@link Type#INVOICE} overwrites {@link Type#ORDER}</td>
      * <td>{@link PaymentMethod#DIRECT_DEBIT}</td>
-     * <td>({@link Condition#PAID} &amp; ( {@link Condition#SENT} | {@link Condition#PICKED_UP} ))</td>
+     * <td>{@link Condition#SENT} | {@link Condition#PICKED_UP}</td>
      * <td>*</td>
      * </tr>
      * <tr>
@@ -417,7 +417,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                             if ( conditions.contains(SENT) ) it.remove();
                             break;
                         case DIRECT_DEBIT:
-                            if ( conditions.contains(PAID) && (conditions.contains(SENT) || conditions.contains(PICKED_UP)) ) it.remove();
+                            if ( conditions.contains(SENT) || conditions.contains(PICKED_UP) ) it.remove();
                             break;
                         case INVOICE:
                             if ( conditions.contains(SENT) || conditions.contains(PICKED_UP) ) it.remove();
@@ -544,7 +544,6 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                 l.setName(normalizeSpace(position.getName()));
                 l.setPositionType(position.getType());
                 l.setPrice(position.getPrice());
-                l.setAfterTaxPrice(position.toAfterTaxPrice());
                 l.setReportingDate(reporting);
                 l.setTax(position.getTax());
 
@@ -560,14 +559,12 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                 // A Credit Memo gets its prices inverted
                 if ( document.getType() == DocumentType.CREDIT_MEMO ) {
                     l.setPrice(position.getPrice() * (-1));
-                    l.setAfterTaxPrice(position.toAfterTaxPrice() * (-1));
                 }
 
                 // Special handling of complaints.
                 if ( document.getType() == DocumentType.COMPLAINT ) {
                     // A Complaint position has "tagging" effect, but shall never result in a plus or minus.
                     l.setPrice(0);
-                    l.setAfterTaxPrice(0);
                     if ( document.getConditions().contains(Condition.REJECTED) || document.getConditions().contains(Condition.WITHDRAWN) ) {
                         l.setWorkflowStatus(ReportLine.WorkflowStatus.DISCHARGED);
                     } else if ( document.getConditions().contains(Condition.ACCEPTED) ) {

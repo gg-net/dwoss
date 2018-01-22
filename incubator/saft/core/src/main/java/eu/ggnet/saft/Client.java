@@ -28,7 +28,6 @@ import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.core.ui.WorkspaceService;
 
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * This is the global entry point for fat clients, see in Code for future.
@@ -58,8 +57,11 @@ public class Client {
     private final static Map<Class<?>, ? super Object> CACHE = new HashMap<>();
 
     @Getter
-    @Setter
     private static RemoteLookup remoteLookup;
+
+    public static void setRemoteLookup(RemoteLookup rl) {
+        Client.remoteLookup = rl;
+    }
 
     /**
      * Returns the sample stub for inspection.

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
@@ -172,7 +172,6 @@ public class CategoryProductEditorController implements Initializable, FxControl
      * field.
      */
     public void initialize(URL location, ResourceBundle resources) {
-
         salesChannel.getItems().addAll(SalesChannel.values());
         priceType.getItems().addAll(PriceType.values());
 

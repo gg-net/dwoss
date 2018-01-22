@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.uniqueunit;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;

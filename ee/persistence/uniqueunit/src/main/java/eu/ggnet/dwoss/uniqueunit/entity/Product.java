@@ -308,6 +308,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         if ( categoryProduct != null ) categoryProduct.fetchEager();
         unitCollections.forEach(u -> u.fetchEager());
         units.forEach(u -> u.fetchEager());
+        priceHistories.size();
     }
 
     @Override

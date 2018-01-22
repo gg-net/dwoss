@@ -55,7 +55,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         doc.setShippingAddress(addressOne);
         doc.setHistory(new DocumentHistory("Nutzer", "Bemerkung"));
 
-        Position p = new PositionBuilder().setType(PositionType.COMMENT).setDescription("Comment").setName("Comment").createPosition();
+        Position p = new PositionBuilder().type(PositionType.COMMENT).description("Comment").name("Comment").build();
         doc.append(p);
         doc.setDirective(Document.Directive.PREPARE_SHIPPING);
         dos.add(doc);
@@ -84,9 +84,9 @@ public class PersistenceIT extends ArquillianProjectArchive {
         document.setShippingAddress(addressOne);
         document.setHistory(new DocumentHistory("Nutzer", "Bemerkung"));
 
-        Position p1 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("Kommentare über Kommentare").setName("Kommentar").createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("Noch mehr Kommentare").setName("Kommentar").createPosition();
-        Position p3 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("So das war aber der Letzte").setName("Kommentar").createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.COMMENT).description("Kommentare über Kommentare").name("Kommentar").build();
+        Position p2 = new PositionBuilder().type(PositionType.COMMENT).description("Noch mehr Kommentare").name("Kommentar").build();
+        Position p3 = new PositionBuilder().type(PositionType.COMMENT).description("So das war aber der Letzte").name("Kommentar").build();
         document.append(p1);
         document.append(p2);
         document.append(p3);
@@ -97,9 +97,9 @@ public class PersistenceIT extends ArquillianProjectArchive {
         document1.setShippingAddress(addressOne);
         document1.setHistory(new DocumentHistory("Nutzer", "Bemerkung"));
 
-        Position p4 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("Ein zweites Doc mit Kommentaren").setName("Kommentar").createPosition();
-        Position p5 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("Was sind das für Kommentare").setName("Kommentar").createPosition();
-        Position p6 = new PositionBuilder().setType(PositionType.COMMENT).setDescription("comment,comment.comment").setName("Kommentar").createPosition();
+        Position p4 = new PositionBuilder().type(PositionType.COMMENT).description("Ein zweites Doc mit Kommentaren").name("Kommentar").build();
+        Position p5 = new PositionBuilder().type(PositionType.COMMENT).description("Was sind das für Kommentare").name("Kommentar").build();
+        Position p6 = new PositionBuilder().type(PositionType.COMMENT).description("comment,comment.comment").name("Kommentar").build();
         document1.append(p4);
         document1.append(p5);
         document1.append(p6);

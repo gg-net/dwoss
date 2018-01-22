@@ -16,73 +16,56 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Map.Entry;
 
 import javafx.beans.property.*;
 import javafx.collections.*;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceHistory;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 
-import lombok.ToString;
+import lombok.*;
 
 /**
  * The Fx variant of a UnitCollection.
- * 
+ *
  * @author jens.papenhagen
  */
 @ToString
 public class UnitCollectionFx {
-
-    private LongProperty idProperty;
-
-    private StringProperty nameExtensionProperty;
-
-    private StringProperty descriptionExtensionProperty;
-
-    private StringProperty partNoExtensionProperty;
-
-    private ObservableList<PicoUnit> unitsProperty;
-
-    private ObservableMap<PriceType, Double> pricesProperty;
-
-    private ObservableList<PriceHistory> priceHistoriesProperty;
-
-    private ObjectProperty<SalesChannel> salesChannelProperty;
-
-    public UnitCollectionFx(long id, String nameExtension, String descriptionExtension, String partNoExtension, List<PicoUnit> units, Map<PriceType, Double> prices, List<PriceHistory> priceHistories, SalesChannel salesChannel) {
-        this.nameExtensionProperty = new SimpleStringProperty(nameExtension);
-        this.descriptionExtensionProperty = new SimpleStringProperty(descriptionExtension);
-        this.partNoExtensionProperty = new SimpleStringProperty(partNoExtension);
-        this.unitsProperty = FXCollections.observableList(units);
-        this.pricesProperty = FXCollections.observableHashMap();
-        pricesProperty.putAll(prices);
-        this.priceHistoriesProperty = FXCollections.observableList(priceHistories);
-        this.salesChannelProperty = new SimpleObjectProperty<>(salesChannel);
+    
+    @Data
+    @AllArgsConstructor
+    public static class Price {
+        
+        private PriceType type;
+        
+        private double value;
+        
     }
+    
+    @Getter
+    @Setter
+    private long id = 0;
 
-    public LongProperty getIdProperty() {
-        return idProperty;
-    }
+    private final StringProperty nameExtensionProperty = new SimpleStringProperty(this, "nameExtension");
 
-    public void setIdProperty(LongProperty idProperty) {
-        this.idProperty = idProperty;
-    }
+    private final StringProperty descriptionExtensionProperty = new SimpleStringProperty(this, "descriptionExtension");
 
-    public final void setId(Long value) {
-        idProperty.set(value);
-    }
+    private final StringProperty partNoExtensionProperty= new SimpleStringProperty(this, "partNoExtension");
 
-    public final Long getId() {
-        return idProperty.get();
-    }
+    @Getter
+    @Setter
+    private List<PicoUnit> units = new ArrayList<>();
 
-    public final LongProperty idProperty() {
-        return idProperty;
+    private final ObservableList<Price> prices = FXCollections.observableArrayList();
+    
+    private final ObjectProperty<SalesChannel> salesChannelProperty = new SimpleObjectProperty<>(this, "salesChannel");
+
+    public UnitCollectionFx() {
     }
 
     public final void setNameExtension(String value) {
@@ -97,14 +80,6 @@ public class UnitCollectionFx {
         return nameExtensionProperty;
     }
 
-    public StringProperty getNameExtensionProperty() {
-        return nameExtensionProperty;
-    }
-
-    public void setNameExtensionProperty(StringProperty nameExtension) {
-        this.nameExtensionProperty = nameExtension;
-    }
-
     public final void setDescriptionExtension(String value) {
         descriptionExtensionProperty.set(value);
     }
@@ -117,13 +92,6 @@ public class UnitCollectionFx {
         return descriptionExtensionProperty;
     }
 
-    public StringProperty getDescriptionExtensionProperty() {
-        return descriptionExtensionProperty;
-    }
-
-    public void setDescriptionExtensionProperty(StringProperty descriptionExtension) {
-        this.descriptionExtensionProperty = descriptionExtension;
-    }
 
     public final void setPartNoExtension(String value) {
         partNoExtensionProperty.set(value);
@@ -137,48 +105,20 @@ public class UnitCollectionFx {
         return partNoExtensionProperty;
     }
 
-    public StringProperty getPartNoExtensionProperty() {
-        return partNoExtensionProperty;
-    }
-
-    public void setPartNoExtensionProperty(StringProperty partNoExtension) {
-        this.partNoExtensionProperty = partNoExtension;
-    }
-
-    public ObservableList<PicoUnit> getUnitsProperty() {
-        return unitsProperty;
-    }
-
-    public void setUnitsProperty(ObservableList<PicoUnit> unitsProperty) {
-        this.unitsProperty = unitsProperty;
-    }
-
-    public ObservableMap<PriceType, Double> getPricesProperty() {
-        return pricesProperty;
-    }
-
-    public void setPricesProperty(ObservableMap<PriceType, Double> pricesProperty) {
-        this.pricesProperty = pricesProperty;
-    }
-
-    public ObservableList<PriceHistory> getPriceHistoriesProperty() {
-        return priceHistoriesProperty;
-    }
-
-    public void setPriceHistoriesProperty(ObservableList<PriceHistory> priceHistoriesProperty) {
-        this.priceHistoriesProperty = priceHistoriesProperty;
-    }
-
-    public ObjectProperty<SalesChannel> getSalesChannelProperty() {
-        return salesChannelProperty;
-    }
-
-    public void setSalesChannelProperty(ObjectProperty<SalesChannel> salesChannelProperty) {
-        this.salesChannelProperty = salesChannelProperty;
-    }
-
     public SalesChannel getSalesChannel() {
         return salesChannelProperty.getValue();
     }
 
+    public final void setSalesChannel(SalesChannel value) {
+        salesChannelProperty.set(value);
+    }
+
+    public ObjectProperty<SalesChannel> salesChannelProperty() {
+        return salesChannelProperty;
+    }
+ 
+    public ObservableList<Price> getPrices() {
+        return prices;
+    }
+    
 }

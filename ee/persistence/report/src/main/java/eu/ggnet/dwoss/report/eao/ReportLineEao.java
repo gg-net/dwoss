@@ -334,9 +334,9 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
         q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDateReported", RevenueHolder.class);
         q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
         List<RevenueHolder> resultList = q.getResultList();
-        System.out.println("Second run size:" + resultList.size());
+        L.debug("Second run size:" + resultList.size());
         for (RevenueHolder holder : resultList) {
-            System.out.println("Second run: " + holder);
+            L.debug("Second run: " + holder);
             Revenue revenueStep = result.get(step.truncate(holder.getReportingDate()));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()

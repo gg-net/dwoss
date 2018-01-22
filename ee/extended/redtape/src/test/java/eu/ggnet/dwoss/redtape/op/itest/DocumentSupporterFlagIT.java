@@ -194,7 +194,6 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
     private void modify2ndPosition(Document doc) {
         Position p2 = doc.getPosition(2);
         p2.setPrice(p2.getPrice() + 50);
-        p2.setAfterTaxPrice(p2.getPrice() + 50);
     }
 
     private void changeInvoiceAddress(Document doc) {

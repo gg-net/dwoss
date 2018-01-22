@@ -123,11 +123,11 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 return false;
             }
             positions.add(new PositionBuilder()
-                    .setType(COMMENT)
-                    .setName("Grund/Beschreibung")
-                    .setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
-                    .setDescription(tablePanel.getComment() + "\n\n" + balancingBox.getSelectedItem().toString())
-                    .createPosition());
+                    .type(COMMENT)
+                    .name("Grund/Beschreibung")
+                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
+                    .description(tablePanel.getComment() + "\n\n" + balancingBox.getSelectedItem().toString())
+                    .build());
             if ( selectedStock == null ) {
                 JOptionPane.showMessageDialog(this, "bitte Standort für die Gutschrift auswählen");
                 return false;

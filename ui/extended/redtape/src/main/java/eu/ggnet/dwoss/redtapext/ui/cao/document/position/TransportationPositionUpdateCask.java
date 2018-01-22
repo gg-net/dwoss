@@ -265,7 +265,7 @@ public class TransportationPositionUpdateCask extends javax.swing.JPanel {
 
     public static void main(String[] args) {
         TransportationPositionUpdateCask tpuc = new TransportationPositionUpdateCask(
-                new PositionBuilder().setPrice(10).setDescription("TestDescritpion").setType(PositionType.SHIPPING_COST).createPosition());
+                new PositionBuilder().price(10).description("TestDescritpion").type(PositionType.SHIPPING_COST).build());
 
         OkCancelDialog<TransportationPositionUpdateCask> dialog = new OkCancelDialog<>("TEst", tpuc);
         dialog.setVisible(true);

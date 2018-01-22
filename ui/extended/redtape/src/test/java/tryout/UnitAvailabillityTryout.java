@@ -27,9 +27,7 @@ import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.Tuple2;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.*;
 
 /**
  *
@@ -73,7 +71,7 @@ public class UnitAvailabillityTryout {
             }
 
             @Override
-            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
+            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

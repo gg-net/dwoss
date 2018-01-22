@@ -26,12 +26,14 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
+import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.customer.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static javax.persistence.CascadeType.ALL;
@@ -54,6 +56,17 @@ import static javax.persistence.CascadeType.ALL;
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
 public class Customer implements Serializable {
 
+    /**
+     * Fields for detailed Search.
+     */
+    public static enum SearchField {
+        ID,
+        FIRSTNAME,
+        LASTNAME,
+        COMPANY,
+        ADDRESS
+    }
+
     @AllArgsConstructor
     @Getter
     public static enum Source {
@@ -75,12 +88,14 @@ public class Customer implements Serializable {
     @GeneratedValue
     private long id;
 
+    @Getter
     @Version
     private short optLock;
 
     /**
      * A list of {@link Company}<code>s</code> represented by the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -89,6 +104,7 @@ public class Customer implements Serializable {
     /**
      * All contacts association with the customer.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -97,6 +113,7 @@ public class Customer implements Serializable {
     /**
      * Optional Mandator Metadate.
      */
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
@@ -128,17 +145,9 @@ public class Customer implements Serializable {
     @Boost(0.5f)
     private String comment;
 
-    public List<Company> getCompanies() {
-        return new ArrayList<>(companies);
-    }
-
-    public List<Contact> getContacts() {
-        return new ArrayList<>(contacts);
-    }
-
-    public List<MandatorMetadata> getMandatorMetadata() {
-        return new ArrayList<>(mandatorMetadata);
-    }
+    @Getter
+    @Transient // Will be in the entity model later
+    private List<AddressLabel> addressLabels = new ArrayList<>();
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -215,8 +224,9 @@ public class Customer implements Serializable {
      */
     public AddressLabel toPreferedInvoiceAddress() {
         return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst(),
-                contacts.stream().filter(Contact::isPrefered).findFirst(),
+                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(INVOICE)).orElse(null),
                 INVOICE);
     }
 
@@ -234,12 +244,11 @@ public class Customer implements Serializable {
      * @return an addresslabel with prefered elements for shipping.
      */
     public AddressLabel toPreferedShippingAddress() {
-        Optional<Contact> preferedContact = contacts.stream().filter(Contact::isPrefered).findFirst();
-        // Setting type to shipping if there exists a shipping address otherwise invoice.
-        AddressType type = preferedContact.map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
+        AddressType type = contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
         return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst(),
-                preferedContact,
+                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
+                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(type)).orElse(null),
                 type);
     }
 
@@ -274,30 +283,119 @@ public class Customer implements Serializable {
         return sb.toString();
     }
 
-    public String toMultiLine() {
-        String result = toString();
-        for (Company company : companies) {
-            result += "\n -" + company;
-            for (Address a : company.getAddresses()) {
-                result += "\n  -" + a;
-            }
-            for (Communication communication : company.getCommunications()) {
-                result += "\n  -" + communication;
-            }
+    /**
+     * Converts the customer to the simple dto form if possible.
+     * If the customer is to complex, it cannot be converted an therefor an empty optional is returned.
+     *
+     * @return an optional of the simple customer
+     */
+    public Optional<SimpleCustomer> toSimple() {
+        if ( !isSimple() ) return Optional.empty();
+        if ( isConsumer() ) {
+            SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(contacts.get(0).getTitle());
+            sc.setFirstName(contacts.get(0).getFirstName());
+            sc.setLastName(contacts.get(0).getLastName());
+            sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+            sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+            
+            contacts.get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(contacts.get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+
+            return Optional.of(sc);
         }
-        for (Contact contact : contacts) {
-            result += "\n -" + contact;
-            for (Address a : contact.getAddresses()) {
-                result += "\n  -" + a;
-            }
-            for (Communication communication : contact.getCommunications()) {
-                result += "\n  -" + communication;
-            }
+        if ( isBussines() ) {
+            SimpleCustomer sc = new SimpleCustomer();
+            sc.setId(id);
+            sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
+            sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
+            sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
+            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
+            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+            companies.get(0).getContacts().get(0).getCommunications().stream().map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.MOBILE) ) {
+                    sc.setMobilePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).map((communication) -> {
+                if ( communication.getType().equals(Communication.Type.PHONE) ) {
+                    sc.setLandlinePhone(communication.getIdentifier());
+                }
+                return communication;
+            }).filter((communication) -> (communication.getType().equals(Communication.Type.EMAIL))).forEachOrdered((communication) -> {
+                sc.setEmail(communication.getIdentifier());
+            });
+            sc.setSex(companies.get(0).getContacts().get(0).getSex());
+            sc.setSource(source);
+            sc.setComment(comment);
+            sc.setCompanyName(companies.get(0).getName());
+            sc.setTaxId(companies.get(0).getTaxId());
+
+            return Optional.of(sc);
         }
-        for (MandatorMetadata metadata : mandatorMetadata) {
-            result += "\n -" + metadata;
+        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
+    }
+
+    public boolean isSimple() {
+        // Für Azubis
+        if ( isConsumer() ) {
+            if ( contacts.size() > 1
+                    || contacts.get(0).getAddresses().size() > 1
+                    || contacts.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ) {
+                return true;
+            }
+
+            return true;
+        } else {
+            // company must not be empty be definiton.
+            if ( companies.size() > 1
+                    || companies.get(0).getAddresses().size() > 1
+                    || companies.get(0).getCommunications().stream().map(Communication::getType).filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE).contains(t)).findAny().isPresent() ){
+                return true;
+            }
+                
+            // TODO: More creterias are here.
+            return false;
         }
-        return result;
+ 
+    }
+
+    public boolean isConsumer() {
+        return !contacts.isEmpty();
+    }
+
+    public boolean isBussines() {
+        return !companies.isEmpty();
+    }
+
+    public boolean isVaild() {
+        return getViolationMessage() == null;
+    }
+
+    // The null annotation can only be activated after the next big release, as the customers in the database are all invalid.
+    // @Null
+    public String getViolationMessage() {
+        return null;
     }
 
     public String toHtml() {

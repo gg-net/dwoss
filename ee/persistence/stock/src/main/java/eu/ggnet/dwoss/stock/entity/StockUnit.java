@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,10 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Null;
 
+import eu.ggnet.dwoss.stock.api.PicoStockUnit;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
+
+import lombok.*;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -61,40 +64,54 @@ import static javax.persistence.FetchType.EAGER;
     @NamedQuery(name = "StockUnit.countByStockOnLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NOT NULL"),
     @NamedQuery(name = "StockUnit.findByUniqueUnitIds", query = "SELECT u FROM StockUnit u WHERE u.uniqueUnitId IN (?1)")
 })
+@EqualsAndHashCode(of = "id")
 public class StockUnit implements Serializable, EagerAble {
 
+    @Getter
     @Id
     @GeneratedValue
     private int id;
 
+    @Getter
     @Version
     private short optLock;
 
     /**
      * The name of the StockUnit.
      */
+    @Getter
+    @Setter
     private String name;
 
     /**
      * An id which helps to find the unit in reality. At the moment, this is either the SopoNr or the Serial
      */
+    @Getter
+    @Setter
     private String refurbishId;
 
+    @Getter
     @Valid
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
     private Stock stock;
 
+    @Getter
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
     private StockLocation stockLocation;
 
+    @Getter
     @Valid
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "stockUnit", fetch = EAGER)
     StockTransactionPosition position;
 
+    @Getter
     @Valid
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private LogicTransaction logicTransaction;
 
+    @Getter
+    @Setter
+    // Todo: convert to long and make it not null.
     private Integer uniqueUnitId;
 
     /**
@@ -159,10 +176,6 @@ public class StockUnit implements Serializable, EagerAble {
         return "StockUnit is invalid, because something mystirious has happend, i don't know, this point should never be reached.";
     }
 
-    public StockTransactionPosition getPosition() {
-        return position;
-    }
-
     /**
      * Sets this StockUnit to be on a StockTransactionPosition, bidirectional handling is implemented.
      * <p/>
@@ -188,15 +201,6 @@ public class StockUnit implements Serializable, EagerAble {
      */
     public boolean isInTransaction() {
         return getPosition() != null;
-    }
-
-    /**
-     * Returns the Stock, where this unit is located or null if dead or in transaction
-     *
-     * @return the Stock, where this unit is located or null if dead or in transaction
-     */
-    public Stock getStock() {
-        return stock;
     }
 
     /**
@@ -227,15 +231,6 @@ public class StockUnit implements Serializable, EagerAble {
     }
 
     /**
-     * Returns the StockLocation
-     * <p/>
-     * @return the StockLocation
-     */
-    public StockLocation getStockLocation() {
-        return stockLocation;
-    }
-
-    /**
      * Sets the StockLocation and the Stock
      * <p/>
      * @param stockLocation the StockLocation to be set
@@ -243,38 +238,6 @@ public class StockUnit implements Serializable, EagerAble {
     public void setStockLocation(StockLocation stockLocation) {
         setStock(stockLocation == null ? null : stockLocation.getStock());
         this.stockLocation = stockLocation;
-    }
-
-    public Integer getUniqueUnitId() {
-        return uniqueUnitId;
-    }
-
-    public void setUniqueUnitId(Integer uniqueUnitId) {
-        this.uniqueUnitId = uniqueUnitId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getRefurbishId() {
-        return refurbishId;
-    }
-
-    public void setRefurbishId(String unitId) {
-        this.refurbishId = unitId;
-    }
-
-    public LogicTransaction getLogicTransaction() {
-        return logicTransaction;
     }
 
     public void setLogicTransaction(LogicTransaction logicTransaction) {
@@ -285,27 +248,16 @@ public class StockUnit implements Serializable, EagerAble {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final StockUnit other = (StockUnit)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 83 * hash + this.id;
-        return hash;
-    }
-
     public void fetchEager() {
         if ( getTransaction() != null ) getTransaction().fetchEager();
     }
 
     public String toSimple() {
         return "StockUnit{id=" + id + ",refurbishId=" + refurbishId + "}";
+    }
+
+    public PicoStockUnit toPico() {
+        return new PicoStockUnit(id, uniqueUnitId == null ? 0 : uniqueUnitId, name + " mit refurbishId=" + refurbishId);
     }
 
     @Override

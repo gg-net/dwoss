@@ -43,7 +43,7 @@ public class DocumentExactlyBriefedTest {
         doc1.setType(DocumentType.ORDER);
         doc1.add(Document.Flag.CUSTOMER_BRIEFED);
         doc1.setDossier(new Dossier());
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
         doc2 = doc1.partialClone();
         doc2.setDossier(new Dossier());
 
@@ -59,8 +59,8 @@ public class DocumentExactlyBriefedTest {
     public void testPositionChange() {
         assertTrue("Documents difference must not invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
 
-        doc2.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc2.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
         assertFalse("Position change must invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
     }
 

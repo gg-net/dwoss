@@ -102,7 +102,7 @@ public class DirectDebitReporterOperation implements DirectDebitReporter {
                 doc.getIdentifier(),
                 doc.getActual(),
                 doc.getPrice(),
-                doc.getAfterTaxPrice(),
+                doc.toAfterTaxPrice(),
                 doc.getDossier().getComment(),
                 customerService.asCustomerMetaData(customer.getId()).getEmail()
             });

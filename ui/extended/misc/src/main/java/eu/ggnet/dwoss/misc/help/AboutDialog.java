@@ -24,7 +24,10 @@ import java.util.Properties;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.dwoss.spec.api.SpecApi;
+import eu.ggnet.dwoss.stock.api.StockApi;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 
 /**
  * Dialog for about and changelog.
@@ -53,14 +56,17 @@ public class AboutDialog extends JDialog {
                     + "http://deutschewarenwirtschaft.de/" + "\n"
                     + "GPL v3 Lizenz" + "\n\n"
                     + "Version: app.version" + "\n"
-                    + "System: project.version";
+                    + "System: project.version" + "\n\n"
+                    + "Aktive Api Module: \n"
+                    + " - Stock: " + Dl.remote().optional(StockApi.class).map(s -> "Aktiv").orElse("Nicht vorhanden") + "\n"
+                    + " - Spec: " + Dl.remote().optional(SpecApi.class).map(s -> "Aktiv").orElse("Nicht vorhanden");
+
             for (Object key : prop.keySet()) {
                 text = text.replace(key.toString(), prop.getProperty(key.toString()));
             }
             infoArea.setText(text);
         } catch (IOException e) {
-            HtmlDialog htmlDialog = new HtmlDialog(this, ModalityType.MODELESS);
-            htmlDialog.setText(e.getMessage());
+            Ui.handle(e);
         }
     }
 

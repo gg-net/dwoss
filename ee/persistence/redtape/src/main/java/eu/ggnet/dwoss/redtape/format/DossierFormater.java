@@ -68,7 +68,7 @@ public class DossierFormater {
             res += "Anmerkung: " + doc.getHistory().getComment() + "<br />";
             res += doc.getPositions().size() != 0 ? "Positionen: " + doc.getPositions().size()
                     + " | Nettosumme: " + NumberFormat.getCurrencyInstance().format(doc.getPrice())
-                    + " | Bruttosumme: " + NumberFormat.getCurrencyInstance().format(doc.getAfterTaxPrice())
+                    + " | Bruttosumme: " + NumberFormat.getCurrencyInstance().format(doc.toAfterTaxPrice())
                     + (settlements.isEmpty() ? "" : " | Gezahlt via " + settlements) + "<br />" : "";
             res += "</p>";
         }

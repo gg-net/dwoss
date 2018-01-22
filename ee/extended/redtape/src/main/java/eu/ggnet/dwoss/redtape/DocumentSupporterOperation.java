@@ -35,7 +35,6 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -80,7 +79,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     private Instance<DocumentService> documentService;
 
     /**
-     * Contains all Paramters which a Template may support, see also {@link FreeDocumentTemplateParameter}.
+     * Contains all Parameters which a Template may support, see also {@link FreeDocumentTemplateParameter}.
      */
     public static class TemplateParameter {
 
@@ -106,6 +105,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         public static final String TAX = "TAX";
 
+        public static final String TAX_DESCRIPTION = "TAX_DESCRIPTION";
+
         public static final String COMPANY_LOGO = "COMPANY_LOGO";
 
         public static final String COMPANY = "COMPANY";
@@ -119,6 +120,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         public static final String ACTUAL = "ACTUAL";
 
         public static final String PERFOMANCE_ON = "PERFOMANCE_ON";
+
     }
 
     private static final Logger L = LoggerFactory.getLogger(DocumentSupporterOperation.class);
@@ -329,7 +331,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         reportParameter.put(SUM_NETTO, nettoPrice);
         reportParameter.put(SUM_BRUTTO, bruttoPrice);
         reportParameter.put(SUM_TAX, bruttoPrice - nettoPrice);
-        reportParameter.put(TAX, GlobalConfig.TAX * 100);
+        reportParameter.put(TAX, document.getSingleTax());
+        reportParameter.put(TAX_DESCRIPTION, document.getTaxDescription());
         reportParameter.put(ACTUAL, document.getActual());
         reportParameter.put(COMPANY, mandator.getCompany().toSingleLine());
         reportParameter.put(COMPANY_LOGO, mandator.getCompany().getLogo().toURL());

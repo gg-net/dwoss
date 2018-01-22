@@ -98,7 +98,7 @@ public class DebitorsReporterOperation implements DebitorsReporter {
                 document.getActual(),
                 document.getIdentifier(),
                 document.getPrice(),
-                document.getAfterTaxPrice(),
+                document.toAfterTaxPrice(),
                 document.getDossier().getPaymentMethod().getNote()
             });
         }

@@ -113,7 +113,6 @@ public class AfterInvoicePosition {
 
     private Position modifyToAfterInvoicePosition(Position p) {
         p.setPrice(p.getPrice() * p.getAmount());
-        p.setAfterTaxPrice(p.toAfterTaxPrice() * p.getAmount());
         p.setAmount(1);
         return p;
     }

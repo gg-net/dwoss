@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,15 +21,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.dwoss.redtape.entity.Document;
-
+import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
+import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
-
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
-
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.saft.Client.lookup;
@@ -48,11 +46,11 @@ public class ModifyShippingCostStateAction extends DefaultStateTransitionAction 
         this.transition = transition;
     }
 
-    private RedTapeController controller;
+    private final RedTapeController controller;
 
-    private CustomerDocument cdoc;
+    private final CustomerDocument cdoc;
 
-    private StateTransition<CustomerDocument> transition;
+    private final StateTransition<CustomerDocument> transition;
 
     private String createWindowText() {
         StringBuilder message = new StringBuilder("Sie haben einen Versandauftrag bearbeitet.\n");
@@ -67,8 +65,8 @@ public class ModifyShippingCostStateAction extends DefaultStateTransitionAction 
 
         int confirmDialog = JOptionPane.showConfirmDialog(parent, createWindowText(),
                 "Automatische Versandkostenkalkulation", JOptionPane.YES_NO_CANCEL_OPTION);
-
-        if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition());
+        double tax = document.hasSingleTax() && !document.getPositions().isEmpty() ? document.getSingleTax() : GlobalConfig.TAX;
+        if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition(), tax);
 
         if ( confirmDialog != JOptionPane.CANCEL_OPTION )
             controller.reloadSelectionOnStateChange(lookup(RedTapeWorker.class).update(document, null, lookup(Guardian.class).getUsername()).getDossier());
