@@ -9,7 +9,7 @@
     </parent>
 
     <properties>
-        <dw.version>1</dw.version>
+        <dw.version>1.0-SNAPSHOT</dw.version>
     </properties>
 
     <name>DwOss • Assembly</name>

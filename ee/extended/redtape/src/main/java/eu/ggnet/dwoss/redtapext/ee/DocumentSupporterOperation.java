@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape;
+package eu.ggnet.dwoss.redtapext.ee;
 
 import java.io.*;
 import java.net.URL;
@@ -30,6 +30,7 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
@@ -58,7 +59,9 @@ import eu.ggnet.dwoss.util.*;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
-import static eu.ggnet.dwoss.redtape.DocumentSupporterOperation.TemplateParameter.*;
+import lombok.Setter;
+
+import static eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation.TemplateParameter.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
@@ -103,9 +106,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         public static final String SUM_TAX = "SUM_TAX";
 
-        public static final String TAX = "TAX";
-
-        public static final String TAX_DESCRIPTION = "TAX_DESCRIPTION";
+        public static final String TAX_INFO = "TAX_INFO";
 
         public static final String COMPANY_LOGO = "COMPANY_LOGO";
 
@@ -113,12 +114,21 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         public static final String FOOTER = "FOOTER";
 
-        public static final String TERMS1 = "TERMS1";
+        /**
+         * Terms besides the sum.
+         */
+        public static final String TERMS1 = FreeDocumentTemplateParameter.TERMS1.name();
 
-        public static final String TERMS2 = "TERMS2";
+        /**
+         * Terms below the sum.
+         */
+        public static final String TERMS2 = FreeDocumentTemplateParameter.TERMS2.name();
 
         public static final String ACTUAL = "ACTUAL";
 
+        /**
+         * Date of the actual activity. Either the invoice date or a reference date.
+         */
         public static final String PERFOMANCE_ON = "PERFOMANCE_ON";
 
     }
@@ -133,6 +143,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     @UniqueUnits
     private EntityManager uuEm;
 
+    @Setter // Only here for the tryout.
     @Inject
     private Mandator mandator;
 
@@ -309,15 +320,6 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     }
 
     private Map<String, Object> toTemplateParameters(Document document, DocumentViewType viewType) {
-
-        double nettoPrice = 0;
-        double bruttoPrice = 0;
-
-        for (Position position : document.getPositions().values()) {
-            nettoPrice += position.getPrice() * position.getAmount();
-            bruttoPrice += position.toAfterTaxPrice() * position.getAmount();
-        }
-
         // Setting Defaults.
         Map<String, Object> reportParameter = new HashMap<>();
         Dossier dossier = document.getDossier();
@@ -328,30 +330,39 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         // The two \n are a workaround for Windows/Remote Client. Otherwise the last line of an address is not shown.
         reportParameter.put(INVOICE_ADDRESS, document.getInvoiceAddress().getDescription() + "\n");
         reportParameter.put(SHIPPING_ADDRESS, document.getShippingAddress().getDescription() + "\n");
-        reportParameter.put(SUM_NETTO, nettoPrice);
-        reportParameter.put(SUM_BRUTTO, bruttoPrice);
-        reportParameter.put(SUM_TAX, bruttoPrice - nettoPrice);
-        reportParameter.put(TAX, document.getSingleTax());
-        reportParameter.put(TAX_DESCRIPTION, document.getTaxDescription());
+        reportParameter.put(SUM_NETTO, document.getPrice());
+        reportParameter.put(SUM_BRUTTO, document.toAfterTaxPrice());
+        double sumTax = document.toAfterTaxPrice() - document.getPrice();
+        // Both tax fields are null, if their value is 0.00
+        reportParameter.put(SUM_TAX, Math.abs(sumTax) < 0.001 ? null : sumTax);
+        reportParameter.put(TAX_INFO, document.getSingleTax() < 0.001 ? null : String.format("%.0f %% MwSt.", document.getSingleTax() * 100));
         reportParameter.put(ACTUAL, document.getActual());
         reportParameter.put(COMPANY, mandator.getCompany().toSingleLine());
         reportParameter.put(COMPANY_LOGO, mandator.getCompany().getLogo().toURL());
         reportParameter.put(FOOTER, mandator.getDocumentIntermix().getFooter() + "\n");
-        reportParameter.put(PERFOMANCE_ON, document.getActual());
         reportParameter.put(PAYMENT_TEXT, "");
 
-        for (FreeDocumentTemplateParameter parameter : FreeDocumentTemplateParameter.values()) {
-            reportParameter.put(parameter.name(), mandator.getDocumentIntermix().getFreeTexts(parameter, viewType, document.getType()));
-        }
+        reportParameter.put(TERMS1, mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS1, viewType, document.getType()));
 
-        if ( documentService.isAmbiguous() || documentService.isUnsatisfied() ) {
+        // Building Terms 2
+        StringBuilder terms2 = new StringBuilder();
+        if ( StringUtils.isNotBlank(document.getTaxType().getDocumentText()) ) terms2.append(document.getTaxType().getDocumentText()).append("<br />");
+        terms2.append(mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS1, viewType, document.getType()));
+        terms2.append("<br />"); // consider <p>
+
+        terms2.append("<b>");
+        if ( documentService == null || documentService.isAmbiguous() || documentService.isUnsatisfied() ) {
             //default
-            if ( document.getType() == DocumentType.ORDER ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getOrderText());
-            if ( document.getType() == DocumentType.INVOICE ) reportParameter.put(PAYMENT_TEXT, dossier.getPaymentMethod().getInvoiceText(0));
+            if ( document.getType() == DocumentType.ORDER ) terms2.append(dossier.getPaymentMethod().getOrderText());
+            if ( document.getType() == DocumentType.INVOICE ) terms2.append(dossier.getPaymentMethod().getInvoiceText(0));
         } else {
-            reportParameter.put(PAYMENT_TEXT, documentService.get().paymentInstructionText(document.getType(), dossier.getPaymentMethod()));
+            terms2.append(documentService.get().paymentInstructionText(document.getType(), dossier.getPaymentMethod()));
         }
+        terms2.append("</b>");
 
+        reportParameter.put(TERMS2, terms2.toString());
+
+        reportParameter.put(PERFOMANCE_ON, document.getActual());
         // Depending dates in PERFORMANCE_ON, like a CreditMemo depends on the date of the invoice.
         List<Document> invoices = dossier.getActiveDocuments(DocumentType.INVOICE);
         if ( !invoices.isEmpty() ) {

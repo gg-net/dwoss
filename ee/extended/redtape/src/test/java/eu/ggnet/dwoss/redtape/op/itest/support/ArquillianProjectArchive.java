@@ -29,6 +29,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 
@@ -43,6 +45,7 @@ public class ArquillianProjectArchive {
     public static WebArchive createDeployment() {
         // Compile Safe Packages.
         Package projectPackage = RedTapeWorker.class.getPackage();
+        Package newProjectPackage = DocumentSupporter.class.getPackage();
 
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
@@ -58,6 +61,7 @@ public class ArquillianProjectArchive {
                 // TODO: Consider moving everything into a different package.
                 .addPackages(true, projectPackage.getName() + ".gen", projectPackage.getName() + ".gsoffice", projectPackage.getName() + ".reporting",
                         projectPackage.getName() + ".state", projectPackage.getName() + ".workflow")
+                .addPackages(true, newProjectPackage)
                 .addClasses(DocumentSupporter.class, DocumentSupporterOperation.class, RedTapeWorker.class, RedTapeWorkerOperation.class, UnitOverseer.class,
                         UnitOverseerBean.class, UnitOverseerRest.class, UniversalSearcher.class, UniversalSearcherOperation.class)
                 // End of manual add ----

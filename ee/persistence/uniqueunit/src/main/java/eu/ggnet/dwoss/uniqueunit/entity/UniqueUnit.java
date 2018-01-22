@@ -435,7 +435,7 @@ public class UniqueUnit implements Serializable, EagerAble {
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
     public void setPrice(PriceType type, double price, String comment) {
-        if ( MathUtil.equals(getPrice(type), price) ) {
+        if ( TwoDigits.equals(getPrice(type), price) ) {
             return; // Don't set the same price
         }
         prices.put(type, price);

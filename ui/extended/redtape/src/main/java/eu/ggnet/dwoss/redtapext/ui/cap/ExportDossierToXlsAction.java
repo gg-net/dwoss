@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
-import eu.ggnet.dwoss.redtape.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;

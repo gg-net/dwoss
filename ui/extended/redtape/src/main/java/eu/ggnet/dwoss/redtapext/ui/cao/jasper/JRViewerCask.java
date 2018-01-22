@@ -29,7 +29,7 @@ import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRViewer;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtape.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
