@@ -48,7 +48,8 @@ import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- *
+ * FXML Controller for the UnitCollection Editor 
+ * 
  * @author jens.papenhagen
  */
 @Title("Geräte Sammlungen Editieren")
