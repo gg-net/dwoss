@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,9 @@ public class AssignmentController implements Initializable, FxController {
     private ListView<UniqueUnit> differentAssignedUnitsList;
 
     @FXML
+    private BorderPane root;
+
+    @FXML
     private void assignUnit(ActionEvent event) {
         List<UniqueUnit> selected = unassignedUnitsList.getSelectionModel().getSelectedItems();
         UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
@@ -93,10 +97,27 @@ public class AssignmentController implements Initializable, FxController {
     @FXML
     private void addUnitCollection() {
 
+        openEdit(new UnitCollection());
+
     }
 
     @FXML
     private void editUnitCollection() {
+
+        if ( unitCollectionList.getSelectionModel().getSelectedItem() != null ) {
+            UnitCollection uc = unitCollectionList.getSelectionModel().getSelectedItem();
+            openEdit(uc);
+        }
+
+    }
+
+    private void openEdit(UnitCollection uc) {
+
+        Ui.fxml().parent(root).eval(() -> uc, UnitCollectionEditorController.class);
+
+    }
+
+    private void updateList(UnitCollection newUc) {
 
     }
 
