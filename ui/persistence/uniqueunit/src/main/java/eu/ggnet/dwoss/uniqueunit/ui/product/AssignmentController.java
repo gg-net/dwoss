@@ -9,11 +9,13 @@ import java.util.stream.Collectors;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,8 @@ import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
+
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  * A ui that can show all UnitCollections of different Products. The UniqueUnits of a Product are also shown in different categorys(assigned to the selected
@@ -56,6 +60,67 @@ public class AssignmentController implements Initializable, FxController {
     @FXML
     private ListView<UniqueUnit> differentAssignedUnitsList;
 
+    @FXML
+    private BorderPane root;
+
+    @FXML
+    private void assignUnit(ActionEvent event) {
+        List<UniqueUnit> selected = unassignedUnitsList.getSelectionModel().getSelectedItems();
+        UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
+        if ( selected != null ) {
+
+            for (UniqueUnit uu : selected) {
+                Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId()), selectedCollection.getId());
+                assignedUnitsList.getItems().add(uu);
+                unassignedUnitsList.getItems().remove(uu);
+                unassignedUnitsList.getSelectionModel().clearSelection();
+            }
+        }
+    }
+
+    @FXML
+    private void unassignUnit(ActionEvent event) {
+        UniqueUnit selected = assignedUnitsList.getSelectionModel().getSelectedItem();
+        if ( selected != null ) {
+            Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(selected.getId(), "RefurbishedId=" + selected.getRefurbishId())))
+                    .filter(r -> {
+                        return Ui.failure().handle(r);
+                    })
+                    .ifPresent(c -> {
+                        unassignedUnitsList.getItems().add(selected);
+                        assignedUnitsList.getItems().remove(selected);
+                        unassignedUnitsList.getSelectionModel().clearSelection();
+                    });
+        }
+    }
+
+    @FXML
+    private void addUnitCollection() {
+
+        openEdit(new UnitCollection());
+
+    }
+
+    @FXML
+    private void editUnitCollection() {
+
+        if ( unitCollectionList.getSelectionModel().getSelectedItem() != null ) {
+            UnitCollection uc = unitCollectionList.getSelectionModel().getSelectedItem();
+            openEdit(uc);
+        }
+
+    }
+
+    private void openEdit(UnitCollection uc) {
+
+        Ui.fxml().parent(root).eval(() -> uc, UnitCollectionEditorController.class);
+
+    }
+
+    private void updateList(UnitCollection newUc) {
+
+    }
+
     @Override
     /**
      * Drag and Drop handling.
@@ -63,6 +128,9 @@ public class AssignmentController implements Initializable, FxController {
      * ActionListener
      */
     public void initialize(URL url, ResourceBundle rb) {
+
+        unassignedUnitsList.getSelectionModel().setSelectionMode(MULTIPLE);
+        assignedUnitsList.getSelectionModel().setSelectionMode(MULTIPLE);
 
         dragAndDropHandling();
 
@@ -84,7 +152,8 @@ public class AssignmentController implements Initializable, FxController {
                 if ( empty ) {
                     setText(null);
                 } else {
-                    String text = p.getShortDescription();
+                    Product dbProduct = Client.lookup(UniqueUnitAgent.class).findByIdEager(Product.class, p.getId());
+                    String text = p.getShortDescription() + " (" + dbProduct.getUnitCollections().size() + ")";
                     setText(text);
                 }
             }
@@ -98,7 +167,8 @@ public class AssignmentController implements Initializable, FxController {
                 if ( empty ) {
                     setText(null);
                 } else {
-                    String text = uc.getNameExtension();
+                    UnitCollection dbCollection = Client.lookup(UniqueUnitAgent.class).findByIdEager(UnitCollection.class, uc.getId());
+                    String text = uc.getNameExtension() + " (" + dbCollection.getUnits().size() + ")";
                     setText(text);
                 }
             }

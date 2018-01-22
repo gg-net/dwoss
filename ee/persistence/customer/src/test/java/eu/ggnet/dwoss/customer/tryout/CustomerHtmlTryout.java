@@ -61,7 +61,15 @@ public class CustomerHtmlTryout extends Application {
         OldCustomer c0 = ConverterUtil.convert(c1, MATCHCODE, defaults);
 
         WebView view = new WebView();
-        view.getEngine().loadContent(Css.toHtml5WithStyle(c0.toHtmlHighDetailed() + "<hr />" + c1.toHtml(MATCHCODE, defaults) + "<hr />" + c2.toHtml()));
+        view.getEngine().loadContent(Css.toHtml5WithStyle(
+                "<h1>OldCustomer.toHtml()</h1>"
+                + c0.toHtmlHighDetailed()
+                + "<hr /><h1>makeOldCustmer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                + c1.toHtml(MATCHCODE, defaults)
+                + "<hr /><h1>makeOldCustmer : Customer.toHtml()</h1>"
+                + c1.toHtml()
+                + "<hr /><h1>makeCustmer : Customer.toHtml()</h1>"
+                + c2.toHtml()));
         primaryStage.setScene(new Scene(new BorderPane(view)));
         primaryStage.sizeToScene();
         primaryStage.show();
