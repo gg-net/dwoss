@@ -63,7 +63,7 @@ public class DossierEmoIT extends ArquillianProjectArchive {
         Dossier dossier = last.getDossier();
         for (int i = 0; i < 20; i++) {
             Document d = new Document(DocumentType.BLOCK, Document.Directive.NONE, new DocumentHistory("JUnit", "JUnit"));
-            d.append(new PositionBuilder().setType(PositionType.COMMENT).setName("JUnit").setDescription("JUnit").createPosition());
+            d.append(new PositionBuilder().type(PositionType.COMMENT).name("JUnit").description("JUnit").build());
             d.setActive(false);
             d.setInvoiceAddress(last.getInvoiceAddress());
             d.setShippingAddress(last.getShippingAddress());

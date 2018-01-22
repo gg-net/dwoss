@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,14 +23,14 @@ import eu.ggnet.dwoss.rules.PositionType;
  * For further information in usage see {@link Position}.
  * <p/>
  * @author pascal.perau
+ * @deprecated Use {@link Position#builder() } and add .amount(1) which was default in position builder.
  */
+@Deprecated
 public class PositionBuilder {
 
     private PositionType type;
 
     private String name;
-
-    private double afterTaxPrice;
 
     private double price;
 
@@ -53,57 +53,53 @@ public class PositionBuilder {
     public PositionBuilder() {
     }
 
-    public PositionBuilder setType(PositionType type) {
+    public PositionBuilder type(PositionType type) {
         this.type = type;
         return this;
     }
 
-    public PositionBuilder setName(String name) {
+    public PositionBuilder name(String name) {
         this.name = name;
         return this;
     }
 
-    public PositionBuilder setAfterTaxPrice(double afterTaxPrice) {
-        this.afterTaxPrice = afterTaxPrice;
-        return this;
-    }
-
-    public PositionBuilder setPrice(double price) {
+    public PositionBuilder price(double price) {
         this.price = price;
         return this;
     }
 
-    public PositionBuilder setAmount(double amount) {
+    public PositionBuilder amount(double amount) {
         this.amount = amount;
         return this;
     }
 
-    public PositionBuilder setTax(double tax) {
+    public PositionBuilder tax(double tax) {
         this.tax = tax;
         return this;
     }
 
-    public PositionBuilder setDescription(String description) {
+    public PositionBuilder description(String description) {
         this.description = description;
         return this;
     }
 
-    public PositionBuilder setBookingAccount(int bookingAccount) {
+    public PositionBuilder bookingAccount(int bookingAccount) {
         this.bookingAccount = bookingAccount;
         return this;
     }
 
-    public PositionBuilder setUniqueUnitId(int uniqueUnitId) {
+    public PositionBuilder uniqueUnitId(int uniqueUnitId) {
         this.uniqueUnitId = uniqueUnitId;
         return this;
     }
 
-    public PositionBuilder setUniqueUnitProductId(long uniqueUnitProductId) {
+    public PositionBuilder uniqueUnitProductId(long uniqueUnitProductId) {
         this.uniqueUnitProductId = uniqueUnitProductId;
         return this;
     }
 
-    public Position createPosition() {
-        return new Position(type, name, afterTaxPrice, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serialNumber);
+    // build
+    public Position build() {
+        return new Position(type, name, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serialNumber);
     }
 }

@@ -16,10 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Ui;
-
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -33,6 +29,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
@@ -96,7 +93,7 @@ public class ServiceViewCaskTryout {
             }
         });
 
-        Ui.swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask()))
+        Ui.swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask(0.10)))
                 .ifPresent(System.out::println);
     }
 

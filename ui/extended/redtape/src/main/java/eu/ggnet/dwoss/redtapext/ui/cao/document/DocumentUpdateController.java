@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
@@ -54,8 +55,6 @@ public class DocumentUpdateController {
 
     private final Document document;
 
-    private Position resultHelperPosition = null; // FIXME: Another workarround. The hole handling of results is not really multithreading able.
-
     public DocumentUpdateController(DocumentUpdateView view, Document model) {
         this.view = view;
         this.document = model;
@@ -77,12 +76,11 @@ public class DocumentUpdateController {
         switch (type) {
             case UNIT:
                 List<Position> result = lookup(UnitOverseer.class)
-                        .createUnitPosition(refurbishId, document.getId()).request(new SwingInteraction(view));
+                        .createUnitPosition(refurbishId, document.getId(), documentTax()).request(new SwingInteraction(view));
                 for (Position p : result) {
                     if ( p.getType() == UNIT ) lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
                 }
                 document.appendAll(result);
-
                 break;
             case SERVICE:
                 createServicePosition();
@@ -90,10 +88,16 @@ public class DocumentUpdateController {
             case PRODUCT_BATCH:
                 SalesProduct pb = createProductBatchPosition(lookup(RedTapeAgent.class).findAll(SalesProduct.class));
                 if ( pb != null ) {
-                    Position p = new PositionBuilder().setType(type).setDescription(pb.getDescription()).
-                            setName(pb.getName()).setUniqueUnitProductId(pb.getUniqueUnitProductId()).createPosition();
-                    p.setPrice((pb.getPrice() == null) ? 0. : pb.getPrice());
-                    p.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(p.getType()).orElse(-1));
+                    Position p = Position.builder()
+                            .amount(1)
+                            .type(type)
+                            .tax(documentTax())
+                            .description(pb.getDescription())
+                            .name(pb.getName())
+                            .uniqueUnitProductId(pb.getUniqueUnitProductId())
+                            .price((pb.getPrice() == null) ? 0. : pb.getPrice())
+                            .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(type).orElse(-1))
+                            .build();
                     document.append(editPosition(p));
                 }
                 break;
@@ -101,7 +105,7 @@ public class DocumentUpdateController {
                 document.append(createCommentPosition());
                 break;
             case SHIPPING_COST:
-                ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition(), documentTax());
                 break;
         }
     }
@@ -119,8 +123,8 @@ public class DocumentUpdateController {
                 .orElse(null);
     }
 
-    public eu.ggnet.dwoss.redtape.entity.Position createCommentPosition() {
-        eu.ggnet.dwoss.redtape.entity.Position p = new PositionBuilder().setType(PositionType.COMMENT).createPosition();
+    public Position createCommentPosition() {
+        Position p = Position.builder().amount(1).type(PositionType.COMMENT).build();
         CommentCreateCask commentView = new CommentCreateCask(p);
         OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Comment hinzufügen", commentView);
         dialog.setLocationRelativeTo(view);
@@ -134,7 +138,7 @@ public class DocumentUpdateController {
 
     public void createServicePosition() {
         document.append(Ui.swing().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
-                .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask()))
+                .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask(documentTax())))
                 .map(Reply::getPayload)
                 .orElse(null));
     }
@@ -225,7 +229,7 @@ public class DocumentUpdateController {
                 return false;
             case JOptionPane.YES_OPTION:
                 if ( document.getDossier().isDispatch() ) {
-                    ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                    ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition(), documentTax());
                 } else {
                     ShippingCostHelper.removeShippingCost(document);
                 }
@@ -233,5 +237,9 @@ public class DocumentUpdateController {
             default:
                 return true;
         }
+    }
+
+    private double documentTax() {
+        return document.hasSingleTax() && !document.getPositions().isEmpty() ? document.getSingleTax() : GlobalConfig.TAX;
     }
 }

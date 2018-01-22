@@ -53,9 +53,9 @@ public class RedTapeStateOperationIT extends ArquillianProjectArchive {
         Document doc1 = dos1.getActiveDocuments(DocumentType.ORDER).get(0);
 
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.COMMENT).setName("OHO").setDescription("Muh").createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.PRODUCT_BATCH).setName("Muuuuh").setDescription("Muhhhhh").setUniqueUnitProductId(1)
-                .setPrice(100).setTax(0.19).setAfterTaxPrice(119).setAmount(1).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.COMMENT).name("OHO").description("Muh").build();
+        Position p2 = new PositionBuilder().type(PositionType.PRODUCT_BATCH).name("Muuuuh").description("Muhhhhh").uniqueUnitProductId(1)
+                .price(100).tax(0.19).amount(1).build();
 
         doc1.append(p1);
         doc1.append(p2);

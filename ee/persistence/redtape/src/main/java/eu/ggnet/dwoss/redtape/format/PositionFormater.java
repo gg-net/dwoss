@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@ import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import eu.ggnet.dwoss.redtape.entity.Position;
-
 import eu.ggnet.dwoss.rules.PositionType;
 
 /**
@@ -128,7 +127,6 @@ public class PositionFormater {
         p.setType(PositionType.UNIT);
         p.setName("Acer Aspire Stein (AA.BBBBB.CCC) SopoNr:12345 SN:AAAABBBBAVAFDADFDASFD");
         p.setPrice(10);
-        p.setAfterTaxPrice(19);
         System.out.println(PositionFormater.toHtmlShort(p, "250px"));
 
         p = new Position();
@@ -137,7 +135,6 @@ public class PositionFormater {
         p.setAmount(1.25);
         p.setDescription("Eine Tolle Beschreibung");
         p.setPrice(10);
-        p.setAfterTaxPrice(19);
         System.out.println(PositionFormater.toHtmlShort(p, "250px"));
 
     }

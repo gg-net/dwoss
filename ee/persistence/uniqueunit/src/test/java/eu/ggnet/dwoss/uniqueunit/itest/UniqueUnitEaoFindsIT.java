@@ -2,6 +2,7 @@ package eu.ggnet.dwoss.uniqueunit.itest;
 
 import java.util.*;
 
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -23,6 +24,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Condition;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
+import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,7 +43,7 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
     private EntityManager em;
 
     @Inject
-    private SearchProvider searchProvider;
+    private Instance<SearchProvider> searchProviders;
 
     /**
      * Multiple tests on find.
@@ -114,8 +116,14 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         assertThat(eao.find("*5*")).as("Find of *5*").contains(unit2, unit3, unit4);
         utx.commit();
 
-        assertThat(searchProvider.estimateMaxResults(new SearchRequest("*5*"))).as("Counting via Searchprovider *5*").isEqualTo(3);
-        assertThat(searchProvider.search(new SearchRequest("*5*"), 0, 1000)).as("Find of *5*").extracting(ShortSearchResult::getKey).
+        SearchProvider search = null;
+        for (Iterator<SearchProvider> iterator = searchProviders.iterator(); iterator.hasNext();) {
+            SearchProvider next = iterator.next();
+            if ( next.getSource() == UNIQUE_UNIT ) search = next;
+        }
+
+        assertThat(search.estimateMaxResults(new SearchRequest("*5*"))).as("Counting via Searchprovider *5*").isEqualTo(3);
+        assertThat(search.search(new SearchRequest("*5*"), 0, 1000)).as("Find of *5*").extracting(ShortSearchResult::getKey).
                 contains(
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit2.getId()),
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit3.getId()),

@@ -146,15 +146,15 @@ public class UnitDestroyerOperation implements UnitDestroyer {
         Document doc = new DossierEmo(redTapeEm)
                 .requestActiveDocumentBlock((int)targetCustomerId, "Blockaddresse KundenId " + targetCustomerId, "Erzeugung durch " + operation, arranger);
         Dossier dos = doc.getDossier();
-        doc.append(new PositionBuilder().setType(PositionType.UNIT)
-                .setBookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
-                .setDescription(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
-                .setName(UniqueUnitFormater.toPositionName(uu))
-                .setUniqueUnitId(uu.getId())
-                .setUniqueUnitProductId(uu.getProduct().getId()).createPosition());
-        doc.append(new PositionBuilder().setType(PositionType.COMMENT)
-                .setBookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
-                .setName(operation).setDescription(reason + " by " + arranger).createPosition());
+        doc.append(Position.builder().type(PositionType.UNIT).amount(1)
+                .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
+                .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
+                .name(UniqueUnitFormater.toPositionName(uu))
+                .uniqueUnitId(uu.getId())
+                .uniqueUnitProductId(uu.getProduct().getId()).build());
+        doc.append(Position.builder().type(PositionType.COMMENT).amount(1)
+                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
+                .name(operation).description(reason + " by " + arranger).build());
         LogicTransaction lt = new LogicTransactionEmo(stockEm).request(dos.getId());
         lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction
         StockTransaction st = stockTransactionEmo.requestDestroyPrepared(stockUnit.getStock().getId(), arranger, reason);

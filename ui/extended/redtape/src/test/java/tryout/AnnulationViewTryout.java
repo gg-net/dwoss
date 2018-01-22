@@ -40,11 +40,11 @@ public class AnnulationViewTryout {
 
         Client.addSampleStub(StockAgent.class, stockStub);
 
-        Position p1 = new PositionBuilder().setName("P1").setPrice(12.).setTax(1.19).createPosition();
-        Position p2 = new PositionBuilder().setName("P2").setPrice(20.).setTax(1.19).createPosition();
-        Position p3 = new PositionBuilder().setName("P3").setPrice(13.24).setTax(1.19).createPosition();
-        Position p4 = new PositionBuilder().setName("P4").setPrice(400.).setTax(1.19).createPosition();
-        Position p5 = new PositionBuilder().setName("P5").setPrice(1234.).setTax(1.19).createPosition();
+        Position p1 = new PositionBuilder().name("P1").price(12.).tax(1.19).build();
+        Position p2 = new PositionBuilder().name("P2").price(20.).tax(1.19).build();
+        Position p3 = new PositionBuilder().name("P3").price(13.24).tax(1.19).build();
+        Position p4 = new PositionBuilder().name("P4").price(400.).tax(1.19).build();
+        Position p5 = new PositionBuilder().name("P5").price(1234.).tax(1.19).build();
 
         List<AfterInvoicePosition> positions = new ArrayList<>();
         positions.add(new AfterInvoicePosition(p1));

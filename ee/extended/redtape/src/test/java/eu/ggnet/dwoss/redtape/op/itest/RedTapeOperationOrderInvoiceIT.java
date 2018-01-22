@@ -164,8 +164,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         assertFalse(doc1.getInvoiceAddress().equals(doc1.getShippingAddress()));
 
         //Test update with document changes
-        Position p8 = new PositionBuilder().setType(PositionType.SERVICE).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Position 8").setDescription("Position from update2").createPosition();
+        Position p8 = new PositionBuilder().type(PositionType.SERVICE).price(50.).tax(1.).name("Position 8").description("Position from update2").build();
         doc1.append(p8);
         doc1.removeAt(6);
 

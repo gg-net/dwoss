@@ -16,27 +16,21 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.saft.core.auth.Guardian;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.dwoss.price.Exporter;
-import eu.ggnet.dwoss.price.Importer;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
-
-import eu.ggnet.saft.core.auth.AccessableAction;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
+import static eu.ggnet.saft.Client.lookup;
 
 /**
  *

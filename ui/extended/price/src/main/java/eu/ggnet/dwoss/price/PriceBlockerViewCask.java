@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,7 @@ import javax.swing.JOptionPane;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.dwoss.util.*;
 
 /**
  * Ui for setting on price fixed.
@@ -74,7 +72,6 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
 
     public static final String PROP_RETAILERPRICE = "retailerPrice";
 
-    /** Creates new form PriceBlockerPanel */
     public PriceBlockerViewCask(String unitName, String unitText, double customerPrice, double retailerPrice) {
         initComponents();
         setCustomerPrice(customerPrice);

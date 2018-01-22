@@ -59,11 +59,11 @@ public class RedTapeAddressOperationIT extends ArquillianProjectArchive {
     }
 
     private void addRandomPositions(Document doc) {
-        Position p1 = new PositionBuilder().setType(PositionType.COMMENT).setName("Comment").setDescription("Comments Description").createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.SERVICE).setName("Service").setPrice(2.).setTax(2.).
-                setAfterTaxPrice(2.2).setAmount(1.).setDescription("Service Description").createPosition();
-        Position p3 = new PositionBuilder().setType(PositionType.SHIPPING_COST).setName("Shipping cost").setDescription("Shipping cost")
-                .setPrice(16.5).setTax(.19).setAfterTaxPrice(16.5 * 1.19).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.COMMENT).name("Comment").description("Comments Description").build();
+        Position p2 = new PositionBuilder().type(PositionType.SERVICE).name("Service").price(2.).tax(2.)
+                .amount(1.).description("Service Description").build();
+        Position p3 = new PositionBuilder().type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost")
+                .price(16.5).tax(.19).build();
 
         doc.append(p1);
         doc.append(p2);

@@ -42,12 +42,12 @@ import static javax.persistence.CascadeType.*;
  * Valid Positions are:
  * <table>
  * <tr><td>Type</td><td>Needed Values</td></tr>
- * <tr><td>Unit</td><td>name, afterTaxPrice, price, amount, tax, description, unitId, document, uniqueUnitProductId;</td></tr>
- * <tr><td>Service</td><td>name, afterTaxPrice, price, amount, tax, description, document;</td></tr>
- * <tr><td>Product_Batch</td><td>name, afterTaxPrice, price, amount, tax, description, document, uniqueUnitProductId;</td></tr>
+ * <tr><td>Unit</td><td>name, price, amount, tax, description, unitId, document, uniqueUnitProductId;</td></tr>
+ * <tr><td>Service</td><td>name, price, amount, tax, description, document;</td></tr>
+ * <tr><td>Product_Batch</td><td>name, price, amount, tax, description, document, uniqueUnitProductId;</td></tr>
  * <tr><td>Comment</td><td>name, description, document;</td></tr>
  * <tr><td>Temporary_Comment</td><td>name, description, document;</td></tr>
- * <tr><td>Transportation_Cost</td><td>name, afterTaxPrice, price, amount, tax, description, document;</td></tr>
+ * <tr><td>Transportation_Cost</td><td>name, price, amount, tax, description, document;</td></tr>
  * </table>
  * <p>
  * @has 1 - 1 Position.Key
@@ -122,9 +122,6 @@ public class Position implements Serializable, Comparable<Position> {
     @Size(min = 1, max = 255, groups = {Default.class, Returns.class, DefaultUi.class, Blocks.class})
     private String name;
 
-    @Deprecated // Will be removed
-    private double afterTaxPrice;
-
     private double price;
 
     private double amount;
@@ -173,10 +170,9 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Builder
-    Position(PositionType type, String name, double afterTaxPrice, double price, double amount, double tax, String description, int bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
+    Position(PositionType type, String name, double price, double amount, double tax, String description, int bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
         this.type = type;
         this.name = name;
-        this.afterTaxPrice = afterTaxPrice;
         this.price = price;
         this.amount = amount;
         this.tax = tax;
@@ -194,7 +190,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @return a copy with document == null
      */
     public Position partialClone() {
-        return new Position(type, name, afterTaxPrice, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
+        return new Position(type, name, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
     }
 
     public int getId() {
@@ -216,11 +212,6 @@ public class Position implements Serializable, Comparable<Position> {
      */
     public double toAfterTaxPrice() {
         return MathUtil.roundedApply(getPrice(), getTax(), 0.01);
-    }
-
-    @Deprecated // be removed
-    public void setAfterTaxPrice(double afterTaxPrice) {
-        this.afterTaxPrice = afterTaxPrice;
     }
 
     public double getPrice() {
@@ -404,25 +395,21 @@ public class Position implements Serializable, Comparable<Position> {
             case UNIT:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( uniqueUnitId == 0 ) violations.add("UniqueUnitId ist nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SERVICE:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( amount <= 0 ) violations.add("Die Menge muss größer als 0 sein.");
                 break;
             case PRODUCT_BATCH:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount < 1 ) violations.add("Die Menge muss größer als 0 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 if ( uniqueUnitProductId == 0 ) violations.add("UniqueUnitProductId ist nicht gesetzt!");
                 break;
             case SHIPPING_COST:
                 if ( price == 0 ) violations.add("Preis ist nicht gesetzt!");
                 if ( amount != 1 ) violations.add("Die Menge darf nicht kleiner oder größer als 1 sein.");
-                if ( tax == 0 ) violations.add("Mwst nicht gesetzt!");
                 break;
             case COMMENT:
                 if ( price != 0 ) violations.add("Preis muss 0 sein, ist aber " + price);

@@ -1,14 +1,12 @@
 package eu.ggnet.dwoss.redtape.op.itest.support;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
 import java.util.Random;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
@@ -35,7 +33,6 @@ public class NaivBuilderUtil {
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(uu.getPrice(CUSTOMER))
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(uu.getPrice(CUSTOMER), GlobalConfig.TAX, 0.))
                 .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
                 .description(uu.getProduct().getDescription())
                 .bookingAccount(-1)
@@ -67,7 +64,6 @@ public class NaivBuilderUtil {
                 .amount(amount)
                 .price(price)
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                 .description("Service Description")
                 .build();
     }
@@ -89,7 +85,6 @@ public class NaivBuilderUtil {
                 .amount(amount)
                 .price(price)
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                 .description(product.getDescription())
                 .name(product.getName())
                 .build();
@@ -110,7 +105,6 @@ public class NaivBuilderUtil {
                 .amount(1)
                 .price(price)
                 .tax(GlobalConfig.TAX)
-                .afterTaxPrice(MathUtil.roundedApply(price, GlobalConfig.TAX, 0.))
                 .description("Shipping costs")
                 .name("Shipping costs")
                 .build();

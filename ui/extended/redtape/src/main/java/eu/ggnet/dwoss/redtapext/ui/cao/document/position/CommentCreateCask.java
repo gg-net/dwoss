@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,23 +17,16 @@
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-
 import eu.ggnet.dwoss.rules.PositionType;
-
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 
@@ -95,9 +88,9 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     public CommentCreateCask(Position position) {
         initComponents();
         if ( position != null ) setPosition(position);
-        else setPosition(new PositionBuilder().setType(PositionType.COMMENT)
-                    .setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
-                    .createPosition());
+        else setPosition(new PositionBuilder().type(PositionType.COMMENT)
+                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
+                    .build());
         positionTamplateList.setCellRenderer(new Tuple2PositionRenderer());
         positionTamplateList.setListData(templates.toArray());
     }
@@ -223,7 +216,7 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     // End of variables declaration//GEN-END:variables
 
     public static void main(String[] args) {
-        Position pos = new PositionBuilder().createPosition();
+        Position pos = new PositionBuilder().build();
         pos.setName("blarg");
         pos.setDescription("blubbadiblub");
         pos.setBookingAccount(-1);

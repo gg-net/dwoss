@@ -32,17 +32,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.MathUtil;
-import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
@@ -55,17 +54,9 @@ import static eu.ggnet.saft.Client.lookup;
  */
 public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<Position>, ResultProducer<Position>, VetoableOnOk {
 
-    private class CurrencyConverter extends Converter<Double, String> {
+    public class CurrencyConverter extends Converter<Double, String> {
 
-        private double taxed;
-
-        public CurrencyConverter() {
-            this(0);
-        }
-
-        public CurrencyConverter(double tax) {
-            this.taxed = 1 + tax;
-        }
+        private double taxed = 0; // 19% are 1.19
 
         @Override
         public String convertForward(Double s) {
@@ -86,9 +77,9 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
     private final static DecimalFormat TAX = new DecimalFormat("##0 %");
 
-    private Converter<Double, String> stringConverter = new CurrencyConverter();
+    private CurrencyConverter stringConverter = new CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.TAX);
+    private CurrencyConverter taxedConverter = new CurrencyConverter();
 
     private Position position;
 
@@ -150,6 +141,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
         this.position = position;
         this.positionTypeField.setText(position.getType() != null ? position.getType().getName() : "Nicht angegeben");
+        this.taxedConverter.taxed = position.getTax() + 1;
         this.taxField.setText(TAX.format(position.getTax()));
         this.setPositionName(position.getName());
         this.setPrice(position.getPrice());
@@ -346,11 +338,9 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         position.setDescription(description);
         position.setName(positionName);
         position.setAmount(amount);
-        position.setTax(GlobalConfig.TAX);
         position.setBookingAccount(bookingAccount);
         try {
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
-            position.setAfterTaxPrice(Double.valueOf(afterTaxPriceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
             UiAlert.show(this, "Preisformat ist nicht lesbar");
         }
@@ -443,6 +433,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         jLabel7.setText("Bruttopreis:");
 
         binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${price}"), afterTaxPriceField, BeanProperty.create("text"), "afterTaxPriceBinding");
+        binding.setConverter(getTaxedConverter());
         bindingGroup.addBinding(binding);
 
         jLabel8.setText("Beschreibung:");
@@ -476,7 +467,8 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${amount * price  }"), priceSumField, BeanProperty.create("text"), "priceSumBinding");
         bindingGroup.addBinding(binding);
 
-        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${amount *price }"), afterTaxSumField, BeanProperty.create("text"), "afterTaxSumBinding");
+        binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${amount * price }"), afterTaxSumField, BeanProperty.create("text"), "afterTaxSumBinding");
+        binding.setConverter(getTaxedConverter());
         bindingGroup.addBinding(binding);
 
         jSeparator1.setOrientation(SwingConstants.VERTICAL);

@@ -66,7 +66,7 @@ public class DocumentEqualsTest {
         doc2.add(Document.Flag.CUSTOMER_BRIEFED);
         assertTrue("The following Documents should allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
 
-        doc2.append(new PositionBuilder().setType(PositionType.COMMENT).createPosition());
+        doc2.append(new PositionBuilder().type(PositionType.COMMENT).build());
         assertTrue("The following Documents should allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
     }
 
@@ -76,7 +76,7 @@ public class DocumentEqualsTest {
         Document doc2 = doc1.partialClone();
         doc2.setDossier(doc1.getDossier());
 
-        doc2.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
+        doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
         assertFalse("The following Documents should not allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
     }
 
@@ -141,9 +141,9 @@ public class DocumentEqualsTest {
         doc1.add(Document.Flag.CUSTOMER_BRIEFED);
         doc1.setClosed(true);
         dos.add(doc1);
-        doc1.append(new PositionBuilder().setType(PositionType.UNIT).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.PRODUCT_BATCH).createPosition());
-        doc1.append(new PositionBuilder().setType(PositionType.COMMENT).createPosition());
+        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc1.append(new PositionBuilder().type(PositionType.PRODUCT_BATCH).build());
+        doc1.append(new PositionBuilder().type(PositionType.COMMENT).build());
         return doc1;
     }
 

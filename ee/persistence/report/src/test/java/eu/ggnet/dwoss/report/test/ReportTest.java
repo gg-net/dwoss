@@ -1,13 +1,12 @@
 package eu.ggnet.dwoss.report.test;
 
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-
 import java.text.ParseException;
 import java.util.*;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.DateFormats;
@@ -46,13 +45,13 @@ public class ReportTest {
         ReportLine unitAfter = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1)
-                .price(100).afterTaxPrice(119).tax(0.19).mfgDate(_2009_01_01)
+                .price(100).tax(0.19).mfgDate(_2009_01_01)
                 .build();
 
         ReportLine unitBefore = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("124").amount(1)
-                .price(100).afterTaxPrice(119).tax(0.19).mfgDate(_2011_09_01)
+                .price(100).tax(0.19).mfgDate(_2011_09_01)
                 .build();
 
         report.add(unitBefore);
@@ -75,7 +74,7 @@ public class ReportTest {
                 new Date(Calendar.getInstance().getTimeInMillis() - 100000), new Date());
 
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
-                DocumentType.INVOICE, 2, 1, 0.19, 100, 119, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
         report.add(line1);
 
@@ -84,14 +83,14 @@ public class ReportTest {
         assertTrue(report.filterInfos().isEmpty());
 
         ReportLine line2 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
-                DocumentType.COMPLAINT, 2, 1, 0.19, 0, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.COMPLAINT, 2, 1, 0.19, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setWorkflowStatus(ReportLine.WorkflowStatus.UNDER_PROGRESS);
 
         line1.add(line2);
         report.add(line2);
 
         ReportLine line3 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
-                DocumentType.COMPLAINT, 2, 1, 0.19, 0, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
+                DocumentType.COMPLAINT, 2, 1, 0.19, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setWorkflowStatus(ReportLine.WorkflowStatus.DISCHARGED);
 
         line1.add(line3);
@@ -110,7 +109,7 @@ public class ReportTest {
 
         ReportLine line1 = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).afterTaxPrice(119).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
 
         report.add(line1);
@@ -118,7 +117,7 @@ public class ReportTest {
         // Creditmemo unitAnnex.
         ReportLine line2 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).afterTaxPrice(-19).tax(0.19)
+                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
 
         line1.add(line2);
@@ -132,7 +131,7 @@ public class ReportTest {
         // Now add A Unit.
         ReportLine line3 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).afterTaxPrice(-100).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
 
         line1.add(line3);
@@ -159,7 +158,7 @@ public class ReportTest {
 
         ReportLine line1 = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).afterTaxPrice(119).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
 
         report1.add(line1);
@@ -167,7 +166,7 @@ public class ReportTest {
         // Creditmemo unitAnnex.
         ReportLine line2 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).afterTaxPrice(-19).tax(0.19)
+                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
 
         line1.add(line2);
@@ -181,7 +180,7 @@ public class ReportTest {
         // Now add A Unit.
         ReportLine line3 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).afterTaxPrice(-100).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
 
         line1.add(line3);
@@ -205,7 +204,7 @@ public class ReportTest {
 
         ReportLine line1 = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).afterTaxPrice(119).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
 
         report1.add(line1);
@@ -213,7 +212,7 @@ public class ReportTest {
         // Creditmemo unitAnnex.
         ReportLine line2 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).afterTaxPrice(-19).tax(0.19)
+                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
 
         line1.add(line2);
@@ -222,7 +221,7 @@ public class ReportTest {
         // Now add A Unit.
         ReportLine line3 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).afterTaxPrice(-100).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
 
         line1.add(line3);
@@ -265,7 +264,7 @@ public class ReportTest {
 
         ReportLine line1 = ReportLine.builder()
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).afterTaxPrice(119).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
 
         report1.add(line1);
@@ -273,7 +272,7 @@ public class ReportTest {
         // Creditmemo unitAnnex.
         ReportLine line2 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).afterTaxPrice(-19).tax(0.19)
+                .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
 
         line1.add(line2);
@@ -282,7 +281,7 @@ public class ReportTest {
         // Now add A Unit.
         ReportLine line3 = ReportLine.builder()
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
-                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).afterTaxPrice(-100).tax(0.19)
+                .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
 
         line1.add(line3);

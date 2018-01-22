@@ -55,37 +55,18 @@ public class RedTapeSamples {
         dossier.setIdentifier("DosId");
         document.setType(DocumentType.ORDER);
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(420.17).
-                setTax(0.19).setAfterTaxPrice(500.).setName("Packard Bell OneTwo S A4146 GE | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("AMD E Series E-300 (1.3 Ghz), Memory (in MB): 4096, AMD Radeon HD 6000 Series 6310, Festplatte(n): 500GB HDD, Optische(s) Laufwerk(e): DVD Super Multi, Display: 20.1\" (51,05 cm), Matt, Full HD (1920x1080), 16:9, Farbe: schwarz-silber, Ausstattung: Webcam, Kartenleser, Windows 7 Home Premium 64").createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(933.61).
-                setTax(0.19).setAfterTaxPrice(1111).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").createPosition();
-        Position p3 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(0.19).setAfterTaxPrice(50.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(LOREM_IPSUM).createPosition();
-        Position p4 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(0.19).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
-        Position p5 = new PositionBuilder().setType(PositionType.PRODUCT_BATCH).setPrice(50.).
-                setTax(0.19).setAfterTaxPrice(1.).setName("Product Batch").
-                setDescription("Ein Menge an Info").createPosition();
-        Position p6 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(100000.).
-                setTax(0.19).setAfterTaxPrice(100000.).setName("Acer Aspire Teuer | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an teure Info").createPosition();
-        Position p7 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.25).
-                setTax(0.19).setAfterTaxPrice(50.25).setName("Acer Aspire Ungrade | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an ungrader Info").createPosition();
-        Position p8 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(0.19).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
-        Position p9 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(0.19).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
-        Position p10 = new PositionBuilder().setType(PositionType.COMMENT).setName("Comment").setDescription("Comments Description").createPosition();
-        Position p11 = new PositionBuilder().setType(PositionType.SERVICE).setName("Service").setPrice(2.).setTax(2.).
-                setAfterTaxPrice(2.2).setAmount(1.).setDescription("Service Description").createPosition();
-        Position p12 = new PositionBuilder().setType(PositionType.SHIPPING_COST).setName("Shipping cost").setDescription("Shipping cost").setPrice(16.5).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(420.17).tax(0.19).name("Packard Bell OneTwo S A4146 GE | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("AMD E Series E-300 (1.3 Ghz), Memory (in MB): 4096, AMD Radeon HD 6000 Series 6310, Festplatte(n): 500GB HDD, Optische(s) Laufwerk(e): DVD Super Multi, Display: 20.1\" (51,05 cm), Matt, Full HD (1920x1080), 16:9, Farbe: schwarz-silber, Ausstattung: Webcam, Kartenleser, Windows 7 Home Premium 64").build();
+        Position p2 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(933.61).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").build();
+        Position p3 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
+        Position p4 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
+        Position p5 = new PositionBuilder().type(PositionType.PRODUCT_BATCH).price(50.).tax(0.19).name("Product Batch").description("Ein Menge an Info").build();
+        Position p6 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(100000.).tax(0.19).name("Acer Aspire Teuer | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an teure Info").build();
+        Position p7 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.25).tax(0.19).name("Acer Aspire Ungrade | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an ungrader Info").build();
+        Position p8 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
+        Position p9 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
+        Position p10 = new PositionBuilder().type(PositionType.COMMENT).name("Comment").description("Comments Description").build();
+        Position p11 = new PositionBuilder().type(PositionType.SERVICE).name("Service").price(2.).tax(2.).amount(1.).description("Service Description").build();
+        Position p12 = new PositionBuilder().type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost").price(16.5).build();
 
         document.append(p1);
         document.append(p2);
@@ -118,9 +99,7 @@ public class RedTapeSamples {
         dossier.setIdentifier("DosId");
         document.setType(DocumentType.ORDER);
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
         document.append(p1);
         return document.getPositions().values();
     }
@@ -141,12 +120,8 @@ public class RedTapeSamples {
         dossier.setIdentifier("DosId");
         document.setType(DocumentType.ORDER);
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription("Ein Menge an Info").createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
+        Position p2 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
         document.append(p1);
         document.append(p2);
         return document.getPositions().values();
@@ -168,9 +143,7 @@ public class RedTapeSamples {
         dossier.setIdentifier("DosId");
         document.setType(DocumentType.ORDER);
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(LOREM_IPSUM).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
         document.append(p1);
         return document.getPositions().values();
     }
@@ -191,12 +164,8 @@ public class RedTapeSamples {
         dossier.setIdentifier("DosId");
         document.setType(DocumentType.ORDER);
         //Create Positions
-        Position p1 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(LOREM_IPSUM).createPosition();
-        Position p2 = new PositionBuilder().setType(PositionType.UNIT).setUniqueUnitId(1).setPrice(50.).
-                setTax(1.).setAfterTaxPrice(1.).setName("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").
-                setDescription(LOREM_IPSUM).createPosition();
+        Position p1 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
+        Position p2 = new PositionBuilder().type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(1.).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
         document.append(p1);
         document.append(p2);
         return document.getPositions().values();
