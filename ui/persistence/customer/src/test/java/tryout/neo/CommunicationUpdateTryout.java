@@ -35,9 +35,6 @@ import tryout.stub.CustomerAgentStub;
 public class CommunicationUpdateTryout {
 
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-
         CustomerGenerator gen = new CustomerGenerator();
         Company company = gen.makeCompany();
         Communication communication = company.getCommunications().get(0);
@@ -48,7 +45,7 @@ public class CommunicationUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class);
+                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(System.out::println);;
             });
         });
 

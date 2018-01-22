@@ -52,16 +52,15 @@
             <children>
                 <Label text="Nameserweiterung:" GridPane.rowIndex="1" GridPane.valignment="TOP" />
                 <ChoiceBox fx:id="salesChannel" maxWidth="1.7976931348623157E308" minWidth="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                <TextField fx:id="name" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                <TextField fx:id="nameExtension" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets />
                     </GridPane.margin>
                 </TextField>
                 <Label text="Verkaufskanal:" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-                <TextArea fx:id="description" promptText="Erweiterung" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="4" />
-                <Label text="Produkt:" />
-                <Label fx:id="producatnamefix" text="Produktname" GridPane.columnIndex="1" />
-                <TextField fx:id="partNo" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+                <TextArea fx:id="descriptionExtension" promptText="Erweiterung" wrapText="true" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.rowSpan="4" />
+                <Label text="Geräte Sammlungen Editieren" GridPane.columnSpan="2" />
+                <TextField fx:id="partNoExtension" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                 <Label alignment="TOP_LEFT" contentDisplay="TOP" prefHeight="37.0" prefWidth="120.0" text="Herrsteller Nummer Erweiterung:" wrapText="true" GridPane.rowIndex="3" GridPane.valignment="TOP" />
                 <Label alignment="TOP_LEFT" text="Beschreibung Erweiterung:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                 <ListView fx:id="listViewPrices" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.rowSpan="4" />
