@@ -38,6 +38,9 @@ public class CustomerSearchTryout {
         UiCore.startSwing(() -> new JLabel("Kundensuche"));
 
         Ui.fxml().show(CustomerSearchController.class);
+        
+        
+        
     }
 
 }

@@ -33,9 +33,7 @@ import tryout.stub.CustomerAgentStub;
 public class CustomerEnhanceTryout {
 
     public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
-        
+       
         CustomerGenerator gen = new CustomerGenerator();
         Customer c = gen.makeCustomer();
 
@@ -45,7 +43,7 @@ public class CustomerEnhanceTryout {
         JButton run = new JButton("OpenUi");      
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> c, CustomerEnhanceController.class);
+                Ui.fxml().eval(() -> c, CustomerEnhanceController.class).ifPresent(System.out::println);;
             });
         });
 
