@@ -24,6 +24,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -91,9 +92,13 @@ public class CustomerGenerator {
             }
             c.add(com);
         }
-        if ( !prefered ) c.getContacts().iterator().next().setPrefered(true);
+        if ( !prefered ) {
+            c.getContacts().iterator().next().setPrefered(true);
+        }
         c.add(makeMandatorMetadata());
-        if ( R.nextBoolean() ) c.add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
+        if ( R.nextBoolean() ) {
+            c.add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
+        }
         c.setComment("Date ist eine Kommentar zum Kunden");
         return c;
     }
@@ -113,6 +118,10 @@ public class CustomerGenerator {
         }
         while (R.nextBoolean()) {
             c.add(makeAddress());
+            c.add(makeCommunication());
+        }
+        if ( c.getAddresses().isEmpty() || c.getCommunications().isEmpty() ) {
+            c.add(makeContact());
         }
         return c;
     }
@@ -144,9 +153,9 @@ public class CustomerGenerator {
         c.setLastName(n.getLast());
         c.setSex(n.getGender().ordinal() == 1 ? MALE : FEMALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        while (R.nextBoolean()) {
+//        while (R.nextBoolean()) {
             c.add(makeCommunication());
-        }
+//        }
         c.add(makeAddress());
         while (R.nextInt() > 70) {
             c.add(makeAddress());
@@ -211,6 +220,12 @@ public class CustomerGenerator {
         return c;
     }
 
+
+    /**
+     * Generates a non persisted {@link MandatorMetadata}.
+     * <p>
+     * @return a generated {@link MandatorMetadata}.
+     */
     private MandatorMetadata makeMandatorMetadata() {
         MandatorMetadata m = new MandatorMetadata();
         m.setMandatorMatchcode(RandomStringUtils.randomAlphanumeric(4));
