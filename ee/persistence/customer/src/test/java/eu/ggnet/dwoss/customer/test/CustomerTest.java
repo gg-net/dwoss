@@ -22,17 +22,24 @@ public class CustomerTest {
 
     private Contact contact;
 
+    private Address address;
+
+    private Communication makeCommunication() {
+        Communication communication = new Communication();
+        communication.setType(Communication.Type.PHONE);
+        communication.setIdentifier("01545452221");
+
+        return communication;
+    }
+
     @Before
     public void executedBeforeEach() {
         customer = gen.makeCustomer();
         company = gen.makeCompany();
         contact = gen.makeContact();
+        address = gen.makeAddress();
 
         customer.getCompanies().clear();
-        customer.getContacts().clear();
-
-        company.getCommunications().add(makeCommunication());
-        contact.getCommunications().add(makeCommunication());
     }
 
     @Test
@@ -43,28 +50,40 @@ public class CustomerTest {
     @Test
     public void testIsBussines() {
         customer.add(company);
+        company.add(makeCommunication());
+        company.add(address);
         assertThat(customer.isBussines()).as("Customer is a Bussines Customer").isTrue();
     }
 
     @Test
     public void testIsConsumer() {
         customer.add(contact);
+        contact.add(makeCommunication());
+        contact.add(address);
         assertThat(customer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
     }
 
     //this test are commentout, because CustomerGenerator not allways generate EMAIL, PHONE OR MOBILE for Communication, this is needed for the SimpleCustomer
     @Test
-    public void testIsSimplerBussniesCustomer() {
-//        customer.add(company);
-//        assertThat(customer.isBussines()).as("Customer is a BussinesCustomer").isTrue();
-//        assertThat(customer.isSimple()).as("Bussnis Customer is possible convert to SimpleCustomer").isTrue();
+    public void testIsSimplerForBussniesCustomer() {
+        company.getCommunications().clear();
+        company.add(makeCommunication());
+        company.add(address);
+        customer.add(company);
+
+        assertThat(customer.isBussines()).as("Customer is a BussinesCustomer").isTrue();
+        assertThat(customer.isSimple()).as("Bussnis Customer is possible convert to SimpleCustomer").isTrue();
     }
 
     @Test
-    public void testIsSimplerConsumerCustomer() {
-//        customer.add(contact);
-//        assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
-//        assertThat(customer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
+    public void testIsSimplerForConsumerCustomer() {
+        contact.getCommunications().clear();
+        contact.add(makeCommunication());
+        contact.add(address);
+        customer.add(contact);
+
+        assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
+        assertThat(customer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
     }
 
     @Test
@@ -72,12 +91,33 @@ public class CustomerTest {
         assertThat(customer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
     }
 
-    private Communication makeCommunication() {
-        Communication communication = new Communication();
-        communication.setType(Communication.Type.PHONE);
-        communication.setIdentifier("01545452221");
+    @Test
+    public void testIsVaildForConsumerCustomer() {
+        assertThat(customer.isVaild()).as("Consumer Customer is vaild").isTrue();
+    }
 
-        return communication;
+    @Test
+    public void testIsVaildForBussniesCustomer() {
+        company.add(address);
+        company.add(makeCommunication());
+        customer.add(company);
+        assertThat(customer.isVaild()).as("Bussnis Customer is vaild").isTrue();
+
+    }
+
+    @Test
+    public void testIsVaildForANoneValidConsumerCustomer() {
+        //make a non-valid Customer without Contacts
+        customer.getContacts().clear();
+        assertThat(customer.isVaild()).as("Consumer Customer is not vaild").isFalse();
+    }
+
+    @Test
+    public void testIsVaildForANoneValidBussniesCustomer() {
+        this.customer.getContacts().clear();
+        this.customer.getCompanies().clear();
+
+        assertThat(this.customer.isVaild()).as("Bussnis Nor a Consumer Customer").isFalse();
     }
 
 }

@@ -113,10 +113,7 @@ public class CustomerGenerator {
         Company c = new Company();
         c.setLedger(R.nextInt(1000) + 1);
         c.setName(GEN.makeCompanyName());
-        while (R.nextBoolean()) {
-            c.add(makeCommunication());
-        }
-        while (R.nextBoolean()) {
+        if(R.nextBoolean()) {
             c.add(makeAddress());
             c.add(makeCommunication());
         }
@@ -133,11 +130,11 @@ public class CustomerGenerator {
      * @return the generated instances.
      */
     public List<Company> makeCompanies(int amount) {
-        List<Company> contacts = new ArrayList<>();
+        List<Company> company = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            contacts.add(makeCompany());
+            company.add(makeCompany());
         }
-        return contacts;
+        return company;
     }
 
     /**
@@ -153,10 +150,9 @@ public class CustomerGenerator {
         c.setLastName(n.getLast());
         c.setSex(n.getGender().ordinal() == 1 ? MALE : FEMALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-//        while (R.nextBoolean()) {
-            c.add(makeCommunication());
-//        }
+        c.add(makeCommunication());
         c.add(makeAddress());
+        
         while (R.nextInt() > 70) {
             c.add(makeAddress());
         }
