@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,15 @@ import java.io.Serializable;
 import java.util.*;
 
 import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.TaxType;
 
 import lombok.Value;
 
 /**
+ * PostLedger (Fibu Buchungskonto) engine.
  *
- * @author Bastian Venz <bastian.venz at gg-net.de>
+ * @author Bastian Venz
+ * @author Oliver Guenther
  */
 @Value
 public class PostLedger implements Serializable {
@@ -57,5 +60,17 @@ public class PostLedger implements Serializable {
     public Optional<List<Integer>> getPossible(PositionType type) {
         return Optional.ofNullable(ledgerCustomers.get(type)).map(lv -> lv.getPossibleLedgersIds());
     }
+
+    /*
+    Scenarien:
+    1. Default -> bassiert nur auf position type
+    2. Reverse Charge -> passiert durch externen eingriff. (Oder aufgrund der Geräte vieleicht irgendwan) -> taxType
+    3. östereich, dhl -> kid, country of kid, extra eingriff -> taxType, customerId)
+
+     */
+    public Optional<Ledger> get(PositionType type, TaxType taxType, long customerId) {
+        return null;
+    }
+
 
 }

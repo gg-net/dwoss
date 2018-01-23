@@ -335,12 +335,16 @@ public class Customer implements Serializable {
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
 
+    // TODO: Docu
+    // FIXME: Make this work.
     public boolean isSimple() {
+//        return getSimpleViolationMessage() == null;
+// Following Code will be removed in the future.
         boolean vaildConsumer = false;
-        if ( !isVaild() ) {
-            return false;
-        }
+        if ( !isVaild() ) return false;
         if ( isConsumer() ) {
+            if ( contacts.size() > 1 ) return false;
+
             for (Contact contact : contacts) {
                 if ( contact.getCommunications().isEmpty() ) {
                     continue;
@@ -355,7 +359,6 @@ public class Customer implements Serializable {
                 }
                 //skipt this for loop, too.
                 if ( vaildConsumer ) {
-                    setViolationMessage("Contact have an Address and a Communication with the right Communication Types");
                     break;
                 }
             }
@@ -377,7 +380,6 @@ public class Customer implements Serializable {
                     }
                     //skipt to the end
                     if ( vaildConsumer ) {
-                        setViolationMessage("Contact have an Address and a Communication with the right Communication Types");
                         return vaildConsumer;
                     }
                 }
@@ -392,7 +394,6 @@ public class Customer implements Serializable {
                             .findAny().isPresent();
                 }
             }
-            setViolationMessage("Company have a Contact with an Address and a Communication with the right Communication Types");
             return vaildConsumer;
         }
 
@@ -407,63 +408,51 @@ public class Customer implements Serializable {
     }
 
     /**
-     * Vailde a Customer
+     * Validtes a customer.
+     * Rules are:
+     * <ul>
+     * <li>either a contact or a companie is set, but never both</li>
+     * <li>At least one contact has a address</li>
+     * </ul>
      *
      * @return true for a Vaild Customer
      */
     public boolean isVaild() {
-        boolean businessVerified = false;
-
-        //a Consumer Customer do not have a Company
-        if ( isConsumer() && companies.isEmpty() ) {
-            //a Consumer Customer need to have one Contact with Addresse and a Communication
-            return contacts.stream().filter(c -> {
-                return (!c.getAddresses().isEmpty() && !c.getCommunications().isEmpty());
-            }).findAny().isPresent();
-        }
-
-        if ( isBussines() ) {
-            //a Bussines Customer can have a Contact or a Contact at a Company
-            for (Company company : companies) {
-//TODO is a Addresse AND a Communication for every copamny a must have.
-                if ( !company.getAddresses().isEmpty() && !company.getCommunications().isEmpty() ) {
-                    businessVerified = true;
-                    setViolationMessage("Company have an Address and a Communication");
-                    break;
-                }
-                //the Company of this Bussnis Customer have no Address and Communications nor a Contact
-                if ( company.getAddresses().isEmpty() || company.getCommunications().isEmpty() ) {
-                    if ( !company.getContacts().isEmpty() ) {
-                        businessVerified = company.getContacts()
-                                .stream()
-                                .filter(c -> {
-                                    return (!c.getAddresses().isEmpty() && !c.getCommunications().isEmpty());
-                                })
-                                .findAny().isPresent();
-
-                        if ( businessVerified ) {
-                            setViolationMessage("Company have a Contact with an Address and a Communication");
-                            break;
-                        }
-                    }else{
-                        setViolationMessage("Company do not have an Address and a Communication nor Contact with an Address and a Communication");
-                        return false;
-                    }
-
-                }
-
-            }
-        }
-        //an Addresse and a Communication is found
-        return businessVerified;
+        return getViolationMessage() == null;
     }
 
-    //TODO the right palce?!?
+    /**
+     * Returns null, if the customer is simple otherwise a string, why the customer is not simple.
+     *
+     * @return a string why the customer is not simple or null.
+     */
+    public String getSimpleViolationMessage() {
+        if ( !isVaild() ) return getViolationMessage();
+        if ( isConsumer() ) {
+            if ( contacts.size() > 1 ) return "More than one contact";
+            Contact contact = contacts.get(0);
+            if ( contact.getAddresses().size() > 1 ) return "Contact has more than one address";
+
+            // Todo, more to come
+        }
+        // Todo even more to come.
+        return null;
+    }
+
     // The null annotation can only be activated after the next big release, as the customers in the database are all invalid.
     // @Null
-    @Getter
-    @Setter
-    private String ViolationMessage = null;
+    public String getViolationMessage() {
+        if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
+        if ( isConsumer() ) {
+            if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() ) return "Consumer: No Address on any Contact";
+            if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
+            // More to come
+        }
+        if ( isBussines() ) {
+            // Much more to come
+        }
+        return null;
+    }
 
     public String toHtml() {
         return toHtml(
