@@ -5,9 +5,27 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.rules.TradeName;
+import java.net.URL;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.NumberStringConverter;
+
+import org.apache.commons.lang3.StringUtils;
+
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.dto.ProductDto;
@@ -18,32 +36,6 @@ import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
-import java.net.URL;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.NumberStringConverter;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * FXML Controller class for ressources/ProductEditorView.fxml This UI is an
@@ -59,8 +51,10 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 
     @FXML
     private TextField partNoTextField;
+
     @FXML
     private TextField gtinTextField;
+
     @FXML
     private TextField imageIdTextField;
 
@@ -69,39 +63,55 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 
     @FXML
     private TextField nameTextArea;
+
     @FXML
     private ComboBox<SalesChannel> salesChannelComboBox;
+
     @FXML
     private ComboBox<ProductGroup> productGroupComboBox;
+
     @FXML
     private TextArea descriptionTextArea;
+
     @FXML
     private TableView<ProductFx.Prices> priceTable;
+
     @FXML
     private TableView<ProductFx.AdditionalPartNo> additionalPartNoTable;
+
     @FXML
     private Button submitButton;
+
     @FXML
     private Button exitButton;
+
     @FXML
     private ComboBox<PriceType> priceTableComboBox;
+
     @FXML
     private TextField priceTableTextField;
+
     @FXML
     private Button priceTableSubmitButton;
+
     @FXML
     private ComboBox<TradeName> additionalPartNoTableComboBox;
+
     @FXML
     private Button additionalPartNoTableSubmitButton;
 
     @FXML
     private DatePicker eolDatePicker;
+
     @FXML
     private TableColumn<AdditionalPartNo, TradeName> tradeNameColumn;
+
     @FXML
     private TableColumn<AdditionalPartNo, String> partNoColumn;
+
     @FXML
     private TableColumn<Prices, PriceType> priceTypeColumn;
+
     @FXML
     private TableColumn<Prices, Double> priceDoubleColumn;
 
@@ -116,8 +126,7 @@ public class ProductEditorController implements Initializable, Consumer<Product>
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
+    public void initialize(URL url, ResourceBundle rb) {
         fillTableComboBoxes();
 
         additionalPartNoTable.setItems(pfx.getAdditionalPartNos());
@@ -132,9 +141,8 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 
         partNoColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AdditionalPartNo, String>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<AdditionalPartNo, String> e)
-            {
-                ((AdditionalPartNo) e.getTableView().getItems().get(e.getTablePosition().getRow())).setPartNo(e.getNewValue());
+            public void handle(TableColumn.CellEditEvent<AdditionalPartNo, String> e) {
+                ((AdditionalPartNo)e.getTableView().getItems().get(e.getTablePosition().getRow())).setPartNo(e.getNewValue());
             }
         });
         partNoColumn.setEditable(true);
@@ -148,11 +156,11 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         priceDoubleColumn.setEditable(true);
         priceDoubleColumn.setCellFactory(
                 TextFieldTableCell.<Prices, Double>forTableColumn(new MyDoubleStringConverter()));
-        priceDoubleColumn.setOnEditCommit(event ->
-        {
+        priceDoubleColumn.setOnEditCommit(event
+                -> {
             final Double value = event.getNewValue() != null ? event.getNewValue() : event.getOldValue();
 
-            ((Prices) event.getTableView().getItems().get(event.getTablePosition().getRow())).setPrice(value);
+            ((Prices)event.getTableView().getItems().get(event.getTablePosition().getRow())).setPrice(value);
 
             event.getTableView().refresh();
         });
@@ -184,30 +192,26 @@ public class ProductEditorController implements Initializable, Consumer<Product>
     }
 
     @FXML
-    private void handleSubmitButtonAction(ActionEvent event)
-    {
+    private void handleSubmitButtonAction(ActionEvent event) {
 
         ProductDto p = new ProductDto();
         p.setId(pfx.getId());
         p.setOptLock(pfx.getOptLock());
 
-        if (pfx.getName().length() == 0)
-        {
+        if ( pfx.getName().length() == 0 ) {
             UiAlert.title("Fehler!").message("Speichern des Produkts nicht möglich.")
                     .nl("Es ist kein Name angegeben.")
                     .parent(submitButton).show(UiAlertBuilder.Type.ERROR);
             return;
         }
-        if (StringUtils.isBlank(pfx.getDescription()))
-        {
+        if ( StringUtils.isBlank(pfx.getDescription()) ) {
             UiAlert.title("Fehler!").message("Speichern des Produkts nicht möglich.")
                     .nl("Es ist keine Beschreibung angegeben.")
                     .parent(submitButton).show(UiAlertBuilder.Type.ERROR);
             return;
         }
 
-        if (StringUtils.isBlank(pfx.getPartNo()))
-        {
+        if ( StringUtils.isBlank(pfx.getPartNo()) ) {
             UiAlert.title("Fehler!").message("Speichern des Produkts nicht möglich.")
                     .nl("Es ist keine Artikelnummer gesetzt.")
                     .parent(submitButton).show(UiAlertBuilder.Type.ERROR);
@@ -216,11 +220,9 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 
         p.setName(pfx.getName());
         p.setDescription(pfx.getDescription());
-        if (pfx.getEol() == null)
-        {
+        if ( pfx.getEol() == null ) {
             p.setEol(null);
-        } else
-        {
+        } else {
             p.setEol(Date.from(pfx.getEol().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         }
         p.setGroup(pfx.getProductGroup());
@@ -230,8 +232,8 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         p.setTradeName(pfx.getTradeName());
         p.setSalesChannel(pfx.getSalesChannel());
         Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
-        pfx.getPrices().forEach((price) ->
-        {
+        pfx.getPrices().forEach((price)
+                -> {
             prices.put(price.getPriceType(), price.getPrice());
         });
 
@@ -239,8 +241,8 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 
         Map<TradeName, String> addPartNos = new EnumMap<>(TradeName.class);
 
-        pfx.getAdditionalPartNos().forEach((additionalPartNo) ->
-        {
+        pfx.getAdditionalPartNos().forEach((additionalPartNo)
+                -> {
             addPartNos.put(additionalPartNo.getContractor(), additionalPartNo.getPartNo());
         });
         p.setAdditionalPartNo(addPartNos);
@@ -251,14 +253,12 @@ public class ProductEditorController implements Initializable, Consumer<Product>
     }
 
     @FXML
-    private void handleExitButtonAction(ActionEvent event)
-    {
+    private void handleExitButtonAction(ActionEvent event) {
         Ui.closeWindowOf(partNoTextField);
     }
 
     @Override
-    public void accept(Product product)
-    {
+    public void accept(Product product) {
         this.pfx.setId(product.getId());
         this.pfx.setOptLock(product.getOptLock());
 
@@ -267,20 +267,16 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         this.pfx.setGtin(product.getGtin());
         this.pfx.setImageId(product.getImageId());
         this.pfx.setPartNo(product.getPartNo());
-        if (product.getEol() == null)
-        {
+        if ( product.getEol() == null ) {
             pfx.setEol(null);
-        } else
-        {
+        } else {
             this.pfx.setEol(product.getEol().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         }
 
         this.pfx.setTradeName(product.getTradeName());
-        if (product.getSalesChannel() != null)
-        {
+        if ( product.getSalesChannel() != null ) {
             this.pfx.setSalesChannel(product.getSalesChannel());
-        } else
-        {
+        } else {
             this.pfx.setSalesChannel(SalesChannel.UNKNOWN);
         }
         this.pfx.setProductGroup(product.getGroup());
@@ -292,8 +288,8 @@ public class ProductEditorController implements Initializable, Consumer<Product>
                 .map(e -> new AdditionalPartNo(e.getKey(), e.getValue()))
                 .collect(Collectors.toList()));
 
-        product.getPrices().forEach((PriceType pT, Double price) ->
-        {
+        product.getPrices().forEach((PriceType pT, Double price)
+                -> {
 
             Prices pr = new Prices();
             pr.setPrice(price);
@@ -305,24 +301,26 @@ public class ProductEditorController implements Initializable, Consumer<Product>
     }
 
     @FXML
-    private void handlePriceTableSubmitButtonAction(ActionEvent event)
-    {
+    private void handlePriceTableSubmitButtonAction(ActionEvent event) {
         String s = priceTableTextField.getText();
         final PriceType selectedPriceType = priceTableComboBox.getValue();
 
-        if (priceTable.getItems().stream().map(Prices::getPriceType).anyMatch((t) -> t == selectedPriceType))
-        {
+        if ( priceTable.getItems().stream().map(Prices::getPriceType).anyMatch((t) -> t == selectedPriceType) ) {
             UiAlert.title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
                     .nl("Der Preistyp ist bereits gesetzt.")
                     .parent(priceTableSubmitButton).show(UiAlertBuilder.Type.ERROR);
             return;
 
         }
-
+        if ( priceTableComboBox.getSelectionModel().isEmpty() ) {
+            UiAlert.title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
+                    .nl("Kein Preistyp ausgewählt.")
+                    .parent(priceTableSubmitButton).show(UiAlertBuilder.Type.ERROR);
+            return;
+        }
         Pattern pattern = Pattern.compile("[-+]?[0-9]*(\\.|,)?[0-9]+([eE][-+]?[0-9]+)?");
         Matcher m = pattern.matcher(s);
-        if (!m.matches())
-        {
+        if ( !m.matches() ) {
             UiAlert.title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
                     .nl("Die Preisangabe entspricht keiner gültigen Zahl")
                     .parent(priceTableSubmitButton).show(UiAlertBuilder.Type.ERROR);
@@ -339,8 +337,7 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         pfx.getPrices().add(p);
     }
 
-    private void fillTableComboBoxes()
-    {
+    private void fillTableComboBoxes() {
         additionalPartNoTableComboBox.getItems().addAll(TradeName.values());
 
         priceTableComboBox.getItems().addAll(PriceType.values());
@@ -354,22 +351,19 @@ public class ProductEditorController implements Initializable, Consumer<Product>
     }
 
     @FXML
-    private void handleAdditionalPartNoTableSubmitButtonAction(ActionEvent event)
-    {
+    private void handleAdditionalPartNoTableSubmitButtonAction(ActionEvent event) {
 
         String textFieldString = additionalPartNoTextField.getText().trim();
         TradeName tradeName = additionalPartNoTableComboBox.getValue();
 
-        if (textFieldString.length() == 0)
-        {
+        if ( textFieldString.length() == 0 ) {
             UiAlert.title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich.")
                     .nl("Es ist keine Artikelnummer angegeben.")
                     .parent(additionalPartNoTableSubmitButton).show(UiAlertBuilder.Type.ERROR);
             return;
         }
 
-        if (additionalPartNoTable.getItems().stream().map(AdditionalPartNo::getContractor).anyMatch(contractor -> contractor == tradeName))
-        {
+        if ( additionalPartNoTable.getItems().stream().map(AdditionalPartNo::getContractor).anyMatch(contractor -> contractor == tradeName) ) {
             UiAlert.title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich")
                     .nl("Der Lieferant ist bereits vorhanden.")
                     .parent(additionalPartNoTableSubmitButton).show(UiAlertBuilder.Type.ERROR);
@@ -386,8 +380,7 @@ public class ProductEditorController implements Initializable, Consumer<Product>
     }
 
     @Override
-    public ProductDto getResult()
-    {
+    public ProductDto getResult() {
         return result;
     }
 
@@ -396,18 +389,14 @@ public class ProductEditorController implements Initializable, Consumer<Product>
 class MyDoubleStringConverter extends DoubleStringConverter {
 
     @Override
-    public Double fromString(final String value)
-    {
+    public Double fromString(final String value) {
         return value.isEmpty() || !isNumber(value) ? null : super.fromString(value);
     }
 
-    public boolean isNumber(String value)
-    {
+    public boolean isNumber(String value) {
         int size = value.length();
-        for (int i = 0; i < size; i++)
-        {
-            if (!Character.isDigit(value.charAt(i)))
-            {
+        for (int i = 0; i < size; i++) {
+            if ( !Character.isDigit(value.charAt(i)) ) {
                 return false;
             }
         }
