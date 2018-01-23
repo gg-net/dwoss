@@ -53,8 +53,6 @@ import static javafx.concurrent.Worker.State.READY;
 @Title("Kunden Suche")
 public class CustomerSearchController implements Initializable, FxController, ClosedListener {
 
-    private CustomerTask LOADING_TASK;
-
     @FXML
     private Button searchButton;
 

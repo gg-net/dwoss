@@ -34,10 +34,24 @@ public class CustomerSearchTryout {
 
         //stub for the new Costumer modell with generator needed
         Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+       
+        JButton close = new JButton("Schliessen");
+        close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        UiCore.startSwing(() -> new JLabel("Kundensuche"));
+        JButton run = new JButton("OpenUi");
+        
+        run.addActionListener(ev -> {
+            Ui.exec(() -> {
+                Ui.fxml().show(CustomerSearchController.class);
+            });
+        });
 
-        Ui.fxml().show(CustomerSearchController.class);
+
+        JPanel p = new JPanel();
+        p.add(run);
+        p.add(close);
+
+        UiCore.startSwing(() -> p);
         
         
         
