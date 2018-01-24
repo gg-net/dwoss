@@ -15,8 +15,8 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="5.0">
             <children>
-                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abrechen" />
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
+                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abrechen" />
             </children>
         </HBox>
     </bottom>

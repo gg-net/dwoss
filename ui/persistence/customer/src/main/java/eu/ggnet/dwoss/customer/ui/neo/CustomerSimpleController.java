@@ -164,15 +164,24 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         }
 
         getSimpleCustomer();
-        
         Ui.closeWindowOf(kid);
     }
 
-  
-
     @FXML
     private void saveAndEnhanceUIButtonHandling(ActionEvent event) {
-        //TODO
+        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
+            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+        getSimpleCustomer();
+        
+        //TODO convert the simpleCustomer to a Customer
+        
+        Ui.exec(() -> {
+       //     Ui.fxml().eval(() -> company, CustomerEnhanceController.class);
+        });
+
+        Ui.closeWindowOf(kid);
     }
 
     @FXML
@@ -183,7 +192,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private void changeUI(ActionEvent event) {
         bussines ^= true; //tournaround of the boolean
-        
+
         getSimpleCustomer();
         setSimpleCustomer(simpleCustomer);
     }
@@ -234,8 +243,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
 
     }
-    
-      private void getSimpleCustomer() {
+
+    private void getSimpleCustomer() {
         simpleCustomer.setTitle(titleTextField.getText());
         simpleCustomer.setFirstName(firstNameTextField.getText());
         simpleCustomer.setLastName(lastNameTextField.getText());

@@ -334,57 +334,67 @@ public class Customer implements Serializable {
         }
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
-
+    
+      // TODO: Docu
+    // FIXME: Make this work.
     public boolean isSimple() {
+//        return getSimpleViolationMessage() == null;
+// Following Code will be removed in the future.
+        boolean vaildConsumer = false;
+        if ( !isVaild() ) return false;
         if ( isConsumer() ) {
-            if ( contacts.size() >= 1 ) {
-                //Contacts of a Customer need an Address for the creation of a SimpleCustomer
-                //Contacts of a Customer need a Communication for the creation of a SimpleCustomer
-                for (Contact contact : contacts) {
-                    if ( contact.getAddresses().isEmpty() || contact.getCommunications().isEmpty() ) {
-                    } else {
-                        for (Communication communication : contact.getCommunications()) {
-                            Type type = communication.getType();
-                            if(type == EMAIL || type == PHONE || type ==  MOBILE){
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
+            if ( contacts.size() > 1 ) return false;
+
+            for (Contact contact : contacts) {
+                if ( contact.getCommunications().isEmpty() ) {
+                    continue;
+                }
+                for (Communication communication : contact.getCommunications()) {
+                    Type type = communication.getType();
+                    if ( type == EMAIL || type == PHONE || type == MOBILE ) {
+                        vaildConsumer = true;
+                        break;
                     }
+
+                }
+                //skipt this for loop, too.
+                if ( vaildConsumer ) {
+                    break;
                 }
             }
-            return false;
+            return vaildConsumer;
+
         } else {
-            // company must not be empty be definiton.
-            if ( companies.size() >= 1 ) {
+            if ( !contacts.isEmpty() ) {
                 //a company need a Address or a Contacts with an Address
-                for (Company company : companies) {
-                    if ( company.getAddresses().isEmpty() ) {
-                        if ( company.getContacts().isEmpty() ) {
-                            return false; //the Company of this Bussnis Customer have no Address and no Contacts with an Address
-                        } else {
-                            //Contacts of a Customer need an Address for the creation of a SimpleCustomer
-                            //Contacts of a Customer need a Communication for the creation of a SimpleCustomer
-                            if ( company.getContacts().stream()
-                                    .filter((contact) -> !(contact.getAddresses().isEmpty()))
-                                    .filter((contact) -> !(contact.getCommunications().isEmpty()))
-                                    .anyMatch((contact) -> (contact.getCommunications().stream()
-                                                            .map(Communication::getType)
-                                                            .filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE)
-                                                            .contains(t))
-                                                            .findAny().isPresent())) ) {
-                                return true;
-                            }
+                for (Contact contact : contacts) {
+                    if ( contact.getCommunications().isEmpty() ) {
+                        continue;
+                    }
+                    for (Communication communication : contact.getCommunications()) {
+                        Type type = communication.getType();
+                        if ( type == EMAIL || type == PHONE || type == MOBILE ) {
+                            vaildConsumer = true;
+                            break;
                         }
-                    } else {
-                        return true; //the Company of this Bussnis Customer have an Address
+                    }
+                    //skipt to the end
+                    if ( vaildConsumer ) {
+                        return vaildConsumer;
                     }
                 }
-
             }
 
-            return false;
+            for (Company company : companies) {
+                if ( !company.getCommunications().isEmpty() ) {
+                    return company.getCommunications()
+                            .stream().map(Communication::getType)
+                            .filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE)
+                            .contains(t))
+                            .findAny().isPresent();
+                }
+            }
+            return vaildConsumer;
         }
 
     }
@@ -397,13 +407,50 @@ public class Customer implements Serializable {
         return !companies.isEmpty();
     }
 
+    /**
+     * Validtes a customer.
+     * Rules are:
+     * <ul>
+     * <li>either a contact or a companie is set, but never both</li>
+     * <li>At least one contact has a address</li>
+     * </ul>
+     *
+     * @return true for a Vaild Customer
+     */
     public boolean isVaild() {
         return getViolationMessage() == null;
+    }
+
+    /**
+     * Returns null, if the customer is simple otherwise a string, why the customer is not simple.
+     *
+     * @return a string why the customer is not simple or null.
+     */
+    public String getSimpleViolationMessage() {
+        if ( !isVaild() ) return getViolationMessage();
+        if ( isConsumer() ) {
+            if ( contacts.size() > 1 ) return "More than one contact";
+            Contact contact = contacts.get(0);
+            if ( contact.getAddresses().size() > 1 ) return "Contact has more than one address";
+
+            // Todo, more to come
+        }
+        // Todo even more to come.
+        return null;
     }
 
     // The null annotation can only be activated after the next big release, as the customers in the database are all invalid.
     // @Null
     public String getViolationMessage() {
+        if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
+        if ( isConsumer() ) {
+            if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() ) return "Consumer: No Address on any Contact";
+            if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
+            // More to come
+        }
+        if ( isBussines() ) {
+            // Much more to come
+        }
         return null;
     }
 

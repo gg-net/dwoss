@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +16,12 @@
  */
 package eu.ggnet.dwoss.redtape.entity.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
-
 import eu.ggnet.dwoss.rules.PositionType;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
@@ -41,7 +33,7 @@ import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
 public class DocumentEquals {
 
     public static enum Property {
-        ID,TYPE,ACTIVE,ACTUAL,IDENTIFIER,HISTORY,PREDECESSOR,SETTLEMENTS ,DOSSIER,SHIPPING_ADDRESS,INVOICE_ADDRESS,DIRECTIVE,FLAGS,CLOSED,CONDITIONS
+        ID, TYPE, ACTIVE, ACTUAL, IDENTIFIER, HISTORY, PREDECESSOR, SETTLEMENTS, DOSSIER, SHIPPING_ADDRESS, INVOICE_ADDRESS, DIRECTIVE, FLAGS, CLOSED, CONDITIONS, TAXTYPE
     }
 
     private Set<Property> properties = EnumSet.allOf(Property.class);
@@ -119,6 +111,8 @@ public class DocumentEquals {
         if ( properties.contains(INVOICE_ADDRESS)) if ( !Objects.equals(d1.getInvoiceAddress(), d2.getInvoiceAddress()) ) return "Invoiceaddress is not equal, d1=" + d1.getInvoiceAddress() + ", d2=" + d2.getInvoiceAddress();
         if ( properties.contains(SHIPPING_ADDRESS)) if ( !Objects.equals(d1.getShippingAddress(), d2.getShippingAddress()) ) return "Shippingaddress is not equal, d1=" + d1.getShippingAddress() + ", d2=" + d2.getShippingAddress();
         if ( properties.contains(CLOSED) ) if ( d1.isClosed() != d2.isClosed() ) return "Closed is not equal, d1=" + d1.isClosed() + ", d2=" + d2.isClosed();
+        if ( properties.contains(TAXTYPE) ) if ( d1.getTaxType() != d2.getTaxType() )
+                return "TaxType is not equal, d1=" + d1.getTaxType() + ", d2=" + d2.getTaxType();
         if ( positionTypes.size() == PositionType.values().length ) if ( d1.getPositions().size() != d2.getPositions().size() ) return "Positions.size is not equal, d1=" + d1.getPositions().size() + ", d2=" + d2.getPositions().size();
         if ( positionTypes.size() == PositionType.values().length && positionOrder ) {
             Iterator<Position> p1 = new TreeSet<>(d1.getPositions().values()).iterator();

@@ -16,10 +16,8 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
-
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -31,7 +29,6 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Address;
-import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
@@ -45,19 +42,18 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 @Title("Kunden Adresse bearbeiten")
 public class AddressUpdateController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
 
-    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
+    private final Pattern decimalPattern = Pattern.compile("\\d+");
 
-    @FXML
-    private Button saveButton;
+    private Address address;
 
     @FXML
     private Button closeButton;
 
     @FXML
-    private ChoiceBox preferedtxpbox;
+    private Button saveButton;
 
     @FXML
-    private ChoiceBox countrybox;
+    private ChoiceBox<String> countrybox;
 
     @FXML
     private TextField zipcode;
@@ -68,32 +64,28 @@ public class AddressUpdateController implements Initializable, FxController, Con
     @FXML
     private TextField street;
 
-    private Address adresse;
-
     @FXML
     /**
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction(ActionEvent event) {
-        this.adresse = null;
         Ui.closeWindowOf(zipcode);
     }
 
     @FXML
     /**
-     * Close the Editor window and discard all changes.
+     * Close the Editor window and save all changes.
      *
      * @todo
      * objekte passen mit saft
      */
     private void handleSaveButtonAction(ActionEvent event) {
-
         if ( StringUtils.isBlank(street.getText()) ) {
             UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-
-        Ui.closeWindowOf(street);
+        getAddress();
+        Ui.closeWindowOf(zipcode);
     }
 
     /**
@@ -102,8 +94,13 @@ public class AddressUpdateController implements Initializable, FxController, Con
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        preferedtxpbox.getItems().addAll(AddressType.values());
-        preferedtxpbox.getSelectionModel().selectFirst();
+        //the isoCountry is hardcoded to DE
+        //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
+        List<String> countries = new ArrayList<>();
+        countries.add("DE");
+        countries.add("CH");
+        countries.add("AT");
+        countrybox.getItems().addAll(countries);
 
         // force the field to be numeric only
         zipcode.textFormatterProperty().set(new TextFormatter<>(changeed -> {
@@ -118,28 +115,48 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Address a) {
-        this.adresse = a;
-        if ( adresse != null ) {
-            preferedtxpbox.getSelectionModel().select(adresse.getPreferedType());
+        if ( a != null ) {
+            address = a;
+            setAddress(address);
+        } else {
+            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
-
-        //the isoCountry is hardcoded to DE
-        //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
-        countrybox.getItems().addAll(adresse.getIsoCountry());
-        countrybox.getSelectionModel().selectFirst();
-
-        zipcode.setText(adresse.getZipCode());
-        city.setText(adresse.getCity());
-
-        street.setText(adresse.getStreet());
     }
 
     @Override
     public Address getResult() {
-        if ( adresse == null ) {
+        if ( address == null ) {
             return null;
         }
-        return adresse;
+        return address;
+    }
+
+    /**
+     * Set the Address for the Edit
+     * 
+     * @param a is the Address
+     */
+    private void setAddress(Address a) {
+        countrybox.getSelectionModel().select(address.getIsoCountry());
+        zipcode.setText(address.getZipCode());
+        city.setText(address.getCity());
+        street.setText(address.getStreet());
+    }
+
+    /**
+     * Get the Address back
+     */
+    private void getAddress() {
+        address.setStreet(street.getText());
+        address.setZipCode(zipcode.getText());
+        address.setCity(city.getText());
+        
+        if ( countrybox.getSelectionModel().getSelectedItem() != null ) {
+            Locale tempLocale = new Locale(countrybox.getSelectionModel().getSelectedItem().toLowerCase(), countrybox.getSelectionModel().getSelectedItem().toUpperCase());
+            address.setIsoCountry(tempLocale );
+        } else {
+            address.setIsoCountry(new Locale("de"));
+        }
     }
 
 }

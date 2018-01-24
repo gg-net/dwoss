@@ -82,8 +82,12 @@ public class Address implements Serializable {
     private String isoCountry = "DE";
 
     public void setIsoCountry(Locale country) {
-        if ( country == null ) throw new NullPointerException("Null not allowed");
-        else isoCountry = country.getCountry();
+        if ( country == null ){
+            throw new NullPointerException("Null not allowed");
+        }
+        else{
+            this.isoCountry = country.getCountry();
+        }
     }
 
     public Address(AddressType preferedType) {
@@ -91,9 +95,9 @@ public class Address implements Serializable {
     }
 
     public String toHtml() {
-        return (preferedType == null ? "" : "<i>Bevorzugte: " + preferedType.getName() + "<br />")
+        return (preferedType == null ? "" : "<i>Bevorzugte: " + preferedType.getName() + "<br />"
                 + street + "<br />"
-                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>");
+                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>") );
     }
 
 }

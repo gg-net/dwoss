@@ -36,7 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
@@ -52,8 +51,6 @@ import static javafx.concurrent.Worker.State.READY;
  */
 @Title("Kunden Suche")
 public class CustomerSearchController implements Initializable, FxController, ClosedListener {
-
-    private CustomerTask LOADING_TASK;
 
     @FXML
     private Button searchButton;
@@ -190,8 +187,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         statusHbox.visibleProperty().bind(searchService.runningProperty());
 
+
         Ui.progress().observe(searchService);
-        //Ui.exec(searchService);
     }
 
     /**

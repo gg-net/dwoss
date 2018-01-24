@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
 
 import lombok.Builder;
 import lombok.Value;
@@ -43,7 +42,6 @@ public class DefaultCustomerSalesdata implements Serializable {
         this.paymentMethod = paymentMethod;
         this.allowedSalesChannels = Collections.unmodifiableNavigableSet(allowedSalesChannels == null ? new TreeSet<>() : new TreeSet<>(allowedSalesChannels));
         this.viewOnlyCustomerIds = Collections.unmodifiableNavigableSet(viewOnlyCustomerIds == null ? new TreeSet<>() : new TreeSet<>(viewOnlyCustomerIds));
-        ValidationUtil.validate(this);
     }
 
     /**

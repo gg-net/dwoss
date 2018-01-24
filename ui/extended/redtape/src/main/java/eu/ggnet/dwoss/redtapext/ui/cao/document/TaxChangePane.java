@@ -16,9 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
+import eu.ggnet.dwoss.rules.TaxType;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
@@ -29,34 +33,34 @@ import eu.ggnet.saft.api.ui.Title;
  * @author oliver.guenther
  */
 @Title("Steuer anpassen")
-public class TaxChangePane extends StackPane implements ResultProducer<Tax> {
+public class TaxChangePane extends StackPane implements ResultProducer<TaxType> {
 
-    private Tax result = null;
+    private TaxType result = null;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public TaxChangePane() {
         VBox p = new VBox(10);
         p.setAlignment(Pos.CENTER);
-        Button _19Percent = new Button(Tax.DEFAULT_TAX.getButtonText());
-        _19Percent.setOnAction(e -> {
-            result = Tax.DEFAULT_TAX;
-            close();
-        });
-        Button reverseCharge = new Button(Tax.REVERSE_CHARGE.getButtonText());
-        reverseCharge.setOnAction(e -> {
-            result = Tax.REVERSE_CHARGE;
-            close();
-        });
+        for (TaxType taxType : TaxType.values()) {
+            Button button = new Button(taxType.getName());
+            button.setOnAction(e -> {
+                result = taxType;
+                close();
+            });
+            button.setTooltip(new Tooltip(taxType.getDescription()));
+            p.getChildren().add(button);
+
+        }
         Button cancel = new Button("Abbrechen");
         cancel.setOnAction(e -> close());
-        p.getChildren().addAll(_19Percent, reverseCharge, cancel);
+        p.getChildren().add(cancel);
         setPrefHeight(120);
         setPrefWidth(300);
         getChildren().add(p);
     }
 
     @Override
-    public Tax getResult() {
+    public TaxType getResult() {
         return result;
     }
 

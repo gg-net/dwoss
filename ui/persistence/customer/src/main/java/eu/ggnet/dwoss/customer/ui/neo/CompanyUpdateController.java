@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,25 +27,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.FlowPane;
+
+import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  * FXML Controller class
  *
- * @author jacob.weinhold
+ * @author jens.papenhagen
  */
+@Title("Firmen Editieren")
 public class CompanyUpdateController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
-//    private final Pattern decimalPattern = Pattern.compile("-?\\d*(\\,\\d{0,2})?");
-    @FXML
-    private Label idLabel;
+    private final Pattern decimalPattern = Pattern.compile("\\d+");
 
     @FXML
-    private TextField nameTextField;
+    private TextField companyNameTextField;
 
     @FXML
     private TextField taxIdTextField;
@@ -53,74 +56,255 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private TextField ledgerTextField;
 
     @FXML
-    private FlowPane contactsPane;
+    private ListView<Contact> contactListView;
 
     @FXML
-    private FlowPane addressesPane;
+    private ListView<Address> addressListView;
 
     @FXML
-    private FlowPane communicationsPane;
+    private ListView<Communication> communicationListView;
 
     private Company company;
 
-    ObservableList<Contact> contacts = FXCollections.observableArrayList();
+    private ObservableList<Contact> contactsList = FXCollections.observableArrayList();
 
-    ObservableList<Address> address = FXCollections.observableArrayList();
+    private ObservableList<Address> addressList = FXCollections.observableArrayList();
 
-    ObservableList<Communication> communications = FXCollections.observableArrayList();
+    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
     @FXML
-    private Button testButton;
+    private void saveAndCloseButtonHandling(ActionEvent event) {
+        if ( StringUtils.isBlank(companyNameTextField.getText()) ) {
+            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+        getCompany();
+        Ui.closeWindowOf(taxIdTextField);
+    }
+
+    @FXML
+    private void saveButtonHandling(ActionEvent event) {
+        if ( StringUtils.isBlank(companyNameTextField.getText()) ) {
+            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+        getCompany();
+    }
+
+    @FXML
+    private void cancelButtonHandling(ActionEvent event) {
+        Ui.closeWindowOf(taxIdTextField);
+    }
+
+    @FXML
+    private void handleEditAddressButton(ActionEvent event) {
+        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            openAddress(selectedItem);
+        }
+    }
+
+    @FXML
+    private void handleAddAddressButton(ActionEvent event) {
+        openAddress(new Address());
+    }
+
+    @FXML
+    private void handleDelAddressButton(ActionEvent event) {
+        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            addressList.remove(selectedItem);
+        }
+    }
+
+    @FXML
+    private void handleEditComButton(ActionEvent event) {
+        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            openCommunication(selectedItem);
+        }
+    }
+
+    @FXML
+    private void handleAddComButton(ActionEvent event) {
+        openCommunication(new Communication());
+    }
+
+    @FXML
+    private void handleDelComButton(ActionEvent event) {
+        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            communicationsList.remove(selectedItem);
+        }
+    }
+
+    @FXML
+    private void handleEditContactButton(ActionEvent event) {
+        Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            openContact(selectedItem);
+        }
+    }
+
+    @FXML
+    private void handleAddContactButton(ActionEvent event) {
+        openContact(new Contact());
+    }
+
+    @FXML
+    private void handleDelContactButton(ActionEvent event) {
+        Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
+        if ( selectedItem != null ) {
+            contactsList.remove(selectedItem);
+        }
+
+    }
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        //Address CellFactory
+        addressListView.setCellFactory((ListView<Address> p) -> {
+            ListCell<Address> cell = new ListCell<Address>() {
+                @Override
+                protected void updateItem(Address t, boolean bln) {
+                    super.updateItem(t, bln);
+                    if ( t != null ) {
+                        setText(t.getStreet() + " " + t.getZipCode() + " " + t.getCity());
+                    } else {
+                        setText("");
+                    }
+                }
+            };
+            return cell;
+        });
+        //Communication CellFactory
+        communicationListView.setCellFactory((ListView<Communication> p) -> {
+            ListCell<Communication> cell = new ListCell<Communication>() {
+                @Override
+                protected void updateItem(Communication t, boolean bln) {
+                    super.updateItem(t, bln);
+                    if ( t != null ) {
+                        setText(t.getType() + ": " + t.getIdentifier());
+                    } else {
+                        setText("");
+                    }
+                }
+            };
+            return cell;
+        });
+        //Contact CellFactory
+        contactListView.setCellFactory((ListView<Contact> p) -> {
+            ListCell<Contact> cell = new ListCell<Contact>() {
+                @Override
+                protected void updateItem(Contact t, boolean bln) {
+                    super.updateItem(t, bln);
+                    if ( t != null ) {
+                        setText(t.toFullName());
+                    } else {
+                        setText("");
+                    }
+                }
+            };
+            return cell;
+        });
+
+        // force the field to be numeric only
+        ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
+            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
+                return changeed;
+            } else {
+                return null;
+            }
+        }));
+
     }
 
     @Override
-    public void accept(Company t) {
-//        this.company = company;
-//        if ( company != null ) {
-//
-//            nameTextField.setText(company.getName());
-//            ledgerTextField.setText("" + company.getLedger());
-//            taxIdTextField.setText(company.getTaxId());
-//
-//            // force the field to be numeric only
-//            ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-//                if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-//                    return changeed;
-//                } else {
-//                    return null;
-//                }
-//            }));
-//
-//            contacts.addAll(company.getContacts());
-//            address.addAll(company.getAddresses());
-//            communications.addAll(company.getCommunications());
-//
-//            ContactList contactList = new ContactList(contacts);
-//            contactsPane.getChildren().add(contactList.getList());
-//
-//            AddressList addressList = new AddressList(address);
-//            addressesPane.getChildren().add(addressList.getList());
-//
-//            CommunicationList communicationList = new CommunicationList(communications);
-//            communicationsPane.getChildren().add(communicationList.getList());
+    public void accept(Company comp) {
+        if ( comp != null ) {
+            company = comp;
+            setCompany(company);
+        } else {
+            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+        }
     }
 
     @Override
     public Company getResult() {
-        return this.company;
+        if ( company == null ) {
+            return null;
+        }
+        return company;
     }
 
-    @FXML
-    private void handleTestButtonAction(ActionEvent event) {
-//        System.out.println(contactsPane.getChildren().size());
-//        contactsPane.getChildren().forEach(e -> System.out.println(e));
+    /**
+     * open the Address Editor
+     * 
+     * @param addresse is the Address
+     */
+    private void openAddress(Address addresse) {        
+        Ui.exec(() -> {
+            Ui.fxml().parent(companyNameTextField).eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> { addressList.add(a);} );
+        });
+    }
+
+    /**
+     * open the Communication Editor
+     * 
+     * @param communication is the Communication
+     */
+    private void openCommunication(Communication communication) {
+        Ui.exec(() -> {
+            Ui.fxml().parent(companyNameTextField).eval(() -> communication, CommunicationUpdateController.class);
+        });
+    }
+
+    /**
+     * open the Contact Editor
+     * 
+     * @param contact is the Contact
+     */
+    private void openContact(Contact contact) {
+        Ui.exec(() -> {
+            Ui.fxml().parent(companyNameTextField).eval(() -> contact, ContactUpdateController.class);
+        });
+    }
+
+    /**
+     * Set the Company for the Editor
+     *
+     * @param comp the Company
+     */
+    private void setCompany(Company comp) {
+        contactsList.addAll(comp.getContacts());
+        addressList.addAll(comp.getAddresses());
+        communicationsList.addAll(comp.getCommunications());
+
+        //fill the listViews
+        addressListView.setItems(addressList);
+        communicationListView.setItems(communicationsList);
+        contactListView.setItems(contactsList);
+
+        companyNameTextField.setText(comp.getName());
+        taxIdTextField.setText(comp.getTaxId());
+        ledgerTextField.setText("" + comp.getLedger());
+
+    }
+
+    /**
+     * Get the Company back
+     */
+    private void getCompany() {
+        company.setName(companyNameTextField.getText());
+        company.setTaxId(taxIdTextField.getText());
+        company.setLedger(Integer.parseInt(ledgerTextField.getText()));
+
+        company.getAddresses().addAll(addressList);
+        company.getCommunications().addAll(communicationsList);
+        company.getContacts().addAll(contactsList);
     }
 
 }

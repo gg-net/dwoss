@@ -40,7 +40,7 @@ import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.saft.api.Reply;
@@ -182,7 +182,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                 continue;
             }
             databaseLines++;
-            if ( mi.getCostPrice() > 0.01 && !MathUtil.equals(mi.getCostPrice(), p.getPrice(MANUFACTURER_COST)) ) {
+            if ( mi.getCostPrice() > 0.01 && !TwoDigits.equals(mi.getCostPrice(), p.getPrice(MANUFACTURER_COST)) ) {
                 if ( p.hasPrice(MANUFACTURER_COST) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(PriceType.MANUFACTURER_COST, mi.costPrice, "Import by " + arranger);
@@ -250,7 +250,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             }
             databaseLines++;
 
-            if ( ci.getReferencePrice() > 0.01 && !MathUtil.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) { // If price is valid and not equal, set it.
+            if ( ci.getReferencePrice() > 0.01 && !TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) { // If price is valid and not equal, set it.
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(CONTRACTOR_REFERENCE, ci.getReferencePrice(), "Import by " + arranger);

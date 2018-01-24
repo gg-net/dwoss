@@ -21,6 +21,9 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+
 import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
@@ -38,6 +41,7 @@ public class AdditionalCustomerIdUpdateTryout {
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
         Map<ExternalSystem, String> additionalCustomerId = gen.makeCustomer().getAdditionalCustomerIds();
+        
 
         //TODO AdditionalCustomerIdUpdateController.class need better Consumer/ResultProducer
 
@@ -47,7 +51,7 @@ public class AdditionalCustomerIdUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-               // Ui.fxml().eval(() -> additionalCustomerId, AdditionalCustomerIdUpdateController.class).ifPresent(System.out::println);;
+       //        Ui.fxml().eval(() -> omap, AdditionalCustomerIdUpdateController.class);
             });
         });
 

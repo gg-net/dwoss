@@ -8,7 +8,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.redtape.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtape.entity.*;
