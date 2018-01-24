@@ -1,26 +1,13 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
+import org.junit.*;
 
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.rules.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-
-import static org.junit.Assert.*;
+import static eu.ggnet.dwoss.rules.TaxType.UNTAXED;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -85,6 +72,14 @@ public class DocumentExactlyBriefedTest {
         assertFalse(doc2.getType() == DocumentType.INVOICE);
         doc1.setType(DocumentType.INVOICE);
         assertFalse("Type change must invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
+    }
+
+    @Test
+    public void testTaxTypeChange() {
+        assertTrue("Documents difference must not invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
+        assertFalse(doc2.getTaxType() == UNTAXED);
+        doc1.setTaxType(UNTAXED);
+        assertFalse("TaxType change must invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
     }
 
     @Test

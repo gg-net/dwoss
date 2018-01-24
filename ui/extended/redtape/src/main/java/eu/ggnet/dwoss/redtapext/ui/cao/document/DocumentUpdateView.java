@@ -688,7 +688,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                 L.debug("Changeing Tax to {}", t);
                 document.getPositions().values().forEach(p -> p.setTax(t.getTax()));
                 L.debug("Fist tax: {}", positions.get(0).getTax());
-                document.setTaxDescription(t.getDocumentText());
+                document.setTaxType(t);
                 refreshAll();
             });
         });

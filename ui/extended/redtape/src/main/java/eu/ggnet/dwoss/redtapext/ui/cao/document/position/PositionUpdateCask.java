@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -61,7 +61,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         @Override
         public String convertForward(Double s) {
             DecimalFormat df = new DecimalFormat("#.00");
-            double value = MathUtil.roundedApply(s, taxed - 1, 0.);
+            double value = TwoDigits.roundedApply(s, taxed - 1, 0.);
             return df.format(value);
         }
 

@@ -30,7 +30,7 @@ import javafx.beans.value.ObservableValue;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
@@ -590,7 +590,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     }
 
     public double toAfterTaxPrice() {
-        return MathUtil.roundedApply(getPrice(), getTax(), 0.00);
+        return TwoDigits.roundedApply(getPrice(), getTax(), 0.00);
     }
 
     public void setManufacturerCostPrice(double value) {

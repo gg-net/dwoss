@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -181,7 +181,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     }
 
     public void setPrice(PriceType type, double price, String comment) {
-        if ( MathUtil.equals(getPrice(type), price) ) {
+        if ( TwoDigits.equals(getPrice(type), price) ) {
             return; // Don't set the same price
         }
         prices.put(type, price);

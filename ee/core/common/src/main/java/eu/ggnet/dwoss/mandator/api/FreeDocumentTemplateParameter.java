@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,5 +24,12 @@ package eu.ggnet.dwoss.mandator.api;
  */
 public enum FreeDocumentTemplateParameter {
 
-    TERMS1, TERMS2
+    /**
+     * Terms left of the sum.
+     */
+    TERMS1,
+    /**
+     * Terms below the sum, may be merged with other texts.
+     */
+    TERMS2
 }

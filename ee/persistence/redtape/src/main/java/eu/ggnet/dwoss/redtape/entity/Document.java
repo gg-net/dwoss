@@ -28,12 +28,14 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.format.DocumentFormater;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
+import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 import static javax.persistence.CascadeType.*;
 
 /**
@@ -399,10 +401,13 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      */
     @Getter
     @Setter
-    private String taxDescription;
+    @Enumerated
+    @NotNull
+    private TaxType taxType;
 
     public Document() {
         actual = new Date();
+        taxType = GENERAL_SALES_TAX_DE_SINCE_2007;
     }
 
     /**
@@ -443,7 +448,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         clone.setShippingAddress(shippingAddress);
         clone.setDirective(directive);
         clone.setClosed(closed);
-        clone.setTaxDescription(taxDescription);
+        clone.setTaxType(taxType);
         for (Settlement settlement : settlements) clone.add(settlement);
         for (Condition condition : conditions) clone.add(condition);
         for (Flag flag : flags) clone.add(flag);
@@ -696,19 +701,27 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         this.settlements.remove(settlement);
     }
 
+    /**
+     * Returns the price of all positions multiplied by amount, clean (rounded to two digits).
+     *
+     * @return the price of the domument
+     */
     public double getPrice() {
         double price = 0.;
         for (Position position : positions.values()) {
-            price += (position.getAmount() * position.getPrice());
+            price += TwoDigits.round(position.getAmount() * position.getPrice());
         }
-        return price;
+        return TwoDigits.round(price);
     }
 
     public double toAfterTaxPrice() {
+        if ( hasSingleTax() ) return TwoDigits.roundedApply(getPrice(), getSingleTax(), 0.01);
+        // MultiTax Case
         double afterTax = 0.;
         for (Position position : positions.values()) {
             afterTax += (position.getAmount() * position.toAfterTaxPrice());
         }
+        // Round .99 and .01 to 00
         double delta = 0.01;
         double correct = Math.round(afterTax * 100.0) / 100.0;
         double rounded = Math.round(correct);
@@ -722,11 +735,11 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      * @return true if the document has only positions with one tax
      */
     public boolean hasSingleTax() {
+        // HINT: In the future, we may have documents with multiple taxes. This should be identified in the tax type and verified. For now, this is enought.
         if ( positions.isEmpty() ) return true;
         double refTax = positions.values().iterator().next().getTax();
         for (Position pos : positions.values()) {
             if ( Double.compare(refTax, pos.getTax()) != 0 ) return false;
-
         }
         return true;
     }
@@ -740,8 +753,9 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      * @throws IllegalStateException if the document has different tax positions.
      */
     public double getSingleTax() throws IllegalStateException {
-        if ( positions.isEmpty() ) return 0;
-        if ( !hasSingleTax() ) throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes");
+        if ( positions.isEmpty() ) return taxType.getTax();
+        if ( !hasSingleTax() )
+            throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes.  " + positions);
         return positions.values().iterator().next().getTax();
     }
 
@@ -812,6 +826,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         if ( other == null ) throw new NullPointerException("The other Document must not be null");
         if ( this.getDossier().isDispatch() != other.getDossier().isDispatch() ) return false;
         if ( this.getDossier().getPaymentMethod() != other.getDossier().getPaymentMethod() ) return false;
+        if ( this.getTaxType() != other.getTaxType() ) return false;
         if ( this.type != other.type ) return false;
         if ( !Objects.equals(this.invoiceAddress, other.invoiceAddress) ) return false;
         if ( !Objects.equals(this.shippingAddress, other.shippingAddress) ) return false;
@@ -843,7 +858,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
                 + ", directive=" + directive + ", positions=" + positions + "settlements=" + settlements
                 + ", active=" + active + ", history=" + history + ", predecessor.id=" + (predecessor == null ? null : predecessor.getId())
                 + ", dossier.id=" + (dossier == null ? null : dossier.getId()) + ", flags=" + flags + ", invoiceAddress=" + invoiceAddress
-                + ", shippingAddress=" + shippingAddress + ", identifier=" + identifier + ", taxDescription=" + taxDescription + '}';
+                + ", shippingAddress=" + shippingAddress + ", identifier=" + identifier + ", taxType=" + taxType + '}';
     }
 
     public String toSimpleLine() {

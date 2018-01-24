@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 

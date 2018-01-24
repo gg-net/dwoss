@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.ui.SwingCore;

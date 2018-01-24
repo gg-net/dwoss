@@ -1,5 +1,7 @@
 package tryout;
 
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+
 import java.util.Arrays;
 
 import javax.swing.JLabel;

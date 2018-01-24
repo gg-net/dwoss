@@ -29,7 +29,7 @@ import javax.validation.groups.Default;
 import eu.ggnet.dwoss.redtape.entity.Position.Key;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.util.MathUtil;
+import eu.ggnet.dwoss.util.TwoDigits;
 
 import lombok.*;
 
@@ -211,7 +211,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @return price * tax.
      */
     public double toAfterTaxPrice() {
-        return MathUtil.roundedApply(getPrice(), getTax(), 0.01);
+        return TwoDigits.roundedApply(getPrice(), getTax(), 0);
     }
 
     public double getPrice() {
