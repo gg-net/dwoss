@@ -71,33 +71,17 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private Contact contact;
 
-    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+    private final TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
 
-    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+    private final TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
+    private final TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
-    private ObservableList<Address> addressList = FXCollections.observableArrayList();
+    private final ObservableList<Address> addressList = FXCollections.observableArrayList();
 
-    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
+    private final ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
-    @FXML
-    private Button editAddressButton;
-
-    @FXML
-    private Button addAddressButton;
-
-    @FXML
-    private Button delAddressButton;
-
-    @FXML
-    private Button editComButton;
-
-    @FXML
-    private Button addComButton;
-
-    @FXML
-    private Button delComButton;
+    private final ToggleGroup prefGroup = new ToggleGroup();
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
@@ -246,15 +230,18 @@ public class ContactUpdateController implements Initializable, FxController, Con
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setText(null);
+                        setGraphic(null);
                     } else {
                         HBox checkHBox = new HBox();
-                        CheckBox prefCheckBox = new CheckBox();
-                        prefCheckBox.setSelected(item);
-                        checkHBox.getChildren().add(prefCheckBox);
+                        RadioButton prefRadioButton = new RadioButton();
+                        prefRadioButton.setSelected(item);
+                        prefRadioButton.setToggleGroup(prefGroup);
+
+                        checkHBox.getChildren().add(prefRadioButton);
                         checkHBox.setAlignment(Pos.CENTER);
 
-                        setGraphic(checkHBox);
                         setText("");
+                        setGraphic(checkHBox);
                     }
                 }
             };
