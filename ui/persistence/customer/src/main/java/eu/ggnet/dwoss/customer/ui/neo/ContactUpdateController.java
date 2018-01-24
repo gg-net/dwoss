@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -26,13 +27,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -51,7 +55,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private ListView<Address> addressListView;
 
     @FXML
-    private ListView<Communication> communicationListView;
+    private TableView<Communication> communicationTableView;
 
     @FXML
     private TextField firstNameTextField;
@@ -66,6 +70,12 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private ChoiceBox<Sex> genderBox;
 
     private Contact contact;
+
+    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+
+    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+
+    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
     private ObservableList<Address> addressList = FXCollections.observableArrayList();
 
@@ -118,7 +128,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleEditComButton(ActionEvent event) {
-        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             openCommunication(selectedItem);
         }
@@ -131,7 +141,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelComButton(ActionEvent event) {
-        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             communicationsList.remove(selectedItem);
         }
@@ -162,7 +172,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
-                        anschriftbox.getChildren().addAll(street, postBox);
+                        Label country = new Label(new Locale("", t.getIsoCountry()).getDisplayCountry());
+
+                        anschriftbox.getChildren().addAll(street, postBox, country);
                         anschriftbox.setSpacing(2.0);
 
                         setText(null);
@@ -178,19 +190,58 @@ public class ContactUpdateController implements Initializable, FxController, Con
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
         //Communication CellFactory
-        communicationListView.setCellFactory((ListView<Communication> p) -> {
-            ListCell<Communication> cell = new ListCell<Communication>() {
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        typeColumn.setCellFactory(column -> {
+            return new TableCell<Communication, Type>() {
                 @Override
-                protected void updateItem(Communication t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
-                        setText(t.getType() + ": " + t.getIdentifier());
+                protected void updateItem(Type item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setText(null);
                     } else {
+                        setText(item.name());
+                        setStyle("-fx-font-weight: bold");
+                    }
+                }
+            };
+        });
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("identifier"));
+        idColumn.setCellFactory(column -> {
+            return new TableCell<Communication, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                        setStyle("");
+                    }
+                }
+            };
+        });
+        prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
+        prefColumn.setMinWidth(50.0);
+        prefColumn.setCellFactory(column -> {
+            return new TableCell<Communication, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    System.out.println("cellvalue:" + item);
+                    if ( item == null || empty ) {
+                        setText(null);
+                    } else {
+                        HBox checkHBox = new HBox();
+                        CheckBox prefCheckBox = new CheckBox();
+                        prefCheckBox.setSelected(item);
+                        checkHBox.getChildren().add(prefCheckBox);
+                        checkHBox.setAlignment(Pos.CENTER);
+
+                        setGraphic(checkHBox);
                         setText("");
                     }
                 }
             };
-            return cell;
         });
 
     }
@@ -227,6 +278,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
                 });
             }
         }).start();
+        //old code 
 //        Ui.exec(() -> {
 //            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
 //                addressList.add(a);
@@ -261,7 +313,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
         //fill the listViews
         addressListView.setItems(addressList);
-        communicationListView.setItems(communicationsList);
+        communicationTableView.setItems(communicationsList);
+        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
 
         titleTextField.setText(contact.getTitle());
         firstNameTextField.setText(contact.getFirstName());

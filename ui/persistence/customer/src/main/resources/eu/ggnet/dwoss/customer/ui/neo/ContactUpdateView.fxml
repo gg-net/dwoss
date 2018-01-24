@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -54,7 +55,6 @@
                   <Insets />
                </GridPane.margin>
             </Label>
-            <ListView fx:id="communicationListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" prefHeight="120.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
                <children>
                   <Button fx:id="editAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditAddressButton" text="Ändern" />
@@ -73,6 +73,7 @@
             <TextField fx:id="lastNameTextField" minHeight="25.0" minWidth="175.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             <ChoiceBox fx:id="genderBox" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
             <Label text="Geschlecht" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <TableView fx:id="communicationTableView" prefHeight="120.0" prefWidth="400.0" GridPane.columnSpan="4" GridPane.rowIndex="8" GridPane.rowSpan="3" />
          </children>
       </GridPane>
    </center>
