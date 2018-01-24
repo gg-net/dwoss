@@ -247,7 +247,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openAddress(Address addresse) {        
         Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> { addressList.add(a);} );
+            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> { addressList.add(a);} );
         });
     }
 
@@ -258,7 +258,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> communication, CommunicationUpdateController.class);
+            Ui.fxml().eval(() -> communication, CommunicationUpdateController.class);
         });
     }
 
@@ -269,7 +269,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> contact, ContactUpdateController.class);
+            Ui.fxml().eval(() -> contact, ContactUpdateController.class);
         });
     }
 
