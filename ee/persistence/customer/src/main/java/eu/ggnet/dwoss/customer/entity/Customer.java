@@ -334,8 +334,8 @@ public class Customer implements Serializable {
         }
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
-
-    // TODO: Docu
+    
+      // TODO: Docu
     // FIXME: Make this work.
     public boolean isSimple() {
 //        return getSimpleViolationMessage() == null;
