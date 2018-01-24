@@ -147,6 +147,9 @@ public class CategoryProductListController implements Initializable, FxControlle
      */
     public void initialize(URL url, ResourceBundle rb) {
 
+        productsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        productsWithoutCpList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         setCellValues();
         dragAndDropHandling();
 

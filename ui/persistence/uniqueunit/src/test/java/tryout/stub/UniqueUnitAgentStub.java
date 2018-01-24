@@ -127,6 +127,11 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
+    public Reply<Void> deleteCategoryProduct(long id) {
+        return Reply.success(null);
+    }
+
+    @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
         if ( entityClass == Product.class ) {
             return (T)PGEN.generateProduct(1).get(0);
@@ -174,11 +179,6 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     @Override
     public Product findProductByPartNo(String partNo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Reply<Void> deleteCategoryProduct(long id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>

@@ -37,12 +37,10 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.FxSaft;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
@@ -60,8 +58,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
     private final UnitCollectionFx ucFx = new UnitCollectionFx();
 
     private UnitCollectionDto result = null;
-
-    private final ProductTask productsTask = new ProductTask();
 
     @FXML
     private ChoiceBox<SalesChannel> salesChannel;
@@ -102,13 +98,6 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      */
     private void cancel(ActionEvent event) {
         Ui.closeWindowOf(nameExtension);
-    }
-
-    public void closed() {
-        FxSaft.dispatch(() -> {
-            if ( productsTask.isRunning() ) productsTask.cancel();
-            return null;
-        });
     }
 
     @FXML
@@ -236,7 +225,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
         listViewPrices.setItems(ucFx.getPrices());
 
         //only allow to safe button on input of nameExtension and partNoExtension
-        saveButton.disableProperty().bind(nameExtension.textProperty().isEmpty().and(partNoExtension.textProperty().isEmpty()));
+        saveButton.disableProperty().bind(nameExtension.textProperty().isEmpty().or(partNoExtension.textProperty().isEmpty()));
     }
 
     @Override
