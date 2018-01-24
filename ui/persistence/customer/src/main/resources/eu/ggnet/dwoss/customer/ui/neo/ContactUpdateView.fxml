@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController">
+ <center>
+      <GridPane prefHeight="500.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="58.0" />
+            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="175.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="1.0" />
+          <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" prefWidth="180.0" />
+            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints fillHeight="false" minHeight="25.0" vgrow="NEVER" />
+          <RowConstraints fillHeight="false" minHeight="25.0" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" prefHeight="25.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="ALWAYS" />
+            <RowConstraints fillHeight="false" minHeight="25.0" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" minHeight="25.0" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" minHeight="25.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="25.0" prefHeight="25.0" vgrow="ALWAYS" />
+            <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+        </rowConstraints>
+         <children>
+            <Label text="Kontakt Editor" GridPane.columnSpan="2" GridPane.halignment="LEFT">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <Label text="Title" GridPane.rowIndex="1" />
+            <Label text="Nachname" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="Adresse" GridPane.rowIndex="3" />
+            <TextField fx:id="titleTextField" minHeight="25.0" minWidth="20.0" prefHeight="25.0" prefWidth="57.0" GridPane.rowIndex="2" />
+            <Label text="Vorname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="400.0" prefHeight="0.0" prefWidth="400.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+            <Label text="Kommunikationswege" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </Label>
+            <ListView fx:id="communicationListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" prefHeight="120.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="8" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="editAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditAddressButton" text="Ändern" />
+                  <Button fx:id="addAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAddAddressButton" text="Hinzufügen" />
+                  <Button fx:id="delAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelAddressButton" text="Löschen" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="4" GridPane.rowIndex="8">
+               <children>
+                  <Button fx:id="editComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditComButton" text="Ändern" />
+                  <Button fx:id="addComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAddComButton" text="Hinzufügen" />
+                  <Button fx:id="delComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelComButton" text="Löschen" />
+               </children>
+            </VBox>
+            <TextField fx:id="firstNameTextField" minHeight="25.0" minWidth="175.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="lastNameTextField" minHeight="25.0" minWidth="175.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <ChoiceBox fx:id="genderBox" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+            <Label text="Geschlecht" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </center>
+   <bottom>
+      <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="3.0" BorderPane.alignment="BOTTOM_RIGHT">
+         <children>
+            <Button mnemonicParsing="false" onAction="#saveAndCloseButtonHandling" text="Speichern und Schließen" />
+            <Button mnemonicParsing="false" onAction="#saveButtonHandling" text="Speichern" wrapText="true" />
+            <Button minWidth="75.0" mnemonicParsing="false" onAction="#cancelButtonHandling" text="Abbrechen" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
