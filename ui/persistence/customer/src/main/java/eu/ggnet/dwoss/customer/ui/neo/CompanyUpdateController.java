@@ -242,7 +242,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             };
         });
         prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
-        prefColumn.setMinWidth(50.0);
         prefColumn.setCellFactory(column -> {
             return new TableCell<Communication, Boolean>() {
                 @Override

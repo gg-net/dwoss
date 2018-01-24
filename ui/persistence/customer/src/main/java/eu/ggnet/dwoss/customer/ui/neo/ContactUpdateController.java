@@ -82,6 +82,24 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
     @FXML
+    private Button editAddressButton;
+
+    @FXML
+    private Button addAddressButton;
+
+    @FXML
+    private Button delAddressButton;
+
+    @FXML
+    private Button editComButton;
+
+    @FXML
+    private Button addComButton;
+
+    @FXML
+    private Button delComButton;
+
+    @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
         if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
@@ -151,7 +169,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) {       
 
         //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
@@ -221,13 +239,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
             };
         });
         prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
-        prefColumn.setMinWidth(50.0);
         prefColumn.setCellFactory(column -> {
             return new TableCell<Communication, Boolean>() {
                 @Override
                 protected void updateItem(Boolean item, boolean empty) {
                     super.updateItem(item, empty);
-                    System.out.println("cellvalue:" + item);
                     if ( item == null || empty ) {
                         setText(null);
                     } else {
