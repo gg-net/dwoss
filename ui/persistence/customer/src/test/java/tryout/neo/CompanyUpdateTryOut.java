@@ -24,7 +24,6 @@ import eu.ggnet.dwoss.customer.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
 import eu.ggnet.saft.*;
 
-
 /**
  *
  * @author jens.papenhagen
@@ -35,14 +34,18 @@ public class CompanyUpdateTryOut {
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
         Company company = gen.makeCompany();
-        
+        company.setTaxId("stuernummern");
+        company.add(gen.makeAddress());
+        company.add(gen.makeCommunication());
+        company.add(gen.makeContact());
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);;
+                Ui.fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);
             });
         });
 
