@@ -34,6 +34,11 @@ public class ContactUpdateTryout {
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
         Contact contact = gen.makeContact();
+        contact.setTitle("Dr.");
+        contact.add(gen.makeAddress());
+        contact.add(gen.makeAddress());
+        contact.add(gen.makeAddress());
+        
         
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

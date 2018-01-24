@@ -16,6 +16,8 @@
  */
 package tryout.neo;
 
+import java.util.Random;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -34,10 +36,14 @@ public class CompanyUpdateTryOut {
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
         Company company = gen.makeCompany();
-        company.setTaxId("stuernummern");
-        company.add(gen.makeAddress());
+        company.setTaxId("Steuernummer");
+        gen.makeAddresses(5).forEach(a -> company.add(a));
+        gen.makeContacts(6).forEach(c -> company.add(c));
         company.add(gen.makeCommunication());
-        company.add(gen.makeContact());
+        company.add(gen.makeCommunication());
+        company.add(gen.makeCommunication());
+        company.add(gen.makeCommunication());
+        company.getCommunications().get(new Random().nextInt(company.getCommunications().size() - 1)).setPrefered(true);
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

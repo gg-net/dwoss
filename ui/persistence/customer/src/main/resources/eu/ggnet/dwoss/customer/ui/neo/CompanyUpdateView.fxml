@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -55,13 +57,12 @@
             <TextField fx:id="ledgerTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" />
             <Label text="FiBu Konto:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
             <TextField fx:id="taxIdTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
-            <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" prefHeight="120.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
+            <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="45.0" minWidth="400.0" prefHeight="45.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
             <Label text="Kommunikationswege" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="8">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Label>
-            <ListView fx:id="communicationListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" prefHeight="120.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
             <ListView fx:id="contactListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" prefHeight="120.0" GridPane.columnSpan="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="13" GridPane.rowSpan="3" GridPane.vgrow="ALWAYS" />
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" GridPane.columnIndex="4" GridPane.rowIndex="5">
                <children>
@@ -84,6 +85,8 @@
                   <Button fx:id="delContactButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelContactButton" text="Löschen" />
                </children>
             </VBox>
+            <TableView fx:id="communicationTableView" minHeight="100.0" minWidth="400.0" GridPane.columnSpan="4" GridPane.rowIndex="9" GridPane.rowSpan="3">
+            </TableView>
          </children>
       </GridPane>
    </center>

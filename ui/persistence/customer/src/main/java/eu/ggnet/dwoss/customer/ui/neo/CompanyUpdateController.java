@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -26,11 +27,18 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
@@ -62,9 +70,15 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private ListView<Address> addressListView;
 
     @FXML
-    private ListView<Communication> communicationListView;
+    private TableView<Communication> communicationTableView;
 
     private Company company;
+
+    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+
+    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+
+    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
     private ObservableList<Contact> contactsList = FXCollections.observableArrayList();
 
@@ -119,7 +133,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleEditComButton(ActionEvent event) {
-        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             openCommunication(selectedItem);
         }
@@ -132,7 +146,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelComButton(ActionEvent event) {
-        Communication selectedItem = communicationListView.getSelectionModel().getSelectedItem();
+        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             communicationsList.remove(selectedItem);
         }
@@ -172,7 +186,22 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 protected void updateItem(Address t, boolean bln) {
                     super.updateItem(t, bln);
                     if ( t != null ) {
-                        setText(t.getStreet() + " " + t.getZipCode() + " " + t.getCity());
+                        VBox anschriftbox = new VBox();
+                        Label street = new Label(t.getStreet());
+
+                        Label zipCode = new Label(t.getZipCode());
+                        Label city = new Label(t.getCity());
+                        HBox postBox = new HBox();
+                        postBox.getChildren().addAll(zipCode, city);
+                        postBox.setSpacing(2.0);
+
+                        Label country = new Label(new Locale("", t.getIsoCountry()).getDisplayCountry());
+                        anschriftbox.getChildren().addAll(street, postBox, country);
+                        anschriftbox.setSpacing(2.0);
+
+                        setText(null);
+                        setGraphic(anschriftbox);
+
                     } else {
                         setText("");
                     }
@@ -180,21 +209,60 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             };
             return cell;
         });
-        //Communication CellFactory
-        communicationListView.setCellFactory((ListView<Communication> p) -> {
-            ListCell<Communication> cell = new ListCell<Communication>() {
+        addressListView.setOrientation(Orientation.HORIZONTAL);
+
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        typeColumn.setCellFactory(column -> {
+            return new TableCell<Communication, Type>() {
                 @Override
-                protected void updateItem(Communication t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
-                        setText(t.getType() + ": " + t.getIdentifier());
+                protected void updateItem(Type item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setText(null);
                     } else {
+                        setText(item.name());
+                        setStyle("-fx-font-weight: bold");
+                    }
+                }
+            };
+        });
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("identifier"));
+        idColumn.setCellFactory(column -> {
+            return new TableCell<Communication, String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setText(null);
+                    } else {
+                        setText(item);
+                        setStyle("");
+                    }
+                }
+            };
+        });
+        prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
+        prefColumn.setCellFactory(column -> {
+            return new TableCell<Communication, Boolean>() {
+                @Override
+                protected void updateItem(Boolean item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setText(null);
+                    } else {
+                        HBox checkHBox = new HBox();
+                        CheckBox prefCheckBox = new CheckBox();
+                        prefCheckBox.setSelected(item);
+                        checkHBox.getChildren().add(prefCheckBox);
+                        checkHBox.setAlignment(Pos.CENTER);
+
+                        setGraphic(checkHBox);
                         setText("");
                     }
                 }
             };
-            return cell;
         });
+
         //Contact CellFactory
         contactListView.setCellFactory((ListView<Contact> p) -> {
             ListCell<Contact> cell = new ListCell<Contact>() {
@@ -202,7 +270,14 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 protected void updateItem(Contact t, boolean bln) {
                     super.updateItem(t, bln);
                     if ( t != null ) {
-                        setText(t.toFullName());
+                        String anrede = "";
+                        if ( t.getSex() == Sex.FEMALE ) {
+                            anrede = "Frau ";
+                        }
+                        if ( t.getSex() == Sex.MALE ) {
+                            anrede = "Herr ";
+                        }
+                        setText(anrede + t.toFullName());
                     } else {
                         setText("");
                     }
@@ -242,35 +317,51 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     /**
      * open the Address Editor
-     * 
+     *
      * @param addresse is the Address
      */
-    private void openAddress(Address addresse) {        
-        Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> { addressList.add(a);} );
-        });
+    private void openAddress(Address addresse) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                    addressList.add(a);
+                });
+            }
+        }).start();
     }
 
     /**
      * open the Communication Editor
-     * 
+     *
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-        Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> communication, CommunicationUpdateController.class);
-        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                    communicationsList.add(a);
+                });
+            }
+        }).start();
     }
 
     /**
      * open the Contact Editor
-     * 
+     *
      * @param contact is the Contact
      */
     private void openContact(Contact contact) {
-        Ui.exec(() -> {
-            Ui.fxml().parent(companyNameTextField).eval(() -> contact, ContactUpdateController.class);
-        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+                    contactsList.add(a);
+                });
+            }
+        }).start();
+
     }
 
     /**
@@ -285,7 +376,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
         //fill the listViews
         addressListView.setItems(addressList);
-        communicationListView.setItems(communicationsList);
+        communicationTableView.setItems(communicationsList);
+        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
+
         contactListView.setItems(contactsList);
 
         companyNameTextField.setText(comp.getName());
