@@ -18,6 +18,10 @@ package eu.ggnet.dwoss.customer.entity.projection;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.rules.AddressType;
@@ -49,6 +53,8 @@ public class AddressLabel {
 
     @Getter
     @Setter
+    @NotNull
+    @Valid
     private Address address;
 
     @Getter
@@ -103,6 +109,28 @@ public class AddressLabel {
     // Will be removed, as an entiy addresslabel can not be empty.
     public boolean isEmpty() {
         return company != null && contact != null;
+    }
+
+    /**
+     * Returns null, if the AddressLabel is valid.
+     * Rules are:
+     * <ul>
+     * <li>Address is not null and all Address have to be valid</li>
+     * <li>either a contact or a companie is set, but never both</li>
+     * <li>Company has to be valid</li>
+     * <li>Contact has to be valid</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    @Null
+    public String getViolationMessages() {
+        if ( address == null ) return "Address is null";
+        if ( address.getViolationMessages() != null ) return "Address: " + address.getViolationMessages();
+        if ( company == null && contact == null ) return "Company and Contact are null.";
+        if ( company != null && company.getViolationMessages() != null ) return "Company: " + company.getViolationMessages();
+        if ( contact != null && contact.getViolationMessages() != null ) return "Contact: " + contact.getViolationMessages();
+        return null;
     }
 
 }

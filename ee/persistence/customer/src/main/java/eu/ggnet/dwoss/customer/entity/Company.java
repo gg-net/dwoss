@@ -24,6 +24,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.rules.AddressType;
@@ -35,9 +36,11 @@ import static javax.persistence.CascadeType.ALL;
 /**
  * Represents a company.
  * <p>
+ *
  * @has 0..1 - 0..n Address
  * @has 0..1 - 0..n Contact
  * @has 0..1 - 0..n Communication
+ *
  * @author oliver.guenther
  */
 @Entity
@@ -216,6 +219,31 @@ public class Company implements Serializable {
         }
         sb.append(prefered ? "</b>" : "");
         return sb.toString();
+    }
+
+    /**
+     * Returns null, if the Company is valid.
+     * Rules are:
+     * <ul>
+     * <li>Name is not blank</li>
+     * <li>at least one Address</li>
+     * <li>all Address have to be valid</li>
+     * <li>all Contacts have to be valid</li>
+     * <li>all Communications have to be valid</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    public String getViolationMessages() {
+        if ( StringUtils.isBlank(name) ) return "Name is blank";
+        if ( addresses.isEmpty() ) return "No Address";
+        if ( addresses.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "One Address: " + addresses.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( contacts.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( communications.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Communications: " + communications.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        return null;
     }
 
 }

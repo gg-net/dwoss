@@ -95,4 +95,19 @@ public class Communication implements Serializable {
         return type + ":&nbsp;" + identifier;
     }
 
+    /**
+     * Returns null, if the Communication is valid.
+     * Rules are:
+     * <ul>
+     * <li>The identifier pattern must match the Communication type</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    public String getViolationMessages() {
+        // TODO: fill me
+        //[[DWOSS-195]]
+        return null;
+    }
+
 }
