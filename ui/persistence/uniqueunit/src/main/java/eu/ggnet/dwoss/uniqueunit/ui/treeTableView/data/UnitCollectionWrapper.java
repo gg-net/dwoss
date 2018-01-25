@@ -18,26 +18,31 @@ package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
 import javafx.scene.control.TreeItem;
 
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
 
+import lombok.Getter;
 import lombok.Setter;
 
 /**
  *
  * @author lucas.huelsen
  */
-public class ProductWrapper implements DataWrapper {
+public class UnitCollectionWrapper implements DataWrapper {
 
     private final TreeItem<DataWrapper> item;
-
-    private final Product product;
 
     @Setter
     private boolean loading = false;
 
-    public ProductWrapper(TreeItem<DataWrapper> item, Product product) {
+    private final UnitCollection unitCollection;
+
+    @Getter
+    private final long unitCollectionId;
+
+    public UnitCollectionWrapper(TreeItem<DataWrapper> item, UnitCollection unitCollection) {
         this.item = item;
-        this.product = product;
+        this.unitCollection = unitCollection;
+        unitCollectionId = unitCollection.getId();
     }
 
     public boolean isLoading() {
@@ -46,7 +51,7 @@ public class ProductWrapper implements DataWrapper {
 
     @Override
     public String getName() {
-        return product.getName();
+        return unitCollection.getNameExtension();
     }
 
 }

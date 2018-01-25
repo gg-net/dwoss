@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,6 +29,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 import org.slf4j.Logger;
@@ -38,6 +41,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.*;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.CategoryProductGenerator;
+import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.ProductGenerator;
 import eu.ggnet.saft.api.ui.FxController;
 
 /**
@@ -50,13 +54,19 @@ public class TreeTableController implements Initializable, FxController {
     private static final Logger L = LoggerFactory.getLogger(TreeTableController.class);
 
     @FXML
-    private TreeTableColumn<DataWrapper, String> overview;
-
-    @FXML
     private TreeTableView<DataWrapper> view;
 
     @FXML
+    private TreeTableColumn<DataWrapper, String> overview;
+
+    @FXML
+    private TreeTableColumn<DataWrapper, Integer> amount;
+
+    @FXML
     private TableView<UniqueUnit> tableUnits;
+
+    @FXML
+    private TableColumn<UniqueUnit, String> unitName;
 
     private TreeItem<DataWrapper> loading = new TreeItem<>(new DataWrapper() {
         @Override
@@ -65,11 +75,36 @@ public class TreeTableController implements Initializable, FxController {
         }
     });
 
+    private TreeItem<DataWrapper> withoutCp = new TreeItem<>(new DataWrapper() {
+        @Override
+        public String getName() {
+            return "Ohne KategorieProdukt";
+        }
+    });
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<DataWrapper>>() {
+            @Override
+            public void changed(ObservableValue<? extends TreeItem<DataWrapper>> observable, TreeItem<DataWrapper> oldValue, TreeItem<DataWrapper> newValue) {
+                if ( newValue.getValue() instanceof UnitCollectionWrapper ) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UnitCollectionWrapper wrap = (UnitCollectionWrapper)newValue.getValue();
+                            tableUnits.getItems().clear();
+                            tableUnits.getItems().addAll(loadUniqueUnits(wrap.getUnitCollectionId()));
+                        }
+                    }).start();
+                }
+            }
+        });
+
+        unitName.setCellValueFactory(new PropertyValueFactory<>("refurbishId"));
 
         TreeItem<DataWrapper> root = new TreeItem<>(new DataWrapper() {
             @Override
@@ -90,9 +125,28 @@ public class TreeTableController implements Initializable, FxController {
             }
         });
 
+        amount.setCellValueFactory(new Callback<CellDataFeatures<DataWrapper, Integer>, ObservableValue<Integer>>() {
+            @Override
+            public ObservableValue<Integer> call(CellDataFeatures<DataWrapper, Integer> param) {
+                DataWrapper dw = param.getValue().getValue();
+                SimpleObjectProperty<Integer> result = new SimpleObjectProperty<>();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if ( dw instanceof ProductGroupWrapper ) {
+                            System.out.println("1111");
+                        }
+                    }
+                }).start();
+
+                return result;
+
+            }
+        });
+
     }
 
-    public ObservableList<TreeItem<DataWrapper>> getTradeNames() {
+    private ObservableList<TreeItem<DataWrapper>> getTradeNames() {
         ObservableList<TreeItem<DataWrapper>> result = FXCollections.observableArrayList();
         for (TradeName tradeName : TradeName.values()) {
             TreeItem<DataWrapper> item = new TreeItem<>(new TradeNameWrapper(tradeName));
@@ -102,7 +156,7 @@ public class TreeTableController implements Initializable, FxController {
         return result;
     }
 
-    public ObservableList<TreeItem<DataWrapper>> getProductGroups(TradeName tradeName) {
+    private ObservableList<TreeItem<DataWrapper>> getProductGroups(TradeName tradeName) {
         ObservableList<TreeItem<DataWrapper>> result = FXCollections.observableArrayList();
         for (ProductGroup group : ProductGroup.values()) {
             TreeItem<DataWrapper> item = new TreeItem<>();
@@ -124,13 +178,6 @@ public class TreeTableController implements Initializable, FxController {
 
                             item.getChildren().addAll(getCategoryProducts(productGroupWrapper.getTradeName(), productGroupWrapper.getProductGroup()));
                             item.getChildren().remove(loading);
-
-                            item.getChildren().add(new TreeItem(new DataWrapper() {
-                                @Override
-                                public String getName() {
-                                    return "Ohne Kategorie Produkt";
-                                }
-                            }));
                         }
                     }).start();
                     L.info("Products loaded");
@@ -141,7 +188,7 @@ public class TreeTableController implements Initializable, FxController {
         return result;
     }
 
-    public ObservableList<TreeItem<DataWrapper>> getCategoryProducts(TradeName tradeName, ProductGroup group) {
+    private ObservableList<TreeItem<DataWrapper>> getCategoryProducts(TradeName tradeName, ProductGroup group) {
         ObservableList<TreeItem<DataWrapper>> result = FXCollections.observableArrayList();
         for (CategoryProduct cp : loadCp(group, tradeName)) {
             TreeItem<DataWrapper> item = new TreeItem<>();
@@ -161,8 +208,11 @@ public class TreeTableController implements Initializable, FxController {
                         @Override
                         public void run() {
 
+                            item.getChildren().addAll(getProducts(cp));
+                            item.getChildren().remove(loading);
+
                         }
-                    });
+                    }).start();
                 }
             });
 
@@ -171,7 +221,7 @@ public class TreeTableController implements Initializable, FxController {
         return result;
     }
 
-    public ObservableList<TreeItem<DataWrapper>> getProducts(CategoryProduct cp) {
+    private ObservableList<TreeItem<DataWrapper>> getProducts(CategoryProduct cp) {
         ObservableList<TreeItem<DataWrapper>> result = FXCollections.observableArrayList();
         for (Product product : loadProducts(cp)) {
             TreeItem<DataWrapper> item = new TreeItem<>();
@@ -180,6 +230,37 @@ public class TreeTableController implements Initializable, FxController {
 
             item.getChildren().add(loading);
 
+            item.expandedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if ( productWrapper.isLoading() ) {
+                        return;
+                    }
+                    productWrapper.setLoading(true);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            item.getChildren().addAll(getUnitCollections(product));
+                            item.getChildren().remove(loading);
+                        }
+                    }).start();
+                }
+            });
+
+            result.add(item);
+        }
+
+        return result;
+    }
+
+    private ObservableList<TreeItem<DataWrapper>> getUnitCollections(Product product) {
+        ObservableList<TreeItem<DataWrapper>> result = FXCollections.observableArrayList();
+        for (UnitCollection uc : loadUnitCollections(product)) {
+            TreeItem<DataWrapper> item = new TreeItem<>();
+            UnitCollectionWrapper unitCollectionWrapper = new UnitCollectionWrapper(item, uc);
+            item.setValue(unitCollectionWrapper);
+
+            result.add(item);
         }
 
         return result;
@@ -191,15 +272,30 @@ public class TreeTableController implements Initializable, FxController {
             Thread.sleep((long)(Math.random() * 3000));
         } catch (InterruptedException ex) {
         }
-        return new ArrayList<>(new CategoryProductGenerator().generateCategoryProduct(5));
+        return new ArrayList<>(new CategoryProductGenerator().generateCategoryProduct(4));
     }
 
     public List<Product> loadProducts(CategoryProduct cp) {
         try {
-            Thread.sleep((long)(Math.random() * 5000));
+            Thread.sleep((long)(Math.random() * 3000));
         } catch (InterruptedException ex) {
         }
-        return new ArrayList<>(cp.getProducts());
+        return new ArrayList<>(new ProductGenerator().generateProduct(8));
     }
 
+    public List<UnitCollection> loadUnitCollections(Product product) {
+        try {
+            Thread.sleep((long)(Math.random() * 3000));
+        } catch (InterruptedException ex) {
+        }
+        return new ArrayList<>(product.getUnitCollections());
+    }
+
+    public List<UniqueUnit> loadUniqueUnits(long unitCollectionId) {
+        try {
+            Thread.sleep((long)(Math.random() * 3000));
+        } catch (InterruptedException ex) {
+        }
+        return new ArrayList<>(new ProductGenerator().generateProduct(1).get(0).getUniqueUnits());
+    }
 }

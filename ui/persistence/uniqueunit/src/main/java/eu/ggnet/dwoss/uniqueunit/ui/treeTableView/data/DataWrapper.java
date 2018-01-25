@@ -23,5 +23,4 @@ package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 public interface DataWrapper {
 
     String getName();
-
 }

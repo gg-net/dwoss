@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TreeTableColumn?>
@@ -13,24 +14,28 @@
    <center>
       <GridPane BorderPane.alignment="CENTER">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="10.0" prefWidth="370.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="554.0" minWidth="10.0" prefWidth="554.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TreeTableView fx:id="view" prefHeight="200.0" prefWidth="200.0">
+            <TreeTableView fx:id="view" prefHeight="200.0" prefWidth="200.0" GridPane.rowSpan="4">
               <columns>
-                <TreeTableColumn fx:id="overview" prefWidth="75.0" text="Hersteller/Gruppe/KategorieProdukt/Produkt/UnitCollection" />
+                <TreeTableColumn fx:id="overview" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="-1.0" text="Hersteller/Gruppe/KategorieProdukt/Produkt/UnitCollection" />
+                  <TreeTableColumn fx:id="amount" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Anzahl" />
               </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TreeTableView>
-            <TableView fx:id="tableUnits" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <TableView fx:id="tableUnits" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columns>
-                <TableColumn prefWidth="75.0" text="Units" />
+                <TableColumn fx:id="unitName" prefWidth="75.0" text="Units" />
                 <TableColumn prefWidth="75.0" text="Verfügbar" />
                   <TableColumn prefWidth="75.0" text="in stock" />
                   <TableColumn prefWidth="75.0" text="Endkundenpreis" />
@@ -40,6 +45,14 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
+            <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+            <Label text="Units der ausgewählten Collection" GridPane.columnIndex="1" />
+            <Label text="Noch nicht zugewiesene Units" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </center>

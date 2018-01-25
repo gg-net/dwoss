@@ -21,18 +21,24 @@ import javafx.scene.control.TreeItem;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author lucas.huelsen
  */
 public class ProductGroupWrapper implements DataWrapper {
 
+    @Getter
     private final ProductGroup productGroup;
 
+    @Getter
     private final TradeName tradeName;
 
     private final TreeItem<DataWrapper> item;
 
+    @Setter
     private boolean loading = false;
 
     public ProductGroupWrapper(ProductGroup productGroup, TradeName tradeName, TreeItem<DataWrapper> item) {
@@ -41,20 +47,8 @@ public class ProductGroupWrapper implements DataWrapper {
         this.item = item;
     }
 
-    public TradeName getTradeName() {
-        return tradeName;
-    }
-
-    public ProductGroup getProductGroup() {
-        return productGroup;
-    }
-
     public boolean isLoading() {
         return loading;
-    }
-
-    public void setLoading(boolean loading) {
-        this.loading = loading;
     }
 
     @Override

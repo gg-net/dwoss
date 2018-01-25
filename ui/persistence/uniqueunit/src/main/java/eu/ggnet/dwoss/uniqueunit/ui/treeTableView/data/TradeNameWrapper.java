@@ -18,12 +18,15 @@ package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
+import lombok.Getter;
+
 /**
  *
  * @author lucas.huelsen
  */
 public class TradeNameWrapper implements DataWrapper {
 
+    @Getter
     private final TradeName tradeName;
 
     public TradeNameWrapper(TradeName tradeName) {
@@ -33,10 +36,6 @@ public class TradeNameWrapper implements DataWrapper {
     @Override
     public String getName() {
         return tradeName.name();
-    }
-
-    public TradeName getTradeName() {
-        return tradeName;
     }
 
 }
