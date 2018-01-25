@@ -24,7 +24,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -75,6 +75,7 @@ public class CustomerGenerator {
         Customer c = new Customer();
         int r = R.nextInt(5) + 1;
         boolean prefered = false;
+        c.getAddressLabels().add(makeInVoiceAddressLabel());
         for (int i = 0; i < r; i++) {
             Contact con = makeContact();
             if ( !prefered ) {
@@ -82,15 +83,6 @@ public class CustomerGenerator {
                 con.setPrefered(prefered);
             }
             c.add(con);
-        }
-        r = R.nextInt(2) + 1;
-        for (int i = 0; i < r; i++) {
-            Company com = makeCompany();
-            if ( !prefered ) {
-                prefered = R.nextBoolean();
-                com.setPrefered(prefered);
-            }
-            c.add(com);
         }
         if ( !prefered ) {
             c.getContacts().iterator().next().setPrefered(true);
@@ -113,12 +105,13 @@ public class CustomerGenerator {
         Company c = new Company();
         c.setLedger(R.nextInt(1000) + 1);
         c.setName(GEN.makeCompanyName());
-        if(R.nextBoolean()) {
-            c.add(makeAddress());
-            c.add(makeCommunication());
-        }
+        c.add(makeAddress());
+        c.add(makeCommunication());
         if ( c.getAddresses().isEmpty() || c.getCommunications().isEmpty() ) {
-            c.add(makeContact());
+            Contact contact = makeContact();
+            contact.getAddresses().clear();
+            contact.add(c.getAddresses().get(0));
+            c.add(contact);
         }
         return c;
     }
@@ -152,10 +145,7 @@ public class CustomerGenerator {
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
         c.add(makeCommunication());
         c.add(makeAddress());
-        
-        while (R.nextInt() > 70) {
-            c.add(makeAddress());
-        }
+
         return c;
     }
 
@@ -204,6 +194,16 @@ public class CustomerGenerator {
     }
 
     /**
+     * Generates a non persisted invoice {@link AddressLabel}.
+     * <p>
+     * @return a generated {@link AddressLabel}.
+     */
+    public AddressLabel makeInVoiceAddressLabel() {
+        AddressLabel a = new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.INVOICE);
+        return a;
+    }
+
+    /**
      * Generates a non persisted {@link Communication}.
      * {@link Communication#prefered} is never set.
      * <p>
@@ -216,13 +216,12 @@ public class CustomerGenerator {
         return c;
     }
 
-
     /**
      * Generates a non persisted {@link MandatorMetadata}.
      * <p>
      * @return a generated {@link MandatorMetadata}.
      */
-    private MandatorMetadata makeMandatorMetadata() {
+    public MandatorMetadata makeMandatorMetadata() {
         MandatorMetadata m = new MandatorMetadata();
         m.setMandatorMatchcode(RandomStringUtils.randomAlphanumeric(4));
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());

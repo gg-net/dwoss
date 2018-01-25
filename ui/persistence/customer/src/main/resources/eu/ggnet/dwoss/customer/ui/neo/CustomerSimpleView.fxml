@@ -17,7 +17,7 @@
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="60.0" minWidth="60.0" />
+          <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="1.7976931348623157E308" minWidth="60.0" />
             <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="128.0" minWidth="50.0" prefWidth="128.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
           <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" />
