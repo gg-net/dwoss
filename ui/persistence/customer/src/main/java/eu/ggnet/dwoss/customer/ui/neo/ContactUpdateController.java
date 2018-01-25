@@ -153,7 +153,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {       
+    public void initialize(URL url, ResourceBundle rb) {
 
         //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
@@ -162,19 +162,22 @@ public class ContactUpdateController implements Initializable, FxController, Con
         addressListView.setCellFactory((ListView<Address> p) -> {
             ListCell<Address> cell = new ListCell<Address>() {
                 @Override
-                protected void updateItem(Address t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
+                protected void updateItem(Address item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
                         VBox anschriftbox = new VBox();
-                        Label street = new Label(t.getStreet());
+                        Label street = new Label(item.getStreet());
 
-                        Label zipCode = new Label(t.getZipCode());
-                        Label city = new Label(t.getCity());
+                        Label zipCode = new Label(item.getZipCode());
+                        Label city = new Label(item.getCity());
                         HBox postBox = new HBox();
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
-                        Label country = new Label(new Locale("", t.getIsoCountry()).getDisplayCountry());
+                        Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
 
                         anschriftbox.getChildren().addAll(street, postBox, country);
                         anschriftbox.setSpacing(2.0);
@@ -182,8 +185,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
                         setText(null);
                         setGraphic(anschriftbox);
 
-                    } else {
-                        setText("");
                     }
                 }
             };
@@ -273,13 +274,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param addresse is the Address
      */
     private void openAddress(Address addresse) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                    addressList.add(a);
-                });
-            }
+        new Thread(() -> {
+            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                addressList.add(a);
+            });
         }).start();
         //old code 
 //        Ui.exec(() -> {
@@ -295,13 +293,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                    communicationsList.add(a);
-                });
-            }
+        new Thread(() -> {
+            Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                communicationsList.add(a);
+            });
         }).start();
     }
 

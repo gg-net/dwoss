@@ -181,31 +181,34 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         //Address CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
             ListCell<Address> cell = new ListCell<Address>() {
                 @Override
-                protected void updateItem(Address t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
+                protected void updateItem(Address item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
                         VBox anschriftbox = new VBox();
-                        Label street = new Label(t.getStreet());
+                        Label street = new Label(item.getStreet());
 
-                        Label zipCode = new Label(t.getZipCode());
-                        Label city = new Label(t.getCity());
+                        Label zipCode = new Label(item.getZipCode());
+                        Label city = new Label(item.getCity());
                         HBox postBox = new HBox();
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
-                        Label country = new Label(new Locale("", t.getIsoCountry()).getDisplayCountry());
+                        Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
+
                         anschriftbox.getChildren().addAll(street, postBox, country);
                         anschriftbox.setSpacing(2.0);
 
                         setText(null);
                         setGraphic(anschriftbox);
 
-                    } else {
-                        setText("");
                     }
                 }
             };
@@ -272,19 +275,20 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         contactListView.setCellFactory((ListView<Contact> p) -> {
             ListCell<Contact> cell = new ListCell<Contact>() {
                 @Override
-                protected void updateItem(Contact t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
+                protected void updateItem(Contact item, boolean empty) {
+                    super.updateItem(item, empty);
+                     if ( item == null || empty ) {
+                        setGraphic(null);
+                        setText("");
+                     }else{
                         String anrede = "";
-                        if ( t.getSex() == Sex.FEMALE ) {
+                        if ( item.getSex() == Sex.FEMALE ) {
                             anrede = "Frau ";
                         }
-                        if ( t.getSex() == Sex.MALE ) {
+                        if ( item.getSex() == Sex.MALE ) {
                             anrede = "Herr ";
                         }
-                        setText(anrede + t.toFullName());
-                    } else {
-                        setText("");
+                        setText(anrede + item.toFullName());
                     }
                 }
             };
@@ -326,13 +330,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param addresse is the Address
      */
     private void openAddress(Address addresse) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                    addressList.add(a);
-                });
-            }
+        new Thread(() -> {
+            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                addressList.add(a);
+            });
         }).start();
     }
 
@@ -342,13 +343,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                    communicationsList.add(a);
-                });
-            }
+        new Thread(() -> {
+            Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                communicationsList.add(a);
+            });
         }).start();
     }
 
@@ -358,13 +356,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param contact is the Contact
      */
     private void openContact(Contact contact) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
-                    contactsList.add(a);
-                });
-            }
+        new Thread(() -> {
+            Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+                contactsList.add(a);
+            });
         }).start();
 
     }

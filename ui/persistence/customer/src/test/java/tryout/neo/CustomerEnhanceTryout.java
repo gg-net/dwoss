@@ -18,13 +18,11 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.saft.*;
 
-import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -43,7 +41,7 @@ public class CustomerEnhanceTryout {
         JButton run = new JButton("OpenUi");      
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> c, CustomerEnhanceController.class).ifPresent(System.out::println);;
+                Ui.fxml().eval(() -> c, CustomerEnhanceController.class).ifPresent(System.out::println);
             });
         });
 
