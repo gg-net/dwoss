@@ -70,8 +70,6 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     /**
      * Close the Editor window and discard all changes.
      *
-     * @todo
-     * objekte passen mit saft
      */
     private void handleSaveButtonAction(ActionEvent event) {
         warning.setVisible(false);
@@ -105,16 +103,18 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        commtypbox.getItems().addAll(Communication.Type.values());
     }
 
     @Override
     public void accept(Communication a) {
-        this.communication = a;
-        identifer.setText(communication.getIdentifier());
-
-        if ( communication != null ) {
-            commtypbox.getSelectionModel().select(communication.getType());
+        if ( a != null ) {
+            communication = a;
+        }else {
+            UiAlert.message("Kommunikationsweg ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
+        identifer.setText(communication.getIdentifier());
+        commtypbox.getSelectionModel().select(communication.getType());
     }
 
     @Override

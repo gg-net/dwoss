@@ -46,9 +46,9 @@
     </center>
     <bottom>
         <HBox alignment="TOP_RIGHT" spacing="5.0">
-            <children>
-                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abbruch" />
+            <children>                
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
+                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abbruch" />
             </children>
         </HBox>
     </bottom>

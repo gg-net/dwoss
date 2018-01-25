@@ -17,14 +17,12 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import javafx.beans.property.*;
 import javafx.collections.*;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceHistory;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 
 import lombok.*;

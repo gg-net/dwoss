@@ -209,7 +209,7 @@ public class CustomerGenerator {
      * <p>
      * @return a generated {@link Communication}.
      */
-    private Communication makeCommunication() {
+    public Communication makeCommunication() {
         Communication c = new Communication();
         c.setType(new RandomEnum<>(Communication.Type.class).random());
         c.setIdentifier(RandomStringUtils.randomAlphanumeric(5));

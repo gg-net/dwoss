@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ui.neo.list.CompanyList;
-import eu.ggnet.dwoss.customer.ui.neo.list.AdditionalCustomerIdList;
-import eu.ggnet.dwoss.customer.ui.neo.list.AddressList;
 
 import java.net.URL;
 import java.util.*;
@@ -101,9 +98,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private GridPane midGridPane;
 
-    private CompanyList companyList;
-
-    private AddressList addressListedViewController;
+  
     
 
     @Override
@@ -123,17 +118,17 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         CustomerGenerator gen = new CustomerGenerator();
         companies.addAll(gen.makeCompanies(10));
 
-        companyList = new CompanyList(FXCollections.observableArrayList(companies));
-
-//        ObservableMap<ExternalSystem, String> additionalCustomerIdMap = FXCollections.observableHashMap();
-//        additionalCustomerIdMap.put(LEXWARE, "hund");
-//        additionalCustomerIdListViewController.setObservableMap(additionalCustomerIdMap);
-        List<Address> addressesList = gen.makeAddresses(5);
-
-        addressListedViewController = new AddressList(FXCollections.observableArrayList(addressesList));
-
-        midGridPane.add(addressListedViewController.getList(), 2, 4);
-        midGridPane.add(companyList.getList(), 0, 3);
+//        companyList = new CompanyList(FXCollections.observableArrayList(companies));
+//
+////        ObservableMap<ExternalSystem, String> additionalCustomerIdMap = FXCollections.observableHashMap();
+////        additionalCustomerIdMap.put(LEXWARE, "hund");
+////        additionalCustomerIdListViewController.setObservableMap(additionalCustomerIdMap);
+//        List<Address> addressesList = gen.makeAddresses(5);
+//
+//        addressListedViewController = new AddressList(FXCollections.observableArrayList(addressesList));
+//
+//        midGridPane.add(addressListedViewController.getList(), 2, 4);
+//        midGridPane.add(companyList.getList(), 0, 3);
 
     }
 
@@ -178,15 +173,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-    public void accept(Customer customer) {
-        if ( customer != null ) {
-            if ( customer.isBussines() ) {
+    public void accept(Customer cust) {
+        if ( cust != null ) {
+            if ( cust.isBussines() ) {
                 bussines = true;
             }
+            customer = cust;
             setCustomer(customer);
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar").show(UiAlertBuilder.Type.WARNING);
-            return;
+            UiAlert.message("Kunde ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
     }
 

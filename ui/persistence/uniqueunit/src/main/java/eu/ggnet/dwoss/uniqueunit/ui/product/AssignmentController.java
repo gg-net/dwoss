@@ -67,37 +67,43 @@ public class AssignmentController implements Initializable, FxController {
     private void assignUnit(ActionEvent event) {
         List<UniqueUnit> selected = unassignedUnitsList.getSelectionModel().getSelectedItems();
         UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
-        if ( selected != null ) {
+        if ( !selected.isEmpty() ) {
 
             for (UniqueUnit uu : selected) {
                 Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId()), selectedCollection.getId());
                 assignedUnitsList.getItems().add(uu);
                 unassignedUnitsList.getItems().remove(uu);
-                unassignedUnitsList.getSelectionModel().clearSelection();
             }
+            unassignedUnitsList.getSelectionModel().clearSelection();
         }
     }
 
     @FXML
     private void unassignUnit(ActionEvent event) {
-        UniqueUnit selected = assignedUnitsList.getSelectionModel().getSelectedItem();
-        if ( selected != null ) {
-            Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(selected.getId(), "RefurbishedId=" + selected.getRefurbishId())))
-                    .filter(r -> {
-                        return Ui.failure().handle(r);
-                    })
-                    .ifPresent(c -> {
-                        unassignedUnitsList.getItems().add(selected);
-                        assignedUnitsList.getItems().remove(selected);
-                        unassignedUnitsList.getSelectionModel().clearSelection();
-                    });
+        List<UniqueUnit> selected = assignedUnitsList.getSelectionModel().getSelectedItems();
+        if ( !selected.isEmpty() ) {
+
+            for (UniqueUnit uu : selected) {
+
+                Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId())))
+                        .filter(r -> {
+                            return Ui.failure().handle(r);
+                        })
+                        .ifPresent(c -> {
+                            unassignedUnitsList.getItems().add(uu);
+                            assignedUnitsList.getItems().remove(uu);
+                        });
+            }
+            unassignedUnitsList.getSelectionModel().clearSelection();
         }
     }
 
     @FXML
     private void addUnitCollection() {
 
-        openEdit(new UnitCollection());
+        if ( productList.getSelectionModel().getSelectedItem() != null ) {
+            openEdit(new UnitCollection());
+        }
 
     }
 
@@ -111,6 +117,8 @@ public class AssignmentController implements Initializable, FxController {
 
     }
 
+    //Todo db createOrUpdate
+    //Ui refresh
     private void openEdit(UnitCollection uc) {
 
         Ui.exec(() -> {
@@ -194,13 +202,14 @@ public class AssignmentController implements Initializable, FxController {
         unassignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                UniqueUnit selectedUnit = unassignedUnitsList.getSelectionModel().getSelectedItem();
-                if ( selectedUnit == null ) return;
+                ArrayList<UniqueUnit> selected = new ArrayList<>();
+                selected.addAll(unassignedUnitsList.getSelectionModel().getSelectedItems());
+                if ( selected.isEmpty() || unitCollectionList.getSelectionModel().getSelectedItem() == null ) return;
                 Dragboard db = unassignedUnitsList.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-                content.put(df, selectedUnit);
+                content.put(df, selected);
                 db.setContent(content);
-                L.info("DnD of {} started", selectedUnit.getId());
+                L.info("DnD of {} Units started", selected.size());
                 event.consume();
             }
         });
@@ -225,19 +234,20 @@ public class AssignmentController implements Initializable, FxController {
             @Override
             public void handle(final DragEvent event) {
                 Dragboard db = event.getDragboard();
-                boolean success = false;
                 if ( db.hasContent(df) ) {
-                    UniqueUnit draggedUnit = (UniqueUnit)db.getContent(df);
-                    Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId())))
-                            .filter(r -> {
-                                if ( !r.hasSucceded() ) event.setDropCompleted(false);
-                                return Ui.failure().handle(r);
-                            })
-                            .ifPresent(c -> {
-                                unassignedUnitsList.getItems().add(draggedUnit);
-                                assignedUnitsList.getItems().remove(draggedUnit);
-                                event.setDropCompleted(true);
-                            });
+                    List<UniqueUnit> dragged = (List<UniqueUnit>)db.getContent(df);
+                    for (UniqueUnit draggedUnit : dragged) {
+                        Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId())))
+                                .filter(r -> {
+                                    if ( !r.hasSucceded() ) event.setDropCompleted(false);
+                                    return Ui.failure().handle(r);
+                                })
+                                .ifPresent(c -> {
+                                    unassignedUnitsList.getItems().add(draggedUnit);
+                                    assignedUnitsList.getItems().remove(draggedUnit);
+                                });
+                    }
+                    event.setDropCompleted(true);
                 } else {
                     event.setDropCompleted(false);
                 }
@@ -251,13 +261,15 @@ public class AssignmentController implements Initializable, FxController {
         assignedUnitsList.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                UniqueUnit selectedUnit = assignedUnitsList.getSelectionModel().getSelectedItem();
-                if ( selectedUnit == null ) return;
+
+                List<UniqueUnit> selected = new ArrayList<>();
+                selected.addAll(assignedUnitsList.getSelectionModel().getSelectedItems());
+                if ( selected.isEmpty() ) return;
                 Dragboard db = assignedUnitsList.startDragAndDrop(TransferMode.ANY);
                 ClipboardContent content = new ClipboardContent();
-                content.put(df, selectedUnit);
+                content.put(df, selected);
                 db.setContent(content);
-                L.info("DnD of {} started", selectedUnit.getId());
+                L.info("DnD of {} Units started", selected.size());
                 event.consume();
             }
         });
@@ -282,20 +294,22 @@ public class AssignmentController implements Initializable, FxController {
             @Override
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
-                boolean success = false;
                 if ( db.hasContent(df) ) {
-                    UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
-                    UniqueUnit draggedUnit = (UniqueUnit)db.getContent(df);
-                    Optional.of(Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId()), selectedCollection.getId()))
-                            .filter(r -> {
-                                if ( !r.hasSucceded() ) event.setDropCompleted(false);
-                                return Ui.failure().handle(r);
-                            })
-                            .ifPresent(c -> {
-                                assignedUnitsList.getItems().add(draggedUnit);
-                                unassignedUnitsList.getItems().remove(draggedUnit);
-                                event.setDropCompleted(true);
-                            });
+                    List<UniqueUnit> dragged = (List<UniqueUnit>)db.getContent(df);
+                    for (UniqueUnit draggedUnit : dragged) {
+                        UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
+                        Optional.of(Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId()), selectedCollection.getId()))
+                                .filter(r -> {
+                                    if ( !r.hasSucceded() ) event.setDropCompleted(false);
+                                    return Ui.failure().handle(r);
+                                })
+                                .ifPresent(c -> {
+                                    assignedUnitsList.getItems().add(draggedUnit);
+                                    unassignedUnitsList.getItems().remove(draggedUnit);
+                                    event.setDropCompleted(true);
+                                });
+                    }
+                    event.setDropCompleted(true);
                 } else {
                     event.setDropCompleted(false);
                 }
