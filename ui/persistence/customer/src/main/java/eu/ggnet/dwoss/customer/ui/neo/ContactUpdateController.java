@@ -274,17 +274,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param addresse is the Address
      */
     private void openAddress(Address addresse) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                addressList.add(a);
-            });
-        }).start();
-        //old code 
-//        Ui.exec(() -> {
-//            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-//                addressList.add(a);
-//            });
-//        });
+         Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                    addressList.add(a);
+                });
+         });
     }
 
     /**
@@ -293,11 +287,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                communicationsList.add(a);
-            });
-        }).start();
+         Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                    communicationsList.add(a);
+                 });
+         });
     }
 
     /**

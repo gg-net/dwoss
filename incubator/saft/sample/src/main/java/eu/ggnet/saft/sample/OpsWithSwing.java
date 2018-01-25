@@ -24,19 +24,19 @@ public class OpsWithSwing {
 
             JMenuItem b = new JMenuItem("Open Search with Default");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new SearchViewWithDefault());
+                Ui.build().fx().show(() -> new SearchViewWithDefault());
             }));
             menu.add(b);
 
             b = new JMenuItem("Open Search with Context");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new SearchViewWithSimpleContext());
+                Ui.build().fx().show(() -> new SearchViewWithSimpleContext());
             }));
             menu.add(b);
 
             b = new JMenuItem("Open Search with Everything");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new SearchViewWithEverything());
+                Ui.build().fx().show(() -> new SearchViewWithEverything());
             }));
             menu.add(b);
 
@@ -46,13 +46,13 @@ public class OpsWithSwing {
 
             b = new JMenuItem("Reactive Unit Viewer");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new UnitDetailSelectivView());
+                Ui.build().fx().show(() -> new UnitDetailSelectivView());
             }));
             menu.add(b);
 
             b = new JMenuItem("Reactive Dossier Viewer");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new DossierDetailSelectivView());
+                Ui.build().fx().show(() -> new DossierDetailSelectivView());
             }));
             menu.add(b);
 

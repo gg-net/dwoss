@@ -684,7 +684,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
 
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
         Ui.exec(() -> {
-            Ui.fx().parent(this).eval(() -> new TaxChangePane()).ifPresent(t -> {
+            Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(t -> {
                 L.debug("Changeing Tax to {}", t);
                 document.getPositions().values().forEach(p -> p.setTax(t.getTax()));
                 L.debug("Fist tax: {}", positions.get(0).getTax());

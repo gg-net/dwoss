@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.saft.Ops;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -54,9 +52,9 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ops;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -70,6 +68,7 @@ import static eu.ggnet.saft.Client.lookup;
 @eu.ggnet.saft.api.ui.Frame
 @Title("Kunden und Aufträge")
 @StoreLocation
+@Once
 public class RedTapeView extends JPanel implements ClosedListener {
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);
@@ -256,7 +255,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
                             customer.getShippingCondition(),
                             customer.getPaymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
-                    Ui.fx().parent(jLabel1).title("StageInfo")
+                    Ui.build().parent(jLabel1).title("StageInfo").fx()
                             .show(() -> {
                                 return "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
                                         + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
@@ -289,7 +288,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
         JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
         showNewDetails.addActionListener(e -> {
             Ui.exec(() -> {
-                Ui.fx().title("Customer").show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
+                Ui.build().title("Customer").fx().show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
             });
         });
 

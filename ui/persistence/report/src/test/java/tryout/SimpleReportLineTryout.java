@@ -186,7 +186,7 @@ public class SimpleReportLineTryout {
         Client.addSampleStub(ReportAgent.class, rastub);
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.fx().show(() -> {
+        Ui.build().fx().show(() -> {
             RawReportView srl = new RawReportView();
             srl.load(new SearchParameter());
             return srl;

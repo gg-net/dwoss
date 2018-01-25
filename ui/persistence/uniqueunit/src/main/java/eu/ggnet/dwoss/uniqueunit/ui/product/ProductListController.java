@@ -121,7 +121,7 @@ public class ProductListController implements Initializable, FxController, Close
      */
     private void openAssignment(ActionEvent event) {
         Ui.exec(() -> {
-            Ui.fxml().parent(tableView).show(AssignmentController.class);
+            Ui.build().parent(tableView).fxml().show(AssignmentController.class);
         });
     }
 
@@ -255,7 +255,7 @@ public class ProductListController implements Initializable, FxController, Close
     @FXML
     private void create() {
         Ui.exec(() -> {
-            Ui.fxml().parent(tableView).eval(ProductEditorController.class)
+            Ui.build().parent(tableView).fxml().eval(ProductEditorController.class)
                     .ifPresent(System.out::println);
         });
     }
@@ -263,7 +263,7 @@ public class ProductListController implements Initializable, FxController, Close
     @FXML
     private void edit() {
         Ui.exec(() -> {
-            Ui.fxml().parent(tableView).eval(() -> tableView.getSelectionModel().getSelectedItem(), ProductEditorController.class)
+            Ui.build().parent(tableView).fxml().eval(() -> tableView.getSelectionModel().getSelectedItem(), ProductEditorController.class)
                     .ifPresent(System.out::println);
         });
     }

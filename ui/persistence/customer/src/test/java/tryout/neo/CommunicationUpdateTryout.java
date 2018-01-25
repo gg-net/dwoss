@@ -45,7 +45,7 @@ public class CommunicationUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(System.out::println);;
+                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(System.out::println);;
             });
         });
 

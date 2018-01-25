@@ -277,10 +277,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 @Override
                 protected void updateItem(Contact item, boolean empty) {
                     super.updateItem(item, empty);
-                     if ( item == null || empty ) {
+                    if ( item == null || empty ) {
                         setGraphic(null);
                         setText("");
-                     }else{
+                    } else {
                         String anrede = "";
                         if ( item.getSex() == Sex.FEMALE ) {
                             anrede = "Frau ";
@@ -330,11 +330,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param addresse is the Address
      */
     private void openAddress(Address addresse) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                 addressList.add(a);
             });
-        }).start();
+        });
     }
 
     /**
@@ -343,11 +343,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                 communicationsList.add(a);
             });
-        }).start();
+        });
     }
 
     /**
@@ -356,12 +356,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param contact is the Contact
      */
     private void openContact(Contact contact) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
                 contactsList.add(a);
             });
-        }).start();
-
+        });
     }
 
     /**

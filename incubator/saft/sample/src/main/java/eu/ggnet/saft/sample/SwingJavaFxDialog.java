@@ -22,7 +22,7 @@ public class SwingJavaFxDialog {
     public static void main(String[] args) {
         UiCore.startSwing(() -> new MainPanel());
 
-        Ui.dialog().eval(() -> {
+        Ui.build().dialog().eval(() -> {
             Dialog<String> dialog = new Dialog<>();
             GridPane grid = new GridPane();
             grid.setHgap(10);

@@ -33,12 +33,9 @@ public class HtmlPane extends BorderPane implements Consumer<String> {
     private WebView webView;
 
     public HtmlPane() {
-        // new WebView must happen on the FxThead.
-        dispatch(() -> {
-            setPadding(new Insets(5));
-            webView = new WebView();
-            setCenter(webView);
-        });
+        setPadding(new Insets(5));
+        webView = new WebView();
+        setCenter(webView);
     }
 
     @Override

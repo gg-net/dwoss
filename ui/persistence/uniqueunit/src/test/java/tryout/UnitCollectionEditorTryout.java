@@ -53,7 +53,7 @@ public class UnitCollectionEditorTryout {
 
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> uc, UnitCollectionEditorController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> uc, UnitCollectionEditorController.class).ifPresent(System.out::println);
             });
         });
 

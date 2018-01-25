@@ -42,7 +42,7 @@ public class CustomerSearchTryout {
         
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().show(CustomerSearchController.class);
+                Ui.build().fxml().show(CustomerSearchController.class);
             });
         });
 

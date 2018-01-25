@@ -25,13 +25,12 @@ import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
-import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
+import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -80,7 +79,7 @@ public class DossierCreateAction extends AbstractAction {
             doc.setInvoiceAddress(addresses.getInvoice());
             doc.setShippingAddress(addresses.getShipping());
 
-            Ui.swing().parent(controller.getView()).eval(() -> {
+            Ui.build().parent(controller.getView()).swing().eval(() -> {
                 DocumentUpdateView docView = new DocumentUpdateView(doc);
                 docView.setController(new DocumentUpdateController(docView, doc));
                 docView.setCustomerValues(customer.getId());

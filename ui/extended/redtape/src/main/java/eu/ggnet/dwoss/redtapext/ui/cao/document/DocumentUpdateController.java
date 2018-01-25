@@ -117,7 +117,7 @@ public class DocumentUpdateController {
      * @return the updated Position.
      */
     public Position editPosition(final Position pos) {
-        return Ui.swing().parent(view).title("Position bearbeiten")
+        return Ui.build().parent(view).title("Position bearbeiten").swing()
                 .eval(() -> pos, () -> OkCancel.wrap(new PositionUpdateCask()))
                 .map(Reply::getPayload)
                 .orElse(null);
@@ -137,7 +137,7 @@ public class DocumentUpdateController {
     }
 
     public void createServicePosition() {
-        document.append(Ui.swing().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten")
+        document.append(Ui.build().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten").swing()
                 .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask(documentTax())))
                 .map(Reply::getPayload)
                 .orElse(null));

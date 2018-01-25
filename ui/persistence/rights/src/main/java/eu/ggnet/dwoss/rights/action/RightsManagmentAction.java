@@ -37,7 +37,7 @@ public class RightsManagmentAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fxml().show(RightsManagmentController.class);
+            Ui.build().fxml().show(RightsManagmentController.class);
         });
     }
 

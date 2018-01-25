@@ -41,7 +41,7 @@ public class ProductEditorTryout extends Application {
 
         UiCore.startSwing(() -> new JLabel("Mainapplicakt"));
 
-// Neue                Ui.fxml().eval(ProductEditorController.class).ifPresent(System.out::println);
+// Neue                Ui.build().fxml().eval(ProductEditorController.class).ifPresent(System.out::println);
 // Alt
         ProductGenerator gen = new ProductGenerator();
 
@@ -52,7 +52,7 @@ public class ProductEditorTryout extends Application {
          * Properties -> Sources
          */
         System.out.println(makeProduct);
-        Ui.fxml().eval(ProductEditorController.class).ifPresent(System.out::println);
+        Ui.build().fxml().eval(ProductEditorController.class).ifPresent(System.out::println);
     }
 
 }

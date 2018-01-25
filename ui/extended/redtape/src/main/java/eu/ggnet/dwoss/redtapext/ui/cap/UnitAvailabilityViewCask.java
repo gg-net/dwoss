@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.saft.core.cap.MainComponent;
-import eu.ggnet.saft.Client;
-
 import java.awt.*;
 import java.util.*;
 
@@ -33,11 +29,12 @@ import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.HtmlPane;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ops.SelectionEnhancer;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.Ops;
+import eu.ggnet.saft.core.cap.MainComponent;
+import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.Selector;
+import eu.ggnet.saft.core.ui.Workspace;
 
 import static eu.ggnet.saft.Client.lookup;
 
@@ -175,7 +172,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         UnitShard us = resultList.getSelectedValue();
         if ( us == null || us.getAvailable() == null ) return;
         Ui.exec(() -> {
-            Ui.fx().id(us.getRefurbishedId()).show(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()), () -> new HtmlPane());
+            Ui.build().id(us.getRefurbishedId()).fx().show(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()), () -> new HtmlPane());
         });
     }//GEN-LAST:event_resultListMouseClicked
 

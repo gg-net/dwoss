@@ -1,14 +1,13 @@
 package eu.ggnet.saft.sample;
 
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Ui;
-
 import java.awt.Dialog;
 import java.awt.Label;
 
 import javax.swing.JDialog;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.sample.support.DocumentAdressUpdateViewOkCanceler;
 import eu.ggnet.saft.sample.support.MainPanel;
 
@@ -40,7 +39,7 @@ public class SwingPopupSwingParentSwing {
         String adress = "Hans Mustermann\nMusterstrasse 22\n12345 Musterhausen";
         // Swing Panel in Swing Dialog
         Ui.exec(() -> {
-            Ui.swing().parent(label).eval(() -> adress, () -> new DocumentAdressUpdateViewOkCanceler()).ifPresent(System.out::println);
+            Ui.build(label).swing().eval(() -> adress, () -> new DocumentAdressUpdateViewOkCanceler()).ifPresent(System.out::println);
         });
     }
 }

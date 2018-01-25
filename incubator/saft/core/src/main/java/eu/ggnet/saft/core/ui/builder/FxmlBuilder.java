@@ -16,7 +16,6 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,14 +23,10 @@ import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.experimental.Accessors;
 
@@ -49,9 +44,9 @@ import lombok.experimental.Accessors;
 
 
     Examples:
-    Ui.fx().parrent().id("blaa").eval(fdsafdsafddsa);
+    Ui.build().fx().parrent().id("blaa").eval(fdsafdsafddsa);
 
-    Ui.swing().show(()->Demo());
+    Ui.build().swing().show(()->Demo());
 
  */
 /**
@@ -64,86 +59,13 @@ import lombok.experimental.Accessors;
 public class FxmlBuilder extends AbstractBuilder {
 
     public FxmlBuilder() {
+        super();
         SwingCore.ensurePlatformIsRunning();
     }
 
-    /**
-     * Sets the once mode.
-     * If set to true, an once mode is enable. This ensures that one one window of the same type is created and show.
-     * If minimised it becomes reopend, if in the back it becomes moved to the front.
-     *
-     * @param once the once mode
-     * @return this as fluent usage
-     */
-    public FxmlBuilder once(boolean once) {
-        super.once = once;
-        return this;
-    }
-
-    /**
-     * An optional id. Replaces the id part in a title like: this is a title of {id}
-     *
-     * @param id the optional id.
-     * @return this as fluent usage
-     */
-    public FxmlBuilder id(String id) {
-        super.id = id;
-        return this;
-    }
-
-    /**
-     * An optional title. If no title is given, the classname is used.
-     *
-     * @param title the title;
-     * @return this as fluent usage
-     */
-    public FxmlBuilder title(String title) {
-        super.title = title;
-        return this;
-    }
-
-    /**
-     * Enables the Frame mode, makeing the created window a first class element.
-     *
-     * @param frame if true frame is assumed.
-     * @return this as fluent usage
-     */
-    public FxmlBuilder frame(boolean frame) {
-        super.frame = frame;
-        return this;
-    }
-
-    /**
-     * Optional value for the modality.
-     *
-     * @param modality the modality to use
-     * @return this as fluent usage
-     */
-    public FxmlBuilder modality(Modality modality) {
-        super.modality = modality;
-        return this;
-    }
-
-    /**
-     * Represents the parent of the ui element, optional.
-     *
-     * @param swingParent the parent
-     * @return this as fluent usage
-     */
-    public FxmlBuilder parent(Component swingParent) {
-        super.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
-        return this;
-    }
-
-    /**
-     * Represents the parent of the ui element, optional.
-     *
-     * @param javaFxParent the parent
-     * @return this as fluent usage
-     */
-    public FxmlBuilder parent(Parent javaFxParent) {
-        super.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
-        return this;
+    public FxmlBuilder(PreBuilder pre) {
+        super(pre);
+        SwingCore.ensurePlatformIsRunning();
     }
 
     /**

@@ -46,13 +46,13 @@ public class ResolveRepaymentAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Contractors contractors = Ui.progress().call(() -> lookup(MandatorSupporter.class).loadContractors());
-            Ui.dialog().eval(() -> {
+            Ui.build().dialog().eval(() -> {
                 ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());
                 dialog.setTitle("Gutschriften");
                 dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
                 dialog.setContentText("Lieferant auswählen:");
                 return dialog;
-            }).ifPresent(c -> Ui.fxml().show(() -> c, ResolveRepaymentController.class));
+            }).ifPresent(c -> Ui.build().fxml().show(() -> c, ResolveRepaymentController.class));
 
         });
     }

@@ -41,7 +41,7 @@ public class CustomerEnhanceTryout {
         JButton run = new JButton("OpenUi");      
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> c, CustomerEnhanceController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> c, CustomerEnhanceController.class).ifPresent(System.out::println);
             });
         });
 

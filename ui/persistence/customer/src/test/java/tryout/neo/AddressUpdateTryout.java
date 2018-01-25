@@ -42,7 +42,7 @@ public class AddressUpdateTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);;
+                Ui.build().fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);;
             });
         });
 

@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ui.main;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -39,14 +37,15 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 
+import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.Client;
 
 import lombok.Getter;
 import lombok.Value;
@@ -377,7 +376,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
     @FXML
     public void handleCreateButtonAction() {
         Ui.exec(() -> {
-            Ui.dialog().parent(mainPane)
+            Ui.build().parent(mainPane).dialog()
                     .eval(() -> reportResult, () -> new ResultPane())
                     .ifPresent(r -> Ui.progress().call(() -> {
                 Client.lookup(ReportAgent.class).store(

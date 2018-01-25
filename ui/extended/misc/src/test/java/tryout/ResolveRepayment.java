@@ -41,7 +41,7 @@ public class ResolveRepayment {
     }
 
     public static void selector() {
-        Ui.dialog().eval(() -> {
+        Ui.build().dialog().eval(() -> {
             ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(ACER, TradeName.values());
             dialog.setTitle("Gutschriften");
             dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
@@ -51,6 +51,6 @@ public class ResolveRepayment {
     }
 
     public static void run() {
-        Ui.fxml().show(ResolveRepaymentController.class);
+        Ui.build().fxml().show(ResolveRepaymentController.class);
     }
 }

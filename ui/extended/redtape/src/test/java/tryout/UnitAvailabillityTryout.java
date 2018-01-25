@@ -83,6 +83,6 @@ public class UnitAvailabillityTryout {
 
         UiCore.startSwing(() -> new JLabel("Main Application"));
 
-        Ui.swing().show(() -> new UnitAvailabilityViewCask());
+        Ui.build().swing().show(() -> new UnitAvailabilityViewCask());
     }
 }

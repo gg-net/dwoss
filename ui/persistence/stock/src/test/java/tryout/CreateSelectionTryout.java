@@ -146,7 +146,7 @@ public class CreateSelectionTryout {
 
         UiCore.startSwing(() -> b);
         Ui.exec(() -> {
-            Ui.fxml().eval(CreateSelectionController.class).ifPresent(System.out::println);
+            Ui.build().fxml().eval(CreateSelectionController.class).ifPresent(System.out::println);
         });
 
         l.await();

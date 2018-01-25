@@ -261,7 +261,7 @@ public class RawReportView extends BorderPane {
         Button okButton = (Button)dialogPane.lookupButton(ButtonType.OK);
         okButton.setText("Save");
 
-        Ui.dialog().parent(this).eval(() -> dialog)
+        Ui.build().parent(this).dialog().eval(() -> dialog)
                 .filter(result -> result == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), textarea.getText()));
     }
@@ -281,7 +281,7 @@ public class RawReportView extends BorderPane {
         dialogPane.setContent(grid);
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
-        Ui.dialog().parent(this).eval(() -> dialog).filter(response -> response == ButtonType.OK)
+        Ui.build(this).dialog().eval(() -> dialog).filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), input));
 
     }
@@ -293,7 +293,7 @@ public class RawReportView extends BorderPane {
      * @param reportLineId
      */
     public void openDetailView(final long reportLineId) {
-        Ui.fx().parent(this).show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
+        Ui.build(this).fx().show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
     }
 
     /**

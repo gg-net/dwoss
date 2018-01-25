@@ -123,18 +123,18 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void handelPreferedAddressLabelsButton(ActionEvent event) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> customer, PreferedAddressLabelsController.class);
-        }).start();
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
+        });
     }
 
     @FXML
-    private void cancelButtonHandling(ActionEvent event) {
+        private void cancelButtonHandling(ActionEvent event) {
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void handleMandatorInfoButton(ActionEvent event) {
+        private void handleMandatorInfoButton(ActionEvent event) {
         //TODO MandatorMetadataUpdateController is missing
         new Thread(() -> {
             //          Ui.fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetadataUpdateController.class);
@@ -142,7 +142,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+        public void initialize(URL url, ResourceBundle rb) {
         source.getItems().addAll(Source.values());
 
         //build the Flags Box
@@ -157,7 +157,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-    public void accept(Customer cust) {
+        public void accept(Customer cust) {
         if ( cust != null ) {
             if ( cust.isBussines() ) {
                 bussines = true;
@@ -170,7 +170,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-    public Customer getResult() {
+        public Customer getResult() {
         if ( customer == null ) {
             return null;
         }
@@ -277,7 +277,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         addExternalIdsListView.setCellFactory((ListView<ExternalId> p) -> {
             ListCell<ExternalId> cell = new ListCell<ExternalId>() {
                 @Override
-                protected void updateItem(ExternalId item, boolean empty) {
+        protected void updateItem(ExternalId item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -353,7 +353,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         contactListView.setCellFactory((ListView<Contact> p) -> {
             ListCell<Contact> cell = new ListCell<Contact>() {
                 @Override
-                protected void updateItem(Contact item, boolean empty) {
+        protected void updateItem(Contact item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -376,7 +376,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         companyListView.setCellFactory((ListView<Company> p) -> {
             ListCell<Company> cell = new ListCell<Company>() {
                 @Override
-                protected void updateItem(Company item, boolean empty) {
+        protected void updateItem(Company item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -393,7 +393,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             showHBox.getChildren().addAll(companyListView, buttonVBox);
         } else {
             showHBox.getChildren().addAll(contactListView, buttonVBox);
-        }
+        
+
+
+
+}
     }
 
     /**
@@ -402,13 +406,19 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param contact is the Contact
      */
     private void openContact(Contact contact) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+         Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> contact, ContactUpdateController.class
+
+).ifPresent(a -> {
                 contactList.add(a);
             });
-        }).start();
+        });
 
-    }
+    
+
+
+
+}
 
     /**
      * open the Company Editor
@@ -416,11 +426,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param company is the Company
      */
     private void openCompany(Company company) {
-        new Thread(() -> {
-            Ui.fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(a -> {
+         Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> company, CompanyUpdateController.class
+
+).ifPresent(a -> {
                 companyList.add(a);
             });
-        }).start();
+        });
     }
 
 }

@@ -45,7 +45,7 @@ public class ReportViewTryout {
                         .end(new Date())
                         .build());
 
-        Ui.fxml().show(() -> new ReportController.In(result, false), ReportController.class);
+        Ui.build().fxml().show(() -> new ReportController.In(result, false), ReportController.class);
     }
 
 }
