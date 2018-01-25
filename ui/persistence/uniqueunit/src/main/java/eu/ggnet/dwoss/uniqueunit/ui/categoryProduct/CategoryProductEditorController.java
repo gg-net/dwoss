@@ -86,7 +86,7 @@ public class CategoryProductEditorController implements Initializable, FxControl
     private void addProductsDnD(ActionEvent event) {
 
         Ui.exec(() -> {
-            Ui.fxml().show(ProductListController.class);
+            Ui.build().fxml().show(ProductListController.class);
         });
     }
 

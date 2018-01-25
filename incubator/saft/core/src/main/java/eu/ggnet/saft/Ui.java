@@ -1,24 +1,20 @@
 package eu.ggnet.saft;
 
-import eu.ggnet.saft.core.ui.Failure;
-import eu.ggnet.saft.core.ui.builder.ProgressBuilder;
-import eu.ggnet.saft.core.ui.builder.SwingBuilder;
-import eu.ggnet.saft.core.ui.builder.FxmlBuilder;
-import eu.ggnet.saft.core.ui.builder.DialogBuilder;
-import eu.ggnet.saft.core.ui.builder.FileChooserBuilder;
-import eu.ggnet.saft.core.ui.builder.FxBuilder;
-
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.core.ui.Failure;
 import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.builder.*;
 
 /*
  Notes of olli:
@@ -44,54 +40,32 @@ public class Ui {
     private final static Logger L = LoggerFactory.getLogger(Ui.class);
 
     /**
-     * Initializes a new swing component handling.
-     * The mode: swing is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Returns a new Ui builder.
      *
-     * @return a new swing builder
+     * @return a new Ui builder.
      */
-    public static SwingBuilder swing() {
-        return new SwingBuilder().parent(SwingCore.mainFrame());
+    public static PreBuilder build() {
+        return new PreBuilder().parent(SwingCore.mainFrame());
     }
 
     /**
-     * Initializes a new swing component handling with a parent.
-     * The mode: swing is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Returns a new Ui builder.
      *
-     * @param swingParent the parent of the swing element.
-     * @return a new swing builder.
+     * @param swingParent optional swing parrent
+     * @return a new Ui builder.
      */
-    public static SwingBuilder swing(Window swingParent) {
-        return new SwingBuilder().parent(SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame()));
+    public static PreBuilder build(Component swingParent) {
+        return new PreBuilder().parent(swingParent);
     }
 
     /**
-     * Initializes a new fx dialog component handling.
-     * The mode: the fx dialog is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Returns a new Ui builder.
      *
-     * @return a new dialog builder
+     * @param javaFxParent optional javafx parrent
+     * @return a new Ui builder.
      */
-    public static DialogBuilder dialog() {
-        return new DialogBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
-     * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new fxbuilder
-     */
-    public static FxBuilder fx() {
-        return new FxBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
-     * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new fxbuilder
-     */
-    public static FxmlBuilder fxml() {
-        return new FxmlBuilder().parent(SwingCore.mainFrame());
+    public static PreBuilder build(Parent javaFxParent) {
+        return new PreBuilder().parent(javaFxParent);
     }
 
     /**
@@ -141,7 +115,7 @@ public class Ui {
      */
     // TODO: Runable version
     public static <V> void exec(Callable<V> callable) {
-        ForkJoinPool.commonPool().execute(() -> {
+        UiCore.EXECUTOR_SERVICE.execute(() -> {
             try {
                 callable.call();
             } catch (Exception e) {
@@ -151,7 +125,7 @@ public class Ui {
     }
 
     public static void exec(Runnable runnable) {
-        ForkJoinPool.commonPool().execute(() -> {
+        UiCore.EXECUTOR_SERVICE.execute(() -> {
             try {
                 runnable.run();
             } catch (RuntimeException e) {

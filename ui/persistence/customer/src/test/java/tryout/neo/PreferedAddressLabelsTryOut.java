@@ -42,7 +42,7 @@ public class PreferedAddressLabelsTryOut {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> c, PreferedAddressLabelsController.class);
+                Ui.build().fxml().eval(() -> c, PreferedAddressLabelsController.class);
             });
         });
 

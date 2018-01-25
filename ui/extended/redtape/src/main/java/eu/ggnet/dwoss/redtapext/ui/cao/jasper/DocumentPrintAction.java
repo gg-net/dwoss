@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -31,10 +27,12 @@ import org.openide.util.Lookup;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtape.*;
+import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
 import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
@@ -85,7 +83,7 @@ public class DocumentPrintAction extends AbstractAction {
             JasperPrint print = lookup(DocumentSupporter.class).render(document, type);
             CustomerMetaData customer = lookup(CustomerService.class).asCustomerMetaData(customerId);
             boolean mailAvailable = customer.getEmail() != null && !customer.getEmail().trim().isEmpty();
-            Ui.swing().parent(controller.getView()).eval(() -> new JRViewerCask(print, document, type, mailAvailable))
+            Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
                     .filter(c -> c.isCorrectlyBriefed())
                     .ifPresent(c -> Ui.progress().call(() -> {
                             CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());

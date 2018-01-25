@@ -31,7 +31,7 @@ public class DateRangeAndContractorChooserTryout {
     public static void main(String[] args) {
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(System.out::println);
+        Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(System.out::println);
     }
 
 }

@@ -26,13 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
+import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
@@ -70,7 +70,7 @@ public class DossierUpdateAction extends AbstractAction {
         }
 
         Ui.exec(() -> {
-            Ui.swing().parent(parent).eval(() -> {
+            Ui.build().parent(parent).swing().eval(() -> {
                 DocumentUpdateView view = new DocumentUpdateView(doc);
                 DocumentUpdateController controller = new DocumentUpdateController(view, doc);
                 view.setController(controller);

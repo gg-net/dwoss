@@ -178,7 +178,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //TODO convert the simpleCustomer to a Customer
         
         Ui.exec(() -> {
-       //     Ui.fxml().eval(() -> company, CustomerEnhanceController.class);
+       //     Ui.build().fxml().eval(() -> company, CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);

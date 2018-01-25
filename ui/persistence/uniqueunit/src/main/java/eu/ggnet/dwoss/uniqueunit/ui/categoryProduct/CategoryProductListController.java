@@ -117,7 +117,7 @@ public class CategoryProductListController implements Initializable, FxControlle
         CategoryProduct cp = categoryProductsTableView.getSelectionModel().getSelectedItem();
         if ( cp != null ) {
             Ui.exec(() -> {
-                Ui.dialog().parent(root).eval(() -> new Alert(Alert.AlertType.WARNING, "Soll das CategoryProduct " + cp.getName() + " wirklich gelöscht werden?!", ButtonType.YES, ButtonType.NO))
+                Ui.build(root).dialog().eval(() -> new Alert(Alert.AlertType.WARNING, "Soll das CategoryProduct " + cp.getName() + " wirklich gelöscht werden?!", ButtonType.YES, ButtonType.NO))
                         .filter((type) -> type.equals(ButtonType.YES))
                         .map(i -> Client.lookup(UniqueUnitAgent.class).deleteCategoryProduct(cp.getId()))
                         .filter(Ui.failure()::handle)
@@ -189,7 +189,7 @@ public class CategoryProductListController implements Initializable, FxControlle
      */
     private void openEdit(CategoryProduct cp) {
         Ui.exec(() -> {
-            Ui.fxml().parent(root).eval(() -> cp, CategoryProductEditorController.class)
+            Ui.build(root).fxml().eval(() -> cp, CategoryProductEditorController.class)
                     .map(dto -> Client.lookup(UniqueUnitAgent.class).createOrUpdate(dto, Client.lookup(Guardian.class).getUsername()))
                     .ifPresent(this::updateList);
         });

@@ -52,7 +52,7 @@ public class CustomerSimpleTryout {
         
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 

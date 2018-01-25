@@ -74,17 +74,19 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private Company company;
 
-    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+    private final TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
 
-    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+    private final TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
+    private final TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
-    private ObservableList<Contact> contactsList = FXCollections.observableArrayList();
+    private final ObservableList<Contact> contactsList = FXCollections.observableArrayList();
 
-    private ObservableList<Address> addressList = FXCollections.observableArrayList();
+    private final ObservableList<Address> addressList = FXCollections.observableArrayList();
 
-    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
+    private final ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
+
+    private final ToggleGroup prefGroup = new ToggleGroup();
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
@@ -249,15 +251,18 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setText(null);
+                        setGraphic(null);
                     } else {
                         HBox checkHBox = new HBox();
-                        CheckBox prefCheckBox = new CheckBox();
-                        prefCheckBox.setSelected(item);
-                        checkHBox.getChildren().add(prefCheckBox);
+                        RadioButton prefRadioButton = new RadioButton();
+                        prefRadioButton.setSelected(item);
+                        prefRadioButton.setToggleGroup(prefGroup);
+
+                        checkHBox.getChildren().add(prefRadioButton);
                         checkHBox.setAlignment(Pos.CENTER);
 
-                        setGraphic(checkHBox);
                         setText("");
+                        setGraphic(checkHBox);
                     }
                 }
             };
@@ -324,7 +329,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                     addressList.add(a);
                 });
             }
@@ -340,7 +345,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                     communicationsList.add(a);
                 });
             }
@@ -356,7 +361,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
                     contactsList.add(a);
                 });
             }

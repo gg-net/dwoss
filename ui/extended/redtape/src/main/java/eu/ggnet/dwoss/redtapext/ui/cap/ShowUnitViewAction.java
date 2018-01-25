@@ -37,7 +37,7 @@ public class ShowUnitViewAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fx().show(() -> new ReactivePicoUnitDetailViewCask());
+            Ui.build().fx().show(() -> new ReactivePicoUnitDetailViewCask());
         });
     }
 
