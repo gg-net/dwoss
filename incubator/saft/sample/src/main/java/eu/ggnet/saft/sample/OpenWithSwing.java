@@ -5,11 +5,9 @@ import java.util.Random;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.api.ui.StoreLocation;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.core.ui.builder.SwingBuilder;
 import eu.ggnet.saft.sample.support.*;
 
@@ -46,32 +44,32 @@ public class OpenWithSwing {
 
             JMenuItem b = new JMenuItem("Once");
             b.addActionListener((e) -> Ui.exec(() -> {
-                SwingBuilder swing = Ui.swing();
+                SwingBuilder swing = Ui.build().swing();
                 swing.show(() -> new PanelOnceDialog());
             }));
             menu.add(b);
 
             b = new JMenuItem("Multiple : 1");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.swing().id("1").show(() -> new UnitViewer());
+                Ui.build().swing().id("1").show(() -> new UnitViewer());
             }));
             menu.add(b);
 
             b = new JMenuItem("Multiple : 2");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.swing().id("2").show(() -> new UnitViewer());
+                Ui.build().swing().id("2").show(() -> new UnitViewer());
             }));
             menu.add(b);
 
             b = new JMenuItem("Multiple : 3 , with precall");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.swing().once(false).show(() -> "Das ist der Riesentext für Unit 3", () -> new UnitViewer());
+                Ui.build().swing().once(false).show(() -> "Das ist der Riesentext für Unit 3", () -> new UnitViewer());
             }));
             menu.add(b);
 
             b = new JMenuItem("SelfCloser");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.swing().show(() -> new PanelWithSelfCloser());
+                Ui.build().swing().show(() -> new PanelWithSelfCloser());
             }));
             menu.add(b);
 
@@ -81,7 +79,7 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once Frame with ClosedListener");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.swing().show(() -> new PanelAsFrame());
+                Ui.build().swing().show(() -> new PanelAsFrame());
             }));
             menu.add(b);
 
@@ -91,13 +89,13 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new SimplePane());
+                Ui.build().fx().show(() -> new SimplePane());
             }));
             menu.add(b);
 
             b = new JMenuItem("Mutiple 1 with Title + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().id("1").show(() -> new SimplePane());
+                Ui.build().fx().id("1").show(() -> new SimplePane());
             }));
             menu.add(b);
 
@@ -107,19 +105,19 @@ public class OpenWithSwing {
                 SimplePane pane = new SimplePane();
                 System.out.println("test2 = " + pane.getClass().getAnnotation(StoreLocation.class) != null);
 
-                Ui.fx().id("2").show(() -> pane);
+                Ui.build().fx().id("2").show(() -> pane);
             }));
             menu.add(b);
 
             b = new JMenuItem("HtmlPane");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> "<h1>Ueberschrift</h1>", () -> new HtmlPane());
+                Ui.build().fx().show(() -> "<h1>Ueberschrift</h1>", () -> new HtmlPane());
             }));
             menu.add(b);
 
             b = new JMenuItem("Once InputPane via Fxml ");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fxml().eval(SimpleFxmlController.class).ifPresent(t -> UiAlert.show("Ok pressed with Input: " + t));
+                Ui.build().fxml().eval(SimpleFxmlController.class).ifPresent(t -> UiAlert.show("Ok pressed with Input: " + t));
             }));
             menu.add(b);
             main.getMenuBar().add(menu);
@@ -127,7 +125,7 @@ public class OpenWithSwing {
             b = new JMenuItem("Consumer with Random Id Supplier");
             b.addActionListener((e) -> {
                 Ui.exec(() -> {
-                    Ui.fx().show(() -> new S(NAMES[R.nextInt(NAMES.length)]), () -> new PaneConsumesIdSupplier());
+                    Ui.build().fx().show(() -> new S(NAMES[R.nextInt(NAMES.length)]), () -> new PaneConsumesIdSupplier());
                 });
             });
             menu.add(b);
@@ -136,19 +134,19 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new PaneAsFrame());
+                Ui.build().fx().show(() -> new PaneAsFrame());
             }));
             menu.add(b);
 
             b = new JMenuItem("Once With Self Closer");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fx().show(() -> new PaneAsFrameWithSelfCloser());
+                Ui.build().fx().show(() -> new PaneAsFrameWithSelfCloser());
             }));
             menu.add(b);
 
             b = new JMenuItem("Once Fxml");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.fxml().show(BasicApplicationController.class);
+                Ui.build().fxml().show(BasicApplicationController.class);
             }));
             menu.add(b);
             main.getMenuBar().add(menu);

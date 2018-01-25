@@ -16,9 +16,6 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import eu.ggnet.saft.core.ui.UserPreferences;
-import eu.ggnet.saft.Client;
-
 import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
@@ -35,11 +32,10 @@ import javafx.stage.Modality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.TitleUtil;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -54,17 +50,6 @@ import lombok.experimental.Accessors;
 public abstract class AbstractBuilder {
 
     protected static final Logger L = LoggerFactory.getLogger(AbstractBuilder.class);
-
-    /**
-     * Calls the callable in the same thread, while sending progress information into the ui.
-     *
-     * @param <A>
-     * @param callable
-     * @return
-     */
-    protected static <A> A callWithProgress(Callable<A> callable) {
-        return Ui.progress().call(callable);
-    }
 
     // Internal Parameter class
     @Builder
@@ -94,11 +79,8 @@ public abstract class AbstractBuilder {
         protected String key() {
             return panelClazz.getName() + (id == null ? "" : ":" + id);
         }
-    ;
-
     }
 
-    // maybe a panel could also happen
     /**
      * Represents the parent of the ui element, optional.
      */
@@ -135,6 +117,23 @@ public abstract class AbstractBuilder {
      * Default = null
      */
     protected Modality modality = null;
+
+    public AbstractBuilder() {
+        this(new PreBuilder());
+    }
+
+    public AbstractBuilder(PreBuilder pre) {
+        this(pre.swingParent, pre.once, pre.id, pre.title, pre.frame, pre.modality);
+    }
+
+    public AbstractBuilder(Window swingParent, boolean once, String id, String title, boolean frame, Modality modality) {
+        this.swingParent = swingParent;
+        this.once = once;
+        this.id = id;
+        this.title = title;
+        this.frame = frame;
+        this.modality = modality;
+    }
 
     /**
      * If we are in once mode, an active window with the supplied key is brought to the front;
@@ -234,6 +233,17 @@ public abstract class AbstractBuilder {
                 return Optional.of(Dialog.ModalityType.MODELESS);
         }
         return Optional.empty();
+    }
+
+    /**
+     * Calls the callable in the same thread, while sending progress information into the ui.
+     *
+     * @param <A>
+     * @param callable
+     * @return
+     */
+    protected static <A> A callWithProgress(Callable<A> callable) {
+        return Ui.progress().call(callable);
     }
 
 }

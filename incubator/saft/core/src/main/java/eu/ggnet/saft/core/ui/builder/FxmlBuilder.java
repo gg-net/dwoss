@@ -29,9 +29,7 @@ import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.experimental.Accessors;
 
@@ -64,8 +62,15 @@ import lombok.experimental.Accessors;
 public class FxmlBuilder extends AbstractBuilder {
 
     public FxmlBuilder() {
+        super();
         SwingCore.ensurePlatformIsRunning();
     }
+
+    public FxmlBuilder(PreBuilder pre) {
+        super(pre);
+        SwingCore.ensurePlatformIsRunning();
+    }
+
 
     /**
      * Sets the once mode.

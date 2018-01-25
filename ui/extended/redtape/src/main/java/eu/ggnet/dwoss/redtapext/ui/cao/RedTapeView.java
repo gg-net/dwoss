@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.saft.Ops;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -54,9 +52,9 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Ops;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
@@ -70,6 +68,7 @@ import static eu.ggnet.saft.Client.lookup;
 @eu.ggnet.saft.api.ui.Frame
 @Title("Kunden und Aufträge")
 @StoreLocation
+@Once
 public class RedTapeView extends JPanel implements ClosedListener {
 
     private final Logger L = LoggerFactory.getLogger(RedTapeView.class);

@@ -1,24 +1,19 @@
 package eu.ggnet.saft;
 
-import eu.ggnet.saft.core.ui.Failure;
-import eu.ggnet.saft.core.ui.builder.ProgressBuilder;
-import eu.ggnet.saft.core.ui.builder.SwingBuilder;
-import eu.ggnet.saft.core.ui.builder.FxmlBuilder;
-import eu.ggnet.saft.core.ui.builder.DialogBuilder;
-import eu.ggnet.saft.core.ui.builder.FileChooserBuilder;
-import eu.ggnet.saft.core.ui.builder.FxBuilder;
-
 import java.awt.*;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.core.ui.Failure;
 import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.builder.*;
 
 /*
  Notes of olli:
@@ -42,6 +37,35 @@ import eu.ggnet.saft.core.ui.SwingCore;
 public class Ui {
 
     private final static Logger L = LoggerFactory.getLogger(Ui.class);
+
+    /**
+     * Returns a new Ui builder.
+     *
+     * @return a new Ui builder.
+     */
+    public static PreBuilder build() {
+        return new PreBuilder().parent(SwingCore.mainFrame());
+    }
+
+    /**
+     * Returns a new Ui builder.
+     *
+     * @param swingParent optional swing parrent
+     * @return a new Ui builder.
+     */
+    public static PreBuilder build(Component swingParent) {
+        return new PreBuilder().parent(swingParent);
+    }
+
+    /**
+     * Returns a new Ui builder.
+     *
+     * @param javaFxParent optional javafx parrent
+     * @return a new Ui builder.
+     */
+    public static PreBuilder build(Parent javaFxParent) {
+        return new PreBuilder().parent(javaFxParent);
+    }
 
     /**
      * Initializes a new swing component handling.

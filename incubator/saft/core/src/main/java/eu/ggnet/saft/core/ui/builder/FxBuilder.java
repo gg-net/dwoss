@@ -16,8 +16,6 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import eu.ggnet.saft.core.ui.builder.AbstractBuilder;
-
 import java.awt.Component;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
@@ -32,9 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.experimental.Accessors;
 
@@ -67,8 +63,15 @@ import lombok.experimental.Accessors;
 public class FxBuilder extends AbstractBuilder {
 
     public FxBuilder() {
+        super();
         SwingCore.ensurePlatformIsRunning();
     }
+
+    public FxBuilder(PreBuilder pre) {
+        super(pre);
+        SwingCore.ensurePlatformIsRunning();
+    }
+
 
     /**
      * Sets the once mode.

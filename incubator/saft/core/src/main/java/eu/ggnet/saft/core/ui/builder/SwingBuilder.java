@@ -65,6 +65,14 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class SwingBuilder extends AbstractBuilder {
 
+    public SwingBuilder() {
+        super();
+    }
+
+    public SwingBuilder(PreBuilder pre) {
+        super(pre);
+    }
+
     /**
      * Sets the once mode.
      * If set to true, an once mode is enable. This ensures that one one window of the same type is created and show.

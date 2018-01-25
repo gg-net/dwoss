@@ -31,7 +31,7 @@ public class SwingPopupJavaFxParentJavaFx {
             l.setFont(font(50));
             Button one = new Button("Open another Dialog");
             one.setOnAction((e) -> Ui.exec(() -> {
-                Ui.fx().parent(l).eval(() -> new RevenueReportSelectorPane()).ifPresent(System.out::println);
+                Ui.build().fx().parent(l).eval(() -> new RevenueReportSelectorPane()).ifPresent(System.out::println);
             }));
 
             Button two = new Button("Ok (Close this dialog)");
@@ -57,7 +57,7 @@ public class SwingPopupJavaFxParentJavaFx {
 
         // JavaFX Pane in Swing Dialog.
         Ui.exec(() -> {
-            Ui.fx().eval(() -> new TestPane()).ifPresent(System.out::println);
+            Ui.build().fx().eval(() -> new TestPane()).ifPresent(System.out::println);
         });
     }
 

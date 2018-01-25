@@ -40,9 +40,15 @@ import eu.ggnet.saft.core.ui.SwingCore;
 public class DialogBuilder extends AbstractBuilder {
 
     public DialogBuilder() {
+        super();
         SwingCore.ensurePlatformIsRunning();
-        once = false;
     }
+
+    public DialogBuilder(PreBuilder pre) {
+        super(pre);
+        SwingCore.ensurePlatformIsRunning();
+    }
+
 
     /**
      * Sets the once mode, default for dialogs is false.
