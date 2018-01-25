@@ -34,7 +34,7 @@ public class TreeTableViewTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().show(TreeTableController.class);
+                Ui.build().fxml().show(TreeTableController.class);
             });
         });
 
