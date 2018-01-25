@@ -89,6 +89,7 @@ public class Company implements Serializable {
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
+    @Getter
     private final List<Contact> contacts = new ArrayList<>();
 
     /**
@@ -97,6 +98,7 @@ public class Company implements Serializable {
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
+    @Getter
     private final List<Address> addresses = new ArrayList<>();
 
     /**
@@ -105,6 +107,7 @@ public class Company implements Serializable {
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
+    @Getter
     private final List<Communication> communications = new ArrayList<>();
 
     public Company() {
@@ -168,18 +171,6 @@ public class Company implements Serializable {
 
     public void remove(Communication c) {
         communications.remove(c);
-    }
-
-    public List<Contact> getContacts() {
-        return new ArrayList<>(contacts);
-    }
-
-    public List<Address> getAddresses() {
-        return new ArrayList<>(addresses);
-    }
-
-    public List<Communication> getCommunications() {
-        return new ArrayList<>(communications);
     }
 
     /**

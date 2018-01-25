@@ -400,10 +400,10 @@ public class Customer implements Serializable {
     public String getSimpleViolationMessage() {
 
         if ( !isVaild() ) return getViolationMessage();
-        if ( !flags.isEmpty() ) return "CustomerFlag is set";
-        if ( !StringUtils.isBlank(keyAccounter) ) return "Key Account is set";
-        if ( !mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
-        if ( !addressLabels.isEmpty() ) return "AddressLable not set";
+        if ( flags.isEmpty() ) return "CustomerFlag is empty";
+        if ( StringUtils.isBlank(keyAccounter) ) return "Key Account is set";
+        if ( mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
+        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "AddressLable is not from type Invoice";
         if ( addressLabels.size() > 1 ) return "More than one AddressLable is set";
 
         List<Communication.Type> allowedCommunicationTypes = new ArrayList<>();
@@ -416,7 +416,7 @@ public class Customer implements Serializable {
             if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 ) return "Contact has more than one address";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "The Contact of the Consumer Customer have more than 3 Communications";
-            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() > 1 )
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
                 return "Not allowed Communications are found";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
                 return "multiple EMAILS found";
@@ -434,7 +434,7 @@ public class Customer implements Serializable {
                 return "The Address of the Company mismatch the Address of the Contact form the Company";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "The Company of the Bussnis Customer have more than 3 Communications";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() > 1 )
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
                 return "Not allowed Communications are found";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
                 return "multiple EMAILS found";
