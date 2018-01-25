@@ -255,7 +255,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
                             customer.getShippingCondition(),
                             customer.getPaymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
-                    Ui.fx().parent(jLabel1).title("StageInfo")
+                    Ui.build().parent(jLabel1).title("StageInfo").fx()
                             .show(() -> {
                                 return "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
                                         + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
@@ -288,7 +288,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
         JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
         showNewDetails.addActionListener(e -> {
             Ui.exec(() -> {
-                Ui.fx().title("Customer").show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
+                Ui.build().title("Customer").fx().show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
             });
         });
 

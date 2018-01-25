@@ -7,9 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
-import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.sample.support.MainPanel;
 import eu.ggnet.saft.sample.support.RevenueReportSelectorPane;
 
@@ -31,7 +31,7 @@ public class SwingPopupJavaFxParentJavaFx {
             l.setFont(font(50));
             Button one = new Button("Open another Dialog");
             one.setOnAction((e) -> Ui.exec(() -> {
-                Ui.build().fx().parent(l).eval(() -> new RevenueReportSelectorPane()).ifPresent(System.out::println);
+                Ui.build(l).fx().eval(() -> new RevenueReportSelectorPane()).ifPresent(System.out::println);
             }));
 
             Button two = new Button("Ok (Close this dialog)");

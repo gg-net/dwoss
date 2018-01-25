@@ -39,6 +39,6 @@ public class ShowMandatorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.fx().show(() -> Css.toHtml5WithStyle(lookup(MandatorSupporter.class).loadMandatorAsHtml()), () -> new HtmlPane());
+        Ui.build().fx().show(() -> Css.toHtml5WithStyle(lookup(MandatorSupporter.class).loadMandatorAsHtml()), () -> new HtmlPane());
     }
 }

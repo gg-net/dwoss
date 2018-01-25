@@ -98,7 +98,7 @@ public class RedTapeTryout {
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Ui.exec(() -> {
-            Ui.swing().show(() -> RedTapeController.build().getView());
+            Ui.build().swing().show(() -> RedTapeController.build().getView());
         });
     }
 

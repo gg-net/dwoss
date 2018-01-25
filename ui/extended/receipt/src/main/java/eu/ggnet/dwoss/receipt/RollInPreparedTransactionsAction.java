@@ -44,7 +44,7 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.swing().title("Stock Transactionen einrollen ?")
+            Ui.build().title("Stock Transactionen einrollen ?").swing()
                     .eval(() -> lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancel.wrap(new RollInPreparedTransactionViewCask()))
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)

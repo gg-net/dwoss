@@ -39,7 +39,7 @@ public class UnitQualityReportAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(rp -> {
+            Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(rp -> {
                 Ui.osOpen(Ui.progress().call(() -> lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor()).toTemporaryFile()));
             });
         });

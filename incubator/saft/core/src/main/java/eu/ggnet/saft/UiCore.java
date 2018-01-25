@@ -1,7 +1,5 @@
 package eu.ggnet.saft;
 
-import eu.ggnet.saft.core.ui.TitleUtil;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -9,8 +7,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import javax.swing.JFrame;
@@ -22,12 +19,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.core.ui.FxCore;
-import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.exception.ExceptionUtil;
 import eu.ggnet.saft.core.exception.SwingExceptionDialog;
-import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * The Core of the Saft UI, containing methods for startup or registering things.
@@ -35,6 +29,9 @@ import eu.ggnet.saft.core.ui.SwingSaft;
  * @author oliver.guenther
  */
 public class UiCore {
+
+    // Package private for Ui usage.
+    final static ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
 
@@ -112,6 +109,7 @@ public class UiCore {
 
             @Override
             public void windowClosed(WindowEvent e) {
+                EXECUTOR_SERVICE.shutdownNow();
                 Platform.exit();
             }
 

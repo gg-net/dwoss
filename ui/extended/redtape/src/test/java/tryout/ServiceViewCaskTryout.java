@@ -93,7 +93,7 @@ public class ServiceViewCaskTryout {
             }
         });
 
-        Ui.swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask(0.10)))
+        Ui.build().swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask(0.10)))
                 .ifPresent(System.out::println);
     }
 

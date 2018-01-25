@@ -37,10 +37,10 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Client;
 
 import lombok.Value;
 
@@ -175,7 +175,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
         dialog.setResultConverter((type) -> type.getButtonData() == OK_DONE ? new EditResult(selectedReport.toKey(), textField.getText()) : null);
 
         Ui.exec(() -> {
-            Ui.dialog().parent(this).eval(() -> dialog)
+            Ui.build().parent(this).dialog().eval(() -> dialog)
                     .map(r -> Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
                     .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {

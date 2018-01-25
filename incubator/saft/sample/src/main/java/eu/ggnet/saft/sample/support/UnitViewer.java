@@ -7,7 +7,6 @@ package eu.ggnet.saft.sample.support;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.Once;
 import eu.ggnet.saft.api.ui.StoreLocation;
 
 /**
@@ -15,7 +14,6 @@ import eu.ggnet.saft.api.ui.StoreLocation;
  * @author oliver.guenther
  */
 @StoreLocation
-@Once
 public class UnitViewer extends javax.swing.JPanel implements Consumer<String> {
 
     /**

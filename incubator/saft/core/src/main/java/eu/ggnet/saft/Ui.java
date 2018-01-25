@@ -1,6 +1,7 @@
 package eu.ggnet.saft;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
@@ -68,57 +69,6 @@ public class Ui {
     }
 
     /**
-     * Initializes a new swing component handling.
-     * The mode: swing is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new swing builder
-     */
-    public static SwingBuilder swing() {
-        return new SwingBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
-     * Initializes a new swing component handling with a parent.
-     * The mode: swing is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @param swingParent the parent of the swing element.
-     * @return a new swing builder.
-     */
-    public static SwingBuilder swing(Window swingParent) {
-        return new SwingBuilder().parent(SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame()));
-    }
-
-    /**
-     * Initializes a new fx dialog component handling.
-     * The mode: the fx dialog is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new dialog builder
-     */
-    public static DialogBuilder dialog() {
-        return new DialogBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
-     * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new fxbuilder
-     */
-    public static FxBuilder fx() {
-        return new FxBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
-     * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
-     *
-     * @return a new fxbuilder
-     */
-    public static FxmlBuilder fxml() {
-        return new FxmlBuilder().parent(SwingCore.mainFrame());
-    }
-
-    /**
      * Shortcut to a file chooser.
      *
      * @return a file chooser builder.
@@ -165,7 +115,7 @@ public class Ui {
      */
     // TODO: Runable version
     public static <V> void exec(Callable<V> callable) {
-        ForkJoinPool.commonPool().execute(() -> {
+        UiCore.EXECUTOR_SERVICE.execute(() -> {
             try {
                 callable.call();
             } catch (Exception e) {
@@ -175,7 +125,7 @@ public class Ui {
     }
 
     public static void exec(Runnable runnable) {
-        ForkJoinPool.commonPool().execute(() -> {
+        UiCore.EXECUTOR_SERVICE.execute(() -> {
             try {
                 runnable.run();
             } catch (RuntimeException e) {

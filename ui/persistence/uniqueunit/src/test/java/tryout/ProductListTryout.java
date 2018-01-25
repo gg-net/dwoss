@@ -34,7 +34,7 @@ public class ProductListTryout {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().show(ProductListController.class);
+                Ui.build().fxml().show(ProductListController.class);
             });
         });
 

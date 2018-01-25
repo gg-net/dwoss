@@ -50,9 +50,9 @@ public class CreateSimpleAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
 
         Ui.exec(() -> {
-            Ui.fxml().eval(CreateSelectionController.class)
+            Ui.build().fxml().eval(CreateSelectionController.class)
                     .map(this::handleResult)
-                    .ifPresent(c -> Ui.dialog().eval(() -> c, () -> new CreateQuestionView())
+                    .ifPresent(c -> Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
                     .map(v -> ReplyUtil.wrap(() -> lookup(StockTransactionProcessor.class)
                     .perpareTransfer(v.stockUnits, v.destination.getId(), lookup(Guardian.class).getUsername(), v.comment))
                     ).filter(Ui.failure()::handle)

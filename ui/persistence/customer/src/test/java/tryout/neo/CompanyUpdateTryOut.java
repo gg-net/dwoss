@@ -51,7 +51,7 @@ public class CompanyUpdateTryOut {
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);
             });
         });
 

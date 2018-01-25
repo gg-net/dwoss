@@ -329,7 +329,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                     addressList.add(a);
                 });
             }
@@ -345,7 +345,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                     communicationsList.add(a);
                 });
             }
@@ -361,7 +361,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
                     contactsList.add(a);
                 });
             }

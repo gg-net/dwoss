@@ -45,7 +45,6 @@ import lombok.experimental.Accessors;
  *
  * @author oliver.guenther
  */
-@Getter
 @ToString
 public abstract class AbstractBuilder {
 
@@ -60,7 +59,7 @@ public abstract class AbstractBuilder {
 
         @Getter
         @Setter
-        protected String id = null;
+        protected String id;
 
         protected final String titleTemplate;
 

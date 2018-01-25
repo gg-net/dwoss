@@ -43,7 +43,7 @@ public class CategoryProductListEditTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.fxml().show(CategoryProductListController.class);
+            Ui.build().fxml().show(CategoryProductListController.class);
         });
 
         JTextField textField = new JTextField();

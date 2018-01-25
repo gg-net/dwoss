@@ -853,7 +853,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
 
     private void addAdditionalCustomerIdsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addAdditionalCustomerIdsActionPerformed
         Ui.exec(() -> {
-            Ui.dialog().parent(this).eval(() -> customer.getAdditionalCustomerIds(), () -> new AdditionalCustomerIdsView())
+            Ui.build(this).dialog().eval(() -> customer.getAdditionalCustomerIds(), () -> new AdditionalCustomerIdsView())
                     .ifPresent(out -> {
                     customer.getAdditionalCustomerIds().clear();
                     customer.getAdditionalCustomerIds().putAll(out);

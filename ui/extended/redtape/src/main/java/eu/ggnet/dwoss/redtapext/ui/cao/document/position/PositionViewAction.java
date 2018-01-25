@@ -33,7 +33,7 @@ public class PositionViewAction implements Consumer<Position> {
 
     @Override
     public void accept(Position pos) {
-        Ui.fx().show(() -> pos, () -> new PositionViewCask());
+        Ui.build().fx().show(() -> pos, () -> new PositionViewCask());
     }
 
 }

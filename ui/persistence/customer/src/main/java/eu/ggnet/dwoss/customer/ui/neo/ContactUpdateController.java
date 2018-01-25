@@ -276,14 +276,14 @@ public class ContactUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                     addressList.add(a);
                 });
             }
         }).start();
         //old code 
 //        Ui.exec(() -> {
-//            Ui.fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+//            Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
 //                addressList.add(a);
 //            });
 //        });
@@ -298,7 +298,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Ui.fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                     communicationsList.add(a);
                 });
             }

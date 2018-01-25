@@ -32,7 +32,7 @@ public class HtmlPaneTryout {
         UiCore.startSwing(() -> new JLabel("Main Application"));
 
         Ui.exec(() -> {
-            Ui.fx().show(() -> "<h1>Hallo HTML Pane</h1>", () -> new HtmlPane());
+            Ui.build().fx().show(() -> "<h1>Hallo HTML Pane</h1>", () -> new HtmlPane());
         });
     }
 

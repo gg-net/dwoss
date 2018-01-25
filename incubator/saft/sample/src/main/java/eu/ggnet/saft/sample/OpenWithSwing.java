@@ -51,19 +51,19 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Multiple : 1");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().swing().id("1").show(() -> new UnitViewer());
+                Ui.build().once(true).id("1").swing().show(() -> new UnitViewer());
             }));
             menu.add(b);
 
             b = new JMenuItem("Multiple : 2");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().swing().id("2").show(() -> new UnitViewer());
+                Ui.build().once(true).id("2").swing().show(() -> new UnitViewer());
             }));
             menu.add(b);
 
             b = new JMenuItem("Multiple : 3 , with precall");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().swing().once(false).show(() -> "Das ist der Riesentext für Unit 3", () -> new UnitViewer());
+                Ui.build().swing().show(() -> "Das ist der Riesentext für Unit 3", () -> new UnitViewer());
             }));
             menu.add(b);
 
@@ -95,7 +95,7 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Mutiple 1 with Title + Store Location");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().fx().id("1").show(() -> new SimplePane());
+                Ui.build().id("1").fx().show(() -> new SimplePane());
             }));
             menu.add(b);
 
@@ -105,7 +105,7 @@ public class OpenWithSwing {
                 SimplePane pane = new SimplePane();
                 System.out.println("test2 = " + pane.getClass().getAnnotation(StoreLocation.class) != null);
 
-                Ui.build().fx().id("2").show(() -> pane);
+                Ui.build().id("2").fx().show(() -> pane);
             }));
             menu.add(b);
 
