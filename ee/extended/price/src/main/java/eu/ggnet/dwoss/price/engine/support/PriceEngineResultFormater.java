@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.price.engine.support;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 
 public class PriceEngineResultFormater {
@@ -33,7 +32,7 @@ public class PriceEngineResultFormater {
         sb.append("<tr><td>Contractor Referenc Preis :</td><td>").append(per.getContractorReferencePrice()).append("</td></tr>");
         sb.append("<tr><td>calc HEK :</td><td>").append(per.getRetailerPrice()).append("</td></tr>");
         sb.append("<tr><td>calc EVK :</td><td>").append(per.getCustomerPrice()).append("</td></tr>");
-        sb.append("<tr><td>EVK (inc.Tax) :</td><td>").append(per.getCustomerPrice() * (1 + GlobalConfig.TAX)).append("</td></tr>");
+        sb.append("<tr><td>EVK (inc.Tax) :</td><td>").append(per.getCustomerPrice() * (1 + GlobalConfig.DEFAULT_TAX.getTax())).append("</td></tr>");
         sb.append("</table>");
         if ( per.isError() || per.isWarning() ) {
             sb.append("<p>ErrorLog : ").append(per.getRulesLog()).append("</p>");

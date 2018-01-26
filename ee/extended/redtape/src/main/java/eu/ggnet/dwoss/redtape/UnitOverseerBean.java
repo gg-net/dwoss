@@ -35,10 +35,8 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.api.LegacyLocalBridge;
 import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.eao.PositionEao;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.eao.*;
+import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtape.format.DossierFormater;
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
@@ -257,15 +255,16 @@ public class UnitOverseerBean implements UnitOverseer {
      * This method will throw a UserInfoException describing, why the unit is not available.
      * <p/>
      * @param refurbishId The refurbished id of the UniqueUnit
-     * @param documentId
+     * @param documentId  the document as reference for tax and more.
      * @return a Unit by its refurbished id or null if nothing is found of the unit is not available.
      * @throws UserInfoException if the refurbishId is not available
      */
     @Override
-    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException {
+    public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
         UnitShard us = internalFind(refurbishId);
         if ( !us.isAvailable() ) throwNotAvailable(refurbishId, us);
 
+        Document doc = new DocumentEao(redTapeEm).findById(documentId);
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
 
         Position p = Position.builder()
@@ -273,9 +272,9 @@ public class UnitOverseerBean implements UnitOverseer {
                 .price(0.)
                 .serialNumber(uu.getSerial())
                 .refurbishedId(uu.getRefurbishId())
-                .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
+                .bookingAccount(postLedger.get(PositionType.UNIT, doc.getTaxType()).orElse(null))
                 .type(PositionType.UNIT)
-                .tax(tax)
+                .tax(doc.getTaxType().getTax())
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .name(UniqueUnitFormater.toPositionName(uu))

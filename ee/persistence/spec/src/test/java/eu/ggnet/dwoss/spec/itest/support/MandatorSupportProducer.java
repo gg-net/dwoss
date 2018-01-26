@@ -40,5 +40,5 @@ public class MandatorSupportProducer {
     public static ShippingTerms st = new ShippingTerms(new HashMap<>());
 
     @Produces
-    public static PostLedger pl = new PostLedger(new HashMap<>());
+    public static PostLedger pl = new PostLedger();
 }

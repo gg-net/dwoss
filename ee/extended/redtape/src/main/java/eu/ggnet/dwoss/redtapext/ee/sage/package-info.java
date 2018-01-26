@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,29 +13,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-package eu.ggnet.dwoss.redtape.gsoffice;
-
-import java.util.Date;
-
-import javax.ejb.Remote;
-
-import eu.ggnet.dwoss.util.FileJacket;
-
 /**
- * GsOffice Exporter.
- * <p/>
- * @author oliver.guenther
+ * Sage (ex GS Buchhalter) Export Operation.
  */
-@Remote
-public interface GsOfficeExporter {
-
-    /**
-     * Exports the all Documents in the Range as the specified XML lines.
-     * <p/>
-     * @param start the starting date
-     * @param end   the ending date
-     * @return an Xml document, ready for import in GS Office.
-     */
-    FileJacket toXml(Date start, Date end);
-}
+package eu.ggnet.dwoss.redtapext.ee.sage;

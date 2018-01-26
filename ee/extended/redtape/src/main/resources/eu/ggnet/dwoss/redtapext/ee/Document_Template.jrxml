@@ -427,7 +427,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="50">
+		<band height="50" splitType="Prevent">
 			<textField>
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="20" height="46" uuid="fa642bcd-54a0-452b-aad2-5fa285f6b869"/>
 				<textElement textAlignment="Center">

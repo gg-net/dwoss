@@ -73,7 +73,6 @@ public class Sample {
                 .dossierPrefix("DW")
                 .documentIntermix(documentIntermix)
                 .documentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
-                .receiptMode(TradeName.ACER)
                 .applyDefaultChannelOnRollIn(false)
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
@@ -96,9 +95,6 @@ public class Sample {
 
     @Produces
     public final static Contractors CONTRACTORS = new Contractors(EnumSet.of(ONESELF, ACER, HP, DELL), EnumSet.of(ACER, PACKARD_BELL, HP, DELL));
-
-    @Produces
-    public final static FinancialAccounting FINANCIAL_ACCOUNTING = new FinancialAccounting(99999, false);
 
     @Produces
     public final static ImageFinder IMAGE_FINDER = new ImageFinder(FileUtils.getTempDirectoryPath());

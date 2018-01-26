@@ -26,7 +26,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
@@ -126,10 +125,9 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(uu.getPrice(CUSTOMER))
-                .tax(GlobalConfig.TAX)
+                .tax(doc.getSingleTax())
                 .name(uu.getProduct().getName() + " | SN:" + uu.getSerial())
                 .description(uu.getProduct().getDescription())
-                .bookingAccount(-1)
                 .refurbishedId(refurbishId)
                 .build());
 

@@ -11,7 +11,9 @@ import eu.ggnet.dwoss.redtape.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.rules.*;
 
+import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
+import static eu.ggnet.dwoss.rules.TaxType.REVERSE_CHARGE;
 
 /**
  *
@@ -21,7 +23,7 @@ public class RedTapeAgentStub implements RedTapeAgent {
 
     private List<Dossier> dossiers = new ArrayList<>();
 
-    private double tax = (1 + GlobalConfig.TAX);
+    private double tax = (1 + GlobalConfig.DEFAULT_TAX.getTax());
 
     {
         // Dossier 1
@@ -96,9 +98,12 @@ public class RedTapeAgentStub implements RedTapeAgent {
         dos2.setPaymentMethod(PaymentMethod.ADVANCE_PAYMENT);
         Document doc2 = new Document();
         doc2.setType(DocumentType.ORDER);
+        doc2.setTaxType(REVERSE_CHARGE);
         doc2.add(Condition.CONFIRMED);
         dos2.add(doc2);
-        doc2.append(Position.builder().type(SERVICE).name("Position").description("A Position").build());
+        doc2.append(Position.builder().type(PRODUCT_BATCH).amount(1000).price(221.45).tax(REVERSE_CHARGE.getTax()).name("Futurama eyePhone 3")
+                .description("The eyePhone, a fictional augmented reality-enbaled smart glasses product depicted in the episode "
+                        + "\"Attack of the Killer App\" of the American animated sitcom Futurama.").build());
         doc2.setDirective(Directive.NONE);
         doc2.setActive(true);
 

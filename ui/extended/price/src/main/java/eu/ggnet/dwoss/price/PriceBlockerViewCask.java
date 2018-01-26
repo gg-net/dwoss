@@ -34,7 +34,7 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.TAX);
+    private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
 
     private class CurrencyConverter extends Converter<Double, String> {
 

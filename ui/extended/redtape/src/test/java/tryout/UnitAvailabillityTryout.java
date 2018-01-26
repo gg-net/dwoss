@@ -71,7 +71,7 @@ public class UnitAvailabillityTryout {
             }
 
             @Override
-            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException {
+            public Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

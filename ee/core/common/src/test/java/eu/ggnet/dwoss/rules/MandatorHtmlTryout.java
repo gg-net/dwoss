@@ -16,21 +16,16 @@
  */
 package eu.ggnet.dwoss.rules;
 
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
-import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
+import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
-import org.junit.Test;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
@@ -40,12 +35,10 @@ import eu.ggnet.dwoss.mandator.api.value.partial.*;
  *
  * @author oliver.guenther
  */
-public class MandatorHtmlTryout {
+public class MandatorHtmlTryout extends Application {
 
-    private boolean complete = false;
-
-    @Test
-    public void tryout() throws InterruptedException, InvocationTargetException, MalformedURLException {
+    @Override
+    public void start(Stage stage) throws Exception {
 
         Company company = Company.builder()
                 .name("Example GmbH")
@@ -100,29 +93,22 @@ public class MandatorHtmlTryout {
                 .mailTemplateLocation(mailTemplateLocation)
                 .defaultMailAttachment(defaultMailAttachment)
                 .documentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
-                .receiptMode(TradeName.ACER)
                 .applyDefaultChannelOnRollIn(false)
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
                 .build();
 
-        new JFXPanel(); // Implicit start the platform.
+        stage.setTitle("HtmlViewer");
+        WebView view = new WebView();
+        view.getEngine().loadContent(Css.toHtml5WithStyle(mandator.toHtml()));
+        BorderPane p = new BorderPane(view);
+        Scene scene = new Scene(p, Color.ALICEBLUE);
+        stage.setScene(scene);
+        stage.show();
+    }
 
-        Platform.runLater(() -> {
-            Stage stage = new Stage();
-            stage.setTitle("HtmlViewer");
-            WebView view = new WebView();
-            view.getEngine().loadContent(Css.toHtml5WithStyle(mandator.toHtml()));
-            BorderPane p = new BorderPane(view);
-            Scene scene = new Scene(p, Color.ALICEBLUE);
-            stage.setScene(scene);
-            stage.showAndWait();
-
-            complete = true;
-        });
-        while (!complete) {
-            Thread.sleep(500);
-        }
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }

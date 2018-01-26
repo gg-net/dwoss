@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.entity;
 
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.rules.PositionType;
 
 /**
@@ -40,7 +41,7 @@ public class PositionBuilder {
 
     private String description;
 
-    private int bookingAccount;
+    private Ledger bookingAccount;
 
     private int uniqueUnitId;
 
@@ -83,7 +84,7 @@ public class PositionBuilder {
         return this;
     }
 
-    public PositionBuilder bookingAccount(int bookingAccount) {
+    public PositionBuilder bookingAccount(Ledger bookingAccount) {
         this.bookingAccount = bookingAccount;
         return this;
     }

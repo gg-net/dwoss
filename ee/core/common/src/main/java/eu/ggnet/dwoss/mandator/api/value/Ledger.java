@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.api.value;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 /**
@@ -23,6 +24,7 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
+@EqualsAndHashCode(of = {"value"})
 public class Ledger {
 
     private final int value;

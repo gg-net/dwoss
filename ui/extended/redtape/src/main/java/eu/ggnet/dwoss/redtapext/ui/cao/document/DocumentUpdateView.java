@@ -36,12 +36,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
@@ -119,7 +120,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         initFxComponents();
         this.document = document;
         positions.addAll(document.getPositions().values());
-        this.accessCos = Lookup.getDefault().lookup(Guardian.class);
+        this.accessCos = Client.lookup(Guardian.class);
         accessCos.add(taxChangeButton, CHANGE_TAX);
         refreshAddressArea();
 
@@ -684,11 +685,14 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
 
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
         Ui.exec(() -> {
-            Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(t -> {
-                L.debug("Changeing Tax to {}", t);
-                document.getPositions().values().forEach(p -> p.setTax(t.getTax()));
-                L.debug("Fist tax: {}", positions.get(0).getTax());
-                document.setTaxType(t);
+            Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(taxType -> {
+                L.debug("Changeing Tax to {}", taxType);
+                document.setTaxType(taxType);
+                final PostLedger ledgers = Client.lookup(MandatorSupporter.class).loadPostLedger();
+                document.getPositions().values().forEach(p -> {
+                    p.setTax(taxType.getTax());
+                    p.setBookingAccount(ledgers.get(p.getType(), taxType).orElse(null));
+                });
                 refreshAll();
             });
         });

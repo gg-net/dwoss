@@ -147,13 +147,12 @@ public class UnitDestroyerOperation implements UnitDestroyer {
                 .requestActiveDocumentBlock((int)targetCustomerId, "Blockaddresse KundenId " + targetCustomerId, "Erzeugung durch " + operation, arranger);
         Dossier dos = doc.getDossier();
         doc.append(Position.builder().type(PositionType.UNIT).amount(1)
-                .bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
+                .bookingAccount(postLedger.get(PositionType.UNIT, doc.getTaxType()).orElse(null))
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
                 .name(UniqueUnitFormater.toPositionName(uu))
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId()).build());
         doc.append(Position.builder().type(PositionType.COMMENT).amount(1)
-                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
                 .name(operation).description(reason + " by " + arranger).build());
         LogicTransaction lt = new LogicTransactionEmo(stockEm).request(dos.getId());
         lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction

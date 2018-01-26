@@ -58,7 +58,7 @@ public class ArquillianProjectArchive {
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "redtape-persistence-test.war")
                 // Because we use the same package for persistence redtape and extended redtape, we need to select everything here manually.
-                // TODO: Consider moving everything into a different package.
+                // TODO: By definition, this must be refactored.
                 .addPackages(true, projectPackage.getName() + ".gen", projectPackage.getName() + ".gsoffice", projectPackage.getName() + ".reporting",
                         projectPackage.getName() + ".state", projectPackage.getName() + ".workflow")
                 .addPackages(true, newProjectPackage)
@@ -76,8 +76,8 @@ public class ArquillianProjectArchive {
                 .addClass(RedTapeCloserOpertaionItBean.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
-                .addAsResource("eu/ggnet/dwoss/redtape/Document_Template.jrxml")
-                .addAsResource("eu/ggnet/dwoss/redtape/Shipping_Template.jrxml")
+                .addAsResource("eu/ggnet/dwoss/redtapext/ee/Document_Template.jrxml")
+                .addAsResource("eu/ggnet/dwoss/redtapext/ee/Shipping_Template.jrxml")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);

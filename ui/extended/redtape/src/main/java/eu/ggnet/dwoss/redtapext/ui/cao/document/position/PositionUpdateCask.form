@@ -199,9 +199,6 @@
           <Property name="name" type="java.lang.String" value="bookingAccountBinding"/>
         </BindingProperty>
       </BindingProperties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bookingAccountBoxActionPerformed"/>
-      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>

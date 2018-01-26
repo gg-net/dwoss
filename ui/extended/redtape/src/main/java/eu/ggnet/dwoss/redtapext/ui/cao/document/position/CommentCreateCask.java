@@ -21,14 +21,9 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Client;
-
-import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 
 /**
  *
@@ -43,21 +38,18 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
         commPosition.setName("UPS Versand am " + SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(new Date()));
         commPosition.setDescription("");
         commPosition.setType(PositionType.COMMENT);
-        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
 
         commPosition = new Position();
         commPosition.setName("Ihre Bestellung");
         commPosition.setDescription("Diese Geräte konnten für Sie reserviert werden.");
         commPosition.setType(PositionType.COMMENT);
-        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
 
         commPosition = new Position();
         commPosition.setName("Verrechnung");
         commPosition.setDescription("Betrag aus Stornorechnung/Gutschrift XXXX verrechnet.");
         commPosition.setType(PositionType.COMMENT);
-        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
 
         commPosition = new Position();
@@ -65,7 +57,6 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
         commPosition.setDescription("Der Versand der Ware erfolgt nach Zahlungseingang. \n"
                 + "Bei Zahlungseingang bis 11:00 Uhr (Montag bis Freitag) erfolgt der Versand tagesgleich.");
         commPosition.setType(PositionType.COMMENT);
-        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
 
         commPosition = new Position();
@@ -73,7 +64,6 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
         commPosition.setDescription("Wir konnten bis heute keinen Zahlungseingang feststellen.\n"
                 + "Wir müssen annehmen, Sie haben kein Interesse mehr haben und geben das Gerät in 48 Stunden wieder zum Verkauf frei.");
         commPosition.setType(PositionType.COMMENT);
-        commPosition.setBookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1));
         templates.add(commPosition);
 
     }
@@ -88,9 +78,7 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     public CommentCreateCask(Position position) {
         initComponents();
         if ( position != null ) setPosition(position);
-        else setPosition(new PositionBuilder().type(PositionType.COMMENT)
-                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
-                    .build());
+        else setPosition(Position.builder().type(PositionType.COMMENT).amount(1).build());
         positionTamplateList.setCellRenderer(new Tuple2PositionRenderer());
         positionTamplateList.setListData(templates.toArray());
     }
@@ -120,7 +108,6 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
         if ( type != CloseType.OK ) return true;
         position.setName(titleField.getText());
         position.setDescription(commentContentArea.getText());
-        position.setBookingAccount(-1);
         // TODO: use validator.validate(A,DefaultUi)
         if ( position.getName() == null || position.getDescription() == null || position.getName().trim().equals("") || position.getDescription().trim().equals("") ) {
             JOptionPane.showMessageDialog(this, "Überschrift und/oder Inhalt sind leer");
@@ -216,10 +203,9 @@ public class CommentCreateCask extends javax.swing.JPanel implements IPreClose {
     // End of variables declaration//GEN-END:variables
 
     public static void main(String[] args) {
-        Position pos = new PositionBuilder().build();
+        Position pos = new Position();
         pos.setName("blarg");
         pos.setDescription("blubbadiblub");
-        pos.setBookingAccount(-1);
         pos.setType(PositionType.COMMENT);
         CommentCreateCask ccc = new CommentCreateCask(null);
         OkCancelDialog<CommentCreateCask> dialog = new OkCancelDialog<>("Comment Creation", ccc);

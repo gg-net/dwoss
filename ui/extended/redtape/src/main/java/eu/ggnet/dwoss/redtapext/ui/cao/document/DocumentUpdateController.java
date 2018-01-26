@@ -23,7 +23,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
@@ -76,7 +75,7 @@ public class DocumentUpdateController {
         switch (type) {
             case UNIT:
                 List<Position> result = lookup(UnitOverseer.class)
-                        .createUnitPosition(refurbishId, document.getId(), documentTax()).request(new SwingInteraction(view));
+                        .createUnitPosition(refurbishId, document.getId()).request(new SwingInteraction(view));
                 for (Position p : result) {
                     if ( p.getType() == UNIT ) lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
                 }
@@ -91,12 +90,12 @@ public class DocumentUpdateController {
                     Position p = Position.builder()
                             .amount(1)
                             .type(type)
-                            .tax(documentTax())
+                            .tax(document.getTaxType().getTax())
                             .description(pb.getDescription())
                             .name(pb.getName())
                             .uniqueUnitProductId(pb.getUniqueUnitProductId())
                             .price((pb.getPrice() == null) ? 0. : pb.getPrice())
-                            .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(type).orElse(-1))
+                            .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
                             .build();
                     document.append(editPosition(p));
                 }
@@ -105,7 +104,7 @@ public class DocumentUpdateController {
                 document.append(createCommentPosition());
                 break;
             case SHIPPING_COST:
-                ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition(), documentTax());
+                ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
                 break;
         }
     }
@@ -118,7 +117,7 @@ public class DocumentUpdateController {
      */
     public Position editPosition(final Position pos) {
         return Ui.build().parent(view).title("Position bearbeiten").swing()
-                .eval(() -> pos, () -> OkCancel.wrap(new PositionUpdateCask()))
+                .eval(() -> new PositionAndTaxType(pos, document.getTaxType()), () -> OkCancel.wrap(new PositionUpdateCask()))
                 .map(Reply::getPayload)
                 .orElse(null);
     }
@@ -138,7 +137,7 @@ public class DocumentUpdateController {
 
     public void createServicePosition() {
         document.append(Ui.build().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten").swing()
-                .eval(() -> Position.builder().type(PositionType.SERVICE).build(), () -> OkCancel.wrap(new ServiceViewCask(documentTax())))
+                .eval(() -> OkCancel.wrap(new ServiceViewCask(document.getTaxType())))
                 .map(Reply::getPayload)
                 .orElse(null));
     }
@@ -229,7 +228,7 @@ public class DocumentUpdateController {
                 return false;
             case JOptionPane.YES_OPTION:
                 if ( document.getDossier().isDispatch() ) {
-                    ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition(), documentTax());
+                    ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
                 } else {
                     ShippingCostHelper.removeShippingCost(document);
                 }
@@ -237,9 +236,5 @@ public class DocumentUpdateController {
             default:
                 return true;
         }
-    }
-
-    private double documentTax() {
-        return document.hasSingleTax() && !document.getPositions().isEmpty() ? document.getSingleTax() : GlobalConfig.TAX;
     }
 }

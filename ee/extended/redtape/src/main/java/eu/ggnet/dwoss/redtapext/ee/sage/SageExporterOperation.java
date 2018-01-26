@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.gsoffice;
+package eu.ggnet.dwoss.redtapext.ee.sage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,25 +27,27 @@ import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
-import eu.ggnet.dwoss.mandator.api.value.FinancialAccounting;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.api.GsOfficeSupport;
 import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
+import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
 
 /**
- * Operation for the Export to GsOffice of RedTape Informations.
+ * Operation for the Export to GsOffice of RedTapeimport eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
+ * <p>
+ * Informations.
  * <p/>
  * @author pascal.perau
  */
 @Stateless
-public class GsOfficeExporterOperation implements GsOfficeExporter {
+public class SageExporterOperation implements SageExporter {
 
     @Inject
     @RedTapes
@@ -58,10 +60,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
     private CustomerServiceBean customerService;
 
     @Inject
-    private FinancialAccounting accounting;
-
-    @Inject
-    private GsOfficeSupport gsOfficeSupport;
+    private SageExporterConfig config;
 
     @Inject
     private Mandator mandator;
@@ -92,7 +91,7 @@ public class GsOfficeExporterOperation implements GsOfficeExporter {
         }
         m.message("Generating Outfile");
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            GsOfficeExporterUtil exporter = new GsOfficeExporterUtil(gsOfficeSupport, out, customerInvoices, accounting);
+            SageExporterEngine exporter = new SageExporterEngine(out, customerInvoices, config);
             exporter.execute(m);
             m.finish();
             return new FileJacket("Buchungsaetze DW " + mandator.getCompany().getName() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());

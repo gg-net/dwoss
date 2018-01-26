@@ -18,10 +18,9 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javax.swing.GroupLayout.Alignment;
@@ -33,6 +32,7 @@ import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -52,7 +52,7 @@ import static eu.ggnet.saft.Client.lookup;
  *
  * @author pascal.perau
  */
-public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<Position>, ResultProducer<Position>, VetoableOnOk {
+public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<PositionAndTaxType>, ResultProducer<Position>, VetoableOnOk {
 
     public class CurrencyConverter extends Converter<Double, String> {
 
@@ -77,9 +77,9 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
     private final static DecimalFormat TAX = new DecimalFormat("##0 %");
 
-    private CurrencyConverter stringConverter = new CurrencyConverter();
+    private final CurrencyConverter stringConverter = new CurrencyConverter();
 
-    private CurrencyConverter taxedConverter = new CurrencyConverter();
+    private final CurrencyConverter taxedConverter = new CurrencyConverter();
 
     private Position position;
 
@@ -95,7 +95,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
     private String positionName;
 
-    private int bookingAccount;
+    private Ledger bookingAccount;
 
     public static final String PROP_BOOKINGACCOUNT = "bookingAccount";
 
@@ -119,11 +119,17 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     public PositionUpdateCask() {
         initComponents();
         ((JSpinner.DefaultEditor)postDecimalSpinner.getEditor()).getTextField().setEditable(false);
-        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
-        List bookingAccounts = new ArrayList();
-        bookingAccounts.add(postLedger.get(SERVICE).orElse(-1));
-        bookingAccounts.addAll(postLedger.getPossible(SERVICE).orElse(Collections.EMPTY_LIST));
-        bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
+        bookingAccountBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if ( value instanceof Ledger ) {
+                    Ledger l = (Ledger)value;
+                    label.setText(l.getValue() + ":" + l.getDescription());
+                }
+                return label;
+            }
+        });
     }
 
     public Position getPosition() {
@@ -131,15 +137,12 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     }
 
     @Override
-    public void accept(Position position) {
-        if ( position == null ) return;
+    public void accept(PositionAndTaxType posAndTax) {
+        if ( posAndTax == null ) return;
+        this.position = posAndTax.getPosition();
         PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
-        List bookingAccounts = new ArrayList();
-        bookingAccounts.add(postLedger.get(position.getType()).orElse(-1));
-        bookingAccounts.addAll(postLedger.getPossible(position.getType()).orElse(Collections.EMPTY_LIST));
-        bookingAccountBox.setModel(new DefaultComboBoxModel(bookingAccounts.toArray()));
-
-        this.position = position;
+        final List<Ledger> ledgers = postLedger.getAlternatives(position.getType(), posAndTax.getTaxType());
+        bookingAccountBox.setModel(new DefaultComboBoxModel(ledgers.toArray()));
         this.positionTypeField.setText(position.getType() != null ? position.getType().getName() : "Nicht angegeben");
         this.taxedConverter.taxed = position.getTax() + 1;
         this.taxField.setText(TAX.format(position.getTax()));
@@ -149,7 +152,15 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         this.setAmount(position.getAmount());
         this.setPreDecimal((int)(position.getAmount() - (position.getAmount() % 1)));
         this.setPostDecimal((int)((position.getAmount() % 1) * 100));
-        this.setBookingAccount(position.getBookingAccount());
+
+        if ( position.getBookingAccount().isPresent() ) { // Remapping of the ledger.
+            if ( !ledgers.contains(position.getBookingAccount().get()) ) {
+                UiAlert.show(this, "Buchungskonto " + position.getBookingAccount().get() + " nicht für diese Position und Steuer konfiguriert. Wurde auf Standard gesetzt");
+                if ( !ledgers.isEmpty() ) this.setBookingAccount(ledgers.get(0));
+            } else {
+                this.setBookingAccount(ledgers.get(ledgers.indexOf(position.getBookingAccount().get())));
+            }
+        }
 
         this.accessCos = lookup(Guardian.class);
 
@@ -304,7 +315,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         firePropertyChange(PROP_POSITIONNAME, oldPositionName, positionName);
     }
 
-    public int getBookingAccount() {
+    public Ledger getBookingAccount() {
         return bookingAccount;
     }
 
@@ -313,8 +324,8 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
      *
      * @param bookingAccount new value of bookingAccount
      */
-    public void setBookingAccount(int bookingAccount) {
-        int oldBookingAccount = this.bookingAccount;
+    public void setBookingAccount(Ledger bookingAccount) {
+        Ledger oldBookingAccount = this.bookingAccount;
         this.bookingAccount = bookingAccount;
         firePropertyChange(PROP_BOOKINGACCOUNT, oldBookingAccount, bookingAccount);
     }
@@ -335,10 +346,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
             UiAlert.show(this, "Name darf nich leer sein.");
             return false;
         }
-        position.setDescription(description);
-        position.setName(positionName);
-        position.setAmount(amount);
-        position.setBookingAccount(bookingAccount);
         try {
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
@@ -347,6 +354,10 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         for (Binding binding : bindingGroup.getBindings()) {
             binding.save();
         }
+        position.setDescription(description);
+        position.setName(positionName);
+        position.setAmount(amount);
+        position.setBookingAccount(bookingAccount);
         if ( position.getPrice() == 0 && position.getType() != PositionType.COMMENT ) {
             // TODO: We need something like Alert. e.g. Question.ask
             return JOptionPane.showConfirmDialog(this, "Preis ist 0, trotzdem fortfahren?", "Position bearbeiten", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == 0;
@@ -418,12 +429,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
         binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, this, ELProperty.create("${bookingAccount}"), bookingAccountBox, BeanProperty.create("selectedItem"), "bookingAccountBinding");
         binding.setSourceNullValue(null);
         bindingGroup.addBinding(binding);
-
-        bookingAccountBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                bookingAccountBoxActionPerformed(evt);
-            }
-        });
 
         jLabel5.setText("Nettopreis:");
 
@@ -591,10 +596,6 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void bookingAccountBoxActionPerformed(ActionEvent evt) {//GEN-FIRST:event_bookingAccountBoxActionPerformed
-        setBookingAccount((int)bookingAccountBox.getSelectedItem());
-    }//GEN-LAST:event_bookingAccountBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     JTextField afterTaxPriceField;

@@ -13,9 +13,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
  */
+package eu.ggnet.dwoss.redtapext.ee.sage;
+
+import java.util.Date;
+
+import javax.ejb.Remote;
+
+import eu.ggnet.dwoss.util.FileJacket;
+
 /**
- * GS Buchhalter Export inc XML Informations.
+ * GsOffice Exporter.
+ * <p/>
+ * @author oliver.guenther
  */
-package eu.ggnet.dwoss.redtape.gsoffice;
+@Remote
+public interface SageExporter {
+
+    /**
+     * Exports the all Documents in the Range as the specified XML lines.
+     * <p/>
+     * @param start the starting date
+     * @param end   the ending date
+     * @return an Xml document, ready for import in GS Office.
+     */
+    FileJacket toXml(Date start, Date end);
+}

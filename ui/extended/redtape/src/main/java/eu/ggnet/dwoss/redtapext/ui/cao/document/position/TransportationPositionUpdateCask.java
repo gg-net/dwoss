@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,6 @@ import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-
-import eu.ggnet.dwoss.rules.PositionType;
-
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  *
@@ -37,7 +32,7 @@ public class TransportationPositionUpdateCask extends javax.swing.JPanel {
 
     private Converter<Double, String> stringConverter = new TransportationPositionUpdateCask.CurrencyConverter();
 
-    private Converter<Double, String> taxedConverter = new TransportationPositionUpdateCask.CurrencyConverter(GlobalConfig.TAX);
+    private Converter<Double, String> taxedConverter = new TransportationPositionUpdateCask.CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
 
     private Position position;
 
@@ -263,12 +258,4 @@ public class TransportationPositionUpdateCask extends javax.swing.JPanel {
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) {
-        TransportationPositionUpdateCask tpuc = new TransportationPositionUpdateCask(
-                new PositionBuilder().price(10).description("TestDescritpion").type(PositionType.SHIPPING_COST).build());
-
-        OkCancelDialog<TransportationPositionUpdateCask> dialog = new OkCancelDialog<>("TEst", tpuc);
-        dialog.setVisible(true);
-        System.out.println(dialog.getSubContainer().getPosition());
-    }
 }

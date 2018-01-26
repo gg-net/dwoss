@@ -42,7 +42,6 @@ public class NaivBuilderUtil {
                 .tax(taxType.getTax())
                 .name(uu.getProduct().getName() + " | SN:" + uu.getIdentifier(UniqueUnit.Identifier.SERIAL))
                 .description(uu.getProduct().getDescription())
-                .bookingAccount(-1)
                 .build();
     }
 

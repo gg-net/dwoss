@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.redtape.api.PositionService;
 import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.rules.TaxType;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
 
@@ -31,17 +32,17 @@ import static eu.ggnet.saft.Client.lookup;
  *
  * @author pascal.perau
  */
-public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Position>, ResultProducer<Position>, VetoableOnOk {
+public class ServiceViewCask extends javax.swing.JPanel implements Consumer<PositionAndTaxType>, ResultProducer<Position>, VetoableOnOk {
 
     private Position position;
 
     private final PositionUpdateCask positionView;
 
-    private final double tax;
+    private TaxType taxType;
 
-    public ServiceViewCask(double tax) {
+    public ServiceViewCask(TaxType taxType) {
         initComponents();
-        this.tax = tax;
+        this.taxType = taxType;
         positionView = new PositionUpdateCask();
         positionPanel.add(positionView);
 
@@ -54,10 +55,11 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
     }
 
     @Override
-    public void accept(Position position) {
-        if ( position == null ) return;
-        this.position = position;
-        positionView.accept(position);
+    public void accept(PositionAndTaxType posAndTax) {
+        if ( posAndTax == null ) return;
+        this.position = posAndTax.getPosition();
+        this.taxType = posAndTax.getTaxType();
+        positionView.accept(posAndTax);
     }
 
     @Override
@@ -124,15 +126,15 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
             Position template = (Position)templateList.getSelectedValue();
             position = Position.builder()
                     .amount(template.getAmount())
-                    .bookingAccount(template.getBookingAccount())
+                    .bookingAccount(template.getBookingAccount().orElse(null))
                     .description(template.getDescription())
                     .name(template.getName())
                     .price(template.getPrice())
-                    .tax(tax)
+                    .tax(taxType.getTax())
                     .type(template.getType())
                     .uniqueUnitProductId(template.getUniqueUnitProductId())
                     .build();
-            positionView.accept(position);
+            positionView.accept(new PositionAndTaxType(position, taxType));
         }
     }//GEN-LAST:event_templateListMouseClicked
 

@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
@@ -531,7 +532,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
                 l = new ReportLine();
                 l.setActual(document.getActual());
                 l.setAmount(position.getAmount());
-                l.setBookingAccount(position.getBookingAccount());
+                l.setBookingAccount(position.getBookingAccount().map(Ledger::getValue).orElse(-1));
                 l.setCustomerId(document.getDossier().getCustomerId());
                 l.setDescription(normalizeSpace(position.getDescription()));
                 l.setDocumentId(document.getId());

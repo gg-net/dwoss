@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import eu.ggnet.dwoss.redtape.api.GsOfficeSupport;
 import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
@@ -34,7 +33,7 @@ import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
  * @author pascal.perau
  */
 @Stateless
-public class SampleHookServiceBean implements UnitPositionHook, GsOfficeSupport {
+public class SampleHookServiceBean implements UnitPositionHook {
 
     @Override
     public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {

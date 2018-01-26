@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,22 @@
  */
 package eu.ggnet.dwoss.price.engine;
 
-import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import java.util.*;
+import java.util.Objects;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.price.api.Estimator.Result;
-
-
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.price.api.EngineTracer;
 import eu.ggnet.dwoss.price.api.Estimator;
+import eu.ggnet.dwoss.price.api.Estimator.Result;
 import eu.ggnet.dwoss.price.engine.support.TraceCollector;
+import eu.ggnet.dwoss.rules.Warranty;
+import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.uniqueunit.entity.*;
 
 import static eu.ggnet.dwoss.price.engine.PriceEngineResult.Change.SET;
 
@@ -75,7 +71,7 @@ public class PriceEngine {
 
         PriceEngineResult per = new PriceEngineResult(uu, stock);
         TraceCollector log = new TraceCollector();
-        per.setTax(GlobalConfig.TAX);
+        per.setTax(GlobalConfig.DEFAULT_TAX.getTax());
         per.setWarrantyId(uu.getWarranty().ordinal());
         if ( uu.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) ) {
             per.setWarrentyValid(uu.getWarrentyValid());

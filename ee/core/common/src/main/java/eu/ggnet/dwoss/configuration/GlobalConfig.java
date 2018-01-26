@@ -16,7 +16,10 @@
  */
 package eu.ggnet.dwoss.configuration;
 
+import eu.ggnet.dwoss.rules.TaxType;
 import eu.ggnet.dwoss.util.TempUtil;
+
+import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
 /**
  * Constants.
@@ -34,7 +37,7 @@ public final class GlobalConfig {
      * The actual tax.
      * Not really good here, but acceptable for now.
      */
-    public static final double TAX = 0.19;
+    public static final TaxType DEFAULT_TAX = GENERAL_SALES_TAX_DE_SINCE_2007;
 
     /**
      * Default country, is used for printing information.

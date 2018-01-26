@@ -27,7 +27,6 @@ import org.apache.commons.mail.MultiPartEmail;
 
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
 
 import lombok.Builder;
 import lombok.Value;
@@ -91,16 +90,6 @@ public class Mandator implements Serializable {
     private final Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations;
 
     /**
-     * The default Mode for Receipt, for now may be null,Acer or Apple.
-     */
-    private final TradeName receiptMode;
-
-    @Deprecated // Remove if ServicePositionTemplate cleanup complete
-    public TradeName getReceiptMode() {
-        return receiptMode;
-    }
-
-    /**
      * Defines, if the primary sales channel should be set on roll in.
      */
     private final boolean applyDefaultChannelOnRollIn;
@@ -142,9 +131,7 @@ public class Mandator implements Serializable {
         sb.append("</tr>");
 
         sb.append("<tr><td colspan=\"2\"><ul>");
-        sb.append("<li><b>ReceiptMode: </b>");
-        sb.append(receiptMode);
-        sb.append("</li><li><b>Dossier Prefix: </b>");
+        sb.append("<li><b>Dossier Prefix: </b>");
         sb.append(dossierPrefix);
         sb.append("</li><li><b>MailTemplateLocation: </b>");
         sb.append(mailTemplateLocation == null ? "null" : mailTemplateLocation.getLocation());

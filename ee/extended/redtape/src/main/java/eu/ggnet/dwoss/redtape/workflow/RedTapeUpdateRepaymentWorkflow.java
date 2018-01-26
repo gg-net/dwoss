@@ -177,8 +177,8 @@ public class RedTapeUpdateRepaymentWorkflow extends RedTapeWorkflow {
 
     void updateMirrorPositions(String dossierIdentifier, Document mirror, Collection<Position> positions) {
         mirror.appendAll(positions);
-        mirror.append(new PositionBuilder()
-                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
+        mirror.append(Position.builder()
+                .amount(1)
                 .type(PositionType.COMMENT)
                 .name("Gutschrift von Dossier " + dossierIdentifier)
                 .description("Gutschrift von Dossier " + dossierIdentifier + " durch " + arranger)

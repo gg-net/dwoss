@@ -18,14 +18,14 @@ package eu.ggnet.dwoss.redtape.entity;
 
 import java.io.Serializable;
 import java.lang.ProcessBuilder.Redirect.Type;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.entity.Position.Key;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
@@ -170,14 +170,14 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Builder
-    Position(PositionType type, String name, double price, double amount, double tax, String description, int bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
+    Position(PositionType type, String name, double price, double amount, double tax, String description, Ledger bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
         this.type = type;
         this.name = name;
         this.price = price;
         this.amount = amount;
         this.tax = tax;
         this.description = description;
-        this.bookingAccount = bookingAccount;
+        this.bookingAccount = Optional.ofNullable(bookingAccount).map(Ledger::getValue).orElse(-1);
         this.uniqueUnitId = uniqueUnitId;
         this.uniqueUnitProductId = uniqueUnitProductId;
         this.serial = serialNumber;
@@ -190,7 +190,7 @@ public class Position implements Serializable, Comparable<Position> {
      * @return a copy with document == null
      */
     public Position partialClone() {
-        return new Position(type, name, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
+        return new Position(type, name, price, amount, tax, description, new Ledger(bookingAccount, "fromPartialClone"), uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
     }
 
     public int getId() {
@@ -246,12 +246,18 @@ public class Position implements Serializable, Comparable<Position> {
         this.description = description;
     }
 
-    public int getBookingAccount() {
-        return bookingAccount;
+    /**
+     * Returns a Ledger instance, for now never Null, may chenge in the future.
+     *
+     * @return a Ledger instance, never Null.
+     */
+    public Optional<Ledger> getBookingAccount() {
+        if ( bookingAccount <= 0 ) return Optional.empty();
+        return Optional.of(new Ledger(bookingAccount, "From Position(id=" + id + ")"));
     }
 
-    public void setBookingAccount(int bookingAccount) {
-        this.bookingAccount = bookingAccount;
+    public void setBookingAccount(Ledger bookingAccount) {
+        this.bookingAccount = Optional.ofNullable(bookingAccount).map(Ledger::getValue).orElse(-1);
     }
 
     public PositionType getType() {

@@ -34,8 +34,7 @@ import eu.ggnet.dwoss.redtape.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.emo.DossierEmo;
 import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.ReceiptOperation;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.*;
 import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
@@ -236,8 +235,8 @@ public class UnitProcessorOperation implements UnitProcessor {
         return new EditableUnit(uniqueUnit, stockUnit, operation, uniqueUnit.getProduct() == null ? "" : uniqueUnit.getProduct().getPartNo());
     }
 
-    private Position toPosition(UniqueUnit uniqueUnit, String operationComment) {
-        return Position.builder().type(PositionType.UNIT).bookingAccount(postLedger.get(PositionType.UNIT).orElse(-1))
+    private Position toPosition(UniqueUnit uniqueUnit, String operationComment, TaxType taxType) {
+        return Position.builder().type(PositionType.UNIT).bookingAccount(postLedger.get(PositionType.UNIT, taxType).orElse(null))
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(uniqueUnit) + ", Aufnahme: " + operationComment)
                 .amount(1)
                 .name(UniqueUnitFormater.toPositionName(uniqueUnit))
@@ -325,7 +324,7 @@ public class UnitProcessorOperation implements UnitProcessor {
         L.debug("Refreshed requestActiveDocumentBlock to = {} with dossier = {}", doc, doc.getDossier());
         if ( !doc.isActive() )
             throw new RuntimeException("The Document(id={}) has changed to inactive while locking, this was very unlikely, inform Administrator");
-        doc.append(toPosition(uniqueUnit, operationComment));
+        doc.append(toPosition(uniqueUnit, operationComment, doc.getTaxType()));
         LogicTransaction lt = new LogicTransactionEmo(stockEm).request(doc.getDossier().getId(), LockModeType.PESSIMISTIC_FORCE_INCREMENT);
         lt.add(stockUnit); // Implicit removes it from an existing LogicTransaction
         L.debug("Executed Operation {} for uniqueUnit(id={},refurbishId={}), added to LogicTransaction({}) and Dossier({})",

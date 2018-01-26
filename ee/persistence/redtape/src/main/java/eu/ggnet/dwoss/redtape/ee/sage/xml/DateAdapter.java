@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,29 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.api.value;
+package eu.ggnet.dwoss.redtape.ee.sage.xml;
 
-import java.io.Serializable;
+import java.text.*;
+import java.util.Date;
 
-import lombok.Value;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-/**
- * Parameters for export to finalcial accounting Systems.
- * For now this is only used in the GSOffice Export.
- * <p>
- * @author oliver.guenther
- */
-@Value
-public class FinancialAccounting  implements Serializable{
+public class DateAdapter extends XmlAdapter<String, Date> {
 
-    /**
-     * Default Ledger of customers, if no extra ledger is set.
-     */
-    private final int defaultLedger;
+    private final static DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 
-    /**
-     * If set, the individual customer ledgers are ignored.
-     */
-    private final boolean disableCustomerLedgers;
+    @Override
+    public Date unmarshal(String date) throws ParseException {
+        return FORMAT.parse(date);
+    }
 
+    @Override
+    public String marshal(Date date) {
+        if (date == null) {
+            return "";
+        }
+        return FORMAT.format(date);
+    }
 }

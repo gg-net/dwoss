@@ -7,6 +7,7 @@ import javax.validation.*;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.entity.Position.DefaultUi;
 import eu.ggnet.dwoss.redtape.entity.Position.Returns;
 import eu.ggnet.dwoss.redtape.entity.*;
@@ -24,18 +25,22 @@ public class PositionTest {
 
     private final static Validator V = Validation.buildDefaultValidatorFactory().getValidator();
 
+    Ledger L1 = new Ledger(1111, "DemoLedger 1");
+
+    Ledger L2 = new Ledger(2222, "DemoLedger 2");
+
     @Test
     public void testEqualsContentBug() {
 
-        Position p1 = new PositionBuilder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
+        Position p1 = Position.builder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
                 .price(1200).amount(1).tax(0.19)
                 .description("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
-                .bookingAccount(8401).uniqueUnitId(9).build();
+                .bookingAccount(L1).uniqueUnitId(9).build();
 
-        Position p2 = new PositionBuilder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
+        Position p2 = Position.builder().type(PositionType.UNIT).name("SopoNr.: 9 Seriennummer: CCCCCCCCCC12011778EEEE")
                 .price(1200).amount(1).tax(0.19)
                 .description("Display: 21.5\" (54,61 cm), Crystal Bright, Full HD (1920x1080), 16:9, Farbe: schwarz, Videokonnektor(en) : VGA, DVI")
-                .bookingAccount(8401).uniqueUnitId(9).build();
+                .bookingAccount(L1).uniqueUnitId(9).build();
 
         assertTrue(p1.equalsContent(p2));
     }
@@ -43,7 +48,8 @@ public class PositionTest {
     @Test
     public void testEqualsContent() {
 
-        Position posUnit = new PositionBuilder().type(PositionType.UNIT).bookingAccount(1).name("TestUnit").tax(GlobalConfig.TAX).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
+
+        Position posUnit = Position.builder().amount(1).type(PositionType.UNIT).bookingAccount(L1).name("TestUnit").tax(GlobalConfig.DEFAULT_TAX.getTax()).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
 
         //copy and equality test
         Position posCopy = posUnit.partialClone();
@@ -62,9 +68,9 @@ public class PositionTest {
         assertTrue(posCopy.equalsContent(posUnit));
 
         //bookingAccount equality test
-        posCopy.setBookingAccount(2);
+        posCopy.setBookingAccount(L2);
         assertFalse(posCopy.equalsContent(posUnit));
-        posCopy.setBookingAccount(posUnit.getBookingAccount());
+        posCopy.setBookingAccount(posUnit.getBookingAccount().get());
         assertTrue(posCopy.equalsContent(posUnit));
 
         //name equality test

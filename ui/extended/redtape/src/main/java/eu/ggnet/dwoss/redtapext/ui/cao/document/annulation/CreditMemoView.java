@@ -22,16 +22,13 @@ import java.util.List;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.saft.Client;
 
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 import static eu.ggnet.saft.Client.lookup;
@@ -122,10 +119,10 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
                 JOptionPane.showMessageDialog(this, "Bitte Storno/Gutschriftsgrund angeben");
                 return false;
             }
-            positions.add(new PositionBuilder()
+            positions.add(Position.builder()
+                    .amount(1)
                     .type(COMMENT)
                     .name("Grund/Beschreibung")
-                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
                     .description(tablePanel.getComment() + "\n\n" + balancingBox.getSelectedItem().toString())
                     .build());
             if ( selectedStock == null ) {

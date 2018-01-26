@@ -17,14 +17,12 @@
 package tryout;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.redtape.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
@@ -33,6 +31,8 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
+
+import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
 /**
  *
@@ -79,7 +79,7 @@ public class ServiceViewCaskTryout {
 
             @Override
             public PostLedger loadPostLedger() {
-                return new PostLedger(new HashMap<>());
+                return new PostLedger();
             }
 
             @Override
@@ -92,8 +92,8 @@ public class ServiceViewCaskTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-
-        Ui.build().swing().eval(() -> Position.builder().type(PositionType.SERVICE).price(30.).build(), () -> OkCancel.wrap(new ServiceViewCask(0.10)))
+// () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
+        Ui.build().swing().eval(() -> OkCancel.wrap(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
                 .ifPresent(System.out::println);
     }
 

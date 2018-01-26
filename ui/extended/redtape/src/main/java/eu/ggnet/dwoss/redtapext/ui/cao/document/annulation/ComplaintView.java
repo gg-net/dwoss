@@ -22,17 +22,12 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.saft.Client;
-
-import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 
 /**
  *
@@ -62,8 +57,7 @@ public class ComplaintView extends javax.swing.JPanel implements IPreClose {
             }
         }
         if ( afterInvoiceTablePanel.getComment() != null && !afterInvoiceTablePanel.getComment().trim().equals("") )
-            positions.add(new PositionBuilder().type(PositionType.COMMENT).name("Grund/Beschreibung")
-                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(COMMENT).orElse(-1))
+            positions.add(Position.builder().amount(1).type(PositionType.COMMENT).name("Grund/Beschreibung")
                     .description(afterInvoiceTablePanel.getComment()).build());
         return positions;
     }

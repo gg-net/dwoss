@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,31 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.itest.support;
+package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
-import java.util.HashMap;
+import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.rules.TaxType;
 
-import javax.annotation.ManagedBean;
-import javax.enterprise.inject.Produces;
-
-import eu.ggnet.dwoss.mandator.api.value.*;
+import lombok.NonNull;
+import lombok.Value;
 
 /**
  *
  * @author oliver.guenther
  */
-@ManagedBean
-public class MandatorSupportProducer {
+@Value
+public class PositionAndTaxType {
 
-    @Produces
-    public static ReceiptCustomers c = new ReceiptCustomers(new HashMap<>());
+    @NonNull
+    private final Position position;
 
-    @Produces
-    public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
+    @NonNull
+    private final TaxType taxType;
 
-    @Produces
-    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
-
-    @Produces
-    public static PostLedger pl = new PostLedger();
 }

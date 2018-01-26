@@ -35,6 +35,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
+import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 import static javax.persistence.CascadeType.*;
 
@@ -737,8 +738,9 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     public boolean hasSingleTax() {
         // HINT: In the future, we may have documents with multiple taxes. This should be identified in the tax type and verified. For now, this is enought.
         if ( positions.isEmpty() ) return true;
-        double refTax = positions.values().iterator().next().getTax();
+        double refTax = taxType.getTax();
         for (Position pos : positions.values()) {
+            if ( pos.getType() == COMMENT ) continue; // Commet Tax is not relevant.
             if ( Double.compare(refTax, pos.getTax()) != 0 ) return false;
         }
         return true;
@@ -756,7 +758,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         if ( positions.isEmpty() ) return taxType.getTax();
         if ( !hasSingleTax() )
             throw new IllegalStateException("Document(id=" + id + ",identifier=" + identifier + ") has Positions with different taxes.  " + positions);
-        return positions.values().iterator().next().getTax();
+        return taxType.getTax();
     }
 
     /**

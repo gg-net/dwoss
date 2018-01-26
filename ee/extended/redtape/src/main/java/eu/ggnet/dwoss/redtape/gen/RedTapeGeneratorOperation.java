@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
@@ -125,10 +124,9 @@ public class RedTapeGeneratorOperation {
                             .uniqueUnitId(uu.getId())
                             .uniqueUnitProductId(uu.getProduct().getId())
                             .price(price)
-                            .tax(GlobalConfig.TAX)
+                            .tax(doc.getSingleTax())
                             .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
                             .name(UniqueUnitFormater.toPositionName(uu))
-                            .bookingAccount(-1)
                             .refurbishedId(uu.getIdentifier(REFURBISHED_ID))
                             .build();
                     doc.append(pos);
@@ -151,10 +149,10 @@ public class RedTapeGeneratorOperation {
                                 .type(PositionType.PRODUCT_BATCH)
                                 .uniqueUnitProductId(p.getId())
                                 .price(price)
-                                .tax(GlobalConfig.TAX)
+                                .tax(doc.getSingleTax())
                                 .name(p.getName())
                                 .description(p.getDescription())
-                                .bookingAccount(postLedger.get(PositionType.PRODUCT_BATCH).orElse(-1))
+                                .bookingAccount(postLedger.get(PositionType.PRODUCT_BATCH, doc.getTaxType()).orElse(null))
                                 .build());
                         break;
                     case 1: // Add a Service
@@ -162,10 +160,10 @@ public class RedTapeGeneratorOperation {
                                 .amount((R.nextInt(100) + 1) / 4.0)
                                 .type(PositionType.SERVICE)
                                 .price(price)
-                                .tax(GlobalConfig.TAX)
+                                .tax(doc.getSingleTax())
                                 .name("Service")
                                 .description("Service")
-                                .bookingAccount(postLedger.get(PositionType.SERVICE).orElse(-1))
+                                .bookingAccount(postLedger.get(PositionType.SERVICE, doc.getTaxType()).orElse(null))
                                 .build());
                         break;
                     case 2: // Add a comment
@@ -174,7 +172,7 @@ public class RedTapeGeneratorOperation {
                                 .type(PositionType.COMMENT)
                                 .name("Comment")
                                 .description("Comment")
-                                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
+                                .bookingAccount(postLedger.get(PositionType.COMMENT, doc.getTaxType()).orElse(null))
                                 .build());
                         break;
                 }
@@ -186,10 +184,10 @@ public class RedTapeGeneratorOperation {
                         .amount(1)
                         .type(PositionType.SHIPPING_COST)
                         .price(price)
-                        .tax(GlobalConfig.TAX)
+                        .tax(doc.getSingleTax())
                         .name("Versandkosten")
                         .description("Versandkosten")
-                        .bookingAccount(postLedger.get(PositionType.SHIPPING_COST).orElse(-1))
+                        .bookingAccount(postLedger.get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
                         .build());
             }
             // Break, if what we build is wrong.

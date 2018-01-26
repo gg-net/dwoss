@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtape.api;
+package eu.ggnet.dwoss.redtape.ee.sage.xml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,7 @@ public class Fields {
 
     @XmlElementWrapper(name = "FIELDS")
     @XmlElement(name = "FIELD")
-    List<Field> fields;
-
-    public Fields() {
-        fields = new ArrayList<Field>();
-    }
+    List<Field> fields = new ArrayList<>();
 
     public boolean add(Field e) {
         return fields.add(e);

@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtape.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.state.CustomerDocument;
@@ -65,8 +64,7 @@ public class ModifyShippingCostStateAction extends DefaultStateTransitionAction 
 
         int confirmDialog = JOptionPane.showConfirmDialog(parent, createWindowText(),
                 "Automatische Versandkostenkalkulation", JOptionPane.YES_NO_CANCEL_OPTION);
-        double tax = document.hasSingleTax() && !document.getPositions().isEmpty() ? document.getSingleTax() : GlobalConfig.TAX;
-        if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition(), tax);
+        if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition());
 
         if ( confirmDialog != JOptionPane.CANCEL_OPTION )
             controller.reloadSelectionOnStateChange(lookup(RedTapeWorker.class).update(document, null, lookup(Guardian.class).getUsername()).getDossier());

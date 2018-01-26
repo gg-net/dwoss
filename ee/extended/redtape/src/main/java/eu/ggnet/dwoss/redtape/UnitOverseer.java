@@ -54,12 +54,11 @@ public interface UnitOverseer {
      * This method will throw a UserInfoException describing, why the unit is not available.
      * <p/>
      * @param refurbishId The refurbished id of the UniqueUnit
-     * @param documentId  the document id
-     * @param tax         the tax to be set.
+     * @param documentId  the document id for taxtype and reference for more
      * @return a result object that contains positions build for a available unit
      * @throws UserInfoException if the refurbishId is not available
      */
-    Result<List<Position>> createUnitPosition(String refurbishId, long documentId, double tax) throws UserInfoException;
+    Result<List<Position>> createUnitPosition(String refurbishId, long documentId) throws UserInfoException;
 
     /**
      * Find a Unit and its representative and return a html formated String representing it.

@@ -11,7 +11,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
@@ -26,8 +25,7 @@ import eu.ggnet.dwoss.redtape.op.itest.support.*;
 import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
@@ -62,9 +60,9 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                             .tax(p.getTax())
                             .serialNumber(p.getSerial())
                             .refurbishedId(p.getRefurbishedId())
-                            .bookingAccount(1000)
+                            .bookingAccount(new Ledger(1000, "DemoLedger"))
                             .type(PRODUCT_BATCH)
-                            .tax(GlobalConfig.TAX)
+                            .tax(TaxType.GENERAL_SALES_TAX_DE_SINCE_2007.getTax())
                             .uniqueUnitId(p.getUniqueUnitId())
                             .uniqueUnitProductId(eao.findByPartNo(WARRANTY_PART_NO).getId())
                             .name("Warranty Position")
@@ -235,10 +233,9 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(price)
-                .tax(GlobalConfig.TAX)
+                .tax(doc.getSingleTax())
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(uu))
                 .name(UniqueUnitFormater.toPositionName(uu))
-                .bookingAccount(-1)
                 .build();
         pos.setRefurbishedId(uu.getRefurbishId());
         doc.appendAll(new RedTapeHookStup().elaborateUnitPosition(pos, doc.getId()).getPayload());
@@ -278,25 +275,25 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .type(PositionType.COMMENT)
                 .name("Comment")
                 .description("Comment")
-                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
                 .build());
 
         Dossier d2 = redTapeWorker.create(customerId, R.nextBoolean(), "JUNIT");
-        d2.getActiveDocuments(BLOCK).get(0).append(Position.builder()
+        Document doc2 = d2.getActiveDocuments(BLOCK).get(0);
+        doc2.append(Position.builder()
                 .amount(1)
                 .type(PositionType.COMMENT)
                 .name("Comment")
                 .description("Comment")
-                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
                 .build());
-        d2.getActiveDocuments(BLOCK).get(0).append(Position.builder()
+
+        doc2.append(Position.builder()
                 .type(PositionType.SERVICE)
                 .price(100)
-                .tax(GlobalConfig.TAX)
+                .tax(doc2.getSingleTax())
                 .name("Service")
                 .description("Service")
                 .amount(1)
-                .bookingAccount(postLedger.get(PositionType.SERVICE).orElse(-1))
+                .bookingAccount(postLedger.get(PositionType.SERVICE, doc2.getTaxType()).orElse(null))
                 .build());
 
         UniqueUnit unit1 = receiptGenerator.makeUniqueUnits(1, true, true).get(0);
@@ -309,10 +306,9 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .uniqueUnitId(unit1.getId())
                 .uniqueUnitProductId(unit1.getProduct().getId())
                 .price(unit1.getPrice(PriceType.SALE))
-                .tax(GlobalConfig.TAX)
+                .tax(d3.getActiveDocuments(BLOCK).get(0).getSingleTax())
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(unit1))
                 .name(UniqueUnitFormater.toPositionName(unit1))
-                .bookingAccount(-1)
                 .refurbishedId(unit1.getIdentifier(REFURBISHED_ID))
                 .build());
 
@@ -323,10 +319,9 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .uniqueUnitId(unit2.getId())
                 .uniqueUnitProductId(unit2.getProduct().getId())
                 .price(unit2.getPrice(PriceType.SALE))
-                .tax(GlobalConfig.TAX)
+                .tax(d4.getActiveDocuments(BLOCK).get(0).getSingleTax())
                 .description(UniqueUnitFormater.toDetailedDiscriptionLine(unit2))
                 .name(UniqueUnitFormater.toPositionName(unit2))
-                .bookingAccount(-1)
                 .refurbishedId(unit2.getIdentifier(REFURBISHED_ID))
                 .build());
 
@@ -336,7 +331,6 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
                 .type(PositionType.COMMENT)
                 .name("Comment")
                 .description("Comment")
-                .bookingAccount(postLedger.get(PositionType.COMMENT).orElse(-1))
                 .build());
 
         redTapeWorker.update(d1.getActiveDocuments(BLOCK).get(0), null, "JUNIT");

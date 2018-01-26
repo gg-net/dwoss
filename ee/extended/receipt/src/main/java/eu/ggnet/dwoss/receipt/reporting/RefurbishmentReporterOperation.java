@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.reporting;
 
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.SBlock;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STable;
-
 import java.awt.Color;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -39,22 +28,22 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
 
-import static eu.ggnet.lucidcalc.CFormat.FontStyle.*;
-import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
-import static eu.ggnet.lucidcalc.CFormat.Representation.*;
-import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.*;
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.NORMAL;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.LEFT;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
+import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
 
 /**
  * Generates Refurbishment Reports.
@@ -107,7 +96,7 @@ public class RefurbishmentReporterOperation implements RefurbishmentReporter {
             }
         }
 
-        double tax = (refilledPriceSum + refurbishedPriceSum) * GlobalConfig.TAX;
+        double tax = (refilledPriceSum + refurbishedPriceSum) * GlobalConfig.DEFAULT_TAX.getTax();
 
         CSheet summary = new CSheet("Summery", 5, 30, 15, 15, 15);
         SBlock headerAndDate = new SBlock();

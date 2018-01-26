@@ -42,7 +42,7 @@ public class ShippingCostHelper {
      * @param doc               the {@link Document} entity.
      * @param shippingCondition the condition on which the shipping cost is calculated
      */
-    public static void modifyOrAddShippingCost(Document doc, ShippingCondition shippingCondition, double tax) {
+    public static void modifyOrAddShippingCost(Document doc, ShippingCondition shippingCondition) {
         int amountOfPositions = doc.getPositions(PositionType.UNIT).size();
         for (Position position : doc.getPositions(PositionType.PRODUCT_BATCH).values()) {
             //just quick for the warranty extension. sucks a bit if we ever wouldhave a refurbished id on another product batch
@@ -56,8 +56,8 @@ public class ShippingCostHelper {
         if ( positions.isEmpty() ) {
             doc.append(Position.builder().type(PositionType.SHIPPING_COST)
                     .name("Versandkosten").description("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
-                    .amount(1).price(costs).tax(tax)
-                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST).orElse(-1))
+                    .amount(1).price(costs).tax(doc.getTaxType().getTax())
+                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
                     .build());
         } else {
             Position next = positions.values().iterator().next();
