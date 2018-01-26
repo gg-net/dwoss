@@ -28,6 +28,7 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
@@ -41,7 +42,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
-    private ChoiceBox commtypbox;
+    private ChoiceBox<Type> commtypbox;
 
     @FXML
     private TextField identifer;
@@ -63,7 +64,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     @FXML
     /**
      * Close the Editor window and discard all changes.
-     *
+     * <p>
      */
     private void handleSaveButtonAction(ActionEvent event) {
         warning.setVisible(false);
@@ -74,6 +75,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                     && !identifer.getText().matches(Communication.EMAIL_PATTERN) ) {
 
                 warning.setVisible(true);
+                warning.setText("Bitte die E-Mail überprüfen.");
                 return;
             }
             //check the phone pattern, display Warning (!)
@@ -82,6 +84,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                   || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
                     && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
                 warning.setVisible(true);
+                warning.setText("Bitte nur Zahlen eingeben.");
                 return;
             }
 
@@ -90,6 +93,8 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         if ( StringUtils.isBlank(identifer.getText()) ) {
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
+        } else {
+            getCommunication();
         }
 
         Ui.closeWindowOf(identifer);
@@ -104,11 +109,11 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     public void accept(Communication a) {
         if ( a != null ) {
             communication = a;
-        }else {
+            setCommunication(communication);
+        } else {
             UiAlert.message("Kommunikationsweg ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
-        identifer.setText(communication.getIdentifier());
-        commtypbox.getSelectionModel().select(communication.getType());
+
     }
 
     @Override
@@ -117,6 +122,24 @@ public class CommunicationUpdateController implements Initializable, FxControlle
             return null;
         }
         return communication;
+    }
+
+    /**
+     * Set the Communication for the Edit
+     *
+     * @param a is the Communication
+     */
+    private void setCommunication(Communication com) {
+        identifer.setText(com.getIdentifier());
+        commtypbox.getSelectionModel().select(com.getType());
+    }
+
+    /**
+     * Get the Communication back
+     */
+    private void getCommunication() {
+        communication.setType(commtypbox.getSelectionModel().getSelectedItem());
+        communication.setIdentifier(identifer.getText());
     }
 
 }

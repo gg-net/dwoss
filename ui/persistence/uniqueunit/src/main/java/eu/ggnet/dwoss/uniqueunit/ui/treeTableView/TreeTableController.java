@@ -129,16 +129,30 @@ public class TreeTableController implements Initializable, FxController {
             @Override
             public ObservableValue<Integer> call(CellDataFeatures<DataWrapper, Integer> param) {
                 DataWrapper dw = param.getValue().getValue();
-                SimpleObjectProperty<Integer> result = new SimpleObjectProperty<>();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if ( dw instanceof ProductGroupWrapper ) {
-                            System.out.println("1111");
-                        }
-                    }
-                }).start();
 
+                SimpleObjectProperty<Integer> result;
+
+                if ( dw instanceof ProductGroupWrapper ) {
+                    result = new SimpleObjectProperty<>(amountOfCategoryProducts(((ProductGroupWrapper)dw).getTradeName(), ((ProductGroupWrapper)dw).getProductGroup()));
+                    return result;
+                }
+
+                if ( dw instanceof CategoryProductWrapper ) {
+                    result = new SimpleObjectProperty<>(amountOfProducts(((CategoryProductWrapper)dw).getCategoryProductId()));
+                    return result;
+                }
+
+                if ( dw instanceof ProductWrapper ) {
+                    result = new SimpleObjectProperty<>(amountOfUnitCollections(((ProductWrapper)dw).getProductId()));
+                    return result;
+                }
+
+                if ( dw instanceof UnitCollectionWrapper ) {
+                    result = new SimpleObjectProperty<>(amountOfUnits(((UnitCollectionWrapper)dw).getUnitCollectionId()));
+                    return result;
+                }
+
+                result = new SimpleObjectProperty<>(0);
                 return result;
 
             }
@@ -298,4 +312,21 @@ public class TreeTableController implements Initializable, FxController {
         }
         return new ArrayList<>(new ProductGenerator().generateProduct(1).get(0).getUniqueUnits());
     }
+
+    public int amountOfCategoryProducts(TradeName tradeName, ProductGroup group) {
+        return 5;
+    }
+
+    public int amountOfProducts(long categoryProductId) {
+        return 10;
+    }
+
+    public int amountOfUnitCollections(long productId) {
+        return 6;
+    }
+
+    public int amountOfUnits(long unitCollectionId) {
+        return 20;
+    }
+
 }

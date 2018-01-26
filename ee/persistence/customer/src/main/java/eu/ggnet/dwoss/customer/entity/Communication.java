@@ -107,6 +107,8 @@ public class Communication implements Serializable {
     public String getViolationMessages() {
         // TODO: fill me
         //[[DWOSS-195]]
+        //new email pattern with longet domains
+        //"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         return null;
     }
 

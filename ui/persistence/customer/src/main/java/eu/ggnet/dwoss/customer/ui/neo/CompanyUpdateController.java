@@ -178,6 +178,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -334,7 +335,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void openAddress(Address addresse) {
         Ui.exec(() -> {
             Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                addressList.add(a);
+                addressList.set(addressListView.getSelectionModel().getSelectedIndex(),a);
+                addressListView.refresh();
             });
         });
     }
@@ -347,7 +349,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void openCommunication(Communication communication) {
         Ui.exec(() -> {
             Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                communicationsList.add(a);
+                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                communicationTableView.refresh();
             });
         });
     }
@@ -360,7 +363,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void openContact(Contact contact) {
         Ui.exec(() -> {
             Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
-                contactsList.add(a);
+                contactsList.set(contactListView.getSelectionModel().getSelectedIndex(),a);
+                contactListView.refresh();
             });
         });
     }
@@ -385,7 +389,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         companyNameTextField.setText(comp.getName());
         taxIdTextField.setText(comp.getTaxId());
         ledgerTextField.setText("" + comp.getLedger());
-
     }
 
     /**

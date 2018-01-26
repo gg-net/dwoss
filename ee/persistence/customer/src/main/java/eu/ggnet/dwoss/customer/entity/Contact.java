@@ -111,6 +111,7 @@ public class Contact implements Serializable {
      */
     @OneToMany(cascade = ALL)
     @NonNull
+    @Getter
     @IndexedEmbedded
     private final List<Address> addresses = new ArrayList<>();
 
@@ -119,6 +120,7 @@ public class Contact implements Serializable {
      */
     @OneToMany(cascade = ALL)
     @NonNull
+    @Getter
     @IndexedEmbedded
     private final List<Communication> communications = new ArrayList<>();
 
@@ -179,18 +181,6 @@ public class Contact implements Serializable {
         return (title == null ? "" : title + " ") + (firstName == null ? "" : firstName + " ") + (lastName == null ? "" : lastName);
     }
 
-    /**
-     *
-     * @return
-     */
-    public List<Address> getAddresses() {
-        return new ArrayList<>(addresses);
-    }
-
-    public List<Communication> getCommunications() {
-        return new ArrayList<>(communications);
-    }
-
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append(title == null ? "" : title + "&nbsp;").append(firstName == null ? "" : firstName + "&nbsp;").append(lastName == null ? "" : lastName)
@@ -223,7 +213,6 @@ public class Contact implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-
     public String getViolationMessages() {
         if ( StringUtils.isBlank(lastName) ) return "LastName is blank";
         if ( addresses.stream().anyMatch(a -> a.getViolationMessages() != null) )
