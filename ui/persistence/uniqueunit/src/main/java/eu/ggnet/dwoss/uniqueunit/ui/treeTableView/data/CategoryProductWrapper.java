@@ -20,6 +20,7 @@ import javafx.scene.control.TreeItem;
 
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 
+import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -35,9 +36,13 @@ public class CategoryProductWrapper implements DataWrapper {
 
     private final CategoryProduct cp;
 
+    @Getter
+    private final long categoryProductId;
+
     public CategoryProductWrapper(TreeItem<DataWrapper> item, CategoryProduct cp) {
         this.item = item;
         this.cp = cp;
+        categoryProductId = cp.getId();
     }
 
     public boolean isLoading() {
