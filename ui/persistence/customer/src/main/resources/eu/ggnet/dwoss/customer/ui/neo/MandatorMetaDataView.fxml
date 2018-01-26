@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -12,7 +13,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController">
     <center>
-        <FlowPane prefHeight="261.0" prefWidth="776.0" BorderPane.alignment="CENTER">
+        <FlowPane prefHeight="261.0" BorderPane.alignment="CENTER">
             <children>
                 <VBox>
                     <children>
@@ -74,17 +75,23 @@
                                 </VBox>
                             </children>
                         </HBox>
-                  <HBox>
-                     <children>
-                        <Region prefWidth="218.0" />
-                            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" prefHeight="35.0" prefWidth="211.0" text="Abbrechen" />
-                            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefHeight="36.0" prefWidth="208.0" text="Speichern" />
-                        <Region />
-                     </children>
-                  </HBox>
                     </children>
                 </VBox>
             </children>
         </FlowPane>
     </center>
+   <bottom>
+      <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <children>
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </FlowPane>
+   </bottom>
 </BorderPane>
