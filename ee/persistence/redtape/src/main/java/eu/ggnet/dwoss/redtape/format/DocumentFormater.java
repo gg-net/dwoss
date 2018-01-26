@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,7 @@ import java.util.*;
 
 import eu.ggnet.dwoss.redtape.entity.Document;
 import eu.ggnet.dwoss.redtape.entity.Position;
-
 import eu.ggnet.dwoss.rules.DocumentType;
-
 import eu.ggnet.dwoss.util.DateFormats;
 
 /**
@@ -63,6 +61,7 @@ public class DocumentFormater {
         String res = (doc.getType() == null) ? "<b>Dokumenttyp unbekannt</b>" : "<b>" + doc.getType().getName() + "</b>";
         res += (doc.getIdentifier() == null) ? "" : " <i>" + doc.getIdentifier() + "</i>";
         res += " von " + ((doc.getActual() != null) ? DateFormats.ISO.format(doc.getActual()) : "Kein Actual gesetzt") + "<br />";
+        res += "Steuertyp: " + doc.getTaxType().getName() + "<br />";
         res += (doc.getConditions().isEmpty() ? "" : toConditions(doc) + "<br />");
         if ( doc.getFlags().contains(Document.Flag.CUSTOMER_EXACTLY_BRIEFED) ) {
             res += "Aktuelle Version liegt dem Kunden vor.<br />";
