@@ -54,18 +54,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private HBox companyHBox;
 
     @FXML
-    private Button saveAndCloseButton;
-
-    @FXML
-    private Button saveAndEnhanceUIButton;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private RowConstraints companyRow;
-
-    @FXML
     private Label headerLabel;
 
     @FXML
@@ -113,15 +101,17 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    private TextField companyNameTextFiled = new TextField();
+    private final TextField companyNameTextFiled = new TextField();
 
-    private TextField ustIdTextField = new TextField();
+    private final TextField ustIdTextField = new TextField();
 
     public CustomerSimpleController() {
     }
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

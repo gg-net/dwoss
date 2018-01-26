@@ -151,6 +151,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -275,7 +277,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
      */
     private void openAddress(Address addresse) {
          Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                Ui.build().parent(titleTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                     addressList.add(a);
                 });
          });
@@ -288,7 +290,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
      */
     private void openCommunication(Communication communication) {
          Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                Ui.build().parent(titleTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                     communicationsList.add(a);
                  });
          });

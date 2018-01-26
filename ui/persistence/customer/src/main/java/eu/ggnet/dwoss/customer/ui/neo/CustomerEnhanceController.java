@@ -21,17 +21,12 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
-import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -53,6 +48,7 @@ import lombok.Data;
  *
  * @author jens.papenhagen
  */
+@Title("Erweiterte Kunden bearbeiten")
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @Data
