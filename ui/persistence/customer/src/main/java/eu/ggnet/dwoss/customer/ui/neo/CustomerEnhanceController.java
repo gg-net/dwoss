@@ -21,12 +21,14 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
+import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -56,11 +58,39 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Data
     @AllArgsConstructor
-    public static class ExternalId {
+    private static class ExternalId {
 
         private ExternalSystem type;
 
         private String value;
+    }
+
+    //extra class for the CheckBox ListView
+    private static class CustomerFlagWithSelect {
+
+        private final ReadOnlyObjectWrapper flag = new ReadOnlyObjectWrapper();
+
+        private final BooleanProperty selected = new SimpleBooleanProperty(false);
+
+        public CustomerFlagWithSelect(CustomerFlag flag) {
+            this.flag.set(flag);
+        }
+
+        public CustomerFlag getFlag() {
+            return (CustomerFlag)flag.get();
+        }
+
+        public BooleanProperty selectedProperty() {
+            return selected;
+        }
+
+        public boolean isSelected() {
+            return selected.get();
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected.set(selected);
+        }
     }
 
     @FXML
@@ -103,6 +133,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private final ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
     private final ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
+    
+    private final ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
 
     private final ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
@@ -166,7 +198,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     public void setCustomer(Customer c) {
-
         if ( c.isBussines() ) {
             CustomerKindLabel.setText("Geschäftskunde");
             kundenname.setText(c.getCompanies().get(0).getName());
@@ -206,7 +237,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         //build the Flags Box
         buildFlagBox();
-        
+
         //build the external System Id´s box
         buildExternalSystemIdBox();
 
@@ -240,6 +271,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         customer.setComment(commentTextArea.getText());
     }
 
+    /**
+     * Build up a ListView with CheckBoxes for the Set of CunstomerFlags
+     */
     private void buildFlagBox() {
         //transform a Set to a ObservableList of CustomerFlag
         List<CustomerFlag> templist = new ArrayList<>();
@@ -248,20 +282,53 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         //fill with all posibile flags
         ObservableList<CustomerFlag> observableArrayListOfAllFlags = FXCollections.observableArrayList(CustomerFlag.values());
-  
+
+        ObservableList<CustomerFlagWithSelect> listForTheView = FXCollections.observableArrayList();
+        
+        //fill the CustomerFlagWithSelect List
+        observableArrayListOfAllFlags.stream().map((ovall) -> {
+            CustomerFlagWithSelect cfs = new CustomerFlagWithSelect(ovall);
+            if(allFlagsFromTheCustomer.contains(ovall)){
+                cfs.isSelected();
+            }
+            return cfs;
+        }).forEachOrdered((cfs) -> {
+            listForTheView.add(cfs);
+        });
+        
+        listForTheView.forEach(flag -> flag.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
+            if (isSelected) {
+                outputFlagslist.add(flag.getFlag());
+            }
+        }));
+       
         
 
+        ListView<CustomerFlagWithSelect> checklist = new ListView<>();
+        checklist.setItems(listForTheView);
+        checklist.setCellFactory(CheckBoxListCell.forListView(CustomerFlagWithSelect::selectedProperty, new StringConverter<CustomerFlagWithSelect>() {
+            @Override
+            public String toString(CustomerFlagWithSelect object) {
+                return object.getFlag().getName();
+            }
+
+            @Override
+            public CustomerFlagWithSelect fromString(String string) {
+                return null;
+            }
+        }));
+        
         
         
         
         Label flagLable = new Label("Flags: ");
-        flagVBox.getChildren().addAll(flagLable);
+        flagVBox.getChildren().addAll(flagLable, checklist);
     }
     
     
-    
-    
-
+    /**
+     * build a small list of all ExternalId
+     */
     private void buildExternalSystemIdBox() {
         addExternalIdsListView.setCellFactory((ListView<ExternalId> p) -> {
             ListCell<ExternalId> cell = new ListCell<ExternalId>() {
@@ -275,7 +342,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         HBox flagbox = new HBox();
                         Label flagLable = new Label(item.type.name() + ":");
                         flagLable.setStyle("-fx-font-weight: bold");
-                        
+
                         TextField textfield = new TextField();
                         textfield.setText(item.getValue());
 
@@ -293,7 +360,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         Label ExternalSystemIdsLable = new Label("Extra Kunden Nummer: ");
         externalSysremIds.getChildren().addAll(ExternalSystemIdsLable, addExternalIdsListView);
     }
-
+    
+    
+    /**
+     * build the main show box 
+     * for bussnis customer with Companies
+     * for consumer customer with Contacts
+     */
     private void buildShowBox() {
         //build up the Buttons
         VBox buttonVBox = new VBox();
@@ -306,7 +379,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         //set the right actions for the buttons
         if ( bussines ) {
-            System.out.println("is Bussnies Customer");
             editButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
@@ -325,7 +397,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 }
             });
         } else {
-            System.out.println("is Consumer Customer");
             editButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
