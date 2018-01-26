@@ -32,7 +32,7 @@
                         <TextField fx:id="identifer" maxWidth="1.7976931348623157E308" minWidth="150.0" />                      
                         <Label fx:id="warning" text="!" textFill="RED" visible="false">
                             <font>
-                                <Font size="20.0" />
+                                <Font size="14.0" />
                             </font>
                         </Label>
                     </children>

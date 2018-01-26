@@ -75,6 +75,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                     && !identifer.getText().matches(Communication.EMAIL_PATTERN) ) {
 
                 warning.setVisible(true);
+                warning.setText("Bitte die E-Mail überprüfen.");
                 return;
             }
             //check the phone pattern, display Warning (!)
@@ -83,6 +84,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                   || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
                     && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
                 warning.setVisible(true);
+                warning.setText("Bitte nur Zahlen eingeben.");
                 return;
             }
 
