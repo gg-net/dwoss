@@ -39,6 +39,9 @@ public class ContactUpdateTryout {
         contact.add(gen.makeAddress());
         contact.add(gen.makeAddress());
         
+        contact.add(gen.makeCommunication());
+        contact.add(gen.makeCommunication());
+        contact.add(gen.makeCommunication());
         
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ui.neo;
-
-import javafx.scene.control.ListCell;
+package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
 /**
  *
- * @author jacob.weinhold
+ * @author lucas.huelsen
  */
-public class PferedAddressLabelsCustomListCell extends ListCell {
+public interface DataWrapper {
 
+    String getName();
 }

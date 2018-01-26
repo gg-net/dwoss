@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.util.Locale;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.rules.AddressType;
@@ -82,10 +82,9 @@ public class Address implements Serializable {
     private String isoCountry = "DE";
 
     public void setIsoCountry(Locale country) {
-        if ( country == null ){
+        if ( country == null ) {
             throw new NullPointerException("Null not allowed");
-        }
-        else{
+        } else {
             this.isoCountry = country.getCountry();
         }
     }
@@ -97,7 +96,28 @@ public class Address implements Serializable {
     public String toHtml() {
         return (preferedType == null ? "" : "<i>Bevorzugte: " + preferedType.getName() + "<br />"
                 + street + "<br />"
-                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>") );
+                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>"));
+    }
+
+    /**
+     * Returns null, if the Address is valid.
+     * Rules are:
+     * <ul>
+     * <li>Street is not blank</li>
+     * <li>City is not blank</li>
+     * <li>ZipCode is not blank</li>
+     * <li>Country is not blank</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    @Null
+    public String getViolationMessages() {
+        if ( StringUtils.isBlank(street) ) return "Street is blank";
+        if ( StringUtils.isBlank(city) ) return "City is blank";
+        if ( StringUtils.isBlank(zipCode) ) return "ZipCode is blank";
+        if ( StringUtils.isBlank(isoCountry) ) return "Country is blank";
+        return null;
     }
 
 }

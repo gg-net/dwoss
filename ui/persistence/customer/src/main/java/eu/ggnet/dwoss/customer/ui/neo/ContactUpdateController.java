@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -43,8 +44,12 @@ import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
+import static javafx.stage.Modality.WINDOW_MODAL;
+
 /**
  * FXML Controller class
+ * <p>
+ * import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author jens.papenhagen
  */
@@ -71,25 +76,27 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private Contact contact;
 
-    private final TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
 
-    private final TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private final TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
+    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
-    private final ObservableList<Address> addressList = FXCollections.observableArrayList();
+    private ObservableList<Address> addressList = FXCollections.observableArrayList();
 
-    private final ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
+    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
-    private final ToggleGroup prefGroup = new ToggleGroup();
+    private ToggleGroup prefGroup = new ToggleGroup();
+
+    @FXML
+    private Button delAddressButton;
+
+    @FXML
+    private Button delComButton;
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
-        getContact();
+        saveButtonHandling(event);
         Ui.closeWindowOf(lastNameTextField);
     }
 
@@ -111,13 +118,13 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void handleEditAddressButton(ActionEvent event) {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            openAddress(selectedItem);
+            editAddress(selectedItem);
         }
     }
 
     @FXML
     private void handleAddAddressButton(ActionEvent event) {
-        openAddress(new Address());
+        addAddress(new Address());
     }
 
     @FXML
@@ -132,13 +139,13 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void handleEditComButton(ActionEvent event) {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            openCommunication(selectedItem);
+            editCommunication(selectedItem);
         }
     }
 
     @FXML
     private void handleAddComButton(ActionEvent event) {
-        openCommunication(new Communication());
+        addCommunication(new Communication());
     }
 
     @FXML
@@ -151,30 +158,39 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {       
-
-        //fill the UI with default values
+    public void initialize(URL url, ResourceBundle rb) {
+        delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        
+        
+         //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
 
         //Address CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
             ListCell<Address> cell = new ListCell<Address>() {
                 @Override
-                protected void updateItem(Address t, boolean bln) {
-                    super.updateItem(t, bln);
-                    if ( t != null ) {
+                protected void updateItem(Address item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
                         VBox anschriftbox = new VBox();
-                        Label street = new Label(t.getStreet());
+                        Label street = new Label(item.getStreet());
 
-                        Label zipCode = new Label(t.getZipCode());
-                        Label city = new Label(t.getCity());
+                        Label zipCode = new Label(item.getZipCode());
+                        Label city = new Label(item.getCity());
                         HBox postBox = new HBox();
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
-                        Label country = new Label(new Locale("", t.getIsoCountry()).getDisplayCountry());
+                        Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
 
                         anschriftbox.getChildren().addAll(street, postBox, country);
                         anschriftbox.setSpacing(2.0);
@@ -182,8 +198,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
                         setText(null);
                         setGraphic(anschriftbox);
 
-                    } else {
-                        setText("");
                     }
                 }
             };
@@ -267,42 +281,54 @@ public class ContactUpdateController implements Initializable, FxController, Con
         return contact;
     }
 
-    /**
-     * open the Address Editor
-     *
-     * @param addresse is the Address
-     */
-    private void openAddress(Address addresse) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                    addressList.add(a);
-                });
-            }
-        }).start();
-        //old code 
-//        Ui.exec(() -> {
-//            Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-//                addressList.add(a);
-//            });
-//        });
+    private void editAddress(Address addresse) {
+        Ui.exec(() -> {
+            Ui.build().parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
     }
 
-    /**
-     * open the Communication Editor
-     *
-     * @param communication is the Communication
-     */
-    private void openCommunication(Communication communication) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                    communicationsList.add(a);
-                });
-            }
-        }).start();
+    private void addAddress(Address addresse) {
+        Ui.exec(() -> {
+            Ui.build().parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.add(a);
+                        });
+
+                    });
+        });
+    }
+
+    private void editCommunication(Communication communication) {
+        Ui.exec(() -> {
+            Ui.build().parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
+    }
+
+    private void addCommunication(Communication communication) {
+        Ui.exec(() -> {
+            Ui.build().parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
     }
 
     /**
@@ -311,19 +337,19 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param comp the Contact
      */
     private void setContact(Contact cont) {
-        addressList.addAll(contact.getAddresses());
-        communicationsList.addAll(contact.getCommunications());
+        titleTextField.setText(cont.getTitle());
+        firstNameTextField.setText(cont.getFirstName());
+        lastNameTextField.setText(cont.getLastName());
+
+        genderBox.getSelectionModel().select(cont.getSex());
+
+        addressList.addAll(cont.getAddresses());
+        communicationsList.addAll(cont.getCommunications());
 
         //fill the listViews
         addressListView.setItems(addressList);
         communicationTableView.setItems(communicationsList);
         communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
-
-        titleTextField.setText(contact.getTitle());
-        firstNameTextField.setText(contact.getFirstName());
-        lastNameTextField.setText(contact.getLastName());
-
-        genderBox.getSelectionModel().select(contact.getSex());
     }
 
     /**

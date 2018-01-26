@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.entity;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -26,7 +27,6 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -46,6 +46,7 @@ import static javax.persistence.CascadeType.ALL;
  * @has 0..1 - 0..n Contact
  * @has 0..1 - 0..n MandatorMetadata
  * @has 0..m - 0..n CustomerFlag
+ * @has 1 - 1..n AddressLabel
  *
  * @author pascal.perau
  */
@@ -334,69 +335,19 @@ public class Customer implements Serializable {
         }
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
-    
-      // TODO: Docu
-    // FIXME: Make this work.
+
+    /**
+     * Validtes a simple customer.
+     * Rules are:
+     * <ul>
+     * <li>either a contact or a companie is set, but never both</li>
+     * <li>At least one contact has a address</li>
+     * </ul>
+     *
+     * @return true for a Vaild Customer
+     */
     public boolean isSimple() {
-//        return getSimpleViolationMessage() == null;
-// Following Code will be removed in the future.
-        boolean vaildConsumer = false;
-        if ( !isVaild() ) return false;
-        if ( isConsumer() ) {
-            if ( contacts.size() > 1 ) return false;
-
-            for (Contact contact : contacts) {
-                if ( contact.getCommunications().isEmpty() ) {
-                    continue;
-                }
-                for (Communication communication : contact.getCommunications()) {
-                    Type type = communication.getType();
-                    if ( type == EMAIL || type == PHONE || type == MOBILE ) {
-                        vaildConsumer = true;
-                        break;
-                    }
-
-                }
-                //skipt this for loop, too.
-                if ( vaildConsumer ) {
-                    break;
-                }
-            }
-            return vaildConsumer;
-
-        } else {
-            if ( !contacts.isEmpty() ) {
-                //a company need a Address or a Contacts with an Address
-                for (Contact contact : contacts) {
-                    if ( contact.getCommunications().isEmpty() ) {
-                        continue;
-                    }
-                    for (Communication communication : contact.getCommunications()) {
-                        Type type = communication.getType();
-                        if ( type == EMAIL || type == PHONE || type == MOBILE ) {
-                            vaildConsumer = true;
-                            break;
-                        }
-                    }
-                    //skipt to the end
-                    if ( vaildConsumer ) {
-                        return vaildConsumer;
-                    }
-                }
-            }
-
-            for (Company company : companies) {
-                if ( !company.getCommunications().isEmpty() ) {
-                    return company.getCommunications()
-                            .stream().map(Communication::getType)
-                            .filter(t -> !EnumSet.of(EMAIL, PHONE, MOBILE)
-                            .contains(t))
-                            .findAny().isPresent();
-                }
-            }
-            return vaildConsumer;
-        }
-
+        return getSimpleViolationMessage() == null;
     }
 
     public boolean isConsumer() {
@@ -412,6 +363,7 @@ public class Customer implements Serializable {
      * Rules are:
      * <ul>
      * <li>either a contact or a companie is set, but never both</li>
+     * <li>AddressLabel from type Invoice</li>
      * <li>At least one contact has a address</li>
      * </ul>
      *
@@ -423,33 +375,118 @@ public class Customer implements Serializable {
 
     /**
      * Returns null, if the customer is simple otherwise a string, why the customer is not simple.
+     * Overall Rules are:
+     * <ul>
+     * <li>Either a Contact or a Company are set.</li>
+     * <li>Contains only one Contact or one Company.</li>
+     * <li>One AddressLabels of Type Invoice</li>
+     * </ul>
+     * <p>
+     * Consumer Customer Rules are:
+     * <ul>
+     * <li>Contact with only one Address</li>
+     * <li>one Communication form eatch type email, phone, mobile allowed</li>
+     * </ul>
+     * <p>
+     * Bussnis Customer Rules are:
+     * <ul>
+     * <li>Company with only one Address and one Contact</li>
+     * <li>The Address of the Company Contact has to match the Company Address</li>
+     * <li>one Communication form eatch type email, phone, mobile allowed</li>
+     * </ul>
      *
-     * @return a string why the customer is not simple or null.
+     * @return null if instance is valid, else a string representing the invalidation.
      */
     public String getSimpleViolationMessage() {
-        if ( !isVaild() ) return getViolationMessage();
-        if ( isConsumer() ) {
-            if ( contacts.size() > 1 ) return "More than one contact";
-            Contact contact = contacts.get(0);
-            if ( contact.getAddresses().size() > 1 ) return "Contact has more than one address";
 
-            // Todo, more to come
+        if ( !isVaild() ) return getViolationMessage();
+        if ( flags.isEmpty() ) return "CustomerFlag is empty";
+        if ( StringUtils.isBlank(keyAccounter) ) return "Key Account is set";
+        if ( mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
+        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "AddressLable is not from type Invoice";
+        if ( addressLabels.size() > 1 ) return "More than one AddressLable is set";
+
+        List<Communication.Type> allowedCommunicationTypes = new ArrayList<>();
+        allowedCommunicationTypes.add(EMAIL);
+        allowedCommunicationTypes.add(MOBILE);
+        allowedCommunicationTypes.add(PHONE);
+
+        if ( isConsumer() ) {
+            if ( contacts.size() > 1 ) return "More than one Contact";
+            if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 ) return "Contact has more than one address";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
+                return "The Contact of the Consumer Customer have more than 3 Communications";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
+                return "Not allowed Communications are found";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
+                return "multiple EMAILS found";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
+                return "multiple MOBILE found";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count() > 1 )
+                return "multiple PHONE found";
         }
-        // Todo even more to come.
+        if ( isBussines() ) {
+            if ( companies.size() > 1 ) return "More than one Company";
+            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 ) return "The Company have more than one Address";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).count() > 1 ) return "The Company have more than one Contact";
+            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).
+                    equals(companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getAddresses().stream()).findAny().isPresent()) )
+                return "The Address of the Company mismatch the Address of the Contact form the Company";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).count() > 3 )
+                return "The Company of the Bussnis Customer have more than 3 Communications";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
+                return "Not allowed Communications are found";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
+                return "multiple EMAILS found";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
+                return "multiple MOBILE found";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count() > 1 )
+                return "multiple PHONE found";
+        }
         return null;
     }
-
     // The null annotation can only be activated after the next big release, as the customers in the database are all invalid.
     // @Null
+
+    /**
+     * Returns null, if the Customer is valid.
+     * Overall Rules are:
+     * <ul>
+     * <li>Either a Contact or a Company are set.</li>
+     * <li>Contains only Contacts or Companies.</li>
+     * <li>One AddressLabels of Type Invoice</li>
+     * </ul>
+     * <p>
+     * Consumer Customer Rules are:
+     * <ul>
+     * <li>A least one Contact.</li>
+     * </ul>
+     * <p>
+     * Bussnis Customer Rules are:
+     * <ul>
+     * <li>A least one Company.</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
     public String getViolationMessage() {
+        if ( contacts.isEmpty() && companies.isEmpty() ) return "Neither Contact nor Company are set.";
         if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
+        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "No Addresslabel of type Invoice";
+        if ( contacts.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( companies.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Companies: " + companies.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
         if ( isConsumer() ) {
             if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() ) return "Consumer: No Address on any Contact";
             if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
-            // More to come
         }
         if ( isBussines() ) {
-            // Much more to come
+            if ( !Stream.concat(
+                    companies.stream().flatMap(c -> c.getCommunications().stream()),
+                    companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream())).findAny().isPresent() )
+                return "No Communication set on company or contact";
+
         }
         return null;
     }

@@ -5,10 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="115.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController">
@@ -20,29 +18,27 @@
         </Label>
     </top>
     <center>
-        <GridPane BorderPane.alignment="CENTER">
-            <columnConstraints>
-                <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="136.0" minWidth="10.0" prefWidth="117.0" />
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="5.0" />
-                <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="172.0" minWidth="10.0" prefWidth="172.0" />
-                <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="10.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints fillHeight="false" minHeight="25.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
-            </rowConstraints>
+        <HBox spacing="3.0" BorderPane.alignment="CENTER">
             <children>
-                <Label text="Kommunikationsweg:" />
-                <Label text="Eintrag" GridPane.rowIndex="1" />
-                <TextField fx:id="identifer" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                <ChoiceBox fx:id="commtypbox" prefWidth="150.0" GridPane.columnIndex="2" />
-                <Label fx:id="warning" text="!" textFill="RED" visible="false" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                </Label>
+                <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="Kommunikationsweg:" />
+                        <Label text="Eintrag" />
+                    </children>
+                </VBox>
+                <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <ChoiceBox fx:id="commtypbox" maxWidth="1.7976931348623157E308" minWidth="150.0" />
+                        <TextField fx:id="identifer" maxWidth="1.7976931348623157E308" minWidth="150.0" />                      
+                        <Label fx:id="warning" text="!" textFill="RED" visible="false">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </VBox>
             </children>
-        </GridPane>
+        </HBox>
     </center>
     <bottom>
         <HBox alignment="TOP_RIGHT" spacing="5.0">

@@ -1,3 +1,14 @@
+package tryout.neo;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+
 /*
  * Copyright (C) 2018 GG-Net GmbH
  *
@@ -14,39 +25,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tryout.neo;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-
 /**
  *
  * @author jacob.weinhold
  */
-public class PreferedAddressLabelsTryOut {
+public class MandatorMetaDataTryOut {
 
     public static void main(String[] args) {
-
-        CustomerGenerator gen = new CustomerGenerator();
-        Customer c = gen.makeCustomer();
-        c.add(gen.makeCompany());
-        c.add(gen.makeCompany());
-        c.add(gen.makeContact());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> c, PreferedAddressLabelsController.class);
-            });
+
+            randomTryOut();
+
         });
 
         JPanel p = new JPanel();
@@ -54,5 +48,13 @@ public class PreferedAddressLabelsTryOut {
         p.add(close);
 
         UiCore.startSwing(() -> p);
+    }
+
+    private static void randomTryOut() {
+        CustomerGenerator gen = new CustomerGenerator();
+        MandatorMetadata mData = gen.makeMandatorMetadata();
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> mData, MandatorMetaDataController.class);
+        });
     }
 }

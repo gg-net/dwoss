@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="351.0" prefWidth="875.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController">
+    <center>
+        <FlowPane prefHeight="261.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox>
+                    <children>
+                        <HBox>
+                            <children>
+                                <Region prefHeight="31.0" prefWidth="401.0" />
+                                <Label text="Standard" />
+                            </children>
+                        </HBox>
+                        <HBox prefHeight="230.0" prefWidth="781.0">
+                            <children>
+                                <VBox prefHeight="230.0" prefWidth="401.0">
+                                    <children>
+                                        <VBox prefHeight="84.0" prefWidth="224.0">
+                                            <children>
+                                                <HBox prefHeight="26.0" prefWidth="100.0">
+                                                    <children>
+                                                        <Label prefHeight="30.0" prefWidth="140.0" text="Versandkonditionen:  " />
+                                                        <ComboBox fx:id="shippingConditionComboBox" prefHeight="26.0" prefWidth="214.0" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefHeight="26.0" prefWidth="293.0">
+                                                    <children>
+                                                        <Label prefHeight="28.0" prefWidth="140.0" text="Zahlungskonditionen: " />
+                                                        <ComboBox fx:id="paymentConditionComboBox" prefHeight="28.0" prefWidth="214.0" />
+                                                    </children>
+                                                </HBox>
+                                                <HBox prefHeight="27.0" prefWidth="100.0">
+                                                    <children>
+                                                        <Label prefHeight="23.0" prefWidth="140.0" text="Zahlungsmodalität :" />
+                                                        <ComboBox fx:id="paymentMethodComboBox" prefHeight="27.0" prefWidth="214.0" />
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </VBox>
+                                        <HBox prefHeight="148.0" prefWidth="401.0">
+                                            <children>
+                                                <Label prefHeight="29.0" prefWidth="139.0" text="Erlaubte Verkaufskanäle:" />
+                                    <VBox prefHeight="139.0" prefWidth="218.0">
+                                       <children>
+                                                      <VBox fx:id="allowedSalesChannelsVBox" />
+                                       </children>
+                                    </VBox>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                <VBox prefHeight="168.0" prefWidth="376.0">
+                                    <children>
+                                        <VBox>
+                                            <children>
+                                                <TextField fx:id="defaultshippingConditionTextField" editable="false" promptText="DEFAULT" />
+                                                <TextField fx:id="defaultpaymentConditionTextField" editable="false" promptText="Händler" />
+                                                <TextField fx:id="defaultpaymentMethodTextField" editable="false" promptText="Vorkasse" />
+                                            </children>
+                                        </VBox>
+                                        <VBox fx:id="defaultAllowedSalesChannelsVBox" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </FlowPane>
+    </center>
+   <bottom>
+      <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <children>
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </FlowPane>
+   </bottom>
+</BorderPane>

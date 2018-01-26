@@ -149,4 +149,19 @@ public class MandatorMetadata implements Serializable {
                 + "</ul>";
     }
 
+    /**
+     * Returns null, if the MandatorMetadata is valid.
+     * Rules are:
+     * <ul>
+     * <li>....</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    public String getViolationMessages() {
+        // TODO: fill me
+        //[[DWOSS-196]]
+        return null;
+    }
+
 }

@@ -16,46 +16,60 @@
  */
 package tryout.neo;
 
-
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
+import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.*;
-
 
 /**
  *
  * @author jens.papenhagen
  */
 public class CustomerSimpleTryout {
+
     public static void main(String[] args) {
-        
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
         Contact contact = gen.makeContact();
         
-        Communication communication = new Communication();
-        communication.setType(Communication.Type.PHONE);
-        communication.setIdentifier("01545452221");        
-        contact.getCommunications().add(communication);
+
+        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.setKeyAccounter("Herr Meier");
+        customer.add(new MandatorMetadata());
+
+        customer.getCompanies().clear();        
+        customer.getContacts().clear();   
         
-        customer.getCompanies().clear();
-        customer.add(contact);
-                
+        Communication communicationEmail = new Communication();
+        communicationEmail.setType(Type.EMAIL);
         
+        contact.getAddresses().clear();
+        contact.getCommunications().clear();
+        contact.add(gen.makeAddress());
+        contact.add(communicationEmail);
+        
+        
+        
+        customer.add(contact);        
+        
+        
+        System.out.println("IS simple: " + customer.getSimpleViolationMessage());
+        
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
-        
+
         run.addActionListener(ev -> {
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
-
 
         JPanel p = new JPanel();
         p.add(run);
@@ -63,5 +77,5 @@ public class CustomerSimpleTryout {
 
         UiCore.startSwing(() -> p);
     }
-    
+
 }

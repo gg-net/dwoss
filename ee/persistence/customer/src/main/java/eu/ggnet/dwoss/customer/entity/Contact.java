@@ -23,12 +23,13 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.rules.AddressType;
 
 import lombok.*;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -110,6 +111,7 @@ public class Contact implements Serializable {
      */
     @OneToMany(cascade = ALL)
     @NonNull
+    @Getter
     @IndexedEmbedded
     private final List<Address> addresses = new ArrayList<>();
 
@@ -118,6 +120,7 @@ public class Contact implements Serializable {
      */
     @OneToMany(cascade = ALL)
     @NonNull
+    @Getter
     @IndexedEmbedded
     private final List<Communication> communications = new ArrayList<>();
 
@@ -178,18 +181,6 @@ public class Contact implements Serializable {
         return (title == null ? "" : title + " ") + (firstName == null ? "" : firstName + " ") + (lastName == null ? "" : lastName);
     }
 
-    /**
-     *
-     * @return
-     */
-    public List<Address> getAddresses() {
-        return new ArrayList<>(addresses);
-    }
-
-    public List<Communication> getCommunications() {
-        return new ArrayList<>(communications);
-    }
-
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append(title == null ? "" : title + "&nbsp;").append(firstName == null ? "" : firstName + "&nbsp;").append(lastName == null ? "" : lastName)
@@ -209,6 +200,26 @@ public class Contact implements Serializable {
             sb.append("</ul>");
         }
         return sb.toString();
+    }
+
+    /**
+     * Returns null, if the Contact is valid.
+     * Rules are:
+     * <ul>
+     * <li>lastName is not blank</li>
+     * <li>all Address have to be valid</li>
+     * <li>all Communications have to be valid</li>
+     * </ul>
+     *
+     * @return null if instance is valid, else a string representing the invalidation.
+     */
+    public String getViolationMessages() {
+        if ( StringUtils.isBlank(lastName) ) return "LastName is blank";
+        if ( addresses.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Address: " + addresses.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( communications.stream().anyMatch(a -> a.getViolationMessages() != null) )
+            return "Communications: " + communications.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        return null;
     }
 
 }

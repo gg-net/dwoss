@@ -3,83 +3,105 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="574.0" prefWidth="448.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController">
    <center>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="60.0" minWidth="60.0" />
-            <ColumnConstraints fillWidth="false" hgrow="NEVER" maxWidth="128.0" minWidth="50.0" prefWidth="128.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
-          <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" />
-            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" />
-            <ColumnConstraints fillWidth="false" hgrow="NEVER" minWidth="75.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-          <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-          <RowConstraints fx:id="companyRow" fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints maxHeight="50.0" minHeight="10.0" vgrow="ALWAYS" />
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints fillHeight="false" minHeight="26.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="100.0" vgrow="ALWAYS" />
-        </rowConstraints>
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="headerLabel" text="Geschäftskunden" GridPane.columnSpan="2">
+            <Label fx:id="headerLabel" text="Geschäftskunden">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <Label text="KId:" GridPane.rowIndex="1" />
-            <Label fx:id="kid" text=" " GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Quelle:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Straße:" GridPane.rowIndex="7" />
-            <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" promptText="Anmerkung" GridPane.columnSpan="2147483647" GridPane.hgrow="ALWAYS" GridPane.rowIndex="15" GridPane.vgrow="ALWAYS" />
-            <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" />
-            <ChoiceBox fx:id="sourceChoiseBox" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-            <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Button" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <TextField fx:id="titleTextField" prefHeight="25.0" prefWidth="51.0" GridPane.rowIndex="4" />
-            <TextField fx:id="firstNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="lastNameTextField" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-            <ChoiceBox fx:id="genderChoiseBox" prefWidth="150.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-            <Label text="Title" GridPane.rowIndex="3" />
-            <Label text="Vorname" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Nachname" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-            <Label alignment="CENTER" text="Geschlecht" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-            <Label text="Adresse" GridPane.rowIndex="6" />
-            <TextField fx:id="streetTextField" minHeight="25.0" minWidth="300.0" promptText="Straße" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
-            <TextField fx:id="zipcodeTextField" promptText="PLZ" GridPane.rowIndex="8" />
-            <TextField fx:id="cityTextField" minHeight="25.0" minWidth="300.0" promptText="Stadt/Ort" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label text="Land:" GridPane.rowIndex="9" />
-            <TextField fx:id="countryTextField" minHeight="25.0" minWidth="300.0" promptText="Land" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <TextField fx:id="landLineTextField" minHeight="25.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <Label text="Festnetz:" GridPane.rowIndex="11" />
-            <Label text="Mobil:" GridPane.rowIndex="12" />
-            <TextField fx:id="mobileTextField" minHeight="25.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-            <Label text="E-Mail:" GridPane.rowIndex="13" />
-            <TextField fx:id="emailTextField" minHeight="25.0" minWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-            <Label text="Anmerkung:" GridPane.columnSpan="2" GridPane.rowIndex="14" />
-            <HBox fx:id="companyHBox" minHeight="26.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+            <HBox alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" minWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label text="KId:" />
+                  <Label fx:id="kid" text=" " />
+                  <Region maxWidth="1.7976931348623157E308" minWidth="50.0" HBox.hgrow="ALWAYS" />
+                  <Label text="Quelle:" />
+                  <ChoiceBox fx:id="sourceChoiseBox" prefWidth="150.0" />
+                  <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Button" />
+               </children>
+            </HBox>
+            <HBox fx:id="companyHBox" maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="1.0" VBox.vgrow="ALWAYS" />
+            <HBox spacing="3.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox minHeight="50.0" spacing="3.0">
+                     <children>
+                        <Label text="Title" />
+                        <TextField fx:id="titleTextField" maxWidth="30.0" minHeight="20.0" minWidth="50.0" />
+                     </children>
+                  </VBox>
+                  <VBox minHeight="50.0" minWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Vorname" />
+                        <TextField fx:id="firstNameTextField" maxWidth="1.7976931348623157E308" />
+                     </children>
+                  </VBox>
+                  <VBox minHeight="50.0" spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="Nachname" />
+                        <TextField fx:id="lastNameTextField" maxWidth="1.7976931348623157E308" />
+                     </children>
+                  </VBox>
+                  <VBox minHeight="50.0" spacing="3.0">
+                     <children>
+                        <Label alignment="CENTER" text="Geschlecht" />
+                        <ChoiceBox fx:id="genderChoiseBox" minWidth="75.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox minWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox spacing="3.0">
+                     <children>
+                        <Label text="Adresse" />
+                        <Region minHeight="13.0" />
+                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Straße:" />
+                        <TextField fx:id="zipcodeTextField" promptText="PLZ" />
+                        <Label text="Land:" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Region minHeight="25.0" />
+                        <TextField fx:id="streetTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" promptText="Straße" />
+                        <TextField fx:id="cityTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" promptText="Stadt/Ort" />
+                        <TextField fx:id="countryTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" promptText="Land" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox VBox.vgrow="ALWAYS">
+               <children>
+                  <VBox minWidth="75.0" spacing="12.0">
+                     <children>
+                        <Label text="Festnetz:" />
+                        <Label text="Mobil:" />
+                        <Label text="E-Mail:" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="landLineTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" VBox.vgrow="ALWAYS" />
+                        <TextField fx:id="mobileTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" VBox.vgrow="ALWAYS" />
+                        <TextField fx:id="emailTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Label text="Anmerkung:" />
+            <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" promptText="Anmerkung" VBox.vgrow="ALWAYS" />
          </children>
-      </GridPane>
+      </VBox>
    </center>
    <bottom>
       <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="3.0" BorderPane.alignment="BOTTOM_RIGHT">
