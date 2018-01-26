@@ -49,6 +49,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private boolean bussines = false;
 
+    @FXML
     private HBox companyHBox;
 
     @FXML
@@ -108,6 +109,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -162,11 +164,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             return;
         }
         getSimpleCustomer();
-        
+
         //TODO convert the simpleCustomer to a Customer
-        
         Ui.exec(() -> {
-       //     Ui.build().fxml().eval(() -> company, CustomerEnhanceController.class);
+            //     Ui.build().fxml().eval(() -> company, CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);

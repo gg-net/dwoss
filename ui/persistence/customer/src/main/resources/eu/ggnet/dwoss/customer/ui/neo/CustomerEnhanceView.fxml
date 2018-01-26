@@ -44,16 +44,16 @@
                </children>
             </HBox>
             <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
-            <HBox minHeight="100.0" spacing="3.0">
+            <HBox minHeight="130.0" spacing="3.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox spacing="3.0">
+                  <VBox maxHeight="1.7976931348623157E308" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Flags" />
-                        <VBox fx:id="flagVBox" minHeight="100.0" minWidth="150.0" spacing="3.0" />
+                        <VBox fx:id="flagVBox" maxHeight="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
-                  <Region minWidth="50.0" HBox.hgrow="ALWAYS" />
-                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
+                  <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="50.0" HBox.hgrow="ALWAYS" />
+                  <VBox maxHeight="1.7976931348623157E308" minHeight="125.0" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Button fx:id="mandatorInfoButton" mnemonicParsing="false" onAction="#handleMandatorInfoButton" text="Mandator Sonder Info" />
                         <HBox spacing="3.0" VBox.vgrow="ALWAYS">
@@ -62,8 +62,7 @@
                               <ChoiceBox fx:id="source" prefWidth="150.0" />
                            </children>
                         </HBox>
-                        <Label text="Extra Kunden Nummer:" />
-                        <VBox fx:id="externalSysremIds" minHeight="50.0" minWidth="200.0" spacing="3.0" VBox.vgrow="ALWAYS" />
+                        <VBox fx:id="externalSysremIds" maxHeight="1.7976931348623157E308" minHeight="50.0" minWidth="200.0" spacing="3.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
                </children>

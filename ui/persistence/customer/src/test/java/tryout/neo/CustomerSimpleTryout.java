@@ -56,6 +56,7 @@ public class CustomerSimpleTryout {
         
         
         System.out.println("IS simple: " + customer.getSimpleViolationMessage());
+        System.out.println("fail to simple:" + customer.toSimple().get().toString());
         
 
         JButton close = new JButton("Schliessen");

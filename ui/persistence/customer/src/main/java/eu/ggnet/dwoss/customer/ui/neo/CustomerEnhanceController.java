@@ -30,10 +30,10 @@ import javafx.scene.layout.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.entity.*;
 import eu.ggnet.dwoss.customer.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.entity.Customer.Source;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -61,7 +61,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         private ExternalSystem type;
 
         private String value;
-
     }
 
     @FXML
@@ -103,7 +102,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private final ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
-    private final ObservableSet<CustomerFlag> flagsSet = FXCollections.emptyObservableSet();
+    private final ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
 
     private final ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
@@ -143,16 +142,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         source.getItems().addAll(Source.values());
-
-        //build the Flags Box
-        buildFlagBox();
-
-        //build the external System Id´s box
-        buildExternalSystemIdBox();
-
-        //build the showbox
-        buildShowBox();
-
     }
 
     @Override
@@ -181,7 +170,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         if ( c.isBussines() ) {
             CustomerKindLabel.setText("Geschäftskunde");
             kundenname.setText(c.getCompanies().get(0).getName());
-            companyList.addAll(c.getCompanies());
+            companyList.setAll(c.getCompanies());
             companyListView.setItems(companyList);
             shoboxLabel.setText("Firmen");
 
@@ -189,7 +178,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         } else {
             CustomerKindLabel.setText("Endkunde");
             kundenname.setText(c.getContacts().get(0).toFullName());
-            contactList.addAll(c.getContacts());
+            contactList.setAll(c.getContacts());
             contactListView.setItems(contactList);
             shoboxLabel.setText("Kontakte");
         }
@@ -214,6 +203,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         }
 
         commentTextArea.setText(c.getComment());
+
+        //build the Flags Box
+        buildFlagBox();
+        
+        //build the external System Id´s box
+        buildExternalSystemIdBox();
+
+        //build the showbox
+        buildShowBox();
     }
 
     public void getCustomer() {
@@ -250,29 +248,19 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         //fill with all posibile flags
         ObservableList<CustomerFlag> observableArrayListOfAllFlags = FXCollections.observableArrayList(CustomerFlag.values());
-        VBox checkVBox = new VBox();
-        for (CustomerFlag oFlag : observableArrayListOfAllFlags) {
-            CheckBox checkBox = new CheckBox(oFlag.getName());
-            checkBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
-                if ( checkBox.isSelected() ) {
-                    //TODO get the lable back
-                    checkBox.getText();
-                }
-            });
-            if ( allFlagsFromTheCustomer.contains(oFlag) ) {
-                checkBox.setSelected(true);
-            }
-            checkVBox.getChildren().add(checkBox);
-        }
+  
+        
 
-        CheckBox checkBox = new CheckBox();
-        checkBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
-            checkBox.isSelected();
-        });
-
+        
+        
+        
         Label flagLable = new Label("Flags: ");
-        flagVBox.getChildren().addAll(flagLable, checkBox);
+        flagVBox.getChildren().addAll(flagLable);
     }
+    
+    
+    
+    
 
     private void buildExternalSystemIdBox() {
         addExternalIdsListView.setCellFactory((ListView<ExternalId> p) -> {
@@ -287,10 +275,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         HBox flagbox = new HBox();
                         Label flagLable = new Label(item.type.name() + ":");
                         flagLable.setStyle("-fx-font-weight: bold");
+                        
                         TextField textfield = new TextField();
                         textfield.setText(item.getValue());
 
-                        flagbox.getChildren().addAll(textfield, flagLable);
+                        flagbox.getChildren().addAll(flagLable, textfield);
                         flagbox.setSpacing(2.0);
 
                         setText(null);
@@ -301,7 +290,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
-        Label ExternalSystemIdsLable = new Label("Flags: ");
+        Label ExternalSystemIdsLable = new Label("Extra Kunden Nummer: ");
         externalSysremIds.getChildren().addAll(ExternalSystemIdsLable, addExternalIdsListView);
     }
 
@@ -311,44 +300,53 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         Button editButton = new Button("Ändern");
         Button addButton = new Button("Hinzufügen");
         Button delButton = new Button("Löschen");
-        editButton.setOnAction((ActionEvent e) -> {
-            if ( bussines ) {
+        editButton.setMinWidth(75.0);
+        addButton.setMinWidth(75.0);
+        delButton.setMinWidth(75.0);
+
+        //set the right actions for the buttons
+        if ( bussines ) {
+            System.out.println("is Bussnies Customer");
+            editButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
                     openCompany(selectedItem);
                 }
-            } else {
-                Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem != null ) {
-                    openContact(selectedItem);
-                }
-            }
-        });
-        addButton.setOnAction((ActionEvent e) -> {
-            if ( bussines ) {
+
+            });
+            addButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = new Company();
                 openCompany(selectedItem);
-
-            } else {
-                Contact selectedItem = new Contact();
-                openContact(selectedItem);
-            }
-        });
-        delButton.setOnAction((ActionEvent e) -> {
-            if ( bussines ) {
+            });
+            delButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
                     companyList.remove(selectedItem);
                 }
-            } else {
+            });
+        } else {
+            System.out.println("is Consumer Customer");
+            editButton.setOnAction((ActionEvent e) -> {
+                Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
+                if ( selectedItem != null ) {
+                    openContact(selectedItem);
+                }
+            });
+            addButton.setOnAction((ActionEvent e) -> {
+                Contact selectedItem = new Contact();
+                openContact(selectedItem);
+            });
+            delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
                     contactList.remove(selectedItem);
                 }
-            }
-        });
+            });
+        }
+
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);
-        buttonVBox.setSpacing(2.0);
+        buttonVBox.setSpacing(3.0);
+        HBox.setHgrow(buttonVBox, Priority.ALWAYS);
 
         //cellcaftory for Contacts
         contactListView.setCellFactory((ListView<Contact> p) -> {
@@ -373,6 +371,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
+        contactListView.setMinWidth(350.0);
+
         //cellcaftory for Company
         companyListView.setCellFactory((ListView<Company> p) -> {
             ListCell<Company> cell = new ListCell<Company>() {
@@ -389,6 +389,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
+        companyListView.setMinWidth(350.0);
         //build up the showBox
         if ( bussines ) {
             showHBox.getChildren().addAll(companyListView, buttonVBox);
