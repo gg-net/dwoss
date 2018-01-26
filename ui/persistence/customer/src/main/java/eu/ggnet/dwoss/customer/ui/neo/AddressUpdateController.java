@@ -46,13 +46,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     private Address address;
 
-    @FXML
-    private Button closeButton;
-
-    @FXML
-    private Button saveButton;
-
-    @FXML
+     @FXML
     private ChoiceBox<String> countrybox;
 
     @FXML

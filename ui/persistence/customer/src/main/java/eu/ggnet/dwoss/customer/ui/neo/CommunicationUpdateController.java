@@ -41,12 +41,6 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
-    private Button saveButton;
-
-    @FXML
-    private Button closeButton;
-
-    @FXML
     private ChoiceBox commtypbox;
 
     @FXML

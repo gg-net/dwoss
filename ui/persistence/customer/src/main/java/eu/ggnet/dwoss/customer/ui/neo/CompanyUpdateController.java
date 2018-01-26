@@ -178,6 +178,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -331,7 +333,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
                 addressList.add(a);
             });
         });
@@ -344,7 +346,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
                 communicationsList.add(a);
             });
         });
@@ -357,7 +359,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void openContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
                 contactsList.add(a);
             });
         });

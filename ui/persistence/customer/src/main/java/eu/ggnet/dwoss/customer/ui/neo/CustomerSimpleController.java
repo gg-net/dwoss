@@ -25,7 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,20 +49,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private boolean bussines = false;
 
-    @FXML
     private HBox companyHBox;
-
-    @FXML
-    private Button saveAndCloseButton;
-
-    @FXML
-    private Button saveAndEnhanceUIButton;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    private RowConstraints companyRow;
 
     @FXML
     private Label headerLabel;
@@ -113,15 +99,17 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    private TextField companyNameTextFiled = new TextField();
+    private final TextField companyNameTextFiled = new TextField();
 
-    private TextField ustIdTextField = new TextField();
+    private final TextField ustIdTextField = new TextField();
 
     public CustomerSimpleController() {
     }
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
