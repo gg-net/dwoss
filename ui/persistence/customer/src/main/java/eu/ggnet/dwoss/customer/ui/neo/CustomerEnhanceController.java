@@ -51,6 +51,9 @@ import lombok.Data;
 @Title("Erweiterte Kunden bearbeiten")
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
+    @FXML
+    private Label shoboxLabel;
+
     @Data
     @AllArgsConstructor
     public static class ExternalId {
@@ -125,12 +128,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @FXML
-        private void cancelButtonHandling(ActionEvent event) {
+    private void cancelButtonHandling(ActionEvent event) {
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-        private void handleMandatorInfoButton(ActionEvent event) {
+    private void handleMandatorInfoButton(ActionEvent event) {
         //TODO MandatorMetadataUpdateController is missing
         new Thread(() -> {
             //          Ui.fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetadataUpdateController.class);
@@ -138,7 +141,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-        public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) {
         source.getItems().addAll(Source.values());
 
         //build the Flags Box
@@ -153,7 +156,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-        public void accept(Customer cust) {
+    public void accept(Customer cust) {
         if ( cust != null ) {
             if ( cust.isBussines() ) {
                 bussines = true;
@@ -166,7 +169,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     @Override
-        public Customer getResult() {
+    public Customer getResult() {
         if ( customer == null ) {
             return null;
         }
@@ -180,6 +183,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             kundenname.setText(c.getCompanies().get(0).getName());
             companyList.addAll(c.getCompanies());
             companyListView.setItems(companyList);
+            shoboxLabel.setText("Firmen");
 
             bussines = true;
         } else {
@@ -187,6 +191,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             kundenname.setText(c.getContacts().get(0).toFullName());
             contactList.addAll(c.getContacts());
             contactListView.setItems(contactList);
+            shoboxLabel.setText("Kontakte");
         }
         kid.setText("" + c.getId());
         keyAccount.setText(c.getKeyAccounter());
@@ -249,7 +254,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         for (CustomerFlag oFlag : observableArrayListOfAllFlags) {
             CheckBox checkBox = new CheckBox(oFlag.getName());
             checkBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
-                if(checkBox.isSelected()){
+                if ( checkBox.isSelected() ) {
                     //TODO get the lable back
                     checkBox.getText();
                 }
@@ -273,7 +278,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         addExternalIdsListView.setCellFactory((ListView<ExternalId> p) -> {
             ListCell<ExternalId> cell = new ListCell<ExternalId>() {
                 @Override
-        protected void updateItem(ExternalId item, boolean empty) {
+                protected void updateItem(ExternalId item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -349,7 +354,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         contactListView.setCellFactory((ListView<Contact> p) -> {
             ListCell<Contact> cell = new ListCell<Contact>() {
                 @Override
-        protected void updateItem(Contact item, boolean empty) {
+                protected void updateItem(Contact item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -372,7 +377,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         companyListView.setCellFactory((ListView<Company> p) -> {
             ListCell<Company> cell = new ListCell<Company>() {
                 @Override
-        protected void updateItem(Company item, boolean empty) {
+                protected void updateItem(Company item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
@@ -389,11 +394,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             showHBox.getChildren().addAll(companyListView, buttonVBox);
         } else {
             showHBox.getChildren().addAll(contactListView, buttonVBox);
-        
 
-
-
-}
+        }
     }
 
     /**
@@ -402,19 +404,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param contact is the Contact
      */
     private void openContact(Contact contact) {
-         Ui.exec(() -> {
+        Ui.exec(() -> {
             Ui.build().fxml().eval(() -> contact, ContactUpdateController.class
-
-).ifPresent(a -> {
+            ).ifPresent(a -> {
                 contactList.add(a);
             });
         });
 
-    
-
-
-
-}
+    }
 
     /**
      * open the Company Editor
@@ -422,10 +419,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param company is the Company
      */
     private void openCompany(Company company) {
-         Ui.exec(() -> {
+        Ui.exec(() -> {
             Ui.build().fxml().eval(() -> company, CompanyUpdateController.class
-
-).ifPresent(a -> {
+            ).ifPresent(a -> {
                 companyList.add(a);
             });
         });

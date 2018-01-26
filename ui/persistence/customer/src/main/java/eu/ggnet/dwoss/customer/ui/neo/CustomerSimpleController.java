@@ -25,7 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -50,7 +49,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private boolean bussines = false;
 
-    @FXML
     private HBox companyHBox;
 
     @FXML
