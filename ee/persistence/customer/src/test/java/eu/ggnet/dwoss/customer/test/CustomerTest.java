@@ -144,6 +144,11 @@ public class CustomerTest {
     public void testIsSimplerForConsumerCustomer() {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
 
+        theSimpleCustomer.getContacts().clear();
+        theSimpleCustomer.getContacts().add(gen.makeContact());
+        theSimpleCustomer.getContacts().get(0).getCommunications().clear();
+        theSimpleCustomer.getContacts().get(0).getCommunications().add(new Communication(Type.EMAIL, true));
+
         assertThat(theSimpleCustomer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
     }
 
