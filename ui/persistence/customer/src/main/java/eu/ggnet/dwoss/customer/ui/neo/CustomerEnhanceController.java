@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
@@ -56,9 +57,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @FXML
     private Label shoboxLabel;
 
+    @FXML
+    private Button PreferedAddressLabelsButton;
+
+    @FXML
+    private Button mandatorInfoButton;
+
     @Data
     @AllArgsConstructor
-    private static class ExternalId {
+    class ExternalId {
 
         private ExternalSystem type;
 
@@ -66,7 +73,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     }
 
     //extra class for the CheckBox ListView
-    private static class CustomerFlagWithSelect {
+    class CustomerFlagWithSelect {
 
         private final ReadOnlyObjectWrapper flag = new ReadOnlyObjectWrapper();
 
@@ -165,10 +172,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void handleMandatorInfoButton(ActionEvent event) {
-        //TODO MandatorMetadataUpdateController is missing
-        new Thread(() -> {
-            //          Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetadataUpdateController.class);
-        }).start();
+//        
+//        Ui.exec(() -> {
+//            Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetaDataController.class).ifPresent(a -> {
+//                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
+//                companyListView.refresh();
+//            });
+//        });
+
     }
 
     @Override
@@ -385,13 +396,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             editButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
-                    openCompany(selectedItem);
+                    editCompany(selectedItem);
                 }
 
             });
             addButton.setOnAction((ActionEvent e) -> {
-                Company selectedItem = new Company();
-                openCompany(selectedItem);
+                addCompany(new Company());
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
@@ -403,12 +413,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             editButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
-                    openContact(selectedItem);
+                    editContact(selectedItem);
                 }
             });
             addButton.setOnAction((ActionEvent e) -> {
-                Contact selectedItem = new Contact();
-                openContact(selectedItem);
+                addContact(new Contact());
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
@@ -475,32 +484,47 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         }
     }
 
-    /**
-     * open the Contact Editor
-     *
-     * @param contact is the Contact
-     */
-    private void openContact(Contact contact) {
+    private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
-                contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
-                contactListView.refresh();
-            });
+            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
+                        });
+                    });
         });
-
     }
 
-    /**
-     * open the Company Editor
-     *
-     * @param company is the Company
-     */
-    private void openCompany(Company company) {
+    private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(a -> {
-                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-                companyListView.refresh();
-            });
+            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            contactList.add(a);
+                        });
+                    });
+        });
+    }
+
+    private void editCompany(Company company) {
+        Ui.exec(() -> {
+            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
+                        });
+                    });
+        });
+    }
+
+    private void addCompany(Company company) {
+        Ui.exec(() -> {
+            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            companyList.add(a);
+                        });
+                    });
         });
     }
 

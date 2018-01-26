@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -76,7 +77,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
 
-    private  TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
     private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
@@ -87,6 +88,15 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
     private ToggleGroup prefGroup = new ToggleGroup();
+
+    @FXML
+    private Button delAddressButton;
+
+    @FXML
+    private Button delComButton;
+
+    @FXML
+    private Button delContactButton;
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
@@ -116,13 +126,13 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditAddressButton(ActionEvent event) {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            openAddress(selectedItem);
+            editAddress(selectedItem);
         }
     }
 
     @FXML
     private void handleAddAddressButton(ActionEvent event) {
-        openAddress(new Address());
+        addAddress(new Address());
     }
 
     @FXML
@@ -137,13 +147,13 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditComButton(ActionEvent event) {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            openCommunication(selectedItem);
+            editCommunication(selectedItem);
         }
     }
 
     @FXML
     private void handleAddComButton(ActionEvent event) {
-        openCommunication(new Communication());
+        addCommunication(new Communication());
     }
 
     @FXML
@@ -158,13 +168,13 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditContactButton(ActionEvent event) {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            openContact(selectedItem);
+            editContact(selectedItem);
         }
     }
 
     @FXML
     private void handleAddContactButton(ActionEvent event) {
-        openContact(new Contact());
+        addContact(new Contact());
     }
 
     @FXML
@@ -184,6 +194,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
 
         //Address CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
@@ -327,45 +340,75 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         return company;
     }
 
-    /**
-     * open the Address Editor
-     *
-     * @param addresse is the Address
-     */
-    private void openAddress(Address addresse) {
+    private void editAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                addressList.set(addressListView.getSelectionModel().getSelectedIndex(),a);
-                addressListView.refresh();
-            });
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
         });
     }
 
-    /**
-     * open the Communication Editor
-     *
-     * @param communication is the Communication
-     */
-    private void openCommunication(Communication communication) {
+    private void addAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                communicationTableView.refresh();
-            });
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.add(a);
+                        });
+
+                    });
         });
     }
 
-    /**
-     * open the Contact Editor
-     *
-     * @param contact is the Contact
-     */
-    private void openContact(Contact contact) {
+    private void editCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
-                contactsList.set(contactListView.getSelectionModel().getSelectedIndex(),a);
-                contactListView.refresh();
-            });
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
+    }
+
+    private void addCommunication(Communication communication) {
+        Ui.exec(() -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
+    }
+
+    private void editContact(Contact contact) {
+        Ui.exec(() -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
+                        });
+                    });
+        });
+    }
+
+    private void addContact(Contact contact) {
+        Ui.exec(() -> {
+            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            contactsList.add(a);
+                        });
+                    });
         });
     }
 

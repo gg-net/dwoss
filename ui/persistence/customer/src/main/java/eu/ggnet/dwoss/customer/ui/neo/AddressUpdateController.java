@@ -116,7 +116,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
             address = a;
             setAddress(address);
         } else {
-            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Addresse ist null").show(UiAlertBuilder.Type.WARNING);
         }
     }
 

@@ -104,6 +104,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private TextField ustIdTextField = new TextField();
 
+
     public CustomerSimpleController() {
     }
 

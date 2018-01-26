@@ -48,15 +48,16 @@ public class CustomerSimpleTryout {
         communicationEmail.setType(Type.EMAIL);
         
         contact.getAddresses().clear();
+        contact.getCommunications().clear();
         contact.add(gen.makeAddress());
         contact.add(communicationEmail);
+        
         
         
         customer.add(contact);        
         
         
         System.out.println("IS simple: " + customer.getSimpleViolationMessage());
-        System.out.println("fail to simple:" + customer.toSimple().get().toString());
         
 
         JButton close = new JButton("Schliessen");
