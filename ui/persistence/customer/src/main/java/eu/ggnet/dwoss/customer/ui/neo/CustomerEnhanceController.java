@@ -262,6 +262,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         customer.getMandatorMetadata().clear();
         mandatorMetadata.forEach(m -> customer.add(m));
+        
+        //tansfer the List of Flags back to Set (remove duplicates) 
+        HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
+        outputFlagslist.clear();
+        outputFlagslist.addAll(tempSet);
+        outputFlagslist.forEach((flag) -> {
+            customer.getFlags().add(flag);
+        });
+                
 
         //transfer List back to a Map
         ObservableList<ExternalId> items = addExternalIdsListView.getItems();
@@ -306,6 +315,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         ListView<CustomerFlagWithSelect> checklist = new ListView<>();
         checklist.setItems(listForTheView);
+        checklist.setMinWidth(150.0);
         checklist.setCellFactory(CheckBoxListCell.forListView(CustomerFlagWithSelect::selectedProperty, new StringConverter<CustomerFlagWithSelect>() {
             @Override
             public String toString(CustomerFlagWithSelect object) {
@@ -359,6 +369,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
         Label ExternalSystemIdsLable = new Label("Extra Kunden Nummer: ");
         externalSysremIds.getChildren().addAll(ExternalSystemIdsLable, addExternalIdsListView);
+        externalSysremIds.setMinWidth(120.0);
     }
     
     
@@ -373,9 +384,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         Button editButton = new Button("Ändern");
         Button addButton = new Button("Hinzufügen");
         Button delButton = new Button("Löschen");
-        editButton.setMinWidth(75.0);
-        addButton.setMinWidth(75.0);
-        delButton.setMinWidth(75.0);
+        editButton.setMinWidth(80.0);
+        addButton.setMinWidth(80.0);
+        delButton.setMinWidth(80.0);
 
         //set the right actions for the buttons
         if ( bussines ) {
