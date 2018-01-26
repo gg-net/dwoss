@@ -84,6 +84,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -131,10 +133,10 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * @param a is the Address
      */
     private void setAddress(Address a) {
-        countrybox.getSelectionModel().select(address.getIsoCountry());
-        zipcode.setText(address.getZipCode());
-        city.setText(address.getCity());
-        street.setText(address.getStreet());
+        countrybox.getSelectionModel().select(a.getIsoCountry());
+        zipcode.setText(a.getZipCode());
+        city.setText(a.getCity());
+        street.setText(a.getStreet());
     }
 
     /**

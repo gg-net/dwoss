@@ -112,13 +112,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private TextField keyAccount;
 
     @FXML
-    private VBox flagVBox = new VBox();
+    private final VBox flagVBox = new VBox();
 
     @FXML
-    private VBox externalSysremIds = new VBox();
+    private final VBox externalSysremIds = new VBox();
 
     @FXML
-    private HBox showHBox = new HBox();
+    private final HBox showHBox = new HBox();
 
     private final ListView<Company> companyListView = new ListView<>();
 

@@ -305,19 +305,19 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param comp the Contact
      */
     private void setContact(Contact cont) {
-        addressList.addAll(contact.getAddresses());
-        communicationsList.addAll(contact.getCommunications());
+        titleTextField.setText(cont.getTitle());
+        firstNameTextField.setText(cont.getFirstName());
+        lastNameTextField.setText(cont.getLastName());
+
+        genderBox.getSelectionModel().select(cont.getSex());
+
+        addressList.addAll(cont.getAddresses());
+        communicationsList.addAll(cont.getCommunications());
 
         //fill the listViews
         addressListView.setItems(addressList);
         communicationTableView.setItems(communicationsList);
         communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
-
-        titleTextField.setText(contact.getTitle());
-        firstNameTextField.setText(contact.getFirstName());
-        lastNameTextField.setText(contact.getLastName());
-
-        genderBox.getSelectionModel().select(contact.getSex());
     }
 
     /**

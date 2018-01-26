@@ -92,8 +92,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         } else {
-            communication.setType(commtypbox.getSelectionModel().getSelectedItem());
-            communication.setIdentifier(identifer.getText());
+            getCommunication();
         }
 
         Ui.closeWindowOf(identifer);
@@ -108,11 +107,11 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     public void accept(Communication a) {
         if ( a != null ) {
             communication = a;
+            setCommunication(communication);
         } else {
             UiAlert.message("Kommunikationsweg ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
-        identifer.setText(communication.getIdentifier());
-        commtypbox.getSelectionModel().select(communication.getType());
+
     }
 
     @Override
@@ -121,6 +120,24 @@ public class CommunicationUpdateController implements Initializable, FxControlle
             return null;
         }
         return communication;
+    }
+
+    /**
+     * Set the Communication for the Edit
+     *
+     * @param a is the Communication
+     */
+    private void setCommunication(Communication com) {
+        identifer.setText(com.getIdentifier());
+        commtypbox.getSelectionModel().select(com.getType());
+    }
+
+    /**
+     * Get the Communication back
+     */
+    private void getCommunication() {
+        communication.setType(commtypbox.getSelectionModel().getSelectedItem());
+        communication.setIdentifier(identifer.getText());
     }
 
 }
