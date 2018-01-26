@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane maxHeight="800.0" minHeight="550.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
    <center>
       <VBox spacing="3.0" BorderPane.alignment="CENTER">
          <children>
@@ -35,7 +35,7 @@
                   <Label fx:id="kundenname" text="firmennname" />
                </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+            <HBox prefWidth="200.0" spacing="3.0">
                <children>
                   <Label fx:id="shoboxLabel" text="Kontakte:" />
                   <Region minWidth="30.0" HBox.hgrow="ALWAYS" />
@@ -52,7 +52,7 @@
                         <VBox fx:id="flagVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
-                  <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="15.0" HBox.hgrow="ALWAYS" />
+                  <Region maxHeight="1.7976931348623157E308" maxWidth="500.0" minWidth="15.0" HBox.hgrow="ALWAYS" />
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Button fx:id="mandatorInfoButton" mnemonicParsing="false" onAction="#handleMandatorInfoButton" text="Mandator Sonder Info" />

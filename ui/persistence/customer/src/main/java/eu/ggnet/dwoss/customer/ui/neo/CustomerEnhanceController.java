@@ -428,7 +428,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);
         buttonVBox.setSpacing(3.0);
-        HBox.setHgrow(buttonVBox, Priority.ALWAYS);
+        
 
         //cellcaftory for Contacts
         contactListView.setCellFactory((ListView<Contact> p) -> {
@@ -453,7 +453,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
-        contactListView.setMinWidth(350.0);
+        contactListView.setMinWidth(450.0);
+        HBox.setHgrow(contactListView, Priority.ALWAYS);
 
         //cellcaftory for Company
         companyListView.setCellFactory((ListView<Company> p) -> {
@@ -471,7 +472,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
-        companyListView.setMinWidth(350.0);
+        companyListView.setMinWidth(450.0);
+        HBox.setHgrow(companyListView, Priority.ALWAYS);
+        
         //build up the showBox
         if ( bussines ) {
             showHBox.getChildren().addAll(companyListView, buttonVBox);
