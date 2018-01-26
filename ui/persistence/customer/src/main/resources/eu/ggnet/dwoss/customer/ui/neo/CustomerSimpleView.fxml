@@ -20,16 +20,17 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Label>
-            <HBox alignment="TOP_RIGHT" minWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
+            <HBox alignment="TOP_RIGHT" maxWidth="1.7976931348623157E308" minWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
                <children>
                   <Label text="KId:" />
                   <Label fx:id="kid" text=" " />
-                  <Region minWidth="50.0" HBox.hgrow="ALWAYS" />
+                  <Region maxWidth="1.7976931348623157E308" minWidth="50.0" HBox.hgrow="ALWAYS" />
                   <Label text="Quelle:" />
                   <ChoiceBox fx:id="sourceChoiseBox" prefWidth="150.0" />
                   <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Button" />
                </children>
             </HBox>
+            <HBox fx:id="companyHBox" maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="1.0" VBox.vgrow="ALWAYS" />
             <HBox spacing="3.0" VBox.vgrow="ALWAYS">
                <children>
                   <VBox minHeight="50.0" spacing="3.0">
