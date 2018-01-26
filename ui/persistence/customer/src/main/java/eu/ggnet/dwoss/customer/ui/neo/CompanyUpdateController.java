@@ -178,6 +178,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -347,7 +348,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void openCommunication(Communication communication) {
         Ui.exec(() -> {
             Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                communicationsList.add(a);
+                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                communicationTableView.refresh();
             });
         });
     }

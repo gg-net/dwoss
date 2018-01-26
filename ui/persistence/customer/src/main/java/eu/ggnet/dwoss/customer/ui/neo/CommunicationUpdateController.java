@@ -28,6 +28,7 @@ import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.entity.Communication;
+import eu.ggnet.dwoss.customer.entity.Communication.Type;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
@@ -41,7 +42,7 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
-    private ChoiceBox commtypbox;
+    private ChoiceBox<Type> commtypbox;
 
     @FXML
     private TextField identifer;
@@ -63,7 +64,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     @FXML
     /**
      * Close the Editor window and discard all changes.
-     *
+     * <p>
      */
     private void handleSaveButtonAction(ActionEvent event) {
         warning.setVisible(false);
@@ -90,6 +91,9 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         if ( StringUtils.isBlank(identifer.getText()) ) {
             UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
+        } else {
+            communication.setType(commtypbox.getSelectionModel().getSelectedItem());
+            communication.setIdentifier(identifer.getText());
         }
 
         Ui.closeWindowOf(identifer);
@@ -104,7 +108,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     public void accept(Communication a) {
         if ( a != null ) {
             communication = a;
-        }else {
+        } else {
             UiAlert.message("Kommunikationsweg ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
         identifer.setText(communication.getIdentifier());
