@@ -44,8 +44,12 @@ import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
+import static javafx.stage.Modality.WINDOW_MODAL;
+
 /**
  * FXML Controller class
+ * <p>
+ * import static javafx.stage.Modality.WINDOW_MODAL;
  *
  * @author jens.papenhagen
  */
@@ -92,11 +96,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
-        getContact();
+        saveButtonHandling(event);
         Ui.closeWindowOf(lastNameTextField);
     }
 

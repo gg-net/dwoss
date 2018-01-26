@@ -100,13 +100,13 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
             boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
                     && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
-                        ^ (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
+                        || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
 
             boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
                                               && shippingAddressCompanyListView.getSelectionModel().isEmpty()
                                               && shippingAddressContactListView.getSelectionModel().isEmpty())
-                    ^ ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
-                       && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
+                    || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
+                        && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
 
             if ( isInvoiceAddressValid && isShippingAddressValid )
                 saveButton.setDisable(false);
