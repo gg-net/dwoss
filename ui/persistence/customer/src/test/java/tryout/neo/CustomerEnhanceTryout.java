@@ -38,9 +38,13 @@ public class CustomerEnhanceTryout {
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
 
-        customer.add(gen.makeCompany());
-        customer.add(gen.makeCompany());
-        customer.add(gen.makeCompany());
+//        customer.add(gen.makeCompany());
+//        customer.add(gen.makeCompany());
+//        customer.add(gen.makeCompany());
+
+        customer.add(gen.makeContact());
+        customer.add(gen.makeContact());
+        customer.add(gen.makeContact());
 
         customer.setSource(Source.ONEADO);
         customer.setKeyAccounter("Herr Meier");

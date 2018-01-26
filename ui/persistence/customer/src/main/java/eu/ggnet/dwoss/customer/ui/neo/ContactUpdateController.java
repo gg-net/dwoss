@@ -71,17 +71,17 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private Contact contact;
 
-    private final TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
+    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
 
-    private final TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
+    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private final TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
+    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
 
-    private final ObservableList<Address> addressList = FXCollections.observableArrayList();
+    private ObservableList<Address> addressList = FXCollections.observableArrayList();
 
-    private final ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
+    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
-    private final ToggleGroup prefGroup = new ToggleGroup();
+    private ToggleGroup prefGroup = new ToggleGroup();
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {

@@ -46,12 +46,7 @@
             <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" spacing="3.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="3.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Label text="Flags" />
-                        <VBox fx:id="flagVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" VBox.vgrow="ALWAYS" />
-                     </children>
-                  </VBox>
+                  <VBox fx:id="flagVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" />
                   <Region maxHeight="1.7976931348623157E308" maxWidth="500.0" minWidth="15.0" HBox.hgrow="ALWAYS" />
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>

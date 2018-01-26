@@ -112,31 +112,31 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private TextField keyAccount;
 
     @FXML
-    private final VBox flagVBox = new VBox();
+    private VBox flagVBox = new VBox();
 
     @FXML
-    private final VBox externalSysremIds = new VBox();
+    private VBox externalSysremIds = new VBox();
 
     @FXML
-    private final HBox showHBox = new HBox();
+    private HBox showHBox = new HBox();
 
-    private final ListView<Company> companyListView = new ListView<>();
+    private ListView<Company> companyListView = new ListView<>();
 
-    private final ListView<Contact> contactListView = new ListView<>();
+    private ListView<Contact> contactListView = new ListView<>();
 
-    private final ListView<ExternalId> addExternalIdsListView = new ListView<>();
+    private ListView<ExternalId> addExternalIdsListView = new ListView<>();
 
-    private final ObservableList<Company> companyList = FXCollections.observableArrayList();
+    private ObservableList<Company> companyList = FXCollections.observableArrayList();
 
-    private final ObservableList<Contact> contactList = FXCollections.observableArrayList();
+    private ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
-    private final ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
+    private ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
-    private final ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
+    private ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
 
-    private final ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
+    private ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
 
-    private final ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
+    private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
     private boolean bussines = false;
 
@@ -203,7 +203,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             kundenname.setText(c.getCompanies().get(0).getName());
             companyList.setAll(c.getCompanies());
             companyListView.setItems(companyList);
-            shoboxLabel.setText("Firmen");
+            shoboxLabel.setText("Firmen: ");
 
             bussines = true;
         } else {
@@ -211,7 +211,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             kundenname.setText(c.getContacts().get(0).toFullName());
             contactList.setAll(c.getContacts());
             contactListView.setItems(contactList);
-            shoboxLabel.setText("Kontakte");
+            shoboxLabel.setText("Kontakte: ");
         }
         kid.setText("" + c.getId());
         keyAccount.setText(c.getKeyAccounter());
@@ -297,7 +297,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         observableArrayListOfAllFlags.stream().map((ovall) -> {
             CustomerFlagWithSelect cfs = new CustomerFlagWithSelect(ovall);
             if ( allFlagsFromTheCustomer.contains(ovall) ) {
-                cfs.isSelected();
+                cfs.setSelected(true);
             }
             return cfs;
         }).forEachOrdered((cfs) -> {
@@ -483,7 +483,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void openContact(Contact contact) {
         Ui.exec(() -> {
             Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
-                contactList.set(contactListView.getSelectionModel().getSelectedIndex(),a);
+                contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
                 contactListView.refresh();
             });
         });
@@ -498,7 +498,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void openCompany(Company company) {
         Ui.exec(() -> {
             Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(a -> {
-                companyList.set(companyListView.getSelectionModel().getSelectedIndex(),a);
+                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
                 companyListView.refresh();
             });
         });

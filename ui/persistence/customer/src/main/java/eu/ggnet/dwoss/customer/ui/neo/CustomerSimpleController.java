@@ -100,9 +100,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    private final TextField companyNameTextFiled = new TextField();
+    private TextField companyNameTextFiled = new TextField();
 
-    private final TextField ustIdTextField = new TextField();
+    private TextField ustIdTextField = new TextField();
 
     public CustomerSimpleController() {
     }

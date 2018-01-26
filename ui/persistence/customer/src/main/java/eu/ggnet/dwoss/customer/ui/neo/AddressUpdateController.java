@@ -46,7 +46,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     private Address address;
 
-     @FXML
+    @FXML
     private ChoiceBox<String> countrybox;
 
     @FXML
@@ -84,6 +84,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -129,7 +130,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     /**
      * Set the Address for the Edit
-     * 
+     *
      * @param a is the Address
      */
     private void setAddress(Address a) {
@@ -146,10 +147,10 @@ public class AddressUpdateController implements Initializable, FxController, Con
         address.setStreet(street.getText());
         address.setZipCode(zipcode.getText());
         address.setCity(city.getText());
-        
+
         if ( countrybox.getSelectionModel().getSelectedItem() != null ) {
             Locale tempLocale = new Locale(countrybox.getSelectionModel().getSelectedItem().toLowerCase(), countrybox.getSelectionModel().getSelectedItem().toUpperCase());
-            address.setIsoCountry(tempLocale );
+            address.setIsoCountry(tempLocale);
         } else {
             address.setIsoCountry(new Locale("de"));
         }
