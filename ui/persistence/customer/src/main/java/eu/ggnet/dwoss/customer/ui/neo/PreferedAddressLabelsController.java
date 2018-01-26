@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -84,8 +83,10 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @FXML
     private Button cancelButton;
 
+    @FXML
     private WebView invoiceAddressWebView;
 
+    @FXML
     private WebView shippingAddressWebView;
 
     private InvoiceAddressLabelWithNullableShippingAddressLabel addressLabel;
@@ -99,13 +100,13 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
             boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
                     && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
-                        || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
+                        ^ (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
 
             boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
                                               && shippingAddressCompanyListView.getSelectionModel().isEmpty()
                                               && shippingAddressContactListView.getSelectionModel().isEmpty())
-                    || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
-                        && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
+                    ^ ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
+                       && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
 
             if ( isInvoiceAddressValid && isShippingAddressValid )
                 saveButton.setDisable(false);
@@ -133,10 +134,12 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
-                if ( newValue.intValue() >= 0 )
+                if ( newValue.intValue() >= 0 ) {
                     invoiceAddressWebView.getEngine().loadContent(
                             invoiceAddressAddressListView.getSelectionModel().getSelectedItem().toHtml()
                     );
+
+                }
             }
         });
 
@@ -146,11 +149,11 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
                 if ( newValue.intValue() >= 0 )
                     shippingAddressWebView.getEngine().loadContent(
-                            shippingAddressAddressListView.getSelectionModel().getSelectedItem().toHtml()
-                    );
+                            shippingAddressAddressListView.getSelectionModel().getSelectedItem().toHtml());
+
             }
         });
-        Platform.runLater(() -> loadWebView());
+
     }
 
     @Override
@@ -221,16 +224,12 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     private void handleCancelButtonAction(ActionEvent event) {
     }
 
-    private void loadWebView() {
-        shippingAddressVBox.getChildren().add(shippingAddressWebView = new WebView());
-        invoiceAddressVBox.getChildren().add(invoiceAddressWebView = new WebView());
-    }
-
     @FXML
     private void handleInvoiceAddressClearButtonAction(ActionEvent event) {
         invoiceAddressCompanyListView.getSelectionModel().clearSelection();
         invoiceAddressContactListView.getSelectionModel().clearSelection();
         invoiceAddressAddressListView.getSelectionModel().clearSelection();
+        invoiceAddressWebView.getEngine().loadContent("");
     }
 
     @FXML
@@ -238,6 +237,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressCompanyListView.getSelectionModel().clearSelection();
         shippingAddressContactListView.getSelectionModel().clearSelection();
         shippingAddressAddressListView.getSelectionModel().clearSelection();
+        shippingAddressWebView.getEngine().loadContent("");
     }
 }
 

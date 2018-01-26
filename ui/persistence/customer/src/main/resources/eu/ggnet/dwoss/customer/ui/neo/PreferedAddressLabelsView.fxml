@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
 
 <BorderPane prefHeight="925.0" prefWidth="1332.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController">
     <center>
@@ -22,7 +23,8 @@
                         <ListView fx:id="invoiceAddressAddressListView" prefHeight="385.0" prefWidth="246.0" />
                   <VBox fx:id="invoiceAddressVBox" prefHeight="377.0" prefWidth="437.0">
                      <children>
-                        <Button fx:id="invoiceAddressClearButton" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
+                        <Button fx:id="invoiceAddressClearButton" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="51.0" prefWidth="213.0" text="Clear" />
+                        <WebView fx:id="invoiceAddressWebView" prefHeight="401.0" prefWidth="437.0" />
                      </children>
                   </VBox>
                     </children>
@@ -35,7 +37,8 @@
                         <ListView fx:id="shippingAddressAddressListView" prefHeight="401.0" prefWidth="249.0" />
                         <VBox fx:id="shippingAddressVBox" prefHeight="377.0" prefWidth="437.0">
                             <children>
-                                <Button fx:id="shippingAddressClearButton" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="36.0" prefWidth="207.0" text="Clear" />
+                                <Button fx:id="shippingAddressClearButton" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="43.0" prefWidth="226.0" text="Clear" />
+                        <WebView fx:id="shippingAddressWebView" prefHeight="395.0" prefWidth="437.0" />
                             </children>
                         </VBox>
                     </children>
