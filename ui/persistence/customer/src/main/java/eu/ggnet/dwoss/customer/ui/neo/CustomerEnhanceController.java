@@ -133,7 +133,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private final ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
     private final ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
-    
+
     private final ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
 
     private final ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
@@ -167,7 +167,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void handleMandatorInfoButton(ActionEvent event) {
         //TODO MandatorMetadataUpdateController is missing
         new Thread(() -> {
-            //          Ui.fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetadataUpdateController.class);
+            //          Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetadataUpdateController.class);
         }).start();
     }
 
@@ -262,7 +262,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         customer.getMandatorMetadata().clear();
         mandatorMetadata.forEach(m -> customer.add(m));
-        
+
         //tansfer the List of Flags back to Set (remove duplicates) 
         HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
         outputFlagslist.clear();
@@ -270,7 +270,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         outputFlagslist.forEach((flag) -> {
             customer.getFlags().add(flag);
         });
-                
 
         //transfer List back to a Map
         ObservableList<ExternalId> items = addExternalIdsListView.getItems();
@@ -293,25 +292,23 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         ObservableList<CustomerFlag> observableArrayListOfAllFlags = FXCollections.observableArrayList(CustomerFlag.values());
 
         ObservableList<CustomerFlagWithSelect> listForTheView = FXCollections.observableArrayList();
-        
+
         //fill the CustomerFlagWithSelect List
         observableArrayListOfAllFlags.stream().map((ovall) -> {
             CustomerFlagWithSelect cfs = new CustomerFlagWithSelect(ovall);
-            if(allFlagsFromTheCustomer.contains(ovall)){
+            if ( allFlagsFromTheCustomer.contains(ovall) ) {
                 cfs.isSelected();
             }
             return cfs;
         }).forEachOrdered((cfs) -> {
             listForTheView.add(cfs);
         });
-        
+
         listForTheView.forEach(flag -> flag.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
-            if (isSelected) {
+            if ( isSelected ) {
                 outputFlagslist.add(flag.getFlag());
             }
         }));
-       
-        
 
         ListView<CustomerFlagWithSelect> checklist = new ListView<>();
         checklist.setItems(listForTheView);
@@ -327,15 +324,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 return null;
             }
         }));
-        
-        
-        
-        
+
         Label flagLable = new Label("Flags: ");
         flagVBox.getChildren().addAll(flagLable, checklist);
     }
-    
-    
+
     /**
      * build a small list of all ExternalId
      */
@@ -371,10 +364,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         externalSysremIds.getChildren().addAll(ExternalSystemIdsLable, addExternalIdsListView);
         externalSysremIds.setMinWidth(120.0);
     }
-    
-    
+
     /**
-     * build the main show box 
+     * build the main show box
      * for bussnis customer with Companies
      * for consumer customer with Contacts
      */
@@ -428,7 +420,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);
         buttonVBox.setSpacing(3.0);
-        
 
         //cellcaftory for Contacts
         contactListView.setCellFactory((ListView<Contact> p) -> {
@@ -474,7 +465,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
         companyListView.setMinWidth(450.0);
         HBox.setHgrow(companyListView, Priority.ALWAYS);
-        
+
         //build up the showBox
         if ( bussines ) {
             showHBox.getChildren().addAll(companyListView, buttonVBox);
@@ -491,9 +482,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      */
     private void openContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> contact, ContactUpdateController.class
-            ).ifPresent(a -> {
-                contactList.add(a);
+            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(a -> {
+                contactList.set(contactListView.getSelectionModel().getSelectedIndex(),a);
+                contactListView.refresh();
             });
         });
 
@@ -506,9 +497,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      */
     private void openCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> company, CompanyUpdateController.class
-            ).ifPresent(a -> {
-                companyList.add(a);
+            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(a -> {
+                companyList.set(companyListView.getSelectionModel().getSelectedIndex(),a);
+                companyListView.refresh();
             });
         });
     }

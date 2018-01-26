@@ -115,7 +115,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         //"hidde" the companyHBox
         companyHBox.setDisable(bussines);
 

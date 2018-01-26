@@ -151,6 +151,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -276,11 +277,12 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param addresse is the Address
      */
     private void openAddress(Address addresse) {
-         Ui.exec(() -> {
-                Ui.build().parent(titleTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
-                    addressList.add(a);
-                });
-         });
+        Ui.exec(() -> {
+            Ui.build().parent(titleTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(a -> {
+                addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                addressListView.refresh();
+            });
+        });
     }
 
     /**
@@ -289,11 +291,12 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param communication is the Communication
      */
     private void openCommunication(Communication communication) {
-         Ui.exec(() -> {
-                Ui.build().parent(titleTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
-                    communicationsList.add(a);
-                 });
-         });
+        Ui.exec(() -> {
+            Ui.build().parent(titleTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(a -> {
+                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                communicationTableView.refresh();
+            });
+        });
     }
 
     /**
