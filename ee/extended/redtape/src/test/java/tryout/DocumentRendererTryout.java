@@ -16,6 +16,11 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -25,8 +30,7 @@ import net.sf.jasperreports.swing.JRViewer;
 
 import eu.ggnet.dwoss.mandator.Sample;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.redtape.op.itest.support.NaivBuilderUtil;
+import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
 import eu.ggnet.dwoss.rules.*;
 

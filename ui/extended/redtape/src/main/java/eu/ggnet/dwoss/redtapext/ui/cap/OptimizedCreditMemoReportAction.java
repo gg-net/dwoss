@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.redtape.reporting.CreditMemoReporter;
+import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.ui.Workspace;

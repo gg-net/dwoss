@@ -3,10 +3,10 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Communication;
-import eu.ggnet.dwoss.customer.entity.Company;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
 import eu.ggnet.saft.*;
 

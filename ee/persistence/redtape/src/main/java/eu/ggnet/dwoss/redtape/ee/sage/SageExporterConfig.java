@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.redtape.ee.sage;
 import java.io.Serializable;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
  * Exporter Engine Configuration.

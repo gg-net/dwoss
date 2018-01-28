@@ -27,9 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.Client;
 

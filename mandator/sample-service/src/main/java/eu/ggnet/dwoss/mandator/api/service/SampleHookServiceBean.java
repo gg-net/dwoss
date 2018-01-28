@@ -21,10 +21,10 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
-import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
+import eu.ggnet.dwoss.redtape.ee.api.UnitPositionHook;
 
 /**
  * Sample implementation of the position service.
@@ -36,7 +36,7 @@ import eu.ggnet.dwoss.redtape.api.UnitPositionHook;
 public class SampleHookServiceBean implements UnitPositionHook {
 
     @Override
-    public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.entity.Position p, long documentId) throws UserInfoException {
+    public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.ee.entity.Position p, long documentId) throws UserInfoException {
         return new Result<>(Arrays.asList(p));
     }
 

@@ -28,7 +28,7 @@ import javafx.scene.control.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;

@@ -16,8 +16,8 @@ import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.entity.ProductSeries;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)

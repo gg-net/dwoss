@@ -26,15 +26,15 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
+import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
-import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;

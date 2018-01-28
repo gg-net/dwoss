@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ops.DefaultAction;
 import eu.ggnet.saft.api.ui.Title;

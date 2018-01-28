@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -37,19 +41,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
-import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
+import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 import eu.ggnet.dwoss.mandator.api.service.DocumentService;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.MailDocumentParameter;
 import eu.ggnet.dwoss.mandator.api.value.partial.MandatorMailAttachment;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.entity.Document.Flag;
-import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.redtape.format.DocumentFormater;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
+import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;

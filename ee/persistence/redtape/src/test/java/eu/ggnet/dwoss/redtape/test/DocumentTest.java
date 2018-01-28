@@ -1,11 +1,15 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.rules.*;
 
 import static org.junit.Assert.*;

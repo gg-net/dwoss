@@ -23,11 +23,11 @@ import javax.persistence.LockModeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 
 /**
  *

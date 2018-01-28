@@ -25,11 +25,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 

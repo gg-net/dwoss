@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
-import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchController;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchView;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;

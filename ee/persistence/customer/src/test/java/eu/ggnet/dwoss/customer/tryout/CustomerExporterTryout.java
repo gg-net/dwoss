@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.CustomerExporterOperation;
 import eu.ggnet.dwoss.util.FileJacket;
 

@@ -1,11 +1,16 @@
 package eu.ggnet.dwoss.customer.test;
 
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
+
 import org.junit.*;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 

@@ -12,7 +12,7 @@ import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import static eu.ggnet.dwoss.rules.TradeName.ALSO;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 public class ReportTest {

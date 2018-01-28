@@ -25,10 +25,10 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.priv.SearchSingleton;
+import eu.ggnet.dwoss.customer.ee.priv.SearchSingleton;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -21,8 +21,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.entity.Customer.Source;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;

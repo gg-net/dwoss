@@ -24,8 +24,8 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-import eu.ggnet.dwoss.redtape.format.DossierFormater;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.util.ComboBoxController;

@@ -3,8 +3,8 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

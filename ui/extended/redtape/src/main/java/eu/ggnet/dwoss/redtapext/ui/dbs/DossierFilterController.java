@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Document.Condition;
-import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
 

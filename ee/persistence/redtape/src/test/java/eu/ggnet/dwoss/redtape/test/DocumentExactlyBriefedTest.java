@@ -1,8 +1,13 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import org.junit.*;
 
-import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.rules.TaxType.UNTAXED;

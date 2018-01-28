@@ -23,7 +23,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.IPreClose;

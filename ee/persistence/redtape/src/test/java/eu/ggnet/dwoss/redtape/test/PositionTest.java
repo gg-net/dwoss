@@ -8,9 +8,10 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.redtape.entity.Position.DefaultUi;
-import eu.ggnet.dwoss.redtape.entity.Position.Returns;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Position.DefaultUi;
+import eu.ggnet.dwoss.redtape.ee.entity.Position.Returns;
+import eu.ggnet.dwoss.redtape.ee.entity.PositionModifier;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
@@ -47,7 +48,6 @@ public class PositionTest {
 
     @Test
     public void testEqualsContent() {
-
 
         Position posUnit = Position.builder().amount(1).type(PositionType.UNIT).bookingAccount(L1).name("TestUnit").tax(GlobalConfig.DEFAULT_TAX.getTax()).price(50.0).description("TestUnit Description").uniqueUnitId(1).build();
 

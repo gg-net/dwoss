@@ -22,9 +22,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 

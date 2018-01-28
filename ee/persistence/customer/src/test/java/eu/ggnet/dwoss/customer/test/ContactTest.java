@@ -16,11 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.*;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

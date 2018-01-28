@@ -38,11 +38,11 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
-import eu.ggnet.dwoss.customer.op.CustomerServiceBean;
+import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
-import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;

@@ -1,5 +1,14 @@
 package tryout;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+
 import java.awt.Font;
 import java.util.Arrays;
 
@@ -10,8 +19,6 @@ import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.redtape.*;
-import eu.ggnet.dwoss.redtape.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -25,7 +32,7 @@ import eu.ggnet.saft.core.swing.OkCancel;
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
 
-import static eu.ggnet.dwoss.redtape.entity.Document.Directive.SEND_ORDER;
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.SEND_ORDER;
 import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.dwoss.rules.TaxType.*;
 

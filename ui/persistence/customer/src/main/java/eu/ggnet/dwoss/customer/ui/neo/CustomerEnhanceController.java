@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
+
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -33,10 +38,9 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.Contact.Sex;
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;

@@ -3,8 +3,7 @@ package tryout.stub;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.redtape.UniversalSearcherOperation;
-
+import eu.ggnet.dwoss.redtapext.ee.UniversalSearcherOperation;
 import eu.ggnet.dwoss.util.Tuple2;
 
 /**

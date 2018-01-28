@@ -33,9 +33,9 @@ import javafx.scene.layout.HBox;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;

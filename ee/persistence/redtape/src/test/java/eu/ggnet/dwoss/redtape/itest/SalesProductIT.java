@@ -8,9 +8,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.SalesProductEao;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.SalesProductEao;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 
 import static org.junit.Assert.assertEquals;
 

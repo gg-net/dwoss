@@ -24,7 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.border.EtchedBorder;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
  *

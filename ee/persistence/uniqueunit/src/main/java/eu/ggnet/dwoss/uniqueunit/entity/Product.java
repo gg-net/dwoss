@@ -286,7 +286,7 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
      * <p>
      * @return null if the instance is valid, or a string representing the error.
      */
-    @Null
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getViolationMessage() {
         if ( tradeName == null ) return null;
         if ( !tradeName.isBrand() ) return tradeName + " is not a Brand";

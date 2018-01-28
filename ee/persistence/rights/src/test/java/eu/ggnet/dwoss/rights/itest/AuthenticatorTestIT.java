@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.fest.assertions.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  *

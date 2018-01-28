@@ -7,8 +7,8 @@ package eu.ggnet.dwoss.customer.ui;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.saft.Client;
 
 import javafx.application.Platform;
@@ -18,7 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-import eu.ggnet.dwoss.customer.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 
 /**
  * Task to obtain all Customers from the database with partial results.

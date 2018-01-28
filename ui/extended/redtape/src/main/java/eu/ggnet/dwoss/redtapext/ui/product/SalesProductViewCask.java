@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.product;
 
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
+
 import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
@@ -24,9 +26,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.PojoColumn;

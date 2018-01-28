@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
+import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.Client;
@@ -43,15 +48,13 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.redtape.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Document.Condition;
-import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.format.DocumentFormater;
-import eu.ggnet.dwoss.redtape.state.RedTapeStateTransition.Hint;
-import eu.ggnet.dwoss.redtape.state.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;

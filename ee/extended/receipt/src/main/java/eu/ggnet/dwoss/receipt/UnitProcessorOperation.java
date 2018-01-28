@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -30,10 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.emo.DossierEmo;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.*;

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,8 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.emo.ReportEmo;
 import eu.ggnet.dwoss.report.entity.Report;

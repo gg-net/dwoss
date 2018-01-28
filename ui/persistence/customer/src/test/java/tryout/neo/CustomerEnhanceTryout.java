@@ -18,11 +18,11 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.entity.Customer.Source;
-import eu.ggnet.dwoss.customer.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.*;

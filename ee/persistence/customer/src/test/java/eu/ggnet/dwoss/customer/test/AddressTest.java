@@ -21,7 +21,7 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

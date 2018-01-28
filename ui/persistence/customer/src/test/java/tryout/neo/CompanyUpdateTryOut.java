@@ -21,8 +21,8 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Company;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
 import eu.ggnet.saft.*;
 

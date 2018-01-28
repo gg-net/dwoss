@@ -21,9 +21,9 @@ import javax.ejb.Remote;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Document.Flag;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 

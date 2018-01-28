@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -424,7 +424,7 @@ public class Display implements Serializable {
         return "Display{" + "id=" + id + ", led=" + led + ", size=" + size + ", resolution=" + resolution + ", type=" + type + ", ration=" + ration + ", economicValue=" + economicValue + '}';
     }
 
-    @Null
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getValidationViolations() {
         if ( resolution.ordinal() > size.getMaxResolution().ordinal() ) return "resolution > size.maxResolution";
         return null;

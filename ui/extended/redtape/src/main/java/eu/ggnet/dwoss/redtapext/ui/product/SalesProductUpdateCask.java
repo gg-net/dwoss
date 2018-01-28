@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
@@ -88,7 +88,7 @@ public class SalesProductUpdateCask extends javax.swing.JPanel {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        salesProduct = new eu.ggnet.dwoss.redtape.entity.SalesProduct();
+        salesProduct = new SalesProduct();
         jLabel6 = new javax.swing.JLabel();
         nameField = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -185,7 +185,7 @@ public class SalesProductUpdateCask extends javax.swing.JPanel {
     private javax.swing.JLabel partNoField;
     private javax.swing.JTextField priceField;
     private javax.swing.JTextField priceIncTaxField;
-    private eu.ggnet.dwoss.redtape.entity.SalesProduct salesProduct;
+    private SalesProduct salesProduct;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 

@@ -1,14 +1,18 @@
 package tryout.stub;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+
 import java.util.*;
 
 import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.Document.Condition;
-import eu.ggnet.dwoss.redtape.entity.Document.Directive;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;

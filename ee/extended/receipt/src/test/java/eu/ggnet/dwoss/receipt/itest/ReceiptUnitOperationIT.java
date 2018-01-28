@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.util.*;
 
 import javax.ejb.EJB;
@@ -9,14 +13,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.receipt.UnitProcessor;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.redtape.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.StockAgent;

@@ -39,9 +39,9 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="eu.ggnet.redtapext.ui.cao.document.AfterInvoiceTablePanel" name="tablePanel">
+    <Component class="eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel" name="tablePanel">
     </Component>
-    <Component class="eu.ggnet.redtapext.ui.cao.document.AfterInvoicePositionPriceSumPanel" name="sumPanel">
+    <Component class="eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePositionPriceSumPanel" name="sumPanel">
     </Component>
     <Container class="javax.swing.JPanel" name="afterInvoiceInfoPanel">
 

@@ -49,19 +49,31 @@ import static javax.persistence.FetchType.EAGER;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "all", query = "Select su from StockUnit su"),
-    @NamedQuery(name = "StockUnit.byUniqueUnitId", query = "Select p from StockUnit as p where p.uniqueUnitId = ?1"),
-    @NamedQuery(name = "StockUnit.byRefurbishId", query = "Select p from StockUnit as p where p.refurbishId = ?1"),
-    @NamedQuery(name = "StockUnit.byRefurbishIds", query = "SELECT p FROM StockUnit AS p WHERE p.refurbishId IN (?1)"),
-    @NamedQuery(name = "StockUnit.byStockId", query = "Select p from StockUnit as p where p.stock.id = ?1"),
+    @NamedQuery(name = "all", query = "Select su from StockUnit su")
+    ,
+    @NamedQuery(name = "StockUnit.byUniqueUnitId", query = "Select p from StockUnit as p where p.uniqueUnitId = ?1")
+    ,
+    @NamedQuery(name = "StockUnit.byRefurbishId", query = "Select p from StockUnit as p where p.refurbishId = ?1")
+    ,
+    @NamedQuery(name = "StockUnit.byRefurbishIds", query = "SELECT p FROM StockUnit AS p WHERE p.refurbishId IN (?1)")
+    ,
+    @NamedQuery(name = "StockUnit.byStockId", query = "Select p from StockUnit as p where p.stock.id = ?1")
+    ,
     @NamedQuery(name = "StockUnit.countByTypeStatusSource", query = "Select count(su) from StockUnit su where su.position.transaction.type = ?1 "
-                + "and su.position.transaction.status.type = ?2 and su.position.transaction.source.id = ?3 "),
-    @NamedQuery(name = "StockUnit.countByStockNoLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NULL"),
-    @NamedQuery(name = "StockUnit.byNoTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.position IS NULL"),
-    @NamedQuery(name = "StockUnit.byNoLogicTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL"),
-    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAndPresentStock", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.stock IS NOT NULL"),
-    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAsUniqueUnitId", query = "SELECT su.uniqueUnitId FROM StockUnit su WHERE su.logicTransaction IS NULL"),
-    @NamedQuery(name = "StockUnit.countByStockOnLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NOT NULL"),
+                + "and su.position.transaction.status.type = ?2 and su.position.transaction.source.id = ?3 ")
+    ,
+    @NamedQuery(name = "StockUnit.countByStockNoLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NULL")
+    ,
+    @NamedQuery(name = "StockUnit.byNoTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.position IS NULL")
+    ,
+    @NamedQuery(name = "StockUnit.byNoLogicTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL")
+    ,
+    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAndPresentStock", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.stock IS NOT NULL")
+    ,
+    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAsUniqueUnitId", query = "SELECT su.uniqueUnitId FROM StockUnit su WHERE su.logicTransaction IS NULL")
+    ,
+    @NamedQuery(name = "StockUnit.countByStockOnLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NOT NULL")
+    ,
     @NamedQuery(name = "StockUnit.findByUniqueUnitIds", query = "SELECT u FROM StockUnit u WHERE u.uniqueUnitId IN (?1)")
 })
 @EqualsAndHashCode(of = "id")
@@ -164,7 +176,7 @@ public class StockUnit implements Serializable, EagerAble {
      * <p/>
      * @return null if Instance is valid, otherwise a message describing the problem
      */
-    @Null
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getValidationViolations() {
         if ( isInStock() ^ isInTransaction() ) return null;
         if ( isInStock() && isInTransaction() && getTransaction().getStatus() != null

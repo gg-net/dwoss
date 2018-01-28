@@ -25,8 +25,8 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.redtape.UnitOverseer;
-import eu.ggnet.dwoss.redtape.UniversalSearcher;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Ui;

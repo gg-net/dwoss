@@ -20,10 +20,10 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
@@ -48,8 +48,7 @@ import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
 import javax.validation.*;
 
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-
+import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;

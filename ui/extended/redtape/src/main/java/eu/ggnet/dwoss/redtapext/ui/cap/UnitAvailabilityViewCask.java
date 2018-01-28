@@ -24,7 +24,7 @@ import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtape.UnitOverseer;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;

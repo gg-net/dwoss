@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.util.IPreClose;
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
-import eu.ggnet.dwoss.redtape.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
 
 import eu.ggnet.dwoss.rules.AddressType;
 

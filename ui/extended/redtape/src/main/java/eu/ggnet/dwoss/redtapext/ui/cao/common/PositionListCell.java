@@ -33,7 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 import javafx.util.Callback;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 import static javafx.scene.text.TextAlignment.JUSTIFY;
 import static javafx.scene.text.TextAlignment.RIGHT;

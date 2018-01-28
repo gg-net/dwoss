@@ -3,6 +3,6 @@
     <persistence-unit name="customer-pu">
         ${customer-pu.default-datasource}
         ${customer-pu.classes}
-        ${customer-pu.default-properties}
+        ${customer-pu.test-create-drop-properties}
     </persistence-unit>
 </persistence>

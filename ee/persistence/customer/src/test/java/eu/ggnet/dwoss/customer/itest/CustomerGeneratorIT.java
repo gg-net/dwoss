@@ -8,8 +8,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;

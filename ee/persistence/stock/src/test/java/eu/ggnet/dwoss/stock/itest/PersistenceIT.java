@@ -20,7 +20,7 @@ import eu.ggnet.dwoss.util.Utils;
 import com.mysema.query.SearchResults;
 import com.mysema.query.jpa.impl.JPAQueryFactory;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)

@@ -22,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.ShippingCondition;
 import eu.ggnet.saft.Client;

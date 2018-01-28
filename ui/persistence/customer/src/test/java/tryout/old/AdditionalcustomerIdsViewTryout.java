@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ui.old.AdditionalCustomerIdsView;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

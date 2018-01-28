@@ -18,9 +18,9 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Address;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController;
 import eu.ggnet.saft.*;
 

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.TaxType;
 
 import lombok.NonNull;

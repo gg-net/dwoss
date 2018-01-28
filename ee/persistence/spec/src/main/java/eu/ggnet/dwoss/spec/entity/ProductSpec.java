@@ -217,7 +217,7 @@ public abstract class ProductSpec implements Serializable, EagerAble {
      * <p>
      * @return null if the instance is valid, or a string representing the error.
      */
-    @Null
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getViolationMessage() {
         if ( model == null
                 || model.getFamily() == null

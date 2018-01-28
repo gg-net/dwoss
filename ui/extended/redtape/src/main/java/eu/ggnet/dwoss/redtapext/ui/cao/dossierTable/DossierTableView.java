@@ -28,10 +28,10 @@ import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.dwoss.redtape.api.LegacyRemoteBridge;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.format.DossierFormater;
+import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.TableColumnChooserPopup;
 import eu.ggnet.saft.Client;

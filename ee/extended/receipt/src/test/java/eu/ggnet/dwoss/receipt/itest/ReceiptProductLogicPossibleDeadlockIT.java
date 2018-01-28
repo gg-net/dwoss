@@ -18,7 +18,7 @@ import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.entity.piece.*;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Arquillian.class)
 public class ReceiptProductLogicPossibleDeadlockIT extends ArquillianProjectArchive {

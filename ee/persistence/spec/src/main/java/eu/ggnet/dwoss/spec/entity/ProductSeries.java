@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -148,7 +148,7 @@ public class ProductSeries implements Serializable, INamed {
      * <p>
      * @return null if valid, or a error message
      */
-    @Null
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getViolationMessage() {
         if ( brand != null && !brand.isBrand() ) return brand.getName() + " is not a Brand";
         return null;

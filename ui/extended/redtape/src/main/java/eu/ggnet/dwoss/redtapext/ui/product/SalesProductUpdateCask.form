@@ -2,7 +2,7 @@
 
 <Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
-    <Component class="eu.ggnet.dwoss.redtape.entity.SalesProduct" name="salesProduct">
+    <Component class="eu.ggnet.dwoss.redtape.ee.entity.SalesProduct" name="salesProduct">
     </Component>
   </NonVisualComponents>
   <Properties>

@@ -13,7 +13,7 @@ import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test the core running fuctionality of the rights pu in the container.

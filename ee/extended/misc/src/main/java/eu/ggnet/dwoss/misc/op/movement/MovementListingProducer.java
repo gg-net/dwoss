@@ -20,7 +20,7 @@ import javax.ejb.Remote;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.stock.entity.Stock;
 
 import lombok.*;

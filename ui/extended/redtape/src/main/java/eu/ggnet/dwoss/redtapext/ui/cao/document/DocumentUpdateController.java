@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.List;
@@ -25,9 +32,7 @@ import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
-import eu.ggnet.dwoss.redtape.RedTapeWorker.Addresses;
-import eu.ggnet.dwoss.redtape.*;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;

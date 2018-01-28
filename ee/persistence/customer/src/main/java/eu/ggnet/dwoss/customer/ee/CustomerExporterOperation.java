@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+
 import java.awt.Color;
 import java.util.*;
 import java.util.function.Function;
@@ -23,17 +29,16 @@ import java.util.function.Function;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.entity.Contact.Sex;
-import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.CFormat.FontStyle;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
-import static eu.ggnet.dwoss.customer.entity.Communication.Type.*;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static java.awt.Color.BLACK;

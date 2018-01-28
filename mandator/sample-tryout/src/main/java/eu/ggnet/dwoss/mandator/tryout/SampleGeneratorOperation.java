@@ -29,12 +29,12 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
-import eu.ggnet.dwoss.redtape.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
+import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.report.assist.gen.ReportLineGeneratorOperation;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.rights.api.AtomicRight;

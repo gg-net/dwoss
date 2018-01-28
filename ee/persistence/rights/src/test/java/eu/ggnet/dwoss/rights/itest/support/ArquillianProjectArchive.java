@@ -51,7 +51,7 @@ public class ArquillianProjectArchive {
 
         return ShrinkWrap.create(WebArchive.class, "rights-persistence-test.war")
                 .addPackages(true, Filters.exclude(getPackage("eu.ggnet.dwoss.rights.itest")), "eu.ggnet.dwoss.rights")
-                .addPackages(true, "org.fest") // Need this for Fest Assertations
+                .addPackages(true, "org.assertj") // Need this for AssertJ Assertations
                 .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment

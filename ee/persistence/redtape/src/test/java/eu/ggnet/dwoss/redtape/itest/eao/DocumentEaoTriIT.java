@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.redtape.itest.eao;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.util.Date;
 import java.util.List;
 
@@ -11,17 +16,16 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.DocumentEao;
-import eu.ggnet.dwoss.redtape.emo.AddressEmo;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 
-import static eu.ggnet.dwoss.redtape.entity.Document.Directive.NONE;
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.NONE;
 import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *

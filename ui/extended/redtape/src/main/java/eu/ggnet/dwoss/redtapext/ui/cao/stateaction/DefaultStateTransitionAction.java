@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
+import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
@@ -23,9 +30,7 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.redtape.state.*;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.rules.PositionType;

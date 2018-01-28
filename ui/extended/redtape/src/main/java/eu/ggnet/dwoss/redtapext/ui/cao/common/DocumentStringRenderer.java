@@ -24,11 +24,11 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.redtape.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.redtape.format.DocumentFormater.toConditions;
+import static eu.ggnet.dwoss.redtape.ee.format.DocumentFormater.toConditions;
 
 /**
  *

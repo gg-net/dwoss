@@ -18,7 +18,7 @@ import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.Utils;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)

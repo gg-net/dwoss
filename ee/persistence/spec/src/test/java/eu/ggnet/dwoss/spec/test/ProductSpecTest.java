@@ -7,12 +7,9 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.entity.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +30,7 @@ public class ProductSpecTest {
         l640.setFamily(lfamiliy);
         ProductSpec s = new BasicSpec("LX.AAAAA.BBB", 1L);
         s.setModel(l640);
-        assertTrue(s + " should be valid", validator.validate(s).isEmpty());
+        assertThat(validator.validate(s)).isEmpty();
         s.setPartNo("LX.AAAAA.OOB");
         assertTrue("The letter O should be allowed", validator.validate(s).isEmpty());
         s.setPartNo("  LLL");

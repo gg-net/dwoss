@@ -8,9 +8,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.emo.AddressEmo;
-import eu.ggnet.dwoss.redtape.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 
 import static org.junit.Assert.assertEquals;

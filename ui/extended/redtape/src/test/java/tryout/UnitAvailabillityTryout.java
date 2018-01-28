@@ -20,8 +20,8 @@ import java.util.*;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.redtape.UnitOverseer;
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.Tuple2;

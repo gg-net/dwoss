@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.op.itest;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,15 +33,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.misc.op.ResolveRepayment;
 import eu.ggnet.dwoss.misc.op.ResolveRepaymentBean;
 import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
-import eu.ggnet.dwoss.redtape.*;
-import eu.ggnet.dwoss.redtape.entity.*;
-import eu.ggnet.dwoss.redtape.gen.RedTapeGeneratorOperation;
-import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
+import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.entity.Report;

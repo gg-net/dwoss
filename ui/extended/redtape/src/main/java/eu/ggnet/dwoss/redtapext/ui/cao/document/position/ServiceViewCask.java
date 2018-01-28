@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.redtape.api.PositionService;
-import eu.ggnet.dwoss.redtape.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.api.PositionService;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.TaxType;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;

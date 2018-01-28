@@ -3,8 +3,8 @@ package tryout.stub;
 import java.util.*;
 
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.priv.ConverterUtil;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 
@@ -14,7 +14,7 @@ import eu.ggnet.dwoss.rules.*;
  */
 public class CustomerServiceStub implements CustomerService {
 
-    private eu.ggnet.dwoss.customer.entity.Customer c;
+    private eu.ggnet.dwoss.customer.ee.entity.Customer c;
 
     public CustomerServiceStub() {
         CustomerGenerator gen = new CustomerGenerator();

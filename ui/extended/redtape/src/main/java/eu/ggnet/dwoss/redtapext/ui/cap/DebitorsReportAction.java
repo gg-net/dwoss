@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.redtape.reporting.DebitorsReporter;
+import eu.ggnet.dwoss.redtapext.ee.reporting.DebitorsReporter;
 
 import java.awt.event.ActionEvent;
 

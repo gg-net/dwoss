@@ -1,16 +1,16 @@
 package tryout.stub;
 
-import eu.ggnet.dwoss.redtape.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.ggnet.dwoss.event.AddressChange;
-import eu.ggnet.dwoss.redtape.RedTapeWorker;
-import eu.ggnet.dwoss.redtape.state.CustomerDocument;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.statemachine.StateTransition;
 
 import eu.ggnet.dwoss.util.UserInfoException;

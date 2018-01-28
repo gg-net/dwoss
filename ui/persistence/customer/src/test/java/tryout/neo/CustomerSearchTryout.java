@@ -18,7 +18,7 @@ package tryout.neo;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.customer.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSearchController;
 import eu.ggnet.saft.*;
 

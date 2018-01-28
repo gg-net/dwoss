@@ -23,8 +23,8 @@ import java.util.concurrent.*;
 import org.slf4j.*;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
-import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 
 import static eu.ggnet.saft.Client.lookup;
 

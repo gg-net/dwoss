@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.redtape.reporting.RedTapeCloser;
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 
 import java.awt.event.ActionEvent;
 

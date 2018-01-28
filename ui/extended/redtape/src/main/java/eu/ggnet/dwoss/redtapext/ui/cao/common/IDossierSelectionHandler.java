@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
-import eu.ggnet.dwoss.redtape.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 
 /**
  *

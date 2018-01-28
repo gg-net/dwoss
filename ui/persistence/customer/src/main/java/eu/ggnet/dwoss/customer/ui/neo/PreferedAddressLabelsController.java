@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
+
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -32,8 +37,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 
-import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;

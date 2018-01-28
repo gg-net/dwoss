@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Company;
+import eu.ggnet.dwoss.customer.ee.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
+
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -37,9 +42,8 @@ import javafx.scene.layout.VBox;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.*;
-import eu.ggnet.dwoss.customer.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;

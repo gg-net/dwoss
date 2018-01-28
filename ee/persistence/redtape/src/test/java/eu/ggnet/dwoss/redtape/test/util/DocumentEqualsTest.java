@@ -1,11 +1,11 @@
 package eu.ggnet.dwoss.redtape.test.util;
 
-import eu.ggnet.dwoss.redtape.entity.Dossier;
-import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
-import eu.ggnet.dwoss.redtape.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.entity.Address;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.util.DocumentEquals;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
+import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 
 import eu.ggnet.dwoss.rules.PositionType;
 
@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.rules.DocumentType;
 
-import static eu.ggnet.dwoss.redtape.entity.util.DocumentEquals.Property.*;
+import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static org.junit.Assert.*;
 
 /**

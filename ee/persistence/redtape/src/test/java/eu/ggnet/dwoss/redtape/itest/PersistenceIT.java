@@ -1,5 +1,13 @@
 package eu.ggnet.dwoss.redtape.itest;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Address;
+import eu.ggnet.dwoss.redtape.ee.entity.Reminder;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +22,9 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.eao.PositionEao;
-import eu.ggnet.dwoss.redtape.entity.Document.Condition;
-import eu.ggnet.dwoss.redtape.entity.*;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.PositionEao;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.rules.PositionType;
 

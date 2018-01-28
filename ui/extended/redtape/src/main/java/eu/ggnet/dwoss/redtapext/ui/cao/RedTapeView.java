@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristicFactory;
+import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristic;
+import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -44,9 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.redtape.entity.Document;
-import eu.ggnet.dwoss.redtape.entity.Position;
-import eu.ggnet.dwoss.redtape.state.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;

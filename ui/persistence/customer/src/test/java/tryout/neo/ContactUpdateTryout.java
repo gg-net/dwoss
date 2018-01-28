@@ -19,8 +19,8 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
 import eu.ggnet.saft.*;
 

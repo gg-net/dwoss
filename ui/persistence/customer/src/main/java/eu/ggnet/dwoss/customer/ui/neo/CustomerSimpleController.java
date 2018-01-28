@@ -28,10 +28,10 @@ import javafx.scene.layout.HBox;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.entity.Contact.Sex;
-import eu.ggnet.dwoss.customer.entity.Customer;
-import eu.ggnet.dwoss.customer.entity.Customer.Source;
-import eu.ggnet.dwoss.customer.entity.dto.SimpleCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;

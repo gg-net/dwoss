@@ -15,7 +15,7 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.entity.*;
 
-import static org.fest.assertions.api.Assertions.failBecauseExceptionWasNotThrown;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)

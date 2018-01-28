@@ -27,7 +27,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.dwoss.customer.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.saft.api.ui.Title;
 
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;

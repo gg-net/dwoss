@@ -30,8 +30,8 @@ import eu.ggnet.dwoss.customer.api.CustomerCos;
 
 import eu.ggnet.dwoss.event.AddressChange;
 
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
-import eu.ggnet.dwoss.customer.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 
 import static eu.ggnet.saft.Client.lookup;
 

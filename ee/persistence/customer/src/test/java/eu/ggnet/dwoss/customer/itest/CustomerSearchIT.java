@@ -11,12 +11,12 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.assist.Customers;
-import eu.ggnet.dwoss.customer.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.priv.OldCustomer;
+import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
+import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.*;

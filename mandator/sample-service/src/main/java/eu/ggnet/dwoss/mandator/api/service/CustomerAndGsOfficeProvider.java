@@ -20,7 +20,7 @@ import javax.ejb.Singleton;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.customer.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;

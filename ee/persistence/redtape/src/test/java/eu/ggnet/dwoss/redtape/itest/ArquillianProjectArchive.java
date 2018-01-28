@@ -47,7 +47,7 @@ public class ArquillianProjectArchive {
                 .importRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator is needed on many places.
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
-                .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
+                .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // Fest assertion
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "redtape-persistence-test.war")
                 .addPackages(true,

@@ -53,7 +53,6 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
                 .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
-                .addDependency(MavenDependencies.createDependency("org.easytesting:fest-assert-core", RUNTIME, false)) // Fest assertion
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")

@@ -125,12 +125,12 @@
         </redtape-pu.default-datasource>
         <redtape-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.redtape.entity.Address</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Document</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Dossier</class>
-                <class>eu.ggnet.dwoss.redtape.entity.Position</class>
-                <class>eu.ggnet.dwoss.redtape.entity.RedTapeCounter</class>
-                <class>eu.ggnet.dwoss.redtape.entity.SalesProduct</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.Address</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.Document</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.Dossier</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.Position</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter</class>
+                <class>eu.ggnet.dwoss.redtape.ee.entity.SalesProduct</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </redtape-pu.classes>
@@ -140,7 +140,7 @@
                 <jta-data-source>java:comp/env/customerDataSource</jta-data-source>
           ]]>
         </customer-pu.default-datasource>
-        <customer-pu.default-properties>
+        <customer-pu.test-create-drop-properties>
           <![CDATA[
                 <properties>
                     <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
@@ -152,15 +152,15 @@
                     <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
-        </customer-pu.default-properties>
+        </customer-pu.test-create-drop-properties>
         <customer-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.customer.entity.Address</class>
-                <class>eu.ggnet.dwoss.customer.entity.Communication</class>
-                <class>eu.ggnet.dwoss.customer.entity.Company</class>
-                <class>eu.ggnet.dwoss.customer.entity.Contact</class>
-                <class>eu.ggnet.dwoss.customer.entity.Customer</class>
-                <class>eu.ggnet.dwoss.customer.entity.MandatorMetadata</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.Address</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.Communication</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.Company</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.Contact</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.Customer</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </customer-pu.classes>
@@ -254,7 +254,7 @@
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </uniqueunit-pu.classes>
-        <test-pu.default-properties>
+        <all-pu.test-create-drop-properties>
           <![CDATA[
                 <properties>
                     <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
@@ -262,7 +262,7 @@
                     <property name="tomee.jpa.factory.lazy" value="true" />
                 </properties>
           ]]>
-        </test-pu.default-properties>
+        </all-pu.test-create-drop-properties>
 
     </properties>
 
@@ -810,11 +810,6 @@
                 <artifactId>el-impl</artifactId>
                 <version>2.2</version>
             </dependency>
-            <dependency> <!-- dead since 2012 move to assertj -->
-                <groupId>org.easytesting</groupId>
-                <artifactId>fest-assert-core</artifactId>
-                <version>2.0M10</version>
-            </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
@@ -866,11 +861,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

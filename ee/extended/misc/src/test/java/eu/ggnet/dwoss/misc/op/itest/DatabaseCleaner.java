@@ -20,8 +20,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.customer.assist.Customers;
-import eu.ggnet.dwoss.redtape.assist.RedTapes;
+import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.report.assist.Reports;
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.stock.assist.Stocks;
