@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
@@ -70,6 +71,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private Button mandatorInfoButton;
+
+    @FXML
+    private Button okButton;
+
 
     @Data
     @AllArgsConstructor
@@ -159,15 +164,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void saveButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(kid.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         customer = getCustomer();
     }
 
     @FXML
     private void handelPreferedAddressLabelsButton(ActionEvent event) {
+        //TODO better work with the entity AddressLable
+        
         Ui.exec(() -> {
             Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
         });
@@ -192,6 +195,17 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
+        
+        /**
+        //button behavior            
+        okButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> keyAccount.getText().trim().isEmpty(), keyAccount.textProperty()
+                )
+        );
+          */
+        
         source.getItems().addAll(Source.values());
     }
 

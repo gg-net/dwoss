@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" minHeight="550.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane minHeight="550.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
    <center>
       <VBox spacing="3.0" BorderPane.alignment="CENTER">
          <children>
@@ -45,9 +45,9 @@
                </children>
             </HBox>
             <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
-            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" spacing="3.0" VBox.vgrow="ALWAYS">
+            <HBox minHeight="150.0" spacing="3.0" VBox.vgrow="ALWAYS">
                <children>
-                  <VBox fx:id="flagVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" />
+                  <VBox fx:id="flagVBox" minHeight="50.0" minWidth="150.0" spacing="3.0" />
                   <Region maxHeight="1.7976931348623157E308" maxWidth="500.0" minWidth="15.0" HBox.hgrow="ALWAYS" />
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
@@ -64,7 +64,7 @@
                </children>
             </HBox>
             <Label text="Kommentar:" />
-            <TextArea fx:id="commentTextArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="200.0" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </center>

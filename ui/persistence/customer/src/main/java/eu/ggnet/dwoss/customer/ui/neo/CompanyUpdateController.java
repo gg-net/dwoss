@@ -114,20 +114,12 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(companyNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         company = getCompany();
         Ui.closeWindowOf(taxIdTextField);
     }
 
     @FXML
     private void saveButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(companyNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         company = getCompany();
     }
 

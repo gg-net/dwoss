@@ -105,14 +105,16 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private Button saveButton;
 
+    
+    @FXML
+    private void saveButtonHandling(ActionEvent event) {
+        contact = getContact();
+    }
+
+    
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         contact = getContact();
-
         Ui.closeWindowOf(lastNameTextField);
     }
 
@@ -397,10 +399,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         c.getCommunications().addAll(communicationsList);
 
         return c;
-    }
-
-    @FXML
-    private void saveButtonHandling(ActionEvent event) {
     }
 
 }
