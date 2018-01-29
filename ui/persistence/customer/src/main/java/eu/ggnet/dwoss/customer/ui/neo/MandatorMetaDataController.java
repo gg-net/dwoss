@@ -17,10 +17,10 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,11 +29,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
@@ -85,13 +87,83 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        saveButton.setDisable(true);
+
+        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
+
+            @Override
+            public void invalidated(javafx.beans.Observable observable) {
+                System.out.println(observable);
+                if ( shippingConditionComboBox.getSelectionModel().isEmpty() && paymentConditionComboBox.getSelectionModel().isEmpty()
+                        && paymentMethodComboBox.getSelectionModel().isEmpty()
+                        && allowedSalesChannelCheckBoxList.stream().noneMatch(checkBox -> checkBox.selectedProperty().get()) )
+                    saveButton.setDisable(true);
+
+                else
+                    saveButton.setDisable(false);
+
+            }
+
+        };
+
+        shippingConditionComboBox.setConverter(new StringConverter<ShippingCondition>() {
+            @Override
+            public ShippingCondition fromString(String string) {
+                throw new UnsupportedOperationException("fromString is not supported");
+
+            }
+
+            @Override
+            public String toString(ShippingCondition myClassinstance) {
+                return myClassinstance.toString();
+            }
+        });
+
+        paymentConditionComboBox.setConverter(new StringConverter<PaymentCondition>() {
+            @Override
+            public PaymentCondition fromString(String string) {
+                throw new UnsupportedOperationException("fromString is not supported");
+            }
+
+            @Override
+            public String toString(PaymentCondition myClassinstance) {
+                return myClassinstance.getNote();
+            }
+        });
+        paymentMethodComboBox.setConverter(new StringConverter<PaymentMethod>() {
+            @Override
+            public PaymentMethod fromString(String string) {
+                throw new UnsupportedOperationException("fromString is not supported");
+            }
+
+            @Override
+            public String toString(PaymentMethod myClassinstance) {
+                return myClassinstance.getNote();
+            }
+        });
+
+        shippingConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        paymentConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        paymentMethodComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+
+        // TODO selectedProperty never calls it's listener
+        allowedSalesChannelCheckBoxList.forEach(e -> e.selectedProperty().addListener(saveButtonDisablingListener));
+
         shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
+
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
+
+        paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
         paymentConditionComboBox.setCellFactory(new Callback<ListView<PaymentCondition>, ListCell<PaymentCondition>>() {
             @Override
             public ListCell<PaymentCondition> call(ListView<PaymentCondition> l) {
                 return new ListCell<PaymentCondition>() {
+                    @Override
+                    public String toString() {
+                        return this.toString();
+                    }
+
                     @Override
                     protected void updateItem(PaymentCondition item, boolean empty) {
                         super.updateItem(item, empty);
@@ -105,24 +177,17 @@ public class MandatorMetaDataController implements Initializable, FxController, 
             }
         });
 
-        paymentMethodComboBox.setCellFactory(new Callback<ListView<PaymentMethod>, ListCell<PaymentMethod>>() {
+        paymentMethodComboBox.setCellFactory((ListView<PaymentMethod> l) -> new ListCell<PaymentMethod>() {
             @Override
-            public ListCell<PaymentMethod> call(ListView<PaymentMethod> l) {
-                return new ListCell<PaymentMethod>() {
-                    @Override
-                    protected void updateItem(PaymentMethod item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if ( item == null || empty ) {
-                            setGraphic(null);
-                        } else {
-                            setText(item.getNote());
-                        }
-                    }
-                };
+            protected void updateItem(PaymentMethod item, boolean empty) {
+                super.updateItem(item, empty);
+                if ( item == null || empty ) {
+                    setGraphic(null);
+                } else {
+                    setText(item.getNote());
+                }
             }
         });
-
-        paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
         defaultshippingConditionTextField.setText(ShippingCondition.DEFAULT.name());
         defaultpaymentConditionTextField.setText(PaymentCondition.DEALER.getNote());
@@ -167,7 +232,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
-
+        Ui.closeWindowOf(saveButton);
     }
 
     @Override
@@ -181,19 +246,15 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     }
 
     private void setSalesChannelBoxesUp() {
+        Arrays.stream(SalesChannel.values()).filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
+                .map(salesChannel -> new CheckBox(salesChannel.getName())).forEach(checkBox -> allowedSalesChannelCheckBoxList.add(checkBox));
 
-        for (SalesChannel salesChannel : SalesChannel.values()) {
-
-            CheckBox checkBox = new CheckBox(salesChannel.getName());
-            allowedSalesChannelCheckBoxList.add(checkBox);
-        }
-
-        for (SalesChannel allowedSalesChannel : defaultCustomerSalesdata.getAllowedSalesChannels()) {
-            CheckBox checkBox = new CheckBox(allowedSalesChannel.getName());
+        defaultCustomerSalesdata.getAllowedSalesChannels().stream().filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
+                .map(salesChannel -> new CheckBox(salesChannel.getName())).forEach(checkBox -> {
             checkBox.setSelected(true);
             checkBox.setDisable(true);
             defaultAllowedSalesChannelCheckBoxList.add(checkBox);
-        }
+        });
 
         allowedSalesChannelsVBox.getChildren().setAll(allowedSalesChannelCheckBoxList);
         defaultAllowedSalesChannelsVBox.getChildren().setAll(defaultAllowedSalesChannelCheckBoxList);

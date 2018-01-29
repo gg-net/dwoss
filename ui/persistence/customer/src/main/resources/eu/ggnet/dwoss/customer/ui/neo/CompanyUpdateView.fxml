@@ -60,7 +60,7 @@
             </HBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0">
                <children>
-                  <VBox maxHeight="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
+                  <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="400.0" spacing="2.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Kommunikationswege" />
                         <TableView fx:id="communicationTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS">
@@ -79,7 +79,7 @@
             </HBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" spacing="2.0">
                <children>
-                  <VBox HBox.hgrow="ALWAYS">
+                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Kontakte" />
                         <ListView fx:id="contactListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
