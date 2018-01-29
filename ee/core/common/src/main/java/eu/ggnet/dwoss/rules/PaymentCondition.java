@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,15 +47,15 @@ public enum PaymentCondition {
     /**
      * Dealer, can buy from SalesChannel Dealer and Customer.
      */
-    DEALER_1_PERCENT_DISCOUNT("Händler 1% Rabat"),
+    DEALER_1_PERCENT_DISCOUNT("Händler 1% Rabatt"),
     /**
      * Dealer, can buy from SalesChannel Dealer and Customer.
      */
-    DEALER_2_PERCENT_DISCOUNT("Händler 2% Rabat"),
+    DEALER_2_PERCENT_DISCOUNT("Händler 2% Rabatt"),
     /**
      * Dealer, can buy from SalesChannel Dealer and Customer.
      */
-    DEALER_3_PERCENT_DISCOUNT("Händler 3% Rabat");
+    DEALER_3_PERCENT_DISCOUNT("Händler 3% Rabatt");
 
     private final String note;
 
