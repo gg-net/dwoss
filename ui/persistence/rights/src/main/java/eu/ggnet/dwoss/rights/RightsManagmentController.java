@@ -39,11 +39,10 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * This is the FXML Controller Class for the RightsManagmentView in which {@link Operator}'s get {@link AtomicRight}'s and {@link Persona}.
@@ -141,7 +140,6 @@ public class RightsManagmentController implements Initializable, FxController {
         activePersonas.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
-                System.out.println("handleActivePersonas:c=" + t.getClickCount() + ",selection=" + activePersonas.getSelectionModel().getSelectedItem());
                 if ( t.getClickCount() > 1 ) {
                     if ( activePersonas.getSelectionModel().getSelectedItem() != null )
                         openPersonaManagment(activePersonas.getSelectionModel().getSelectedItem());
@@ -193,7 +191,7 @@ public class RightsManagmentController implements Initializable, FxController {
         resetDeactiveRights();
         resetAllRights();
 //        setSelectedOperator(op);
-        lookup(RightsAgent.class).store(op);
+        Dl.remote().lookup(RightsAgent.class).store(op);
     }
 
     @FXML
@@ -204,7 +202,7 @@ public class RightsManagmentController implements Initializable, FxController {
         resetDeactiveRights();
         resetAllRights();
 //        setSelectedOperator(op);
-        lookup(RightsAgent.class).store(op);
+         Dl.remote().lookup(RightsAgent.class).store(op);
     }
 
     private void resetDeactiveRights() {
@@ -223,7 +221,7 @@ public class RightsManagmentController implements Initializable, FxController {
         resetAllRights();
 
 //        setSelectedOperator(op);
-        lookup(RightsAgent.class).store(op);
+         Dl.remote().lookup(RightsAgent.class).store(op);
     }
 
     private Operator selectedOperator() {
@@ -249,7 +247,7 @@ public class RightsManagmentController implements Initializable, FxController {
         resetAllRights();
 
 //        setSelectedOperator(op);
-        lookup(RightsAgent.class).store(op);
+         Dl.remote().lookup(RightsAgent.class).store(op);
     }
 
     private void resetAllRights() {
@@ -312,7 +310,7 @@ public class RightsManagmentController implements Initializable, FxController {
                 new Runnable() {
             @Override
             public void run() {
-                RightsAgent agent = lookup(RightsAgent.class);
+                RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
                 userlist.getItems().addAll(agent.findAllEager(Operator.class));
                 List<Persona> findAllEager = agent.findAllEager(Persona.class);
                 allPersonas.addAll(findAllEager);
