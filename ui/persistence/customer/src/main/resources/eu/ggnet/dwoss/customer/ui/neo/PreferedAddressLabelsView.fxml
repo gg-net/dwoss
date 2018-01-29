@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
@@ -16,33 +17,63 @@
         <VBox prefHeight="572.0" prefWidth="969.0">
             <children>
                 <Label prefHeight="39.0" prefWidth="144.0" style="-fx-font-weight: bold;" text="Rechnungsadresse" underline="true" />
-                <FlowPane hgap="15.0" prefHeight="336.0" prefWidth="1139.0" vgap="5.0">
-                    <children>
-                        <ListView fx:id="invoiceAddressCompanyListView" prefHeight="411.0" prefWidth="304.0" />
-                        <ListView fx:id="invoiceAddressContactListView" prefHeight="414.0" prefWidth="289.0" />
-                        <ListView fx:id="invoiceAddressAddressListView" prefHeight="385.0" prefWidth="246.0" />
+            <HBox>
+               <children>
+                        <ListView fx:id="invoiceAddressCompanyListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ListView>
+                        <ListView fx:id="invoiceAddressContactListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ListView>
+                        <ListView fx:id="invoiceAddressAddressListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ListView>
                   <VBox fx:id="invoiceAddressVBox" prefHeight="377.0" prefWidth="437.0">
                      <children>
-                        <Button fx:id="invoiceAddressClearButton" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="51.0" prefWidth="213.0" text="Clear" />
-                        <WebView fx:id="invoiceAddressWebView" prefHeight="401.0" prefWidth="437.0" />
+                        <Button fx:id="invoiceAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="ALWAYS" />
+                        <WebView fx:id="invoiceAddressWebView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
-                    </children>
-                </FlowPane>
+               </children>
+            </HBox>
                 <Label prefHeight="35.0" prefWidth="137.0" text="Lieferadresse" />
-                <FlowPane hgap="15.0" prefHeight="317.0" prefWidth="1139.0" vgap="5.0">
-                    <children>
-                        <ListView fx:id="shippingAddressCompanyListView" prefHeight="405.0" prefWidth="305.0" />
-                        <ListView fx:id="shippingAddressContactListView" prefHeight="401.0" prefWidth="291.0" />
-                        <ListView fx:id="shippingAddressAddressListView" prefHeight="401.0" prefWidth="249.0" />
+            <HBox>
+               <children>
+                        <ListView fx:id="shippingAddressCompanyListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="20.0" right="10.0" />
+                     </padding>
+                  </ListView>
+                        <ListView fx:id="shippingAddressContactListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                     <padding>
+                        <Insets left="20.0" right="10.0" />
+                     </padding>
+                  </ListView>
+                        <ListView fx:id="shippingAddressAddressListView" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ListView>
                         <VBox fx:id="shippingAddressVBox" prefHeight="377.0" prefWidth="437.0">
                             <children>
-                                <Button fx:id="shippingAddressClearButton" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="43.0" prefWidth="226.0" text="Clear" />
-                        <WebView fx:id="shippingAddressWebView" prefHeight="395.0" prefWidth="437.0" />
+                                <Button fx:id="shippingAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="NEVER" />
+                        <WebView fx:id="shippingAddressWebView" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
-                    </children>
-                </FlowPane>
+               </children>
+            </HBox>
             </children>
         </VBox>
     </center>
