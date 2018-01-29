@@ -16,6 +16,8 @@
  */
 package tryout.neo;
 
+import java.util.Locale;
+
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
@@ -24,6 +26,7 @@ import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
@@ -39,30 +42,30 @@ public class CustomerSimpleTryout {
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
         Contact contact = gen.makeContact();
-        
 
         customer.add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
         customer.add(new MandatorMetadata());
 
-        customer.getCompanies().clear();        
-        customer.getContacts().clear();   
-        
+        customer.getCompanies().clear();
+        customer.getContacts().clear();
+
         Communication communicationEmail = new Communication();
-        communicationEmail.setType(Type.EMAIL);
-        
+        communicationEmail.setType(Type.MOBILE);
+        communicationEmail.setIdentifier("040 123456789");
+
+        Address address = gen.makeAddress();
+        address.setIsoCountry(Locale.GERMANY);
+
         contact.getAddresses().clear();
         contact.getCommunications().clear();
-        contact.add(gen.makeAddress());
+
+        contact.add(address);
         contact.add(communicationEmail);
-        
-        
-        
-        customer.add(contact);        
-        
-        
+
+        customer.add(contact);
+
         System.out.println("IS simple: " + customer.getSimpleViolationMessage());
-        
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -71,7 +74,7 @@ public class CustomerSimpleTryout {
 
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Ui.build().parent(run).fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 

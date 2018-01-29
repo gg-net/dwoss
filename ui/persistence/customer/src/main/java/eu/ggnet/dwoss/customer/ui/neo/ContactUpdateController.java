@@ -29,7 +29,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -38,8 +37,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import org.apache.commons.lang3.StringUtils;
+import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
@@ -105,26 +103,24 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private Button saveButton;
 
-    
     @FXML
-    private void saveButtonHandling(ActionEvent event) {
+    private void saveButtonHandling() {
         contact = getContact();
     }
 
-    
     @FXML
-    private void saveAndCloseButtonHandling(ActionEvent event) {
+    private void saveAndCloseButtonHandling() {
         contact = getContact();
         Ui.closeWindowOf(lastNameTextField);
     }
 
     @FXML
-    private void cancelButtonHandling(ActionEvent event) {
+    private void cancelButtonHandling() {
         Ui.closeWindowOf(lastNameTextField);
     }
 
     @FXML
-    private void handleEditAddressButton(ActionEvent event) {
+    private void handleEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             editAddress(selectedItem);
@@ -132,7 +128,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddAddressButton(ActionEvent event) {
+    private void handleAddAddressButton() {
         Address a = new Address();
         a.setCity("");
         a.setStreet("");
@@ -142,15 +138,16 @@ public class ContactUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleDelAddressButton(ActionEvent event) {
-        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            addressList.remove(selectedItem);
+    private void handleDelAddressButton() {
+        int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
+        if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
+            addressList.remove(selectedIndex);
+            addressListView.refresh();
         }
     }
 
     @FXML
-    private void handleEditComButton(ActionEvent event) {
+    private void handleEditComButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             editCommunication(selectedItem);
@@ -158,17 +155,18 @@ public class ContactUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddComButton(ActionEvent event) {
+    private void handleAddComButton() {
         Communication c = new Communication();
         c.setIdentifier("");
         addCommunication(c);
     }
 
     @FXML
-    private void handleDelComButton(ActionEvent event) {
-        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            communicationsList.remove(selectedItem);
+    private void handleDelComButton() {
+         int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
+        if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
+            communicationsList.remove(selectedIndex);
+            communicationTableView.refresh();
         }
     }
 
@@ -197,6 +195,17 @@ public class ContactUpdateController implements Initializable, FxController, Con
         );
 
         //fill the UI with default values
+        genderBox.setConverter(new StringConverter<Sex>() {
+            @Override
+            public Sex fromString(String string) {
+                return null;
+            }
+
+            @Override
+            public String toString(Sex myClassinstance) {
+                return myClassinstance.getSign();
+            }
+        });
         genderBox.getItems().addAll(Contact.Sex.values());
 
         //Address CellFactory
@@ -368,7 +377,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
         firstNameTextField.setText(cont.getFirstName());
         lastNameTextField.setText(cont.getLastName());
 
-        genderBox.getSelectionModel().select(cont.getSex());
+        if ( cont.getSex() != null ) {
+            genderBox.getSelectionModel().select(cont.getSex());
+        } else {
+            genderBox.getSelectionModel().selectFirst();
+        }
 
         addressList.addAll(cont.getAddresses());
         communicationsList.addAll(cont.getCommunications());
@@ -387,13 +400,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         c.setTitle(titleTextField.getText());
         c.setFirstName(firstNameTextField.getText());
         c.setLastName(lastNameTextField.getText());
-
-        if ( genderBox.getSelectionModel().getSelectedItem() != null ) {
-            Sex selectedItem = genderBox.getSelectionModel().getSelectedItem();
-            c.setSex(selectedItem);
-        } else {
-            c.setSex(Sex.MALE);
-        }
+        c.setSex(genderBox.getSelectionModel().getSelectedItem());
 
         c.getAddresses().addAll(addressList);
         c.getCommunications().addAll(communicationsList);

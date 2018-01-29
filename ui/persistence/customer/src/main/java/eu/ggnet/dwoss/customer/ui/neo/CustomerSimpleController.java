@@ -22,16 +22,13 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-
-import org.apache.commons.lang3.StringUtils;
+import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
@@ -116,9 +113,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private Button saveAndEnhanceUIButton;
 
-    @FXML
-    private Button cancelButton;
-
     public CustomerSimpleController() {
     }
 
@@ -134,7 +128,34 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         companyHBox.setDisable(bussines);
 
         //fill the choiseBoxs
+        genderChoiseBox.setConverter(new StringConverter<Sex>() {
+            @Override
+            public Sex fromString(String string) {
+                return null;
+            }
+
+            @Override
+            public String toString(Sex myClassinstance) {
+                return myClassinstance.getSign();
+            }
+        });
         genderChoiseBox.getItems().addAll(Sex.values());
+        sourceChoiseBox.setConverter(new StringConverter<Source>() {
+            @Override
+            public String toString(Source sour) {
+                if ( sour == null ) {
+                    return null;
+                } else {
+                    return sour.getName();
+                }
+            }
+
+            @Override
+            public Source fromString(String personString) {
+                return null; // No conversion fromString needed.
+            }
+        });
+
         sourceChoiseBox.getItems().addAll(Source.values());
 
         saveAndCloseButton.disableProperty().bind(
@@ -173,90 +194,31 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @FXML
-    private void saveAndCloseButtonHandling(ActionEvent event) {
+    private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void saveAndEnhanceUIButtonHandling(ActionEvent event) {
+    private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
-        
-        //convert the SimpleCustomer to a Customer
-        Customer c = new Customer();
 
-        Contact cont = new Contact();
-        cont.setFirstName(simpleCustomer.getFirstName());
-        cont.setLastName(simpleCustomer.getLastName());
-        cont.setSex(simpleCustomer.getSex());
-        cont.setTitle(simpleCustomer.getTitle());
-
-        //Contact with only one Address
-        Address a = new Address();
-        a.setCity(simpleCustomer.getCity());
-        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
-        a.setStreet(simpleCustomer.getStreet());
-        a.setZipCode(simpleCustomer.getZipCode());
-        cont.add(a);
-
-        //one Communication form eatch type email, phone, mobile allowed
-        Communication comm = new Communication();
-        if ( !emailTextField.getText().trim().isEmpty() ) {
-            comm.setType(Type.EMAIL);
-            comm.setIdentifier(simpleCustomer.getEmail());
-        }
-        if ( !landLineTextField.getText().trim().isEmpty() ) {
-            comm.setType(Type.PHONE);
-            comm.setIdentifier(simpleCustomer.getLandlinePhone());
-        }
-        if ( !mobileTextField.getText().trim().isEmpty() ) {
-            comm.setType(Type.MOBILE);
-            comm.setIdentifier(simpleCustomer.getMobilePhone());
-        }
-        
-        //check if the Communication is valid with the right pattern
-        if(comm.getViolationMessages() != null){
-            cont.add(comm);
-        }else{
-            UiAlert.message("Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
-        }
-        
-
-        if ( bussines ) {
-            //Either a Contact or a Company are set.
-            //Contains only one Contact or one Company.
-            c.getContacts().clear();
-
-            Company comp = new Company();
-            comp.setName(simpleCustomer.getCompanyName());
-            comp.setTaxId(simpleCustomer.getTaxId());
-
-            //The Address of the Company Contact has to match the Company Address
-            comp.add(a);
-            comp.add(cont);
-
-            c.add(comp);
-
-        } else {
-            //Contains only one Contact or one Company.
-            c.getCompanies().clear();
-            c.add(cont);
-        }
-
+        //TODO 
+        //safe the simpleCustomer to DB and than build it back here
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> c, CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> new Customer(), CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void cancelButtonHandling(ActionEvent event) {
+    private void cancelButtonHandling() {
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void changeUI(ActionEvent event) {
+    private void changeUI() {
         bussines ^= true; //tournaround of the boolean
 
         simpleCustomer = getSimpleCustomer();
@@ -297,7 +259,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         streetTextField.setText(simpleCustomer.getStreet());
         zipcodeTextField.setText(simpleCustomer.getZipCode());
         cityTextField.setText(simpleCustomer.getCity());
-        countryTextField.setText(simpleCustomer.getIsoCountry());
+        countryTextField.setText(new Locale("", simpleCustomer.getIsoCountry()).getDisplayName());
         landLineTextField.setText(simpleCustomer.getLandlinePhone());
         mobileTextField.setText(simpleCustomer.getMobilePhone());
         emailTextField.setText(simpleCustomer.getEmail());
@@ -305,8 +267,16 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         commentTextArea.setText(simpleCustomer.getComment());
 
         //select the choicebox
-        genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
-        sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
+        if ( simpleCustomer.getSex() != null ) {
+            genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
+        } else {
+            genderChoiseBox.getSelectionModel().selectFirst();
+        }
+        if ( simpleCustomer.getSource() != null ) {
+            sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
+        } else {
+            sourceChoiseBox.getSelectionModel().selectFirst();
+        }
 
     }
 
@@ -326,10 +296,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
         sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
 
-        sc.setComment(commentTextArea.getText());
         sc.setCompanyName(companyNameTextFiled.getText());
-
         sc.setTaxId(ustIdTextField.getText());
+
+        sc.setComment(commentTextArea.getText());
 
         return sc;
     }

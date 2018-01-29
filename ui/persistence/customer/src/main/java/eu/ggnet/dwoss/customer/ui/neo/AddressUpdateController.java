@@ -27,10 +27,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TextFormatter;
-import javafx.util.converter.DoubleStringConverter;
+import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
-
-import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.saft.Ui;
@@ -50,7 +48,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
     private Address address;
 
     @FXML
-    private ChoiceBox<String> countrybox;
+    private ChoiceBox<Locale> countrybox;
 
     @FXML
     private TextField zipcode;
@@ -76,14 +74,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
     /**
      * Close the Editor window and save all changes.
      *
-     * @todo
-     * objekte passen mit saft
      */
     private void handleSaveButtonAction(ActionEvent event) {
-        if ( StringUtils.isBlank(street.getText()) ) {
-            UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         address = getAddress();
         Ui.closeWindowOf(zipcode);
     }
@@ -97,12 +89,22 @@ public class AddressUpdateController implements Initializable, FxController, Con
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        //the isoCountry is hardcoded to DE
-        //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
-        List<String> countries = new ArrayList<>();
-        countries.add(new Locale("de", "DE").getDisplayCountry());
-        countries.add(new Locale("ch", "CH").getDisplayCountry());
-        countries.add(new Locale("at", "AT").getDisplayCountry());
+        List<Locale> countries = new ArrayList<>();
+        countries.add(new Locale("de", "DE"));
+        countries.add(new Locale("ch", "CH"));
+        countries.add(new Locale("at", "AT"));
+        countrybox.setConverter(new StringConverter<Locale>() {
+            @Override
+            public Locale fromString(String string) {
+                return null;
+            }
+
+            @Override
+            public String toString(Locale myClassinstance) {
+                return myClassinstance.getDisplayCountry();
+            }
+        }
+        );
         countrybox.getItems().addAll(countries);
 
         // force the field to be numeric only
@@ -160,7 +162,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
     private void setAddress(Address a) {
         Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
 
-        countrybox.getSelectionModel().select(tempLocale.getDisplayCountry());
+        countrybox.getSelectionModel().select(tempLocale);
         zipcode.setText(a.getZipCode());
         city.setText(a.getCity());
         street.setText(a.getStreet());
@@ -174,14 +176,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         a.setStreet(street.getText());
         a.setZipCode(zipcode.getText());
         a.setCity(city.getText());
-
-        if ( countrybox.getSelectionModel().getSelectedItem() != null ) {
-            String selectedItem = countrybox.getSelectionModel().getSelectedItem();
-            a.setIsoCountry(new Locale(selectedItem.toLowerCase(), selectedItem.toUpperCase()));
-        } else {
-            //hardcoded Locale for germany
-            a.setIsoCountry(new Locale("de", "DE"));
-        }
+        a.setIsoCountry(countrybox.getSelectionModel().getSelectedItem());
 
         return a;
     }
