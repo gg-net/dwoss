@@ -21,10 +21,14 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,14 +39,13 @@ import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- * FXML Controller class
+ * Controller class for the editor view of a Address. Allows the user to
+ * change all values of the Address.
  *
  * @author jens.papenhagen
  */
 @Title("Kunden Adresse bearbeiten")
 public class AddressUpdateController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
-
-    private final Pattern decimalPattern = Pattern.compile("\\d+");
 
     private Address address;
 
@@ -57,6 +60,9 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     @FXML
     private TextField street;
+
+    @FXML
+    private Button saveButton;
 
     @FXML
     /**
@@ -78,7 +84,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
             UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getAddress();
+        address = getAddress();
         Ui.closeWindowOf(zipcode);
     }
 
@@ -94,29 +100,47 @@ public class AddressUpdateController implements Initializable, FxController, Con
         //the isoCountry is hardcoded to DE
         //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
         List<String> countries = new ArrayList<>();
-        countries.add("DE");
-        countries.add("CH");
-        countries.add("AT");
+        countries.add(new Locale("de", "DE").getDisplayCountry());
+        countries.add(new Locale("ch", "CH").getDisplayCountry());
+        countries.add(new Locale("at", "AT").getDisplayCountry());
         countrybox.getItems().addAll(countries);
 
         // force the field to be numeric only
-        zipcode.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-                return changeed;
-            } else {
-                return null;
-            }
-        }));
+        zipcode.textFormatterProperty().set(
+                new TextFormatter<>(new IntegerStringConverter(), 0,
+                        change -> {
+                            String newText = change.getControlNewText();
+                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
+                                return change;
+                            } else {
+                                return null;
+                            }
+                        })
+        );
+
+        //enable the safe button only on filled TextFields
+        saveButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> zipcode.getText().trim().isEmpty(), zipcode.textProperty()
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> city.getText().trim().isEmpty(), city.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> street.getText().trim().isEmpty(), street.textProperty()
+                        )
+                )
+        );
 
     }
 
     @Override
     public void accept(Address a) {
-        if ( a != null ) {
-            address = a;
-            setAddress(address);
+        if ( a != null || a.getViolationMessages() != null ) {
+            setAddress(a);
         } else {
-            UiAlert.message("Addresse ist null").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Addresse ist inkompatibel: " + a.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
         }
     }
 
@@ -134,7 +158,9 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * @param a is the Address
      */
     private void setAddress(Address a) {
-        countrybox.getSelectionModel().select(a.getIsoCountry());
+        Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
+
+        countrybox.getSelectionModel().select(tempLocale.getDisplayCountry());
         zipcode.setText(a.getZipCode());
         city.setText(a.getCity());
         street.setText(a.getStreet());
@@ -143,17 +169,21 @@ public class AddressUpdateController implements Initializable, FxController, Con
     /**
      * Get the Address back
      */
-    private void getAddress() {
-        address.setStreet(street.getText());
-        address.setZipCode(zipcode.getText());
-        address.setCity(city.getText());
+    private Address getAddress() {
+        Address a = new Address();
+        a.setStreet(street.getText());
+        a.setZipCode(zipcode.getText());
+        a.setCity(city.getText());
 
         if ( countrybox.getSelectionModel().getSelectedItem() != null ) {
-            Locale tempLocale = new Locale(countrybox.getSelectionModel().getSelectedItem().toLowerCase(), countrybox.getSelectionModel().getSelectedItem().toUpperCase());
-            address.setIsoCountry(tempLocale);
+            String selectedItem = countrybox.getSelectionModel().getSelectedItem();
+            a.setIsoCountry(new Locale(selectedItem.toLowerCase(), selectedItem.toUpperCase()));
         } else {
-            address.setIsoCountry(new Locale("de"));
+            //hardcoded Locale for germany
+            a.setIsoCountry(new Locale("de", "DE"));
         }
+
+        return a;
     }
 
 }

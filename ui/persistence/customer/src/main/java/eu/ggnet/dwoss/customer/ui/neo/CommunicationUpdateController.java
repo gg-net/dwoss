@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -35,7 +36,8 @@ import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- * FXML Controller class
+ * Controller class for the editor view of a Communication. Allows the user to
+ * change all values of the Communication.
  *
  * @author jens.papenhagen
  */
@@ -53,11 +55,16 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     private Communication communication;
 
     @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button closeButton;
+
+    @FXML
     /**
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction(ActionEvent event) {
-        this.communication = null;
         Ui.closeWindowOf(identifer);
     }
 
@@ -90,12 +97,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
         }
 
-        if ( StringUtils.isBlank(identifer.getText()) ) {
-            UiAlert.message("Es muss das Feld gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        } else {
-            getCommunication();
-        }
+        communication = getCommunication();
 
         Ui.closeWindowOf(identifer);
     }
@@ -103,15 +105,21 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         commtypbox.getItems().addAll(Communication.Type.values());
+
+        //enable the safe button only on filled TextFields
+        saveButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> identifer.getText().trim().isEmpty(), identifer.textProperty()
+                )
+        );
     }
 
     @Override
-    public void accept(Communication a) {
-        if ( a != null ) {
-            communication = a;
-            setCommunication(communication);
+    public void accept(Communication c) {
+        if ( c != null || c.getViolationMessages() != null ) {
+            setCommunication(c);
         } else {
-            UiAlert.message("Kommunikationsweg ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kommunikationsweg ist inkompatibel: " + c.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
         }
 
     }
@@ -137,9 +145,12 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     /**
      * Get the Communication back
      */
-    private void getCommunication() {
-        communication.setType(commtypbox.getSelectionModel().getSelectedItem());
-        communication.setIdentifier(identifer.getText());
+    private Communication getCommunication() {
+        Communication c = new Communication();
+        c.setType(commtypbox.getSelectionModel().getSelectedItem());
+        c.setIdentifier(identifer.getText());
+
+        return c;
     }
 
 }

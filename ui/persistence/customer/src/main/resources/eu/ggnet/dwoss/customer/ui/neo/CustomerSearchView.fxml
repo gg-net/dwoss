@@ -7,41 +7,33 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSearchController">
     <top>
-        <BorderPane id="mainPane">
-            <left>
+      <HBox spacing="5.0" BorderPane.alignment="TOP_CENTER">
+         <BorderPane.margin>
+            <Insets top="3.0" />
+         </BorderPane.margin>
+         <children>
                 <Label alignment="TOP_LEFT" contentDisplay="TOP" text="Kunden Suche:">
                     <padding>
                         <Insets right="5.0" />
                     </padding>
                 </Label>
-            </left>
-            <right>
-                <Button fx:id="searchButton" mnemonicParsing="false" text="Suche">
-                    <BorderPane.margin>
-                        <Insets left="5.0" />
-                    </BorderPane.margin>
-                </Button>
-            </right>
-            <center>
-                <VBox>
+                <VBox HBox.hgrow="ALWAYS">
                     <children>
                         <TextField fx:id="searchField" promptText="Suche" />
                         <HBox spacing="5.0">
                             <children>
                                 <CheckBox fx:id="kid" mnemonicParsing="false" text="Kunden ID" />
-                                <CheckBox fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname"  />
-                                <CheckBox fx:id="firstname" mnemonicParsing="false" text="Vorname"  />
-                                <CheckBox fx:id="address" mnemonicParsing="false" text="Adresse"  />
-                                <CheckBox fx:id="company" mnemonicParsing="false" text="Firma"  />
+                                <CheckBox fx:id="lastname" mnemonicParsing="false" selected="true" text="Nachname" />
+                                <CheckBox fx:id="firstname" mnemonicParsing="false" text="Vorname" />
+                                <CheckBox fx:id="address" mnemonicParsing="false" text="Adresse" />
+                                <CheckBox fx:id="company" mnemonicParsing="false" text="Firma" />
                             </children>
                             <opaqueInsets>
                                 <Insets />
@@ -49,17 +41,9 @@
                         </HBox>
                     </children>
                 </VBox>
-            </center>
-            <padding>
-                <Insets left="5.0" right="5.0" />
-            </padding>
-            <opaqueInsets>
-                <Insets />
-            </opaqueInsets>
-            <BorderPane.margin>
-                <Insets top="3.0" />
-            </BorderPane.margin>
-        </BorderPane>
+                <Button fx:id="searchButton" mnemonicParsing="false" text="Suche" />
+         </children>
+      </HBox>
     </top>
     <bottom>
         <HBox fx:id="statusHbox" alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
@@ -67,9 +51,15 @@
                 <ProgressBar fx:id="progressBar" progress="0.0" />
                 <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
             </children>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
         </HBox>
     </bottom>
     <center>
         <ListView fx:id="resultListView" BorderPane.alignment="CENTER" />
     </center>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </BorderPane>

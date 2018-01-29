@@ -50,7 +50,8 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
- * FXML Controller class
+ * Controller class for the editor view of a Contact. Allows the user to
+ * change all values of the Contact.
  * <p>
  * import static javafx.stage.Modality.WINDOW_MODAL;
  *
@@ -99,19 +100,16 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        saveButtonHandling(event);
-        Ui.closeWindowOf(lastNameTextField);
-    }
-
-    @FXML
-    private void saveButtonHandling(ActionEvent event) {
         if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getContact();
+        contact = getContact();
+
+        Ui.closeWindowOf(lastNameTextField);
     }
 
+  
     @FXML
     private void cancelButtonHandling(ActionEvent event) {
         Ui.closeWindowOf(lastNameTextField);
@@ -169,9 +167,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
     public void initialize(URL url, ResourceBundle rb) {
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
-        
-        
-         //fill the UI with default values
+
+        //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
 
         //Address CellFactory
@@ -268,11 +265,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Contact cont) {
-        if ( cont != null ) {
-            contact = cont;
-            setContact(contact);
+        if ( cont != null || cont.getViolationMessages() != null ) {
+            setContact(cont);
         } else {
-            UiAlert.message("Kontakt ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kontakt ist inkompatibel: " + cont.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
         }
     }
 
@@ -286,7 +282,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private void editAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
@@ -298,7 +294,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private void addAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             addressList.add(a);
@@ -310,7 +306,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private void editCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
 
                         Platform.runLater(() -> {
@@ -323,7 +319,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private void addCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
 
                         Platform.runLater(() -> {
@@ -358,18 +354,23 @@ public class ContactUpdateController implements Initializable, FxController, Con
     /**
      * Get the Contact back
      */
-    private void getContact() {
-        contact.setTitle(titleTextField.getText());
-        contact.setFirstName(firstNameTextField.getText());
-        contact.setLastName(lastNameTextField.getText());
+    private Contact getContact() {
+        Contact c = new Contact();
+        c.setTitle(titleTextField.getText());
+        c.setFirstName(firstNameTextField.getText());
+        c.setLastName(lastNameTextField.getText());
 
         if ( genderBox.getSelectionModel().getSelectedItem() != null ) {
             Sex selectedItem = genderBox.getSelectionModel().getSelectedItem();
-            contact.setSex(selectedItem);
+            c.setSex(selectedItem);
+        }else{
+            c.setSex(Sex.MALE);
         }
 
-        contact.getAddresses().addAll(addressList);
-        contact.getCommunications().addAll(communicationsList);
+        c.getAddresses().addAll(addressList);
+        c.getCommunications().addAll(communicationsList);
+        
+        return c;
     }
 
 }
