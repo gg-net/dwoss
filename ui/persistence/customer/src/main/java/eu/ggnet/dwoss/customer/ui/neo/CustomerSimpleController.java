@@ -22,13 +22,10 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-
-import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -173,15 +170,15 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @FXML
-    private void saveAndCloseButtonHandling(ActionEvent event) {
+    private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void saveAndEnhanceUIButtonHandling(ActionEvent event) {
+    private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
-        
+
         //convert the SimpleCustomer to a Customer
         Customer c = new Customer();
 
@@ -213,14 +210,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             comm.setType(Type.MOBILE);
             comm.setIdentifier(simpleCustomer.getMobilePhone());
         }
-        
+
         //check if the Communication is valid with the right pattern
-        if(comm.getViolationMessages() != null){
+        if ( comm.getViolationMessages() != null ) {
             cont.add(comm);
-        }else{
+        } else {
             UiAlert.message("Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
         }
-        
 
         if ( bussines ) {
             //Either a Contact or a Company are set.
@@ -251,12 +247,12 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @FXML
-    private void cancelButtonHandling(ActionEvent event) {
+    private void cancelButtonHandling() {
         Ui.closeWindowOf(kid);
     }
 
     @FXML
-    private void changeUI(ActionEvent event) {
+    private void changeUI() {
         bussines ^= true; //tournaround of the boolean
 
         simpleCustomer = getSimpleCustomer();
@@ -305,8 +301,16 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         commentTextArea.setText(simpleCustomer.getComment());
 
         //select the choicebox
-        genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
-        sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
+        if ( simpleCustomer.getSex() != null ) {
+            genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
+        } else {
+            genderChoiseBox.getSelectionModel().selectFirst();
+        }
+        if ( simpleCustomer.getSource() != null ) {
+            sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
+        } else {
+            sourceChoiseBox.getSelectionModel().selectFirst();
+        }
 
     }
 

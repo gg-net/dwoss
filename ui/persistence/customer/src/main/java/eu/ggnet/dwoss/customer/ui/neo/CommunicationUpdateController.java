@@ -21,7 +21,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -64,7 +63,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     /**
      * Close the Editor window and discard all changes.
      */
-    private void handleCloseButtonAction(ActionEvent event) {
+    private void handleCloseButtonAction() {
         Ui.closeWindowOf(identifer);
     }
 
@@ -73,7 +72,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
      * Close the Editor window and discard all changes.
      * <p>
      */
-    private void handleSaveButtonAction(ActionEvent event) {
+    private void handleSaveButtonAction() {
         warning.setVisible(false);
 
         if ( !StringUtils.isBlank(identifer.getText()) ) {
@@ -138,7 +137,11 @@ public class CommunicationUpdateController implements Initializable, FxControlle
      */
     private void setCommunication(Communication com) {
         identifer.setText(com.getIdentifier());
-        commtypbox.getSelectionModel().select(com.getType());
+        if ( com.getType() != null ) {
+            commtypbox.getSelectionModel().select(com.getType());
+        } else {
+            commtypbox.getSelectionModel().selectFirst();
+        }
     }
 
     /**

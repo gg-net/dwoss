@@ -31,7 +31,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -40,8 +39,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import org.apache.commons.lang3.StringUtils;
+import javafx.util.converter.IntegerStringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
@@ -113,23 +111,23 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private Button saveButton;
 
     @FXML
-    private void saveAndCloseButtonHandling(ActionEvent event) {
+    private void saveAndCloseButtonHandling() {
         company = getCompany();
         Ui.closeWindowOf(taxIdTextField);
     }
 
     @FXML
-    private void saveButtonHandling(ActionEvent event) {
+    private void saveButtonHandling() {
         company = getCompany();
     }
 
     @FXML
-    private void cancelButtonHandling(ActionEvent event) {
+    private void cancelButtonHandling() {
         Ui.closeWindowOf(taxIdTextField);
     }
 
     @FXML
-    private void handleEditAddressButton(ActionEvent event) {
+    private void handleEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             editAddress(selectedItem);
@@ -137,7 +135,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddAddressButton(ActionEvent event) {
+    private void handleAddAddressButton() {
         Address a = new Address();
         a.setCity("");
         a.setStreet("");
@@ -147,7 +145,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleDelAddressButton(ActionEvent event) {
+    private void handleDelAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             addressList.remove(selectedItem);
@@ -155,7 +153,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleEditComButton(ActionEvent event) {
+    private void handleEditComButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             editCommunication(selectedItem);
@@ -163,14 +161,14 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddComButton(ActionEvent event) {
+    private void handleAddComButton() {
         Communication c = new Communication();
         c.setIdentifier("");
         addCommunication(c);
     }
 
     @FXML
-    private void handleDelComButton(ActionEvent event) {
+    private void handleDelComButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             communicationsList.remove(selectedItem);
@@ -178,7 +176,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleEditContactButton(ActionEvent event) {
+    private void handleEditContactButton() {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             editContact(selectedItem);
@@ -186,14 +184,14 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddContactButton(ActionEvent event) {
+    private void handleAddContactButton() {
         Contact c = new Contact();
         c.setLastName("");
         addContact(c);
     }
 
     @FXML
-    private void handleDelContactButton(ActionEvent event) {
+    private void handleDelContactButton() {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             contactsList.remove(selectedItem);
@@ -209,7 +207,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         //button behavior
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
@@ -251,6 +249,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
+                           
                         Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
 
                         anschriftbox.getChildren().addAll(street, postBox, country);
@@ -346,13 +345,17 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         });
 
         // force the field to be numeric only
-        ledgerTextField.textFormatterProperty().set(new TextFormatter<>(changeed -> {
-            if ( decimalPattern.matcher(changeed.getControlNewText()).matches() ) {
-                return changeed;
-            } else {
-                return null;
-            }
-        }));
+        ledgerTextField.textFormatterProperty().set(
+                new TextFormatter<>(new IntegerStringConverter(), 0,
+                        change -> {
+                            String newText = change.getControlNewText();
+                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
+                                return change;
+                            } else {
+                                return null;
+                            }
+                        })
+        );
 
     }
 
@@ -458,7 +461,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         //fill the listViews
         addressListView.setItems(addressList);
         addressListView.getSelectionModel().selectFirst();
-        
+
         communicationTableView.setItems(communicationsList);
         communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
         communicationTableView.getSelectionModel().selectFirst();
