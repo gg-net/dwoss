@@ -108,7 +108,7 @@ public class AddressLabel {
      */
     // Will be removed, as an entiy addresslabel can not be empty.
     public boolean isEmpty() {
-        return company != null && contact != null;
+        return company == null && contact == null && address == null;
     }
 
     /**

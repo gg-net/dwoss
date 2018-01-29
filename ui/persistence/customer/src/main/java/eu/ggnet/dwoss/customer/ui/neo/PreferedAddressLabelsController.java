@@ -31,6 +31,9 @@ import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.AddressListCell;
+import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.CompanyListCell;
+import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.ContactListCell;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
@@ -266,44 +269,44 @@ class InvoiceAddressLabelWithNullableShippingAddressLabel {
         return "InvoiceAddressLabelWithNullableShippingAddressLabel{" + "shippingLabel=" + shippingLabel + ", invoiceLabel=" + invoiceLabel + '}';
     }
 
-}
+    public static class CompanyListCell extends ListCell<Company> {
 
-class CompanyListCell extends ListCell<Company> {
-
-    @Override
-    public void updateItem(Company item, boolean empty) {
-        super.updateItem(item, empty);
-        if ( empty ) {
-            setText(null);
-        } else {
-            setText(item.getName());
+        @Override
+        public void updateItem(Company item, boolean empty) {
+            super.updateItem(item, empty);
+            if ( empty ) {
+                setText(null);
+            } else {
+                setText(item.getName());
+            }
         }
     }
-}
 
-class ContactListCell extends ListCell<Contact> {
+    public static class ContactListCell extends ListCell<Contact> {
 
-    @Override
-    public void updateItem(Contact item, boolean empty) {
-        super.updateItem(item, empty);
-        if ( empty ) {
-            setText(null);
-        } else {
-            setText(((item.getTitle() == null) ? "" : item.getTitle())
-                    + " " + item.getFirstName() + " " + item.getLastName());
+        @Override
+        public void updateItem(Contact item, boolean empty) {
+            super.updateItem(item, empty);
+            if ( empty ) {
+                setText(null);
+            } else {
+                setText(((item.getTitle() == null) ? "" : item.getTitle())
+                        + " " + item.getFirstName() + " " + item.getLastName());
+            }
         }
     }
-}
 
-class AddressListCell extends ListCell<Address> {
+    public static class AddressListCell extends ListCell<Address> {
 
-    @Override
-    public void updateItem(Address item, boolean empty) {
-        super.updateItem(item, empty);
-        if ( empty ) {
-            setText(null);
-        } else {
-            setText(item.getStreet() + " " + item.getZipCode() + " " + item.getCity());
+        @Override
+        public void updateItem(Address item, boolean empty) {
+            super.updateItem(item, empty);
+            if ( empty ) {
+                setText(null);
+            } else {
+                setText(item.getStreet() + " " + item.getZipCode() + " " + item.getCity());
+            }
         }
     }
+
 }
