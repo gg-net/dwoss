@@ -22,6 +22,7 @@ import java.awt.Window;
 import javafx.scene.Parent;
 import javafx.stage.Modality;
 
+import eu.ggnet.saft.api.ui.UiParent;
 import eu.ggnet.saft.core.ui.SwingCore;
 
 /**
@@ -145,6 +146,18 @@ public class PreBuilder {
     public PreBuilder parent(Parent javaFxParent) {
         this.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
         return this;
+    }
+
+    /**
+     * Represents the parent of the ui element, optional.
+     *
+     * @param uiParent the parent
+     * @return this as fluent usage
+     */
+    public PreBuilder parent(UiParent uiParent) {
+        if ( uiParent == null ) return this;
+        if ( uiParent.getSwingParent() != null ) return parent(uiParent.getSwingParent());
+        return parent(uiParent.getJavafxParent());
     }
 
     /**

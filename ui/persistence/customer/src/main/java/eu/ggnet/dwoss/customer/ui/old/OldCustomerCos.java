@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ui.old;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import java.awt.*;
+import java.awt.Dialog;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
@@ -27,11 +25,13 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
-
-import eu.ggnet.dwoss.event.AddressChange;
-
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.util.CloseType;
+import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.api.ui.UiParent;
+import eu.ggnet.saft.core.ui.SwingCore;
 
 import static eu.ggnet.saft.Client.lookup;
 
@@ -43,13 +43,14 @@ import static eu.ggnet.saft.Client.lookup;
 public class OldCustomerCos implements CustomerCos {
 
     @Override
-    public long createCustomer() {
+    public long createCustomer(UiParent parent) {
+
         CustomerCreateWithSearchView view = new CustomerCreateWithSearchView();
         CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
         view.setController(controller);
         controller.setView(view);
-        // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
+        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::getSwingParent).orElse(null)).orElse(SwingCore.mainFrame()),
+                Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
         dialog.setVisible(true);
         if ( dialog.isOk() ) {
             return lookup(OldCustomerAgent.class).store(view.getCustomer()).getId();
@@ -58,12 +59,12 @@ public class OldCustomerCos implements CustomerCos {
     }
 
     @Override
-    public boolean updateCustomer(long customerId) {
+    public boolean updateCustomer(UiParent parent, long customerId) {
         OldCustomer customer = lookup(OldCustomerAgent.class).findById(customerId);
         CustomerEditView ec = new CustomerEditView();
         ec.setCustomer(customer);
         // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(null, Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
+        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::getSwingParent).orElse(null)).orElse(SwingCore.mainFrame()), Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
         dialog.setVisible(true);
 
         boolean changed = false;

@@ -41,8 +41,7 @@ import eu.ggnet.dwoss.search.op.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.Selector;
 import eu.ggnet.saft.core.ui.FxSaft;
 
@@ -57,6 +56,8 @@ import static javafx.concurrent.Worker.State.READY;
  * @author oliver.guenther
  */
 @Title("Suche")
+@Once
+@Frame
 public class SearchCask extends BorderPane implements ClosedListener {
 
     private final Service<List<ShortSearchResult>> searchService;
@@ -147,8 +148,10 @@ public class SearchCask extends BorderPane implements ClosedListener {
         resultListView.setOnMouseClicked((MouseEvent click) -> {
             if ( click.getClickCount() == 2 ) {
                 ShortSearchResult selectedItem = resultListView.getSelectionModel().getSelectedItem();
-                Ui.build(SearchCask.this).title(selectedItem.getKey().toString()).fx()
-                        .show(() -> searcher.details(selectedItem.getKey()), () -> new HtmlPane());
+                Ui.exec(() -> {
+                    Ui.build(SearchCask.this).title(selectedItem.getKey().toString()).fx()
+                            .show(() -> searcher.details(selectedItem.getKey()), () -> new HtmlPane());
+                });
             }
         });
 

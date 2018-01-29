@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristicFactory;
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristic;
-import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -50,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
@@ -80,27 +77,6 @@ public class RedTapeView extends JPanel implements ClosedListener {
 
     private Selector<Position> selector;
 
-    /**
-     * Returns a single Instance of this view, initialising and showing it.
-     */
-//    public static void showSingleInstance() {
-//        if ( instance == null ) {
-//            instance = new RedTapeView();
-//            RedTapeModel model = new RedTapeModel();
-//            RedTapeController controller = new RedTapeController();
-//            instance.setController(controller);
-//            instance.setModel(model);
-//            controller.setModel(model);
-//            controller.setView(instance);
-//            instance.setSize(1150, 900);
-//            instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-//            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
-//            instance.setVisible(true);
-//        } else {
-//            instance.toFront();
-//            if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
-//        }
-//    }
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -258,12 +234,14 @@ public class RedTapeView extends JPanel implements ClosedListener {
                             customer.getShippingCondition(),
                             customer.getPaymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
-                    Ui.build().parent(jLabel1).title("StageInfo").fx()
-                            .show(() -> {
-                                return "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
-                                        + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
-                                        + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>";
-                            }, () -> new HtmlPane());
+                    Ui.exec(() -> {
+                        Ui.build().parent(jLabel1).title("StageInfo").fx()
+                                .show(() -> {
+                                    return "<html>" + (sc.isDispatch() ? "DISPATCH - " : "PICKUP - ") + "<b>" + sc.getType() + "</b><br />"
+                                            + "PaymentMethod - " + sc.getPaymentMethod() + "<br />Directive - " + sc.getDirective() + (sc.getConditions().isEmpty() ? "" : "<br />Conditions:<br />" + sc.getConditions())
+                                            + (sc.getCustomerFlags().isEmpty() ? "" : "<br />Flags:<br />" + sc.getCustomerFlags()) + "<br /></html>";
+                                }, () -> new HtmlPane());
+                    });
                 }
             }
         });

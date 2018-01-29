@@ -65,7 +65,7 @@ public class RunClientFx extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        LoggerFactory.getLogger(RunClientFx.class).info("JavaFx start");
+        LoggerFactory.getLogger(RunClientFx.class).info("JavaFx.start()");
         System.out.println("JavaFx start");
 
         if ( error != null ) {
@@ -120,7 +120,7 @@ public class RunClientFx extends Application {
                 protected void close() {
                     System.out.println("Calling Close");
                     Platform.exit();
-                    System.exit(0); // Again, not perfect, but otherwise the application dosen't close and I don't know why.
+                    System.exit(0); // Again, not perfect, but otherwise the application dosen't close and I don't know why yet.
                 }
             };
             swingClient.init();
@@ -130,6 +130,7 @@ public class RunClientFx extends Application {
     @Override
     public void stop() throws Exception {
         System.out.println("JavaFx stop");
+        LoggerFactory.getLogger(RunClientFx.class).info("JavaFx.stop()");
     }
 
     /**

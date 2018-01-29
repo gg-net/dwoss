@@ -16,19 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
-import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
-import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -48,13 +35,18 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
+import eu.ggnet.dwoss.redtapext.ee.*;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
+import eu.ggnet.dwoss.redtapext.ee.state.*;
+import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
+import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
@@ -62,9 +54,11 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.api.ui.UiParent;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Getter;
@@ -311,7 +305,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        long customerId = lookup(CustomerCos.class).createCustomer();
+        long customerId = lookup(CustomerCos.class).createCustomer(new UiParent(view));
         if ( customerId == 0 ) {
             UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
@@ -328,7 +322,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        if ( !lookup(CustomerCos.class).updateCustomer(recentCustomerId) ) return;
+        if ( !lookup(CustomerCos.class).updateCustomer(new UiParent(view), recentCustomerId) ) return;
         //reset search to avoid wrong customer selections
         model.setSearch(String.valueOf(recentCustomerId));
         view.searchResultList.setSelectedIndex(0);

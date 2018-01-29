@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,15 @@
  */
 package eu.ggnet.dwoss.customer.ui.old;
 
-import java.beans.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
@@ -35,6 +39,14 @@ import static eu.ggnet.saft.Client.lookup;
  */
 public class CustomerCreateWithSearchController {
 
+    public static CustomerCreateWithSearchController build() {
+        CustomerCreateWithSearchView view = new CustomerCreateWithSearchView();
+        CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
+        view.setController(controller);
+        controller.setView(view);
+        return controller;
+    }
+
     private final static Logger L = LoggerFactory.getLogger(CustomerCreateWithSearchController.class);
 
     private OldCustomer customer;
@@ -45,7 +57,7 @@ public class CustomerCreateWithSearchController {
 
     private ExecutorService es = Executors.newSingleThreadExecutor();
 
-    private PropertyChangeListener customerListener = new PropertyChangeListener() {
+    private final PropertyChangeListener customerListener = new PropertyChangeListener() {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             switch (evt.getPropertyName()) {

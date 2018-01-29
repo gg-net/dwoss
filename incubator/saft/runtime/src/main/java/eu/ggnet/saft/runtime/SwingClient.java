@@ -16,13 +16,6 @@
  */
 package eu.ggnet.saft.runtime;
 
-import eu.ggnet.saft.core.ui.UserPreferences;
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.saft.core.cap.ToolbarComponent;
-import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.core.cap.MainComponent;
-import eu.ggnet.saft.core.auth.AutoLoginLogout;
-
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.*;
@@ -38,12 +31,14 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.Ops;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.core.auth.*;
 import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.auth.UserChangeListener;
-import eu.ggnet.saft.Ops;
+import eu.ggnet.saft.core.cap.*;
+import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.Workspace;
 
 import static eu.ggnet.saft.Client.lookup;
 
@@ -248,7 +243,7 @@ public class SwingClient {
     public void show(final String postTitle, final Application.Parameters parameters) {
         if ( parameters != null && parameters.getNamed().containsKey("autologout") ) {
             autologout = Integer.parseInt(parameters.getNamed().get("autologout"));
-            System.out.println("Aktiviere Autologout mit " + autologout + "s Timeout.");
+            L.info("Aktiviere Autologout mit " + autologout + "s Timeout.");
         }
         run(postTitle);
     }

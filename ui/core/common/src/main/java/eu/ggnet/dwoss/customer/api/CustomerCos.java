@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
+import eu.ggnet.saft.api.ui.UiParent;
+
 /**
  * This interface shall provide the possibility to create or modify Customers.
  * <p/>
@@ -26,15 +28,17 @@ public interface CustomerCos {
     /**
      * Method for Customer creation.
      * <p/>
+     * @param parent optional parent
      * @return id of a new, persisted customer or zero if canceled
      */
-    long createCustomer();
+    long createCustomer(UiParent parent);
 
     /**
      * Method for Customer modification.
      * <p/>
+     * @param parent     optional parent
      * @param customerId the SopoCustomer to be modified
      * @return weither the customer has changed
      */
-    boolean updateCustomer(long customerId);
+    boolean updateCustomer(UiParent parent, long customerId);
 }

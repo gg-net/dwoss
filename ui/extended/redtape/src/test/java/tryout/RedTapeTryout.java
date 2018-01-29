@@ -1,10 +1,5 @@
 package tryout;
 
-import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-
 import java.util.Arrays;
 
 import javax.swing.JLabel;
@@ -18,9 +13,11 @@ import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
@@ -29,14 +26,13 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import tryout.stub.*;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -94,8 +90,8 @@ public class RedTapeTryout {
         Client.addSampleStub(MandatorSupporter.class, mandatorSupporterMock);
 
         CustomerCos ccos = mock(CustomerCos.class);
-        when(ccos.createCustomer()).thenReturn(0L);
-        when(ccos.updateCustomer(anyLong())).thenReturn(true);
+        when(ccos.createCustomer(any())).thenReturn(0L);
+        when(ccos.updateCustomer(any(), anyLong())).thenReturn(true);
         Client.addSampleStub(CustomerCos.class, ccos);
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
