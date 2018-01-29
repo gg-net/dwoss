@@ -35,7 +35,7 @@
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </ListView>
-                  <VBox fx:id="invoiceAddressVBox" prefHeight="377.0" prefWidth="437.0">
+                  <VBox prefHeight="377.0" prefWidth="437.0">
                      <children>
                         <Button fx:id="invoiceAddressClearButton" maxWidth="100.0" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" text="Clear" VBox.vgrow="ALWAYS">
                            <VBox.margin>
@@ -70,7 +70,7 @@
                         <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </ListView>
-                        <VBox fx:id="shippingAddressVBox" prefHeight="377.0" prefWidth="437.0">
+                        <VBox prefHeight="377.0" prefWidth="437.0">
                             <children>
                                 <Button fx:id="shippingAddressClearButton" maxWidth="100.0" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" text="Clear" VBox.vgrow="NEVER">
                            <VBox.margin>

@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -28,15 +23,13 @@ import java.util.function.Consumer;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.api.ui.FxController;
@@ -70,12 +63,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     private ListView<Address> shippingAddressAddressListView;
 
     @FXML
-    private VBox shippingAddressVBox;
-
-    @FXML
-    private VBox invoiceAddressVBox;
-
-    @FXML
     private Button invoiceAddressClearButton;
 
     @FXML
@@ -93,7 +80,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @FXML
     private WebView shippingAddressWebView;
 
-    private InvoiceAddressLabelWithNullableShippingAddressLabel addressLabel;
+    private InvoiceAddressLabelWithNullableShippingAddressLabel resultAdressLabel;
 
     private Customer customer;
 
@@ -134,33 +121,47 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressContactListView.setCellFactory(cb -> new ContactListCell());
         shippingAddressAddressListView.setCellFactory(cb -> new AddressListCell());
 
-        this.invoiceAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        InvalidationListener invoiceWebViewListener = new InvalidationListener() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-                if ( newValue.intValue() >= 0 ) {
+            public void invalidated(Observable observable) {
+                if ( !invoiceAddressAddressListView.getSelectionModel().isEmpty() ) {
+                    AddressLabel addressLabel = new AddressLabel(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem(),
+                            invoiceAddressContactListView.getSelectionModel().getSelectedItem(),
+                            invoiceAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.INVOICE);
                     invoiceAddressWebView.getEngine().loadContent(
-                            invoiceAddressAddressListView.getSelectionModel().getSelectedItem().toHtml()
-                    );
+                            addressLabel.toHtml());
 
-                }
+                } else
+                    invoiceAddressWebView.getEngine().loadContent("");
             }
-        });
+        };
 
-        this.shippingAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+        this.invoiceAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
+        this.invoiceAddressCompanyListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
+        this.invoiceAddressContactListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
+
+        InvalidationListener shippingWebViewListener = new InvalidationListener() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-                if ( newValue.intValue() >= 0 )
+            public void invalidated(Observable observable) {
+                if ( !shippingAddressAddressListView.getSelectionModel().isEmpty() ) {
+                    AddressLabel addressLabel = new AddressLabel(shippingAddressCompanyListView.getSelectionModel().getSelectedItem(),
+                            shippingAddressContactListView.getSelectionModel().getSelectedItem(),
+                            shippingAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.SHIPPING);
                     shippingAddressWebView.getEngine().loadContent(
-                            shippingAddressAddressListView.getSelectionModel().getSelectedItem().toHtml());
+                            addressLabel.toHtml());
 
+                } else
+                    shippingAddressWebView.getEngine().loadContent("");
             }
-        });
+        };
 
+        this.shippingAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
+        this.shippingAddressCompanyListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
+        this.shippingAddressContactListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
     }
 
     @Override
+
     public void accept(Customer inputCustomer) {
 
         this.customer = inputCustomer;
@@ -188,7 +189,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @Override
     public InvoiceAddressLabelWithNullableShippingAddressLabel getResult() {
 
-        return this.addressLabel;
+        return this.resultAdressLabel;
 
     }
 
@@ -219,9 +220,9 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         else
             shippingLabel = new AddressLabel(shippingLabelCompany, invoiceLabelContact, shippingAddress, SHIPPING);
 
-        this.addressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
+        this.resultAdressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
 
-        System.out.println(this.addressLabel);
+        System.out.println(this.resultAdressLabel);
     }
 
     @FXML

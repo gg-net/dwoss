@@ -34,6 +34,7 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
@@ -85,6 +86,29 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        saveButton.setDisable(true);
+// TODO der listener wird nie gecalled
+//        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
+//
+//            @Override
+//            public void invalidated(Observable observable) {
+//                System.out.println(observable);
+//                if ( shippingConditionComboBox.getSelectionModel().isEmpty() || paymentConditionComboBox.getSelectionModel().isEmpty()
+//                        || paymentMethodComboBox.getSelectionModel().isEmpty()
+//                        || allowedSalesChannelCheckBoxList.stream().noneMatch(checkBox -> checkBox.selectedProperty().get()) )
+//                    saveButton.setDisable(true);
+//
+//                else
+//                    saveButton.setDisable(false);
+//
+//            }
+//
+//        };
+//        shippingConditionComboBox.selectionModelProperty().addListener(saveButtonDisablingListener);
+//        paymentConditionComboBox.selectionModelProperty().addListener(saveButtonDisablingListener);
+//        paymentMethodComboBox.selectionModelProperty().addListener(saveButtonDisablingListener);
+//        allowedSalesChannelCheckBoxList.forEach(e -> e.selectedProperty().addListener(saveButtonDisablingListener));
+
         shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
 
@@ -92,6 +116,11 @@ public class MandatorMetaDataController implements Initializable, FxController, 
             @Override
             public ListCell<PaymentCondition> call(ListView<PaymentCondition> l) {
                 return new ListCell<PaymentCondition>() {
+                    @Override
+                    public String toString() {
+                        return this.getText();
+                    }
+
                     @Override
                     protected void updateItem(PaymentCondition item, boolean empty) {
                         super.updateItem(item, empty);
@@ -167,7 +196,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
-
+        Ui.closeWindowOf(saveButton);
     }
 
     @Override
