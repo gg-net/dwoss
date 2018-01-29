@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -99,6 +100,12 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private Button delComButton;
 
     @FXML
+    private Button saveAndCloseButton;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
         if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
@@ -109,7 +116,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         Ui.closeWindowOf(lastNameTextField);
     }
 
-  
     @FXML
     private void cancelButtonHandling(ActionEvent event) {
         Ui.closeWindowOf(lastNameTextField);
@@ -125,7 +131,12 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleAddAddressButton(ActionEvent event) {
-        addAddress(new Address());
+        Address a = new Address();
+        a.setCity("");
+        a.setStreet("");
+        a.setZipCode("");
+
+        addAddress(a);
     }
 
     @FXML
@@ -146,7 +157,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleAddComButton(ActionEvent event) {
-        addCommunication(new Communication());
+        Communication c = new Communication();
+        c.setIdentifier("");
+        addCommunication(c);
     }
 
     @FXML
@@ -165,8 +178,21 @@ public class ContactUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        //button behavior        
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+
+        saveAndCloseButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
+
+        saveButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
 
         //fill the UI with default values
         genderBox.getItems().addAll(Contact.Sex.values());
@@ -363,14 +389,18 @@ public class ContactUpdateController implements Initializable, FxController, Con
         if ( genderBox.getSelectionModel().getSelectedItem() != null ) {
             Sex selectedItem = genderBox.getSelectionModel().getSelectedItem();
             c.setSex(selectedItem);
-        }else{
+        } else {
             c.setSex(Sex.MALE);
         }
 
         c.getAddresses().addAll(addressList);
         c.getCommunications().addAll(communicationsList);
-        
+
         return c;
+    }
+
+    @FXML
+    private void saveButtonHandling(ActionEvent event) {
     }
 
 }

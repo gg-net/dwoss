@@ -96,9 +96,9 @@
    <bottom>
       <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
          <children>
-            <Button mnemonicParsing="false" onAction="#saveAndCloseButtonHandling" text="Speichern und Schließen" />
-            <Button mnemonicParsing="false" onAction="#saveButtonHandling" text="Speichern" wrapText="true" />
-            <Button minWidth="75.0" mnemonicParsing="false" onAction="#cancelButtonHandling" text="Abbrechen" />
+            <Button fx:id="saveAndCloseButton" mnemonicParsing="false" onAction="#saveAndCloseButtonHandling" text="Speichern und Schließen" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonHandling" text="Speichern" wrapText="true" />
+            <Button fx:id="cancelButton" minWidth="75.0" mnemonicParsing="false" onAction="#cancelButtonHandling" text="Abbrechen" />
          </children>
          <padding>
             <Insets left="5.0" top="5.0" />

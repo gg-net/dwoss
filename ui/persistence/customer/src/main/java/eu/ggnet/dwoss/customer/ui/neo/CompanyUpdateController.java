@@ -195,7 +195,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleAddContactButton(ActionEvent event) {
-        addContact(new Contact());
+        Contact c = new Contact();
+        c.setLastName("");
+        addContact(c);
     }
 
     @FXML
@@ -215,6 +217,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        //button behavior
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));

@@ -38,6 +38,7 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -410,7 +411,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
             });
             addButton.setOnAction((ActionEvent e) -> {
-                addCompany(new Company());
+                Company c = new Company();
+                c.setName("");
+                Address a = new Address();
+                a.setCity("");
+                a.setStreet("");
+                a.setZipCode("");
+                c.add(a);
+
+                addCompany(c);
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
@@ -418,6 +427,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                     companyList.remove(selectedItem);
                 }
             });
+            delButton.disableProperty().bind(companyListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         } else {
             editButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
@@ -426,7 +436,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 }
             });
             addButton.setOnAction((ActionEvent e) -> {
-                addContact(new Contact());
+                Contact c = new Contact();
+                c.setLastName("");
+                addContact(c);
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
@@ -434,6 +446,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                     contactList.remove(selectedItem);
                 }
             });
+            delButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         }
 
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);
