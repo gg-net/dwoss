@@ -98,7 +98,6 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         }
 
         communication = getCommunication();
-
         Ui.closeWindowOf(identifer);
     }
 

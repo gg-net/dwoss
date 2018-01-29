@@ -17,9 +17,11 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,14 +30,17 @@ import javafx.scene.layout.HBox;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
+
+import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
  * Controller class for the editor view of a SimpleCustomer. Allows the user to
@@ -105,6 +110,15 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private TextField ustIdTextField = new TextField();
 
+    @FXML
+    private Button saveAndCloseButton;
+
+    @FXML
+    private Button saveAndEnhanceUIButton;
+
+    @FXML
+    private Button cancelButton;
+
     public CustomerSimpleController() {
     }
 
@@ -122,6 +136,19 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //fill the choiseBoxs
         genderChoiseBox.getItems().addAll(Sex.values());
         sourceChoiseBox.getItems().addAll(Source.values());
+
+        saveAndCloseButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
+
+        saveAndEnhanceUIButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
+
     }
 
     @Override
@@ -132,7 +159,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             }
             setSimpleCustomer(c.toSimple().get());
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" +  c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
         }
 
     }
@@ -147,26 +174,77 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
-
         simpleCustomer = getSimpleCustomer();
         Ui.closeWindowOf(kid);
     }
 
     @FXML
     private void saveAndEnhanceUIButtonHandling(ActionEvent event) {
-        if ( StringUtils.isBlank(lastNameTextField.getText()) ) {
-            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         simpleCustomer = getSimpleCustomer();
+        
+        //convert the SimpleCustomer to a Customer
+        Customer c = new Customer();
 
-        //TODO convert the simpleCustomer to a Customer
+        Contact cont = new Contact();
+        cont.setFirstName(simpleCustomer.getFirstName());
+        cont.setLastName(simpleCustomer.getLastName());
+        cont.setSex(simpleCustomer.getSex());
+        cont.setTitle(simpleCustomer.getTitle());
+
+        //Contact with only one Address
+        Address a = new Address();
+        a.setCity(simpleCustomer.getCity());
+        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
+        a.setStreet(simpleCustomer.getStreet());
+        a.setZipCode(simpleCustomer.getZipCode());
+        cont.add(a);
+
+        //one Communication form eatch type email, phone, mobile allowed
+        Communication comm = new Communication();
+        if ( !emailTextField.getText().trim().isEmpty() ) {
+            comm.setType(Type.EMAIL);
+            comm.setIdentifier(simpleCustomer.getEmail());
+        }
+        if ( !landLineTextField.getText().trim().isEmpty() ) {
+            comm.setType(Type.PHONE);
+            comm.setIdentifier(simpleCustomer.getLandlinePhone());
+        }
+        if ( !mobileTextField.getText().trim().isEmpty() ) {
+            comm.setType(Type.MOBILE);
+            comm.setIdentifier(simpleCustomer.getMobilePhone());
+        }
+        
+        //check if the Communication is valid with the right pattern
+        if(comm.getViolationMessages() != null){
+            cont.add(comm);
+        }else{
+            UiAlert.message("Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
+        }
+        
+
+        if ( bussines ) {
+            //Either a Contact or a Company are set.
+            //Contains only one Contact or one Company.
+            c.getContacts().clear();
+
+            Company comp = new Company();
+            comp.setName(simpleCustomer.getCompanyName());
+            comp.setTaxId(simpleCustomer.getTaxId());
+
+            //The Address of the Company Contact has to match the Company Address
+            comp.add(a);
+            comp.add(cont);
+
+            c.add(comp);
+
+        } else {
+            //Contains only one Contact or one Company.
+            c.getCompanies().clear();
+            c.add(cont);
+        }
+
         Ui.exec(() -> {
-            //     Ui.build().modality(WINDOW_MODAL).parents(kid).fxml().eval(() -> company, CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> c, CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);
@@ -247,8 +325,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setEmail(emailTextField.getText());
         sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
         sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
+
         sc.setComment(commentTextArea.getText());
         sc.setCompanyName(companyNameTextFiled.getText());
+
         sc.setTaxId(ustIdTextField.getText());
 
         return sc;
