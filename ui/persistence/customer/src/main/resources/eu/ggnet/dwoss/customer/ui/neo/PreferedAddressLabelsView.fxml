@@ -5,10 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
 
@@ -16,7 +14,10 @@
     <center>
         <VBox prefHeight="572.0" prefWidth="969.0">
             <children>
-                <Label prefHeight="39.0" prefWidth="144.0" style="-fx-font-weight: bold;" text="Rechnungsadresse" underline="true" />
+                <Label prefHeight="40.0" prefWidth="145.0" text="Rechnungsadresse">
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin></Label>
             <HBox>
                <children>
                         <ListView fx:id="invoiceAddressCompanyListView" HBox.hgrow="ALWAYS">
@@ -29,37 +30,40 @@
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                   </ListView>
-                        <ListView fx:id="invoiceAddressAddressListView" HBox.hgrow="ALWAYS">
+                        <ListView fx:id="invoiceAddressAddressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
                   </ListView>
                   <VBox fx:id="invoiceAddressVBox" prefHeight="377.0" prefWidth="437.0">
                      <children>
-                        <Button fx:id="invoiceAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="ALWAYS" />
-                        <WebView fx:id="invoiceAddressWebView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="invoiceAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin></Button>
+                        <WebView fx:id="invoiceAddressWebView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin></WebView>
                      </children>
                   </VBox>
                </children>
             </HBox>
-                <Label prefHeight="35.0" prefWidth="137.0" text="Lieferadresse" />
+                <Label prefHeight="40.0" prefWidth="145.0" text="Lieferadresse">
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin></Label>
             <HBox>
                <children>
                         <ListView fx:id="shippingAddressCompanyListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
-                     <padding>
-                        <Insets left="20.0" right="10.0" />
-                     </padding>
                   </ListView>
                         <ListView fx:id="shippingAddressContactListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
-                     <padding>
-                        <Insets left="20.0" right="10.0" />
-                     </padding>
                   </ListView>
                         <ListView fx:id="shippingAddressAddressListView" HBox.hgrow="ALWAYS">
                      <HBox.margin>
@@ -68,33 +72,33 @@
                   </ListView>
                         <VBox fx:id="shippingAddressVBox" prefHeight="377.0" prefWidth="437.0">
                             <children>
-                                <Button fx:id="shippingAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="NEVER" />
-                        <WebView fx:id="shippingAddressWebView" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+                                <Button fx:id="shippingAddressClearButton" maxHeight="35.0" maxWidth="200.0" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" prefHeight="35.0" prefWidth="200.0" text="Clear" VBox.vgrow="NEVER">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin></Button>
+                        <WebView fx:id="shippingAddressWebView" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin></WebView>
                             </children>
                         </VBox>
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </HBox>
             </children>
         </VBox>
     </center>
     <bottom>
-        <GridPane prefHeight="90.0" prefWidth="969.0" BorderPane.alignment="CENTER">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefHeight="29.0" prefWidth="246.0" text="Speichern" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" prefHeight="31.0" prefWidth="252.0" text="Abbrechen" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            </children>
-        </GridPane>
+      <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
+         <children>
+                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" prefHeight="29.0" text="Speichern" />
+                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </FlowPane>
     </bottom>
 </BorderPane>
