@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -49,8 +50,11 @@ import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
+import static javafx.stage.Modality.WINDOW_MODAL;
+
 /**
- * FXML Controller class
+ * Controller class for the editor view of a Company. Allows the user to
+ * change all values of the Company.
  *
  * @author jens.papenhagen
  */
@@ -103,12 +107,18 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private Button delContactButton;
 
     @FXML
+    private Button saveAndCloseButton;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
     private void saveAndCloseButtonHandling(ActionEvent event) {
         if ( StringUtils.isBlank(companyNameTextField.getText()) ) {
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getCompany();
+        company = getCompany();
         Ui.closeWindowOf(taxIdTextField);
     }
 
@@ -118,7 +128,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getCompany();
+        company = getCompany();
     }
 
     @FXML
@@ -136,7 +146,12 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleAddAddressButton(ActionEvent event) {
-        addAddress(new Address());
+        Address a = new Address();
+        a.setCity("");
+        a.setStreet("");
+        a.setZipCode("");
+
+        addAddress(a);
     }
 
     @FXML
@@ -157,7 +172,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleAddComButton(ActionEvent event) {
-        addCommunication(new Communication());
+        Communication c = new Communication();
+        c.setIdentifier("");
+        addCommunication(c);
     }
 
     @FXML
@@ -201,6 +218,23 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+
+        //enable the safe button only on filled TextFields
+        saveButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
+                ).or(
+                        addressListView.getSelectionModel().selectedIndexProperty().lessThan(0)
+                )
+        );
+
+        saveAndCloseButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
+                ).or(
+                        addressListView.getSelectionModel().selectedIndexProperty().lessThan(0)
+                )
+        );
 
         //Address CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
@@ -328,11 +362,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Company comp) {
-        if ( comp != null ) {
-            company = comp;
-            setCompany(company);
+        if ( comp != null || comp.getViolationMessages() != null ) {
+            setCompany(comp);
         } else {
-            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Firma ist inkompatibel: " + comp.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
         }
     }
 
@@ -346,7 +379,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void editAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
@@ -358,7 +391,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void addAddress(Address addresse) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             addressList.add(a);
@@ -370,7 +403,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void editCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
 
                         Platform.runLater(() -> {
@@ -383,7 +416,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void addCommunication(Communication communication) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
 
                         Platform.runLater(() -> {
@@ -396,7 +429,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
@@ -407,7 +440,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactsList.add(a);
@@ -428,10 +461,14 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
         //fill the listViews
         addressListView.setItems(addressList);
+        addressListView.getSelectionModel().selectFirst();
+        
         communicationTableView.setItems(communicationsList);
         communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
+        communicationTableView.getSelectionModel().selectFirst();
 
         contactListView.setItems(contactsList);
+        contactListView.getSelectionModel().selectFirst();
 
         companyNameTextField.setText(comp.getName());
         taxIdTextField.setText(comp.getTaxId());
@@ -441,14 +478,17 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     /**
      * Get the Company back
      */
-    private void getCompany() {
-        company.setName(companyNameTextField.getText());
-        company.setTaxId(taxIdTextField.getText());
-        company.setLedger(Integer.parseInt(ledgerTextField.getText()));
+    private Company getCompany() {
+        Company c = new Company();
+        c.setName(companyNameTextField.getText());
+        c.setTaxId(taxIdTextField.getText());
+        c.setLedger(Integer.parseInt(ledgerTextField.getText()));
 
-        company.getAddresses().addAll(addressList);
-        company.getCommunications().addAll(communicationsList);
-        company.getContacts().addAll(contactsList);
+        c.getAddresses().addAll(addressList);
+        c.getCommunications().addAll(communicationsList);
+        c.getContacts().addAll(contactsList);
+
+        return c;
     }
 
 }

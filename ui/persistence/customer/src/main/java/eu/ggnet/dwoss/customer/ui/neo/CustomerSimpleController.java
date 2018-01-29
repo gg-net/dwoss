@@ -38,7 +38,8 @@ import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
- * FXML Controller for CustomerSimple Editor
+ * Controller class for the editor view of a SimpleCustomer. Allows the user to
+ * change all values of the SimpleCustomer.
  *
  * @author jens.papenhagen
  */
@@ -104,7 +105,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private TextField ustIdTextField = new TextField();
 
-
     public CustomerSimpleController() {
     }
 
@@ -125,15 +125,14 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @Override
-    public void accept(Customer customer) {
-        if ( customer != null || customer.isSimple() ) {
-            if ( customer.isBussines() ) {
+    public void accept(Customer c) {
+        if ( c != null || c.isSimple() ) {
+            if ( c.isBussines() ) {
                 bussines = true;
             }
-            simpleCustomer = customer.toSimple().get();
-            setSimpleCustomer(simpleCustomer);
+            setSimpleCustomer(c.toSimple().get());
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" +  c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
         }
 
     }
@@ -153,7 +152,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             return;
         }
 
-        getSimpleCustomer();
+        simpleCustomer = getSimpleCustomer();
         Ui.closeWindowOf(kid);
     }
 
@@ -163,11 +162,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getSimpleCustomer();
+        simpleCustomer = getSimpleCustomer();
 
         //TODO convert the simpleCustomer to a Customer
         Ui.exec(() -> {
-            //     Ui.build().fxml().eval(() -> company, CustomerEnhanceController.class);
+            //     Ui.build().modality(WINDOW_MODAL).parents(kid).fxml().eval(() -> company, CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);
@@ -182,7 +181,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private void changeUI(ActionEvent event) {
         bussines ^= true; //tournaround of the boolean
 
-        getSimpleCustomer();
+        simpleCustomer = getSimpleCustomer();
         setSimpleCustomer(simpleCustomer);
     }
 
@@ -233,22 +232,26 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     }
 
-    private void getSimpleCustomer() {
-        simpleCustomer.setTitle(titleTextField.getText());
-        simpleCustomer.setFirstName(firstNameTextField.getText());
-        simpleCustomer.setLastName(lastNameTextField.getText());
-        simpleCustomer.setStreet(streetTextField.getText());
-        simpleCustomer.setZipCode(zipcodeTextField.getText());
-        simpleCustomer.setCity(cityTextField.getText());
-        simpleCustomer.setIsoCountry(countryTextField.getText());
-        simpleCustomer.setMobilePhone(mobileTextField.getText());
-        simpleCustomer.setLandlinePhone(landLineTextField.getText());
-        simpleCustomer.setEmail(emailTextField.getText());
-        simpleCustomer.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
-        simpleCustomer.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
-        simpleCustomer.setComment(commentTextArea.getText());
-        simpleCustomer.setCompanyName(companyNameTextFiled.getText());
-        simpleCustomer.setTaxId(ustIdTextField.getText());
+    private SimpleCustomer getSimpleCustomer() {
+        SimpleCustomer sc = new SimpleCustomer();
+
+        sc.setTitle(titleTextField.getText());
+        sc.setFirstName(firstNameTextField.getText());
+        sc.setLastName(lastNameTextField.getText());
+        sc.setStreet(streetTextField.getText());
+        sc.setZipCode(zipcodeTextField.getText());
+        sc.setCity(cityTextField.getText());
+        sc.setIsoCountry(countryTextField.getText());
+        sc.setMobilePhone(mobileTextField.getText());
+        sc.setLandlinePhone(landLineTextField.getText());
+        sc.setEmail(emailTextField.getText());
+        sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
+        sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
+        sc.setComment(commentTextArea.getText());
+        sc.setCompanyName(companyNameTextFiled.getText());
+        sc.setTaxId(ustIdTextField.getText());
+
+        return sc;
     }
 
 }

@@ -50,8 +50,11 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import static javafx.stage.Modality.WINDOW_MODAL;
+
 /**
- * FXML Controller class
+ * Controller class for the editor view of a Customer. Allows the user to
+ * change all values of the Customer.
  *
  * @author jens.papenhagen
  */
@@ -159,7 +162,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             UiAlert.message("Es muss ein Firmen Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
             return;
         }
-        getCustomer();
+        customer = getCustomer();
     }
 
     @FXML
@@ -180,7 +183,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 //        Ui.exec(() -> {
 //            Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetaDataController.class).ifPresent(a -> {
 //                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-//                companyListView.refresh();
+//                
 //            });
 //        });
 
@@ -193,14 +196,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void accept(Customer cust) {
-        if ( cust != null ) {
+        if ( cust != null || cust.getViolationMessage() != null ) {
             if ( cust.isBussines() ) {
                 bussines = true;
             }
-            customer = cust;
-            setCustomer(customer);
+            setCustomer(cust);
         } else {
-            UiAlert.message("Kunde ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kunde ist inkompatibel: " + cust.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
         }
     }
 
@@ -260,38 +262,41 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         buildShowBox();
     }
 
-    public void getCustomer() {
+    public Customer getCustomer() {
+        Customer cust = new Customer();
         if ( bussines ) {
-            customer.getCompanies().clear();
-            companyList.forEach(c -> customer.add(c));
+            cust.getCompanies().clear();
+            companyList.forEach(c -> cust.add(c));
         } else {
-            customer.getContacts().clear();
-            contactList.forEach(c -> customer.add(c));
+            cust.getContacts().clear();
+            contactList.forEach(c -> cust.add(c));
         }
-        customer.setKeyAccounter(keyAccount.getText());
+        cust.setKeyAccounter(keyAccount.getText());
 
-        customer.getFlags().clear();
-        flagsSet.forEach(f -> customer.add(f));
+        cust.getFlags().clear();
+        flagsSet.forEach(f -> cust.add(f));
 
-        customer.setSource(source.getSelectionModel().getSelectedItem());
+        cust.setSource(source.getSelectionModel().getSelectedItem());
 
-        customer.getMandatorMetadata().clear();
-        mandatorMetadata.forEach(m -> customer.add(m));
+        cust.getMandatorMetadata().clear();
+        mandatorMetadata.forEach(m -> cust.add(m));
 
         //tansfer the List of Flags back to Set (remove duplicates) 
         HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
         outputFlagslist.clear();
         outputFlagslist.addAll(tempSet);
         outputFlagslist.forEach((flag) -> {
-            customer.getFlags().add(flag);
+            cust.getFlags().add(flag);
         });
 
         //transfer List back to a Map
         ObservableList<ExternalId> items = addExternalIdsListView.getItems();
-        customer.getAdditionalCustomerIds().clear();
-        customer.getAdditionalCustomerIds().putAll(items.stream().collect(Collectors.toMap(ExternalId::getType, ExternalId::getValue)));
+        cust.getAdditionalCustomerIds().clear();
+        cust.getAdditionalCustomerIds().putAll(items.stream().collect(Collectors.toMap(ExternalId::getType, ExternalId::getValue)));
 
-        customer.setComment(commentTextArea.getText());
+        cust.setComment(commentTextArea.getText());
+
+        return cust;
     }
 
     /**
@@ -382,8 +387,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     /**
      * build the main show box
-     * for bussnis customer with Companies
-     * for consumer customer with Contacts
+     * for bussnis Customer with Companies
+     * for consumer Customer with Contacts
      */
     private void buildShowBox() {
         //build up the Buttons
@@ -490,7 +495,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
@@ -501,7 +506,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactList.add(a);
@@ -512,7 +517,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
@@ -523,7 +528,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build().parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             companyList.add(a);

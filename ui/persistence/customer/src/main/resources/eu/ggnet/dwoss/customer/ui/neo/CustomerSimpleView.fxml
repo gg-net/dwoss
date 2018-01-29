@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="574.0" prefWidth="448.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController">
+<BorderPane minHeight="580.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController">
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -104,12 +105,18 @@
       </VBox>
    </center>
    <bottom>
-      <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="3.0" BorderPane.alignment="BOTTOM_RIGHT">
+      <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
          <children>
             <Button fx:id="saveAndCloseButton" mnemonicParsing="false" onAction="#saveAndCloseButtonHandling" text="Speichern und Schließen" />
             <Button fx:id="saveAndEnhanceUIButton" mnemonicParsing="false" onAction="#saveAndEnhanceUIButtonHandling" text="Speichern und Erweiterter Editor" wrapText="true" />
             <Button fx:id="cancelButton" minWidth="75.0" mnemonicParsing="false" onAction="#cancelButtonHandling" text="Abbrechen" />
          </children>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
       </HBox>
    </bottom>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
 </BorderPane>
