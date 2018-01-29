@@ -37,6 +37,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
@@ -138,9 +139,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelAddressButton() {
-        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            addressList.remove(selectedItem);
+        int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
+        if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
+            addressList.remove(selectedIndex);
+            addressListView.refresh();
         }
     }
 
@@ -161,9 +163,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelComButton() {
-        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            communicationsList.remove(selectedItem);
+         int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
+        if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
+            communicationsList.remove(selectedIndex);
+            communicationTableView.refresh();
         }
     }
 
@@ -192,6 +195,17 @@ public class ContactUpdateController implements Initializable, FxController, Con
         );
 
         //fill the UI with default values
+        genderBox.setConverter(new StringConverter<Sex>() {
+            @Override
+            public Sex fromString(String string) {
+                return null;
+            }
+
+            @Override
+            public String toString(Sex myClassinstance) {
+                return myClassinstance.getSign();
+            }
+        });
         genderBox.getItems().addAll(Contact.Sex.values());
 
         //Address CellFactory

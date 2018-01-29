@@ -57,9 +57,6 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     private Button saveButton;
 
     @FXML
-    private Button closeButton;
-
-    @FXML
     /**
      * Close the Editor window and discard all changes.
      */

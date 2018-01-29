@@ -30,8 +30,6 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-import org.apache.commons.lang3.StringUtils;
-
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -76,14 +74,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
     /**
      * Close the Editor window and save all changes.
      *
-     * @todo
-     * objekte passen mit saft
      */
     private void handleSaveButtonAction(ActionEvent event) {
-        if ( StringUtils.isBlank(street.getText()) ) {
-            UiAlert.message("Es muss ein Strasse gesetzt werden").show(UiAlertBuilder.Type.WARNING);
-            return;
-        }
         address = getAddress();
         Ui.closeWindowOf(zipcode);
     }
@@ -97,8 +89,6 @@ public class AddressUpdateController implements Initializable, FxController, Con
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        //the isoCountry is hardcoded to DE
-        //IDEA Enum for more usefull List: https://en.wikipedia.org/wiki/ISO_3166-1
         List<Locale> countries = new ArrayList<>();
         countries.add(new Locale("de", "DE"));
         countries.add(new Locale("ch", "CH"));
@@ -106,7 +96,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         countrybox.setConverter(new StringConverter<Locale>() {
             @Override
             public Locale fromString(String string) {
-                return new Locale("", string);
+                return null;
             }
 
             @Override

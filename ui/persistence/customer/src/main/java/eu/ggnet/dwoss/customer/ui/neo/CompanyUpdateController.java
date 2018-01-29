@@ -146,9 +146,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelAddressButton() {
-        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            addressList.remove(selectedItem);
+        int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
+        if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
+            addressList.remove(selectedIndex);
+            addressListView.refresh();
         }
     }
 
@@ -169,9 +170,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelComButton() {
-        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            communicationsList.remove(selectedItem);
+        int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
+        if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
+            communicationsList.remove(selectedIndex);
+            communicationTableView.refresh();
         }
     }
 
@@ -192,9 +194,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void handleDelContactButton() {
-        Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            contactsList.remove(selectedItem);
+        int selectedIndex = contactListView.getSelectionModel().getSelectedIndex();
+        if ( contactListView.getSelectionModel().getSelectedItems() != null ) {
+            contactsList.remove(selectedIndex);
+            contactListView.refresh();
         }
 
     }
@@ -249,7 +252,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                         postBox.getChildren().addAll(zipCode, city);
                         postBox.setSpacing(2.0);
 
-                           
                         Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
 
                         anschriftbox.getChildren().addAll(street, postBox, country);
