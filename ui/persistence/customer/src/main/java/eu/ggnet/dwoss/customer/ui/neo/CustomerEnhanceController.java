@@ -32,6 +32,7 @@ import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -175,13 +176,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void handleMandatorInfoButton(ActionEvent event) {
-//
-//        Ui.exec(() -> {
-//            Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetaDataController.class).ifPresent(a -> {
-//                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-//
-//            });
-//        });
+
+        CustomerGenerator gen = new CustomerGenerator();
+        MandatorMetadata mData = gen.makeMandatorMetadata();
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> mData, MandatorMetaDataController.class);
+        });
 
     }
 

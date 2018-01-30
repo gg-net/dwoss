@@ -33,27 +33,48 @@ public class PreferedAddressLabelsTryOut {
     public static void main(String[] args) {
 
         CustomerGenerator gen = new CustomerGenerator();
-        Customer customer = gen.makeCustomer();
-        customer.getContacts().clear();
-        customer.add(gen.makeCompany());
-        customer.add(gen.makeCompany());
-        if ( customer.getViolationMessage() != null ) {
-            UiAlert.show("customer is invalid" + customer.getViolationMessage());
 
-            return;
-        }
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
-        run.addActionListener(ev -> {
+        JButton firmenKundenButton = new JButton("Lade FirmenKunde");
+        firmenKundenButton.addActionListener(ev -> {
+
+            Customer customer = gen.makeCustomer();
+            customer.getContacts().clear();
+            customer.add(gen.makeCompany());
+            customer.add(gen.makeCompany());
+
+            if ( !customer.isVaild() ) {
+                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+
+                return;
+            }
+            Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
+            });
+        });
+
+        JButton endKundenButton = new JButton("Lade Endkunde");
+        endKundenButton.addActionListener(ev -> {
+            Customer customer = gen.makeCustomer();
+            customer.getCompanies().clear();
+            customer.add(gen.makeContact());
+            customer.add(gen.makeContact());
+
+            if ( !customer.isVaild() ) {
+                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+
+                return;
+            }
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(run);
+        p.add(firmenKundenButton);
+        p.add(endKundenButton);
         p.add(close);
 
         UiCore.startSwing(() -> p);
