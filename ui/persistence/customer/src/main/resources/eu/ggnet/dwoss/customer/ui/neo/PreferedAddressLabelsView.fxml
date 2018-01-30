@@ -37,10 +37,15 @@
                   </ListView>
                   <VBox prefHeight="377.0" prefWidth="437.0">
                      <children>
-                        <Button fx:id="invoiceAddressClearButton" maxWidth="100.0" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" text="Clear" VBox.vgrow="ALWAYS">
+                        <Button fx:id="invoiceAddressClearButton" mnemonicParsing="false" onAction="#handleInvoiceAddressClearButtonAction" text="Auswahl zurücksetzen" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin></Button>
+                        <Label prefHeight="24.0" prefWidth="102.0" text="Adresslabel:">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Label>
                         <WebView fx:id="invoiceAddressWebView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="5.0" right="5.0" />
@@ -72,10 +77,15 @@
                   </ListView>
                         <VBox prefHeight="377.0" prefWidth="437.0">
                             <children>
-                                <Button fx:id="shippingAddressClearButton" maxWidth="100.0" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" text="Clear" VBox.vgrow="NEVER">
+                                <Button fx:id="shippingAddressClearButton" mnemonicParsing="false" onAction="#handleShippingAddressClearButtonAction" text="Auswahl zurücksetzen" VBox.vgrow="NEVER">
                            <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin></Button>
+                        <Label prefHeight="24.0" prefWidth="102.0" text="Adresslabel:">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </Label>
                         <WebView fx:id="shippingAddressWebView" minHeight="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="5.0" right="5.0" />
