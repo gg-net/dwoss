@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.redtape.ee.entity;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -275,16 +276,8 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
      * @return a List of Documents.
      */
     public List<Document> getActiveDocuments(DocumentType... types) {
-        List<Document> result = new ArrayList<>();
-        for (Document document : documents) {
-            if ( document.isActive() ) result.add(document);
-        }
-        if ( types == null || types.length == 0 ) return result;
-        List<DocumentType> typesList = Arrays.asList(types);
-        for (Iterator<Document> it = result.iterator(); it.hasNext();) {
-            if ( !typesList.contains(it.next().getType()) ) it.remove();
-        }
-        return result;
+        final List<DocumentType> typesList = (types != null || types.length == 0) ? Arrays.asList(DocumentType.values()) : Arrays.asList(types);
+        return documents.stream().filter(Document::isActive).filter(d -> typesList.contains(d.getType())).collect(Collectors.toList());
     }
 
     public boolean isClosed() {
