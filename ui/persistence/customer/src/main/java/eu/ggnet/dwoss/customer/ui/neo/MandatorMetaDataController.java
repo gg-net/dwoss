@@ -36,10 +36,8 @@ import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  *
@@ -87,24 +85,17 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        CustomerGenerator gen = new CustomerGenerator();
+        MandatorMetadata m = gen.makeMandatorMetadata();
+        defaultCustomerSalesdata = new DefaultCustomerSalesdata(m.getShippingCondition(), m.getPaymentCondition(), m.getPaymentMethod(), m.getAllowedSalesChannels(), new ArrayList(m.getAllowedSalesChannels()));
+        this.setDefaultValues(defaultCustomerSalesdata);
+
         saveButton.setDisable(true);
 
-        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
-
-            @Override
-            public void invalidated(javafx.beans.Observable observable) {
-                System.out.println(observable);
-                if ( shippingConditionComboBox.getSelectionModel().isEmpty() && paymentConditionComboBox.getSelectionModel().isEmpty()
-                        && paymentMethodComboBox.getSelectionModel().isEmpty()
-                        && allowedSalesChannelCheckBoxList.stream().noneMatch(checkBox -> checkBox.selectedProperty().get()) )
-                    saveButton.setDisable(true);
-
-                else
-                    saveButton.setDisable(false);
-
-            }
-
-        };
+        shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
+        paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
+        paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
         shippingConditionComboBox.setConverter(new StringConverter<ShippingCondition>() {
             @Override
@@ -141,20 +132,6 @@ public class MandatorMetaDataController implements Initializable, FxController, 
                 return myClassinstance.getNote();
             }
         });
-
-        shippingConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-        paymentConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-        paymentMethodComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-
-        // TODO selectedProperty never calls it's listener
-        allowedSalesChannelCheckBoxList.forEach(e -> e.selectedProperty().addListener(saveButtonDisablingListener));
-
-        shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
-
-        paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
-
-        paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
-
         paymentConditionComboBox.setCellFactory(new Callback<ListView<PaymentCondition>, ListCell<PaymentCondition>>() {
             @Override
             public ListCell<PaymentCondition> call(ListView<PaymentCondition> l) {
@@ -189,44 +166,47 @@ public class MandatorMetaDataController implements Initializable, FxController, 
             }
         });
 
-        defaultshippingConditionTextField.setText(ShippingCondition.DEFAULT.name());
-        defaultpaymentConditionTextField.setText(PaymentCondition.DEALER.getNote());
-        defaultpaymentMethodTextField.setText(PaymentMethod.ADVANCE_PAYMENT.getNote());
+        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
 
-        CustomerGenerator gen = new CustomerGenerator();
-        MandatorMetadata m = gen.makeMandatorMetadata();
-        DefaultCustomerSalesdata defaultData = new DefaultCustomerSalesdata(m.getShippingCondition(), m.getPaymentCondition(), m.getPaymentMethod(), m.getAllowedSalesChannels(), new ArrayList(m.getAllowedSalesChannels()));
-        this.setDefaults(defaultData);
+            @Override
+            public void invalidated(javafx.beans.Observable observable) {
+
+                if ( shippingConditionComboBox.getSelectionModel().isEmpty() && paymentConditionComboBox.getSelectionModel().isEmpty()
+                        && paymentMethodComboBox.getSelectionModel().isEmpty()
+                        && allowedSalesChannelCheckBoxList.stream().noneMatch(CheckBox::isSelected) )
+                    saveButton.setDisable(true);
+
+                else
+                    saveButton.setDisable(false);
+
+            }
+
+        };
+
+        shippingConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        paymentConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        paymentMethodComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        allowedSalesChannelCheckBoxList.forEach(e -> e.selectedProperty().addListener(saveButtonDisablingListener));
 
     }
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
 
-        if ( shippingConditionComboBox.getValue() == null
-                || paymentConditionComboBox.getValue() == null
-                || paymentMethodComboBox.getValue() == null ) {
-            UiAlert.title("Fehler!").message("Speichern der Mandantendaten nicht möglich.")
-                    .nl("Es müssen Versandkondition, Zahlungskondition und Zahlungsmodalität gesetzt sein.")
-                    .parent(saveButton).show(UiAlertBuilder.Type.ERROR);
-            return;
-
-        }
-
-        if ( allowedSalesChannelCheckBoxList.stream().noneMatch(CheckBox::isSelected) ) {
-            UiAlert.title("Fehler!").message("Speichern der Mandantendaten nicht möglich.")
-                    .nl("Es ist kein Verkaufskanal angegeben.")
-                    .parent(saveButton).show(UiAlertBuilder.Type.ERROR);
-            return;
-        }
-
+        mandatorMetaData.clearSalesChannels();
         mandatorMetaData.setShippingCondition(shippingConditionComboBox.getValue());
         mandatorMetaData.setPaymentCondition(paymentConditionComboBox.getValue());
         mandatorMetaData.setPaymentMethod(paymentMethodComboBox.getValue());
 
-        allowedSalesChannelCheckBoxList.stream().filter((checkBox) -> (checkBox.isSelected())).forEach((checkBox) -> {
-            mandatorMetaData.add(SalesChannel.valueOf(checkBox.getText()));
-        });
+        allowedSalesChannelCheckBoxList.stream()
+                .filter((checkBox) -> (checkBox.isSelected()))
+                .map(checkBox -> {
+                    return Arrays.stream(SalesChannel.values())
+                            .filter(salesChannel -> salesChannel.getName().equals(checkBox.getText()))
+                            .findFirst()
+                            .get();
+                })
+                .forEach(salesChannel -> mandatorMetaData.add(salesChannel));
 
     }
 
@@ -236,8 +216,21 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     }
 
     @Override
-    public void accept(MandatorMetadata consumable) {
+    public void accept(final MandatorMetadata consumable) {
         this.mandatorMetaData = consumable;
+
+        this.paymentConditionComboBox.getSelectionModel().select(mandatorMetaData.getPaymentCondition());
+        this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());
+        this.shippingConditionComboBox.getSelectionModel().select(mandatorMetaData.getShippingCondition());
+
+        mandatorMetaData.getAllowedSalesChannels().forEach(salesChannel -> {
+            this.allowedSalesChannelCheckBoxList.forEach(checkBox -> {
+                if ( checkBox.getText().equals(salesChannel.getName()) )
+                    checkBox.setSelected(true);
+
+            });
+        });
+
     }
 
     @Override
@@ -246,25 +239,31 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     }
 
     private void setSalesChannelBoxesUp() {
-        Arrays.stream(SalesChannel.values()).filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
-                .map(salesChannel -> new CheckBox(salesChannel.getName())).forEach(checkBox -> allowedSalesChannelCheckBoxList.add(checkBox));
+        Arrays.stream(SalesChannel.values())
+                .filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
+                .map(salesChannel -> new CheckBox(salesChannel.getName()))
+                .forEach(checkBox -> allowedSalesChannelCheckBoxList.add(checkBox));
 
-        defaultCustomerSalesdata.getAllowedSalesChannels().stream().filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
-                .map(salesChannel -> new CheckBox(salesChannel.getName())).forEach(checkBox -> {
-            checkBox.setSelected(true);
-            checkBox.setDisable(true);
-            defaultAllowedSalesChannelCheckBoxList.add(checkBox);
-        });
+        defaultCustomerSalesdata.getAllowedSalesChannels().stream()
+                .filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
+                .map(salesChannel -> new CheckBox(salesChannel.getName()))
+                .forEach(checkBox -> {
+                    checkBox.setSelected(true);
+                    checkBox.setDisable(true);
+                    defaultAllowedSalesChannelCheckBoxList.add(checkBox);
+                });
 
         allowedSalesChannelsVBox.getChildren().setAll(allowedSalesChannelCheckBoxList);
         defaultAllowedSalesChannelsVBox.getChildren().setAll(defaultAllowedSalesChannelCheckBoxList);
-
     }
 
-    private void setDefaults(DefaultCustomerSalesdata defaultCustomerSalesdata) {
+    private void setDefaultValues(DefaultCustomerSalesdata defaultCustomerSalesdata) {
         this.defaultCustomerSalesdata = defaultCustomerSalesdata;
         setSalesChannelBoxesUp();
 
+        defaultshippingConditionTextField.setText(defaultCustomerSalesdata.getShippingCondition().name());
+        defaultpaymentConditionTextField.setText(defaultCustomerSalesdata.getPaymentCondition().getNote());
+        defaultpaymentMethodTextField.setText(defaultCustomerSalesdata.getPaymentMethod().getNote());
     }
 
 }
