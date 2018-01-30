@@ -11,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -116,20 +115,17 @@ public class ProductListController implements Initializable, FxController, Close
     }
 
     @FXML
-    /**
-     * Reset the TradeName and the ProductGroup filter.
-     */
     private void openAssignment(ActionEvent event) {
         Ui.exec(() -> {
             Ui.build().parent(tableView).fxml().show(AssignmentController.class);
         });
     }
 
-    @Override
     /**
      * Adding the filters to the combo box. Setting the cell values and the
      * filtered list containing the data.
      */
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         tableView.getSelectionModel().setSelectionMode(MULTIPLE);
@@ -137,20 +133,17 @@ public class ProductListController implements Initializable, FxController, Close
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
 
-        tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                ArrayList<Product> selectedProducts = new ArrayList<>();
-                selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
-                ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
-                if ( selectedProducts.isEmpty() ) return;
-                Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
-                content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
-                db.setContent(content);
-                event.consume();
-            }
+        tableView.setOnDragDetected((MouseEvent event) -> {
+            ArrayList<Product> selectedProducts = new ArrayList<>();
+            selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
+            ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
+            if ( selectedProducts.isEmpty() ) return;
+            Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
+            content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
+            db.setContent(content);
+            event.consume();
         });
 
         setCellValues();

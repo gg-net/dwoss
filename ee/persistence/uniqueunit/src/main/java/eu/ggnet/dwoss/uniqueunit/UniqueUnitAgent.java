@@ -19,8 +19,9 @@ package eu.ggnet.dwoss.uniqueunit;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
@@ -64,9 +65,8 @@ public interface UniqueUnitAgent extends RemoteAgent {
      * @param dto      the dto as basis, must not be null.
      * @param username the user who changed that.
      * @return the created or updated CategoryProduct.
-     * @throws NullPointerException if dto is null.
      */
-    CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException;
+    CategoryProduct createOrUpdate(CategoryProductDto dto, String username);
 
     /**
      * Delete a category product.
@@ -93,4 +93,30 @@ public interface UniqueUnitAgent extends RemoteAgent {
      */
     Reply<Void> unsetUnitCollection(PicoUnit unit);
 
+    /**
+     * Creates a new unitcollection based on the dto and appends it to the suplied productId.
+     *
+     * @param productId the productId
+     * @param dto       the dto to be stored, must not be null.
+     * @param username
+     * @return a reply
+     */
+    Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username);
+
+    /**
+     * Update existing Unit collection.
+     *
+     * @param dto the dto as basis.
+     * @param username
+     * @return a reply
+     */
+    Reply<UnitCollection> update(UnitCollectionDto dto, String username);
+
+    /**
+     * Deletes UnitCollection.
+     *
+     * @param dto unitCollection
+     * @return a reply.
+     */
+    Reply<Void> delete(UnitCollection dto);
 }

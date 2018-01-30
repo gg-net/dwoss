@@ -37,4 +37,12 @@ public interface StockApi {
      */
     List<PicoUnit> filterAvailable(List<PicoUnit> units);
 
+    /**
+     * Returns true if available.
+     *
+     * @param unit the unit.
+     * @return true if available
+     */
+    boolean isAvailable(PicoUnit unit);
+
 }

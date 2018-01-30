@@ -20,6 +20,7 @@ import java.io.Serializable;
 
 import eu.ggnet.saft.api.ui.IdSupplier;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 /**
@@ -28,6 +29,7 @@ import lombok.Value;
  * @author oliver.guenther
  */
 @Value
+@EqualsAndHashCode(of = {"uniqueUnitId"})
 public class PicoUnit implements IdSupplier, Serializable {
 
     public static final String MIME_TYPE = "dw-api/picounit";

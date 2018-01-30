@@ -5,16 +5,16 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.Client;
-
 import java.util.List;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.saft.Dl;
 
 /**
  * Task to obtain all Products from the database with partial results.
@@ -32,7 +32,7 @@ public class ProductTask extends Task<ObservableList<Product>> {
     @Override
     protected ObservableList<Product> call() throws Exception {
 
-        UniqueUnitAgent agent = Client.lookup(UniqueUnitAgent.class);
+        UniqueUnitAgent agent = Dl.remote().lookup(UniqueUnitAgent.class);
 
         long count = agent.count(Product.class);
         int batch = 20;

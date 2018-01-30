@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="672.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.AssignmentController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="958.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.uniqueunit.ui.product.AssignmentController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -35,15 +35,15 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </ListView>
-            <Label text="Unit Collections" GridPane.columnIndex="1" />
-            <Label text="Bereits zugewiesene Einheiten" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Label text="Geräte Sammlung" GridPane.columnIndex="1" />
+            <Label text="Zugewiesene Geräte" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
             <ListView fx:id="assignedUnitsList" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin>
             </ListView>
-            <Label text="Anders zugewiesene Einheiten" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-            <Label text="Noch nicht zugewiesene Einheiten" GridPane.columnIndex="2" GridPane.columnSpan="2" />
+            <Label text="Anders zugewiesene Geräte" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+            <Label text="Nicht zugewiesene Geräte" GridPane.columnIndex="2" GridPane.columnSpan="2" />
             <ListView fx:id="differentAssignedUnitsList" GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.rowSpan="2">
                <GridPane.margin>
                   <Insets right="5.0" />

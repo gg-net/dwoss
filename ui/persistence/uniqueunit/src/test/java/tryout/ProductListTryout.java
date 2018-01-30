@@ -1,11 +1,18 @@
 package tryout;
 
+import java.util.Arrays;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import tryout.stub.UniqueUnitAgentStub;
 
@@ -26,8 +33,16 @@ public class ProductListTryout {
      */
     public static void main(String[] args) {
 
-        Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+        Dl.remote().add(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
+            {
+                setRights(new Operator("hans", 123, Arrays.asList(AtomicRight.values())));
+            }
 
+            @Override
+            public void login(String user, char[] pass) throws AuthenticationException {
+            }
+        });
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 

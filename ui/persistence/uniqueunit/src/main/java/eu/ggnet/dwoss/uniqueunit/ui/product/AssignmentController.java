@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.saft.api.ui.FxController;
-
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,20 +11,25 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.auth.Guardian;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -70,7 +73,7 @@ public class AssignmentController implements Initializable, FxController {
         if ( !selected.isEmpty() ) {
 
             for (UniqueUnit uu : selected) {
-                Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId()), selectedCollection.getId());
+                Dl.remote().lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId()), selectedCollection.getId());
                 assignedUnitsList.getItems().add(uu);
                 unassignedUnitsList.getItems().remove(uu);
             }
@@ -85,7 +88,7 @@ public class AssignmentController implements Initializable, FxController {
 
             for (UniqueUnit uu : selected) {
 
-                Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId())))
+                Optional.of(Dl.remote().lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(uu.getId(), "RefurbishedId=" + uu.getRefurbishId())))
                         .filter(r -> {
                             return Ui.failure().handle(r);
                         })
@@ -100,35 +103,33 @@ public class AssignmentController implements Initializable, FxController {
 
     @FXML
     private void addUnitCollection() {
-
-        if ( productList.getSelectionModel().getSelectedItem() != null ) {
-            openEdit(new UnitCollection());
-        }
-
+        final PicoProduct selectedProduct = productList.getSelectionModel().getSelectedItem();
+        if ( selectedProduct == null ) return;
+            Ui.exec(() -> {
+                Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                        .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOnProduct(selectedProduct.getId(), dto, Dl.local().lookup(Guardian.class).getUsername()))
+                        .filter(Ui.failure()::handle)
+                        .map(Reply::getPayload)
+                        .ifPresent(uc -> {
+                            unitCollectionList.getItems().add(uc);
+                        });
+        });
     }
 
     @FXML
     private void editUnitCollection() {
-
-        if ( unitCollectionList.getSelectionModel().getSelectedItem() != null ) {
-            UnitCollection uc = unitCollectionList.getSelectionModel().getSelectedItem();
-            openEdit(uc);
-        }
-
-    }
-
-    //Todo db createOrUpdate
-    //Ui refresh
-    private void openEdit(UnitCollection uc) {
-
+        UnitCollection selectedUnitCollection = unitCollectionList.getSelectionModel().getSelectedItem();
+        int indexOf = unitCollectionList.getItems().indexOf(selectedUnitCollection);
+        if ( selectedUnitCollection == null ) return;
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> uc, UnitCollectionEditorController.class);
+            Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                    .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).update(dto, Dl.local().lookup(Guardian.class).getUsername()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .ifPresent(uc -> {
+                        unitCollectionList.getItems().set(indexOf, uc);
+                    });
         });
-
-    }
-
-    private void updateList(UnitCollection newUc) {
-
     }
 
     @Override
@@ -162,7 +163,7 @@ public class AssignmentController implements Initializable, FxController {
                 if ( empty ) {
                     setText(null);
                 } else {
-                    Product dbProduct = Client.lookup(UniqueUnitAgent.class).findByIdEager(Product.class, p.getId());
+                    Product dbProduct = Dl.remote().lookup(UniqueUnitAgent.class).findByIdEager(Product.class, p.getId());
                     String text = p.getShortDescription() + " (" + dbProduct.getUnitCollections().size() + ")";
                     setText(text);
                 }
@@ -177,7 +178,7 @@ public class AssignmentController implements Initializable, FxController {
                 if ( empty ) {
                     setText(null);
                 } else {
-                    UnitCollection dbCollection = Client.lookup(UniqueUnitAgent.class).findByIdEager(UnitCollection.class, uc.getId());
+                    UnitCollection dbCollection = Dl.remote().lookup(UniqueUnitAgent.class).findByIdEager(UnitCollection.class, uc.getId());
                     String text = uc.getNameExtension() + " (" + dbCollection.getUnits().size() + ")";
                     setText(text);
                 }
@@ -237,7 +238,7 @@ public class AssignmentController implements Initializable, FxController {
                 if ( db.hasContent(df) ) {
                     List<UniqueUnit> dragged = (List<UniqueUnit>)db.getContent(df);
                     for (UniqueUnit draggedUnit : dragged) {
-                        Optional.of(Client.lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId())))
+                        Optional.of(Dl.remote().lookup(UniqueUnitAgent.class).unsetUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId())))
                                 .filter(r -> {
                                     if ( !r.hasSucceded() ) event.setDropCompleted(false);
                                     return Ui.failure().handle(r);
@@ -298,7 +299,7 @@ public class AssignmentController implements Initializable, FxController {
                     List<UniqueUnit> dragged = (List<UniqueUnit>)db.getContent(df);
                     for (UniqueUnit draggedUnit : dragged) {
                         UnitCollection selectedCollection = unitCollectionList.getSelectionModel().getSelectedItem();
-                        Optional.of(Client.lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId()), selectedCollection.getId()))
+                        Optional.of(Dl.remote().lookup(UniqueUnitAgent.class).addToUnitCollection(new PicoUnit(draggedUnit.getId(), "RefurbishedId=" + draggedUnit.getRefurbishId()), selectedCollection.getId()))
                                 .filter(r -> {
                                     if ( !r.hasSucceded() ) event.setDropCompleted(false);
                                     return Ui.failure().handle(r);
@@ -360,7 +361,17 @@ public class AssignmentController implements Initializable, FxController {
                 if ( newValue != null ) {
 
                     // get the Product based on the id of the PicoProduct
-                    Product product = Client.lookup(UniqueUnitAgent.class).findByIdEager(Product.class, newValue.getId());
+                    Product product = Dl.remote().lookup(UniqueUnitAgent.class).findByIdEager(Product.class, newValue.getId());
+                    // Remove all non available units. This is by spaggetiemonster not good, but lets see it work.
+                    Dl.remote().optional(StockApi.class).ifPresent(sapi -> {
+                        List<PicoUnit> available = sapi.filterAvailable(product.getUniqueUnits().stream().map(UniqueUnit::toPicoUnit).collect(Collectors.toList()));
+                        for (UniqueUnit uu : new ArrayList<>(product.getUniqueUnits())) {
+                            if ( !available.contains(uu.toPicoUnit()) ) {
+                                uu.setProduct(null);
+                                uu.setUnitCollection(null);
+                            }
+                        }
+                    });
 
                     //Fill the list with UnitCollections of the Product
                     unitCollectionList.getItems().clear();
@@ -371,7 +382,7 @@ public class AssignmentController implements Initializable, FxController {
                     unassignedUnitsList.getItems().addAll(product
                             .getUniqueUnits()
                             .stream()
-                            .filter(u -> u.getProduct() != null)
+                            .filter(u -> u.getUnitCollection() != null)
                             .collect(Collectors.toList()));
                 } else {
                     // clear the lists if no Product is selected

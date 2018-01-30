@@ -27,12 +27,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductMapper;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
@@ -121,8 +120,8 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
         UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
         if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
         UnitCollection uc = em.find(UnitCollection.class, unitCollectionId);
-        if ( uc == null ) return Reply.failure("No UnitCollection found with " + unitCollectionId);
-        uc.addUnit(uu);
+        if ( uc == null ) return Reply.failure("No UnitCollection found for id " + unitCollectionId);
+        uc.getUnits().add(uu);
         return Reply.success(null);
     }
 
@@ -132,6 +131,44 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
         UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
         if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
         uu.setUnitCollection(null);
+        return Reply.success(null);
+    }
+
+    @Override
+    public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
+        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
+        Product product = em.find(Product.class, productId);
+        if ( product == null ) return Reply.failure("Product of id " + productId + " does not exist");
+        UnitCollection unitCollection = new UnitCollection();
+        UnitCollectionMapper.INSTANCE.update(unitCollection, dto);
+        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
+            unitCollection.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
+        }
+        unitCollection.setProduct(product);
+        em.persist(unitCollection);
+        return Reply.success(unitCollection);
+    }
+
+    @Override
+    public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
+        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
+        UnitCollection unitCollection = em.find(UnitCollection.class, dto.getId());
+        if ( unitCollection == null ) return Reply.failure("UnitCollection of id " + dto.getId() + " does not exist");
+        UnitCollectionMapper.INSTANCE.update(unitCollection, dto);
+        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
+            unitCollection.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
+        }
+        return Reply.success(unitCollection);
+    }
+
+    @Override
+    public Reply<Void> delete(UnitCollection dto) {
+        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
+        UnitCollection unitCollection = em.find(UnitCollection.class, dto.getId());
+        if ( unitCollection == null ) return Reply.failure("UnitCollection of id " + dto.getId() + " does not exist");
+        unitCollection.setProduct(null);
+        unitCollection.getUnits().clear();
+        em.remove(unitCollection);
         return Reply.success(null);
     }
 

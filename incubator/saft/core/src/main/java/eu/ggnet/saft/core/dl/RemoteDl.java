@@ -21,7 +21,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 
@@ -34,7 +33,7 @@ public class RemoteDl {
     private static RemoteDl instance;
 
     // Don't use info Logglevel here until the Progress is lookuped in a different way. e.g. keep the instance until the connection fails.
-    private final static Logger L = LoggerFactory.getLogger(Client.class);
+    private final static Logger L = LoggerFactory.getLogger(LocalDl.class);
 
     private final static Map<String, Object> DIRECT_LOOKUP = new HashMap<>();
 
