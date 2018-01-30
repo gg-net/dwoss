@@ -67,6 +67,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction(ActionEvent event) {
+        address = null;
         Ui.closeWindowOf(zipcode);
     }
 
@@ -121,20 +122,6 @@ public class AddressUpdateController implements Initializable, FxController, Con
         }
         );
         countrybox.getItems().addAll(countries);
-
-        // force the zipcode field to be numeric only, becuase the ledger get saved as an int
-        zipcode.textFormatterProperty().set(
-                new TextFormatter<>(new IntegerStringConverter(), 0,
-                        change -> {
-                            String newText = change.getControlNewText();
-                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
-                                return change;
-                            } else {
-                                return null;
-                            }
-                        })
-        );
-
     }
 
     @Override

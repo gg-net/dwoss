@@ -22,11 +22,15 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
@@ -57,86 +61,49 @@ import static javafx.stage.Modality.WINDOW_MODAL;
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @FXML
-    private Label shoboxLabel;
-
-    @FXML
     private Button PreferedAddressLabelsButton;
 
     @FXML
-    private Button mandatorInfoButton;
+    private Button cancelButton;
 
     @FXML
-    private Button okButton;
+    private ChoiceBox<Source> sourceChoiceBox;
 
-    @Data
-    @AllArgsConstructor
-    class ExternalId {
+    @FXML
+    private Label KIDLabel;
 
-        private ExternalSystem type;
-
-        private String value;
-    }
-
-    //extra class for the CheckBox ListView
-    class CustomerFlagWithSelect {
-
-        private final ReadOnlyObjectWrapper flag = new ReadOnlyObjectWrapper();
-
-        private final BooleanProperty selected = new SimpleBooleanProperty(false);
-
-        public CustomerFlagWithSelect(CustomerFlag flag) {
-            this.flag.set(flag);
-        }
-
-        public CustomerFlag getFlag() {
-            return (CustomerFlag)flag.get();
-        }
-
-        public BooleanProperty selectedProperty() {
-            return selected;
-        }
-
-        public boolean isSelected() {
-            return selected.get();
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected.set(selected);
-        }
-    }
+    @FXML
+    private Label customerNameLabel;
 
     @FXML
     private Label CustomerKindLabel;
 
     @FXML
-    private Label kid;
-
-    @FXML
-    private Label kundenname;
-
-    @FXML
-    private ChoiceBox<Source> source;
-
-    @FXML
     private TextArea commentTextArea;
-
-    @FXML
-    private TextField keyAccount;
 
     @FXML
     private VBox flagVBox = new VBox();
 
     @FXML
-    private VBox externalSysremIds = new VBox();
+    private HBox showHBox = new HBox();
 
     @FXML
-    private HBox showHBox = new HBox();
+    private Button saveButton;
+
+    @FXML
+    private Label contactOrCompanyLabel;
+
+    @FXML
+    private TextField keyAccounterTextField;
+
+    @FXML
+    private Button mandatorMetaDataButton;
 
     private ListView<Company> companyListView = new ListView<>();
 
     private ListView<Contact> contactListView = new ListView<>();
 
-    private ListView<ExternalId> addExternalIdsListView = new ListView<>();
+    private ListView<AdditionalCustomerID> additionalCustomerIDsListView = new ListView<>();
 
     private ObservableList<Company> companyList = FXCollections.observableArrayList();
 
@@ -150,9 +117,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
-    private boolean bussines = false;
+    private boolean isBusinessCustomer = false;
 
     private Customer customer;
+
+    @FXML
+    private VBox additionalCustomerIDsVBox;
 
     @FXML
     private void saveButtonHandling(ActionEvent event) {
@@ -170,41 +140,32 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void cancelButtonHandling(ActionEvent event) {
-        Ui.closeWindowOf(kid);
-    }
-
-    @FXML
-    private void handleMandatorInfoButton(ActionEvent event) {
-//
-//        Ui.exec(() -> {
-//            Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetaDataController.class).ifPresent(a -> {
-//                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-//
-//            });
-//        });
-
+        Ui.closeWindowOf(KIDLabel);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
 
-        /**
-         * //button behavior
-         * okButton.disableProperty().bind(
-         * Bindings.createBooleanBinding(()
-         * -> keyAccount.getText().trim().isEmpty(), keyAccount.textProperty()
-         * )
-         * );
-         */
-        source.getItems().addAll(Source.values());
+        sourceChoiceBox.getItems().addAll(Source.values());
+        sourceChoiceBox.setConverter(new StringConverter<Source>() {
+            @Override
+            public String toString(Source object) {
+                return object.getName();
+            }
+
+            @Override
+            public Source fromString(String string) {
+                throw new UnsupportedOperationException("fromString is not supported"); //
+            }
+        });
     }
 
     @Override
     public void accept(Customer cust) {
         if ( cust != null && cust.isVaild() ) {
             if ( cust.isBussines() ) {
-                bussines = true;
+                isBusinessCustomer = true;
             }
             setCustomer(cust);
         } else {
@@ -223,25 +184,25 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     public void setCustomer(Customer c) {
         if ( c.isBussines() ) {
             CustomerKindLabel.setText("Geschäftskunde");
-            kundenname.setText(c.getCompanies().get(0).getName());
+            customerNameLabel.setText(c.getCompanies().get(0).getName());
             companyList.setAll(c.getCompanies());
             companyListView.setItems(companyList);
-            shoboxLabel.setText("Firmen: ");
+            contactOrCompanyLabel.setText("Firmen: ");
 
-            bussines = true;
+            isBusinessCustomer = true;
         } else {
             CustomerKindLabel.setText("Endkunde");
-            kundenname.setText(c.getContacts().get(0).toFullName());
+            customerNameLabel.setText(c.getContacts().get(0).toFullName());
             contactList.setAll(c.getContacts());
             contactListView.setItems(contactList);
-            shoboxLabel.setText("Kontakte: ");
+            contactOrCompanyLabel.setText("Kontakte: ");
         }
-        kid.setText("" + c.getId());
-        keyAccount.setText(c.getKeyAccounter());
+        KIDLabel.setText("" + c.getId());
+        keyAccounterTextField.setText(c.getKeyAccounter());
 
         flagsSet.addAll(c.getFlags());
 
-        source.getSelectionModel().select(c.getSource());
+        sourceChoiceBox.getSelectionModel().select(c.getSource());
         mandatorMetadata.addAll(c.getMandatorMetadata());
         additionalCustomerIds.putAll(c.getAdditionalCustomerIds());
 
@@ -249,11 +210,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         if ( additionalCustomerIds == null ) {
             FXCollections.emptyObservableList();
         } else {
-            ObservableList<ExternalId> observableArrayList = FXCollections.observableArrayList(
+            ObservableList<AdditionalCustomerID> observableArrayList = FXCollections.observableArrayList(
                     additionalCustomerIds.entrySet().stream()
-                            .map(e -> new ExternalId(e.getKey(), e.getValue()))
+                            .map(e -> new AdditionalCustomerID(e.getKey(), e.getValue()))
                             .collect(Collectors.toList()));
-            addExternalIdsListView.setItems(observableArrayList);
+            additionalCustomerIDsListView.setItems(observableArrayList);
         }
 
         commentTextArea.setText(c.getComment());
@@ -270,19 +231,19 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     public Customer getCustomer() {
         Customer cust = new Customer();
-        if ( bussines ) {
+        if ( isBusinessCustomer ) {
             cust.getCompanies().clear();
             companyList.forEach(c -> cust.add(c));
         } else {
             cust.getContacts().clear();
             contactList.forEach(c -> cust.add(c));
         }
-        cust.setKeyAccounter(keyAccount.getText());
+        cust.setKeyAccounter(keyAccounterTextField.getText());
 
         cust.getFlags().clear();
         flagsSet.forEach(f -> cust.add(f));
 
-        cust.setSource(source.getSelectionModel().getSelectedItem());
+        cust.setSource(sourceChoiceBox.getSelectionModel().getSelectedItem());
 
         cust.getMandatorMetadata().clear();
         mandatorMetadata.forEach(m -> cust.add(m));
@@ -296,9 +257,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
 
         //transfer List back to a Map
-        ObservableList<ExternalId> items = addExternalIdsListView.getItems();
+        ObservableList<AdditionalCustomerID> items = additionalCustomerIDsListView.getItems();
         cust.getAdditionalCustomerIds().clear();
-        cust.getAdditionalCustomerIds().putAll(items.stream().collect(Collectors.toMap(ExternalId::getType, ExternalId::getValue)));
+        cust.getAdditionalCustomerIds().putAll(items.stream().collect(Collectors.toMap(AdditionalCustomerID::getType, AdditionalCustomerID::getValue)));
 
         cust.setComment(commentTextArea.getText());
 
@@ -359,23 +320,24 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * build a small list of all ExternalId
      */
     private void buildExternalSystemIdBox() {
-        addExternalIdsListView.setCellFactory((ListView<ExternalId> p) -> {
-            ListCell<ExternalId> cell = new ListCell<ExternalId>() {
+        additionalCustomerIDsListView.setCellFactory((ListView<AdditionalCustomerID> p) -> {
+            ListCell<AdditionalCustomerID> cell = new ListCell<AdditionalCustomerID>() {
                 @Override
-                protected void updateItem(ExternalId item, boolean empty) {
+                protected void updateItem(AdditionalCustomerID item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setGraphic(null);
                         setText("");
                     } else {
                         HBox flagbox = new HBox();
-                        Label flagLable = new Label(item.type.name() + ":");
-                        flagLable.setStyle("-fx-font-weight: bold");
+                        Label flagLabel = new Label(item.type.name() + ":");
+                        flagLabel.setPrefWidth(65.0);
+                        flagLabel.setStyle("-fx-font-weight: bold");
 
                         TextField textfield = new TextField();
                         textfield.setText(item.getValue());
 
-                        flagbox.getChildren().addAll(flagLable, textfield);
+                        flagbox.getChildren().addAll(flagLabel, textfield);
                         flagbox.setSpacing(2.0);
 
                         setText(null);
@@ -386,9 +348,75 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             };
             return cell;
         });
-        Label ExternalSystemIdsLable = new Label("Extra Kunden Nummer: ");
-        externalSysremIds.getChildren().addAll(ExternalSystemIdsLable, addExternalIdsListView);
-        externalSysremIds.setMinWidth(120.0);
+        Label ExternalSystemIDsLabel = new Label("Zusätzliche Kundennummern: ");
+        Button addButton = new Button("Hinzufügen");
+        addButton.setMinWidth(80.0);
+        addButton.setOnAction((ActionEvent event) -> {
+            Dialog<AdditionalCustomerID> dialog = new Dialog<>();
+            dialog.setTitle("Zusätzliche Kundennummer hinzufügen.");
+
+            ButtonType addButtonType = new ButtonType("Hinzufügen", ButtonData.OK_DONE);
+            additionalCustomerIDsListView.getItems().addListener(new InvalidationListener() {
+                @Override
+                public void invalidated(javafx.beans.Observable observable) {
+
+                    addButton.setDisable(additionalCustomerIDsListView.getItems().stream()
+                            .map(additionalCustomerID -> additionalCustomerID.type)
+                            .collect(Collectors.toList())
+                            .containsAll(Arrays.asList(ExternalSystem.values())));
+                }
+            });
+
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+            TextField customerId = new TextField();
+            customerId.setPromptText("Kundennummer");
+
+            ChoiceBox externalSystemChoiceBox = new ChoiceBox(Arrays.stream(ExternalSystem.values())
+                    .filter(externalSystem
+                            -> !additionalCustomerIDsListView.getItems()
+                            .stream()
+                            .map(additionalCustomerID -> additionalCustomerID.type)
+                            .collect(Collectors.toList())
+                            .contains(externalSystem))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            grid.add(new Label("ExternalSystem:"), 0, 0);
+            grid.add(externalSystemChoiceBox, 1, 0);
+            grid.add(new Label("Kundennummer:"), 0, 1);
+            grid.add(customerId, 1, 1);
+            Node dialogAddButton = dialog.getDialogPane().lookupButton(addButtonType);
+            dialogAddButton.setDisable(true);
+            InvalidationListener addButtonDisabler = (javafx.beans.Observable observable) -> {
+                dialogAddButton.setDisable(externalSystemChoiceBox.getSelectionModel().isEmpty() || customerId.getText().isEmpty());
+            };
+            externalSystemChoiceBox.getSelectionModel().selectedIndexProperty().addListener(addButtonDisabler);
+            customerId.textProperty().addListener(addButtonDisabler);
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(dialogButton -> {
+                if ( dialogButton == addButtonType ) {
+                    return new AdditionalCustomerID((ExternalSystem)externalSystemChoiceBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
+                }
+                return null;
+            });
+            Optional<AdditionalCustomerID> result = dialog.showAndWait();
+            result.ifPresent(additionalId -> additionalCustomerIDsListView.getItems().add(additionalId));
+        });
+
+        Button deleteButton = new Button("Löschen");
+        deleteButton.setMinWidth(80.0);
+        deleteButton.setOnAction((event) -> {
+            additionalCustomerIDsListView.getItems().remove(additionalCustomerIDsListView.getSelectionModel().getSelectedItem());
+        });
+
+        HBox buttonsHBox = new HBox();
+        buttonsHBox.getChildren().addAll(addButton, deleteButton);
+        buttonsHBox.setSpacing(3.0);
+        additionalCustomerIDsVBox.getChildren().addAll(ExternalSystemIDsLabel, buttonsHBox, additionalCustomerIDsListView);
+        additionalCustomerIDsVBox.setMinWidth(120.0);
     }
 
     /**
@@ -407,7 +435,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         delButton.setMinWidth(80.0);
 
         //set the right actions for the buttons
-        if ( bussines ) {
+        if ( isBusinessCustomer ) {
             editButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem != null ) {
@@ -503,7 +531,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         HBox.setHgrow(companyListView, Priority.ALWAYS);
 
         //build up the showBox
-        if ( bussines ) {
+        if ( isBusinessCustomer ) {
             showHBox.getChildren().addAll(companyListView, buttonVBox);
         } else {
             showHBox.getChildren().addAll(contactListView, buttonVBox);
@@ -513,7 +541,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
@@ -524,7 +552,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             contactList.add(a);
@@ -535,7 +563,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
@@ -546,13 +574,66 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kundenname).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
+            Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
                     a -> {
                         Platform.runLater(() -> {
                             companyList.add(a);
                         });
                     });
         });
+    }
+
+    @FXML
+    private void handleMandatorMetaDataButtonAction(ActionEvent event) {
+
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> getCustomer().getMandatorMetadata().get(0), MandatorMetaDataController.class)
+                    .ifPresent(newMandatorMetaData -> {
+                        MandatorMetadata oldMandatorMetadata = getCustomer().getMandatorMetadata().get(0);
+                        oldMandatorMetadata.setMandatorMatchcode(newMandatorMetaData.getMandatorMatchcode());
+                        oldMandatorMetadata.setPaymentCondition(newMandatorMetaData.getPaymentCondition());
+                        oldMandatorMetadata.setPaymentMethod(newMandatorMetaData.getPaymentMethod());
+                        oldMandatorMetadata.setShippingCondition(newMandatorMetaData.getShippingCondition());
+                    });
+        });
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    class AdditionalCustomerID {
+
+        private ExternalSystem type;
+
+        private String value;
+    }
+
+    //extra class for the CheckBox ListView
+    class CustomerFlagWithSelect {
+
+        private final ReadOnlyObjectWrapper flag = new ReadOnlyObjectWrapper();
+
+        private final BooleanProperty selected = new SimpleBooleanProperty(false);
+
+        public CustomerFlagWithSelect(CustomerFlag flag) {
+            this.flag.set(flag);
+        }
+
+        public CustomerFlag getFlag() {
+            return (CustomerFlag)flag.get();
+        }
+
+        public BooleanProperty selectedProperty() {
+            return selected;
+        }
+
+        public boolean isSelected() {
+            return selected.get();
+        }
+
+        public void setSelected(boolean selected) {
+            this.selected.set(selected);
+        }
     }
 
 }

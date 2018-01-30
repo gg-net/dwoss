@@ -207,11 +207,12 @@ public class MandatorMetaDataController implements Initializable, FxController, 
                             .get();
                 })
                 .forEach(salesChannel -> mandatorMetaData.add(salesChannel));
-
+        Ui.closeWindowOf(saveButton);
     }
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
+        mandatorMetaData = null;
         Ui.closeWindowOf(saveButton);
     }
 

@@ -135,6 +135,8 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         this.shippingAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
         this.shippingAddressCompanyListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
         this.shippingAddressContactListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
+
+        cancelButton = null;
     }
 
     @Override

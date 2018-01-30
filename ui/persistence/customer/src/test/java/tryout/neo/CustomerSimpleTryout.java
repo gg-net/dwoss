@@ -47,20 +47,21 @@ public class CustomerSimpleTryout {
 
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
+        Company company = gen.makeCompany();
         Contact contact = gen.makeContact();
+        Communication communicationEmail = new Communication();
+        Address address = gen.makeAddress();
+
+        customer.getCompanies().clear();
+        customer.getContacts().clear();
 
         customer.add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
         customer.add(new MandatorMetadata());
 
-        customer.getCompanies().clear();
-        customer.getContacts().clear();
-
-        Communication communicationEmail = new Communication();
         communicationEmail.setType(Type.MOBILE);
         communicationEmail.setIdentifier("040123456789");
 
-        Address address = gen.makeAddress();
         address.setIsoCountry(Locale.GERMANY);
 
         contact.getAddresses().clear();
@@ -69,23 +70,76 @@ public class CustomerSimpleTryout {
         contact.add(address);
         contact.add(communicationEmail);
 
-        customer.add(contact);
-
-        System.out.println("IS simple: " + customer.getSimpleViolationMessage());
-
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
+        JButton consumerCustomer = new JButton("Consumer Customer");
+        consumerCustomer.addActionListener(ev -> {
+            customer.add(CustomerFlag.ITC_CUSTOMER);
+            customer.setKeyAccounter("Herr Meier");
+            customer.add(new MandatorMetadata());
 
-        run.addActionListener(ev -> {
+            communicationEmail.setType(Type.MOBILE);
+            communicationEmail.setIdentifier("040123456789");
+
+            address.setIsoCountry(Locale.GERMANY);
+
+            contact.getAddresses().clear();
+            contact.getCommunications().clear();
+
+            contact.add(address);
+            contact.add(communicationEmail);
+
+            customer.add(contact);
+
+            System.out.println("IS simple: " + customer.getSimpleViolationMessage());
+            System.out.println("Consumer Customer: " + customer.isConsumer());
+
             Ui.exec(() -> {
-                Ui.build().parent(run).fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Ui.build().parent(consumerCustomer).fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
+            });
+        });
+
+        JButton bussinesCustomer = new JButton("Bussines Customer");
+        bussinesCustomer.addActionListener(ev -> {
+            Customer bc = gen.makeCustomer();
+            bc.getContacts().clear();
+            bc.add(CustomerFlag.ITC_CUSTOMER);
+            bc.setKeyAccounter("Herr Meier");
+            bc.add(new MandatorMetadata());
+
+            communicationEmail.setType(Type.MOBILE);
+            communicationEmail.setIdentifier("040123456789");
+
+            address.setIsoCountry(Locale.GERMANY);
+
+            company.getContacts().clear();
+            company.getAddresses().clear();
+            company.getCommunications().clear();
+
+                contact.getAddresses().clear();
+                contact.getCommunications().clear();
+
+                contact.add(address);
+                contact.add(communicationEmail);
+
+            company.add(contact);
+            company.add(address);
+            company.add(communicationEmail);
+
+            bc.add(company);
+
+            System.out.println("IS simple: " + bc.getSimpleViolationMessage());
+            System.out.println("Bussines Customer: " + bc.isBussines());
+
+            Ui.exec(() -> {
+                Ui.build().parent(consumerCustomer).fxml().eval(() -> bc, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(run);
+        p.add(consumerCustomer);
+        p.add(bussinesCustomer);
         p.add(close);
 
         UiCore.startSwing(() -> p);

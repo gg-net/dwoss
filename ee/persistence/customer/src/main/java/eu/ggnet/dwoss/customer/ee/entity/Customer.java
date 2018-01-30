@@ -72,7 +72,7 @@ public class Customer implements Serializable {
     @AllArgsConstructor
     @Getter
     public static enum Source {
-        EXISITING("Bestandskunde"),
+        EXISTING("Bestandskunde"),
         JH_CAM_TOOL("CAM Tool T&S"),
         SOPO_STORE("Sonderposten Store"),
         SOPO_ONLINE("Sonderposten Online"),
