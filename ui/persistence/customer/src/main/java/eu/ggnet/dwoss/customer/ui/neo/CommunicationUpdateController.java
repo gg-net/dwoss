@@ -61,6 +61,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction() {
+        communication = null;
         Ui.closeWindowOf(identifer);
     }
 

@@ -133,6 +133,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void cancelButtonHandling() {
+        simpleCustomer = null;
         Ui.closeWindowOf(kid);
     }
 

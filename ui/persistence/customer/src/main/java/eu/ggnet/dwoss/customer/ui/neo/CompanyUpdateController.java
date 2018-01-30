@@ -123,6 +123,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void cancelButtonHandling() {
+        company = null;
         Ui.closeWindowOf(taxIdTextField);
     }
 

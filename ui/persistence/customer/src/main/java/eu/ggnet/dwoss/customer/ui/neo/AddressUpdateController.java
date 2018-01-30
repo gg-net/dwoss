@@ -67,6 +67,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction(ActionEvent event) {
+        address = null;
         Ui.closeWindowOf(zipcode);
     }
 

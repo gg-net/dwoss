@@ -116,6 +116,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void cancelButtonHandling() {
+        contact = null;
         Ui.closeWindowOf(lastNameTextField);
     }
 
