@@ -98,6 +98,8 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     @Version
     private Short optLock = 0;
 
+    @Getter
+    @Setter
     @Lob
     @Column(length = 65536)
     private String comment;
@@ -106,10 +108,14 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     @Valid
     Set<Document> documents = new HashSet<>();
 
+    @Getter
+    @Setter
     @Enumerated
     private PaymentMethod paymentMethod;
 
     @Min(1)
+    @Getter
+    @Setter
     private long customerId;
 
     /**
@@ -127,8 +133,12 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     /**
      * This String identifies the Dossier.
      */
+    @Getter
+    @Setter
     private String identifier;
 
+    @Getter
+    @Setter
     @Valid
     @Embedded
     private Reminder reminder;
@@ -158,49 +168,9 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
         this.dispatch = dispatch;
     }
 
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
     @Override
     public long getId() {
         return id;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Reminder getReminder() {
-        return reminder;
-    }
-
-    public void setReminder(Reminder reminder) {
-        this.reminder = reminder;
     }
 
     /**
@@ -276,7 +246,7 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
      * @return a List of Documents.
      */
     public List<Document> getActiveDocuments(DocumentType... types) {
-        final List<DocumentType> typesList = (types != null || types.length == 0) ? Arrays.asList(DocumentType.values()) : Arrays.asList(types);
+        final List<DocumentType> typesList = (types == null || types.length == 0) ? Arrays.asList(DocumentType.values()) : Arrays.asList(types);
         return documents.stream().filter(Document::isActive).filter(d -> typesList.contains(d.getType())).collect(Collectors.toList());
     }
 

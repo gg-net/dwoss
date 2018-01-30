@@ -31,6 +31,8 @@ import eu.ggnet.dwoss.util.MapBuilder;
 
 import static eu.ggnet.dwoss.rules.DocumentType.CAPITAL_ASSET;
 import static eu.ggnet.dwoss.rules.DocumentType.RETURNS;
+import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.rules.TaxType.*;
 
 /**
  *
@@ -66,7 +68,33 @@ public class CustomerAndGsOfficeProvider {
             .toHashMap());
 
     @Produces
-    public final static PostLedger pl = new PostLedger();
+    public final static PostLedger NEW_POST_LEDGER = new PostLedger(
+            PostLedger.add()
+                    .positionTypes(UNIT)
+                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .primaryLedger(1000, "Standard Gerät")
+                    .alternativeLedger(1001, "Behindertes Geräte"),
+            PostLedger.add()
+                    .positionTypes(UNIT, SERVICE, PRODUCT_BATCH, SHIPPING_COST, UNIT_ANNEX)
+                    .taxTypes(UNTAXED)
+                    .primaryLedger(2000, "Geräte ohne Ust."),
+            PostLedger.add()
+                    .positionTypes(UNIT, SERVICE, PRODUCT_BATCH, SHIPPING_COST, UNIT_ANNEX)
+                    .taxTypes(REVERSE_CHARGE)
+                    .primaryLedger(3000, "Reverse Charge"),
+            PostLedger.add()
+                    .positionTypes(SERVICE)
+                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .primaryLedger(4000, "Service")
+                    .alternativeLedger(4001, "VIP Service"),
+            PostLedger.add()
+                    .positionTypes(PRODUCT_BATCH)
+                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .primaryLedger(5000, "ProductBatch"),
+            PostLedger.add()
+                    .positionTypes(SHIPPING_COST)
+                    .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
+                    .primaryLedger(6000, "Versand"));
 
     // Rewired the system customers.
     @Produces

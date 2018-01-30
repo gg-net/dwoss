@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.redtape.itest.emo;
 
-import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -16,6 +11,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
@@ -67,7 +63,7 @@ public class DossierEmoIT extends ArquillianProjectArchive {
         Dossier dossier = last.getDossier();
         for (int i = 0; i < 20; i++) {
             Document d = new Document(DocumentType.BLOCK, Document.Directive.NONE, new DocumentHistory("JUnit", "JUnit"));
-            d.append(new PositionBuilder().type(PositionType.COMMENT).name("JUnit").description("JUnit").build());
+            d.append(Position.builder().amount(1).type(PositionType.COMMENT).name("JUnit").description("JUnit").build());
             d.setActive(false);
             d.setInvoiceAddress(last.getInvoiceAddress());
             d.setShippingAddress(last.getShippingAddress());

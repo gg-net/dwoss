@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.mandator.api.value;
 
+import java.io.Serializable;
+
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -25,7 +27,7 @@ import lombok.Value;
  */
 @Value
 @EqualsAndHashCode(of = {"value"})
-public class Ledger {
+public class Ledger implements Serializable {
 
     private final int value;
 

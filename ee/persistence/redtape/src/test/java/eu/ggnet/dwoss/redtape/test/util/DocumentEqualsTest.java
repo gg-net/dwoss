@@ -1,26 +1,19 @@
 package eu.ggnet.dwoss.redtape.test.util;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
-import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
-
-import eu.ggnet.dwoss.rules.PositionType;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -66,7 +59,7 @@ public class DocumentEqualsTest {
         doc2.add(Document.Flag.CUSTOMER_BRIEFED);
         assertTrue("The following Documents should allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
 
-        doc2.append(new PositionBuilder().type(PositionType.COMMENT).build());
+        doc2.append(Position.builder().type(PositionType.COMMENT).build());
         assertTrue("The following Documents should allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
     }
 
@@ -76,7 +69,7 @@ public class DocumentEqualsTest {
         Document doc2 = doc1.partialClone();
         doc2.setDossier(doc1.getDossier());
 
-        doc2.append(new PositionBuilder().type(PositionType.UNIT).build());
+        doc2.append(Position.builder().amount(1).type(PositionType.UNIT).build());
         assertFalse("The following Documents should not allow changes:\n" + doc1 + "\n" + doc2, EQ.equals(doc1,doc2));
     }
 
@@ -141,9 +134,9 @@ public class DocumentEqualsTest {
         doc1.add(Document.Flag.CUSTOMER_BRIEFED);
         doc1.setClosed(true);
         dos.add(doc1);
-        doc1.append(new PositionBuilder().type(PositionType.UNIT).build());
-        doc1.append(new PositionBuilder().type(PositionType.PRODUCT_BATCH).build());
-        doc1.append(new PositionBuilder().type(PositionType.COMMENT).build());
+        doc1.append(Position.builder().amount(1).type(PositionType.UNIT).build());
+        doc1.append(Position.builder().amount(1).type(PositionType.PRODUCT_BATCH).build());
+        doc1.append(Position.builder().amount(1).type(PositionType.COMMENT).build());
         return doc1;
     }
 

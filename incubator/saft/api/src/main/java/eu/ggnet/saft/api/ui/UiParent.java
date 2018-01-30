@@ -30,16 +30,36 @@ import lombok.Getter;
 @Getter
 public class UiParent {
 
-        private Component swingParent = null;
+    /**
+     * Returns a new wrapped parrent of a swing component.
+     *
+     * @param swingParent the swingparent to be wrapped.
+     * @return a new wrapped parrent of a swing component.
+     */
+    public static UiParent of(Component swingParent) {
+        return new UiParent(swingParent);
+    }
 
-        private Parent javafxParent = null;
+    /**
+     * Returns a new wrapped parrent of a javafx parent.
+     *
+     * @param javafxParent a javafxparent
+     * @return a new wrapped parrent of a javafx parent
+     */
+    public static UiParent of(Parent javafxParent) {
+        return new UiParent(javafxParent);
+    }
 
-        public UiParent(Component swingParent) {
-            this.swingParent = swingParent;
-        }
+    private Component swingParent = null;
 
-        public UiParent(Parent javafxParent) {
-            this.javafxParent = javafxParent;
+    private Parent javafxParent = null;
+
+    private UiParent(Component swingParent) {
+        this.swingParent = swingParent;
+    }
+
+    private UiParent(Parent javafxParent) {
+        this.javafxParent = javafxParent;
     }
 
 }

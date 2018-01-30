@@ -19,25 +19,24 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_GSOFFICE_IN_XML;
 import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN_XML;
 
 /**
  * Action to create the GsOfficeXml.
  *
  * @author pascal.perau
  */
-public class GsOfficeExportAction extends AccessableAction {
+public class SageExportAction extends AccessableAction {
 
-    public GsOfficeExportAction() {
-        super(EXPORT_DOCUMENTS_FOR_GSOFFICE_IN_XML);
+    public SageExportAction() {
+        super(EXPORT_DOCUMENTS_FOR_SAGE_IN_XML);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class GsOfficeExportAction extends AccessableAction {
         dialog.setVisible(true);
         if ( !dialog.isOk() ) return;
         Ui.exec(() -> {
-            Ui.progress().title("GsOffice Export")
+            Ui.progress().title("Sage Export")
                     .call(() -> lookup(SageExporter.class).toXml(dialog.getStart(), dialog.getEnd()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
         });
 

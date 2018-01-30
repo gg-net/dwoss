@@ -20,7 +20,6 @@ import java.io.Serializable;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
  * Exporter Engine Configuration.
@@ -77,17 +76,5 @@ public interface SageExporterConfig extends Serializable {
      * @return the stCode text
      */
     String stCode(Document doc);
-
-    /**
-     * Optional interceptor to manipulate the position while processing.
-     *
-     * @param pos the possition.
-     * @return the posstion.
-     */
-    //TODO: Remove shortly after next update, might manipulate indirect database data.
-    default Position intercept(Position pos) {
-        return pos;
-    }
-
 
 }

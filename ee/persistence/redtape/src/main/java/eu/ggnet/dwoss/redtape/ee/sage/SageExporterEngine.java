@@ -24,10 +24,10 @@ import javax.xml.bind.*;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
-import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
+import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.saft.api.progress.IMonitor;
 
@@ -96,8 +96,7 @@ public class SageExporterEngine {
 
             Map<Integer, Row> bookingRates = new HashMap<>();
             for (Position position : doc.getPositions().values()) {
-                if ( !position.getBookingAccount().isPresent() ) continue;
-                position = config.intercept(position);
+                if ( !position.getBookingAccount().isPresent() ) continue;  // WARN in LOG orelse.
                 Row row;
                 if ( !bookingRates.containsKey(position.getBookingAccount().get().getValue()) ) {
                     bookingRates.put(position.getBookingAccount().get().getValue(), new Row(r));
@@ -127,6 +126,16 @@ public class SageExporterEngine {
         return rowData;
     }
 
+    /**
+     * Will be removed
+     *
+     * @param monitor
+     * @param defaultLedger
+     * @param disableCustomerLedgers
+     * @return
+     * @deprecated use {@link SageExporterEngine#generateGSRowData(eu.ggnet.saft.api.progress.IMonitor)
+     */
+    @Deprecated
     public RowData generateGSRowDataOld(IMonitor monitor, int defaultLedger, boolean disableCustomerLedgers) {
         SubMonitor m = SubMonitor.convert(monitor);
         RowData rowData = new RowData();

@@ -280,6 +280,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     /**
      * Updates the selection in case of data change.
+     * @param dos
      */
     public void reloadSelectionOnStateChange(Dossier dos) {
         Dossier oldDos = model.getSelectedDossier();
@@ -290,7 +291,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     /**
      * Updates the selection in case of dossier deletion.
-     * <p/>
+     * <p>
      * @param dos
      */
     public void reloadOnDelete(Dossier dos) {
@@ -305,7 +306,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        long customerId = lookup(CustomerCos.class).createCustomer(new UiParent(view));
+        long customerId = lookup(CustomerCos.class).createCustomer(UiParent.of(view));
         if ( customerId == 0 ) {
             UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
@@ -322,7 +323,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        if ( !lookup(CustomerCos.class).updateCustomer(new UiParent(view), recentCustomerId) ) return;
+        if ( !lookup(CustomerCos.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
         //reset search to avoid wrong customer selections
         model.setSearch(String.valueOf(recentCustomerId));
         view.searchResultList.setSelectedIndex(0);

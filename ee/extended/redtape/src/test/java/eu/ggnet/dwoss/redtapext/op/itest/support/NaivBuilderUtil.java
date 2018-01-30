@@ -2,6 +2,7 @@ package eu.ggnet.dwoss.redtapext.op.itest.support;
 
 import java.util.Random;
 
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.TaxType;
@@ -20,6 +21,14 @@ public class NaivBuilderUtil {
 
     private final static Random R = new Random();
 
+    private final static Ledger UNIT_LEDGER = new Ledger(1000, "Units in Tests");
+
+    private final static Ledger SERVICE_LEDGER = new Ledger(1001, "Services in Tests");
+
+    private final static Ledger PRODUCT_BATCHES_LEDGER = new Ledger(1002, "ProductBatches in Tests");
+
+    private final static Ledger SHIPPING_LEDGER = new Ledger(1003, "ShippingCosts in Tests");
+
     private static TaxType taxType = TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
     public static void overwriteTax(TaxType taxType) {
@@ -36,6 +45,7 @@ public class NaivBuilderUtil {
         return Position.builder()
                 .type(UNIT)
                 .amount(1)
+                .bookingAccount(UNIT_LEDGER)
                 .uniqueUnitId(uu.getId())
                 .uniqueUnitProductId(uu.getProduct().getId())
                 .price(uu.getPrice(CUSTOMER))
@@ -66,6 +76,7 @@ public class NaivBuilderUtil {
     public static Position service(double amount, double price) {
         return Position.builder()
                 .type(PositionType.SERVICE)
+                .bookingAccount(SERVICE_LEDGER)
                 .name("Service")
                 .amount(amount)
                 .price(price)
@@ -81,12 +92,13 @@ public class NaivBuilderUtil {
      * @return a Product Batch Position with generated price and amount.
      */
     public static Position batch(Product product) {
-        return batch(R.nextInt(20) + 1, TwoDigits.roundedApply(R.nextInt(1000) * R.nextDouble(), 0, 0), product);
+        return batch(R.nextInt(20) + 1, TwoDigits.round(1.0 + R.nextInt(1000) * R.nextDouble()), product);
     }
 
     public static Position batch(int amount, double price, Product product) {
         return Position.builder()
                 .type(PositionType.PRODUCT_BATCH)
+                .bookingAccount(PRODUCT_BATCHES_LEDGER)
                 .uniqueUnitProductId(product.getId())
                 .amount(amount)
                 .price(price)
@@ -102,12 +114,13 @@ public class NaivBuilderUtil {
      * @return a Shipping Cost Position with generated price
      */
     public static Position shippingcost() {
-        return shippingcost(TwoDigits.roundedApply(R.nextInt(1000) * R.nextDouble(), 0, 0));
+        return shippingcost(TwoDigits.round(1.0 + R.nextInt(1000) * R.nextDouble()));
     }
 
     public static Position shippingcost(double price) {
         return Position.builder()
                 .type(PositionType.SHIPPING_COST)
+                .bookingAccount(SHIPPING_LEDGER)
                 .amount(1)
                 .price(price)
                 .tax(taxType.getTax())

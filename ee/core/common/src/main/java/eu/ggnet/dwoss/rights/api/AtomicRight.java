@@ -148,7 +148,7 @@ public enum AtomicRight implements Authorisation {
     /**
      * Allows to read the Doccuments to export them to the GsOffice XML Format.
      */
-    EXPORT_DOCUMENTS_FOR_GSOFFICE_IN_XML("Exportiere Dokumente zu GsOffice XML"),
+    EXPORT_DOCUMENTS_FOR_SAGE_IN_XML("Exportiere Dokumente zu Sage(GsOffice) XML"),
     /**
      * Unused, can be reassigned.
      */

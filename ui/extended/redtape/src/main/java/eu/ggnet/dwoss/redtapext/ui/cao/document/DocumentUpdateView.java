@@ -155,8 +155,10 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
                 if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
                     if ( isChangeAllowed() ) {
-                        controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
-                        positionsFxList.refresh();
+                        Ui.exec(() -> {
+                            controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
+                            Platform.runLater(() -> positionsFxList.refresh());
+                        });
                     } else {
                         UiAlert.show("Änderung an Positionen ist nicht erlaubt.");
                     }

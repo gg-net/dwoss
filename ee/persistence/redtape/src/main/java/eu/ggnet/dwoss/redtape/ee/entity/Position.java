@@ -393,7 +393,6 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     @Null(groups = DefaultUi.class, message = "ViolationMessage is not null, but '${validatedValue}'")
-
     public String getDefaultUiValidationViolations() {
         // if this is InPersistence, we could also discover the Type of Document and get more detailed.
         if ( type == null ) return null;

@@ -6,6 +6,8 @@ import java.util.*;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.bouncycastle.util.Strings;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -17,6 +19,7 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.StockAgent;
@@ -25,7 +28,7 @@ import eu.ggnet.dwoss.stock.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -42,6 +45,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
     @EJB
     private RedTapeWorker redTapeWorker;
+
+    @EJB
+    private SageExporter sageExporter;
 
     @Inject
     private CustomerGeneratorOperation customerGenerator;
@@ -310,6 +316,18 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         doc2.setType(DocumentType.INVOICE);
         Document update2 = redTapeWorker.update(doc2, null, "Junit");
         assertEquals("RS" + format + "_00002", update2.getIdentifier());
+
+        Date now = new Date();
+        Date start = DateUtils.addDays(now, -1);
+        Date end = DateUtils.addDays(now, 1);
+
+        FileJacket fj = sageExporter.toXml(start, end);
+        String result = Strings.fromByteArray(fj.getContent());
+        assertThat(result).as("SageXml spot Test")
+                .isNotBlank()
+                .contains(dos.getIdentifier(), dos2.getIdentifier())
+                .contains(Double.toString(TwoDigits.round(p7.getPrice() * p7.getAmount())).replace(".", ","))
+                .contains(Double.toString(TwoDigits.round(p6.getPrice() * p6.getAmount())).replace(".", ","));
     }
 
     @Test

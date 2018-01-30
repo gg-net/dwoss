@@ -6,6 +6,8 @@ import java.util.*;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.time.DateUtils;
+import org.bouncycastle.util.Strings;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +18,7 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtapext.op.itest.support.SupportBean;
 import eu.ggnet.dwoss.rules.DocumentType;
@@ -25,7 +28,7 @@ import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.*;
 
 import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +65,9 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
     @Inject
     private ReceiptGeneratorOperation receiptGenerator;
 
+    @EJB
+    private SageExporter sageExporter;
+
     private final String YY = new SimpleDateFormat("YY").format(new Date());
 
     @Test
@@ -84,13 +90,15 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
         assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
+        Position batch = batch(uuProduct1);
+        Position shipping = shippingcost();
         doc.append(unit(uu1));
         doc.append(unit(uu2));
         doc.append(unit(uu3));
         doc.append(comment());
         doc.append(service());
-        doc.append(batch(uuProduct1));
-        doc.append(shippingcost());
+        doc.append(batch);
+        doc.append(shipping);
 
         //add units to LogicTransaction
         unitOverseer.lockStockUnit(dos.getId(), uu1.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID));
@@ -217,6 +225,20 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
         }
         assertTrue(unit1Found);
         assertTrue(commentFound);
+
+        Date now = new Date();
+        Date start = DateUtils.addDays(now, -1);
+        Date end = DateUtils.addDays(now, 1);
+
+        FileJacket fj = sageExporter.toXml(start, end);
+        String result = Strings.fromByteArray(fj.getContent());
+        assertThat(result).as("SageXml spot Test")
+                .isNotBlank()
+                .contains(dos.getIdentifier())
+                .contains(Double.toString(TwoDigits.round(batch.getPrice() * batch.getAmount())).replace(".", ","))
+                .contains(Double.toString(TwoDigits.round(shipping.getPrice() * shipping.getAmount())).replace(".", ","));
+
+        System.out.println(result);
 
     }
 
