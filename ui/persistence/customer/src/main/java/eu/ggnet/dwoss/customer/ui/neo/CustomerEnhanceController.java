@@ -202,7 +202,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void accept(Customer cust) {
-        if ( cust != null && cust.getViolationMessage() != null ) {
+        if ( cust != null && cust.isVaild() ) {
             if ( cust.isBussines() ) {
                 bussines = true;
             }

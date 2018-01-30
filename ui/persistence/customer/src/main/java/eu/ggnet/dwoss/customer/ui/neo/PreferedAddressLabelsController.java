@@ -145,11 +145,13 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
         invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
         invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressContactListView.getItems().addAll(company.getContacts()));
+        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressAddressListView.getItems().addAll(company.getAddresses()));
         invoiceAddressContactListView.getItems().addAll(customer.getContacts());
         invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
         shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
         shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressContactListView.getItems().addAll(company.getContacts()));
+        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressAddressListView.getItems().addAll(company.getAddresses()));
         shippingAddressContactListView.getItems().addAll(customer.getContacts());
         shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
