@@ -16,33 +16,26 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
-import org.apache.commons.lang3.StringUtils;
-
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -74,7 +67,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private Button okButton;
-
 
     @Data
     @AllArgsConstructor
@@ -169,10 +161,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void handelPreferedAddressLabelsButton(ActionEvent event) {
-        //TODO better work with the entity AddressLable
-        
+        System.out.println("customer in ui" + getCustomer());
+        getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
+            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class);
         });
     }
 
@@ -183,11 +175,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void handleMandatorInfoButton(ActionEvent event) {
-//        
+//
 //        Ui.exec(() -> {
 //            Ui.build().parent(kundenname).fxml().eval(() -> customer.getMandatorMetadata(), MandatorMetaDataController.class).ifPresent(a -> {
 //                companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-//                
+//
 //            });
 //        });
 
@@ -196,22 +188,21 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
-        
+
         /**
-        //button behavior            
-        okButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> keyAccount.getText().trim().isEmpty(), keyAccount.textProperty()
-                )
-        );
-          */
-        
+         * //button behavior
+         * okButton.disableProperty().bind(
+         * Bindings.createBooleanBinding(()
+         * -> keyAccount.getText().trim().isEmpty(), keyAccount.textProperty()
+         * )
+         * );
+         */
         source.getItems().addAll(Source.values());
     }
 
     @Override
     public void accept(Customer cust) {
-        if ( cust != null || cust.getViolationMessage() != null ) {
+        if ( cust != null && cust.getViolationMessage() != null ) {
             if ( cust.isBussines() ) {
                 bussines = true;
             }
@@ -296,7 +287,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         cust.getMandatorMetadata().clear();
         mandatorMetadata.forEach(m -> cust.add(m));
 
-        //tansfer the List of Flags back to Set (remove duplicates) 
+        //tansfer the List of Flags back to Set (remove duplicates)
         HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
         outputFlagslist.clear();
         outputFlagslist.addAll(tempSet);

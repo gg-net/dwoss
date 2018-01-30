@@ -37,7 +37,6 @@ public class PreferedAddressLabelsTryOut {
         Customer c = gen.makeCustomer();
         c.add(gen.makeCompany());
         c.add(gen.makeCompany());
-        c.add(gen.makeContact());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

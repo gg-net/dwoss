@@ -16,7 +16,8 @@
  */
 package tryout.neo;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
@@ -25,7 +26,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -37,14 +39,10 @@ public class CustomerEnhanceTryout {
 
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
-
-//        customer.add(gen.makeCompany());
-//        customer.add(gen.makeCompany());
-//        customer.add(gen.makeCompany());
-
-        customer.add(gen.makeContact());
-        customer.add(gen.makeContact());
-        customer.add(gen.makeContact());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
 
         customer.setSource(Source.ONEADO);
         customer.setKeyAccounter("Herr Meier");
@@ -53,6 +51,7 @@ public class CustomerEnhanceTryout {
         customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
         customer.add(new MandatorMetadata());
 
+        System.out.println("customer in tryout" + customer);
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
