@@ -22,6 +22,7 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -123,11 +124,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
-        simpleCustomer = getSimpleCustomer();
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> Client.lookup(CustomerAgent.class).store(simpleCustomer), CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> Client.lookup(CustomerAgent.class).store(getSimpleCustomer()), CustomerEnhanceController.class);
         });
-
+        //close this window
+        simpleCustomer = null;
         Ui.closeWindowOf(kid);
     }
 
@@ -282,7 +283,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         } else {
             genderChoiseBox.getSelectionModel().selectFirst();
         }
-        
+
         if ( simpleCustomer.getSource() != null ) {
             sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
         } else {

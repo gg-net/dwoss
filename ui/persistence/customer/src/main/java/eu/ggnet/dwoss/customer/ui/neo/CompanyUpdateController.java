@@ -134,10 +134,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             Ui.exec(() -> {
                 Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class).ifPresent(
                         a -> {
-                            Platform.runLater(() -> {
-                                addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
-                            });
-
+                            if ( a != null ) {
+                                Platform.runLater(() -> {
+                                    addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                                });
+                            }
                         });
             });
         }
@@ -146,15 +147,17 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddAddressButton() {
         Address addresse = new Address();
-        addresse.setCity("");
-        addresse.setStreet("");
-        addresse.setZipCode("");
+        addresse.setCity("Stadt");
+        addresse.setStreet("Strasse");
+        addresse.setZipCode("123456");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
-                        Platform.runLater(() -> {
-                            addressList.add(a);
-                        });
+                        if ( a != null ) {
+                            Platform.runLater(() -> {
+                                addressList.add(a);
+                            });
+                        }
 
                     });
         });
@@ -176,9 +179,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             Ui.exec(() -> {
                 Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class).ifPresent(
                         a -> {
-                            Platform.runLater(() -> {
-                                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                            });
+                            if ( a != null ) {
+                                Platform.runLater(() -> {
+                                    communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                                });
+                            }
 
                         });
             });
@@ -192,9 +197,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
-                        Platform.runLater(() -> {
-                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                        });
+                        if ( a != null ) {
+                            Platform.runLater(() -> {
+                                communicationsList.add(a);
+                            });
+                        }
 
                     });
         });
@@ -216,9 +223,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             Ui.exec(() -> {
                 Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, ContactUpdateController.class).ifPresent(
                         a -> {
-                            Platform.runLater(() -> {
-                                contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
-                            });
+                            if ( a != null ) {
+                                Platform.runLater(() -> {
+                                    contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
+                                });
+                            }
                         });
             });
         }
@@ -227,13 +236,15 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddContactButton() {
         Contact contact = new Contact();
-        contact.setLastName("");
+        contact.setLastName("Nachnahme");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
-                        Platform.runLater(() -> {
-                            contactsList.add(a);
-                        });
+                        if ( a != null ) {
+                            Platform.runLater(() -> {
+                                contactsList.add(a);
+                            });
+                        }
                     });
         });
     }
