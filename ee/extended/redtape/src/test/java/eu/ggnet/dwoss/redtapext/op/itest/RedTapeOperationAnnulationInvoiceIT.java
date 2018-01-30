@@ -16,7 +16,8 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.redtapext.op.itest.support.*;
+import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.redtapext.op.itest.support.SupportBean;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.StockAgent;
@@ -27,6 +28,7 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -79,7 +81,8 @@ public class RedTapeOperationAnnulationInvoiceIT extends ArquillianProjectArchiv
                 .orElseThrow(() -> new RuntimeException("No alternate StockId found, impossible"));
 
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         doc.append(unit(uu1));
         doc.append(unit(uu2));

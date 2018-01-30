@@ -115,7 +115,8 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         //Generate Dossier
         Dossier dos1 = redTapeWorker.create(customerId, false, "Me");
-        Document doc1 = FindRandomExceptionUtil.order(dos1);
+        Document doc1 = dos1.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos1.toMultiLine()).isNotNull();
 
         //Commit explicit date to document for assertion
         doc1 = manipulator.changeActual(doc1, new GregorianCalendar(2012, 3, 15).getTime());
@@ -164,7 +165,7 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         assertFalse(doc1.getInvoiceAddress().equals(doc1.getShippingAddress()));
 
         //Test update with document changes
-        Position p8 = new PositionBuilder().type(PositionType.SERVICE).price(50.).tax(1.).name("Position 8").description("Position from update2").build();
+        Position p8 = Position.builder().amount(1).type(PositionType.SERVICE).price(50.).tax(1.).name("Position 8").description("Position from update2").build();
         doc1.append(p8);
         doc1.removeAt(6);
 
@@ -196,7 +197,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         //Generate Dossier
         Dossier dos1 = redTapeWorker.create(customerId, true, "Me");
-        Document doc1 = FindRandomExceptionUtil.order(dos1);
+        Document doc1 = dos1.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos1.toMultiLine()).isNotNull();
+
         //Create Positions
         Position p1 = NaivBuilderUtil.unit(uu1);
         Position p2 = NaivBuilderUtil.unit(uu2);
@@ -251,7 +254,8 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         //Generate Dossier
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc1 = FindRandomExceptionUtil.order(dos);
+        Document doc1 = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         doc1.add(Document.Flag.CUSTOMER_BRIEFED);
         doc1.add(Document.Flag.CUSTOMER_EXACTLY_BRIEFED);
@@ -275,7 +279,8 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         Position p8 = NaivBuilderUtil.unit(uu4);
 
         Dossier dos2 = redTapeWorker.create(customerId, false, "Me2");
-        Document doc2 = FindRandomExceptionUtil.order(dos2);
+        Document doc2 = dos2.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc2).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos2.toMultiLine()).isNotNull();
 
         doc2.append(p3);
         doc2.append(p8);
@@ -320,7 +325,8 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         //Generate Dossier
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc1 = FindRandomExceptionUtil.order(dos);
+        Document doc1 = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         //Create Positions
         Position p1 = NaivBuilderUtil.unit(uu1);
@@ -341,7 +347,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         Dossier dos2 = redTapeWorker.create(customerId, false, "Me2");
 
-        Document doc2 = FindRandomExceptionUtil.order(dos2);
+        Document doc2 = dos2.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc2).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos2.toMultiLine()).isNotNull();
+
 
         doc2.add(Document.Condition.CONFIRMED);
         doc2.add(Document.Condition.PAID);

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +20,18 @@ import java.io.Serializable;
 import java.util.*;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.ShippingCondition;
+import eu.ggnet.dwoss.rules.*;
 
 import lombok.Data;
 
 /**
- *
+ * Basic input Object for the RedTapeStateCharacteristikFactory, uses some filters.
+ * Only the following CustomerFlags are used:
+ * <ul>
+ * <li>{@link CustomerFlag#CONFIRMS_DOSSIER</li>
+ * <li>{@link CustomerFlag#CONFIRMED_CASH_ON_DELIVERY}</li>
+ * <li>{@link CustomerFlag#SYSTEM_CUSTOMER</li>
+ * <p>
  * @author oliver.guenther
  */
 @Data
@@ -42,7 +46,10 @@ public class CustomerDocument implements Serializable {
     private PaymentMethod paymentMethod;
 
     public CustomerDocument(Set<CustomerFlag> customerFlags, Document document, ShippingCondition shippingCondition, PaymentMethod paymentMethod) {
-        this.customerFlags = Objects.requireNonNull(customerFlags, "CustomerFlags must not be null");
+        this.customerFlags = EnumSet.noneOf(CustomerFlag.class);
+        this.customerFlags.addAll(Objects.requireNonNull(customerFlags, "CustomerFlags must not be null"));
+        // Filter of flags.
+        this.customerFlags.retainAll(EnumSet.of(CustomerFlag.CONFIRMS_DOSSIER, CustomerFlag.CONFIRMED_CASH_ON_DELIVERY, CustomerFlag.SYSTEM_CUSTOMER));
         this.document = Objects.requireNonNull(document, "Document must not be null");
         this.shippingCondition = Objects.requireNonNull(shippingCondition, "ShippingCondition must not be null");
         this.paymentMethod = Objects.requireNonNull(paymentMethod, "PaymentMethod must not be null");

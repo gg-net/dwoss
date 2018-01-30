@@ -76,12 +76,12 @@ public class RedTapeOperationDossierIT extends ArquillianProjectArchive {
     }
 
     @Test
-//    @Ignore
     public void testRevertCreate() throws UserInfoException {
         long customerId = cgo.makeCustomer();
         UniqueUnit uu1 = receiptGenerator.makeUniqueUnit();
         Dossier dos = setupDossier(customerId, uu1);
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         doc.setType(DocumentType.INVOICE);
         doc.add(Document.Condition.PAID);
@@ -104,7 +104,8 @@ public class RedTapeOperationDossierIT extends ArquillianProjectArchive {
     private Dossier setupDossier(long customerId, UniqueUnit uu1) throws UserInfoException {
         uu1.setPrice(CUSTOMER, 100, "Price Added in Test");
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         doc.append(NaivBuilderUtil.unit(uu1));
         doc.append(NaivBuilderUtil.service());

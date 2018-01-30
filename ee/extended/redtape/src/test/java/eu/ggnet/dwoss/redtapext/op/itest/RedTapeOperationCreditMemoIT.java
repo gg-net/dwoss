@@ -16,7 +16,8 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.redtapext.op.itest.support.*;
+import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.redtapext.op.itest.support.SupportBean;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.StockAgent;
@@ -27,10 +28,8 @@ import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-
 /**
  *
  * @author bastian.venz
@@ -81,7 +80,8 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
                 .orElseThrow(() -> new RuntimeException("No alternate StockId found, impossible"));
 
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         //Create Positions
         doc.append(unit(uu1));
@@ -139,8 +139,7 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
         List<StockTransaction> sto = stockAgent.findStockTransactionEager(StockTransactionType.EXTERNAL_TRANSFER, StockTransactionStatusType.COMPLETED);
         assertEquals("One External Transfer Transaction", 1, sto.size());
         assertEquals("Only One Position on the Transaction should exist", 1, sto.get(0).getPositions().size());
-        assertThat("The One Position should reference to the UniqueUnit of the CreditMemo", uu1.getId(),
-                is(equalTo(sto.get(0).getPositions().get(0).getUniqueUnitId())));
+        assertThat(uu1.getId()).as("The One Position should reference to the UniqueUnit of the CreditMemo").isEqualTo(sto.get(0).getPositions().get(0).getUniqueUnitId());
         assertEquals("The Transaction should contain exactlly one shadow of the UniqueUnit", 1, sto.size());
 
         StockUnit stockUnit1 = stockAgent.findStockUnitByUniqueUnitIdEager(uu1.getId());
@@ -192,7 +191,7 @@ public class RedTapeOperationCreditMemoIT extends ArquillianProjectArchive {
         stockUnit2 = stockAgent.findStockUnitByUniqueUnitIdEager(uu2.getId());
         assertNotNull("StockUnit exists", stockUnit2);
         assertNotNull("StockUnit should have LogicTransaction", stockUnit2.getLogicTransaction());
-        assertThat("StockUnit is not the correct one", uu2.getId(), is(equalTo(stockUnit2.getUniqueUnitId())));
+        assertThat(uu2.getId()).as("StockUnit is not the correct one").isEqualTo(stockUnit2.getUniqueUnitId());
 
         dossier = redTapeAgent.findByIdEager(Dossier.class, stockUnit2.getLogicTransaction().getDossierId());
         assertNotNull("A Dossier on the SystemCustomer must exist", dossier);

@@ -16,12 +16,12 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.redtapext.op.itest.support.FindRandomExceptionUtil;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 
 import static eu.ggnet.dwoss.rules.PaymentMethod.ADVANCE_PAYMENT;
 import static eu.ggnet.dwoss.rules.ShippingCondition.DEFAULT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -43,15 +43,16 @@ public class RedTapeStateOperationIT extends ArquillianProjectArchive {
      * <p>
      * @throws java.lang.InterruptedException
      */
-    @Ignore
     @Test
+    @Ignore //Fails, but ... is this test even relevant anymore.
     public void testStateError() throws InterruptedException {
 
         long customerId = customerGenerator.makeCustomer();
 
         //Generate Dossier
         Dossier dos1 = redTapeWorker.create(customerId, false, "Test");
-        Document doc1 = FindRandomExceptionUtil.order(dos1);
+        Document doc1 = dos1.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos1.toMultiLine()).isNotNull();
 
         //Create Positions
         Position p1 = Position.builder().type(PositionType.COMMENT).name("OHO").description("Muh").build();
@@ -72,7 +73,8 @@ public class RedTapeStateOperationIT extends ArquillianProjectArchive {
 
         //Generate Dossier -- Now Sent
         dos1 = redTapeWorker.create(customerId, true, "Test");
-        doc1 = FindRandomExceptionUtil.order(dos1);
+        doc1 = dos1.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc1).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos1.toMultiLine()).isNotNull();
 
         doc1.append(p1.partialClone());
         doc1.append(p2.partialClone());

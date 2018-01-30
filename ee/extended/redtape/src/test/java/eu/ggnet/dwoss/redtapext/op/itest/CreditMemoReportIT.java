@@ -16,7 +16,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
-import eu.ggnet.dwoss.redtapext.op.itest.support.*;
+import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.redtapext.op.itest.support.SupportBean;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.LogicTransaction;
@@ -102,7 +103,8 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
         int stockIdOfUU1 = su1.getStock().getId();
 
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         doc.append(unit(uu1));
         doc.append(unit(uu2));

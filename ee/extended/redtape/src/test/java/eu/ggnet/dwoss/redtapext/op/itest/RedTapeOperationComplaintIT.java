@@ -22,8 +22,8 @@ import eu.ggnet.dwoss.stock.entity.LogicTransaction;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
-
 /**
  *
  * @author bastian.venz, oliver.guenther
@@ -54,7 +54,8 @@ public class RedTapeOperationComplaintIT extends ArquillianProjectArchive {
         UniqueUnit uu2 = units.get(1);
 
         Dossier dos = redTapeOperation.create(customerId, true, "Me");
-        Document doc = FindRandomExceptionUtil.order(dos);
+        Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
+        assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();
 
         //Create Positions
         Position p1 = NaivBuilderUtil.unit(uu1);
