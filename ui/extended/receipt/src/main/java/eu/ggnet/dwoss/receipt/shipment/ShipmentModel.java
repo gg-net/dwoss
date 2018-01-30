@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,14 +20,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoFilter;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
+import eu.ggnet.dwoss.util.table.*;
+
+import lombok.ToString;
 
 public class ShipmentModel extends PojoTableModel<Shipment> {
 
+    private final static Logger L = LoggerFactory.getLogger(ShipmentModel.class);
+
+    @ToString
     private class ShipmentFilter implements PojoFilter<Shipment> {
 
         private boolean isShipmentId;
@@ -63,18 +69,21 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
     public void filterShipmentId(String s, boolean enable) {
         filter.regexShipment = "(?i).*"+s+".*";
         filter.isShipmentId = enable;
+        L.debug("Filter changed. {}", filter);
         fireTableDataChanged();
     }
 
     public void filterStatus(Shipment.Status status ,boolean enable) {
         filter.status = status;
         filter.isStatus = enable;
+        L.debug("Filter changed. {}", filter);
         fireTableDataChanged();
     }
 
     public void filterOwner(TradeName owner, boolean enable) {
         filter.owner = owner;
         filter.isOwner = enable;
+        L.debug("Filter changed. {}", filter);
         fireTableDataChanged();
     }
 

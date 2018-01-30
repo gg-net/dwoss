@@ -21,10 +21,12 @@ import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
 import org.openide.util.Lookup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.DetailDialog;
-import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
@@ -35,8 +37,11 @@ import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
  */
 public class DwFinalExceptionConsumer implements Consumer<Throwable> {
 
+    private final static Logger L = LoggerFactory.getLogger(DwFinalExceptionConsumer.class);
+
     @Override
     public void accept(Throwable b) {
+        L.error("Systemfehler: {} , {}", b.getClass().getSimpleName(), b.getMessage());
         SwingSaft.execute(() -> {
             DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", extractDeepestMessage(b),
                     getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b));

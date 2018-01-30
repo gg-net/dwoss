@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -52,6 +48,7 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
@@ -349,11 +346,11 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
         // Building Terms 2
         StringBuilder terms2 = new StringBuilder();
-        if ( StringUtils.isNotBlank(document.getTaxType().getDocumentText()) ) terms2.append(document.getTaxType().getDocumentText()).append("<br />");
-        terms2.append(mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS1, viewType, document.getType()));
-        terms2.append("<br />"); // consider <p>
+        if ( StringUtils.isNotBlank(document.getTaxType().getDocumentText()) )
+            terms2.append("<p>").append(document.getTaxType().getDocumentText()).append("</p>");
+        terms2.append("<p>").append(mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS2, viewType, document.getType())).append("</p>");
 
-        terms2.append("<b>");
+        terms2.append("<p><b>");
         if ( documentService == null || documentService.isAmbiguous() || documentService.isUnsatisfied() ) {
             //default
             if ( document.getType() == DocumentType.ORDER ) terms2.append(dossier.getPaymentMethod().getOrderText());
@@ -361,7 +358,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         } else {
             terms2.append(documentService.get().paymentInstructionText(document.getType(), dossier.getPaymentMethod()));
         }
-        terms2.append("</b>");
+        terms2.append("</b></p>");
 
         reportParameter.put(TERMS2, terms2.toString());
 

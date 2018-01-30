@@ -18,15 +18,19 @@ package eu.ggnet.dwoss.common.exception;
 
 import java.awt.Window;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 import javax.validation.ConstraintViolationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
-import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
+import static eu.ggnet.saft.core.exception.ExceptionUtil.toStackStrace;
 
 /**
  *
@@ -34,8 +38,11 @@ import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
  */
 public class ConstraintViolationConsumer implements Consumer<ConstraintViolationException> {
 
+    private final static Logger L = LoggerFactory.getLogger(UserInfoExceptionConsumer.class);
+
     @Override
     public void accept(ConstraintViolationException ex) {
+        L.info("ConstraintViolationException {}", ConstraintViolationFormater.toSingleLine(new HashSet(ex.getConstraintViolations())));
         SwingSaft.execute(() -> {
             DetailDialog.show(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null),
                     "Validationsfehler", "Fehler bei der Validation", ConstraintViolationFormater.toMultiLine(ex.getConstraintViolations(), true), toStackStrace(ex));

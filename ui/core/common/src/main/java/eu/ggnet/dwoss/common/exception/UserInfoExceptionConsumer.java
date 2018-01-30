@@ -20,6 +20,9 @@ import java.awt.Window;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
@@ -30,8 +33,11 @@ import eu.ggnet.saft.core.ui.UiAlertBuilder;
  */
 public class UserInfoExceptionConsumer implements Consumer<UserInfoException> {
 
+    private final static Logger L = LoggerFactory.getLogger(UserInfoExceptionConsumer.class);
+
     @Override
     public void accept(UserInfoException ex) {
+        L.info("UserInfoException {}", ex.getMessage());
         UiAlert.title(ex.getHead()).message(ex.getMessage())
                 .parent(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
                 .show(map(ex.getType()));
