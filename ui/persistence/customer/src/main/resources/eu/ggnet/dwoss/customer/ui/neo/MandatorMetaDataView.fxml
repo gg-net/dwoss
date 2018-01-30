@@ -91,9 +91,9 @@
       </FlowPane>
    </bottom>
    <top>
-      <FlowPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="CENTER">
+      <FlowPane alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="CENTER">
          <children>
-                    <Label text="Standard" />
+                    <Label alignment="CENTER_RIGHT" text="Standard" />
          </children>
       </FlowPane>
    </top>
