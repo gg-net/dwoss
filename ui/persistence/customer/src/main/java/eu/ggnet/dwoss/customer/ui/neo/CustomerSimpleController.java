@@ -20,14 +20,15 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -190,13 +191,32 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         saveAndCloseButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
-        );
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
+                        )
+                ));
 
         saveAndEnhanceUIButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
+                        )
+                ));
+
+        // force the zipcode field to be numeric only, becuase the ledger get saved as an int
+        zipcodeTextField.textFormatterProperty().set(
+                new TextFormatter<>(new IntegerStringConverter(), 0,
+                        change -> {
+                            String newText = change.getControlNewText();
+                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
+                                return change;
+                            } else {
+                                return null;
+                            }
+                        })
         );
 
     }
@@ -209,7 +229,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             }
             setSimpleCustomer(c.toSimple().get());
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
         }
 
     }
@@ -222,23 +242,19 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         return simpleCustomer;
     }
 
-    public void showCompanyHBox() {
-        Label companyNameLable = new Label("Firma:");
-        Label ustIdLable = new Label("ustID:");
-
-        companyNameTextFiled.setText(simpleCustomer.getCompanyName());
-        ustIdTextField.setText(simpleCustomer.getTaxId());
-        companyHBox.setSpacing(5.0);
-
-        companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
-    }
-
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
         //the button and the header
         if ( bussines ) {
             headerLabel.setText("Geschäftskunde");
             changeUIButton.setText("Endkunde");
-            showCompanyHBox();
+            companyNameTextFiled.setText(simpleCustomer.getCompanyName());
+            ustIdTextField.setText(simpleCustomer.getTaxId());
+            //fill the HBox for Company
+            Label companyNameLable = new Label("Firma:");
+            Label ustIdLable = new Label("ustID:");
+
+            companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
+            companyHBox.setSpacing(5.0);
         } else {
             headerLabel.setText("Endkunde");
             changeUIButton.setText("Geschäftskunde");
@@ -265,6 +281,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         } else {
             genderChoiseBox.getSelectionModel().selectFirst();
         }
+        
         if ( simpleCustomer.getSource() != null ) {
             sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
         } else {
