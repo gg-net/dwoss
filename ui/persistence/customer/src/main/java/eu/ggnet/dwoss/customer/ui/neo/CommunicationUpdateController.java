@@ -101,7 +101,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     public void initialize(URL url, ResourceBundle rb) {
         commtypbox.getItems().addAll(Communication.Type.values());
 
-        //enable the safe button only on filled TextFields
+        //enable the save button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> identifer.getText().trim().isEmpty(), identifer.textProperty()
@@ -111,7 +111,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
     @Override
     public void accept(Communication c) {
-        if ( c != null || c.getViolationMessages() != null ) {
+        if ( c != null && c.getViolationMessages() == null ) {
             setCommunication(c);
         } else {
             UiAlert.message("Kommunikationsweg ist inkompatibel: " + c.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
@@ -136,6 +136,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         identifer.setText(com.getIdentifier());
         if ( com.getType() != null ) {
             commtypbox.getSelectionModel().select(com.getType());
+            commtypbox.setDisable(true);
         } else {
             commtypbox.getSelectionModel().selectFirst();
         }

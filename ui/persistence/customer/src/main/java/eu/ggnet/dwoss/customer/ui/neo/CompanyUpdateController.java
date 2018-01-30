@@ -130,18 +130,33 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            editAddress(selectedItem);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class).ifPresent(
+                        a -> {
+                            Platform.runLater(() -> {
+                                addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                            });
+
+                        });
+            });
         }
     }
 
     @FXML
     private void handleAddAddressButton() {
-        Address a = new Address();
-        a.setCity("");
-        a.setStreet("");
-        a.setZipCode("");
+        Address addresse = new Address();
+        addresse.setCity("");
+        addresse.setStreet("");
+        addresse.setZipCode("");
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.add(a);
+                        });
 
-        addAddress(a);
+                    });
+        });
     }
 
     @FXML
@@ -157,15 +172,31 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditComButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            editCommunication(selectedItem);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class).ifPresent(
+                        a -> {
+                            Platform.runLater(() -> {
+                                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                            });
+
+                        });
+            });
         }
     }
 
     @FXML
     private void handleAddComButton() {
-        Communication c = new Communication();
-        c.setIdentifier("");
-        addCommunication(c);
+        Communication communication = new Communication();
+        communication.setIdentifier("");
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
     }
 
     @FXML
@@ -181,15 +212,29 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void handleEditContactButton() {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            editContact(selectedItem);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, ContactUpdateController.class).ifPresent(
+                        a -> {
+                            Platform.runLater(() -> {
+                                contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
+                            });
+                        });
+            });
         }
     }
 
     @FXML
     private void handleAddContactButton() {
-        Contact c = new Contact();
-        c.setLastName("");
-        addContact(c);
+        Contact contact = new Contact();
+        contact.setLastName("");
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            contactsList.add(a);
+                        });
+                    });
+        });
     }
 
     @FXML
@@ -216,7 +261,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
 
-        //enable the safe button only on filled TextFields
+        //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
@@ -233,7 +278,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 )
         );
 
-        //Address CellFactory
+        //Address HORIZONTAL CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
             ListCell<Address> cell = new ListCell<Address>() {
                 @Override
@@ -267,6 +312,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         });
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
+        //adding a CellFactory for every Colum 
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
             return new TableCell<Communication, Type>() {
@@ -346,7 +392,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             return cell;
         });
 
-        // force the field to be numeric only
+        // force the ledger field to be numeric only, becuase the ledger get saved as an int
         ledgerTextField.textFormatterProperty().set(
                 new TextFormatter<>(new IntegerStringConverter(), 0,
                         change -> {
@@ -363,7 +409,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Company comp) {
-        if ( comp != null || comp.getViolationMessages() != null ) {
+        if ( comp != null && comp.getViolationMessages() == null ) {
             setCompany(comp);
         } else {
             UiAlert.message("Firma ist inkompatibel: " + comp.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
@@ -376,78 +422,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
             return null;
         }
         return company;
-    }
-
-    private void editAddress(Address addresse) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
-    }
-
-    private void addAddress(Address addresse) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            addressList.add(a);
-                        });
-
-                    });
-        });
-    }
-
-    private void editCommunication(Communication communication) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
-                    a -> {
-
-                        Platform.runLater(() -> {
-                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
-    }
-
-    private void addCommunication(Communication communication) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
-                    a -> {
-
-                        Platform.runLater(() -> {
-                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
-    }
-
-    private void editContact(Contact contact) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
-                        });
-                    });
-        });
-    }
-
-    private void addContact(Contact contact) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            contactsList.add(a);
-                        });
-                    });
-        });
     }
 
     /**

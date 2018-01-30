@@ -123,18 +123,35 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void handleEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            editAddress(selectedItem);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class).ifPresent(
+                        a -> {
+                            Platform.runLater(() -> {
+                                addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
+                            });
+
+                        });
+            });
         }
     }
 
     @FXML
     private void handleAddAddressButton() {
-        Address a = new Address();
-        a.setCity("");
-        a.setStreet("");
-        a.setZipCode("");
+        Address addresse = new Address();
+        addresse.setCity("");
+        addresse.setStreet("");
+        addresse.setZipCode("");
 
-        addAddress(a);
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            addressList.add(a);
+                        });
+
+                    });
+        });
+
     }
 
     @FXML
@@ -150,20 +167,36 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void handleEditComButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            editCommunication(selectedItem);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class).ifPresent(
+                        a -> {
+                            Platform.runLater(() -> {
+                                communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                            });
+
+                        });
+            });
         }
     }
 
     @FXML
     private void handleAddComButton() {
-        Communication c = new Communication();
-        c.setIdentifier("");
-        addCommunication(c);
+        Communication communication = new Communication();
+        communication.setIdentifier("");
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
+                    a -> {
+                        Platform.runLater(() -> {
+                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
+                        });
+
+                    });
+        });
     }
 
     @FXML
     private void handleDelComButton() {
-         int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
+        int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
         if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
             communicationsList.remove(selectedIndex);
             communicationTableView.refresh();
@@ -182,13 +215,13 @@ public class ContactUpdateController implements Initializable, FxController, Con
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
 
-        saveAndCloseButton.disableProperty().bind(
+        //enable the save and "saveAndClose" button only on filled TextFields
+        saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
                 )
         );
-
-        saveButton.disableProperty().bind(
+        saveAndCloseButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
                 )
@@ -198,7 +231,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         genderBox.setConverter(new StringConverter<Sex>() {
             @Override
             public Sex fromString(String string) {
-                return null;
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Sex.");
             }
 
             @Override
@@ -208,7 +241,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         });
         genderBox.getItems().addAll(Contact.Sex.values());
 
-        //Address CellFactory
+        //Address HORIZONTAL CellFactory
         addressListView.setCellFactory((ListView<Address> p) -> {
             ListCell<Address> cell = new ListCell<Address>() {
                 @Override
@@ -242,7 +275,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         });
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
-        //Communication CellFactory
+        //adding a CellFactory for every Colum
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
             return new TableCell<Communication, Type>() {
@@ -302,7 +335,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Contact cont) {
-        if ( cont != null || cont.getViolationMessages() != null ) {
+        if ( cont != null && cont.getViolationMessages() == null ) {
             setContact(cont);
         } else {
             UiAlert.message("Kontakt ist inkompatibel: " + cont.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
@@ -315,56 +348,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
             return null;
         }
         return contact;
-    }
-
-    private void editAddress(Address addresse) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
-    }
-
-    private void addAddress(Address addresse) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            addressList.add(a);
-                        });
-
-                    });
-        });
-    }
-
-    private void editCommunication(Communication communication) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
-                    a -> {
-
-                        Platform.runLater(() -> {
-                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
-    }
-
-    private void addCommunication(Communication communication) {
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
-                    a -> {
-
-                        Platform.runLater(() -> {
-                            communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a);
-                        });
-
-                    });
-        });
     }
 
     /**

@@ -22,8 +22,7 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 
 /**
  *
@@ -34,18 +33,22 @@ public class PreferedAddressLabelsTryOut {
     public static void main(String[] args) {
 
         CustomerGenerator gen = new CustomerGenerator();
-        Customer c = gen.makeCustomer();
-        c.add(gen.makeCompany());
-        c.add(gen.makeCompany());
-        c.add(gen.makeContact());
+        Customer customer = gen.makeCustomer();
+        customer.getContacts().clear();
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
+        if ( customer.getViolationMessage() != null ) {
+            UiAlert.show("customer is invalid" + customer.getViolationMessage());
 
+            return;
+        }
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> c, PreferedAddressLabelsController.class);
+                Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
             });
         });
 

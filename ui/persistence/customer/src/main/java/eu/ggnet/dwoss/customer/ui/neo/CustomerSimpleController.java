@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,12 +29,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
@@ -113,86 +114,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private Button saveAndEnhanceUIButton;
 
-    public CustomerSimpleController() {
-    }
-
-    /**
-     * Initializes the controller class.
-     *
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //"hidde" the companyHBox
-        companyHBox.setDisable(bussines);
-
-        //fill the choiseBoxs
-        genderChoiseBox.setConverter(new StringConverter<Sex>() {
-            @Override
-            public Sex fromString(String string) {
-                return null;
-            }
-
-            @Override
-            public String toString(Sex myClassinstance) {
-                return myClassinstance.getSign();
-            }
-        });
-        genderChoiseBox.getItems().addAll(Sex.values());
-        sourceChoiseBox.setConverter(new StringConverter<Source>() {
-            @Override
-            public String toString(Source sour) {
-                if ( sour == null ) {
-                    return null;
-                } else {
-                    return sour.getName();
-                }
-            }
-
-            @Override
-            public Source fromString(String personString) {
-                return null; // No conversion fromString needed.
-            }
-        });
-
-        sourceChoiseBox.getItems().addAll(Source.values());
-
-        saveAndCloseButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
-        );
-
-        saveAndEnhanceUIButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
-        );
-
-    }
-
-    @Override
-    public void accept(Customer c) {
-        if ( c != null || c.isSimple() ) {
-            if ( c.isBussines() ) {
-                bussines = true;
-            }
-            setSimpleCustomer(c.toSimple().get());
-        } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
-        }
-
-    }
-
-    @Override
-    public SimpleCustomer getResult() {
-        if ( simpleCustomer == null ) {
-            return null;
-        }
-        return simpleCustomer;
-    }
-
     @FXML
     private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
@@ -202,11 +123,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
-
-        //TODO 
-        //safe the simpleCustomer to DB and than build it back here
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> new Customer(), CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> Client.lookup(CustomerAgent.class).store(simpleCustomer), CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);
@@ -225,6 +143,85 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         setSimpleCustomer(simpleCustomer);
     }
 
+    /**
+     * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        //"hidde" the companyHBox
+        companyHBox.setDisable(bussines);
+
+        //fill the choiseBoxs
+        genderChoiseBox.setConverter(new StringConverter<Sex>() {
+            @Override
+            public Sex fromString(String string) {
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Sex.");
+            }
+
+            @Override
+            public String toString(Sex myClassinstance) {
+                return myClassinstance.getSign();
+            }
+        });
+        genderChoiseBox.getItems().addAll(Sex.values());
+        sourceChoiseBox.setConverter(new StringConverter<Source>() {
+            @Override
+            public Source fromString(String personString) {
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Source.");
+            }
+
+            @Override
+            public String toString(Source sour) {
+                if ( sour == null ) {
+                    return null;
+                } else {
+                    return sour.getName();
+                }
+            }
+        });
+
+        sourceChoiseBox.getItems().addAll(Source.values());
+
+        //button behavior
+        //enable the save and "saveAndEnhanceUI" button only on filled TextFields
+        saveAndCloseButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
+
+        saveAndEnhanceUIButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
+                )
+        );
+
+    }
+
+    @Override
+    public void accept(Customer c) {
+        if ( c != null && c.isSimple() ) {
+            if ( c.isBussines() ) {
+                bussines = true;
+            }
+            setSimpleCustomer(c.toSimple().get());
+        } else {
+            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar" + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+        }
+
+    }
+
+    @Override
+    public SimpleCustomer getResult() {
+        if ( simpleCustomer == null ) {
+            return null;
+        }
+        return simpleCustomer;
+    }
+
     public void showCompanyHBox() {
         Label companyNameLable = new Label("Firma:");
         Label ustIdLable = new Label("ustID:");
@@ -236,10 +233,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
     }
 
-    public void hiddeCompanyHBox() {
-        companyHBox.getChildren().clear();
-    }
-
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
         //the button and the header
         if ( bussines ) {
@@ -249,7 +242,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         } else {
             headerLabel.setText("Endkunde");
             changeUIButton.setText("Geschäftskunde");
-            hiddeCompanyHBox();
+            companyHBox.getChildren().clear();
         }
 
         kid.setText("" + simpleCustomer.getId());

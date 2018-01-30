@@ -25,9 +25,14 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
 /**
  *
@@ -141,8 +146,80 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public Customer store(SimpleCustomer simpleCustomer) {
         System.out.println("Input form Stubs: " + simpleCustomer.toString());
+
+        //convert the SimpleCustomer to a Customer
+        boolean bussines = false;
+        if ( !simpleCustomer.getCompanyName().trim().isEmpty() ) {
+            bussines = true;
+        }
+
         Customer c = new Customer();
+
+        Contact cont = new Contact();
+        cont.setFirstName(simpleCustomer.getFirstName());
+        cont.setLastName(simpleCustomer.getLastName());
+        cont.setSex(simpleCustomer.getSex());
+        cont.setTitle(simpleCustomer.getTitle());
+
+        //Contact with only one Address
+        Address a = new Address();
+        a.setCity(simpleCustomer.getCity());
+        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
+        a.setStreet(simpleCustomer.getStreet());
+        a.setZipCode(simpleCustomer.getZipCode());
+        cont.add(a);
+
+        //one Communication form eatch type email, phone, mobile allowed
+        Communication comm = new Communication();
+        if ( simpleCustomer.getEmail() != null ) {
+            comm.setType(Type.EMAIL);
+            comm.setIdentifier(simpleCustomer.getEmail());
+        }
+        if ( simpleCustomer.getLandlinePhone() != null ) {
+            comm.setType(Type.PHONE);
+            comm.setIdentifier(simpleCustomer.getLandlinePhone());
+        }
+        if ( simpleCustomer.getMobilePhone() != null ) {
+            comm.setType(Type.MOBILE);
+            comm.setIdentifier(simpleCustomer.getMobilePhone());
+        }
+
+        //check if the Communication is valid with the right pattern
+        if ( comm.getViolationMessages() == null ) {
+            cont.add(comm);
+        } else {
+            UiAlert.message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
+        }
+
+        AddressLabel al = null;
+        if ( bussines ) {
+            //Either a Contact or a Company are set.
+            //Contains only one Contact or one Company.
+            c.getContacts().clear();
+
+            Company comp = new Company();
+            comp.setName(simpleCustomer.getCompanyName());
+            comp.setTaxId(simpleCustomer.getTaxId());
+
+            //The Address of the Company Contact has to match the Company Address
+            comp.add(a);
+            comp.add(cont);
+            //build AddressLabel
+            al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
+
+            c.add(comp);
+
+        } else {
+            //Contains only one Contact or one Company.
+            c.getCompanies().clear();
+            c.add(cont);
+            al = new AddressLabel(null, cont, a, AddressType.INVOICE);
+        }
+        c.getAddressLabels().clear();
+        c.getAddressLabels().add(al);
+
         System.out.println("Output form Stubs: " + c.toString());
+        System.out.println("ViolationMessage " + c.getViolationMessage());
 
         return c;
     }

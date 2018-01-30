@@ -73,7 +73,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
     @FXML
     /**
      * Close the Editor window and save all changes.
-     *
+     * <p>
      */
     private void handleSaveButtonAction(ActionEvent event) {
         address = getAddress();
@@ -88,39 +88,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        List<Locale> countries = new ArrayList<>();
-        countries.add(new Locale("de", "DE"));
-        countries.add(new Locale("ch", "CH"));
-        countries.add(new Locale("at", "AT"));
-        countrybox.setConverter(new StringConverter<Locale>() {
-            @Override
-            public Locale fromString(String string) {
-                return null;
-            }
-
-            @Override
-            public String toString(Locale myClassinstance) {
-                return myClassinstance.getDisplayCountry();
-            }
-        }
-        );
-        countrybox.getItems().addAll(countries);
-
-        // force the field to be numeric only
-        zipcode.textFormatterProperty().set(
-                new TextFormatter<>(new IntegerStringConverter(), 0,
-                        change -> {
-                            String newText = change.getControlNewText();
-                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
-                                return change;
-                            } else {
-                                return null;
-                            }
-                        })
-        );
-
-        //enable the safe button only on filled TextFields
+        //button behavior  
+        //enable the save button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> zipcode.getText().trim().isEmpty(), zipcode.textProperty()
@@ -135,11 +104,42 @@ public class AddressUpdateController implements Initializable, FxController, Con
                 )
         );
 
+        List<Locale> countries = new ArrayList<>();
+        countries.add(new Locale("de", "DE"));
+        countries.add(new Locale("ch", "CH"));
+        countries.add(new Locale("at", "AT"));
+        countrybox.setConverter(new StringConverter<Locale>() {
+            @Override
+            public Locale fromString(String string) {
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Locale.");
+            }
+
+            @Override
+            public String toString(Locale myClassinstance) {
+                return myClassinstance.getDisplayCountry();
+            }
+        }
+        );
+        countrybox.getItems().addAll(countries);
+
+        // force the zipcode field to be numeric only, becuase the ledger get saved as an int
+        zipcode.textFormatterProperty().set(
+                new TextFormatter<>(new IntegerStringConverter(), 0,
+                        change -> {
+                            String newText = change.getControlNewText();
+                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
+                                return change;
+                            } else {
+                                return null;
+                            }
+                        })
+        );
+
     }
 
     @Override
     public void accept(Address a) {
-        if ( a != null || a.getViolationMessages() != null ) {
+        if ( a != null && a.getViolationMessages() == null ) {
             setAddress(a);
         } else {
             UiAlert.message("Addresse ist inkompatibel: " + a.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
@@ -160,9 +160,12 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * @param a is the Address
      */
     private void setAddress(Address a) {
-        Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
-
-        countrybox.getSelectionModel().select(tempLocale);
+        if ( a.getIsoCountry() != null ) {
+            Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
+            countrybox.getSelectionModel().select(tempLocale);
+        }else{
+            countrybox.getSelectionModel().selectFirst();
+        }
         zipcode.setText(a.getZipCode());
         city.setText(a.getCity());
         street.setText(a.getStreet());

@@ -31,10 +31,9 @@ import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.AddressListCell;
-import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.CompanyListCell;
-import eu.ggnet.dwoss.customer.ui.neo.InvoiceAddressLabelWithNullableShippingAddressLabel.ContactListCell;
+import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController.InvoiceAddressLabelWithNullableShippingAddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
 
@@ -86,31 +85,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     private InvoiceAddressLabelWithNullableShippingAddressLabel resultAdressLabel;
 
     private Customer customer;
-
-    InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
-
-        @Override
-        public void invalidated(Observable observable) {
-
-            boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
-                    && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
-                        || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
-
-            boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
-                                              && shippingAddressCompanyListView.getSelectionModel().isEmpty()
-                                              && shippingAddressContactListView.getSelectionModel().isEmpty())
-                    || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
-                        && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
-
-            if ( isInvoiceAddressValid && isShippingAddressValid )
-                saveButton.setDisable(false);
-
-            else
-                saveButton.setDisable(true);
-
-        }
-
-    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -169,16 +143,42 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
         this.customer = inputCustomer;
 
-        invoiceAddressCompanyListView.getItems().addAll(this.customer.getCompanies());
-        this.invoiceAddressCompanyListView.getItems().forEach(company -> this.invoiceAddressContactListView.getItems().addAll(company.getContacts()));
-        invoiceAddressContactListView.getItems().addAll(this.customer.getContacts());
-        this.invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
+        invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
+        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressContactListView.getItems().addAll(company.getContacts()));
+        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressAddressListView.getItems().addAll(company.getAddresses()));
+        invoiceAddressContactListView.getItems().addAll(customer.getContacts());
+        invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
-        shippingAddressCompanyListView.getItems().addAll(this.customer.getCompanies());
-        this.shippingAddressCompanyListView.getItems().forEach(company -> this.shippingAddressContactListView.getItems().addAll(company.getContacts()));
-        shippingAddressContactListView.getItems().addAll(this.customer.getContacts());
-        this.shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
+        shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
+        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressContactListView.getItems().addAll(company.getContacts()));
+        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressAddressListView.getItems().addAll(company.getAddresses()));
+        shippingAddressContactListView.getItems().addAll(customer.getContacts());
+        shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
+        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
+
+            @Override
+            public void invalidated(Observable observable) {
+
+                boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
+                        && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
+                            || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
+
+                boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
+                                                  && shippingAddressCompanyListView.getSelectionModel().isEmpty()
+                                                  && shippingAddressContactListView.getSelectionModel().isEmpty())
+                        || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
+                            && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
+
+                if ( isInvoiceAddressValid && isShippingAddressValid )
+                    saveButton.setDisable(false);
+
+                else
+                    saveButton.setDisable(true);
+
+            }
+
+        };
         invoiceAddressCompanyListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         invoiceAddressContactListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         invoiceAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
@@ -196,13 +196,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
     }
 
-    /**
-     * AddressLabel.class allows it's company OR contact field to be null
-     *
-     * @todo
-     * close window etc
-     * @param event
-     */
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
 
@@ -225,11 +218,11 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
         this.resultAdressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
 
-        System.out.println(this.resultAdressLabel);
     }
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
+        Ui.closeWindowOf(saveButton);
     }
 
     @FXML
@@ -237,7 +230,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         invoiceAddressCompanyListView.getSelectionModel().clearSelection();
         invoiceAddressContactListView.getSelectionModel().clearSelection();
         invoiceAddressAddressListView.getSelectionModel().clearSelection();
-        invoiceAddressWebView.getEngine().loadContent("");
     }
 
     @FXML
@@ -245,28 +237,27 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressCompanyListView.getSelectionModel().clearSelection();
         shippingAddressContactListView.getSelectionModel().clearSelection();
         shippingAddressAddressListView.getSelectionModel().clearSelection();
-        shippingAddressWebView.getEngine().loadContent("");
-    }
-}
-
-class InvoiceAddressLabelWithNullableShippingAddressLabel {
-
-    private Optional<AddressLabel> shippingLabel;
-
-    private AddressLabel invoiceLabel;
-
-    public InvoiceAddressLabelWithNullableShippingAddressLabel(AddressLabel shippingLabel, AddressLabel invoiceLabel) {
-        if ( invoiceLabel == null )
-            throw new IllegalArgumentException("invoice Label can not be null");
-
-        this.shippingLabel = Optional.ofNullable(shippingLabel);
-
-        this.invoiceLabel = invoiceLabel;
     }
 
-    @Override
-    public String toString() {
-        return "InvoiceAddressLabelWithNullableShippingAddressLabel{" + "shippingLabel=" + shippingLabel + ", invoiceLabel=" + invoiceLabel + '}';
+    public static class InvoiceAddressLabelWithNullableShippingAddressLabel {
+
+        private Optional<AddressLabel> shippingLabel;
+
+        private AddressLabel invoiceLabel;
+
+        public InvoiceAddressLabelWithNullableShippingAddressLabel(AddressLabel shippingLabel, AddressLabel invoiceLabel) {
+            if ( invoiceLabel == null )
+                throw new IllegalArgumentException("invoice Label can not be null");
+
+            this.shippingLabel = Optional.ofNullable(shippingLabel);
+
+            this.invoiceLabel = invoiceLabel;
+        }
+
+        @Override
+        public String toString() {
+            return "InvoiceAddressLabelWithNullableShippingAddressLabel{" + "shippingLabel=" + shippingLabel + ", invoiceLabel=" + invoiceLabel + '}';
+        }
     }
 
     public static class CompanyListCell extends ListCell<Company> {

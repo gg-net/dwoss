@@ -16,7 +16,8 @@
  */
 package tryout.neo;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
@@ -37,14 +38,12 @@ public class CustomerEnhanceTryout {
 
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
+        customer.getContacts().clear();
 
-//        customer.add(gen.makeCompany());
-//        customer.add(gen.makeCompany());
-//        customer.add(gen.makeCompany());
-
-        customer.add(gen.makeContact());
-        customer.add(gen.makeContact());
-        customer.add(gen.makeContact());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
+        customer.add(gen.makeCompany());
 
         customer.setSource(Source.ONEADO);
         customer.setKeyAccounter("Herr Meier");
@@ -52,7 +51,12 @@ public class CustomerEnhanceTryout {
         customer.add(CustomerFlag.CS_UPDATE_CANDIDATE);
         customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
         customer.add(new MandatorMetadata());
+        if ( customer.getViolationMessage() != null ) {
+            UiAlert.show("customer is invalid" + customer.getViolationMessage());
 
+            return;
+        }
+        System.out.println("customer in tryout" + customer);
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
