@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
 import eu.ggnet.saft.*;
@@ -36,21 +37,42 @@ public class CommunicationUpdateTryout {
 
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
-        Company company = gen.makeCompany();
-        Communication communication = company.getCommunications().get(0);
+        Communication comm = gen.makeCommunication();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
-        run.addActionListener(ev -> {
+        JButton editButton = new JButton("Edit");
+
+        editButton.addActionListener(ev -> {
+            comm.setType(Type.MOBILE);
+            comm.setIdentifier("040123456789");
+
+            if ( comm.getViolationMessages() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            }
+
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(System.out::println);;
+                Ui.build().fxml().eval(() -> comm, CommunicationUpdateController.class).ifPresent(System.out::println);
+            });
+        });
+
+        JButton addButton = new JButton("Add");
+
+        addButton.addActionListener(ev -> {
+            comm.setType(null);
+            if ( comm.getViolationMessages() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            }
+
+            Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> comm, CommunicationUpdateController.class).ifPresent(System.out::println);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(run);
+        p.add(editButton);
+        p.add(addButton);
         p.add(close);
 
         UiCore.startSwing(() -> p);

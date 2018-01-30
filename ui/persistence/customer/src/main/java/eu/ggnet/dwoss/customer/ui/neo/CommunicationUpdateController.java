@@ -136,6 +136,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         identifer.setText(com.getIdentifier());
         if ( com.getType() != null ) {
             commtypbox.getSelectionModel().select(com.getType());
+            commtypbox.setDisable(true);
         } else {
             commtypbox.getSelectionModel().selectFirst();
         }
