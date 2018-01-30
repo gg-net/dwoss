@@ -217,6 +217,9 @@ public class CustomerAgentStub implements CustomerAgent {
         }
         c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
+        
+        MandatorMetadata mandatorMetadata = new MandatorMetadata();
+        c.add(mandatorMetadata);
 
         System.out.println("Output form Stubs: " + c.toString());
         System.out.println("ViolationMessage " + c.getViolationMessage());
