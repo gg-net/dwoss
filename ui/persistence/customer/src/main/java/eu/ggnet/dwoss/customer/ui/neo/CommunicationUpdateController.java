@@ -101,7 +101,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     public void initialize(URL url, ResourceBundle rb) {
         commtypbox.getItems().addAll(Communication.Type.values());
 
-        //enable the safe button only on filled TextFields
+        //enable the save button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> identifer.getText().trim().isEmpty(), identifer.textProperty()

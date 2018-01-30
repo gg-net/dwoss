@@ -131,7 +131,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         genderChoiseBox.setConverter(new StringConverter<Sex>() {
             @Override
             public Sex fromString(String string) {
-                return null;
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Sex.");
             }
 
             @Override
@@ -142,6 +142,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         genderChoiseBox.getItems().addAll(Sex.values());
         sourceChoiseBox.setConverter(new StringConverter<Source>() {
             @Override
+            public Source fromString(String personString) {
+                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Source.");
+            }
+
+            @Override
             public String toString(Source sour) {
                 if ( sour == null ) {
                     return null;
@@ -149,15 +154,12 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                     return sour.getName();
                 }
             }
-
-            @Override
-            public Source fromString(String personString) {
-                return null; // No conversion fromString needed.
-            }
         });
 
         sourceChoiseBox.getItems().addAll(Source.values());
 
+        //button behavior
+        //enable the save and "saveAndEnhanceUI" button only on filled TextFields
         saveAndCloseButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
