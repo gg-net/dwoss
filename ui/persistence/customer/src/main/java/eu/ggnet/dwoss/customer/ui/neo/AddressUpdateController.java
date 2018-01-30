@@ -139,7 +139,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Address a) {
-        if ( a != null || a.getViolationMessages() != null ) {
+        if ( a != null && a.getViolationMessages() == null ) {
             setAddress(a);
         } else {
             UiAlert.message("Addresse ist inkompatibel: " + a.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
@@ -160,9 +160,12 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * @param a is the Address
      */
     private void setAddress(Address a) {
-        Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
-
-        countrybox.getSelectionModel().select(tempLocale);
+        if ( a.getIsoCountry() != null ) {
+            Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
+            countrybox.getSelectionModel().select(tempLocale);
+        }else{
+            countrybox.getSelectionModel().selectFirst();
+        }
         zipcode.setText(a.getZipCode());
         city.setText(a.getCity());
         street.setText(a.getStreet());

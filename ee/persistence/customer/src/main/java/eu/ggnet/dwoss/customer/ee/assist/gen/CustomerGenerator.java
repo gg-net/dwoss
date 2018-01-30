@@ -140,7 +140,7 @@ public class CustomerGenerator {
         Name n = GEN.makeName();
         c.setFirstName(n.getFirst());
         c.setLastName(n.getLast());
-        c.setSex(n.getGender().ordinal() == 1 ? MALE : FEMALE);
+        c.setSex(n.getGender().ordinal() == 1 ? FEMALE : MALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
         c.add(makeCommunication());
         c.add(makeAddress());

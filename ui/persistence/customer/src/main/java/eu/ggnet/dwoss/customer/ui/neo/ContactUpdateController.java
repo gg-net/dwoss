@@ -335,7 +335,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Contact cont) {
-        if ( cont != null || cont.getViolationMessages() != null ) {
+        if ( cont != null && cont.getViolationMessages() == null ) {
             setContact(cont);
         } else {
             UiAlert.message("Kontakt ist inkompatibel: " + cont.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);

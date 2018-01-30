@@ -25,12 +25,15 @@ import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.*;
+
+import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -39,6 +42,9 @@ import eu.ggnet.saft.*;
 public class CustomerSimpleTryout {
 
     public static void main(String[] args) {
+        //stub for the new Costumer modell with generator needed
+        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
         Contact contact = gen.makeContact();
@@ -52,7 +58,7 @@ public class CustomerSimpleTryout {
 
         Communication communicationEmail = new Communication();
         communicationEmail.setType(Type.MOBILE);
-        communicationEmail.setIdentifier("040 123456789");
+        communicationEmail.setIdentifier("040123456789");
 
         Address address = gen.makeAddress();
         address.setIsoCountry(Locale.GERMANY);
