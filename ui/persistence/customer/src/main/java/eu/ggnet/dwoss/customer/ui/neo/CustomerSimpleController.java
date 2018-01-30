@@ -113,7 +113,36 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private Button saveAndEnhanceUIButton;
 
-    public CustomerSimpleController() {
+    @FXML
+    private void saveAndCloseButtonHandling() {
+        simpleCustomer = getSimpleCustomer();
+        Ui.closeWindowOf(kid);
+    }
+
+    @FXML
+    private void saveAndEnhanceUIButtonHandling() {
+        simpleCustomer = getSimpleCustomer();
+
+        //TODO 
+        //safe the simpleCustomer to DB and than build it back here
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> new Customer(), CustomerEnhanceController.class);
+        });
+
+        Ui.closeWindowOf(kid);
+    }
+
+    @FXML
+    private void cancelButtonHandling() {
+        Ui.closeWindowOf(kid);
+    }
+
+    @FXML
+    private void changeUI() {
+        bussines ^= true; //tournaround of the boolean
+
+        simpleCustomer = getSimpleCustomer();
+        setSimpleCustomer(simpleCustomer);
     }
 
     /**
@@ -195,38 +224,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         return simpleCustomer;
     }
 
-    @FXML
-    private void saveAndCloseButtonHandling() {
-        simpleCustomer = getSimpleCustomer();
-        Ui.closeWindowOf(kid);
-    }
-
-    @FXML
-    private void saveAndEnhanceUIButtonHandling() {
-        simpleCustomer = getSimpleCustomer();
-
-        //TODO 
-        //safe the simpleCustomer to DB and than build it back here
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> new Customer(), CustomerEnhanceController.class);
-        });
-
-        Ui.closeWindowOf(kid);
-    }
-
-    @FXML
-    private void cancelButtonHandling() {
-        Ui.closeWindowOf(kid);
-    }
-
-    @FXML
-    private void changeUI() {
-        bussines ^= true; //tournaround of the boolean
-
-        simpleCustomer = getSimpleCustomer();
-        setSimpleCustomer(simpleCustomer);
-    }
-
     public void showCompanyHBox() {
         Label companyNameLable = new Label("Firma:");
         Label ustIdLable = new Label("ustID:");
@@ -238,10 +235,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
     }
 
-    public void hiddeCompanyHBox() {
-        companyHBox.getChildren().clear();
-    }
-
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
         //the button and the header
         if ( bussines ) {
@@ -251,7 +244,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         } else {
             headerLabel.setText("Endkunde");
             changeUIButton.setText("Geschäftskunde");
-            hiddeCompanyHBox();
+            companyHBox.getChildren().clear();
         }
 
         kid.setText("" + simpleCustomer.getId());

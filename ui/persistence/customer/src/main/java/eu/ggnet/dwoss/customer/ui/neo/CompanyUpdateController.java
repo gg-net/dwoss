@@ -261,7 +261,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
 
-        //enable the safe and "safeAndClose" button only on filled TextFields
+        //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
