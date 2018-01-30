@@ -111,7 +111,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
     @Override
     public void accept(Communication c) {
-        if ( c != null || c.getViolationMessages() != null ) {
+        if ( c != null && c.getViolationMessages() == null ) {
             setCommunication(c);
         } else {
             UiAlert.message("Kommunikationsweg ist inkompatibel: " + c.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);

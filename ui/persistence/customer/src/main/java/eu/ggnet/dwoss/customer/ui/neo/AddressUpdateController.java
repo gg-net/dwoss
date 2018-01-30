@@ -139,7 +139,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Address a) {
-        if ( a != null || a.getViolationMessages() != null ) {
+        if ( a != null && a.getViolationMessages() == null ) {
             setAddress(a);
         } else {
             UiAlert.message("Addresse ist inkompatibel: " + a.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);

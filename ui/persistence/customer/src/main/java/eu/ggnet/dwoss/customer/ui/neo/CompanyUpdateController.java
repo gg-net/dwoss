@@ -409,7 +409,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Company comp) {
-        if ( comp != null || comp.getViolationMessages() != null ) {
+        if ( comp != null && comp.getViolationMessages() == null ) {
             setCompany(comp);
         } else {
             UiAlert.message("Firma ist inkompatibel: " + comp.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);

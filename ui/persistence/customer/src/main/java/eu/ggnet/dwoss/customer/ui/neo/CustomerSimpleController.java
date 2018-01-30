@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,12 +29,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.UiAlertBuilder;
 
@@ -122,11 +123,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
-
-        //TODO 
-        //safe the simpleCustomer to DB and than build it back here
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> new Customer(), CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> Client.lookup(CustomerAgent.class).store(simpleCustomer), CustomerEnhanceController.class);
         });
 
         Ui.closeWindowOf(kid);
@@ -205,7 +203,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @Override
     public void accept(Customer c) {
-        if ( c != null || c.isSimple() ) {
+        if ( c != null && c.isSimple() ) {
             if ( c.isBussines() ) {
                 bussines = true;
             }
