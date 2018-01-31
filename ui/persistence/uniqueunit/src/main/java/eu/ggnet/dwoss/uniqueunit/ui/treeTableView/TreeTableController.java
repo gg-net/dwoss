@@ -30,7 +30,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
 import org.slf4j.Logger;
@@ -62,12 +61,6 @@ public class TreeTableController implements Initializable, FxController {
     @FXML
     private TreeTableColumn<DataWrapper, Integer> amount;
 
-    @FXML
-    private TableView<UniqueUnit> tableUnits;
-
-    @FXML
-    private TableColumn<UniqueUnit, String> unitName;
-
     private TreeItem<DataWrapper> loading = new TreeItem<>(new DataWrapper() {
         @Override
         public String getName() {
@@ -87,24 +80,6 @@ public class TreeTableController implements Initializable, FxController {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<DataWrapper>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<DataWrapper>> observable, TreeItem<DataWrapper> oldValue, TreeItem<DataWrapper> newValue) {
-                if ( newValue.getValue() instanceof UnitCollectionWrapper ) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UnitCollectionWrapper wrap = (UnitCollectionWrapper)newValue.getValue();
-                            tableUnits.getItems().clear();
-                            tableUnits.getItems().addAll(loadUniqueUnits(wrap.getUnitCollectionId()));
-                        }
-                    }).start();
-                }
-            }
-        });
-
-        unitName.setCellValueFactory(new PropertyValueFactory<>("refurbishId"));
 
         TreeItem<DataWrapper> root = new TreeItem<>(new DataWrapper() {
             @Override
@@ -306,6 +281,14 @@ public class TreeTableController implements Initializable, FxController {
     }
 
     public List<UniqueUnit> loadUniqueUnits(long unitCollectionId) {
+        try {
+            Thread.sleep((long)(Math.random() * 3000));
+        } catch (InterruptedException ex) {
+        }
+        return new ArrayList<>(new ProductGenerator().generateProduct(1).get(0).getUniqueUnits());
+    }
+
+    public List<UniqueUnit> loadUnsetUniqueUnits(long productId) {
         try {
             Thread.sleep((long)(Math.random() * 3000));
         } catch (InterruptedException ex) {

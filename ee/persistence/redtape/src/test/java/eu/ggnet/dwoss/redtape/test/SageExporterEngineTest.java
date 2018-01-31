@@ -87,7 +87,6 @@ public class SageExporterEngineTest {
             + "</DATAPACKET>\n"
             + "";
 
-
     @Test
     public void testExport() throws UnsupportedEncodingException {
         UiCustomer cus = new UiCustomer(1, "Herr", "Max", "Müstermann", null, "none", "max@example.com", 0);
@@ -113,7 +112,14 @@ public class SageExporterEngineTest {
         dos2.add(doc2);
         doc2.append(unit(doc2.getTaxType(), new Ledger(1234, "Demo2")));
 
-        Map<Document, UiCustomer> content = new HashMap<>();
+        // Comparator is needed for the resulting rowlines. In productive, this is not important, but for an exact string match.
+        Map<Document, UiCustomer> content = new TreeMap<>(new Comparator<Document>() {
+            @Override
+            public int compare(Document t0, Document t1) {
+                return t0.getIdentifier().compareTo(t1.getIdentifier());
+            }
+
+        });
         content.put(doc, cus);
         content.put(doc2, cus);
 
@@ -130,7 +136,6 @@ public class SageExporterEngineTest {
 //        System.out.println(VALID);
 //        System.out.println("Diff: " + StringUtils.difference(result, VALID));
 //        System.out.println("DiffIndex: " + StringUtils.indexOfDifference(result, VALID));
-
         assertThat(result).isEqualTo(VALID);
     }
 
