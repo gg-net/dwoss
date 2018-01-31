@@ -29,12 +29,13 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.util.Utils;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -51,7 +52,7 @@ public class Server {
     private String prefix = "";
 
     @EJB
-    private MandatorSupporter mandatorSupport;
+    private Mandators mandatorSupport;
 
     public List<String> inspectJndi() {
         try {

@@ -10,7 +10,7 @@ import javax.swing.UIManager;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
@@ -43,7 +43,7 @@ public class UnitViewTryout {
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
+        Client.addSampleStub(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
                 return Mandator.builder()
@@ -85,11 +85,6 @@ public class UnitViewTryout {
             @Override
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String loadMandatorAsHtml() {
-                return loadMandator().toHtml();
             }
 
         });

@@ -20,12 +20,12 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -39,6 +39,6 @@ public class ShowMandatorAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().fx().show(() -> Css.toHtml5WithStyle(lookup(MandatorSupporter.class).loadMandatorAsHtml()), () -> new HtmlPane());
+        Ui.build().fx().show(() -> Css.toHtml5WithStyle(Dl.local().lookup(CachedMandators.class).loadMandator().toHtml()), () -> new HtmlPane());
     }
 }

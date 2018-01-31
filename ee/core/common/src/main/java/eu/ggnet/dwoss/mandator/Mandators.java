@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.mandator.api.value.*;
  * @author oliver.guenther
  */
 @Remote
-public interface MandatorSupporter {
+public interface Mandators {
 
     /**
      * Loads the Mandator.
@@ -34,13 +34,6 @@ public interface MandatorSupporter {
      * @return the Mandator.
      */
     Mandator loadMandator();
-
-    /**
-     * Returns the Mandator as an Html representation.
-     *
-     * @return the Mandator as an Html representation.
-     */
-    String loadMandatorAsHtml();
 
     /**
      * Loads the default Salesdata.

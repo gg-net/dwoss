@@ -11,7 +11,6 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchController;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchView;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Client;
@@ -19,6 +18,8 @@ import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static org.mockito.Mockito.mock;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -30,7 +31,7 @@ public class CreateCustomerTryout {
 
     public static void main(String[] args) {
 
-        Client.addSampleStub(MandatorSupporter.class, mock(MandatorSupporter.class));
+        Client.addSampleStub(Mandators.class, mock(Mandators.class));
 
         Client.addSampleStub(Guardian.class, new AbstractGuardian() {
             {

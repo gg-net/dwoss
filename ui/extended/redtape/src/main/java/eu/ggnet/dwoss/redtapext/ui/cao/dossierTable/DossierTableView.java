@@ -27,14 +27,14 @@ import javax.swing.RowFilter.Entry;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
-import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
+import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.TableColumnChooserPopup;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -181,7 +181,7 @@ public class DossierTableView extends javax.swing.JPanel {
     private void initFilterButtons() {
         for (FilterType t : FilterType.values()) {
             final FilterType filterType = t;
-            if ( filterType == LEGACY && !Client.hasFound(LegacyRemoteBridge.class) ) continue;
+            if ( filterType == LEGACY && !Dl.remote().contains(LegacyRemoteBridge.class) ) continue;
             JRadioButton button = new JRadioButton(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -199,7 +199,7 @@ public class DossierTableView extends javax.swing.JPanel {
             });
             String label = filterType.getName();
             if ( filterType == LEGACY ) {
-                label = filterType.getName() + " (" + Client.lookup(LegacyRemoteBridge.class).remoteName() + ")";
+                label = filterType.getName() + " (" + Dl.remote().lookup(LegacyRemoteBridge.class).remoteName() + ")";
             }
             button.setName(label);
             button.setText(label);

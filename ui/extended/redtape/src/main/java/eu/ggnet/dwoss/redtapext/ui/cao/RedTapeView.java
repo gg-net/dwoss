@@ -52,13 +52,12 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Ops;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.saft.Client.lookup;
+
 
 /**
  * The main UI for using RedTape components.
@@ -83,7 +82,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
             final RedTapeModel m = (RedTapeModel)evt.getSource();
             switch (evt.getPropertyName()) {
                 case RedTapeModel.PROP_CUSTOMER:
-                    customerDetailArea.setText(lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().getId()));
+                    customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().getId()));
                     controller.fillToolBar();
                     break;
                 case RedTapeModel.PROP_DOCUMENTS:
@@ -262,14 +261,14 @@ public class RedTapeView extends JPanel implements ClosedListener {
         editEditItem.addActionListener(e -> {
             if ( model.getPurchaseCustomer() != null ) {
                 controller.openUpdateCustomer(model.getPurchaseCustomer().getId());
-                customerDetailArea.setText(lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
+                customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
             }
         });
 
         JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
         showNewDetails.addActionListener(e -> {
             Ui.exec(() -> {
-                Ui.build().title("Customer").fx().show(() -> lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
+                Ui.build().title("Customer").fx().show(() -> Dl.remote().lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
             });
         });
 

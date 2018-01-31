@@ -31,7 +31,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
@@ -46,6 +45,8 @@ import eu.ggnet.saft.core.swing.OkCancel;
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -100,7 +101,7 @@ public class DocumentUpdateController {
                             .name(pb.getName())
                             .uniqueUnitProductId(pb.getUniqueUnitProductId())
                             .price((pb.getPrice() == null) ? 0. : pb.getPrice())
-                            .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
+                            .bookingAccount(Client.lookup(Mandators.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
                             .build();
                     document.append(editPosition(p));
                 }

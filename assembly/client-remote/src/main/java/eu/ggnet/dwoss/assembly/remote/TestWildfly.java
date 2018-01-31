@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -48,7 +48,7 @@ public class TestWildfly {
         env.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
         InitialContext remoteContext = new InitialContext(env);
         Object lookupObject = remoteContext.lookup("ejb:/dwoss-server//MandatorSupporterBean!eu.ggnet.dwoss.mandator.MandatorSupporter");
-        MandatorSupporter supporter = (MandatorSupporter)lookupObject;
+        Mandators supporter = (Mandators)lookupObject;
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);
@@ -67,7 +67,7 @@ public class TestWildfly {
 
         Object lookupObject = remoteContext.lookup("dwoss-server/MandatorSupporterBean!eu.ggnet.dwoss.mandator.MandatorSupporter");
 
-        MandatorSupporter supporter = (MandatorSupporter)lookupObject;
+        Mandators supporter = (Mandators)lookupObject;
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);
@@ -83,7 +83,7 @@ public class TestWildfly {
                 .app("dwoss-server")
                 .build());
 
-        MandatorSupporter supporter = l.lookup(MandatorSupporter.class);
+        Mandators supporter = l.lookup(Mandators.class);
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);

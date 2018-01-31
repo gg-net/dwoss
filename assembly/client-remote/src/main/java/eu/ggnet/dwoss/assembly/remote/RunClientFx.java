@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.common.exception.*;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
@@ -40,6 +39,8 @@ import eu.ggnet.saft.runtime.SwingClient;
 
 import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * JavaFx entry Point.
@@ -84,9 +85,8 @@ public class RunClientFx extends Application {
          */
         Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
-            swingClient.show(
-                    "(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
-                    + lookup(MandatorSupporter.class).loadMandator().getCompany().getName(), getParameters());
+            swingClient.show("(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
+                    + lookup(Mandators.class).loadMandator().getCompany().getName(), getParameters());
         });
 
     }
@@ -110,7 +110,7 @@ public class RunClientFx extends Application {
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
 
-        Client.enableCache(MandatorSupporter.class);
+        Client.enableCache(Mandators.class);
 
         verifyRemoteConnection();
 
@@ -160,7 +160,7 @@ public class RunClientFx extends Application {
     private void verifyRemoteConnection() {
         try {
             // Try to load the Mandator.
-            Client.lookup(MandatorSupporter.class).loadMandator();
+            Client.lookup(Mandators.class).loadMandator();
         } catch (Exception e) {
             error = e.getMessage() + " thrown by " + e.getClass().getSimpleName();
             LoggerFactory.getLogger(RunClientFx.class).error("Exception on remote connection test.", e);

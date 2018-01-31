@@ -26,13 +26,13 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.stock.entity.Shipment;
 
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -52,7 +52,7 @@ public class ShipmentEditPanel extends javax.swing.JPanel implements IPreClose {
         initComponents();
         idField.setText(Long.toString(shipment.getId()));
         shipmentField.setText(shipment.getShipmentId());
-        ownerController = new ComboBoxController<>(ownerBox, Client.lookup(MandatorSupporter.class).loadContractors().all().toArray());
+        ownerController = new ComboBoxController<>(ownerBox, Client.lookup(Mandators.class).loadContractors().all().toArray());
         statusController = new ComboBoxController<>(statusBox, Shipment.Status.values());
         ownerController.setSelected(shipment.getContractor());
         statusController.setSelected(shipment.getStatus());

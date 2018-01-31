@@ -33,7 +33,7 @@ public class RemoteDl {
     private static RemoteDl instance;
 
     // Don't use info Logglevel here until the Progress is lookuped in a different way. e.g. keep the instance until the connection fails.
-    private final static Logger L = LoggerFactory.getLogger(LocalDl.class);
+    private final static Logger L = LoggerFactory.getLogger(RemoteDl.class);
 
     private final static Map<String, Object> DIRECT_LOOKUP = new HashMap<>();
 
@@ -61,7 +61,7 @@ public class RemoteDl {
 
     public <T> void add(Class<T> clazz, T t) {
         DIRECT_LOOKUP.put(clazz.getName(), t);
-        L.info("Remote dierct lookup filled with {}.", clazz.getName());
+        L.warn("RemoteDl.add() used, might be a mistake or tryout/testing. Direct lookup filled with {}. ", clazz.getName());
     }
 
     private RemoteLookup rl() {

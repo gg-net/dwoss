@@ -30,9 +30,9 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -64,7 +64,6 @@ import eu.ggnet.statemachine.StateTransition;
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
@@ -91,12 +90,12 @@ public class RedTapeController implements IDossierSelectionHandler {
     private Boolean shippingCostUiHelpEnabled = null;
 
     private boolean isShippingCostUiHelpEnabled() {
-        if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = Client.hasFound(ShippingCostService.class);
+        if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = Dl.remote().contains(ShippingCostService.class);
         return shippingCostUiHelpEnabled;
     }
 
     private NavigableSet<Long> getViewOnlyCustomerIds() {
-        if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Client.lookup(MandatorSupporter.class).loadSalesdata().getViewOnlyCustomerIds();
+        if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Dl.local().lookup(CachedMandators.class).loadSalesdata().getViewOnlyCustomerIds();
         return viewOnlyCustomerIds;
     }
 
@@ -142,12 +141,12 @@ public class RedTapeController implements IDossierSelectionHandler {
                                     model.getSelectedDocument(),
                                     model.getPurchaseCustomer().getShippingCondition(),
                                     model.getPurchaseCustomer().getPaymentMethod());
-                            List<StateTransition<CustomerDocument>> transitions = lookup(RedTapeWorker.class).getPossibleTransitions(cdoc);
+                            List<StateTransition<CustomerDocument>> transitions = Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(cdoc);
                             // Remove old Actions from the receiving of right changes.
                             for (Action accessDependent : accessDependentActions) {
                                 if ( accessDependent instanceof AccessableAction )
-                                    lookup(Guardian.class).remove((AccessableAction)accessDependent);
-                                else lookup(Guardian.class).remove(accessDependent);
+                                    Dl.local().lookup(Guardian.class).remove((AccessableAction)accessDependent);
+                                else Dl.local().lookup(Guardian.class).remove(accessDependent);
                             }
                             accessDependentActions.clear();
                             List<Action> stateActions = new ArrayList<>();
@@ -167,7 +166,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                                         stateActions.add(new RemoveShippingCostStateAction(parent(), RedTapeController.this, cdoc, stateTransition));
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_CREDIT_MEMO) ) {
                                         CreditMemoAction creditMemoAction = new CreditMemoAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
-                                        lookup(Guardian.class).add(creditMemoAction);
+                                        Dl.local().lookup(Guardian.class).add(creditMemoAction);
                                         accessDependentActions.add(creditMemoAction);
                                         stateActions.add(creditMemoAction);
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_COMPLAINT) ) {
@@ -175,12 +174,12 @@ public class RedTapeController implements IDossierSelectionHandler {
                                         stateActions.add(action);
                                     } else if ( stateTransition.getHints().contains(Hint.CREATES_ANNULATION_INVOICE) ) {
                                         AnnulationInvoiceAction action = new AnnulationInvoiceAction(parent(), RedTapeController.this, model.getSelectedDocument(), stateTransition);
-                                        lookup(Guardian.class).add(action);
+                                        Dl.local().lookup(Guardian.class).add(action);
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else if ( stateTransition.getEnablingRight() != null && stateTransition.getEnablingRight().equals(AtomicRight.CREATE_ANNULATION_INVOICE) ) {
                                         DefaultStateTransitionAction action = new DefaultStateTransitionAction(parent(), RedTapeController.this, cdoc, stateTransition);
-                                        lookup(Guardian.class).add(action, AtomicRight.CREATE_ANNULATION_INVOICE);
+                                        Dl.local().lookup(Guardian.class).add(action, AtomicRight.CREATE_ANNULATION_INVOICE);
                                         accessDependentActions.add(action);
                                         stateActions.add(action);
                                     } else {
@@ -189,7 +188,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                                 }
                                 if ( model.getSelectedDocument().getType() == DocumentType.BLOCK ) {
                                     DossierDeleteAction action = new DossierDeleteAction(parent(), RedTapeController.this, model.getSelectedDossier());
-                                    lookup(Guardian.class).add(action);
+                                    Dl.local().lookup(Guardian.class).add(action);
                                     accessDependentActions.add(action);
                                     stateActions.add(action);
                                 }
@@ -211,7 +210,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                     reloadSelectionOnCustomerChange();
                     break;
                 case RedTapeModel.PROP_SEARCH:
-                    model.setSearchResult(lookup(UniversalSearcher.class).searchCustomers(model.getSearch()));
+                    model.setSearchResult(Dl.remote().lookup(UniversalSearcher.class).searchCustomers(model.getSearch()));
                     break;
             }
         }
@@ -306,7 +305,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        long customerId = lookup(CustomerCos.class).createCustomer(UiParent.of(view));
+        long customerId = Dl.local().lookup(CustomerCos.class).createCustomer(UiParent.of(view));
         if ( customerId == 0 ) {
             UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
@@ -323,7 +322,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        if ( !lookup(CustomerCos.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
+        if ( !Dl.local().lookup(CustomerCos.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
         //reset search to avoid wrong customer selections
         model.setSearch(String.valueOf(recentCustomerId));
         view.searchResultList.setSelectedIndex(0);
@@ -347,7 +346,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             try {
-                Dossier dos = lookup(RedTapeWorker.class).updateComment(model.getSelectedDossier(), sav.getText());
+                Dossier dos = Dl.remote().lookup(RedTapeWorker.class).updateComment(model.getSelectedDossier(), sav.getText());
                 reloadSelectionOnStateChange(dos);
             } catch (UserInfoException ex) {
                 Ui.handle(ex);
@@ -362,7 +361,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param document
      */
     public void openDocument(Document document, boolean printAsReservation) {
-        JasperPrint print = lookup(DocumentSupporter.class).render(document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT));
+        JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT));
         JDialog d = new JDialog(parent(), "Dokument drucken/versenden");
         d.setSize(800, 1000);
         d.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
@@ -373,7 +372,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         d.getContentPane().add(jrViewerCask, BorderLayout.CENTER);
         d.setVisible(true);
         if ( jrViewerCask.isCorrectlyBriefed() ) {
-            reloadSelectionOnStateChange(lookup(DocumentSupporter.class).briefed(document, lookup(Guardian.class).getUsername()));
+            reloadSelectionOnStateChange(Dl.remote().lookup(DocumentSupporter.class).briefed(document, Dl.local().lookup(Guardian.class).getUsername()));
         }
     }
 
@@ -394,7 +393,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openDocumentViewer(Document doc) {
         HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
         dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />"
-                + lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()) + "</html>");
+                + Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()) + "</html>");
         dialog.setVisible(true);
     }
 
@@ -414,7 +413,7 @@ public class RedTapeController implements IDossierSelectionHandler {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openUpdateCustomer(model.getPurchaseCustomer().getId());
-                view.customerDetailArea.setText(lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
+                view.customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
             }
         }));
 
@@ -443,7 +442,7 @@ public class RedTapeController implements IDossierSelectionHandler {
             }
 
             if ( selDocument.getType().equals(DocumentType.CREDIT_MEMO) ) {
-                lookup(Guardian.class).add(action, CREATE_ANNULATION_INVOICE);
+                Dl.local().lookup(Guardian.class).add(action, CREATE_ANNULATION_INVOICE);
                 accessDependentActions.add(action);
             }
             view.setDocumentPopupActions(action, new AbstractAction("Details") {

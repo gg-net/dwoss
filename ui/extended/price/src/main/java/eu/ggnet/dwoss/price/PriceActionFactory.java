@@ -21,12 +21,13 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.price.imex.*;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.core.cap.ActionFactory;
 
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * ActionFactory for Prices.
@@ -40,7 +41,7 @@ public class PriceActionFactory implements ActionFactory {
     public List<MetaAction> createMetaActions() {
         List<MetaAction> actions = new ArrayList<>();
 
-        for (TradeName contractor : lookup(MandatorSupporter.class).loadContractors().all()) {
+        for (TradeName contractor : lookup(Mandators.class).loadContractors().all()) {
             if ( contractor.isManufacturer() ) {
                 actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ManufacturerExportAction(contractor)));
             } else {

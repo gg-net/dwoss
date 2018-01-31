@@ -21,12 +21,12 @@ import java.util.function.Consumer;
 import eu.ggnet.dwoss.redtape.ee.api.PositionService;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.TaxType;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
-import static eu.ggnet.saft.Client.hasFound;
-import static eu.ggnet.saft.Client.lookup;
+
 
 /**
  *
@@ -47,8 +47,8 @@ public class ServiceViewCask extends javax.swing.JPanel implements Consumer<Posi
         positionPanel.add(positionView);
 
         templateList.setCellRenderer(new Tuple2PositionRenderer());
-        if ( hasFound(PositionService.class) ) {
-            templateList.setListData(lookup(PositionService.class).servicePositionTemplates().toArray());
+        if ( Dl.remote().contains(PositionService.class) ) {
+            templateList.setListData(Dl.remote().lookup(PositionService.class).servicePositionTemplates().toArray());
         } else {
             templateList.setListData(new Position[]{Position.builder().name("ServicePosition").type(SERVICE).description("").price(0.).build()});
         }
