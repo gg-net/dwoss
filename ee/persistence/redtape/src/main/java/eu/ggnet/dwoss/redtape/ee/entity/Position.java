@@ -173,7 +173,7 @@ public class Position implements Serializable, Comparable<Position> {
     Position(PositionType type, String name, double price, double amount, double tax, String description, Ledger bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
         this.type = type;
         this.name = name;
-        this.price = price;
+        this.price = TwoDigits.round(price);
         this.amount = amount;
         this.tax = tax;
         this.description = description;
@@ -219,7 +219,7 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     public void setPrice(double nettoPrice) {
-        this.price = nettoPrice;
+        this.price = TwoDigits.round(nettoPrice);
     }
 
     public double getAmount() {

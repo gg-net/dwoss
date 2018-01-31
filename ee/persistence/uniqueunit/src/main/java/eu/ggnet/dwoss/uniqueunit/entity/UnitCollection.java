@@ -107,6 +107,7 @@ public class UnitCollection implements Serializable, EagerAble {
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
     public void setPrice(PriceType type, double price, String comment) {
+        price = TwoDigits.round(price);
         if ( TwoDigits.equals(getPrice(type), price) ) return; // Don't set the same price
         if ( price == 0 ) prices.remove(type);
         else prices.put(type, price);
