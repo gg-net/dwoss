@@ -845,6 +845,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
 
     @Override
     public int compareTo(Document o) {
+        // TODO: Fixme, this is not stable.
         if ( o == null ) return -1;
         if ( this.type != o.type ) return this.type.compareTo(o.type);
         return this.hashCode() - o.hashCode();

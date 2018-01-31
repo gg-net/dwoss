@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,6 +57,12 @@ public class ContactTest {
     public void testGetViolationMessagesNonValid2() {
         contact.getAddresses().add(new Address());
         assertThat(contact.getViolationMessages()).as("Contact with invalid address").isNotBlank();
+    }
+
+    @Test
+    public void testGetViolationMessagesNonValid3() {
+        contact.getCommunications().add(new Communication());
+        assertThat(contact.getViolationMessages()).as("Contact with invalid Communication").isNotBlank();
     }
 
 }
