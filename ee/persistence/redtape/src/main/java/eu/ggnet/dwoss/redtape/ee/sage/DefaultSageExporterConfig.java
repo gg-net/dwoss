@@ -42,7 +42,9 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String beleg(Document doc, UiCustomer customer) {
-        return "AR/K" + doc.getDossier().getCustomerId() + doc.getDossier().getIdentifier().replace("_", "") + "/" + doc.getIdentifier().substring(0, 4);
+        String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDossierIdentifier" : doc.getDossier().getIdentifier().replace("_", "");
+        String documentIdentifier = doc.getIdentifier() == null ? "NoDocumentIdentifier" : doc.getIdentifier().substring(0, 4);
+        return "AR/K" + doc.getDossier().getCustomerId() + dossierIdentifier + "/" + documentIdentifier;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String stCode(Document doc) {
-        return "01";
+        return doc.getTaxType().getTaxCode();
     }
 
 }

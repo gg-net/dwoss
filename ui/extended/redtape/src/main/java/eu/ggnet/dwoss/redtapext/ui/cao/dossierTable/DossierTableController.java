@@ -26,18 +26,18 @@ import javax.swing.SwingWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.Client;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
-import static eu.ggnet.saft.Client.lookup;
+
 
 /**
  *
@@ -135,7 +135,7 @@ public class DossierTableController {
 
         @Override
         protected List<Dossier> find(int last, int amount) {
-            return lookup(RedTapeAgent.class).findDossiersClosedByCustomerIdEager(customerId, last, amount);
+            return Dl.remote().lookup(RedTapeAgent.class).findDossiersClosedByCustomerIdEager(customerId, last, amount);
         }
 
     }
@@ -143,12 +143,12 @@ public class DossierTableController {
     private class LegacyDossierLoader extends DossierLoader {
 
         public LegacyDossierLoader(long customerId) {
-            super(customerId, lookup(LegacyRemoteBridge.class).remoteName());
+            super(customerId, Dl.remote().lookup(LegacyRemoteBridge.class).remoteName());
         }
 
         @Override
         protected List<Dossier> find(int last, int amount) {
-            return lookup(LegacyRemoteBridge.class).findByCustomerId(customerId, last, amount);
+            return Dl.remote().lookup(LegacyRemoteBridge.class).findByCustomerId(customerId, last, amount);
         }
 
     }
@@ -161,7 +161,7 @@ public class DossierTableController {
 
         @Override
         protected List<Dossier> find(int last, int amount) {
-            if ( last == 0 ) return lookup(RedTapeAgent.class).findDossiersOpenByCustomerIdEager(customerId);
+            if ( last == 0 ) return Dl.remote().lookup(RedTapeAgent.class).findDossiersOpenByCustomerIdEager(customerId);
             return new ArrayList<>();
         }
 
@@ -225,7 +225,7 @@ public class DossierTableController {
     }
 
     public void loadLegacyDossiers(long customerId) {
-        if ( model == null || customerId <= 0 || legacyLoaded || !Client.hasFound(LegacyRemoteBridge.class) ) return;
+        if ( model == null || customerId <= 0 || legacyLoaded || !Dl.remote().contains(LegacyRemoteBridge.class) ) return;
         legacyLoader = new LegacyDossierLoader(customerId);
         legacyLoaded = true;
         legacyLoader.execute();

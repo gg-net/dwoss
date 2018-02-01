@@ -6,7 +6,7 @@ import javax.persistence.LockModeType;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.product.DesktopBundleView;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
@@ -27,7 +27,7 @@ public class DesktopBundleViewTryout {
     public void tryoutView() throws InterruptedException {
         final ProductSpec spec = new SpecGenerator().makeSpec();
 
-        DesktopBundleView view = new DesktopBundleView(new MandatorSupporter() {
+        DesktopBundleView view = new DesktopBundleView(new Mandators() {
             @Override
             public Mandator loadMandator() {
                 return Mandator.builder()
@@ -71,10 +71,6 @@ public class DesktopBundleViewTryout {
                 throw new UnsupportedOperationException("loadShippingTerms - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
-            @Override
-            public String loadMandatorAsHtml() {
-                return loadMandator().toHtml();
-            }
         }, new SpecAgent() {
             @Override
             public ProductSpec findProductSpecByPartNoEager(String partNo) {

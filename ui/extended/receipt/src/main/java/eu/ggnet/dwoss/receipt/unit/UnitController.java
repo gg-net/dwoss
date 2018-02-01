@@ -26,7 +26,6 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.MetaValue;
@@ -48,6 +47,8 @@ import lombok.Setter;
 import static eu.ggnet.dwoss.rules.ReceiptOperation.IN_SALE;
 import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 public class UnitController {
 
@@ -139,7 +140,7 @@ public class UnitController {
             return;
         }
         addClosingAction(new SaleableAction());
-        lookup(MandatorSupporter.class).loadReceiptCustomers().enabledOperations(model.getContractor())
+        lookup(Mandators.class).loadReceiptCustomers().enabledOperations(model.getContractor())
                 .stream().forEach(r -> addClosingAction(new OperationAction(r)));
     }
 
@@ -307,7 +308,7 @@ public class UnitController {
         Chains chains = Chains.getInstance(model.getMode());
         metaUnit.getRefurbishId().setChain(chains.newRefubishIdChain(model.getContractor(), lookup(UnitSupporter.class), model.isEditMode()));
         metaUnit.getSerial().setChain(chains.newSerialChain(lookup(UnitSupporter.class), (model.isEditMode() ? metaUnit.getRefurbishId().getValue() : null)));
-        metaUnit.getPartNo().setChain(chains.newPartNoChain(lookup(SpecAgent.class), lookup(MandatorSupporter.class).loadContractors().allowedBrands()));
+        metaUnit.getPartNo().setChain(chains.newPartNoChain(lookup(SpecAgent.class), lookup(Mandators.class).loadContractors().allowedBrands()));
         metaUnit.getMfgDate().setChain(chains.newMfgDateChain());
     }
 

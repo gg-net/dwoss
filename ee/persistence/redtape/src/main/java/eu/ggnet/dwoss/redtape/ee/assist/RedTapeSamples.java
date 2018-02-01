@@ -16,13 +16,9 @@
  */
 package eu.ggnet.dwoss.redtape.ee.assist;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-
 import java.util.Collection;
 
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.rules.*;
 
 /**
@@ -60,7 +56,7 @@ public class RedTapeSamples {
         document.setType(DocumentType.ORDER);
         //Create Positions
         Position p1 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(420.17).tax(0.19).name("Packard Bell OneTwo S A4146 GE | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("AMD E Series E-300 (1.3 Ghz), Memory (in MB): 4096, AMD Radeon HD 6000 Series 6310, Festplatte(n): 500GB HDD, Optische(s) Laufwerk(e): DVD Super Multi, Display: 20.1\" (51,05 cm), Matt, Full HD (1920x1080), 16:9, Farbe: schwarz-silber, Ausstattung: Webcam, Kartenleser, Windows 7 Home Premium 64").build();
-        Position p2 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(933.61).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").build();
+        Position p2 = Position.builder().amount(214).type(PositionType.SERVICE).name("Service").price(7.5).tax(0.19).description("Service Description").build();
         Position p3 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description(LOREM_IPSUM).build();
         Position p4 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(50.).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Ein Menge an Info").build();
         Position p5 = Position.builder().amount(1).type(PositionType.PRODUCT_BATCH).price(50.).tax(0.19).name("Product Batch").description("Ein Menge an Info").build();
@@ -71,6 +67,7 @@ public class RedTapeSamples {
         Position p10 = Position.builder().amount(1).type(PositionType.COMMENT).name("Comment").description(LOREM_IPSUM + " " + LOREM_IPSUM).build();
         Position p11 = Position.builder().amount(1).type(PositionType.SERVICE).name("Service").price(2.).tax(2.).description("Service Description").build();
         Position p12 = Position.builder().amount(1).type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost").price(16.5).build();
+        Position p13 = Position.builder().amount(1).type(PositionType.UNIT).uniqueUnitId(1).price(933.61).tax(0.19).name("Acer Aspire Blub | SN: AAAAAAAAAAAAAAAAAAAAAAAAAAa").description("Intel Core I7 i7-2600 (3.4 Ghz, 4 Kern(e)), Memory (in MB): 8192, nVidia GeForce 500 Series GTX 570 HD, Festplatte(n): 2000GB HDD, 32GB SSD, Optische(s) Laufwerk(e): DVD Super Multi, Blu-Ray Combo, , Farbe: schwarz-orange, Ausstattung: USB 3, PS2, Kartenleser, Videokonnektor(en) : DVI, HDMI, Windows 7 Home Premium 64, Bemerkung: Kratzer auf dem Gehäuse, Untere Fronklappe fehlt, Geänderte Konfiguration: 1x DVD-ROM, 1x DVD-SuperMulti, kein Blu-ray. W-Lan. W-Lan-Antenne dabei.").build();
 
         document.append(p1);
         document.append(p2);
@@ -84,6 +81,7 @@ public class RedTapeSamples {
         document.append(p10);
         document.append(p11);
         document.append(p12);
+        document.append(p13);
         return document.getPositions().values();
     }
 

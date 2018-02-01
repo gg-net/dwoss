@@ -23,7 +23,6 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.Report.ViewMode;
@@ -33,6 +32,7 @@ import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * View to create new sales report based on mandator contractors.
@@ -43,7 +43,7 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
 
     public CreateNewReportView() {
         initComponents();
-        contractorComboBox.setModel(new DefaultComboBoxModel(Client.lookup(MandatorSupporter.class).loadContractors().all().toArray()));
+        contractorComboBox.setModel(new DefaultComboBoxModel(Client.lookup(Mandators.class).loadContractors().all().toArray()));
         contractorComboBox.setRenderer(new NamedEnumCellRenderer());
         viewModeComboBox.setModel(new DefaultComboBoxModel(Report.ViewMode.values()));
     }

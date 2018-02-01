@@ -21,7 +21,6 @@ import java.util.Date;
 import javax.swing.*;
 
 import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.rules.TradeName;
 
@@ -30,6 +29,7 @@ import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
 
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -40,7 +40,7 @@ public class ShipmentCreatePanel extends javax.swing.JPanel implements IPreClose
     /** Creates new form ShipmentCreatePanel */
     public ShipmentCreatePanel() {
         initComponents();
-        ownerBox.setModel(new DefaultComboBoxModel(Client.lookup(MandatorSupporter.class).loadContractors().all().toArray()));
+        ownerBox.setModel(new DefaultComboBoxModel(Client.lookup(Mandators.class).loadContractors().all().toArray()));
     }
 
     /** This method is called from within the constructor to

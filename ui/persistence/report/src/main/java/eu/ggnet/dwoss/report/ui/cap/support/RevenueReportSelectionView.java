@@ -28,7 +28,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.Step;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
@@ -36,6 +35,8 @@ import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.Client;
 
 import static javafx.geometry.Pos.CENTER_RIGHT;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * Shows a selector pane for the Revenue Report.
@@ -70,7 +71,7 @@ public class RevenueReportSelectionView extends GridPane implements ResultProduc
         addRow(0, new Label("Step:"), stepChoice);
 
         ChoiceBox<String> contractorChoice = new ChoiceBox<>();
-        contractorChoice.getItems().addAll(Client.lookup(MandatorSupporter.class).loadContractors()
+        contractorChoice.getItems().addAll(Client.lookup(Mandators.class).loadContractors()
                 .all().stream().map(TradeName::name).collect(Collectors.toList()));
         contractorChoice.getItems().add("ALL");
 
@@ -119,7 +120,7 @@ public class RevenueReportSelectionView extends GridPane implements ResultProduc
             return EnumSet.of(TradeName.valueOf(contractor.get()));
         } catch (IllegalArgumentException e) {
             // Name does not match
-            return Client.lookup(MandatorSupporter.class).loadContractors().all();
+            return Client.lookup(Mandators.class).loadContractors().all();
         }
     }
 

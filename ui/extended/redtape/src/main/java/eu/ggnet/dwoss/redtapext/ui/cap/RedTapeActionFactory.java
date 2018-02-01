@@ -47,7 +47,7 @@ public class RedTapeActionFactory implements ActionFactory {
                 new MetaAction("Geschäftsführung", "Allgemeine Reporte", new DebitorsReportAction()),
                 new MetaAction("Geschäftsführung", "Allgemeine Reporte", new DirectDebitReportAction()),
                 new MetaAction("Geschäftsführung", "Abschluss Reporte", new LastWeekCloseAction()),
-                new MetaAction("Geschäftsführung", new GsOfficeExportAction())
+                new MetaAction("Geschäftsführung", new SageExportAction())
         );
     }
 

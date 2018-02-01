@@ -1,14 +1,5 @@
 package tryout;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-
 import java.awt.Font;
 import java.util.Arrays;
 
@@ -17,8 +8,12 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -140,7 +135,7 @@ public class DocumentUpdateViewTryout {
                 .build()
         );
 
-        Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
+        Client.addSampleStub(Mandators.class, new Mandators() {
 
             @Override
             public PostLedger loadPostLedger() {
@@ -185,11 +180,6 @@ public class DocumentUpdateViewTryout {
 
             @Override
             public ShippingTerms loadShippingTerms() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String loadMandatorAsHtml() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

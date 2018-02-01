@@ -16,16 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.saft.core.ui.UserPreferences;
-import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.Client;
+import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.Workspace;
 
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -55,7 +55,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
         shipmentTable.setModel(model);
         model.setTable(shipmentTable);
         filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
-        filterOwner = new ComboBoxController<>(filterOwnerbox, Client.lookup(MandatorSupporter.class).loadContractors().all().toArray());
+        filterOwner = new ComboBoxController<>(filterOwnerbox, Client.lookup(Mandators.class).loadContractors().all().toArray());
         if ( parent != null ) setLocationRelativeTo(parent);
         lookup(UserPreferences.class).loadLocation(this.getClass(), this);
     }

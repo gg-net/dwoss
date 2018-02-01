@@ -1,7 +1,6 @@
 package eu.ggnet.dwoss.redtapext.op.itest.support;
 
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -10,6 +9,7 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
@@ -67,6 +67,10 @@ public class SupportBean {
         doc = new DocumentEao(redTapeEm).findById(doc.getId());
         doc.setActual(date);
         return doc;
+    }
+
+    public List<Document> findDocumentsBetweenDates(Date start, Date end, DocumentType... types) {
+        return new DocumentEao(redTapeEm).findDocumentsBetweenDates(start, end, types);
     }
 
 }

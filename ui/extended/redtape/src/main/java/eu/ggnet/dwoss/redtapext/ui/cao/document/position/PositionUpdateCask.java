@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
@@ -47,6 +46,8 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTIN
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.*;
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -140,7 +141,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     public void accept(PositionAndTaxType posAndTax) {
         if ( posAndTax == null ) return;
         this.position = posAndTax.getPosition();
-        PostLedger postLedger = lookup(MandatorSupporter.class).loadPostLedger();
+        PostLedger postLedger = lookup(Mandators.class).loadPostLedger();
         final List<Ledger> ledgers = postLedger.getAlternatives(position.getType(), posAndTax.getTaxType());
         bookingAccountBox.setModel(new DefaultComboBoxModel(ledgers.toArray()));
         this.positionTypeField.setText(position.getType() != null ? position.getType().getName() : "Nicht angegeben");

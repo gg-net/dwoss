@@ -46,8 +46,7 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.Frame;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.*;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -58,6 +57,7 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  */
 @Frame
 @Title("Report Daten")
+@Once
 public class RawReportView extends BorderPane {
 
     private final Logger L = LoggerFactory.getLogger(SimpleReportLine.class);
@@ -293,7 +293,9 @@ public class RawReportView extends BorderPane {
      * @param reportLineId
      */
     public void openDetailView(final long reportLineId) {
-        Ui.build(this).fx().show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
+        Ui.exec(() -> {
+            Ui.build(this).fx().show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
+        });
     }
 
     /**

@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.mandator.api.value.*;
  */
 @Named
 @Stateless
-public class MandatorSupporterBean implements MandatorSupporter {
+public class MandatorsBean implements Mandators {
 
     @Inject
     private Mandator mandator;
@@ -85,11 +85,6 @@ public class MandatorSupporterBean implements MandatorSupporter {
     @Override
     public ShippingTerms loadShippingTerms() {
         return shippingTerms;
-    }
-
-    @Override
-    public String loadMandatorAsHtml() {
-        return mandator.toHtml();
     }
 
 }

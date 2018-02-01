@@ -32,15 +32,18 @@ public enum TaxType {
     GENERAL_SALES_TAX_DE_SINCE_2007(0.19,
             "19% Mwst",
             "Standard Umsatzsteuer (Mehrwertsteuer) in Deutschland seit 2007",
-            null),
+            null,
+            "01"),
     UNTAXED(0,
             "Keine Ust (0%)",
             "0% Umsatzsteuer, z.b. bei Verkäufen ins Ausland oder Versicherungsverkäufen an Logistiker",
-            null),
+            null,
+            "00"),
     REVERSE_CHARGE(0,
             "Reverse Charge",
             "0% Umsatzsteuer bei Verkauf von Endgeräten mit Funkanbindungen und einem Rechnungswert von mid. 5000,-€",
-            "Steuerschuldnerschaft des Leistungsempfängers gemäß § 13b Abs. 2 Nr. 10 UStG (Reverse-Charge-Verfahren)");
+            "Steuerschuldnerschaft des Leistungsempfängers gemäß § 13b Abs. 2 Nr. 10 UStG (Reverse-Charge-Verfahren)",
+            "36");
 
     /**
      * Tax value, must never Change.
@@ -61,5 +64,10 @@ public enum TaxType {
      * A optional Text, that must be displayed in invoices.
      */
     private final String documentText;
+
+    /**
+     * Code used in the exporter to finacial software (sage in our case).
+     */
+    private final String taxCode;
 
 }

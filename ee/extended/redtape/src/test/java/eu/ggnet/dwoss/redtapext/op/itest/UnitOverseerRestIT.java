@@ -56,7 +56,7 @@ public class UnitOverseerRestIT extends ArquillianProjectArchive {
     @Inject
     private ReceiptGeneratorOperation receiptGenerator;
 
-    @Ignore // Enable with Arquilian. Test should work, but some deps are not ok.
+    @Ignore // WebClient an Aquillian are a little more difficult, if there is time .....
     @Test
     public void testUnit() throws InterruptedException {
         uniqueUnits = receiptGenerator.makeUniqueUnits(4, true, true);

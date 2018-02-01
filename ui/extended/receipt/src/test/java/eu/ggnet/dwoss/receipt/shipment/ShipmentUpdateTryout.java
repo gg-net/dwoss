@@ -7,7 +7,7 @@ import javafx.embed.swing.JFXPanel;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
@@ -24,7 +24,7 @@ public class ShipmentUpdateTryout {
     @Test
     public void tryout() throws InterruptedException {
 
-        Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
+        Client.addSampleStub(Mandators.class, new Mandators() {
 
             @Override
             public Mandator loadMandator() {
@@ -59,11 +59,6 @@ public class ShipmentUpdateTryout {
             @Override
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String loadMandatorAsHtml() {
-                return loadMandator().toHtml();
             }
 
         });

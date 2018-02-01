@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
@@ -435,6 +437,7 @@ public class UniqueUnit implements Serializable, EagerAble {
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
     public void setPrice(PriceType type, double price, String comment) {
+        price = TwoDigits.round(price);
         if ( TwoDigits.equals(getPrice(type), price) ) {
             return; // Don't set the same price
         }
@@ -536,6 +539,10 @@ public class UniqueUnit implements Serializable, EagerAble {
 
     public void addHistory(String comment) {
         addHistory(new UniqueUnitHistory(comment));
+    }
+
+    public PicoUnit toPicoUnit() {
+        return new PicoUnit(id, UniqueUnitFormater.toPositionName(this));
     }
 
     /**

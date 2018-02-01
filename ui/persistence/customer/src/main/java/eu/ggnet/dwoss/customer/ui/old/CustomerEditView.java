@@ -24,7 +24,6 @@ import javax.swing.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.event.AddressChange;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
@@ -40,6 +39,8 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -81,7 +82,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
     public CustomerEditView() {
         initComponents();
 
-        shippingTerms = lookup(MandatorSupporter.class).loadShippingTerms();
+        shippingTerms = lookup(Mandators.class).loadShippingTerms();
 
         shippingConditionBox.setRenderer(new DefaultListCellRenderer() {
             @Override

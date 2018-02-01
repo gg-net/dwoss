@@ -10,7 +10,7 @@ import javax.swing.UIManager;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
@@ -21,10 +21,11 @@ import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.Client;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * Tryout Test for Unit View.
@@ -42,7 +43,7 @@ public class UnitViewTryout {
 
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-        Client.addSampleStub(MandatorSupporter.class, new MandatorSupporter() {
+        Client.addSampleStub(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
                 return Mandator.builder()
@@ -84,11 +85,6 @@ public class UnitViewTryout {
             @Override
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public String loadMandatorAsHtml() {
-                return loadMandator().toHtml();
             }
 
         });
@@ -253,6 +249,21 @@ public class UnitViewTryout {
 
             @Override
             public Reply<Void> unsetUnitCollection(PicoUnit unit) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public Reply<Void> delete(UnitCollection dto) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

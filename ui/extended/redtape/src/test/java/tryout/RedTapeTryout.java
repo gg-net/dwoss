@@ -9,12 +9,11 @@ import net.sf.jasperreports.engine.JasperPrint;
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
-import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.*;
@@ -29,6 +28,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.cap.RemoteLookup;
 
 import tryout.stub.*;
 
@@ -44,11 +44,22 @@ import static org.mockito.Mockito.when;
 public class RedTapeTryout {
 
     public static void main(String[] args) {
-        Client.addSampleStub(RedTapeAgent.class, new RedTapeAgentStub());
-        Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
-        Client.addSampleStub(UniversalSearcher.class, new UniversalSearcherStub());
-        Client.addSampleStub(CustomerService.class, new CustomerServiceStub());
-        Client.addSampleStub(DocumentSupporter.class, new DocumentSupporter() {
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
+        Dl.remote().add(RedTapeAgent.class, new RedTapeAgentStub());
+        Dl.remote().add(RedTapeWorker.class, new RedTapeWorkerStub());
+        Dl.remote().add(UniversalSearcher.class, new UniversalSearcherStub());
+        Dl.remote().add(CustomerService.class, new CustomerServiceStub());
+        Dl.remote().add(DocumentSupporter.class, new DocumentSupporter() {
             @Override
             public void mail(Document document, DocumentViewType jtype) throws UserInfoException, RuntimeException {
                 System.out.println("Mailing " + document);
@@ -72,27 +83,27 @@ public class RedTapeTryout {
             }
 
         });
-        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
                 setRights(new Operator(user, 1, Arrays.asList(AtomicRight.values())));
             }
         });
-        Client.addSampleStub(StockAgent.class, null);
-        Client.addSampleStub(UniqueUnitAgent.class, null);
-        Client.addSampleStub(LegacyRemoteBridge.class, null);
-        Client.addSampleStub(ShippingCostService.class, null);
+        Dl.remote().add(StockAgent.class, null);
+        Dl.remote().add(UniqueUnitAgent.class, null);
+        //     Dl.remote().add(LegacyRemoteBridge.class, null);
+        Dl.remote().add(ShippingCostService.class, null);
 
-        MandatorSupporter mandatorSupporterMock = mock(MandatorSupporter.class);
+        Mandators mandatorSupporterMock = mock(Mandators.class);
         when(mandatorSupporterMock.loadSalesdata()).thenReturn(new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
                 Arrays.asList(SalesChannel.CUSTOMER, SalesChannel.RETAILER), null));
 
-        Client.addSampleStub(MandatorSupporter.class, mandatorSupporterMock);
+        Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
         CustomerCos ccos = mock(CustomerCos.class);
         when(ccos.createCustomer(any())).thenReturn(0L);
         when(ccos.updateCustomer(any(), anyLong())).thenReturn(true);
-        Client.addSampleStub(CustomerCos.class, ccos);
+        Dl.local().add(CustomerCos.class, ccos);
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Ui.exec(() -> {

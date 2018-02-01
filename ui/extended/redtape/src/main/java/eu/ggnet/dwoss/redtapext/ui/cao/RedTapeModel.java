@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,19 +21,14 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.Set;
 
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
-
 import eu.ggnet.dwoss.util.Tuple2;
+import eu.ggnet.saft.Dl;
 
 import lombok.Getter;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * The RedTape main component model containing all selection and list information needed.
@@ -135,7 +130,7 @@ public class RedTapeModel {
      */
     public void setPurchaseCustomer(long id) {
         CustomerMetaData old = this.purchaseCustomer;
-        this.purchaseCustomer = lookup(CustomerService.class).asCustomerMetaData(id);
+        this.purchaseCustomer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(id);
         propertyChangeSupport.firePropertyChange(PROP_CUSTOMER, old, purchaseCustomer);
     }
 

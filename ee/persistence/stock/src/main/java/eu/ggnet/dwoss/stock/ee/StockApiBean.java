@@ -54,4 +54,9 @@ public class StockApiBean implements StockApi {
         return units.stream().filter(p -> avialableUuIds.contains(p.getUniqueUnitId())).collect(Collectors.toList());
     }
 
+    @Override
+    public boolean isAvailable(PicoUnit unit) {
+        return eao.findByUniqueUnitId(unit.getUniqueUnitId()) != null;
+    }
+
 }

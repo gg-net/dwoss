@@ -17,13 +17,13 @@
 package eu.ggnet.dwoss.uniqueunit.entity.dto;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 
-import lombok.*;
+import lombok.Data;
 
 /**
  *

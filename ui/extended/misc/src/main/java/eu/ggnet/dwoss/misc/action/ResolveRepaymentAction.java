@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.ChoiceDialog;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
 import eu.ggnet.dwoss.rules.TradeName;
@@ -29,6 +28,8 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -45,7 +46,7 @@ public class ResolveRepaymentAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Contractors contractors = Ui.progress().call(() -> lookup(MandatorSupporter.class).loadContractors());
+            Contractors contractors = Ui.progress().call(() -> lookup(Mandators.class).loadContractors());
             Ui.build().dialog().eval(() -> {
                 ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());
                 dialog.setTitle("Gutschriften");

@@ -34,6 +34,7 @@ import lombok.Getter;
  * The usage for now is only the lookup.
  * <p/>
  * @author oliver.guenther
+ * @deprecated Use {@link Dl}
  */
 // FIXME: Split this class in WorkspaceServiceDiscovery, LocalLookup and Remotelookup.
 // TODO: Find the local lookuped Classes. Should be that mutch.
@@ -45,6 +46,7 @@ Folgendes Gedankenexperiment. Wie würde die Leistung dieser Class mit CDI funkt
    Cache ist halt ein Feature von RemoteLookup. Und addSample ist das selbe wie mit CDI den container zu manipulieren.
 3. Workspace ist auch ein SingleTon. -> Kann also auch als selbstdiscovernde CDI Singleton betrachtet werden. Sieh oben.
  */
+@Deprecated
 public class Client {
 
     // Don't use info Logglevel here until the Progress is lookuped in a different way. e.g. keep the instance until the connection fails.
@@ -58,7 +60,7 @@ public class Client {
 
     @Getter
     private static RemoteLookup remoteLookup;
-
+    @Deprecated
     public static void setRemoteLookup(RemoteLookup rl) {
         Client.remoteLookup = rl;
     }
@@ -68,6 +70,7 @@ public class Client {
      *
      * @return the sample stub for inspection.
      */
+    @Deprecated
     public static Map<String, Object> getSampleStub() {
         return Collections.unmodifiableMap(SAMPLE_STUB);
     }
@@ -89,6 +92,7 @@ public class Client {
      * @return the fist found implementation.
      * @throws NullPointerException if clazz is null.
      */
+    @Deprecated
     public static <T> T lookup(Class<T> clazz) throws NullPointerException, IllegalArgumentException {
         Objects.requireNonNull(clazz, "clazz is null");
         L.debug("Looking Up {}", clazz.getName());
@@ -118,6 +122,7 @@ public class Client {
      * @param clazz the class to look for an implementation
      * @return ture if existent.
      */
+    @Deprecated
     public static <T> boolean hasFound(Class<T> clazz) {
         // Allows the hasFound in a sample environment. A key without a value just means a optional service missing.
         if ( SAMPLE_STUB.containsKey(clazz.getName()) ) return SAMPLE_STUB.get(clazz.getName()) != null;
@@ -131,6 +136,7 @@ public class Client {
      * <p>
      * @param clazz the class to cache.
      */
+    @Deprecated
     public static <T> void enableCache(Class<T> clazz) {
         CACHE.put(clazz, null);
     }
@@ -143,6 +149,7 @@ public class Client {
      * @param clazz the clazz as index
      * @param t     the instance.
      */
+    @Deprecated
     public static <T> void addSampleStub(Class<T> clazz, T t) {
         SAMPLE_STUB.put(clazz.getName(), t);
         L.warn("Client lookup Sample Stub filled with {}. If this is happening in the productive system, this is definitivly wrong", clazz.getName());
@@ -156,6 +163,7 @@ public class Client {
      * @param clazz the class identifying the instance.
      * @return the instance itself or null.
      */
+    @Deprecated
     private static <T> T remoteLookupAndCache(Class<T> clazz) {
         if ( remoteLookup == null ) return null;
         L.debug("Trying RemoteLookup {}", remoteLookup);

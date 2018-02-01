@@ -21,7 +21,6 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.rules.TradeName;
 
 import eu.ggnet.dwoss.stock.entity.Shipment;
@@ -43,6 +42,8 @@ import lombok.Getter;
 
 import static eu.ggnet.dwoss.stock.entity.Shipment.Status.OPENED;
 import static java.lang.Double.MAX_VALUE;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * Stage for creating/eediting Shipments.
@@ -122,7 +123,7 @@ public class ShipmentUpdateStage extends Stage {
             }
         };
 
-        Set<TradeName> contractors = Client.lookup(MandatorSupporter.class).loadContractors().all();
+        Set<TradeName> contractors = Client.lookup(Mandators.class).loadContractors().all();
         ownerBox = new ComboBox<>(FXCollections.observableArrayList(contractors));
         ownerBox.setMaxWidth(MAX_VALUE);
         ownerBox.setCellFactory(cb);

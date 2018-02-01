@@ -25,6 +25,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.common.log.AutoLogger;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -32,9 +36,9 @@ import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.util.FileJacket;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
@@ -48,6 +52,8 @@ import static eu.ggnet.dwoss.rules.DocumentType.*;
  */
 @Stateless
 public class SageExporterOperation implements SageExporter {
+
+    private final static Logger L = LoggerFactory.getLogger(SageExporterOperation.class);
 
     @Inject
     @RedTapes
@@ -75,6 +81,7 @@ public class SageExporterOperation implements SageExporter {
      * @return an Xml document, ready for import in GS Office.
      */
     @Override
+    @AutoLogger
     public FileJacket toXml(Date start, Date end) {
         SubMonitor m = monitorFactory.newSubMonitor("GS Buchhalter Export", 100);
         m.start();
@@ -82,6 +89,7 @@ public class SageExporterOperation implements SageExporter {
         DocumentEao documentEao = new DocumentEao(redTapeEm);
         List<Document> documents = new ArrayList<>();
         documents.addAll(documentEao.findDocumentsBetweenDates(start, end, INVOICE, CREDIT_MEMO, ANNULATION_INVOICE));
+        L.info("Loaded {} amount of documents", documents.size());
         m.worked(10);
         Map<Document, UiCustomer> customerInvoices = new HashMap<>();
         m.setWorkRemaining(documents.size() * 2);

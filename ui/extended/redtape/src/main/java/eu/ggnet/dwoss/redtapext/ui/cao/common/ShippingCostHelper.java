@@ -20,13 +20,13 @@ import java.util.SortedMap;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.ShippingCondition;
 import eu.ggnet.saft.Client;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * A helper class that provides methods to modify shipping costs.
@@ -57,7 +57,7 @@ public class ShippingCostHelper {
             doc.append(Position.builder().type(PositionType.SHIPPING_COST)
                     .name("Versandkosten").description("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
                     .amount(1).price(costs).tax(doc.getTaxType().getTax())
-                    .bookingAccount(Client.lookup(MandatorSupporter.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
+                    .bookingAccount(Client.lookup(Mandators.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
                     .build());
         } else {
             Position next = positions.values().iterator().next();

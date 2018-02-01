@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -15,6 +10,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.AddressType;
@@ -63,10 +59,10 @@ public class RedTapeAddressOperationIT extends ArquillianProjectArchive {
     }
 
     private void addRandomPositions(Document doc) {
-        Position p1 = new PositionBuilder().type(PositionType.COMMENT).name("Comment").description("Comments Description").build();
-        Position p2 = new PositionBuilder().type(PositionType.SERVICE).name("Service").price(2.).tax(2.)
+        Position p1 = Position.builder().amount(1).type(PositionType.COMMENT).name("Comment").description("Comments Description").build();
+        Position p2 = Position.builder().amount(1).type(PositionType.SERVICE).name("Service").price(2.).tax(2.)
                 .amount(1.).description("Service Description").build();
-        Position p3 = new PositionBuilder().type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost")
+        Position p3 = Position.builder().amount(1).type(PositionType.SHIPPING_COST).name("Shipping cost").description("Shipping cost")
                 .price(16.5).tax(.19).build();
 
         doc.append(p1);

@@ -95,22 +95,22 @@ public class UnitCollection implements Serializable, EagerAble {
     @SuppressWarnings("FieldMayBeFinal")
     private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
 
+    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @SuppressWarnings("FieldMayBeFinal")
     private List<PriceHistory> priceHistories = new ArrayList<>();
 
-    @Getter
     @Setter
     @NotNull
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
     public void setPrice(PriceType type, double price, String comment) {
-        if ( TwoDigits.equals(getPrice(type), price) ) {
-            return; // Don't set the same price
-        }
-        prices.put(type, price);
+        price = TwoDigits.round(price);
+        if ( TwoDigits.equals(getPrice(type), price) ) return; // Don't set the same price
+        if ( price == 0 ) prices.remove(type);
+        else prices.put(type, price);
         priceHistories.add(new PriceHistory(type, price, new Date(), comment));
     }
 
@@ -124,10 +124,6 @@ public class UnitCollection implements Serializable, EagerAble {
 
     public Map<PriceType, Double> getPrices() {
         return Collections.unmodifiableMap(prices);
-    }
-
-    public List<PriceHistory> getPriceHistory() {
-        return priceHistories;
     }
 
     /**
@@ -153,14 +149,21 @@ public class UnitCollection implements Serializable, EagerAble {
         this.product = product;
     }
 
-    public void addUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setUnitCollection(this);
-    }
-
-    public void removeUnit(UniqueUnit unit) {
-        if ( unit == null ) return;
-        unit.setUnitCollection(null);
+    /**
+     * Returns a bidirectional list implementation.
+     * Updates to the list will result in changes in {@link UnitCollection} and {@link @UniqueUnit}.
+     *
+     * @return a bidirectional list implementation.
+     */
+    public List<UniqueUnit> getUnits() {
+        return new AbstractBidirectionalListWrapper<UniqueUnit>(units) {
+            @Override
+            protected void update(UniqueUnit uu, boolean add) {
+                if ( uu == null ) return;
+                if ( add ) uu.setUnitCollection(UnitCollection.this);
+                else uu.setUnitCollection(null);
+            }
+        };
     }
 
     @Override

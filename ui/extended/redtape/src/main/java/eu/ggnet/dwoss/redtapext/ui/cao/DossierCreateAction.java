@@ -23,7 +23,6 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
@@ -39,7 +38,9 @@ import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancel;
 
-import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -59,9 +60,9 @@ public class DossierCreateAction extends AbstractAction {
     public DossierCreateAction(Window parent, boolean dispatch, RedTapeController controller, long customerId) {
         this.parent = parent;
         this.dispatch = dispatch;
-        this.customer = lookup(CustomerService.class).asCustomerMetaData(customerId);
+        this.customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
         this.controller = controller;
-        SpecialSystemCustomers special = lookup(MandatorSupporter.class).loadSystemCustomers();
+        SpecialSystemCustomers special = Dl.local().lookup(CachedMandators.class).loadSystemCustomers();
         if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
             putValue(NAME, special.get(customerId).orElse(DocumentType.BLOCK).getName());
         } else {
@@ -72,10 +73,10 @@ public class DossierCreateAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Dossier dos = lookup(RedTapeWorker.class).create(customer.getId(), dispatch, lookup(Guardian.class).getUsername());
+            Dossier dos = Dl.remote().lookup(RedTapeWorker.class).create(customer.getId(), dispatch, Dl.local().lookup(Guardian.class).getUsername());
             Document doc = dos.getDocuments().iterator().next();  // This is safe, as a create will return exactly one document.
 
-            Addresses addresses = lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
+            Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
             doc.setInvoiceAddress(addresses.getInvoice());
             doc.setShippingAddress(addresses.getShipping());
 
@@ -91,14 +92,14 @@ public class DossierCreateAction extends AbstractAction {
     }
 
     private void handleSuccesses(Document doc) {
-        Document updatedDoc = lookup(RedTapeWorker.class).update(doc, null, lookup(Guardian.class).getUsername());
+        Document updatedDoc = Dl.remote().lookup(RedTapeWorker.class).update(doc, null, Dl.local().lookup(Guardian.class).getUsername());
         controller.getDossierTableController().getModel().add(updatedDoc.getDossier());
     }
 
     private boolean handleFailure(Reply<?> reply, Document doc) {
         if ( reply.hasSucceded() ) return true;
         try {
-            lookup(RedTapeWorker.class).revertCreate(doc);
+            Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }

@@ -22,12 +22,15 @@ import java.util.Map;
 
 import javax.xml.bind.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
-import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
+import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.saft.api.progress.IMonitor;
 
@@ -49,6 +52,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SageExporterEngine {
+
+    private final static Logger L = LoggerFactory.getLogger(SageExporterEngine.class);
 
     @NonNull
     private OutputStream output;
@@ -96,8 +101,10 @@ public class SageExporterEngine {
 
             Map<Integer, Row> bookingRates = new HashMap<>();
             for (Position position : doc.getPositions().values()) {
-                if ( !position.getBookingAccount().isPresent() ) continue;
-                position = config.intercept(position);
+                if ( !position.getBookingAccount().isPresent() ) {
+                    L.warn("Export contains Position without BookingAccount. Kid={},Dossier={},Pos={}", customer.getId(), doc.getDossier().getIdentifier(), position);
+                    continue;
+                }
                 Row row;
                 if ( !bookingRates.containsKey(position.getBookingAccount().get().getValue()) ) {
                     bookingRates.put(position.getBookingAccount().get().getValue(), new Row(r));
@@ -127,6 +134,16 @@ public class SageExporterEngine {
         return rowData;
     }
 
+    /**
+     * Will be removed
+     *
+     * @param monitor
+     * @param defaultLedger
+     * @param disableCustomerLedgers
+     * @return
+     * @deprecated use {@link SageExporterEngine#generateGSRowData(eu.ggnet.saft.api.progress.IMonitor)
+     */
+    @Deprecated
     public RowData generateGSRowDataOld(IMonitor monitor, int defaultLedger, boolean disableCustomerLedgers) {
         SubMonitor m = SubMonitor.convert(monitor);
         RowData rowData = new RowData();

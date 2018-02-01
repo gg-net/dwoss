@@ -52,7 +52,7 @@ public class UnitCollectionGenerator {
             uc.setPrice(PriceType.SALE, 350.00, "comment");
 
             for (int j = 0; j < 3; j++) {
-                uc.addUnit(uuGen.makeUniqueUnit(tradeName.get(rand.nextInt(tradeName.size())), productGroup.get(rand.nextInt(productGroup.size()))));
+                uc.getUnits().add(uuGen.makeUniqueUnit(tradeName.get(rand.nextInt(tradeName.size())), productGroup.get(rand.nextInt(productGroup.size()))));
             }
 
             collections.add(uc);

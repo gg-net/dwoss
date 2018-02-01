@@ -21,9 +21,9 @@ import java.io.*;
 
 import javax.swing.JFrame;
 
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.util.MailTo;
 import eu.ggnet.saft.Client;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -37,7 +37,7 @@ public class DetailDialog extends javax.swing.JDialog {
                 .message(messsage)
                 .overview(overview)
                 .details(details)
-                .bugMail(Client.lookup(MandatorSupporter.class).loadMandator().getBugMail())
+                .bugMail(Client.lookup(Mandators.class).loadMandator().getBugMail())
                 .showDialog();
     }
 

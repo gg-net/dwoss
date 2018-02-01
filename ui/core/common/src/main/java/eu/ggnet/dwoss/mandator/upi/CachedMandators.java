@@ -14,28 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.redtapext.op.itest.support;
+package eu.ggnet.dwoss.mandator.upi;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.rules.DocumentType;
-
-import static org.junit.Assert.fail;
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
- * Util, to finally discover the random exceptions, which must be based in the generator.
+ * Interface for the a cached local implementation of Mandators.
  *
  * @author oliver.guenther
  */
-public class FindRandomExceptionUtil {
-
-    public static Document order(Dossier dos) {
-        try {
-            return dos.getActiveDocuments(DocumentType.ORDER).get(0);
-        } catch (RuntimeException e) {
-            fail("Created Dossier has no order, which it must have. Document:\n" + dos.toMultiLine() + "\nOriginal Exception\n " + e.getMessage());
-        }
-        return null;
-    }
+public interface CachedMandators extends Mandators {
 
 }

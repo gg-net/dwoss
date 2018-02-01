@@ -13,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.api.Reply;
 
 /**
@@ -182,5 +183,20 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
+
+    @Override
+    public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Reply<Void> delete(UnitCollection dto) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

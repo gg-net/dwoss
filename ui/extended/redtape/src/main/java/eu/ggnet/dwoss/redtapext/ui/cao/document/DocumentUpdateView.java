@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.MandatorSupporter;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.ee.api.WarrantyHook;
@@ -62,6 +61,8 @@ import lombok.Getter;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
 import static eu.ggnet.saft.Client.lookup;
+
+import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -155,8 +156,10 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             positionsFxList.setOnMouseClicked((mouseEvent) -> {
                 if ( mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2 ) {
                     if ( isChangeAllowed() ) {
-                        controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
-                        positionsFxList.refresh();
+                        Ui.exec(() -> {
+                            controller.editPosition(positionsFxList.getSelectionModel().getSelectedItem());
+                            Platform.runLater(() -> positionsFxList.refresh());
+                        });
                     } else {
                         UiAlert.show("Änderung an Positionen ist nicht erlaubt.");
                     }
@@ -688,7 +691,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(taxType -> {
                 L.debug("Changeing Tax to {}", taxType);
                 document.setTaxType(taxType);
-                final PostLedger ledgers = Client.lookup(MandatorSupporter.class).loadPostLedger();
+                final PostLedger ledgers = Client.lookup(Mandators.class).loadPostLedger();
                 document.getPositions().values().forEach(p -> {
                     p.setTax(taxType.getTax());
                     p.setBookingAccount(ledgers.get(p.getType(), taxType).orElse(null));
