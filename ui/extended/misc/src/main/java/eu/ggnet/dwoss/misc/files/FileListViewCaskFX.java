@@ -19,23 +19,22 @@ package eu.ggnet.dwoss.misc.files;
 import java.io.File;
 import java.util.concurrent.*;
 
-import eu.ggnet.saft.core.cap.MainComponent;
-
-import javafx.scene.control.*;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
-import org.openide.util.lookup.ServiceProvider;
-
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.cap.MainComponent;
 
 /**
  *
  * @author jens.papenhagen
  */
-@ServiceProvider(service = MainComponent.class)
+// Aktuall unused Component, as the hole MainComponten Concept is Swing only an obsoled.
+// @ServiceProvider(service = MainComponent.class)
 public class FileListViewCaskFX extends BorderPane implements MainComponent {
 
     private TreeView treeview;
