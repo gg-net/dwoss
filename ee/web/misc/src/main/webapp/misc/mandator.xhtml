@@ -8,7 +8,7 @@
       xmlns:pe="http://primefaces.org/ui/extensions">
     <f:view contentType="text/html">
         <h:head>
-            <title>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</title>
+            <title>Mandator - #{mandatorsBean.loadMandator().company.name}</title>
             <style>
                 table, th, td {
                     border: 1px solid black;
@@ -17,8 +17,8 @@
             </style>
         </h:head>
         <h:body>
-            <h1>Mandator - #{mandatorSupporterBean.loadMandator().company.name}</h1>
-            <h:outputText escape="false" value="#{mandatorSupporterBean.loadMandator().toHtml()}" />
+            <h1>Mandator - #{mandatorsBean.loadMandator().company.name}</h1>
+            <h:outputText escape="false" value="#{mandatorsBean.loadMandator().toHtml()}" />
         </h:body>
     </f:view>
 </html>
