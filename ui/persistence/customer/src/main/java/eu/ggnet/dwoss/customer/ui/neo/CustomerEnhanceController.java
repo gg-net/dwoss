@@ -61,10 +61,16 @@ import static javafx.stage.Modality.WINDOW_MODAL;
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @FXML
-    private Button PreferedAddressLabelsButton;
+    private Button saveButton;
 
     @FXML
     private Button cancelButton;
+
+    @FXML
+    private Button selectPreferedAddressLabelsButton;
+
+    @FXML
+    private Button mandatorMetaDataButton;
 
     @FXML
     private ChoiceBox<Source> sourceChoiceBox;
@@ -88,16 +94,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private HBox showHBox = new HBox();
 
     @FXML
-    private Button saveButton;
+    private VBox additionalCustomerIDsVBox;
 
     @FXML
     private Label contactOrCompanyLabel;
 
     @FXML
     private TextField keyAccounterTextField;
-
-    @FXML
-    private Button mandatorMetaDataButton;
 
     private ListView<Company> companyListView = new ListView<>();
 
@@ -120,28 +123,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private boolean isBusinessCustomer = false;
 
     private Customer customer;
-
-    @FXML
-    private VBox additionalCustomerIDsVBox;
-
-    @FXML
-    private void saveButtonHandling(ActionEvent event) {
-        customer = getCustomer();
-    }
-
-    @FXML
-    private void handelPreferedAddressLabelsButton(ActionEvent event) {
-        System.out.println("customer in ui" + getCustomer());
-        getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
-        Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class);
-        });
-    }
-
-    @FXML
-    private void cancelButtonHandling(ActionEvent event) {
-        Ui.closeWindowOf(KIDLabel);
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -266,6 +247,25 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         return cust;
     }
 
+    @FXML
+    private void saveButtonHandling(ActionEvent event) {
+        customer = getCustomer();
+    }
+
+    @FXML
+    private void cancelButtonHandling(ActionEvent event) {
+        Ui.closeWindowOf(KIDLabel);
+    }
+
+    @FXML
+    private void handleSelectPreferedAddressLabelsButtonAction(ActionEvent event) {
+        System.out.println("customer in ui" + getCustomer());
+        getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class);
+        });
+    }
+
     /**
      * Build up a ListView with CheckBoxes for the Set of CunstomerFlags
      */
@@ -316,9 +316,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         flagVBox.getChildren().addAll(flagLable, checklist);
     }
 
-    /**
-     * build a small list of all ExternalId
-     */
     private void buildExternalSystemIdBox() {
         additionalCustomerIDsListView.setCellFactory((ListView<AdditionalCustomerID> p) -> {
             ListCell<AdditionalCustomerID> cell = new ListCell<AdditionalCustomerID>() {
@@ -349,13 +346,17 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             return cell;
         });
         Label ExternalSystemIDsLabel = new Label("Zusätzliche Kundennummern: ");
+
+        //create a dialog to add AdditionalCustomerId instances to the additionalCustomerIDsListView
         Button addButton = new Button("Hinzufügen");
         addButton.setMinWidth(80.0);
+
         addButton.setOnAction((ActionEvent event) -> {
             Dialog<AdditionalCustomerID> dialog = new Dialog<>();
             dialog.setTitle("Zusätzliche Kundennummer hinzufügen.");
-
             ButtonType addButtonType = new ButtonType("Hinzufügen", ButtonData.OK_DONE);
+
+            // disable the add button if every type of ExternalSystem enum is already contained in the listView
             additionalCustomerIDsListView.getItems().addListener(new InvalidationListener() {
                 @Override
                 public void invalidated(javafx.beans.Observable observable) {
@@ -371,6 +372,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             TextField customerId = new TextField();
             customerId.setPromptText("Kundennummer");
 
+            // filter ExternalSystem types which are already contained in the listView
             ChoiceBox externalSystemChoiceBox = new ChoiceBox(Arrays.stream(ExternalSystem.values())
                     .filter(externalSystem
                             -> !additionalCustomerIDsListView.getItems()
@@ -583,6 +585,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
     }
 
+    /**
+     * open a new window of an MandatorMetaData editor
+     *
+     * @todo select the proper MandatorMetaData instance by MatchCode
+     * @param event
+     */
     @FXML
     private void handleMandatorMetaDataButtonAction(ActionEvent event) {
 
