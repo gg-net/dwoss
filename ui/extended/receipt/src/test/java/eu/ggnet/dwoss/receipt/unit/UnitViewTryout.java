@@ -1,14 +1,10 @@
 package eu.ggnet.dwoss.receipt.unit;
 
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import javax.persistence.LockModeType;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-
-import org.junit.Test;
 
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
@@ -16,9 +12,10 @@ import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
@@ -27,21 +24,47 @@ import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.api.Reply;
 
+import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
+
 /**
  * Tryout Test for Unit View.
- * <p/>
+ * <
+ * import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
+ * p/>
+ *
  * @author oliver.guenther
  */
 public class UnitViewTryout {
 
-    @Test
-    public void tryOut() throws Exception {
-        final ProductSpec spec = new SpecGenerator().makeSpec();
-        final Product product = new Product(spec.getModel().getFamily().getSeries().getGroup(),
-                spec.getModel().getFamily().getSeries().getBrand(), spec.getPartNo(), spec.getModel().getName());
-        JOptionPane.showMessageDialog(null, "Generated Product is : " + product.getTradeName().getName() + " - " + product.getGroup().getName());
-
+    public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+        final SpecGenerator GEN = new SpecGenerator();
+
+        final List<ProductSpec> productSpecs = new ArrayList<>();
+
+        final Map<String, ProductModel> productModels = new HashMap<>();
+
+        final Map<String, ProductSeries> productSeries = new HashMap<>();
+
+        final Map<String, ProductFamily> productFamily = new HashMap<>();
+
+        final List<Product> products = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            ProductSpec spec = GEN.makeSpec();
+            productSpecs.add(spec);
+            products.add(new Product(spec.getModel().getFamily().getSeries().getGroup(),
+                    spec.getModel().getFamily().getSeries().getBrand(), spec.getPartNo(), spec.getModel().getName()));
+            productModels.putIfAbsent(spec.getModel().getName(), spec.getModel());
+            productFamily.putIfAbsent(spec.getModel().getFamily().getName(), spec.getModel().getFamily());
+            productSeries.putIfAbsent(spec.getModel().getFamily().getSeries().getName(), spec.getModel().getFamily().getSeries());
+
+        }
+
+//        final Product product = new Product(spec.getModel().getFamily().getSeries().getGroup(),
+//                spec.getModel().getFamily().getSeries().getBrand(), spec.getPartNo(), spec.getModel().getName());
 
         Client.addSampleStub(Mandators.class, new Mandators() {
             @Override
@@ -74,7 +97,7 @@ public class UnitViewTryout {
 
             @Override
             public Contractors loadContractors() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return new Contractors(EnumSet.allOf(TradeName.class), TradeName.getManufacturers());
             }
 
             @Override
@@ -92,10 +115,7 @@ public class UnitViewTryout {
         Client.addSampleStub(SpecAgent.class, new SpecAgent() {
             @Override
             public ProductSpec findProductSpecByPartNoEager(String partNo) {
-                if ( partNo == null ) return null;
-                if ( partNo.startsWith("X") ) return null;
-                spec.setPartNo(partNo);
-                return spec;
+                return productSpecs.stream().filter(p -> Objects.equals(partNo, p.getPartNo())).findFirst().orElse(null);
             }
             // <editor-fold defaultstate="collapsed" desc="Unneeded Methods">
 
@@ -106,7 +126,11 @@ public class UnitViewTryout {
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                if ( entityClass.equals(ProductSpec.class) ) return (List<T>)productSpecs;
+                else if ( entityClass.equals(ProductSeries.class) ) return (List<T>)new ArrayList<>(productSeries.values());
+                else if ( entityClass.equals(ProductFamily.class) ) return (List<T>)new ArrayList<>(productFamily.values());
+                else if ( entityClass.equals(ProductModel.class) ) return (List<T>)new ArrayList<>(productModels.values());
+                return Collections.emptyList();
             }
 
             @Override
@@ -116,12 +140,12 @@ public class UnitViewTryout {
 
             @Override
             public <T> List<T> findAllEager(Class<T> entityClass) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return findAll(entityClass);
             }
 
             @Override
             public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return findAll(entityClass, start, amount);
             }
 
             @Override
@@ -169,10 +193,8 @@ public class UnitViewTryout {
         Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgent() {
             @Override
             public Product findProductByPartNo(String partNo) {
-                if ( partNo == null ) return null;
-                if ( partNo.startsWith("X") ) return null;
-                product.setPartNo(partNo);
-                return product;
+                return products.stream().filter(p -> Objects.equals(partNo, p.getPartNo())).findFirst().orElse(null);
+
             }
             // <editor-fold defaultstate="collapsed" desc="Unneeded Methods">
 
@@ -274,6 +296,9 @@ public class UnitViewTryout {
         UnitController controller = new UnitController();
 
         UnitModel model = new UnitModel();
+        model.setContractor(ONESELF);
+        model.setMode(ACER);
+
         controller.setModel(model);
 
         final UnitView view = new UnitView(null);

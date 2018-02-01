@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.unit;
 
-import eu.ggnet.dwoss.rules.ReceiptOperation;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.Warranty;
-
 import java.util.*;
 
 import javax.swing.Action;
@@ -28,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
@@ -171,7 +168,7 @@ public class UnitModel {
             return true;
         }
     }
-    private Set<Action> actions = new HashSet<>();
+    private final Set<Action> actions = new HashSet<>();
 
     @NotNull(message = "contractor not set")
     @Getter
@@ -216,7 +213,7 @@ public class UnitModel {
     public Set<Action> getActions() {
         return Collections.unmodifiableSet(actions);
     }
-    
+
     public void addAction(Action action){
         actions.add(action);
     }
