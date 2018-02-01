@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -40,6 +36,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -106,11 +103,21 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private void saveButtonHandling() {
         contact = getContact();
+        //only get valid object out
+        if ( contact.getViolationMessages() != null ) {
+            UiAlert.message("Kontakt ist inkompatibel: " + contact.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
     }
 
     @FXML
     private void saveAndCloseButtonHandling() {
         contact = getContact();
+        if ( contact.getViolationMessages() != null ) {
+
+            UiAlert.message("Kontakt ist inkompatibel: " + contact.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
         Ui.closeWindowOf(lastNameTextField);
     }
 
@@ -215,10 +222,14 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //button behavior        
+    public void initialize(URL url, ResourceBundle rb
+    ) {
+        //button behavior
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        
+        //get overwriten in accept()
+        lastNameTextField.setText("");
 
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
@@ -311,7 +322,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
                 }
             };
         });
-        prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
+        prefColumn.setCellValueFactory(new PropertyValueFactory<>("preferred"));
         prefColumn.setCellFactory(column -> {
             return new TableCell<Communication, Boolean>() {
                 @Override
@@ -336,22 +347,25 @@ public class ContactUpdateController implements Initializable, FxController, Con
             };
         });
 
+        //fill the listViews
+        addressListView.setItems(addressList);
+        communicationTableView.setItems(communicationsList);
+        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
     }
 
     @Override
-    public void accept(Contact cont) {
+    public void accept(Contact cont
+    ) {
         if ( cont != null && cont.getViolationMessages() == null ) {
             setContact(cont);
         } else {
-            UiAlert.message("Kontakt ist inkompatibel: " + cont.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kontakt ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
     }
 
     @Override
     public Contact getResult() {
-        if ( contact == null ) {
-            return null;
-        }
+
         return contact;
     }
 
@@ -374,10 +388,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         addressList.addAll(cont.getAddresses());
         communicationsList.addAll(cont.getCommunications());
 
-        //fill the listViews
-        addressListView.setItems(addressList);
-        communicationTableView.setItems(communicationsList);
-        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
     }
 
     /**

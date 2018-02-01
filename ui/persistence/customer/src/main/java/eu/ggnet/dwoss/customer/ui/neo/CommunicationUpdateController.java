@@ -95,12 +95,22 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         }
 
         communication = getCommunication();
+
+        //only get valid object out
+        if ( communication.getViolationMessages() != null ) {
+            UiAlert.message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
         Ui.closeWindowOf(identifer);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         commtypbox.getItems().addAll(Communication.Type.values());
+        
+        //get overwriten in accept()
+        identifer.setText("");
 
         //enable the save button only on filled TextFields
         saveButton.disableProperty().bind(
@@ -112,10 +122,10 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
     @Override
     public void accept(Communication c) {
-        if ( c != null && c.getViolationMessages() == null ) {
+        if ( c != null ) {
             setCommunication(c);
         } else {
-            UiAlert.message("Kommunikationsweg ist inkompatibel: " + c.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kommunikationsweg ist inkompatibel");
         }
 
     }

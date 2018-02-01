@@ -40,6 +40,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -61,10 +62,16 @@ import static javafx.stage.Modality.WINDOW_MODAL;
 public class CustomerEnhanceController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Customer> {
 
     @FXML
-    private Button PreferedAddressLabelsButton;
+    private Button saveButton;
 
     @FXML
     private Button cancelButton;
+
+    @FXML
+    private Button selectPreferedAddressLabelsButton;
+
+    @FXML
+    private Button mandatorMetaDataButton;
 
     @FXML
     private ChoiceBox<Source> sourceChoiceBox;
@@ -88,16 +95,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private HBox showHBox = new HBox();
 
     @FXML
-    private Button saveButton;
+    private VBox additionalCustomerIDsVBox;
 
     @FXML
     private Label contactOrCompanyLabel;
 
     @FXML
     private TextField keyAccounterTextField;
-
-    @FXML
-    private Button mandatorMetaDataButton;
 
     private ListView<Company> companyListView = new ListView<>();
 
@@ -117,31 +121,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
+    private ObservableList<AddressLabel> addressLabels = FXCollections.observableArrayList();
+
     private boolean isBusinessCustomer = false;
 
     private Customer customer;
-
-    @FXML
-    private VBox additionalCustomerIDsVBox;
-
-    @FXML
-    private void saveButtonHandling(ActionEvent event) {
-        customer = getCustomer();
-    }
-
-    @FXML
-    private void handelPreferedAddressLabelsButton(ActionEvent event) {
-        System.out.println("customer in ui" + getCustomer());
-        getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
-        Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class);
-        });
-    }
-
-    @FXML
-    private void cancelButtonHandling(ActionEvent event) {
-        Ui.closeWindowOf(KIDLabel);
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -175,36 +159,35 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public Customer getResult() {
-        if ( customer == null ) {
-            return null;
-        }
         return customer;
     }
 
-    public void setCustomer(Customer c) {
-        if ( c.isBussines() ) {
+    public void setCustomer(Customer customer) {
+        addressLabels.addAll(customer.getAddressLabels());
+        if ( customer.isBussines() ) {
             CustomerKindLabel.setText("Geschäftskunde");
-            customerNameLabel.setText(c.getCompanies().get(0).getName());
-            companyList.setAll(c.getCompanies());
+            customerNameLabel.setText(customer.getCompanies().get(0).getName());
+            companyList.setAll(customer.getCompanies());
             companyListView.setItems(companyList);
             contactOrCompanyLabel.setText("Firmen: ");
 
             isBusinessCustomer = true;
         } else {
             CustomerKindLabel.setText("Endkunde");
-            customerNameLabel.setText(c.getContacts().get(0).toFullName());
-            contactList.setAll(c.getContacts());
+            customerNameLabel.setText(customer.getContacts().get(0).toFullName());
+            contactList.setAll(customer.getContacts());
             contactListView.setItems(contactList);
             contactOrCompanyLabel.setText("Kontakte: ");
         }
-        KIDLabel.setText("" + c.getId());
-        keyAccounterTextField.setText(c.getKeyAccounter());
 
-        flagsSet.addAll(c.getFlags());
+        KIDLabel.setText("" + customer.getId());
+        keyAccounterTextField.setText(customer.getKeyAccounter());
 
-        sourceChoiceBox.getSelectionModel().select(c.getSource());
-        mandatorMetadata.addAll(c.getMandatorMetadata());
-        additionalCustomerIds.putAll(c.getAdditionalCustomerIds());
+        flagsSet.addAll(customer.getFlags());
+
+        sourceChoiceBox.getSelectionModel().select(customer.getSource());
+        mandatorMetadata.addAll(customer.getMandatorMetadata());
+        additionalCustomerIds.putAll(customer.getAdditionalCustomerIds());
 
         //transfer the map into a List
         if ( additionalCustomerIds == null ) {
@@ -217,7 +200,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             additionalCustomerIDsListView.setItems(observableArrayList);
         }
 
-        commentTextArea.setText(c.getComment());
+        commentTextArea.setText(customer.getComment());
 
         //build the Flags Box
         buildFlagBox();
@@ -231,6 +214,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     public Customer getCustomer() {
         Customer cust = new Customer();
+        cust.getAddressLabels().addAll(addressLabels);
+
         if ( isBusinessCustomer ) {
             cust.getCompanies().clear();
             companyList.forEach(c -> cust.add(c));
@@ -264,6 +249,34 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         cust.setComment(commentTextArea.getText());
 
         return cust;
+    }
+
+    @FXML
+    private void saveButtonHandling(ActionEvent event) {
+        customer = getCustomer();
+    }
+
+    @FXML
+    private void cancelButtonHandling(ActionEvent event) {
+        Ui.closeWindowOf(KIDLabel);
+    }
+
+    @FXML
+    private void handleSelectPreferedAddressLabelsButtonAction(ActionEvent event) {
+        System.out.println("customer in ui" + getCustomer());
+        getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class)
+                    .ifPresent(invoiceAddressLabelWithNullableShippingAddressLabel -> {
+                        if ( invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().isPresent() ) {
+                            int shippingLabelIndex = getCustomer().getAddressLabels().indexOf(invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().get());
+                            getCustomer().getAddressLabels().set(shippingLabelIndex, invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().get());
+                        }
+                        int invoceLabelIndex = getCustomer().getAddressLabels().indexOf(invoiceAddressLabelWithNullableShippingAddressLabel.getInvoiceLabel());
+                        getCustomer().getAddressLabels().set(invoceLabelIndex, invoiceAddressLabelWithNullableShippingAddressLabel.getInvoiceLabel());
+
+                    });
+        });
     }
 
     /**
@@ -316,9 +329,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         flagVBox.getChildren().addAll(flagLable, checklist);
     }
 
-    /**
-     * build a small list of all ExternalId
-     */
     private void buildExternalSystemIdBox() {
         additionalCustomerIDsListView.setCellFactory((ListView<AdditionalCustomerID> p) -> {
             ListCell<AdditionalCustomerID> cell = new ListCell<AdditionalCustomerID>() {
@@ -349,13 +359,17 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             return cell;
         });
         Label ExternalSystemIDsLabel = new Label("Zusätzliche Kundennummern: ");
+
+        //create a dialog to add AdditionalCustomerId instances to the additionalCustomerIDsListView
         Button addButton = new Button("Hinzufügen");
         addButton.setMinWidth(80.0);
+
         addButton.setOnAction((ActionEvent event) -> {
             Dialog<AdditionalCustomerID> dialog = new Dialog<>();
             dialog.setTitle("Zusätzliche Kundennummer hinzufügen.");
-
             ButtonType addButtonType = new ButtonType("Hinzufügen", ButtonData.OK_DONE);
+
+            // disable the add button if every type of ExternalSystem enum is already contained in the listView
             additionalCustomerIDsListView.getItems().addListener(new InvalidationListener() {
                 @Override
                 public void invalidated(javafx.beans.Observable observable) {
@@ -371,6 +385,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             TextField customerId = new TextField();
             customerId.setPromptText("Kundennummer");
 
+            // filter ExternalSystem types which are already contained in the listView
             ChoiceBox externalSystemChoiceBox = new ChoiceBox(Arrays.stream(ExternalSystem.values())
                     .filter(externalSystem
                             -> !additionalCustomerIDsListView.getItems()
@@ -469,9 +484,16 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 }
             });
             addButton.setOnAction((ActionEvent e) -> {
-                Contact c = new Contact();
-                c.setLastName("");
-                addContact(c);
+
+                Ui.exec(() -> {
+                    Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class).ifPresent(
+                            a -> {
+                                Platform.runLater(() -> {
+                                    contactList.add(a);
+                                });
+                            });
+                });
+
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
@@ -583,6 +605,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
     }
 
+    /**
+     * open a new window of an MandatorMetaData editor
+     *
+     * @todo select the proper MandatorMetaData instance by MatchCode
+     * @param event
+     */
     @FXML
     private void handleMandatorMetaDataButtonAction(ActionEvent event) {
 

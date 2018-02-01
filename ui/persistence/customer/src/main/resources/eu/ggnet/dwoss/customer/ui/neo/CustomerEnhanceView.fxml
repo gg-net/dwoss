@@ -24,7 +24,7 @@
                             </font>
                         </Label>
                         <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="PreferedAddressLabelsButton" minHeight="35.0" mnemonicParsing="false" onAction="#handelPreferedAddressLabelsButton" text="Standard Adressen auswählen" wrapText="true" />
+                        <Button fx:id="SelectPreferedAddressLabelsButton" minHeight="35.0" mnemonicParsing="false" onAction="#handleSelectPreferedAddressLabelsButtonAction" text="Standard Adressen auswählen" wrapText="true" />
                     </children>
                 </HBox>
                 <HBox spacing="3.0">
@@ -59,13 +59,14 @@
                                     </children>
                                 </HBox>
                                 <VBox fx:id="additionalCustomerIDsVBox" maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin></VBox>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                </VBox>
                             </children>
-                     <padding>
-                        <Insets left="10.0" top="10.0" />
-                     </padding>
+                            <padding>
+                                <Insets left="10.0" top="10.0" />
+                            </padding>
                         </VBox>
                     </children>
                 </HBox>

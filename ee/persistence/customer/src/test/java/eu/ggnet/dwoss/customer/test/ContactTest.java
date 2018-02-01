@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,7 +62,7 @@ public class ContactTest {
 
     @Test
     public void testGetViolationMessagesNonValid3() {
-        contact.getCommunications().add(new Communication());
+        contact.getCommunications().add(new Communication(Type.SKYPE, true));
         assertThat(contact.getViolationMessages()).as("Contact with invalid Communication").isNotBlank();
     }
 
