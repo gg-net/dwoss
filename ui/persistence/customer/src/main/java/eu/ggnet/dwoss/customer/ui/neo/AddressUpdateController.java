@@ -19,16 +19,13 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
-import javafx.util.converter.IntegerStringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.saft.Ui;
@@ -119,7 +116,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         city.setText("");
         street.setText("");
 
-        //button behavior  
+        //button behavior
         //enable the save button only on filled TextFields
         saveButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
@@ -160,12 +157,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
      * @param a is the Address
      */
     private void setAddress(Address a) {
-        if ( a.getIsoCountry() != null ) {
-            Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
-            countrybox.getSelectionModel().select(tempLocale);
-        } else {
-            countrybox.getSelectionModel().selectFirst();
-        }
+        Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
+        countrybox.getSelectionModel().select(tempLocale);
         zipcode.setText(a.getZipCode());
         city.setText(a.getCity());
         street.setText(a.getStreet());
