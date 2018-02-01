@@ -113,12 +113,22 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void saveAndCloseButtonHandling() {
         company = getCompany();
+        //only get valid object out
+        if ( company.getViolationMessages() != null ) {
+            UiAlert.message("Firma ist inkompatibel: " + company.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
         Ui.closeWindowOf(taxIdTextField);
     }
 
     @FXML
     private void saveButtonHandling() {
         company = getCompany();
+        //only get valid object out
+        if ( company.getViolationMessages() != null ) {
+            UiAlert.message("Firma ist inkompatibel: " + company.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
     }
 
     @FXML
@@ -272,6 +282,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        
+        //get overwriten in accept()
+        companyNameTextField.setText("");
+        addressListView.setItems(addressList);
+        
 
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
@@ -421,10 +436,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @Override
     public void accept(Company comp) {
-        if ( comp != null && comp.getViolationMessages() == null ) {
+        if ( comp != null ) {
             setCompany(comp);
         } else {
-            UiAlert.message("Firma ist inkompatibel: " + comp.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
     }
 

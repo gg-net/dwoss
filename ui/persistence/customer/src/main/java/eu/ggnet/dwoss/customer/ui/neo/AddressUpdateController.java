@@ -78,6 +78,13 @@ public class AddressUpdateController implements Initializable, FxController, Con
      */
     private void handleSaveButtonAction(ActionEvent event) {
         address = getAddress();
+
+        //only get valid object out
+        if ( address.getViolationMessages() != null ) {
+            UiAlert.message("Adresse ist inkompatibel: " + address.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
         Ui.closeWindowOf(zipcode);
     }
 
@@ -89,22 +96,6 @@ public class AddressUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //button behavior  
-        //enable the save button only on filled TextFields
-        saveButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> zipcode.getText().trim().isEmpty(), zipcode.textProperty()
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> city.getText().trim().isEmpty(), city.textProperty()
-                        )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> street.getText().trim().isEmpty(), street.textProperty()
-                        )
-                )
-        );
-
         List<Locale> countries = new ArrayList<>();
         countries.add(new Locale("de", "DE"));
         countries.add(new Locale("ch", "CH"));
@@ -122,14 +113,36 @@ public class AddressUpdateController implements Initializable, FxController, Con
         }
         );
         countrybox.getItems().addAll(countries);
+
+        //get overwriten in accept()
+        zipcode.setText("");
+        city.setText("");
+        street.setText("");
+
+        //button behavior  
+        //enable the save button only on filled TextFields
+        saveButton.disableProperty().bind(
+                Bindings.createBooleanBinding(()
+                        -> zipcode.getText().trim().isEmpty(), zipcode.textProperty()
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> city.getText().trim().isEmpty(), city.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> street.getText().trim().isEmpty(), street.textProperty()
+                        )
+                )
+        );
+
     }
 
     @Override
     public void accept(Address a) {
-        if ( a != null && a.getViolationMessages() == null ) {
+        if ( a != null ) {
             setAddress(a);
         } else {
-            UiAlert.message("Addresse ist inkompatibel: " + a.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Addresse ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
     }
 
@@ -150,7 +163,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         if ( a.getIsoCountry() != null ) {
             Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
             countrybox.getSelectionModel().select(tempLocale);
-        }else{
+        } else {
             countrybox.getSelectionModel().selectFirst();
         }
         zipcode.setText(a.getZipCode());

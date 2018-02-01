@@ -119,13 +119,32 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
+
+        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+
+        //only get valid object out
+        if ( tempCustomer.getViolationMessage() != null ) {
+            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
         Ui.closeWindowOf(kid);
     }
 
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
+        simpleCustomer = getSimpleCustomer();
+
+        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+
+        //only get valid object out
+        if ( tempCustomer.getViolationMessage() != null ) {
+            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
+
         Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> Client.lookup(CustomerAgent.class).store(getSimpleCustomer()), CustomerEnhanceController.class);
+            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> tempCustomer, CustomerEnhanceController.class);
         });
         //close this window
         simpleCustomer = null;
@@ -185,8 +204,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                 }
             }
         });
-
         sourceChoiseBox.getItems().addAll(Source.values());
+        
+        //get overwriten in accept()
+        lastNameTextField.setText("");
+        streetTextField.setText("");       
 
         //button behavior
         //enable the save and "saveAndEnhanceUI" button only on filled TextFields
@@ -225,7 +247,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @Override
     public void accept(Customer c) {
-        if ( c != null && c.isSimple() ) {
+        if ( c != null ) {
             if ( c.isBussines() ) {
                 bussines = true;
             }

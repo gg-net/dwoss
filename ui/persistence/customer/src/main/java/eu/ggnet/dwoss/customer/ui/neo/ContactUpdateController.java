@@ -103,6 +103,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private void saveButtonHandling() {
         contact = getContact();
+        //only get valid object out
+        if ( contact.getViolationMessages() != null ) {
+            UiAlert.message("Kontakt ist inkompatibel: " + contact.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            return;
+        }
     }
 
     @FXML
@@ -222,6 +227,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
         //button behavior
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        
+        //get overwriten in accept()
+        lastNameTextField.setText("");
 
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
@@ -351,7 +359,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         if ( cont != null && cont.getViolationMessages() == null ) {
             setContact(cont);
         } else {
-            UiAlert.message("Kontakt ist inkompatibel: " + cont.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            UiAlert.message("Kontakt ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
         }
     }
 
