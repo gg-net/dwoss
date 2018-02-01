@@ -31,6 +31,8 @@ public class CustomerTest {
     private Contact contact;
 
     private Address address;
+    
+    private Communication communication;
 
     private Customer forceToSimpleCustomer(Customer c) {
         c.add(CustomerFlag.ITC_CUSTOMER);
@@ -49,6 +51,7 @@ public class CustomerTest {
         company = gen.makeCompany();
         contact = gen.makeContact();
         address = gen.makeAddress();
+        communication = gen.makeCommunication();
     }
 
     @After
@@ -152,7 +155,9 @@ public class CustomerTest {
         theSimpleCustomer.getContacts().clear();
         theSimpleCustomer.getContacts().add(gen.makeContact());
         theSimpleCustomer.getContacts().get(0).getCommunications().clear();
-        theSimpleCustomer.getContacts().get(0).getCommunications().add(new Communication(Type.EMAIL, true));
+        communication.setType(Type.EMAIL);
+        communication.setIdentifier("test@test.de");
+        theSimpleCustomer.getContacts().get(0).getCommunications().add(communication);
 
         assertThat(theSimpleCustomer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
     }
@@ -235,9 +240,9 @@ public class CustomerTest {
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomer3() {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
+        theSimpleCustomer.getContacts().get(0).add(communication);
+        theSimpleCustomer.getContacts().get(0).add(communication);
+        theSimpleCustomer.getContacts().get(0).add(communication);
 
         assertThat(theSimpleCustomer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 4 Communications").isFalse();
     }
@@ -247,6 +252,7 @@ public class CustomerTest {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
         Communication communicationEmail = new Communication();
         communicationEmail.setType(Type.EMAIL);
+        communicationEmail.setIdentifier("040123456789");
 
         theSimpleCustomer.getContacts().get(0).add(communicationEmail);
         theSimpleCustomer.getContacts().get(0).add(communicationEmail);
@@ -272,49 +278,20 @@ public class CustomerTest {
         assertThat(theSimpleCustomer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
 
     }
+    
+    @Test
+    public void testGetViolationMessage(){
+        customer.getContacts().clear();
+        customer.add(company);
+
+        assertThat(customer.getViolationMessage()).as("Bussnis Customer is vaild").isNull();
+    }
+    
+     @Test
+    public void testGetViolationMessageForANoneValidCustomer(){
+        customer.add(company);
+
+        assertThat(customer.getViolationMessage()).as("Bussnis Customer is not vaild").isNotBlank();
+    }
 
 }
-//    public Optional<SimpleCustomer> toSimple() {
-//        if ( !isSimple() ) return Optional.empty();
-//        if ( isConsumer() ) {
-//            SimpleCustomer sc = new SimpleCustomer();
-//            sc.setId(id);
-//            sc.setTitle(contacts.get(0).getTitle());
-//            sc.setFirstName(contacts.get(0).getFirstName());
-//            sc.setLastName(contacts.get(0).getLastName());
-//            sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
-//            sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
-//            sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
-//            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
-//            sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setLandlinePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setEmail(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setSex(contacts.get(0).getSex());
-//            sc.setSource(source);
-//            sc.setComment(comment);
-//
-//            return Optional.of(sc);
-//        }
-//        if ( isBussines() ) {
-//            SimpleCustomer sc = new SimpleCustomer();
-//            sc.setId(id);
-//            sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
-//            sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
-//            sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
-//            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
-//            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
-//            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
-//            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
-//            sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setEmail(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
-//            sc.setSex(companies.get(0).getContacts().get(0).getSex());
-//            sc.setSource(source);
-//            sc.setComment(comment);
-//            sc.setCompanyName(companies.get(0).getName());
-//            sc.setTaxId(companies.get(0).getTaxId());
-//
-//            return Optional.of(sc);
-//        }
-//        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
-//    }
