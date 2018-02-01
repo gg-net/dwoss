@@ -31,6 +31,8 @@ public class CustomerTest {
     private Contact contact;
 
     private Address address;
+    
+    private Communication communication;
 
     private Customer forceToSimpleCustomer(Customer c) {
         c.add(CustomerFlag.ITC_CUSTOMER);
@@ -49,6 +51,7 @@ public class CustomerTest {
         company = gen.makeCompany();
         contact = gen.makeContact();
         address = gen.makeAddress();
+        communication = gen.makeCommunication();
     }
 
     @After
@@ -152,7 +155,9 @@ public class CustomerTest {
         theSimpleCustomer.getContacts().clear();
         theSimpleCustomer.getContacts().add(gen.makeContact());
         theSimpleCustomer.getContacts().get(0).getCommunications().clear();
-        theSimpleCustomer.getContacts().get(0).getCommunications().add(new Communication(Type.EMAIL, true));
+        communication.setType(Type.EMAIL);
+        communication.setIdentifier("test@test.de");
+        theSimpleCustomer.getContacts().get(0).getCommunications().add(communication);
 
         assertThat(theSimpleCustomer.isSimple()).as("Consumer Customer is possible convert to SimpleCustomer").isTrue();
     }
@@ -235,9 +240,9 @@ public class CustomerTest {
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomer3() {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
-        theSimpleCustomer.getContacts().get(0).add(gen.makeCommunication());
+        theSimpleCustomer.getContacts().get(0).add(communication);
+        theSimpleCustomer.getContacts().get(0).add(communication);
+        theSimpleCustomer.getContacts().get(0).add(communication);
 
         assertThat(theSimpleCustomer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 4 Communications").isFalse();
     }
@@ -247,6 +252,7 @@ public class CustomerTest {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
         Communication communicationEmail = new Communication();
         communicationEmail.setType(Type.EMAIL);
+        communicationEmail.setIdentifier("040123456789");
 
         theSimpleCustomer.getContacts().get(0).add(communicationEmail);
         theSimpleCustomer.getContacts().get(0).add(communicationEmail);

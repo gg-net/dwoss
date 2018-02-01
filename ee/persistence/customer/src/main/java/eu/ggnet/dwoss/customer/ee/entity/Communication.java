@@ -39,9 +39,9 @@ import lombok.*;
 @Indexed
 public class Communication implements Serializable {
 
-    public static final String EMAIL_PATTERN = "^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
+    public static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public static final String PHONE_PATTERN = "^[_0-9\\\\+]+(\\s?[0-9]+)";
+    public static final String PHONE_PATTERN = "^[_0-9\\+]+(\\s?[0-9]+)";
 
     /**
      * Represents some of the common ways to communicate nowadays.
@@ -105,10 +105,13 @@ public class Communication implements Serializable {
      * @return null if instance is valid, else a string representing the invalidation.
      */
     public String getViolationMessages() {
-        // TODO: fill me
-        //[[DWOSS-195]]
         //new email pattern with longet domains
         //"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        //old pattern "^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
+        if ( type.equals(Type.EMAIL) && !identifier.matches(Communication.EMAIL_PATTERN) ) return "the Communication are missmatchting the EMail Pattern";
+        if ( (type.equals(Type.MOBILE) || type.equals(Type.PHONE) || type.equals(Type.FAX)) && !identifier.matches(Communication.PHONE_PATTERN) ) return "the Communication are missmatchting the Phone Pattern";
+
+
         return null;
     }
 

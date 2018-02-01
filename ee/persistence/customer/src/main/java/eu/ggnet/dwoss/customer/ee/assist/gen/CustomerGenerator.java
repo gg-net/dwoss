@@ -23,6 +23,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
@@ -212,6 +213,13 @@ public class CustomerGenerator {
         Communication c = new Communication();
         c.setType(new RandomEnum<>(Communication.Type.class).random());
         c.setIdentifier(RandomStringUtils.randomAlphanumeric(5));
+        if(c.getType().equals(Type.PHONE) || c.getType().equals(Type.FAX) || c.getType().equals(Type.MOBILE) ){
+            c.setIdentifier(RandomStringUtils.randomNumeric(5));
+        }
+        if(c.getType().equals(Type.EMAIL)){
+            c.setIdentifier("test@test.de");
+        }
+        
         return c;
     }
 
