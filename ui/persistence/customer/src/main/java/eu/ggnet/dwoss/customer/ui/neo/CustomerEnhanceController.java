@@ -156,9 +156,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public Customer getResult() {
-        if ( customer == null ) {
-            return null;
-        }
         return customer;
     }
 
@@ -471,9 +468,16 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 }
             });
             addButton.setOnAction((ActionEvent e) -> {
-                Contact c = new Contact();
-                c.setLastName("");
-                addContact(c);
+
+                Ui.exec(() -> {
+                    Ui.build().modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class).ifPresent(
+                            a -> {
+                                Platform.runLater(() -> {
+                                    contactList.add(a);
+                                });
+                            });
+                });
+
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();

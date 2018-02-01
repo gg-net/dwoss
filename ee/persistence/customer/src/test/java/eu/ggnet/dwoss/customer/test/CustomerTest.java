@@ -270,6 +270,51 @@ public class CustomerTest {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
         assertThat(theSimpleCustomer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(theSimpleCustomer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
+
     }
 
 }
+//    public Optional<SimpleCustomer> toSimple() {
+//        if ( !isSimple() ) return Optional.empty();
+//        if ( isConsumer() ) {
+//            SimpleCustomer sc = new SimpleCustomer();
+//            sc.setId(id);
+//            sc.setTitle(contacts.get(0).getTitle());
+//            sc.setFirstName(contacts.get(0).getFirstName());
+//            sc.setLastName(contacts.get(0).getLastName());
+//            sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
+//            sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
+//            sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
+//            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+//            sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setLandlinePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setEmail(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setSex(contacts.get(0).getSex());
+//            sc.setSource(source);
+//            sc.setComment(comment);
+//
+//            return Optional.of(sc);
+//        }
+//        if ( isBussines() ) {
+//            SimpleCustomer sc = new SimpleCustomer();
+//            sc.setId(id);
+//            sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
+//            sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
+//            sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
+//            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+//            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+//            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
+//            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+//            sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setEmail(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
+//            sc.setSex(companies.get(0).getContacts().get(0).getSex());
+//            sc.setSource(source);
+//            sc.setComment(comment);
+//            sc.setCompanyName(companies.get(0).getName());
+//            sc.setTaxId(companies.get(0).getTaxId());
+//
+//            return Optional.of(sc);
+//        }
+//        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
+//    }
