@@ -24,7 +24,9 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
+import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.*;
 
@@ -58,11 +60,14 @@ public class CustomerEnhanceTryout {
             customer.add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
             customer.add(new MandatorMetadata());
+
             if ( customer.getViolationMessage() != null ) {
                 UiAlert.show("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
+            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
+            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).ifPresent(System.out::println);
             });
@@ -84,6 +89,8 @@ public class CustomerEnhanceTryout {
             customer.add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
             customer.add(new MandatorMetadata());
+            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
+            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
             if ( customer.getViolationMessage() != null ) {
                 UiAlert.show("customer is invalid" + customer.getViolationMessage());
 

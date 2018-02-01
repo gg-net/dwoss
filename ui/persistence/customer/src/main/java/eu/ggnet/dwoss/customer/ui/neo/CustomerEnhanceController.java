@@ -40,6 +40,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
@@ -120,6 +121,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
+    private ObservableList<AddressLabel> addressLabels = FXCollections.observableArrayList();
+
     private boolean isBusinessCustomer = false;
 
     private Customer customer;
@@ -159,30 +162,32 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         return customer;
     }
 
-    public void setCustomer(Customer c) {
-        if ( c.isBussines() ) {
+    public void setCustomer(Customer customer) {
+        addressLabels.addAll(customer.getAddressLabels());
+        if ( customer.isBussines() ) {
             CustomerKindLabel.setText("Geschäftskunde");
-            customerNameLabel.setText(c.getCompanies().get(0).getName());
-            companyList.setAll(c.getCompanies());
+            customerNameLabel.setText(customer.getCompanies().get(0).getName());
+            companyList.setAll(customer.getCompanies());
             companyListView.setItems(companyList);
             contactOrCompanyLabel.setText("Firmen: ");
 
             isBusinessCustomer = true;
         } else {
             CustomerKindLabel.setText("Endkunde");
-            customerNameLabel.setText(c.getContacts().get(0).toFullName());
-            contactList.setAll(c.getContacts());
+            customerNameLabel.setText(customer.getContacts().get(0).toFullName());
+            contactList.setAll(customer.getContacts());
             contactListView.setItems(contactList);
             contactOrCompanyLabel.setText("Kontakte: ");
         }
-        KIDLabel.setText("" + c.getId());
-        keyAccounterTextField.setText(c.getKeyAccounter());
 
-        flagsSet.addAll(c.getFlags());
+        KIDLabel.setText("" + customer.getId());
+        keyAccounterTextField.setText(customer.getKeyAccounter());
 
-        sourceChoiceBox.getSelectionModel().select(c.getSource());
-        mandatorMetadata.addAll(c.getMandatorMetadata());
-        additionalCustomerIds.putAll(c.getAdditionalCustomerIds());
+        flagsSet.addAll(customer.getFlags());
+
+        sourceChoiceBox.getSelectionModel().select(customer.getSource());
+        mandatorMetadata.addAll(customer.getMandatorMetadata());
+        additionalCustomerIds.putAll(customer.getAdditionalCustomerIds());
 
         //transfer the map into a List
         if ( additionalCustomerIds == null ) {
@@ -195,7 +200,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             additionalCustomerIDsListView.setItems(observableArrayList);
         }
 
-        commentTextArea.setText(c.getComment());
+        commentTextArea.setText(customer.getComment());
 
         //build the Flags Box
         buildFlagBox();
@@ -209,6 +214,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     public Customer getCustomer() {
         Customer cust = new Customer();
+        cust.getAddressLabels().addAll(addressLabels);
+
         if ( isBusinessCustomer ) {
             cust.getCompanies().clear();
             companyList.forEach(c -> cust.add(c));
@@ -259,7 +266,16 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         System.out.println("customer in ui" + getCustomer());
         getCustomer().getCompanies().forEach(comp -> comp.getAddresses().forEach(addr -> System.out.println(addr)));
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class);
+            Ui.build().fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class)
+                    .ifPresent(invoiceAddressLabelWithNullableShippingAddressLabel -> {
+                        if ( invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().isPresent() ) {
+                            int shippingLabelIndex = getCustomer().getAddressLabels().indexOf(invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().get());
+                            getCustomer().getAddressLabels().set(shippingLabelIndex, invoiceAddressLabelWithNullableShippingAddressLabel.getShippingLabel().get());
+                        }
+                        int invoceLabelIndex = getCustomer().getAddressLabels().indexOf(invoiceAddressLabelWithNullableShippingAddressLabel.getInvoiceLabel());
+                        getCustomer().getAddressLabels().set(invoceLabelIndex, invoiceAddressLabelWithNullableShippingAddressLabel.getInvoiceLabel());
+
+                    });
         });
     }
 
