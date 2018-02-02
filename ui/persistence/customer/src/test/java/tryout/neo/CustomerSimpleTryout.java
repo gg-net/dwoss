@@ -42,6 +42,9 @@ import tryout.stub.CustomerAgentStub;
 public class CustomerSimpleTryout {
 
     public static void main(String[] args) {
+        //stub for the new Costumer modell with generator needed
+        Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
+
         CustomerGenerator gen = new CustomerGenerator();
         Customer customer = gen.makeCustomer();
         Company company = gen.makeCompany();
@@ -114,11 +117,11 @@ public class CustomerSimpleTryout {
             company.getAddresses().clear();
             company.getCommunications().clear();
 
-                contact.getAddresses().clear();
-                contact.getCommunications().clear();
+            contact.getAddresses().clear();
+            contact.getCommunications().clear();
 
-                contact.add(address);
-                contact.add(communicationEmail);
+            contact.add(address);
+            contact.add(communicationEmail);
 
             company.add(contact);
             company.add(address);
