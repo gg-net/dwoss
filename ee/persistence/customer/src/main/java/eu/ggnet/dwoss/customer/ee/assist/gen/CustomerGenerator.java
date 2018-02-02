@@ -234,7 +234,7 @@ public class CustomerGenerator {
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());
         m.setPaymentMethod(new RandomEnum<>(PaymentMethod.class).random());
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
-        EnumSet.allOf(SalesChannel.class).stream().filter(t -> R.nextInt(10) < 3).forEach(t -> m.add(t));
+        EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.add(t));
         return m;
     }
 
