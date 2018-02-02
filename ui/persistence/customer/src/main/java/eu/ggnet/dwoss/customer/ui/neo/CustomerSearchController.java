@@ -22,8 +22,8 @@ import java.util.*;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,11 +31,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import org.apache.commons.lang3.StringUtils;
-
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ui.CustomerTask;
 import eu.ggnet.saft.Client;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
@@ -85,19 +84,16 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     @FXML
     private HBox statusHbox;
 
-    private Service<List<Customer>> searchService;
-
     private Set<SearchField> customerFields;
 
-    private CustomerAgent agent = Client.lookup(CustomerAgent.class);
+    private ObservableList<Customer> observableCustomers = FXCollections.observableArrayList();
+
+    private StringProperty searchProperty = new SimpleStringProperty();
+
+    private CustomerTask LOADING_CUSTOMER_TASK;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
-        // Creating and laying out the Ui
-        StringProperty searchProperty = new SimpleStringProperty();
-        ObservableList<Customer> resultProperty = FXCollections.observableArrayList();
-
         resultListView = new ListView<>();
         resultListView.setCellFactory(listView -> {
             return new ListCell<Customer>() {
@@ -113,62 +109,15 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             };
         });
 
+        LOADING_CUSTOMER_TASK = new CustomerTask(searchProperty.get(), customerFields);
+
+        customerFields = fillSet();
+        observableCustomers = LOADING_CUSTOMER_TASK.getPartialResults();
+
+        resultListView.setItems(observableCustomers);
+
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
         progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
-
-        // Search Service. Creates for every search request a task, which picks up results in the background. Optional, cancels the allready running task.
-        searchService = new Service<List<Customer>>() {
-            @Override
-            protected Task<List<Customer>> createTask() {
-
-                return new Task<List<Customer>>() {
-                    @Override
-                    protected List<Customer> call() throws Exception {
-
-                        updateProgress(-1, -1);
-
-                        if ( StringUtils.isEmpty(searchProperty.get()) ) {
-                            return Collections.EMPTY_LIST;
-                        } // Empty check.
-
-                        customerFields = fillSet();
-                        System.out.println("Size of Set: " + customerFields.size());
-
-                        //fill the task
-                        List<Customer> searchlist = agent.search(searchProperty.get(), customerFields, 0, agent.countSearch(searchProperty.get(), customerFields));
-                        List<Customer> last = Collections.EMPTY_LIST;
-
-                        int done = 0;
-                        int i = 0;
-
-                        while (!isCancelled() && i < searchlist.size()) {
-                            last.add(searchlist.get(i));
-                            done = done + last.size();
-                            updateValue(last);
-                            int estimate = agent.countSearch(searchProperty.get(), customerFields);
-
-                            updateMessage("Searchresult " + done + " of " + estimate);
-                            updateProgress(done, estimate);
-
-                            i++;
-                        }
-                        updateProgress(100, 100);
-
-                        return last;
-                    }
-                };
-            }
-        };
-
-        // Adding Actions and Listeners
-        searchService.valueProperty().addListener((ob, o, n) -> {
-            if ( n == null ) {
-                resultProperty.clear();
-            } // happens if service has allready a value and is reinited.
-            else {
-                resultProperty.addAll(n);
-            }
-        });
 
         searchButton.setOnAction((ActionEvent event) -> search());
         searchField.setOnKeyPressed((ke) -> {
@@ -178,17 +127,18 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         });
 
         // Binding all Ui Properties
-        Ui.progress().observe(searchService);
         searchProperty.bind(searchField.textProperty());
-        resultListView.itemsProperty().bind(new SimpleListProperty<>(resultProperty));
 
-        progressBar.progressProperty().bind(searchService.progressProperty());
-        progressIndicator.progressProperty().bind(searchService.progressProperty());
+        progressBar.progressProperty().bind(LOADING_CUSTOMER_TASK.progressProperty());
+        progressIndicator.progressProperty().bind(LOADING_CUSTOMER_TASK.progressProperty());
 
-        statusHbox.visibleProperty().bind(searchService.runningProperty());
+        //hidde the HBox
+        progressBar.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
+        progressIndicator.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
+        statusHbox.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
 
-
-        Ui.progress().observe(searchService);
+        Ui.progress().observe(LOADING_CUSTOMER_TASK);
+        Ui.exec(LOADING_CUSTOMER_TASK);
     }
 
     /**
@@ -218,18 +168,20 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     }
 
     private void search() {
-        if ( searchService.getState() == READY ) {
-            searchService.start();
+        if ( LOADING_CUSTOMER_TASK.getState() == READY ) {
+            LOADING_CUSTOMER_TASK.setCustomerFields(customerFields);
+            LOADING_CUSTOMER_TASK.setSearchsting(searchProperty.get());
         } else {
-            searchService.restart();
+            LOADING_CUSTOMER_TASK.setCustomerFields(customerFields);
+            LOADING_CUSTOMER_TASK.setSearchsting(searchProperty.get());
         }
     }
 
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
-            if ( searchService.isRunning() ) {
-                searchService.cancel();
+            if ( LOADING_CUSTOMER_TASK.isRunning() ) {
+                LOADING_CUSTOMER_TASK.cancel();
             }
             return null;
         });
