@@ -120,7 +120,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
 
-        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {
@@ -135,7 +135,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
 
-        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {

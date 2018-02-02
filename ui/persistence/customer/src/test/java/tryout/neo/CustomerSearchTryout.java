@@ -33,7 +33,7 @@ public class CustomerSearchTryout {
     public static void main(String[] args) {
 
         //stub for the new Costumer modell with generator needed
-        Client.addSampleStub(CustomerAgent.class, new CustomerAgentStub());
+        Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
        
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
