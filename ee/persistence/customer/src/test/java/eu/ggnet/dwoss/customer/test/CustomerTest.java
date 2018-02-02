@@ -276,7 +276,12 @@ public class CustomerTest {
         Customer theSimpleCustomer = forceToSimpleCustomer(customer);
         assertThat(theSimpleCustomer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(theSimpleCustomer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
-
+    }
+    
+    @Test
+    public void testToNotSimple() {
+        assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
+        assertThat(customer.toSimple()).as("Customer can not convert to SimpleCustomer and is null").isEmpty();
     }
     
     @Test
