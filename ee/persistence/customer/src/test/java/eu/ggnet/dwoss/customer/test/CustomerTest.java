@@ -31,7 +31,7 @@ public class CustomerTest {
     private Contact contact;
 
     private Address address;
-    
+
     private Communication communication;
 
     private Customer forceToSimpleCustomer(Customer c) {
@@ -277,23 +277,23 @@ public class CustomerTest {
         assertThat(theSimpleCustomer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(theSimpleCustomer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
     }
-    
+
     @Test
     public void testToNotSimple() {
         assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(customer.toSimple()).as("Customer can not convert to SimpleCustomer and is null").isEmpty();
     }
-    
+
     @Test
-    public void testGetViolationMessage(){
+    public void testGetViolationMessage() {
         customer.getContacts().clear();
         customer.add(company);
 
         assertThat(customer.getViolationMessage()).as("Bussnis Customer is vaild").isNull();
     }
-    
-     @Test
-    public void testGetViolationMessageForANoneValidCustomer(){
+
+    @Test
+    public void testGetViolationMessageForANoneValidCustomer() {
         customer.add(company);
 
         assertThat(customer.getViolationMessage()).as("Bussnis Customer is not vaild").isNotBlank();
