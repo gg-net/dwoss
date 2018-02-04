@@ -54,7 +54,6 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type;
 
 import lombok.Getter;
 
@@ -158,7 +157,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
                             Platform.runLater(() -> positionsFxList.refresh());
                         });
                     } else {
-                        UiAlert.show("Änderung an Positionen ist nicht erlaubt.");
+                        Ui.build(this).alert("Änderung an Positionen ist nicht erlaubt.");
                     }
                 }
             });
@@ -598,7 +597,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
     private void addUnitAction(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUnitAction
         if ( unitInputField.getText().isEmpty() ) return;
         if ( document.isClosed() ) {
-            UiAlert.show(this, "Nicht erlaubt", "Hinzufügen von Sopo Ware nicht erlaubt, abgeschlossenes Dokument", Type.INFO);
+            Ui.build(this).title("Nicht erlaubt").alert().message("Hinzufügen von Sopo Ware nicht erlaubt, abgeschlossenes Dokument").show();
             return;
         }
 

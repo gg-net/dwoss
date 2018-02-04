@@ -21,10 +21,10 @@ import java.awt.Window;
 
 import javafx.scene.Parent;
 
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.UiAlert;
 
-import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.ERROR;
+import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
 /**
  *
@@ -73,8 +73,7 @@ public class Failure {
     public <T> boolean handle(Reply<T> reply) {
         if ( reply == null ) throw new NullPointerException("Reply is null, not allowed");
         if ( reply.hasSucceded() ) return true;
-        UiAlert.title("Fehler")
-                .parent(swingParent)
+        Ui.build(swingParent).alert().title("Fehler")
                 .message(reply.getSummary())
                 .show(ERROR);
         return false;

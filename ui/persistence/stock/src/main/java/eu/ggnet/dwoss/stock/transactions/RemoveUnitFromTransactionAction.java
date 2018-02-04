@@ -23,7 +23,7 @@ import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
 
@@ -44,7 +44,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new RemoveQuestionView()).ifPresent(v -> Ui.progress().call(() -> {
                 Dl.remote().lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment());
-                Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(Type.INFO);
+                Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(AlertType.INFO);
                 return null;
             }));
         });

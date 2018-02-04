@@ -99,7 +99,7 @@ public class DateRangeAndContractorChooserView extends BorderPane implements Res
         ok.setOnAction((e) -> {
             result = new RangeAndContractor(start.getValue(), end.getValue(), contractorBox.getSelectionModel().getSelectedItem());
             if ( result.isValid() ) Ui.closeWindowOf(this);
-            else eu.ggnet.saft.UiAlert.show(this, result.violationMessages());
+            else Ui.build(this).alert(result.violationMessages());
         });
 
         FlowPane flowPane = new FlowPane(10, 10, ok, cancel);

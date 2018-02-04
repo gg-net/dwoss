@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,45 +16,32 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.STableColumn;
-
 import java.io.File;
 import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.swing.JOptionPane;
 import javax.validation.*;
 
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.assist.Stocks;
+import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.lucidcalc.*;
 
 import lombok.*;
 
@@ -110,7 +97,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
      * @return a Filejacket where a xls from the JExcel api is, that contains all Errors.
      */
     @Override
-    public FileJacket validateDatabase() {
+    public Optional<FileJacket> validateDatabase() {
         List<Vm> vms = new ArrayList<>();
         UniqueUnitEao uuEao = new UniqueUnitEao(uuEm);
         DossierEao dossierEao = new DossierEao(redTapeEm);
@@ -340,13 +327,10 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
      * First it sort the erros by his level and put them into different sheets.
      * <p/>
      * @param errors
-     * @return
+     * @return an optional of filejacket, if empty no errors are found.
      */
-    private FileJacket createFileJacket(List<Vm> errors) {
-        if ( errors.isEmpty() ) {
-            JOptionPane.showMessageDialog(null, "Kein Fehler gefunden");
-            return null;
-        }
+    private Optional<FileJacket> createFileJacket(List<Vm> errors) {
+        if ( errors.isEmpty() ) return Optional.empty();
         List<Object[]> rows = new ArrayList<>();
         for (Vm vm : errors) {
             rows.add(new Object[]{vm.getLevel(), vm.getMessage()});
@@ -362,7 +346,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
         document.add(sheet);
         File file = LucidCalc.createWriter(LucidCalc.Backend.XLS).write(document);
         FileJacket result = new FileJacket("Datenbank_Errors", ".xls", file);
-        return result;
+        return Optional.of(result);
     }
 
     private void error(List<Vm> vms, String msg) {

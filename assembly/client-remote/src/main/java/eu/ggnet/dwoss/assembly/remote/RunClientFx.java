@@ -38,7 +38,7 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 import eu.ggnet.saft.runtime.SwingClient;
 
-import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.ERROR;
+import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
 /**
  * JavaFx entry Point.
@@ -68,7 +68,7 @@ public class RunClientFx extends Application {
         System.out.println("JavaFx start");
 
         if ( error != null ) {
-            UiAlert.title("Fehler im Init")
+            Ui.build().alert().title("Fehler im Init")
                     .nl("Fehler in der Initialisierung oder Verbindung")
                     .nl("Später noch mal probieren oder Technik kontaktieren")
                     .nl()

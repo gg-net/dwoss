@@ -308,7 +308,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openCreateCustomer() {
         long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
         if ( customerId == 0 ) {
-            UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+            Ui.build().alert().message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
         }
         model.setPurchaseCustomer(customerId);

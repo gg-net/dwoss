@@ -41,7 +41,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -135,13 +135,13 @@ public class ResolveRepaymentController implements Initializable, FxController, 
         ForkJoinPool.commonPool().execute(() -> {
             try {
                 ResolveResult result = Dl.remote().lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, Dl.local().lookup(Guardian.class).getUsername(), commentField.getText());
-                eu.ggnet.saft.UiAlert.title("Repayment resolved")
+                Ui.build().alert().title("Repayment resolved")
                         .parent(sopoField)
                         .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
                         .nl("Stock: " + result.stockMessage)
                         .nl("RedTape: " + result.redTapeMessage)
                         .nl("Report: " + result.reportMessage)
-                        .show(Type.INFO);
+                        .show(AlertType.INFO);
                 reset();
             } catch (UserInfoException ex) {
                 Ui.handle(ex);

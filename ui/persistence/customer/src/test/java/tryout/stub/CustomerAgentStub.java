@@ -25,14 +25,14 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  *
@@ -188,7 +188,7 @@ public class CustomerAgentStub implements CustomerAgent {
         if ( comm.getViolationMessages() == null ) {
             cont.add(comm);
         } else {
-            UiAlert.message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
         }
 
         AddressLabel al = null;
@@ -217,7 +217,7 @@ public class CustomerAgentStub implements CustomerAgent {
         }
         c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
-        
+
         MandatorMetadata mandatorMetadata = new MandatorMetadata();
         c.add(mandatorMetadata);
 

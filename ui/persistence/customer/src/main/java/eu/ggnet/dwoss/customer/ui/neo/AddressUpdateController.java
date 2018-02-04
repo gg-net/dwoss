@@ -29,9 +29,8 @@ import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  * Controller class for the editor view of a Address. Allows the user to
@@ -78,7 +77,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
         //only get valid object out
         if ( address.getViolationMessages() != null ) {
-            UiAlert.message("Adresse ist inkompatibel: " + address.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Adresse ist inkompatibel: " + address.getViolationMessages()).show(AlertType.WARNING);
             return;
         }
 
@@ -139,7 +138,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         if ( a != null ) {
             setAddress(a);
         } else {
-            UiAlert.message("Addresse ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Addresse ist inkompatibel").show(AlertType.WARNING);
         }
     }
 

@@ -203,9 +203,18 @@ public class PreBuilder {
     /**
      * Initializes a alert, like the swing JOptionPane or the javafx 8u60 Alert.
      *
-     * @return a new uialertbuilder.
+     * @return a new Ui.build().alert()builder.
      */
-    public UiAlertBuilder alert() {
-        return new UiAlertBuilder(this);
+    public AlertBuilder alert() {
+        return new AlertBuilder(this);
+    }
+
+    /**
+     * Shortcut for alert().message(xxxx).show().
+     *
+     * @param message the message to be shown
+     */
+    public void alert(String message) {
+        new AlertBuilder(this).message(message).show();
     }
 }

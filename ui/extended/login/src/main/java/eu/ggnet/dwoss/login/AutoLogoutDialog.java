@@ -21,8 +21,6 @@ import java.awt.event.*;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
-
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 
@@ -162,7 +160,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
                 Lookup.getDefault().lookup(Guardian.class).login(view.getUsername(), view.getPassword());
                 this.dispose();
             } catch (AuthenticationException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
+                Ui.build(this).alert(ex.getMessage());
             } catch (Exception ex) {
                 Ui.handle(ex);
             }

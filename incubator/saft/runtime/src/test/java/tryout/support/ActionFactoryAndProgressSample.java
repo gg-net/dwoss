@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -40,7 +41,7 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        JOptionPane.showMessageDialog(null, "Ich wurde geklickt");
+                        Ui.build().alert("Ich wurde geklickt");
                     }
                 }, true),
                 new MetaAction("System", new AbstractAction("Saft Progress 4s") {

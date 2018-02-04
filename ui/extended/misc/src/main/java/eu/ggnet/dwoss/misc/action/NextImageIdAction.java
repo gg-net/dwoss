@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  *
@@ -38,7 +38,7 @@ public class NextImageIdAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().alert().message("Die nächste BilderId ist " + Dl.remote().lookup(SalesListingProducer.class).nextImageId()).show(Type.INFO);
+            Ui.build().alert().message("Die nächste BilderId ist " + Dl.remote().lookup(SalesListingProducer.class).nextImageId()).show(AlertType.INFO);
         });
     }
 }

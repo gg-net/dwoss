@@ -5,7 +5,8 @@ import java.util.Random;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.api.ui.StoreLocation;
 import eu.ggnet.saft.core.ui.builder.SwingBuilder;
@@ -117,7 +118,7 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once InputPane via Fxml ");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().fxml().eval(SimpleFxmlController.class).ifPresent(t -> UiAlert.show("Ok pressed with Input: " + t));
+                Ui.build().fxml().eval(SimpleFxmlController.class).ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
             }));
             menu.add(b);
             main.getMenuBar().add(menu);

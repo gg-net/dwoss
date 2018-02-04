@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
@@ -155,7 +155,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
         if ( position.getBookingAccount().isPresent() ) { // Remapping of the ledger.
             if ( !ledgers.contains(position.getBookingAccount().get()) ) {
-                UiAlert.show(this, "Buchungskonto " + position.getBookingAccount().get() + " nicht für diese Position und Steuer konfiguriert. Wurde auf Standard gesetzt");
+                Ui.build(this).alert("Buchungskonto " + position.getBookingAccount().get() + " nicht für diese Position und Steuer konfiguriert. Wurde auf Standard gesetzt");
                 if ( !ledgers.isEmpty() ) this.setBookingAccount(ledgers.get(0));
             } else {
                 this.setBookingAccount(ledgers.get(ledgers.indexOf(position.getBookingAccount().get())));
@@ -339,17 +339,17 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     @Override
     public boolean mayClose() {
         if ( StringUtils.isBlank(description) ) {
-            UiAlert.show(this, "Beschreibung darf nich leer sein.");
+            Ui.build(this).alert("Beschreibung darf nich leer sein.");
             return false;
         }
         if ( StringUtils.isBlank(positionName) ) {
-            UiAlert.show(this, "Name darf nich leer sein.");
+            Ui.build(this).alert("Name darf nich leer sein.");
             return false;
         }
         try {
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
-            UiAlert.show(this, "Preisformat ist nicht lesbar");
+            Ui.build(this).alert("Preisformat ist nicht lesbar");
         }
         for (Binding binding : bindingGroup.getBindings()) {
             binding.save();

@@ -26,7 +26,8 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ops.DescriptiveConsumer;
 import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
@@ -43,7 +44,7 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
     @Override
     public List<DescriptiveConsumer<PicoUnit>> of(PicoUnit t) {
 
-        StockAgent stockAgent =Dl.remote().lookup(StockAgent.class);
+        StockAgent stockAgent = Dl.remote().lookup(StockAgent.class);
         StockUnit su = stockAgent.findStockUnitByUniqueUnitIdEager(t.uniqueUnitId);
         if ( su == null || su.isInTransaction() ) return Collections.EMPTY_LIST;
         Guardian guardian = Dl.local().lookup(Guardian.class);
@@ -55,12 +56,12 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                     return new DescriptiveConsumer<>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
                         Ui.exec(() -> {
                             Ui.build().dialog().eval(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"), () -> new CreateQuestionView())
-                                    .map(v -> ReplyUtil.wrap(() ->Dl.remote().lookup(StockTransactionProcessor.class).perpareTransfer(
+                                    .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class).perpareTransfer(
                                     v.stockUnits,
                                     v.destination.getId(),
                                     Dl.local().lookup(Guardian.class).getUsername(),
                                     v.comment)))
-                                    .filter(Ui.failure()::handle).ifPresent(u -> UiAlert.show("Umfuhr angelegt"));
+                                    .filter(Ui.failure()::handle).ifPresent(u -> Ui.build().alert("Umfuhr angelegt"));
                         });
                     });
                 })

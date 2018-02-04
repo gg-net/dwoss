@@ -22,7 +22,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -46,7 +47,7 @@ public class PreferedAddressLabelsTryOut {
             customer.add(gen.makeCompany());
 
             if ( !customer.isVaild() ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
@@ -63,7 +64,7 @@ public class PreferedAddressLabelsTryOut {
             customer.add(gen.makeContact());
 
             if ( !customer.isVaild() ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }

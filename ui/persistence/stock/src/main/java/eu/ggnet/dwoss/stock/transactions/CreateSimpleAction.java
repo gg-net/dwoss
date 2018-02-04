@@ -27,7 +27,8 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
@@ -51,10 +52,10 @@ public class CreateSimpleAction extends AccessableAction {
             Ui.build().fxml().eval(CreateSelectionController.class)
                     .map(this::handleResult)
                     .ifPresent(c -> Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
-                    .map(v -> ReplyUtil.wrap(() ->Dl.remote().lookup(StockTransactionProcessor.class)
+                    .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
                     .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
                     ).filter(Ui.failure()::handle)
-                    .ifPresent(t -> UiAlert.show("Umfuhr angelegt")));
+                    .ifPresent(t -> Ui.build().alert("Umfuhr angelegt")));
         });
 
     }
@@ -86,7 +87,7 @@ public class CreateSimpleAction extends AccessableAction {
             if ( c.target() == null ) throw new UserInfoException("Kein Ziellager ausgewählt");
             List<String> refurbishIds = parseRefurbishIds(c.refurbishIds());
             if ( refurbishIds.isEmpty() ) throw new UserInfoException("Keine SopoNr in " + c.refurbishIds() + " erkannt");
-            List<StockUnit> stockUnits =Dl.remote().lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
+            List<StockUnit> stockUnits = Dl.remote().lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
             if ( stockUnits.isEmpty() ) throw new UserInfoException("Keine der SopoNr(n) " + refurbishIds + " ist im Lager");
             if ( stockUnits.stream().anyMatch(s -> s.isInTransaction()) )
                 throw new UserInfoException("Mindestens eine SopoNr ist auf einer Transaktion");

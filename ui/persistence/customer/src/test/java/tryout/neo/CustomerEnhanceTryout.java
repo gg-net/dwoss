@@ -28,7 +28,8 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -62,7 +63,7 @@ public class CustomerEnhanceTryout {
             customer.add(new MandatorMetadata());
 
             if ( customer.getViolationMessage() != null ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
@@ -92,7 +93,7 @@ public class CustomerEnhanceTryout {
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
             if ( customer.getViolationMessage() != null ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }

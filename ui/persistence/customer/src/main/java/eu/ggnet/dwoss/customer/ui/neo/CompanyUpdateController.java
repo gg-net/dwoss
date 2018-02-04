@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,11 +37,11 @@ import javafx.scene.layout.VBox;
 import javafx.util.converter.IntegerStringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -115,7 +110,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         company = getCompany();
         //only get valid object out
         if ( company.getViolationMessages() != null ) {
-            UiAlert.message("Firma ist inkompatibel: " + company.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessages()).show(AlertType.WARNING);
             return;
         }
         Ui.closeWindowOf(taxIdTextField);
@@ -126,7 +121,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         company = getCompany();
         //only get valid object out
         if ( company.getViolationMessages() != null ) {
-            UiAlert.message("Firma ist inkompatibel: " + company.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessages()).show(AlertType.WARNING);
             return;
         }
     }
@@ -282,11 +277,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
-        
+
         //get overwriten in accept()
         companyNameTextField.setText("");
         addressListView.setItems(addressList);
-        
 
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
@@ -339,7 +333,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         });
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
-        //adding a CellFactory for every Colum 
+        //adding a CellFactory for every Colum
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
             return new TableCell<Communication, Type>() {
@@ -439,7 +433,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         if ( comp != null ) {
             setCompany(comp);
         } else {
-            UiAlert.message("Firma ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Firma ist inkompatibel").show(AlertType.WARNING);
         }
     }
 

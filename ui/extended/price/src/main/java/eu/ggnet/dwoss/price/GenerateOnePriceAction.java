@@ -22,13 +22,11 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javax.swing.JOptionPane.showInputDialog;
-import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -46,7 +44,7 @@ public class GenerateOnePriceAction extends AccessableAction {
         if ( refurbishId == null || refurbishId.isEmpty() ) return;
         PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
         if ( per == null ) {
-            showMessageDialog(UiCore.getMainFrame(), "Kein Ergebins für SopoNr: " + refurbishId);
+            Ui.build().alert("Kein Ergebins für SopoNr: " + refurbishId);
         }
         String html = PriceEngineResultFormater.toSimpleHtml(per);
         HtmlDialog dialog = new HtmlDialog(UiCore.getMainFrame(), Dialog.ModalityType.MODELESS);

@@ -54,7 +54,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
             protected void done() {
                 try {
                     FileJacket fj = get();
-                    if ( fj == null ) UiAlert.show("Keine Rückgabewerte");
+                    if ( fj == null ) Ui.build().alert("Keine Rückgabewerte");
                     else Desktop.getDesktop().open(fj.toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
                     Ui.handle(ex);

@@ -38,7 +38,7 @@ import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import lombok.AllArgsConstructor;
 
-import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.ERROR;
+import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
 /**
  *

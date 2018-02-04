@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import org.openide.util.Lookup;
@@ -91,7 +90,7 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                         protected void done() {
                             try {
                                 String msg = (get() ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt");
-                                JOptionPane.showMessageDialog(UiCore.getMainFrame(), msg);
+                                Ui.build().alert(msg);
                             } catch (InterruptedException | ExecutionException ex) {
                                 Ui.handle(ex);
                             }

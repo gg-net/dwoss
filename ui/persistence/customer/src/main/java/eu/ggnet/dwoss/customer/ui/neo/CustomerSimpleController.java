@@ -37,7 +37,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.AlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -123,7 +124,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {
-            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
 
@@ -138,7 +139,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {
-            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
 
@@ -252,7 +253,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             }
             setSimpleCustomer(c.toSimple().get());
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
         }
 
     }

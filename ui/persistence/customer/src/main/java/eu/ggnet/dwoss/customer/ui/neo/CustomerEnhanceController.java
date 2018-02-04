@@ -43,9 +43,8 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -153,7 +152,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             }
             setCustomer(cust);
         } else {
-            UiAlert.message("Kunde ist inkompatibel: " + cust.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + cust.getViolationMessage()).show(AlertType.WARNING);
         }
     }
 

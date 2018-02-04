@@ -30,9 +30,9 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  * Controller class for the editor view of a Communication. Allows the user to
@@ -98,7 +98,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
         //only get valid object out
         if ( communication.getViolationMessages() != null ) {
-            UiAlert.message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessages()).show(AlertType.WARNING);
             return;
         }
 
@@ -108,7 +108,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         commtypbox.getItems().addAll(Communication.Type.values());
-        
+
         //get overwriten in accept()
         identifer.setText("");
 
@@ -125,7 +125,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         if ( c != null ) {
             setCommunication(c);
         } else {
-            UiAlert.message("Kommunikationsweg ist inkompatibel");
+            Ui.build().alert().message("Kommunikationsweg ist inkompatibel");
         }
 
     }

@@ -49,7 +49,7 @@ public class ProductSpecExportAction extends AccessableAction {
             });
 
         } catch (NumberFormatException ex) {
-            UiAlert.show("Die Eingabe '" + input + "' ist keine Zahl");
+            Ui.build().alert("Die Eingabe '" + input + "' ist keine Zahl");
             return;
         }
     }

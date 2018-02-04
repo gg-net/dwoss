@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.misc.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 
 import javax.swing.AbstractAction;
 
@@ -34,7 +33,7 @@ public class DatabaseValidationAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional.ofNullable(Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
+            Ui.progress().call(() -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
         });
     }
 }

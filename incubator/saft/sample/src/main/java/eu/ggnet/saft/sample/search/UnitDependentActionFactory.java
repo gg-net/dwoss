@@ -18,7 +18,7 @@ package eu.ggnet.saft.sample.search;
 
 import java.util.*;
 
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.ops.DescriptiveConsumer;
 import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
 
@@ -36,7 +36,7 @@ public class UnitDependentActionFactory implements DescriptiveConsumerFactory<Mi
         } catch (InterruptedException ex) {
             //
         }
-        return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> UiAlert.show("Umfuhr ausgeführt")));
+        return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> Ui.build().alert().message("Umfuhr ausgeführt").show()));
     }
 
 }

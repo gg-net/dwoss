@@ -16,15 +16,13 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.saft.api.ui.FxController;
-
 import java.net.URL;
-import java.util.*;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import javafx.collections.FXCollections;
-import javafx.event.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -33,15 +31,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  * FXML Controller for the UnitCollection Editor
@@ -106,7 +104,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      */
     private void save(ActionEvent event) {
         if ( StringUtils.isBlank(nameExtension.getText()) ) {
-            UiAlert.message("Es muss ein Name gesetzt werden").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Es muss ein Name gesetzt werden").show(AlertType.WARNING);
             return;
         }
 
@@ -125,7 +123,7 @@ public class UnitCollectionEditorController implements Initializable, FxControll
             //check if the pricetype is in the list
             for (Price items : listViewPrices.getItems()) {
                 if ( items.getType() == priceType.getSelectionModel().getSelectedItem() ) {
-                    UiAlert.message("Dieser Preistyp wurde schon angelegt").show(UiAlertBuilder.Type.WARNING);
+                    Ui.build().alert().message("Dieser Preistyp wurde schon angelegt").show(AlertType.WARNING);
                     return;
                 }
             }
