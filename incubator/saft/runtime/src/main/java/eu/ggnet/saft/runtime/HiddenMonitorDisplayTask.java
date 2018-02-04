@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,12 +25,12 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.progress.HiddenMonitor;
 import eu.ggnet.saft.api.progress.ProgressObserver;
 import eu.ggnet.saft.runtime.HiddenMonitorDisplayTask.Progress;
-import lombok.Data;
 
-import static eu.ggnet.saft.Client.lookup;
+import lombok.Data;
 
 public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDisplayTask.Progress> {
 
@@ -70,14 +70,14 @@ public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDis
     @SuppressWarnings("SleepWhileInLoop")
     protected Void doInBackground() throws Exception {
         // Hint: the supplied Monitor has a length of 100;
-        HiddenMonitor hm = lookup(ProgressObserver.class).getMonitor(key);
+        HiddenMonitor hm = Dl.remote().lookup(ProgressObserver.class).getMonitor(key);
         while (hm != null && !hm.isFinished()) {
             int progress = 100 - hm.getAbsolutRemainingTicks();
             if ( progress < 0 ) progress = 0;
             if ( progress > 100 ) progress = 100;
             publish(new Progress(progress, hm.getTitle() + ":" + StringUtils.defaultIfBlank(hm.getMessage(), "")));
             Thread.sleep(250);
-            hm = lookup(ProgressObserver.class).getMonitor(key);
+            hm = Dl.remote().lookup(ProgressObserver.class).getMonitor(key);
         }
         publish(new Progress(100, ""));
         keys.remove(key);

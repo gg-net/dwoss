@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,29 +20,27 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.api.ui.ResultProducer;
 
-/**
- * Wrapper and Helper for the old Ok/Cancel construct
- *
- * @author oliver.guenther
- */
-public class OkCancel {
+public class OkCancelConsumerVetoResult<V, U, T extends JPanel & ResultProducer<V> & VetoableOnOk & Consumer<U>> extends AbstractOkCancelPanelWrapper<T> implements ResultProducer<Reply<V>>, Consumer<U> {
 
-    /**
-     * Wrap method for every solution.
-     * The Ok/Cancel construct is an old concept. Better is the javafx Dialog. So this wrapper is only for old DW implementations.
-     * If we ever release the API, we might consider to split the different implementations.
-     *
-     * @param <U>
-     * @param <V>
-     * @param <T>
-     * @param t
-     * @return a Panel with Ok Cancel Button.
-     */
-    public static <U, V, T extends JPanel & VetoableOnOk & ResultProducer<V> & Consumer<U>> OkCancelPanel<V, U, T> wrap(T t) {
-        return new OkCancelPanel<>(t);
+    private T panel;
+
+    public OkCancelConsumerVetoResult(T panel) {
+        super(panel);
+        this.panel = panel;
+        this.vetoableOnOk = panel;
     }
-;
+
+    @Override
+    public Reply<V> getResult() {
+        return okPressed ? Reply.success(panel.getResult()) : Reply.failure("Cancel pressed");
+    }
+
+    @Override
+    public void accept(U t) {
+        panel.accept(t);
+    }
 
 }

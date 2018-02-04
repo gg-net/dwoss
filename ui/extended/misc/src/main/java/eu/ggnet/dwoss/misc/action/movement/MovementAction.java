@@ -19,17 +19,16 @@ package eu.ggnet.dwoss.misc.action.movement;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.ExecutionException;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.SwingWorker;
 
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
 import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
-
 import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -52,7 +51,7 @@ public class MovementAction extends AbstractAction {
         new SwingWorker<JasperPrint, Object>() {
             @Override
             protected JasperPrint doInBackground() throws Exception {
-                return lookup(MovementListingProducer.class).generateList(listType, stock);
+                return Dl.remote().lookup(MovementListingProducer.class).generateList(listType, stock);
             }
 
             @Override

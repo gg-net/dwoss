@@ -1,18 +1,20 @@
 package eu.ggnet.saft;
 
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
-
 import java.awt.Component;
 
 import javafx.scene.Parent;
 
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.INFO;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
+
+import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.INFO;
 
 /**
  * Entry point for short alerts, like JOptionPane but with saft.
  *
  * @author oliver.guenther
+ * @deprecated use Ui.build().alert() instead.
  */
+@Deprecated
 public class UiAlert {
 
     /**

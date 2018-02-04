@@ -22,12 +22,11 @@ import java.util.concurrent.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.auth.AutoLoginLogout;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.saft.Client.lookup;
 import static java.awt.AWTEvent.*;
 
 @ServiceProvider(service = AutoLoginLogout.class)
@@ -45,8 +44,7 @@ public class AutoLoginLogoutHandler implements AWTEventListener, KeyEventDispatc
     public AutoLoginLogoutHandler() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(this);
         Toolkit.getDefaultToolkit().addAWTEventListener(this, MOUSE_MOTION_EVENT_MASK | MOUSE_EVENT_MASK | KEY_EVENT_MASK);
-        lookup(Workspace.class).addShutdownListener(event -> stsx.shutdown());
-
+        UiCore.addOnShutdown(() -> stsx.shutdown());
     }
 
     /**
@@ -69,7 +67,7 @@ public class AutoLoginLogoutHandler implements AWTEventListener, KeyEventDispatc
     @Override
     public void showAuthenticator() {
         if ( dialog != null ) return; // When the Dialog is already open, return.
-        Guardian accessCos = lookup(Guardian.class);
+        Guardian accessCos = Dl.local().lookup(Guardian.class);
         accessCos.logout();
         dialog = new AutoLogoutDialog(UiCore.getMainFrame(), accessCos.getOnceLoggedInUsernames());
         dialog.setVisible(true);

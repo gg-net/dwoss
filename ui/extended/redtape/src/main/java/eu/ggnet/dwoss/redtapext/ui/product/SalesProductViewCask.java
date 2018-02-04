@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.product;
 
-import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-
 import java.awt.Dialog;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
@@ -27,14 +25,14 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.PojoColumn;
 import eu.ggnet.dwoss.util.table.PojoTableModel;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * A UI to add a {@link SalesProduct} for Sale. <br />
@@ -74,7 +72,7 @@ public class SalesProductViewCask extends javax.swing.JPanel {
     }
 
     public SalesProductViewCask() {
-        this(lookup(RedTapeAgent.class), lookup(RedTapeWorker.class));
+        this(Dl.remote().lookup(RedTapeAgent.class), Dl.remote().lookup(RedTapeWorker.class));
     }
 
     private void reloadListData() {

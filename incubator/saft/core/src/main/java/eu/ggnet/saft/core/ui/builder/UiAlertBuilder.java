@@ -1,6 +1,4 @@
-package eu.ggnet.saft.core.ui;
-
-import eu.ggnet.saft.core.ui.SwingCore;
+package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
@@ -9,12 +7,15 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
 import lombok.*;
@@ -62,6 +63,14 @@ public class UiAlertBuilder {
      * A optional parent of JavaFx.
      */
     private Parent javafxParent = null;
+
+    public UiAlertBuilder(PreBuilder pre) {
+        swingParent = pre.swingParent;
+        if ( !StringUtils.isBlank(pre.title) ) title = pre.title;
+    }
+
+    public UiAlertBuilder() {
+    }
 
     /**
      * Set the title of the alert.

@@ -8,10 +8,10 @@ import javax.swing.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.progress.ProgressObserver;
 import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.Client;
 
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;
@@ -26,7 +26,7 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
     private final ProgressObserverStub progressObserver = new ProgressObserverStub();
 
     public ActionFactoryAndProgressSample() {
-        Client.addSampleStub(ProgressObserver.class, progressObserver);
+        Dl.remote().add(ProgressObserver.class, progressObserver);
     }
 
     @Override

@@ -9,15 +9,13 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
+import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.Client;
 
 /**
  *
@@ -183,7 +181,7 @@ public class SimpleReportLineTryout {
             //</editor-fold>
 
         };
-        Client.addSampleStub(ReportAgent.class, rastub);
+        Dl.remote().add(ReportAgent.class, rastub);
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
         Ui.build().fx().show(() -> {

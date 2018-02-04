@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.op;
 
-import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.progress.MonitorFactory;
@@ -52,6 +51,7 @@ import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.dwoss.rules.SalesChannel;
 
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
+import eu.ggnet.saft.api.Reply;
 
 import lombok.Data;
 
@@ -99,7 +99,7 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
     private Mandator mandator;
 
     @Override
-    public void importMissing(FileJacket inFile) throws UserInfoException {
+    public Reply<Void> importMissing(FileJacket inFile) {
         final SubMonitor m = monitorFactory.newSubMonitor("Image Ids importieren", 100);
         m.message("Reading File");
         m.start();
@@ -131,7 +131,8 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
             }
         }
         m.finish();
-        if ( !errors.isEmpty() ) throw new UserInfoException(errors);
+        if ( !errors.isEmpty() ) return Reply.failure(errors.toString());
+        return Reply.success(null);
     }
 
     /**

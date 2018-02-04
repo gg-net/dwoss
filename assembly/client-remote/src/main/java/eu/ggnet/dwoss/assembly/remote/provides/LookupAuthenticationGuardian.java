@@ -25,10 +25,9 @@ import eu.ggnet.dwoss.rights.RightsAgent;
 import eu.ggnet.dwoss.rights.entity.Operator;
 import eu.ggnet.dwoss.rights.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Implementation of an IAuthenticator using the GG-Net Imap Server
@@ -39,11 +38,11 @@ public class LookupAuthenticationGuardian extends AbstractGuardian implements Gu
     @Override
     public void login(String user, char[] pass) throws AuthenticationException {
         if ( getAllUsernames().isEmpty() ) {
-            setAllUsersnames(lookup(RightsAgent.class).findAll(Operator.class).stream().map(Operator::getUsername).collect(Collectors.toSet()));
+            setAllUsersnames(Dl.remote().lookup(RightsAgent.class).findAll(Operator.class).stream().map(Operator::getUsername).collect(Collectors.toSet()));
         }
 
         try {
-            setRights(lookup(Authentication.class).login(user, pass));
+            setRights(Dl.remote().lookup(Authentication.class).login(user, pass));
         } catch (UserInfoException ex) {
             throw new AuthenticationException(ex.getMessage());
         }

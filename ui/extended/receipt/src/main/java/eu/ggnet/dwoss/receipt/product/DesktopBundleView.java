@@ -21,6 +21,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.receipt.unit.UnitModel;
@@ -35,13 +37,10 @@ import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.util.IPreClose;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
-
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * Ui for the Desktop Bundle.
@@ -75,7 +74,7 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
 
     public DesktopBundleView(TradeName mode,
                              TradeName mustBrand, ProductGroup mustGroup1, ProductGroup mustGroup2) {
-        this(lookup(Mandators.class), lookup(SpecAgent.class), lookup(ProductProcessor.class), mode, mustBrand, mustGroup1, mustGroup2);
+        this(Dl.local().lookup(CachedMandators.class), Dl.remote().lookup(SpecAgent.class), Dl.remote().lookup(ProductProcessor.class), mode, mustBrand, mustGroup1, mustGroup2);
     }
 
     public DesktopBundleView(Mandators mandatorSupporter, SpecAgent specAgent, ProductProcessor productProcessor,

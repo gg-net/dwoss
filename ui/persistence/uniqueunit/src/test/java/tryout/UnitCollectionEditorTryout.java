@@ -19,7 +19,6 @@ package tryout;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionEditorController;
 import eu.ggnet.saft.*;

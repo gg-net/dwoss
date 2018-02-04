@@ -20,16 +20,16 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.PREPARED;
 import static eu.ggnet.dwoss.stock.entity.StockTransactionType.ROLL_IN;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -45,10 +45,10 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().title("Stock Transactionen einrollen ?").swing()
-                    .eval(() -> lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancel.wrap(new RollInPreparedTransactionViewCask()))
+                    .eval(() -> Dl.remote().lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancelWrap.consumerVetoResult(new RollInPreparedTransactionViewCask()))
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
-                    .ifPresent(sts -> Ui.progress().call(() -> lookup(StockTransactionProcessor.class).rollIn(sts, lookup(Guardian.class).getUsername())));
+                    .ifPresent(sts -> Ui.progress().call(() -> Dl.remote().lookup(StockTransactionProcessor.class).rollIn(sts, Dl.local().lookup(Guardian.class).getUsername())));
         });
     }
 }

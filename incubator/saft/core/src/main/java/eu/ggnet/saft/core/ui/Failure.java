@@ -24,7 +24,7 @@ import javafx.scene.Parent;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.UiAlert;
 
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
+import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.ERROR;
 
 /**
  *

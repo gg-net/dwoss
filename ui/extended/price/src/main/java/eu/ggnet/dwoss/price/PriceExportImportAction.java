@@ -18,12 +18,12 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Executing the price management generator and stores the generated values.
@@ -39,7 +39,7 @@ public class PriceExportImportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> Ui.progress().call(() -> {
-            lookup(Importer.class).direct(lookup(Guardian.class).getUsername());
+            Dl.remote().lookup(Importer.class).direct(Dl.local().lookup(Guardian.class).getUsername());
             return null;
         }));
     }

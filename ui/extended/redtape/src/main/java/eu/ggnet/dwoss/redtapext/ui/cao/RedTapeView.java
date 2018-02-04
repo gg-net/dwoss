@@ -39,11 +39,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.api.*;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
@@ -57,7 +58,6 @@ import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-
 
 /**
  * The main UI for using RedTape components.
@@ -130,7 +130,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
         dossierButtonPanel.setComponentPopupMenu(builtStateInfoPopup());
         documentPopup = new JPopupMenu();
 
-        newCustomerButton.setEnabled(Lookup.getDefault().lookup(CustomerCos.class) != null);
+        newCustomerButton.setEnabled(Dl.local().lookup(CustomerUpi.class) != null);
     }
 
     private void initFxComponents() {

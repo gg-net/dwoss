@@ -29,8 +29,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 /**
  * Controller for the create of a Customer.
@@ -78,7 +77,7 @@ public class CustomerCreateWithSearchController {
                                 @Override
                                 public void run() {
                                     try {
-                                        view.searchResultList.setListData(lookup(CustomerService.class).asUiCustomers(customer.getFirma(), customer.getVorname(), customer.getNachname(), customer.getEmail(), true).toArray());
+                                        view.searchResultList.setListData(Dl.remote().lookup(CustomerService.class).asUiCustomers(customer.getFirma(), customer.getVorname(), customer.getNachname(), customer.getEmail(), true).toArray());
                                     } catch (Exception e) {
                                         L.error("Exception in Backgroundsearch.", e);
                                     }
@@ -116,7 +115,7 @@ public class CustomerCreateWithSearchController {
      * @param customerId the id of the customer that is selected
      */
     public void selectCustomer(long customerId) {
-        OldCustomer existingCustomer = lookup(OldCustomerAgent.class).findById(customerId);
+        OldCustomer existingCustomer = Dl.remote().lookup(OldCustomerAgent.class).findById(customerId);
         view.setCustomer(existingCustomer);
         setCustomer(existingCustomer);
     }
@@ -127,7 +126,7 @@ public class CustomerCreateWithSearchController {
      * @param search a string, that will be use to compare multiple fields of a customer.
      */
     public void findCustomers(String search) {
-        view.searchResultList.setListData(lookup(CustomerService.class).asUiCustomers(search).toArray());
+        view.searchResultList.setListData(Dl.remote().lookup(CustomerService.class).asUiCustomers(search).toArray());
     }
 
     private boolean isEmpty(String in) {

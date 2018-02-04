@@ -20,8 +20,8 @@ import java.util.*;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.Tuple2;
@@ -36,7 +36,7 @@ import eu.ggnet.saft.*;
 public class UnitAvailabillityTryout {
 
     public static void main(String[] args) {
-        Client.addSampleStub(UnitOverseer.class, new UnitOverseer() {
+        Dl.remote().add(UnitOverseer.class, new UnitOverseer() {
             private Map<String, Tuple2<UnitShard, String>> data = new HashMap<>();
 
             {

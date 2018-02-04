@@ -35,7 +35,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
 
 /**
  * FXML Controller class for ressources/ProductEditorView.fxml This UI is an

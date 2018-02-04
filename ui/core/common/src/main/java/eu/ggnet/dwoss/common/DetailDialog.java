@@ -16,14 +16,16 @@
  */
 package eu.ggnet.dwoss.common;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Desktop;
+import java.awt.Window;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFrame;
 
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.util.MailTo;
-import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -37,7 +39,7 @@ public class DetailDialog extends javax.swing.JDialog {
                 .message(messsage)
                 .overview(overview)
                 .details(details)
-                .bugMail(Client.lookup(Mandators.class).loadMandator().getBugMail())
+                .bugMail(Dl.local().lookup(CachedMandators.class).loadMandator().getBugMail())
                 .showDialog();
     }
 

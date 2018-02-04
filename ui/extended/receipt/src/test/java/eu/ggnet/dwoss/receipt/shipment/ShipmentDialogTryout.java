@@ -1,13 +1,22 @@
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.receipt.shipment.ShipmentDialog;
-import eu.ggnet.dwoss.receipt.shipment.ShipmentController;
+import java.util.Arrays;
 
 import javax.swing.UIManager;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.core.auth.Guardian;
+
+import stock.upi.StockUpi;
+import stock.upi.impl.StockUpiImpl;
 
 /**
  *
@@ -18,7 +27,22 @@ public class ShipmentDialogTryout {
     @Test
     public void testShipment() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        ShipmentController controller = new ShipmentController(new Stock(0, "Test"), "No User", new ReceiptShipmentOperationStub());
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
+
+            {
+                setRights(new Operator("Testuser", 0, Arrays.asList(AtomicRight.values())));
+            }
+
+            @Override
+            public void login(String user, char[] pass) throws AuthenticationException {
+            }
+        });
+        StockUpiImpl su = new StockUpiImpl();
+        su.setActiveStock(new PicoStock(0, "Demostock"));
+        Dl.local().add(StockUpi.class, su);
+        Dl.remote().add(StockAgent.class, new StockAgentStub());
+
+        ShipmentController controller = new ShipmentController();
         ShipmentDialog dialog = new ShipmentDialog(new javax.swing.JFrame(), controller);
         dialog.setVisible(true);
     }

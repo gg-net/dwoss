@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
-import java.util.*;
-
-import org.apache.commons.lang3.StringUtils;
-
-import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.rules.TradeName;
-
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import java.util.Date;
+import java.util.Set;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -38,12 +32,17 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import org.apache.commons.lang3.StringUtils;
+
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.saft.Dl;
+
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.stock.entity.Shipment.Status.OPENED;
 import static java.lang.Double.MAX_VALUE;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  * Stage for creating/eediting Shipments.
@@ -123,7 +122,7 @@ public class ShipmentUpdateStage extends Stage {
             }
         };
 
-        Set<TradeName> contractors = Client.lookup(Mandators.class).loadContractors().all();
+        Set<TradeName> contractors = Dl.local().lookup(CachedMandators.class).loadContractors().all();
         ownerBox = new ComboBox<>(FXCollections.observableArrayList(contractors));
         ownerBox.setMaxWidth(MAX_VALUE);
         ownerBox.setCellFactory(cb);

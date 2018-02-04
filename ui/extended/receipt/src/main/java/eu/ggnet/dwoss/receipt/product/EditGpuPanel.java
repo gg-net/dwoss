@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-
 import eu.ggnet.dwoss.spec.entity.piece.Gpu;
 import eu.ggnet.dwoss.spec.entity.piece.Gpu.Series;
 import eu.ggnet.dwoss.spec.entity.piece.Gpu.Type;
-
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -55,14 +46,13 @@ public class EditGpuPanel extends javax.swing.JPanel implements IPreClose {
     private ComboBoxController<Gpu.Manufacturer> manufacturers;
 
     public EditGpuPanel(List<Gpu> allgpu) {
-        this(lookup(ProductProcessor.class), allgpu);
+        this(Dl.remote().lookup(ProductProcessor.class), allgpu);
     }
 
     /** Creates new form EditGpuPanel */
     public EditGpuPanel(ProductProcessor productProcessor, List<Gpu> allgpu) {
         this.productProcessor = Objects.requireNonNull(productProcessor, ProductProcessor.class.getSimpleName() + " must not be null");
         this.allgpu = allgpu;
-
 
         initComponents();
         manufacturers = new ComboBoxController<>(manufacturerBox, Gpu.Manufacturer.values());

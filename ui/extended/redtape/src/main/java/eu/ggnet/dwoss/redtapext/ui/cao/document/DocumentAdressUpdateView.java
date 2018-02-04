@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,18 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.IPreClose;
-
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
-
 import eu.ggnet.dwoss.rules.AddressType;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -125,8 +120,8 @@ public class DocumentAdressUpdateView extends javax.swing.JPanel implements IPre
     }//GEN-LAST:event_resetToOriginalButtonActionPerformed
 
     private void resetToCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetToCustomerButtonActionPerformed
-        if ( invoice ) adressArea.setText(lookup(AddressService.class).defaultAddressLabel(customerId, AddressType.INVOICE));
-        else adressArea.setText(lookup(AddressService.class).defaultAddressLabel(customerId, AddressType.SHIPPING));
+        if ( invoice ) adressArea.setText(Dl.remote().lookup(AddressService.class).defaultAddressLabel(customerId, AddressType.INVOICE));
+        else adressArea.setText(Dl.remote().lookup(AddressService.class).defaultAddressLabel(customerId, AddressType.SHIPPING));
     }//GEN-LAST:event_resetToCustomerButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -139,7 +134,7 @@ public class DocumentAdressUpdateView extends javax.swing.JPanel implements IPre
     public static void main(String[] args) {
         Address invoice = new Address("Blubba, invoice");
 
-        // TODO : fill Client.addSampleStub(AddressService.class) // With a sample
+        // TODO : fill Dl.remote().add(AddressService.class) // With a sample
         DocumentAdressUpdateView view = new DocumentAdressUpdateView(1, invoice.getDescription(), true);
         OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>("TOLLER TITEL", view);
         dialog.setVisible(true);

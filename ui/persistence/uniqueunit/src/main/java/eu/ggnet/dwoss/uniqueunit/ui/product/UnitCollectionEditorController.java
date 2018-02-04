@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
 
 /**
  * FXML Controller for the UnitCollection Editor

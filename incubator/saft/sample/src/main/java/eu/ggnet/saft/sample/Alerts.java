@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import eu.ggnet.saft.UiAlert;
 
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.*;
+import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.*;
 
 /**
  *

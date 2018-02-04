@@ -26,7 +26,7 @@ public class TreeTableViewTryout {
      */
     public static void main(String[] args) {
 
-        Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+        Dl.remote().add(UniqueUnitAgent.class, new UniqueUnitAgentStub());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

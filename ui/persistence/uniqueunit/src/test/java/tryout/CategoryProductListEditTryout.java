@@ -1,21 +1,16 @@
 package tryout;
 
-import tryout.stub.UniqueUnitAgentStub;
-import tryout.stub.GuardianStub;
-
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.auth.Guardian;
-
 import java.awt.Dimension;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
+import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.categoryProduct.CategoryProductListController;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.auth.Guardian;
+
+import tryout.stub.GuardianStub;
+import tryout.stub.UniqueUnitAgentStub;
 
 /**
  * Test the ListView with Sample data.
@@ -35,8 +30,8 @@ public class CategoryProductListEditTryout {
      */
     public static void main(String[] args) throws InterruptedException {
 
-        Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgentStub());
-        Client.addSampleStub(Guardian.class, new GuardianStub());
+        Dl.remote().add(UniqueUnitAgent.class, new UniqueUnitAgentStub());
+        Dl.local().add(Guardian.class, new GuardianStub());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

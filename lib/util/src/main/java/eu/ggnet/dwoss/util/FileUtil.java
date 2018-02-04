@@ -25,7 +25,9 @@ import org.apache.tika.Tika;
  * This Class contains methods to handle, validate or work with Files.
  * <p>
  * @author bastian.venz
+ * @deprecated use TikaUtil
  */
+@Deprecated
 public class FileUtil {
 
     public static String EXCEL_MIME_TYPE = "application/vnd.ms-excel";

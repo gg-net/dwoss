@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Export the price management xls.
@@ -37,7 +37,7 @@ public class PriceExportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> Ui.osOpen(Ui.progress().call(() -> lookup(Exporter.class).toXls().toTemporaryFile())));
+        Ui.exec(() -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXls().toTemporaryFile())));
     }
 
 }

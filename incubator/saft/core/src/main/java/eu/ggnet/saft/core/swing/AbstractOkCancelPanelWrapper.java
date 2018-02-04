@@ -16,17 +16,13 @@
  */
 package eu.ggnet.saft.core.swing;
 
-import java.util.function.Consumer;
-
 import javax.swing.JPanel;
 
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.api.ui.Once;
-import eu.ggnet.saft.api.ui.ResultProducer;
 
 @Once(false)
-public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProducer<V> & Consumer<U>> extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Reply<V>>, Consumer<U> {
+public class AbstractOkCancelPanelWrapper<T extends JPanel> extends javax.swing.JPanel {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -60,8 +56,8 @@ public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProduce
     }// </editor-fold>//GEN-END:initComponents
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        if ( !panel.mayClose() ) return;
-        ok = true;
+        if ( vetoableOnOk != null && !vetoableOnOk.mayClose() ) return;
+        okPressed = true;
         Ui.closeWindowOf(this);
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -75,30 +71,14 @@ public class OkCancelPanel<V, U, T extends JPanel & VetoableOnOk & ResultProduce
     private javax.swing.JButton okButton;
     // End of variables declaration//GEN-END:variables
 
-    private final T panel;
+    protected boolean okPressed = false;
 
-    private boolean ok = false;
+    protected VetoableOnOk vetoableOnOk = null;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public OkCancelPanel(T panel) {
+    public AbstractOkCancelPanelWrapper(T panel) {
         initComponents();
         add(panel);
-        this.panel = panel;
     }
 
-    @Override
-    public Reply<V> getResult() {
-        return ok ? Reply.success(panel.getResult()) : Reply.failure("Cancel pressed");
-    }
-
-    @Override
-    public void accept(U t) {
-        panel.accept(t);
-    }
-
-    @Override
-    public boolean mayClose() {
-        // Only here for simplcity
-        return false;
-    }
 }

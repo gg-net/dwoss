@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
-import eu.ggnet.saft.Client;
-
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-
-import static eu.ggnet.saft.Client.lookup;
-
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -40,10 +34,10 @@ public class LegacyBridgeUtil {
      * @return a HTML view.
      */
     public static String toHtmlDetailed(Dossier dos) {
-        if ( dos.isLegacy() && Client.hasFound(LegacyRemoteBridge.class) ) {
-            return lookup(LegacyRemoteBridge.class).toDetailedHtmlDossier(dos.getLegacyIdentifier());
+        if ( dos.isLegacy() && Dl.remote().contains(LegacyRemoteBridge.class) ) {
+            return Dl.remote().lookup(LegacyRemoteBridge.class).toDetailedHtmlDossier(dos.getLegacyIdentifier());
         } else {
-            return lookup(RedTapeWorker.class).toDetailedHtml(dos.getId());
+            return Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId());
         }
     }
 }

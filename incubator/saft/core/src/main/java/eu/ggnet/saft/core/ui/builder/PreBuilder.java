@@ -200,4 +200,12 @@ public class PreBuilder {
         return new FxmlBuilder(this);
     }
 
+    /**
+     * Initializes a alert, like the swing JOptionPane or the javafx 8u60 Alert.
+     *
+     * @return a new uialertbuilder.
+     */
+    public UiAlertBuilder alert() {
+        return new UiAlertBuilder(this);
+    }
 }

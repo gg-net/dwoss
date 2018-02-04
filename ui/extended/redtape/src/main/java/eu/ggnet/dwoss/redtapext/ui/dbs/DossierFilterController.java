@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -31,22 +28,20 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-
+import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.util.HtmlDialog;
 import eu.ggnet.dwoss.util.table.PojoFilter;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * @author bastian.venz
@@ -168,7 +163,7 @@ public class DossierFilterController {
             int last = nextToLoad;
             do {
                 L.debug("loading dossiers from {} to {}", last, amount);
-                foundDossiers = lookup(RedTapeAgent.class).findAllEagerDescending(last, amount);
+                foundDossiers =Dl.remote().lookup(RedTapeAgent.class).findAllEagerDescending(last, amount);
                 last += amount;
                 publish(foundDossiers.toArray(new Dossier[0]));
                 L.debug("T({}) published: {}", Thread.currentThread().getName(), identifiers(foundDossiers));
@@ -207,7 +202,7 @@ public class DossierFilterController {
         }
     };
 
-    private final DossierFilter filter = new DossierFilter(Client.lookup(CustomerService.class).allSystemCustomerIds());
+    private final DossierFilter filter = new DossierFilter(Dl.remote().lookup(CustomerService.class).allSystemCustomerIds());
 
     private DossierFilterModel model;
 

@@ -29,9 +29,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.CreateSelectionController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.*;
 
 /**
  *
@@ -48,7 +46,7 @@ public class CreateSelectionTryout {
             l.countDown();
         });
 
-        Client.addSampleStub(StockAgent.class, new StockAgent() {
+        Dl.remote().add(StockAgent.class, new StockAgent() {
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,48 +16,29 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.Stock;
-
 import javax.swing.JOptionPane;
-
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.saft.core.auth.Guardian;
-
-import eu.ggnet.dwoss.receipt.AbstractController;
-
-import eu.ggnet.dwoss.stock.StockAgent;
 
 import javafx.application.Platform;
 import javafx.stage.Modality;
 
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.receipt.AbstractController;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.auth.Guardian;
+
+import stock.upi.StockUpi;
 
 public class ShipmentController extends AbstractController {
 
     private ShipmentModel model;
 
-    private Stock stock;
-
     private StockAgent stockAgent;
 
-    private String userName;
-
-    /**
-     * Constructor, with Service Discovery.
-     *
-     * @param stockId
-     */
     public ShipmentController() {
-        this(lookup(Workspace.class).getValue(Stock.class), lookup(Guardian.class).getUsername(), lookup(StockAgent.class));
-    }
-
-    public ShipmentController(Stock stock, String userName, StockAgent stockAgent) {
-        this.stock = stock;
-        this.userName = userName;
-        this.stockAgent = stockAgent;
-        if ( stockAgent == null ) throw new NullPointerException("ReceiptShipmentLogic is null");
+        this.stockAgent = Dl.remote().lookup(StockAgent.class);
+        if ( stockAgent == null ) throw new NullPointerException(StockAgent.class.getName() + " is null");
     }
 
     public ShipmentModel getModel() {
@@ -91,7 +72,10 @@ public class ShipmentController extends AbstractController {
     public void inclusion() {
         Shipment shipment = model.getSelected();
         if ( shipment == null ) return;
-        StockTransaction stockTransaction = stockAgent.findOrCreateRollInTransaction(stock.getId(), userName, "Roll in through Inclusion");
+        StockTransaction stockTransaction = stockAgent.findOrCreateRollInTransaction(
+                Dl.local().lookup(StockUpi.class).getActiveStock().getId(),
+                Dl.local().lookup(Guardian.class).getUsername(),
+                "Roll in through Inclusion");
         ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(view, shipment, stockTransaction);
         sip.setLocationRelativeTo(view);
         sip.setVisible(true);

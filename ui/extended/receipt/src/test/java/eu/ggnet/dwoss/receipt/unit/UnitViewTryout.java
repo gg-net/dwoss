@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
@@ -65,8 +65,7 @@ public class UnitViewTryout {
 
 //        final Product product = new Product(spec.getModel().getFamily().getSeries().getGroup(),
 //                spec.getModel().getFamily().getSeries().getBrand(), spec.getPartNo(), spec.getModel().getName());
-
-        Client.addSampleStub(Mandators.class, new Mandators() {
+        Dl.remote().add(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
                 return Mandator.builder()
@@ -112,7 +111,7 @@ public class UnitViewTryout {
 
         });
 
-        Client.addSampleStub(SpecAgent.class, new SpecAgent() {
+        Dl.remote().add(SpecAgent.class, new SpecAgent() {
             @Override
             public ProductSpec findProductSpecByPartNoEager(String partNo) {
                 return productSpecs.stream().filter(p -> Objects.equals(partNo, p.getPartNo())).findFirst().orElse(null);
@@ -170,7 +169,7 @@ public class UnitViewTryout {
             // </editor-fold>
         });
 
-        Client.addSampleStub(UnitSupporter.class, new UnitSupporter() {
+        Dl.remote().add(UnitSupporter.class, new UnitSupporter() {
             @Override
             public boolean isRefurbishIdAvailable(String refurbishId) {
                 return Pattern.matches("([2-8][0-9]{4}|A1[0-9]{3})", refurbishId);
@@ -190,7 +189,7 @@ public class UnitViewTryout {
             }
         });
 
-        Client.addSampleStub(UniqueUnitAgent.class, new UniqueUnitAgent() {
+        Dl.remote().add(UniqueUnitAgent.class, new UniqueUnitAgent() {
             @Override
             public Product findProductByPartNo(String partNo) {
                 return products.stream().filter(p -> Objects.equals(partNo, p.getPartNo())).findFirst().orElse(null);
@@ -291,7 +290,7 @@ public class UnitViewTryout {
 
         });
 
-        Client.addSampleStub(ProductProcessor.class, new ProductProcessorStub());
+        Dl.remote().add(ProductProcessor.class, new ProductProcessorStub());
 
         UnitController controller = new UnitController();
 

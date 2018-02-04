@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +37,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 

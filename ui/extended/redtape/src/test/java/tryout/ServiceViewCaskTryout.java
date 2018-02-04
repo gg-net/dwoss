@@ -19,8 +19,9 @@ package tryout;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
@@ -34,7 +35,7 @@ public class ServiceViewCaskTryout {
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
 // () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
-        Ui.build().swing().eval(() -> OkCancel.wrap(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
+        Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
                 .ifPresent(System.out::println);
     }
 

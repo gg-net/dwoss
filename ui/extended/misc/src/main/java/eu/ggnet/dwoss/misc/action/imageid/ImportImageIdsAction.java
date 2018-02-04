@@ -18,26 +18,24 @@ package eu.ggnet.dwoss.misc.action.imageid;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
-import javax.swing.JFileChooser;
-import javax.swing.SwingWorker;
+import javafx.scene.control.Alert;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.misc.op.ImageIdHandler;
-
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.TikaUtil;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
-import eu.ggnet.dwoss.util.FileJacket;
-
-import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
+ *
  *
  * @author oliver.guenther
  */
@@ -49,30 +47,17 @@ public class ImportImageIdsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(lookup(Workspace.class).getMainFrame()) ) return;
-        final File inFile = dialog.getSelectedFile();
-        if ( YES_OPTION != showConfirmDialog(lookup(Workspace.class).getMainFrame(),
-                "ImageIds aus der Datei:" + inFile.getPath() + " importieren ?", "ImageIds importieren",
-                YES_NO_OPTION, QUESTION_MESSAGE) ) return;
-
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                FileUtil.checkIfExcelFile(inFile);
-                lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", inFile));
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
-                }
-            }
-        }.execute();
+        Ui.exec(() -> {
+            Optional<File> inFile = Ui.fileChooser().open();
+            if ( !inFile.isPresent() ) return;
+            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "ImageIds aus der Datei:" + inFile.get().getPath() + " importieren ?"))
+                    .filter(b -> b == OK)
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(ImageIdHandler.class).importMissing(new FileJacket("in", ".xls", f))))
+                    .filter(Ui.failure()::handle)
+                    .isPresent();
+        });
     }
 }

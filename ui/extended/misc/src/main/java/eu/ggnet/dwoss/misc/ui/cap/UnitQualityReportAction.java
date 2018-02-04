@@ -22,9 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.ui.cap.support.DateRangeAndContractorChooserView;
 import eu.ggnet.dwoss.uniqueunit.op.UniqueUnitReporter;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -40,7 +39,7 @@ public class UnitQualityReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).ifPresent(rp -> {
-                Ui.osOpen(Ui.progress().call(() -> lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor()).toTemporaryFile()));
+                Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(UniqueUnitReporter.class).quality(rp.getStart(), rp.getEnd(), rp.getContractor()).toTemporaryFile()));
             });
         });
     }

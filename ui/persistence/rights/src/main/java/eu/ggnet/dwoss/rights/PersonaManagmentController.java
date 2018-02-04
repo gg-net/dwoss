@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -32,8 +32,7 @@ import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.entity.Persona;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -119,7 +118,7 @@ public class PersonaManagmentController implements Initializable {
 
     @FXML
     public void onConfirm() {
-        RightsAgent agent = lookup(RightsAgent.class);
+        RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
         agent.store(p);
         onCancel();
     }

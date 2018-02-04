@@ -27,17 +27,16 @@ import org.openide.util.Lookup;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -80,23 +79,23 @@ public class DocumentPrintAction extends AbstractAction {
         Ui.exec(() -> {
             // TODO: This is a very special case, there the Ui needs the result on construction. So the consumer pattern cannot be used.
             // This meeans, for now no progress display.
-            JasperPrint print = lookup(DocumentSupporter.class).render(document, type);
-            CustomerMetaData customer = lookup(CustomerService.class).asCustomerMetaData(customerId);
+            JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, type);
+            CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
             boolean mailAvailable = customer.getEmail() != null && !customer.getEmail().trim().isEmpty();
             Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
                     .filter(c -> c.isCorrectlyBriefed())
                     .ifPresent(c -> Ui.progress().call(() -> {
-                            CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
-                            for (StateTransition<CustomerDocument> stateTransition : lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
-                                RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
-                                for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
-                                    if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
-                                        this.document = lookup(RedTapeWorker.class).stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername());
-                                    }
-                                }
-                            }
-                            controller.reloadSelectionOnStateChange(lookup(DocumentSupporter.class).briefed(document, lookup(Guardian.class).getUsername()));
-                            return null;
+                CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
+                for (StateTransition<CustomerDocument> stateTransition : Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
+                    RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
+                    for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
+                        if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
+                            this.document = Dl.remote().lookup(RedTapeWorker.class).stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername());
+                        }
+                    }
+                }
+                controller.reloadSelectionOnStateChange(Dl.remote().lookup(DocumentSupporter.class).briefed(document, Dl.local().lookup(Guardian.class).getUsername()));
+                return null;
             }));
 
         });

@@ -26,6 +26,7 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.receipt.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.MetaValue;
@@ -39,16 +40,14 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import static eu.ggnet.dwoss.rules.ReceiptOperation.IN_SALE;
-import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 public class UnitController {
 
@@ -140,7 +139,7 @@ public class UnitController {
             return;
         }
         addClosingAction(new SaleableAction());
-        lookup(Mandators.class).loadReceiptCustomers().enabledOperations(model.getContractor())
+        Dl.local().lookup(CachedMandators.class).loadReceiptCustomers().enabledOperations(model.getContractor())
                 .stream().forEach(r -> addClosingAction(new OperationAction(r)));
     }
 
@@ -183,8 +182,8 @@ public class UnitController {
                 if ( value.getSurvey().isOkOrWarn() ) {
                     L.debug("Loading Details for PartNo: {}", value.getValue());
                     // Load details for update.
-                    model.setProduct(lookup(UniqueUnitAgent.class).findProductByPartNo(value.getValue()));
-                    model.setProductSpecDescription(SpecFormater.toHtml(lookup(SpecAgent.class).findProductSpecByPartNoEager(value.getValue())));
+                    model.setProduct(Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(value.getValue()));
+                    model.setProductSpecDescription(SpecFormater.toHtml(Dl.remote().lookup(SpecAgent.class).findProductSpecByPartNoEager(value.getValue())));
                 } else {
                     L.debug("Removeing PartNo Details.");
                     model.setProduct(null);
@@ -260,7 +259,7 @@ public class UnitController {
         newRefurbishId = newRefurbishId.trim();
         if ( newRefurbishId.equals("") ) return;
         if ( newRefurbishId.equals(refurbishId) ) return;
-        if ( lookup(UnitSupporter.class).isRefurbishIdAvailable(refurbishId) ) {
+        if ( Dl.remote().lookup(UnitSupporter.class).isRefurbishIdAvailable(refurbishId) ) {
             model.getMetaUnit().getRefurbishId().setValue(refurbishId);
             view.updateMetaUnit();
         } else {
@@ -306,9 +305,9 @@ public class UnitController {
         L.debug("updateChains called with {}", model.getMode());
         UnitModel.MetaUnit metaUnit = model.getMetaUnit();
         Chains chains = Chains.getInstance(model.getMode());
-        metaUnit.getRefurbishId().setChain(chains.newRefubishIdChain(model.getContractor(), lookup(UnitSupporter.class), model.isEditMode()));
-        metaUnit.getSerial().setChain(chains.newSerialChain(lookup(UnitSupporter.class), (model.isEditMode() ? metaUnit.getRefurbishId().getValue() : null)));
-        metaUnit.getPartNo().setChain(chains.newPartNoChain(lookup(SpecAgent.class), lookup(Mandators.class).loadContractors().allowedBrands()));
+        metaUnit.getRefurbishId().setChain(chains.newRefubishIdChain(model.getContractor(), Dl.remote().lookup(UnitSupporter.class), model.isEditMode()));
+        metaUnit.getSerial().setChain(chains.newSerialChain(Dl.remote().lookup(UnitSupporter.class), (model.isEditMode() ? metaUnit.getRefurbishId().getValue() : null)));
+        metaUnit.getPartNo().setChain(chains.newPartNoChain(Dl.remote().lookup(SpecAgent.class), Dl.local().lookup(CachedMandators.class).loadContractors().allowedBrands()));
         metaUnit.getMfgDate().setChain(chains.newMfgDateChain());
     }
 

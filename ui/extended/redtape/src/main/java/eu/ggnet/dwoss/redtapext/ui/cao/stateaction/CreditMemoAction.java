@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,35 +18,27 @@ package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-
-import eu.ggnet.dwoss.rules.PositionType;
-
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
-
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
-
-import eu.ggnet.saft.core.auth.AccessableAction;
-
 import eu.ggnet.dwoss.rules.DocumentType;
-
+import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_CREDITMEMO;
 
 /**
@@ -77,10 +69,9 @@ public class CreditMemoAction extends AccessableAction {
         Calendar beforeOneYear = Calendar.getInstance();
         beforeOneYear.set(Calendar.YEAR, Calendar.getInstance().get(Calendar.YEAR) - 1);
 
-
         if ( beforeOneYear.after(release)
                 && JOptionPane.CANCEL_OPTION == JOptionPane.showConfirmDialog(parent,
-                "Der Vorgang ist über ein Jahr alt und die Garantie ist abgelaufen!\nMöchten sie fortfahren?", "Garantie Warnung", JOptionPane.OK_CANCEL_OPTION) ) {
+                        "Der Vorgang ist über ein Jahr alt und die Garantie ist abgelaufen!\nMöchten sie fortfahren?", "Garantie Warnung", JOptionPane.OK_CANCEL_OPTION) ) {
             return;
         }
 
@@ -99,7 +90,7 @@ public class CreditMemoAction extends AccessableAction {
             }
             doc.setType(DocumentType.CREDIT_MEMO);
             doc.setDirective(Directive.BALANCE_REPAYMENT);
-            Document d = lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), lookup(Guardian.class).getUsername());
+            Document d =Dl.remote().lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), Dl.local().lookup(Guardian.class).getUsername());
             controller.reloadSelectionOnStateChange(d.getDossier());
         }
     }

@@ -31,7 +31,6 @@ import java.util.stream.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.Selector;
 
 /**

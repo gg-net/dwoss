@@ -43,8 +43,7 @@ import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.api.ReportExporter;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 
 import lombok.Getter;
@@ -338,7 +337,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
         this.viewmode.set(viewmode);
         createButton.disableProperty().bind(this.viewmode);
 
-        exportButton.setDisable(!Client.hasFound(ReportExporter.class));
+        exportButton.setDisable(!Dl.remote().contains(ReportExporter.class));
 
         this.reportResult = reportResult;
         nameLabel.setText(reportResult.getParameter().getReportName());
@@ -379,7 +378,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
             Ui.build().parent(mainPane).dialog()
                     .eval(() -> reportResult, () -> new ResultPane())
                     .ifPresent(r -> Ui.progress().call(() -> {
-                Client.lookup(ReportAgent.class).store(
+                Dl.remote().lookup(ReportAgent.class).store(
                         r.getParameter().toNewReport(),
                         r.getRelevantLines().values().stream().flatMap(Collection::stream).map(ReportLine::toStorable).collect(Collectors.toList()));
                 Platform.runLater(() -> viewmode.set(true));
@@ -390,7 +389,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
     @FXML
     public void handleExportButtonAction() {
-        Ui.osOpen(Client.lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
+        Ui.osOpen(Dl.remote().lookup(ReportExporter.class).toFullXls(filterRelevantLines()).toTemporaryFile());
     }
 
     @FXML

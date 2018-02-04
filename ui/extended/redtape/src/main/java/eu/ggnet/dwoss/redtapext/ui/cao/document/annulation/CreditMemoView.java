@@ -29,9 +29,9 @@ import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
+import eu.ggnet.saft.Dl;
 
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -51,7 +51,7 @@ public class CreditMemoView extends javax.swing.JPanel implements IPreClose {
      */
     public CreditMemoView(List<AfterInvoicePosition> creditPositions) {
         initComponents();
-        stockSelectionBox.setModel(new DefaultComboBoxModel(lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0])));
+        stockSelectionBox.setModel(new DefaultComboBoxModel(Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0])));
         stockSelectionBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

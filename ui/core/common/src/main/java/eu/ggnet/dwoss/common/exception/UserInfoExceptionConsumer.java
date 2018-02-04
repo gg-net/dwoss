@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder;
 
 /**
  *

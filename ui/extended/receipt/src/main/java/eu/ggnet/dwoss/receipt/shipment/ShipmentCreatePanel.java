@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,16 +20,14 @@ import java.util.Date;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
-
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -40,7 +38,7 @@ public class ShipmentCreatePanel extends javax.swing.JPanel implements IPreClose
     /** Creates new form ShipmentCreatePanel */
     public ShipmentCreatePanel() {
         initComponents();
-        ownerBox.setModel(new DefaultComboBoxModel(Client.lookup(Mandators.class).loadContractors().all().toArray()));
+        ownerBox.setModel(new DefaultComboBoxModel(Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray()));
     }
 
     /** This method is called from within the constructor to
@@ -113,8 +111,8 @@ public class ShipmentCreatePanel extends javax.swing.JPanel implements IPreClose
         if ( type == CloseType.CANCEL ) return true;
         Shipment shipment = getShipment();
         if ( !ValidationUtil.isValidOrShow(SwingUtilities.getWindowAncestor(this), shipment) ) return false;
-        if ( !Client.hasFound(ShipmentLabelValidator.class) ) return true;
-        String warn = Client.lookup(ShipmentLabelValidator.class).validate(shipment.getShipmentId(), shipment.getContractor());
+        if ( !Dl.remote().contains(ShipmentLabelValidator.class) ) return true;
+        String warn = Dl.remote().lookup(ShipmentLabelValidator.class).validate(shipment.getShipmentId(), shipment.getContractor());
         if ( warn == null ) return true;
         int result = JOptionPane.showConfirmDialog(this, warn, "Achtung", JOptionPane.OK_CANCEL_OPTION);
         if ( result == JOptionPane.CANCEL_OPTION ) return false;

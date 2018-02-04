@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,11 @@ import java.io.Serializable;
 import java.util.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.stock.api.PicoStock;
 
 import lombok.*;
 
@@ -127,6 +129,10 @@ public class Stock implements Serializable {
 
     public List<StockLocation> getStockLocations() {
         return Collections.unmodifiableList(stockLocations);
+    }
+
+    public PicoStock toPicoStock() {
+        return new PicoStock(id, name);
     }
 
 }

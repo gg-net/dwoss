@@ -27,14 +27,12 @@ import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
-import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -56,9 +54,9 @@ public class ContractorImportAction extends AccessableAction {
         // TODO: Make the importer generic.
         JFileChooser dialog = new JFileChooser();
         dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(lookup(Workspace.class).getMainFrame()) ) return;
+        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) return;
         final File inFile = dialog.getSelectedFile();
-        if ( YES_OPTION != showConfirmDialog(lookup(Workspace.class).getMainFrame(),
+        if ( YES_OPTION != showConfirmDialog(UiCore.getMainFrame(),
                 "Fehlende " + contractor.getName() + " Daten aus der Datei:" + inFile.getPath() + " importieren ?",
                 "Fehlende Liferanten Daten importieren",
                 YES_NO_OPTION, QUESTION_MESSAGE) ) return;
@@ -68,16 +66,16 @@ public class ContractorImportAction extends AccessableAction {
             protected Reply<Void> doInBackground() throws Exception {
                 FileUtil.checkIfExcelFile(inFile);
                 FileJacket in = new FileJacket("in", ".xls", inFile);
-                String user = lookup(Guardian.class).getUsername();
-                if ( contractor.isManufacturer() ) return lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, in, user);
-                return lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, in, user);
+                String user = Dl.local().lookup(Guardian.class).getUsername();
+                if ( contractor.isManufacturer() ) return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, in, user);
+                return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, in, user);
             }
 
             @Override
             protected void done() {
                 try {
                     Reply<Void> result = get();
-                    new DetailDialog(lookup(Workspace.class).getMainFrame())
+                    new DetailDialog(UiCore.getMainFrame())
                             .head(contractor.getName() + " Import")
                             .message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen")
                             .overview(result.getSummary())

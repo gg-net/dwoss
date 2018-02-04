@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,18 +23,13 @@ import javax.swing.JOptionPane;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
-import eu.ggnet.dwoss.receipt.UnitDestroyer;
-
-import eu.ggnet.saft.core.auth.AccessableAction;
-
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javax.swing.JOptionPane.*;
 
@@ -51,8 +46,8 @@ public class ScrapUnitAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            Window mainFrame = lookup(Workspace.class).getMainFrame();
-            UnitDestroyer destroyer = lookup(UnitDestroyer.class);
+            Window mainFrame = UiCore.getMainFrame();
+            UnitDestroyer destroyer = Dl.remote().lookup(UnitDestroyer.class);
             String refurbishedId = showInputDialog(mainFrame, "SopoNr die verschrottet werden soll:");
             if ( refurbishedId == null ) return;
             UniqueUnit uniqueUnit = destroyer.verifyScarpOrDeleteAble(refurbishedId);
@@ -62,7 +57,7 @@ public class ScrapUnitAction extends AccessableAction {
             destroyer.scrap(uniqueUnit, reason, Lookup.getDefault().lookup(Guardian.class).getUsername());
             showMessageDialog(mainFrame, "SopoNr " + refurbishedId + " ist verschrottet.");
         } catch (UserInfoException ex) {
-            JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), ex.getMessage());
+            JOptionPane.showMessageDialog(UiCore.getMainFrame(), ex.getMessage());
         }
     }
 }

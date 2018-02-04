@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -37,7 +35,7 @@ public class SpecListAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OkCancelDialog<SpecListPanel> dialog = new OkCancelDialog<>(lookup(Workspace.class).getMainFrame(),"Brand-Familiy-Model-Series", new SpecListPanel(new SpecListController()));
+        OkCancelDialog<SpecListPanel> dialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Brand-Familiy-Model-Series", new SpecListPanel(new SpecListController()));
         dialog.setVisible(true);
     }
 

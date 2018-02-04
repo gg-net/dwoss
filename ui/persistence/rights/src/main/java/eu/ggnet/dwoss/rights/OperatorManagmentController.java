@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,23 @@
  */
 package eu.ggnet.dwoss.rights;
 
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
 
-import eu.ggnet.dwoss.rights.RightsAgent;
-
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-
 import javafx.beans.binding.Bindings;
-import javafx.fxml.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -119,7 +117,7 @@ public class OperatorManagmentController implements Initializable {
 
     @FXML
     public void onConfirm() {
-        RightsAgent agent = lookup(RightsAgent.class);
+        RightsAgent agent = Dl.remote().lookup(RightsAgent.class);
         agent.store(operator);
         onCancel();
     }

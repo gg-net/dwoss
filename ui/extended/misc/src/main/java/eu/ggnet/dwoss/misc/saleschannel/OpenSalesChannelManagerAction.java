@@ -32,13 +32,11 @@ import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.model.SalesChannelLine;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens the SalesChannelManager with all available units and optional executes the changes.
@@ -56,14 +54,14 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
         new SwingWorker<List<SalesChannelLine>, Object>() {
             @Override
             protected List<SalesChannelLine> doInBackground() throws Exception {
-                return lookup(SalesChannelHandler.class).findAvailableUnits();
+                return Dl.remote().lookup(SalesChannelHandler.class).findAvailableUnits();
             }
 
             @Override
             protected void done() {
                 try {
-                    final SalesChannelManagerDialog dialog = new SalesChannelManagerDialog(lookup(Workspace.class).getMainFrame());
-                    Map<SalesChannel, List<Stock>> collect = lookup(StockAgent.class).findAll(Stock.class).stream().collect(Collectors.groupingBy(Stock::getPrimaryChannel));
+                    final SalesChannelManagerDialog dialog = new SalesChannelManagerDialog(UiCore.getMainFrame());
+                    Map<SalesChannel, List<Stock>> collect = Dl.remote().lookup(StockAgent.class).findAll(Stock.class).stream().collect(Collectors.groupingBy(Stock::getPrimaryChannel));
                     Map<SalesChannel, Stock> stockToChannel = new HashMap<>();
                     // TODO: Make this better.
                     for (Entry<SalesChannel, List<Stock>> entry : collect.entrySet()) {
@@ -73,13 +71,13 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                     }
 
                     dialog.setModel(new SalesChannelTableModel(get(), stockToChannel));
-                    dialog.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
+                    dialog.setLocationRelativeTo(UiCore.getMainFrame());
                     dialog.setVisible(true);
                     if ( !dialog.isOk() ) return;
                     new SwingWorker<Boolean, Object>() {
                         @Override
                         protected Boolean doInBackground() throws Exception {
-                            return lookup(SalesChannelHandler.class)
+                            return Dl.remote().lookup(SalesChannelHandler.class)
                                     .update(dialog
                                             .getModel()
                                             .getDataModel()
@@ -93,7 +91,7 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                         protected void done() {
                             try {
                                 String msg = (get() ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt");
-                                JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), msg);
+                                JOptionPane.showMessageDialog(UiCore.getMainFrame(), msg);
                             } catch (InterruptedException | ExecutionException ex) {
                                 Ui.handle(ex);
                             }

@@ -24,12 +24,10 @@ import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Allow the modification of a Product/Part.
@@ -45,16 +43,16 @@ public class UpdateProductAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            String partNo = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte Artikelnummer des Herstellers eingeben:");
+            String partNo = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte Artikelnummer des Herstellers eingeben:");
             if ( partNo == null ) return;
-            Product product = lookup(UniqueUnitAgent.class).findProductByPartNo(partNo);
+            Product product = Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(partNo);
             if ( product == null ) {
-                JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Artikel " + partNo + " existiert nicht, bitte über Aufnahme erfassen",
+                JOptionPane.showMessageDialog(UiCore.getMainFrame(), "Artikel " + partNo + " existiert nicht, bitte über Aufnahme erfassen",
                         "Fehler", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Hint: We need the Manufacturer of the Porduct in advance, as we initialize all Validator elements.
                 // If We want to allow creation of new Products here, the workflow must be enhanced.
-                new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, lookup(Workspace.class).getMainFrame());
+                new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, UiCore.getMainFrame());
             }
         } catch (UserInfoException ex) {
             Ui.handle(ex);

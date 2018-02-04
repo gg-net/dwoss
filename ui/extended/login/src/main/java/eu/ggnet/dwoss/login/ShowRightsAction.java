@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,21 +16,17 @@
  */
 package eu.ggnet.dwoss.login;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 import eu.ggnet.saft.api.auth.Authorisation;
 
-import org.openide.util.Lookup;
-
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.core.auth.Guardian;
 
-import eu.ggnet.dwoss.util.HtmlDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 
 /**
  * An Action, that opens a HtmlDialog to show all active Rights.
@@ -45,17 +41,19 @@ public class ShowRightsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        HtmlDialog dialog = new HtmlDialog(lookup(Workspace.class).getMainFrame(), Dialog.ModalityType.MODELESS);
-        StringBuilder sb = new StringBuilder();
-        Guardian accessCos = Lookup.getDefault().lookup(Guardian.class);
-        sb.append("<html><body><u>Benutzer:</u> <b>").append(accessCos.getUsername()).append("</b><br /><u>Berechtigungen</u><ul>");
-        for (Authorisation authorisation : accessCos.getRights()) {
-            sb.append("<li>").append(authorisation.toName()).append("</li>");
-        }
+        Ui.exec(() -> {
+            Ui.build().fx().show(() -> {
+                StringBuilder sb = new StringBuilder();
+                Guardian accessCos = Dl.local().lookup(Guardian.class);
+                sb.append("<html><body><u>Benutzer:</u> <b>").append(accessCos.getUsername()).append("</b><br /><u>Berechtigungen</u><ul>");
+                for (Authorisation authorisation : accessCos.getRights()) {
+                    sb.append("<li>").append(authorisation.toName()).append("</li>");
+                }
 
-        sb.append("</ul></body></html>");
-        dialog.setText(sb.toString());
-        dialog.setVisible(true);
+                sb.append("</ul></body></html>");
+                return sb.toString();
+            }, () -> new HtmlPane());
+        });
     }
 
 }

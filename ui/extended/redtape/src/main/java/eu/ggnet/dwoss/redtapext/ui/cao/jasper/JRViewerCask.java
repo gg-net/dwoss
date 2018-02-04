@@ -29,12 +29,11 @@ import net.sf.jasperreports.swing.JRViewerToolbar;
 import net.sf.jasperreports.view.JRViewer;
 
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * This Class is to view a Jasper Report with a modified {@link JRViewerToolbar}.
@@ -85,7 +84,7 @@ public class JRViewerCask extends JRViewer implements ResultProducer<JRViewerCas
                         @Override
                         protected Object doInBackground() throws Exception {
                             infoDialog.setVisible(true);
-                            lookup(DocumentSupporter.class).mail(document, viewType);
+                            Dl.remote().lookup(DocumentSupporter.class).mail(document, viewType);
                             return null;
                         }
 

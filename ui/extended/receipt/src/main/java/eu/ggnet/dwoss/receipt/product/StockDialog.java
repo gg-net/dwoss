@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,21 +21,24 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.entity.Stock;
+
 /**
  *
  * @author oliver.guenther
  */
-public class ComboBoxDialog<T> extends javax.swing.JDialog {
+public class StockDialog extends javax.swing.JDialog {
 
     private boolean ok = false;
 
     /** Creates new form ComboBoxDialog */
-    public ComboBoxDialog(java.awt.Window parent, T[] ts, ListCellRenderer cellrenderer) {
+    public StockDialog(java.awt.Window parent, Stock[] ts, ListCellRenderer cellrenderer) {
         super(parent);
         setModalityType(ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
-        selectionBox.setModel(new DefaultComboBoxModel(ts));
+        selectionBox.setModel(new DefaultComboBoxModel<>(ts));
         selectionBox.setRenderer(cellrenderer);
         // Close the dialog when Esc is pressed
         String cancelName = "cancel";
@@ -51,12 +54,19 @@ public class ComboBoxDialog<T> extends javax.swing.JDialog {
         });
     }
 
-    public void setSelection(T t) {
-        selectionBox.setSelectedItem(t);
+    public void setSelection(Stock s) {
+        selectionBox.setSelectedItem(s);
     }
 
-    public T getSelection() {
-        return (T)selectionBox.getSelectedItem();
+    public void setSelection(PicoStock ps) {
+        for (int i = 0; i < selectionBox.getItemCount(); i++) {
+            Stock elem = selectionBox.getItemAt(i);
+            if ( elem.getId() == ps.getId() ) selectionBox.setSelectedIndex(i);
+        }
+    }
+
+    public Stock getSelection() {
+        return (Stock)selectionBox.getSelectedItem();
     }
 
     public boolean isOk() {
@@ -75,7 +85,7 @@ public class ComboBoxDialog<T> extends javax.swing.JDialog {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        selectionBox = new javax.swing.JComboBox();
+        selectionBox = new javax.swing.JComboBox<>();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -99,7 +109,6 @@ public class ComboBoxDialog<T> extends javax.swing.JDialog {
 
         jLabel1.setText("Auswahl");
 
-        selectionBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         selectionBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectionBoxActionPerformed(evt);
@@ -172,7 +181,7 @@ public class ComboBoxDialog<T> extends javax.swing.JDialog {
     private javax.swing.JButton cancelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton okButton;
-    private javax.swing.JComboBox selectionBox;
+    private javax.swing.JComboBox<Stock> selectionBox;
     // End of variables declaration//GEN-END:variables
 
 }

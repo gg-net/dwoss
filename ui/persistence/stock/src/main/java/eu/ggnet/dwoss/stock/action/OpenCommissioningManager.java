@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.dwoss.stock.CommissioningManagerController;
-import eu.ggnet.dwoss.stock.CommissioningManagerModel;
-import eu.ggnet.dwoss.stock.CommissioningManagerView;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.stock.*;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -40,7 +36,7 @@ public class OpenCommissioningManager extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         CommissioningManagerModel model = new CommissioningManagerModel();
-        CommissioningManagerView view = new CommissioningManagerView(lookup(Workspace.class).getMainFrame());
+        CommissioningManagerView view = new CommissioningManagerView(UiCore.getMainFrame());
         CommissioningManagerController controller = new CommissioningManagerController();
         view.setModel(model);
         view.setController(controller);

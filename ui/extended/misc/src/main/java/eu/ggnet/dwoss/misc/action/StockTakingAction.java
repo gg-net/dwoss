@@ -18,22 +18,18 @@ package eu.ggnet.dwoss.misc.action;
 
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.misc.op.StockTaking;
-
 import eu.ggnet.dwoss.stock.entity.Stock;
-
 import eu.ggnet.dwoss.util.FileJacket;
-
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 
-import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -60,9 +56,9 @@ public class StockTakingAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         JFileChooser dialog = new JFileChooser();
         dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(lookup(Workspace.class).getMainFrame()) ) return;
+        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) return;
         final File inFile = dialog.getSelectedFile();
-        if ( YES_OPTION != showConfirmDialog(lookup(Workspace.class).getMainFrame(),
+        if ( YES_OPTION != showConfirmDialog(UiCore.getMainFrame(),
                 "Inventur" + (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.getPath() + " vervollständigen ?", "Inventur vervollständigen",
                 YES_NO_OPTION, QUESTION_MESSAGE) ) return;
 
@@ -70,7 +66,7 @@ public class StockTakingAction extends AbstractAction {
             @Override
             protected FileJacket doInBackground() throws Exception {
                 FileUtil.checkIfExcelFile(inFile);
-                return lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", inFile), (stock == null ? null : stock.getId()));
+                return Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", inFile), (stock == null ? null : stock.getId()));
             }
 
             @Override

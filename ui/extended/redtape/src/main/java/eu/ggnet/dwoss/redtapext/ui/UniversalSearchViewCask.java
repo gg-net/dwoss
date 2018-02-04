@@ -29,11 +29,8 @@ import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
-
-import static eu.ggnet.saft.Client.lookup;
 
 public class UniversalSearchViewCask extends javax.swing.JFrame {
 
@@ -118,7 +115,7 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
             instance = new UniversalSearchViewCask();
             instance.setVisible(true);
         } else {
-            // lookup(Workspace.class).getMainFrame().toBack();
+            // UiCore.getMainFrame().toBack();
             instance.toFront();
             if ( instance.getState() == JFrame.ICONIFIED ) instance.setState(JFrame.NORMAL);
         }
@@ -129,7 +126,7 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
     private final UnitOverseer unitOverseer;
 
     public UniversalSearchViewCask() {
-        this(lookup(Workspace.class).getMainFrame(), lookup(UniversalSearcher.class), lookup(UnitOverseer.class));
+        this(UiCore.getMainFrame(), Dl.remote().lookup(UniversalSearcher.class), Dl.remote().lookup(UnitOverseer.class));
     }
 
     public UniversalSearchViewCask(java.awt.Window parent, UniversalSearcher searchOperation, UnitOverseer unitOverseer) {
@@ -289,7 +286,7 @@ public class UniversalSearchViewCask extends javax.swing.JFrame {
 
             switch ((Type)searchType.getSelectedItem()) {
                 case UNITS:
-                    re = unitOverseer.toDetailedHtml(value._1.toString(), lookup(Guardian.class).getUsername());
+                    re = unitOverseer.toDetailedHtml(value._1.toString(), Dl.local().lookup(Guardian.class).getUsername());
                     break;
                 case CUSTOMER:
                     re = searchOperation.findCustomer(value._1.intValue());

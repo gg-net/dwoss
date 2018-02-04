@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -36,6 +35,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 
 /**
  *
@@ -100,10 +101,10 @@ public class RedTapeTryout {
 
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
-        CustomerCos ccos = mock(CustomerCos.class);
+        CustomerUpi ccos = mock(CustomerUpi.class);
         when(ccos.createCustomer(any())).thenReturn(0L);
         when(ccos.updateCustomer(any(), anyLong())).thenReturn(true);
-        Dl.local().add(CustomerCos.class, ccos);
+        Dl.local().add(CustomerUpi.class, ccos);
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Ui.exec(() -> {

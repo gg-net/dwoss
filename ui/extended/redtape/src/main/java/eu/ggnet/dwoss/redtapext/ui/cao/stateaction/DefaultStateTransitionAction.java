@@ -16,13 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
-import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
-
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 
@@ -30,16 +23,18 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Default Action for a wrapped StateTransistion.
@@ -115,7 +110,7 @@ public class DefaultStateTransitionAction extends AbstractAction {
                 }
             }
         }
-        Dossier d = lookup(RedTapeWorker.class).stateChange(cdoc, transition, lookup(Guardian.class).getUsername()).getDossier();
+        Dossier d =Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername()).getDossier();
         controller.reloadSelectionOnStateChange(d);
     }
 }

@@ -31,8 +31,7 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static org.mockito.BDDMockito.given;
@@ -58,7 +57,7 @@ public class CreateSimpleActionTryout {
         p.add(new JButton(new CreateSimpleAction()));
         p.add(b);
 
-        Client.addSampleStub(StockAgent.class, new StockAgent() {
+        Dl.remote().add(StockAgent.class, new StockAgent() {
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
@@ -159,7 +158,7 @@ public class CreateSimpleActionTryout {
             }
             // </editor-fold>
         });
-        Client.addSampleStub(StockTransactionProcessor.class, new StockTransactionProcessor() {
+        Dl.remote().add(StockTransactionProcessor.class, new StockTransactionProcessor() {
             @Override
             public SortedMap<Integer, String> perpareTransfer(List<StockUnit> stockUnits, int destinationStockId, String arranger, String comment) throws UserInfoException {
                 SortedMap<Integer, String> r = new TreeMap<>();
@@ -197,7 +196,7 @@ public class CreateSimpleActionTryout {
         });
         Guardian guardianMock = mock(Guardian.class);
         given(guardianMock.getUsername()).willAnswer(i -> "Testuser");
-        Client.addSampleStub(Guardian.class, guardianMock);
+        Dl.local().add(Guardian.class, guardianMock);
 
         UiCore.startSwing(() -> p);
         l.await();

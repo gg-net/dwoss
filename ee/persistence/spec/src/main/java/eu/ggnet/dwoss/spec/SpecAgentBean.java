@@ -20,8 +20,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.StringUtils;
-
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;

@@ -36,7 +36,7 @@ import eu.ggnet.saft.*;
 public class SearchTryout {
 
     public static void main(String[] args) {
-        Client.addSampleStub(Searcher.class, new Searcher() {
+        Dl.remote().add(Searcher.class, new Searcher() {
 
             private final Logger LOG = LoggerFactory.getLogger(Searcher.class);
 

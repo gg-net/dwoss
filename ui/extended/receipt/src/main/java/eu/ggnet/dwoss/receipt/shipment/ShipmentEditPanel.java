@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,23 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.IPreClose;
-
 import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.stock.entity.Shipment;
-
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -52,7 +47,7 @@ public class ShipmentEditPanel extends javax.swing.JPanel implements IPreClose {
         initComponents();
         idField.setText(Long.toString(shipment.getId()));
         shipmentField.setText(shipment.getShipmentId());
-        ownerController = new ComboBoxController<>(ownerBox, Client.lookup(Mandators.class).loadContractors().all().toArray());
+        ownerController = new ComboBoxController<>(ownerBox, Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray());
         statusController = new ComboBoxController<>(statusBox, Shipment.Status.values());
         ownerController.setSelected(shipment.getContractor());
         statusController.setSelected(shipment.getStatus());
@@ -71,8 +66,8 @@ public class ShipmentEditPanel extends javax.swing.JPanel implements IPreClose {
         if ( type == CloseType.CANCEL ) return true;
         Shipment resultShipment = getShipment();
         if ( !ValidationUtil.isValidOrShow(SwingUtilities.getWindowAncestor(this), resultShipment) ) return false;
-        if ( !Client.hasFound(ShipmentLabelValidator.class) ) return true;
-        String warn = Client.lookup(ShipmentLabelValidator.class).validate(shipment.getShipmentId(), shipment.getContractor());
+        if ( !Dl.remote().contains(ShipmentLabelValidator.class) ) return true;
+        String warn = Dl.remote().lookup(ShipmentLabelValidator.class).validate(shipment.getShipmentId(), shipment.getContractor());
         if ( warn == null ) return true;
         int result = JOptionPane.showConfirmDialog(this, warn, "Achtung", JOptionPane.OK_CANCEL_OPTION);
         if ( result == JOptionPane.CANCEL_OPTION ) return false;

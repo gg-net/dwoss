@@ -22,9 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -39,7 +38,7 @@ public class AllSalesListingAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().call(() -> lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT)));
+            Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(SalesListingProducer.class).generateAllSalesListing().toFile(GlobalConfig.APPLICATION_PATH_OUTPUT)));
         });
     }
 }

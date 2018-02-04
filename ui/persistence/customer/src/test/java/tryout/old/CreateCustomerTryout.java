@@ -11,15 +11,14 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchController;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchView;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static org.mockito.Mockito.mock;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -31,18 +30,19 @@ public class CreateCustomerTryout {
 
     public static void main(String[] args) {
 
-        Client.addSampleStub(Mandators.class, mock(Mandators.class));
+        Dl.remote().add(Mandators.class, mock(Mandators.class));
 
-        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
             {
                 setAllUsersnames(Arrays.asList("hans", "claus", "peter"));
             }
+
             @Override
             public void login(String user, char[] pass) throws AuthenticationException {
             }
         });
 
-        Client.addSampleStub(OldCustomerAgent.class, new OldCustomerAgent() {
+        Dl.remote().add(OldCustomerAgent.class, new OldCustomerAgent() {
 
             @Override
             public OldCustomer findById(long id) {
@@ -66,13 +66,14 @@ public class CreateCustomerTryout {
             }
         });
 
-        Client.addSampleStub(CustomerService.class, new CustomerService() {
+        Dl.remote().add(CustomerService.class, new CustomerService() {
 
             @Override
             public List<UiCustomer> asUiCustomers(String company, String firstName, String lastName, String email, boolean appendWildcard) {
                 L.info("call of asUiCustomers(company={},firstName={},lastName={},email={},wildCard={}", company, firstName, lastName, email, appendWildcard);
                 return new ArrayList<>();
             }
+
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">
             @Override
             public CustomerMetaData asCustomerMetaData(long customerId) {

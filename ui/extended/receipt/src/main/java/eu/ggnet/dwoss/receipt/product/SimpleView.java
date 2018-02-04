@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IView;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.IPreClose;
-
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
@@ -34,16 +25,15 @@ import java.util.*;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
-
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
+import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
 
 import lombok.Getter;
-
-import static eu.ggnet.saft.Client.lookup;
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 
@@ -70,8 +60,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         this.manufacturer = Objects.requireNonNull(manufacturer, "Manufacturer must not be null");
         if ( !manufacturer.isManufacturer() ) throw new IllegalArgumentException("Manufacturer " + manufacturer + " is not a Manufacturer");
         initComponents();
-        receiptProductLogic = lookup(ProductProcessor.class);
-        specAgent = lookup(SpecAgent.class);
+        receiptProductLogic = Dl.remote().lookup(ProductProcessor.class);
+        specAgent = Dl.remote().lookup(SpecAgent.class);
         this.serieses = specAgent.findAll(ProductSeries.class);
         seriesBox.setRenderer(new ListCellRenderer() {
             protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
@@ -109,7 +99,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
     /**
      * Creates new ProductSpec from the PartNo with some hints.
      * Usefull for existing SopoProducts.
-     *
+     * <p>
      */
     public SimpleView(TradeName manufacturer, String partNo) {
         this(manufacturer);

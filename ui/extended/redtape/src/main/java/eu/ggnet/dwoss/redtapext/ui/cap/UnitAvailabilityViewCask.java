@@ -25,7 +25,6 @@ import javax.swing.border.EtchedBorder;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.HtmlPane;
@@ -34,9 +33,9 @@ import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.cap.MainComponent;
 import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.Selector;
-import eu.ggnet.saft.core.ui.Workspace;
 
-import static eu.ggnet.saft.Client.lookup;
+import stock.upi.StockUpi;
+
 
 /**
  * View that is used to quickly check availability.
@@ -66,11 +65,13 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         }
 
         private Color getColor(UnitShard us) {
-            if ( us.getAvailable() == null ) return Color.yellow;
-            if ( us.getAvailable() == false ) return Color.red;
+            if ( us.getAvailable() == null ) return Color.YELLOW;
+            if ( us.getAvailable() == false ) return Color.RED;
             // now we are available
-            if ( Objects.equals(us.getStockId(), lookup(Workspace.class).getValue(Stock.class).getId()) ) return Color.green;
-            return Color.cyan;
+            return Dl.local().optional(StockUpi.class)
+                    .map(StockUpi::getActiveStock)
+                    .map(ps -> Objects.equals(ps.getId(), us.getStockId()) ? Color.GREEN : Color.CYAN)
+                    .orElse(Color.CYAN);
         }
     }
 
@@ -172,13 +173,13 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         UnitShard us = resultList.getSelectedValue();
         if ( us == null || us.getAvailable() == null ) return;
         Ui.exec(() -> {
-            Ui.build().id(us.getRefurbishedId()).fx().show(() -> Client.lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Client.lookup(Guardian.class).getUsername()), () -> new HtmlPane());
+            Ui.build().id(us.getRefurbishedId()).fx().show(() -> Dl.remote().lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Dl.local().lookup(Guardian.class).getUsername()), () -> new HtmlPane());
         });
     }//GEN-LAST:event_resultListMouseClicked
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         String refurbishedId = searchCommand.getText().trim();
-        UnitShard us = lookup(UnitOverseer.class).find(refurbishedId);
+        UnitShard us =Dl.remote().lookup(UnitOverseer.class).find(refurbishedId);
         model.add(0, us);
         searchCommand.setText("");
     }//GEN-LAST:event_searchActionPerformed

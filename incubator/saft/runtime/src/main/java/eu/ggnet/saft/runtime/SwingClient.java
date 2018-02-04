@@ -18,7 +18,8 @@ package eu.ggnet.saft.runtime;
 
 import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -31,16 +32,12 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Ops;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.auth.Accessable;
 import eu.ggnet.saft.core.auth.*;
 import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
 import eu.ggnet.saft.core.cap.*;
 import eu.ggnet.saft.core.ui.UserPreferences;
-import eu.ggnet.saft.core.ui.Workspace;
-
-import static eu.ggnet.saft.Client.lookup;
 
 public class SwingClient {
 
@@ -69,8 +66,8 @@ public class SwingClient {
         public void actionPerformed(ActionEvent e) {
             try {
                 UIManager.setLookAndFeel(className);
-                SwingUtilities.updateComponentTreeUI(lookup(Workspace.class).getMainFrame());
-                lookup(UserPreferences.class).storeLaf(className);
+                SwingUtilities.updateComponentTreeUI(UiCore.getMainFrame());
+                Dl.local().lookup(UserPreferences.class).storeLaf(className);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 L.error("Error on changing LAF", ex);
             }
@@ -128,7 +125,7 @@ public class SwingClient {
 
     public void init() {
         try {
-            UIManager.setLookAndFeel(lookup(UserPreferences.class).loadLaf());
+            UIManager.setLookAndFeel(Dl.local().lookup(UserPreferences.class).loadLaf());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             L.warn("Cound not set LAF:" + ex.getMessage(), ex);
         }
@@ -169,7 +166,7 @@ public class SwingClient {
         for (ToolbarComponent tc : tcs) {
             if ( tc instanceof Component ) tccs.put(tc.getOrder(), (Component)tc);
             if ( (tc instanceof UserChangeListener) && Lookup.getDefault().lookup(Guardian.class) != null )
-                lookup(Guardian.class).addUserChangeListener((UserChangeListener)tc);
+                Dl.local().lookup(Guardian.class).addUserChangeListener((UserChangeListener)tc);
         }
         for (Component tc : tccs.values()) {
             view.toolBar.add(tc);
@@ -180,39 +177,25 @@ public class SwingClient {
         for (MainComponent mc : mcs) {
             if ( mc instanceof Component ) view.mainPanel.add((Component)mc, mc.getLayoutHint());
             if ( (mc instanceof UserChangeListener) && Lookup.getDefault().lookup(Guardian.class) != null )
-                lookup(Guardian.class).addUserChangeListener((UserChangeListener)mc);
+                Dl.local().lookup(Guardian.class).addUserChangeListener((UserChangeListener)mc);
         }
 
         enableAccessRestrictions(metaActions);
 
-        lookup(Workspace.class).setMainFrame(view);
-
         es.scheduleAtFixedRate(new HiddenMonitorDisplayer(view), 2, 2, TimeUnit.SECONDS);
 
         view.setLocationByPlatform(true);
-        lookup(UserPreferences.class).loadLocation(view.getClass(), view);
+        Dl.local().lookup(UserPreferences.class).loadLocation(view.getClass(), view);
 
-        Workspace ws = lookup(Workspace.class);
-        ws.setMainFrame(view);
-        ws.addShutdownListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                lookup(UserPreferences.class).storeLocation(view.getClass(), view);
-                es.shutdownNow();
-                try {
-                    boolean result = es.awaitTermination(10, TimeUnit.SECONDS);
-                    L.info("Shutdown Client,ExecutorService.isTerminated={}", result);
-                } catch (InterruptedException ex) {
-                }
-                close();
+        UiCore.addOnShutdown(() -> {
+            Dl.local().lookup(UserPreferences.class).storeLocation(view.getClass(), view);
+            es.shutdownNow();
+            try {
+                boolean result = es.awaitTermination(10, TimeUnit.SECONDS);
+                L.info("Shutdown Client,ExecutorService.isTerminated={}", result);
+            } catch (InterruptedException ex) {
             }
-        });
-
-        view.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                lookup(Workspace.class).shutdown();
-            }
+            close();
         });
 
         if ( System.getProperty("persistence.host") != null ) view.setTitle(view.getTitle() + " Datenbank:" + System.getProperty("persistence.host"));
@@ -226,7 +209,7 @@ public class SwingClient {
     }
 
     private void ready(String postTitle) {
-        AutoLoginLogout all = Lookup.getDefault().lookup(AutoLoginLogout.class);
+        AutoLoginLogout all = Dl.local().lookup(AutoLoginLogout.class);
         if ( all == null ) return;
         all.setTimeout(autologout);
         all.showAuthenticator();

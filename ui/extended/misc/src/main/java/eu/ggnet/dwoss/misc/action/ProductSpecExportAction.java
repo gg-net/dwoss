@@ -22,13 +22,10 @@ import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.spec.SpecExporter;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Action to Export the ProductSpecs to XML.
@@ -43,12 +40,12 @@ public class ProductSpecExportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String input = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Grenze der zu exportierenden ProductSpecs eingeben", 100);
+        String input = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Grenze der zu exportierenden ProductSpecs eingeben", 100);
         if ( input == null ) return;
         try {
             final int amount = Integer.parseInt(input);
             Ui.exec(() -> {
-                Ui.progress().wrap(() -> lookup(SpecExporter.class).toXml(amount).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+                Ui.progress().wrap(() -> Dl.remote().lookup(SpecExporter.class).toXml(amount).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
             });
 
         } catch (NumberFormatException ex) {

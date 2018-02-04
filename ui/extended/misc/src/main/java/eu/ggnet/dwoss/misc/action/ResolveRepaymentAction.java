@@ -27,9 +27,9 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
-import static eu.ggnet.saft.Client.lookup;
 
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -46,7 +46,7 @@ public class ResolveRepaymentAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Contractors contractors = Ui.progress().call(() -> lookup(Mandators.class).loadContractors());
+            Contractors contractors = Ui.progress().call(() -> Dl.local().lookup(CachedMandators.class).loadContractors());
             Ui.build().dialog().eval(() -> {
                 ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(contractors.all().iterator().next(), contractors.all());
                 dialog.setTitle("Gutschriften");

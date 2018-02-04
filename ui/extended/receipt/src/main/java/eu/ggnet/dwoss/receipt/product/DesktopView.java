@@ -20,17 +20,12 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import javax.swing.*;
 
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.ProductGroup;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.Desktop;
 import eu.ggnet.dwoss.spec.entity.Desktop.Hdd;
@@ -39,13 +34,8 @@ import eu.ggnet.dwoss.spec.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.entity.piece.Gpu;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -236,11 +226,11 @@ public class DesktopView extends AbstractView<Desktop> implements IPreClose {
     };
 
     public DesktopView() {
-        this(lookup(SpecAgent.class), null);
+        this(Dl.remote().lookup(SpecAgent.class), null);
     }
 
     public DesktopView(ProductGroup productGroup) {
-        this(lookup(SpecAgent.class), productGroup);
+        this(Dl.remote().lookup(SpecAgent.class), productGroup);
     }
 
     /**

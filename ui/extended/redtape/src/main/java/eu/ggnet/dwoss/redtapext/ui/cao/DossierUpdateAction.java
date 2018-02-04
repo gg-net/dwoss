@@ -25,21 +25,20 @@ import javax.swing.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import lombok.AllArgsConstructor;
 
-import static eu.ggnet.saft.Client.lookup;
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
+import static eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type.ERROR;
 
 /**
  *
@@ -65,7 +64,7 @@ public class DossierUpdateAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if ( doc.getDossier().getId() == 0 ) {
-            UiAlert.show(parent, "Fehler", "Sopo Aufträge können nicht bearbeitet werden.", ERROR);
+            Ui.build(parent).title("Fehler").alert().message("Sopo Aufträge können nicht bearbeitet werden.").show(ERROR);
             return;
         }
 
@@ -75,7 +74,7 @@ public class DossierUpdateAction extends AbstractAction {
                 DocumentUpdateController controller = new DocumentUpdateController(view, doc);
                 view.setController(controller);
                 view.setCustomerValues(id);
-                return OkCancel.wrap(view);
+                return OkCancelWrap.vetoResult(view);
             })
                     .filter(this::handleFailure)
                     .map(Reply::getPayload)
@@ -85,14 +84,14 @@ public class DossierUpdateAction extends AbstractAction {
     }
 
     private void handleSuccess(Document doc) {
-        Document result = lookup(RedTapeWorker.class).update(doc, null, lookup(Guardian.class).getUsername());
+        Document result = Dl.remote().lookup(RedTapeWorker.class).update(doc, null, Dl.local().lookup(Guardian.class).getUsername());
         redTapeController.reloadSelectionOnStateChange(result.getDossier());
     }
 
     private boolean handleFailure(Reply<Document> reply) {
         if ( reply.hasSucceded() ) return true;
         try {
-            doc = lookup(RedTapeWorker.class).revertCreate(doc);
+            doc = Dl.remote().lookup(RedTapeWorker.class).revertCreate(doc);
             redTapeController.reloadSelectionOnStateChange(doc.getDossier());
         } catch (UserInfoException ex) {
             Ui.handle(ex);

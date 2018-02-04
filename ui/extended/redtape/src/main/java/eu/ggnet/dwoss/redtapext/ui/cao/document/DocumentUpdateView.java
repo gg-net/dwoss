@@ -20,7 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.net.URL;
 import java.util.EnumSet;
-import java.util.function.Consumer;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -42,33 +41,31 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
-import eu.ggnet.saft.core.ui.UiAlertBuilder.Type;
+import eu.ggnet.saft.core.ui.builder.UiAlertBuilder.Type;
 
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
  * @author pascal.perau
  */
-public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose, Consumer<Void>, VetoableOnOk, ResultProducer<Document> {
+public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Document> {
 
     static URL loadPlus() {
         return DocumentUpdateView.class.getResource("plus.png");
@@ -121,11 +118,11 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
         initFxComponents();
         this.document = document;
         positions.addAll(document.getPositions().values());
-        this.accessCos = Client.lookup(Guardian.class);
+        this.accessCos = Dl.local().lookup(Guardian.class);
         accessCos.add(taxChangeButton, CHANGE_TAX);
         refreshAddressArea();
 
-        if ( !Client.hasFound(WarrantyHook.class) ) convertToWarrantyPositionButton.setVisible(false);
+        if ( !Dl.remote().contains(WarrantyHook.class) ) convertToWarrantyPositionButton.setVisible(false);
 
         if ( document.isClosed() || EnumSet.of(DocumentType.COMPLAINT, DocumentType.CREDIT_MEMO, DocumentType.ANNULATION_INVOICE).contains(document.getType()) ) {
             disableComponents(addProductBatchButton, addUnitButton, unitInputField, addServiceButton, shippingCostButton);
@@ -182,10 +179,10 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
      */
     public void setCustomerValues(long customerId) {
         this.customerId = customerId;
-        String labelText = lookup(CustomerService.class).asUiCustomer(customerId).getSimpleHtml();
+        String labelText = Dl.remote().lookup(CustomerService.class).asUiCustomer(customerId).getSimpleHtml();
         recentCustomerLabel.setText("<html><div align=\"center\" width=\"120px\"><i>" + labelText + "</i></div></html>");
         recentCustomerLabel.setToolTipText("<html>" + labelText + "</html>");
-        paymentMethodLabel.setText(paymentMethodLabel.getText() + " " + lookup(CustomerService.class).asCustomerMetaData(customerId).getPaymentMethod().getNote());
+        paymentMethodLabel.setText(paymentMethodLabel.getText() + " " + Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId).getPaymentMethod().getNote());
     }
 
     public Document getDocument() {
@@ -232,8 +229,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
     }
 
     @Override
-    public boolean pre(CloseType type) {
-        if ( type == CloseType.CANCEL ) return true;
+    public boolean mayClose() {
         if ( controller == null ) return true;
         if ( customerId == 0 ) {
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), "Bitte Kunden wählen");
@@ -254,7 +250,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                 accessCos.remove(component);
             }
         }
-        if ( Client.hasFound(ShippingCostService.class) ) return controller.optionalRecalcShippingCost();
+        if ( Dl.remote().contains(ShippingCostService.class) ) return controller.optionalRecalcShippingCost();
         else return true;
     }
 
@@ -674,7 +670,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
                 try {
                     //constructor made sure the service is present
                     document.appendAll(
-                            lookup(WarrantyHook.class)
+                            Dl.remote().lookup(WarrantyHook.class)
                                     .addWarrantyForUnitPosition(positionsFxList.getSelectionModel().getSelectedItem(), document.getId())
                                     .request(new SwingInteraction(this)));
                     positions.clear();
@@ -691,7 +687,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(taxType -> {
                 L.debug("Changeing Tax to {}", taxType);
                 document.setTaxType(taxType);
-                final PostLedger ledgers = Client.lookup(Mandators.class).loadPostLedger();
+                final PostLedger ledgers = Dl.local().lookup(CachedMandators.class).loadPostLedger();
                 document.getPositions().values().forEach(p -> {
                     p.setTax(taxType.getTax());
                     p.setBookingAccount(ledgers.get(p.getType(), taxType).orElse(null));
@@ -752,16 +748,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements IPreClose,
             positions.clear();
             positions.addAll(document.getPositions().values());
         });
-    }
-
-    @Override
-    public void accept(Void t) {
-        // Ignoere
-    }
-
-    @Override
-    public boolean mayClose() {
-        return pre(CloseType.OK);
     }
 
     @Override

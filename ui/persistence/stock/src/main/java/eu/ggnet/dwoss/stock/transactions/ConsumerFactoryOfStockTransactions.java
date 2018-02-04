@@ -26,14 +26,12 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ops.DescriptiveConsumer;
 import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
-import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Supplies dependent actions of Stock.
@@ -45,10 +43,10 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
     @Override
     public List<DescriptiveConsumer<PicoUnit>> of(PicoUnit t) {
 
-        StockAgent stockAgent = lookup(StockAgent.class);
+        StockAgent stockAgent =Dl.remote().lookup(StockAgent.class);
         StockUnit su = stockAgent.findStockUnitByUniqueUnitIdEager(t.uniqueUnitId);
         if ( su == null || su.isInTransaction() ) return Collections.EMPTY_LIST;
-        Guardian guardian = lookup(Guardian.class);
+        Guardian guardian = Dl.local().lookup(Guardian.class);
         if ( !guardian.hasRight(CREATE_TRANSACTION_FOR_SINGLE_UNIT) ) return Collections.EMPTY_LIST;
         return stockAgent.findAll(Stock.class)
                 .stream()
@@ -57,26 +55,13 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                     return new DescriptiveConsumer<>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
                         Ui.exec(() -> {
                             Ui.build().dialog().eval(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"), () -> new CreateQuestionView())
-                                    .map(v -> ReplyUtil.wrap(() -> lookup(StockTransactionProcessor.class).perpareTransfer(
+                                    .map(v -> ReplyUtil.wrap(() ->Dl.remote().lookup(StockTransactionProcessor.class).perpareTransfer(
                                     v.stockUnits,
                                     v.destination.getId(),
-                                    lookup(Guardian.class).getUsername(),
+                                    Dl.local().lookup(Guardian.class).getUsername(),
                                     v.comment)))
                                     .filter(Ui.failure()::handle).ifPresent(u -> UiAlert.show("Umfuhr angelegt"));
                         });
-
-// OLD Style
-//                        Ui.call(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"))
-//                                .choiceFx(CreateQuestionView.class)
-//                                .onOk(v -> {
-//                                    lookup(StockTransactionProcessor.class).perpareTransfer(
-//                                            v.model().stockUnits,
-//                                            v.model().destination.getId(),
-//                                            guardian.getUsername(),
-//                                            v.model().comment);
-//                                    Alert.show("Umfuhr anglegt.");
-//                                    return null;
-//                                }).exec();
                     });
                 })
                 .collect(Collectors.toList());

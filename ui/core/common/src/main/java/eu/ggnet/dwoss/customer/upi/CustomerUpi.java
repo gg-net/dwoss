@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.api;
+package eu.ggnet.dwoss.customer.upi;
 
 import eu.ggnet.saft.api.ui.UiParent;
 
@@ -23,7 +23,7 @@ import eu.ggnet.saft.api.ui.UiParent;
  * <p/>
  * @author pascal.perau
  */
-public interface CustomerCos {
+public interface CustomerUpi {
 
     /**
      * Method for Customer creation.

@@ -23,10 +23,9 @@ import javafx.scene.layout.GridPane;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * FXML Controller class
@@ -54,7 +53,7 @@ public class CreateSelectionController implements FxController, ResultProducer<C
     void initialize() {
         target.setCellFactory(new StockListCell.Factory());
         target.setButtonCell(new StockListCell());
-        target.getItems().addAll(lookup(StockAgent.class).findAll(Stock.class));
+        target.getItems().addAll(Dl.remote().lookup(StockAgent.class).findAll(Stock.class));
     }
 
     @FXML

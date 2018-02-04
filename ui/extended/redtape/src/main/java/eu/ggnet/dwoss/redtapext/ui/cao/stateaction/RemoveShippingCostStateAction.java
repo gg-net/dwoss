@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,14 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
-
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.saft.Client.lookup;
 
 public class RemoveShippingCostStateAction extends DefaultStateTransitionAction {
 
@@ -56,6 +54,6 @@ public class RemoveShippingCostStateAction extends DefaultStateTransitionAction 
         if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.removeShippingCost(cdoc.getDocument());
 
         if ( confirmDialog != JOptionPane.CANCEL_OPTION )
-            controller.reloadSelectionOnStateChange(lookup(RedTapeWorker.class).stateChange(cdoc, transition, lookup(Guardian.class).getUsername()).getDossier());
+            controller.reloadSelectionOnStateChange(Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername()).getDossier());
     }
 }

@@ -21,12 +21,12 @@ import java.util.SortedMap;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.ShippingCondition;
-import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.saft.Dl;
 
 /**
  * A helper class that provides methods to modify shipping costs.
@@ -50,14 +50,14 @@ public class ShippingCostHelper {
             amountOfPositions += position.getAmount();
         }
         double costs = 0;
-        if ( Client.hasFound(ShippingCostService.class) )
-            costs = Client.lookup(ShippingCostService.class).calculate(amountOfPositions, doc.getDossier().getPaymentMethod(), shippingCondition);
+        if ( Dl.remote().contains(ShippingCostService.class) )
+            costs = Dl.remote().lookup(ShippingCostService.class).calculate(amountOfPositions, doc.getDossier().getPaymentMethod(), shippingCondition);
         SortedMap<Integer, Position> positions = doc.getPositions(PositionType.SHIPPING_COST);
         if ( positions.isEmpty() ) {
             doc.append(Position.builder().type(PositionType.SHIPPING_COST)
                     .name("Versandkosten").description("Versandkosten zu Vorgang: " + doc.getDossier().getIdentifier())
                     .amount(1).price(costs).tax(doc.getTaxType().getTax())
-                    .bookingAccount(Client.lookup(Mandators.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
+                    .bookingAccount(Dl.local().lookup(CachedMandators.class).loadPostLedger().get(PositionType.SHIPPING_COST, doc.getTaxType()).orElse(null))
                     .build());
         } else {
             Position next = positions.values().iterator().next();

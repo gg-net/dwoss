@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,9 @@ import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-
-import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_DOSSIER;
 
 /**
@@ -56,7 +53,7 @@ public class DossierDeleteAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         if ( JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(parent,
                 "Möchten Sie den Vorgang " + dos.getIdentifier() + " wirklich löschen ?", "Vorgang löschen", JOptionPane.YES_NO_OPTION) ) return;
-        lookup(RedTapeWorker.class).delete(dos);
+        Dl.remote().lookup(RedTapeWorker.class).delete(dos);
         controller.reloadOnDelete(dos);
     }
 }
