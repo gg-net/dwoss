@@ -129,6 +129,45 @@ public class CustomerTest {
 //        assertThat(c.isSimple()).overridingErrorMessage("Customer not simple, becaus: " + c.getSimpleViolationMessage()).isTrue();
 //        assertThat(c.isBussines()).isTrue();
 //        assertThat(c.getViolationMessage()).as("Bussnis Customer is vaild").isNull();
+//        Customer c = new Customer();
+//
+//        //use an non default firstname
+//        contact.setFirstName("Moris");
+//
+//        //build the AddressLabel
+//        c.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
+//        c.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+//        c.setKeyAccounter("Herr Meier");
+//
+//        //build the MandatorMetadata
+//        MandatorMetadata m = new MandatorMetadata();
+//        m.setShippingCondition(ShippingCondition.DEALER_ONE);
+//        m.setPaymentCondition(PaymentCondition.CUSTOMER);
+//        m.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+//        m.add(SalesChannel.UNKNOWN);
+//        c.add(m);
+//
+//        contact.add(address);
+//        contact.add(communication);
+//        c.add(contact);
+//
+//        c = makeValidSimpleConsumer();
+//        assertThat(c.isVaild()).isTrue(); // optional
+//        assertThat(c.isSimple()).overridingErrorMessage("Customer not simple, becaus: " + c.getSimpleViolationMessage()).isTrue();
+//        assertThat(c.isConsumer()).isTrue();
+//
+//        SimpleCustomer sc = c.toSimple().get();
+//        assertThat(sc.getFirstName()).as("simpleCustomer.firstName").isEqualTo(contact.getFirstName());
+//        // Test jeden parameter.
+//
+//        c.getContacts().clear();
+//        company.add(address);
+//        company.add(communication);
+//        c.getCompanies().add(company);
+//
+//        assertThat(c.isSimple()).overridingErrorMessage("Customer not simple, becaus: " + c.getSimpleViolationMessage()).isTrue();
+//        assertThat(c.isBussines()).isTrue();
+//        assertThat(c.getViolationMessage()).as("Bussnis Customer is vaild").isNull();
     }
 
     @Test
