@@ -4,6 +4,7 @@ import org.junit.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
@@ -299,10 +300,16 @@ public class CustomerTest {
 
     @Test
     public void testGetViolationMessage() {
-        customer.getContacts().clear();
-        customer.add(company);
 
-        assertThat(customer.getViolationMessage()).as("Bussnis Customer is vaild").isNull();
+        Company validCompany = new Company("Test Gmbh", 0, true, "01238321hd");
+        Contact validContact = new Contact(Sex.MALE, true, "", "Testkunde", "Testkunde");
+
+        Customer c = new Customer();
+        assertThat(c.getViolationMessage()).as("customer is invalid").isNotNull();
+        c.add(validCompany);
+        assertThat(c.getViolationMessage()).as("businessCustomer is invalid").isNotNull();
+        c.getAddressLabels().add(new AddressLabel(c.getCompanies().get(0), null, new Address(), AddressType.INVOICE));
+        assertThat(c.getViolationMessage()).as("customern is valid").isNull();
     }
 
     @Test
