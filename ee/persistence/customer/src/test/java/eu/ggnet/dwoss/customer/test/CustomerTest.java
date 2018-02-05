@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.customer.test;
 
+import java.util.Locale;
+
 import org.junit.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
@@ -7,8 +9,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.rules.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,11 +40,44 @@ public class CustomerTest {
         communication = gen.makeCommunication();
     }
 
+    @Test
     public void testSimpleConsumer() {
         Customer c = new Customer();
         Contact con = new Contact();
         con.setFirstName("Max");
         con.setLastName("Mustermann");
+
+        //build a Address
+        Address addr = new Address();
+        addr.setStreet("Postallee 23");
+        addr.setZipCode("21234");
+        addr.setCity("Hamburg");
+        addr.setIsoCountry(Locale.GERMANY);
+        con.add(addr);
+
+        //build a Communication
+        Communication comm = new Communication();
+        comm.setType(Type.EMAIL);
+        comm.setIdentifier("test@test.de");
+        con.add(comm);
+
+        //build a Company for the AddressLabel
+        Company com = new Company();
+        com.setName("Firma ABC");
+        com.add(addr);
+
+        //build the AddressLabel
+        c.getAddressLabels().add(new AddressLabel(com, con, addr, AddressType.INVOICE));
+        c.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+        c.setKeyAccounter("Herr Meier");
+
+        //build the MandatorMetadata
+        MandatorMetadata m = new MandatorMetadata();
+        m.setShippingCondition(ShippingCondition.DEALER_ONE);
+        m.setPaymentCondition(PaymentCondition.CUSTOMER);
+        m.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        m.add(SalesChannel.UNKNOWN);
+        c.add(m);
 
         c.add(con);
 
@@ -321,11 +355,11 @@ public class CustomerTest {
         customer.add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
         customer.add(gen.makeMandatorMetadata());
-        
+
         contact.getCommunications().get(0).setType(Type.PHONE);
         contact.getCommunications().get(0).setIdentifier("040123456789");
         customer.add(contact);
-        
+
         assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(customer.toSimple()).as("Customer convert to SimpleCustomer and is not null").isNotNull();
     }
