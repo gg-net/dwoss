@@ -74,11 +74,44 @@ public class CustomerTest {
         customer.getAddressLabels().add(new AddressLabel(null, validContact, customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
         assertThat(customer.getViolationMessage()).as("customer does not violate any role").isNull();
         assertThat(customer.isConsumer()).as("customer is a consumer").isTrue();
-        assertThat(customer.isSimple()).as("customer is ").isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
         customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
-        assertThat(customer.isSimple()).as("customer is ").isFalse();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
         assertThat(customer.getViolationMessage()).as("customer does not violate any role").isNull();
         assertThat(customer.isValid()).as("customer is valid customer").isTrue();
+
+        return customer;
+
+    }
+
+    public static Customer makeValidBusinessCustomer() {
+
+        Address address = new Address();
+        address.setStreet("Postallee 23");
+        address.setZipCode("21234");
+        address.setCity("Hamburg");
+        address.setIsoCountry(Locale.GERMANY);
+        assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
+
+        Company company = new Company("Musterfirma", 0, true, "1203223");
+        company.getAddresses().add(address);
+        company.getCommunications().add(new Communication(Type.EMAIL, true));
+        company.getCommunications().get(0).setIdentifier("ceoA@gmx.net");
+
+        company.getCommunications().add(new Communication(Type.EMAIL, false));
+        company.getCommunications().get(1).setIdentifier("ceoB@gmx.net");
+
+        assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
+
+        Customer customer = new Customer();
+        customer.getCompanies().add(company);
+
+        customer.getAddressLabels().add(new AddressLabel(company, null, customer.getCompanies().get(0).getAddresses().get(0), AddressType.INVOICE));
+
+        assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
+        assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
 
         return customer;
 
@@ -104,7 +137,7 @@ public class CustomerTest {
         customer.getAddressLabels().add(new AddressLabel(company, null, customer.getCompanies().get(0).getAddresses().get(0), AddressType.INVOICE));
 
         assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
-        assertThat(customer.isSimple()).as("customer is a simple customer").isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
         assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
         assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
 
@@ -134,7 +167,7 @@ public class CustomerTest {
         AddressLabel invoiceLabel = new AddressLabel(null, customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE);
         customer.getAddressLabels().add(invoiceLabel);
 
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
         assertThat(customer.getSimpleViolationMessage()).as("customer does not violate any rule").isNull();
         assertThat(customer.isValid()).isTrue(); // optional
 
@@ -145,6 +178,8 @@ public class CustomerTest {
 
     @Test
     public void testSimpleConsumer() {
+
+        // JW: Hab ich auskommentiert, da der Test noch fehlschläg
 //        Customer c = new Customer();
 //
 //        //use an non default firstname
@@ -467,42 +502,66 @@ public class CustomerTest {
     }
 
     @Test
-    public void testGetViolationMessageForAValidSimpleConsumer() {
+    public void testGetViolationMessageValidSimpleConsumer() {
         Customer customer = makeValidSimpleConsumer();
+
+        customer.getCompanies().add(new Company());
+        assertThat(customer.getViolationMessage()).as("consumer with company is not valid").isNotNull();
+
+        customer.getCompanies().clear();
+
+        assertThat(customer.getViolationMessage()).as("consumer with contact and without company is valid").isNull();
+        customer.getContacts().clear();
+        assertThat(customer.getViolationMessage()).as("consumer without contact is invalid").isNotNull();
+
+        customer = makeValidSimpleConsumer();
+
+        customer.getAddressLabels().remove(customer.getAddressLabels().stream().filter(label -> label.getType() == AddressType.INVOICE).findAny().get());
+        assertThat(customer.getViolationMessage()).as("removing ONE AddressLabel of type INVOICE must always result in an invalid customer").isNotNull();
+
+        customer = makeValidSimpleConsumer();
+
+        // testGetSimpleViolatonMessage from here
+        customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
+        assertThat(customer.getSimpleViolationMessage()).as("Customer is valid, not simple").isNotNull();
+        customer.getFlags().clear();
+        assertThat(customer.isSimple()).as("Customer is simple").isTrue();
+        customer.setKeyAccounter("keyAccounter");
+        assertThat(customer.isSimple()).as("Customer isn't simple").isFalse();
     }
 
     @Test
-    public void testGetViolationMessageForAnInValidSimpleConsumer() {
+    public void testGetViolationMessageInValidSimpleConsumer() {
 
     }
 
     @Test
-    public void testGetViolationMessageForAValidSimpleBusinessCustomer() {
+    public void testGetViolationMessageValidSimpleBusinessCustomer() {
         Customer customer = makeValidSimpleBusiness();
     }
 
     @Test
-    public void testGetViolationMessageForAnInvalidSimpleBusinessCustomer() {
+    public void testGetViolationMessageInvalidSimpleBusinessCustomer() {
 
     }
 
     @Test
-    public void testGetViolationMessageForAValidConsumer() {
+    public void testGetViolationMessageValidConsumer() {
         Customer customer = makeValidConsumer();
     }
 
     @Test
-    public void testGetViolationMessageForAnInvalidConsumer() {
+    public void testGetViolationMessageInvalidConsumer() {
 
     }
 
     @Test
-    public void testGetViolationMessageForAValidBusinessCustomer() {
-
+    public void testGetViolationMessageValidBusinessCustomer() {
+        Customer customer = makeValidBusinessCustomer();
     }
 
     @Test
-    public void testGetViolationMessageForAnInvalidBusinessCustomer() {
+    public void testGetViolationMessageInvalidBusinessCustomer() {
 
     }
 

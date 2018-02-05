@@ -457,11 +457,15 @@ public class Customer implements Serializable {
                 return "The Company of the Business Customer has more than 3 Communications";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
                 return "Communications not allowed for business customers were found";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
+            if ( companies.stream().flatMap(company -> company.getCommunications().stream()).filter(communication -> communication.getType() == EMAIL).count()
+                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count()
+                    > 1 )
                 return "multiple EMAIL type communications found";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
+            if ( companies.stream().flatMap(company -> company.getCommunications().stream()).filter(communication -> communication.getType() == MOBILE).count()
+                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
                 return "multiple MOBILE type communications found";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count() > 1 )
+            if ( companies.stream().flatMap(company -> company.getCommunications().stream()).filter(communication -> communication.getType() == PHONE).count()
+                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count() > 1 )
                 return "multiple PHONE type communications found";
         }
         return null;
