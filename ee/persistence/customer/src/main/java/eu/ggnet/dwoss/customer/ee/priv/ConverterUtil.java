@@ -16,19 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.ee.priv;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.SalesChannel;
@@ -148,7 +142,7 @@ public class ConverterUtil {
         }
         contact.setPrefered(true);
         if ( !StringUtils.isBlank(old.getFirma()) || !customer.getCompanies().isEmpty() ) {
-            if ( customer.getCompanies().isEmpty() ) customer.add(new Company());
+            if ( customer.getCompanies().isEmpty() ) customer.getCompanies().add(new Company());
             Company company = customer.getCompanies().get(0);
             company.setName(old.getFirma());
             company.setLedger(old.getLedger());

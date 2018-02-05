@@ -93,7 +93,7 @@ public class CustomerGeneratorOperation {
             c.setComment("Generatered Customer Number: " + i);
             cem.persist(c);
             if ( systemCustomerName.containsKey(c.getId()) ) {
-                c.add(Company.builder().name(systemCustomerName.get(c.getId())).prefered(true).build());
+                c.getCompanies().add(Company.builder().name(systemCustomerName.get(c.getId())).prefered(true).build());
                 c.add(CustomerFlag.SYSTEM_CUSTOMER);
             }
         }
@@ -107,7 +107,7 @@ public class CustomerGeneratorOperation {
                 Customer c = new Customer();
                 c.setComment("Generatered Receipt Customer: " + contractor + "," + operation);
                 c.add(CustomerFlag.SYSTEM_CUSTOMER);
-                c.add(Company.builder().name(operation + " - " + contractor).prefered(true).build());
+                c.getCompanies().add(Company.builder().name(operation + " - " + contractor).prefered(true).build());
                 c.add(Contact.builder().firstName(operation.getNote()).lastName(contractor.getName()).prefered(true).build());
                 cem.persist(c);
                 receiptCustomersBuilder.put(contractor, operation, c.getId());
@@ -123,7 +123,7 @@ public class CustomerGeneratorOperation {
             Customer c = new Customer();
             c.setComment("Generatered Repayment Customer: " + contractor);
             c.add(CustomerFlag.SYSTEM_CUSTOMER);
-            c.add(Company.builder().name("Repayment - " + contractor).prefered(true).build());
+            c.getCompanies().add(Company.builder().name("Repayment - " + contractor).prefered(true).build());
             c.add(Contact.builder().firstName("Repayment").lastName(contractor.getName()).prefered(true).build());
             cem.persist(c);
             repaymentCustomersBuilder.put(contractor, c.getId());
@@ -139,7 +139,7 @@ public class CustomerGeneratorOperation {
             Customer c = new Customer();
             c.setComment("Generatered Scrap Customer: " + contractor);
             c.add(CustomerFlag.SYSTEM_CUSTOMER);
-            c.add(Company.builder().name("Scrap - " + contractor).prefered(true).build());
+            c.getCompanies().add(Company.builder().name("Scrap - " + contractor).prefered(true).build());
             c.add(Contact.builder().firstName("Scrap").lastName(contractor.getName()).prefered(true).build());
             cem.persist(c);
             scrapCustomersBuilder.put(contractor, c.getId());
@@ -154,7 +154,7 @@ public class CustomerGeneratorOperation {
             Customer c = new Customer();
             c.setComment("Generatered Delete Customer: " + contractor);
             c.add(CustomerFlag.SYSTEM_CUSTOMER);
-            c.add(Company.builder().name("Delete - " + contractor).prefered(true).build());
+            c.getCompanies().add(Company.builder().name("Delete - " + contractor).prefered(true).build());
             c.add(Contact.builder().firstName("Delete").lastName(contractor.getName()).prefered(true).build());
             cem.persist(c);
             deleteCustomersBuilder.put(contractor, c.getId());
@@ -169,7 +169,7 @@ public class CustomerGeneratorOperation {
             Customer c = new Customer();
             c.setComment("Generatered " + type.getName() + "");
             c.add(CustomerFlag.SYSTEM_CUSTOMER);
-            c.add(Company.builder().name(type.getName()).prefered(true).build());
+            c.getCompanies().add(Company.builder().name(type.getName()).prefered(true).build());
             c.add(Contact.builder().firstName("Special").lastName(type.getName()).prefered(true).build());
             cem.persist(c);
             specialCustomers.put(c.getId(), type);

@@ -172,7 +172,9 @@ public class Customer implements Serializable {
      * Null values or duplicates will be ignored.
      * <p>
      * @param c the {@link Company}
+     * @deprecated use {@link Customer#getCompanies()} add.
      */
+    @Deprecated
     public void add(Company c) {
         if ( c != null ) companies.add(c);
     }
@@ -182,7 +184,9 @@ public class Customer implements Serializable {
      * Null values or duplicates will be ignored.
      * <p>
      * @param c the {@link Contact}
+     * @deprecated use {@link Customer#getContacts()} add.
      */
+    @Deprecated
     public void add(Contact c) {
         if ( c != null ) contacts.add(c);
     }
@@ -192,7 +196,9 @@ public class Customer implements Serializable {
      * Null values or duplicates will be ignored.
      * <p>
      * @param m the {@link MandatorMetadata}
+     * @deprecated use {@link Customer#getMandatorMetadatas()} add.
      */
+    @Deprecated
     public void add(MandatorMetadata m) {
         if ( m != null ) mandatorMetadata.add(m);
     }
@@ -201,15 +207,27 @@ public class Customer implements Serializable {
      * Defensivly add customerFlag.
      * <p>
      * @param customerFlag
+     * @deprecated use {@link Customer#getFlags()} add.
      */
+    @Deprecated
     public void add(CustomerFlag customerFlag) {
         if ( customerFlag != null ) flags.add(customerFlag);
     }
 
+    /**
+     *
+     * @param customerFlag
+     * @deprecated use {@link Customer#getFlags()} remove.
+     */
+    @Deprecated
     public void remove(CustomerFlag customerFlag) {
         flags.remove(customerFlag);
     }
 
+    /**
+     * @deprecated use {@link Customer#getFlags()} clear.
+     */
+    @Deprecated
     public void clearFlags() {
         flags.clear();
     }
@@ -502,6 +520,13 @@ public class Customer implements Serializable {
         );
     }
 
+    /**
+     * Returns the customer as html, containing only the mandator metadata of the supplied matchcode, reflecting the defaults.
+     *
+     * @param matchcode the matchcode of the mandator to show the metadata.
+     * @param defaults  the defaults to reflect agains.
+     * @return the customer as html with only the metadata of the matchcode.
+     */
     public String toHtml(String matchcode, DefaultCustomerSalesdata defaults) {
 
         StringBuilder sb = new StringBuilder();

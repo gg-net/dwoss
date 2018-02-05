@@ -25,7 +25,7 @@ In the core the application has a simple layer model.
 		- Only one data source per project.
 	2. Extended
 		- Projects that use more than one persistence source
-3. No module name may stretch over a layer. (For now, redtape ignores that rule, but this is wrong. [DWOSS-133](https://jira.cybertron.global/browse/DWOSS-137])
+3. No module name may stretch over a layer. (For now, redtape ignores that rule, but this is wrong. [DWOSS-137](https://jira.cybertron.global/browse/DWOSS-137])
 
 There are also some more rules to consider, which we were not yet able to represent.
 See the developed Graph in

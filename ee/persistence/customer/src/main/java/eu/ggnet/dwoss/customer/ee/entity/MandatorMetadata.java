@@ -108,18 +108,25 @@ public class MandatorMetadata implements Serializable {
     @Enumerated
     private PaymentMethod paymentMethod;
 
+    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<SalesChannel> allowedSalesChannels = new HashSet<>();
 
-    public Set<SalesChannel> getAllowedSalesChannels() {
-        return new HashSet<>(allowedSalesChannels);
-    }
-
+    /**
+     *
+     * @deprecated use getAllowedSalesChannels.clear();
+     */
+    @Deprecated
     public void clearSalesChannels() {
         allowedSalesChannels.clear();
     }
 
+    /**
+     *
+     * @deprecated use getAllowedSalesChannels.add();
+     */
+    @Deprecated
     public void add(SalesChannel s) {
         allowedSalesChannels.add(s);
     }
