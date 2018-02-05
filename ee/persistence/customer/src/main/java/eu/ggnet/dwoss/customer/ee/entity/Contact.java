@@ -29,7 +29,6 @@ import org.hibernate.search.annotations.*;
 import eu.ggnet.dwoss.rules.AddressType;
 
 import lombok.*;
-import lombok.Builder;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -164,10 +163,22 @@ public class Contact implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @param c
+     * @deprecated use getCommunication.add
+     */
+    @Deprecated
     public void add(Communication c) {
         if ( c != null ) communications.add(c);
     }
 
+    /**
+     *
+     * @param a
+     * @deprecated use getAddress.add
+     */
+    @Deprecated
     public void add(Address a) {
         if ( a != null ) addresses.add(a);
     }

@@ -127,7 +127,9 @@ public class Company implements Serializable {
      * <p>
      * @param type type of communication.
      * @return the first prefered communication of that Type, may return null.
+     * @deprecated prefered is gone be removed.
      */
+    @Deprecated
     public Communication prefered(Communication.Type type) {
         for (Communication communication : communications) {
             if ( communication.getType() == type && communication.isPrefered() ) return communication;
@@ -141,7 +143,9 @@ public class Company implements Serializable {
      * <p>
      * @param type type of the prefered address
      * @return the first prefered Address of that Type, may return null.
+     * @deprecated prefered is gone be removed.
      */
+    @Deprecated
     public Address prefered(AddressType type) {
         for (Address address : addresses) {
             if ( address.getPreferedType() == type ) return address;
@@ -149,26 +153,32 @@ public class Company implements Serializable {
         return null;
     }
 
+    @Deprecated
     public void add(Contact c) {
         if ( c != null ) contacts.add(c);
     }
 
+    @Deprecated
     public void add(Address a) {
         if ( a != null ) addresses.add(a);
     }
 
+    @Deprecated
     public void add(Communication c) {
         if ( c != null ) communications.add(c);
     }
 
+    @Deprecated
     public void remove(Contact c) {
         contacts.remove(c);
     }
 
+    @Deprecated
     public void remove(Address a) {
         addresses.remove(a);
     }
 
+    @Deprecated
     public void remove(Communication c) {
         communications.remove(c);
     }
