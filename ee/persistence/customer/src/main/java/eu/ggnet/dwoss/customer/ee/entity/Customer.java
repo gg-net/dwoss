@@ -149,9 +149,6 @@ public class Customer implements Serializable {
 
     /**
      * maximum of size2, consisting of
-     *
-     * @todo validation in violationMessage
-     *
      */
     @Getter
     @Transient // Will be in the entity model later
@@ -479,6 +476,7 @@ public class Customer implements Serializable {
         if ( contacts.isEmpty() && companies.isEmpty() ) return "Neither Contact nor Company are set.";
         if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
         if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "No Addresslabel of type Invoice";
+        if ( addressLabels.size() > 2 ) return "More than two AddressLables are set";
         if ( contacts.stream().anyMatch(a -> a.getViolationMessages() != null) )
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessages() != null) )
