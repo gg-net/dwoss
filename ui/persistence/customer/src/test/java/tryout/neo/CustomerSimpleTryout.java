@@ -130,7 +130,7 @@ public class CustomerSimpleTryout {
             bc.add(company);
 
             System.out.println("IS simple: " + bc.getSimpleViolationMessage());
-            System.out.println("Bussines Customer: " + bc.isBussines());
+            System.out.println("Bussines Customer: " + bc.isBusiness());
 
             Ui.exec(() -> {
                 Ui.build().parent(consumerCustomer).fxml().eval(() -> bc, CustomerSimpleController.class).ifPresent(System.out::println);

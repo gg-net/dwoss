@@ -109,8 +109,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void saveAndCloseButtonHandling() {
         company = getCompany();
         //only get valid object out
-        if ( company.getViolationMessages() != null ) {
-            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessages()).show(AlertType.WARNING);
+        if ( company.getViolationMessage() != null ) {
+            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
         Ui.closeWindowOf(taxIdTextField);
@@ -120,8 +120,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void saveButtonHandling() {
         company = getCompany();
         //only get valid object out
-        if ( company.getViolationMessages() != null ) {
-            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessages()).show(AlertType.WARNING);
+        if ( company.getViolationMessage() != null ) {
+            Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
     }

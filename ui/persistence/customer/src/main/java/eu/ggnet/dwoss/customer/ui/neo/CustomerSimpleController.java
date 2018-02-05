@@ -248,7 +248,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @Override
     public void accept(Customer c) {
         if ( c != null ) {
-            if ( c.isBussines() ) {
+            if ( c.isBusiness() ) {
                 bussines = true;
             }
             setSimpleCustomer(c.toSimple().get());

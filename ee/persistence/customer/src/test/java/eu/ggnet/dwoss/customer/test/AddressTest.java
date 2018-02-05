@@ -44,7 +44,7 @@ public class AddressTest {
         address.setCity("city");
         address.setZipCode("12345");
         address.setIsoCountry(Locale.GERMANY);
-        assertThat(address.getViolationMessages()).as("Address with valid values").isNull();
+        assertThat(address.getViolationMessage()).as("Address with valid values").isNull();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class AddressTest {
         address.setCity("city");
         address.setZipCode("12345");
         address.setIsoCountry(Locale.GERMANY);
-        assertThat(address.getViolationMessages()).as("Address without street").isNotBlank();
+        assertThat(address.getViolationMessage()).as("Address without street").isNotBlank();
     }
 
     @Test
@@ -60,7 +60,7 @@ public class AddressTest {
         address.setStreet("street");
         address.setZipCode("12345");
         address.setIsoCountry(Locale.GERMANY);
-        assertThat(address.getViolationMessages()).as("Address without city").isNotBlank();
+        assertThat(address.getViolationMessage()).as("Address without city").isNotBlank();
     }
 
     @Test
@@ -68,7 +68,7 @@ public class AddressTest {
         address.setStreet("street");
         address.setCity("city");
         address.setIsoCountry(Locale.GERMANY);
-        assertThat(address.getViolationMessages()).as("Address without zipcode").isNotBlank();
+        assertThat(address.getViolationMessage()).as("Address without zipcode").isNotBlank();
     }
 
     @Test
@@ -77,7 +77,7 @@ public class AddressTest {
         address.setCity("city");
         address.setZipCode("12345");
         address.setIsoCountry(Locale.GERMAN);
-        assertThat(address.getViolationMessages()).as("Address without Iso Country").isNotBlank();
+        assertThat(address.getViolationMessage()).as("Address without Iso Country").isNotBlank();
     }
 
 }

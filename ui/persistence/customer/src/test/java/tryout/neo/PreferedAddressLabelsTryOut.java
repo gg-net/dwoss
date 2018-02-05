@@ -46,7 +46,7 @@ public class PreferedAddressLabelsTryOut {
             customer.add(gen.makeCompany());
             customer.add(gen.makeCompany());
 
-            if ( !customer.isVaild() ) {
+            if ( !customer.isValid() ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
@@ -63,7 +63,7 @@ public class PreferedAddressLabelsTryOut {
             customer.add(gen.makeContact());
             customer.add(gen.makeContact());
 
-            if ( !customer.isVaild() ) {
+            if ( !customer.isValid() ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;

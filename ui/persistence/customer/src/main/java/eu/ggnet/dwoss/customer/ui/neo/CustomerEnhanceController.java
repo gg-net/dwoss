@@ -146,8 +146,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void accept(Customer cust) {
-        if ( cust != null && cust.isVaild() ) {
-            if ( cust.isBussines() ) {
+        if ( cust != null && cust.isValid() ) {
+            if ( cust.isBusiness() ) {
                 isBusinessCustomer = true;
             }
             setCustomer(cust);
@@ -163,7 +163,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     public void setCustomer(Customer customer) {
         addressLabels.addAll(customer.getAddressLabels());
-        if ( customer.isBussines() ) {
+        if ( customer.isBusiness() ) {
             CustomerKindLabel.setText("Geschäftskunde");
             customerNameLabel.setText(customer.getCompanies().get(0).getName());
             companyList.setAll(customer.getCompanies());
