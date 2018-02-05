@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.test;
 
 import org.junit.*;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 
@@ -33,17 +32,16 @@ public class CommunicationTest {
     
     private Communication communication;
     
-    private final CustomerGenerator GEN = new CustomerGenerator();
-
     @Before
     public void executedBeforeEach() {
-        communication = GEN.makeCommunication();
+        communication = new Communication();
+        communication.setType(SKYPE);
+        communication.setIdentifier("skypename");
     }
     
     
     @Test
     public void GetViolationMessages(){
-        communication.setType(SKYPE);
         assertThat(communication.getViolationMessages()).as("Communication with valid values").isNull();
     }
     

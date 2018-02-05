@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.customer.test;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.rules.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,11 +32,13 @@ public class MandatorMetadataTest {
 
     private MandatorMetadata mandatorMetadata;
 
-    private final CustomerGenerator GEN = new CustomerGenerator();
-
     @Before
     public void executeBeforeEach() {
-        mandatorMetadata = GEN.makeMandatorMetadata();
+        mandatorMetadata = new MandatorMetadata();
+        mandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
+        mandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
+        mandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        mandatorMetadata.add(SalesChannel.UNKNOWN);
     }
 
     @Test
