@@ -224,7 +224,7 @@ public class Contact implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( StringUtils.isBlank(lastName) ) return "LastName is blank";
         if ( addresses.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();

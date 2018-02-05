@@ -240,8 +240,8 @@ public class Company implements Serializable {
         if ( addresses.isEmpty() ) return "No Address";
         if ( addresses.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "One Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-        if ( contacts.stream().anyMatch(a -> a.getViolationMessages() != null) )
-            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )
+            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( communications.stream().anyMatch(a -> a.getViolationMessages() != null) )
             return "Communications: " + communications.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
         return null;

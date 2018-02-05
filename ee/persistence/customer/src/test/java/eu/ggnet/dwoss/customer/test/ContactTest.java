@@ -45,25 +45,25 @@ public class ContactTest {
 
     @Test
     public void testGetViolationMessages() {
-        assertThat(contact.getViolationMessages()).as("Contact with valid values").isNull();
+        assertThat(contact.getViolationMessage()).as("Contact with valid values").isNull();
     }
 
     @Test
     public void testGetViolationMessagesNonValid() {
         contact.setLastName("");
-        assertThat(contact.getViolationMessages()).as("Contact without lastName").isNotBlank();
+        assertThat(contact.getViolationMessage()).as("Contact without lastName").isNotBlank();
     }
 
     @Test
     public void testGetViolationMessagesNonValid2() {
         contact.getAddresses().add(new Address());
-        assertThat(contact.getViolationMessages()).as("Contact with invalid address").isNotBlank();
+        assertThat(contact.getViolationMessage()).as("Contact with invalid address").isNotBlank();
     }
 
     @Test
     public void testGetViolationMessagesNonValid3() {
         contact.getCommunications().add(new Communication(Type.SKYPE, true));
-        assertThat(contact.getViolationMessages()).as("Contact with invalid Communication").isNotBlank();
+        assertThat(contact.getViolationMessage()).as("Contact with invalid Communication").isNotBlank();
     }
 
 }

@@ -129,7 +129,7 @@ public class AddressLabel {
         if ( address.getViolationMessage() != null ) return "Address: " + address.getViolationMessage();
         if ( company == null && contact == null ) return "Company and Contact are null.";
         if ( company != null && company.getViolationMessage() != null ) return "Company: " + company.getViolationMessage();
-        if ( contact != null && contact.getViolationMessages() != null ) return "Contact: " + contact.getViolationMessages();
+        if ( contact != null && contact.getViolationMessage() != null ) return "Contact: " + contact.getViolationMessage();
         return null;
     }
 

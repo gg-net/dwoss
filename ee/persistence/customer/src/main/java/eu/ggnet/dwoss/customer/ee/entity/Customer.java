@@ -406,14 +406,14 @@ public class Customer implements Serializable {
      * Consumer Customer Rules are:
      * <ul>
      * <li>Contact with only one Address</li>
-     * <li>one Communication form eatch type email, phone, mobile allowed</li>
+     * <li>one Communication from each type: "EMAIL, PHONE, MOBILE" is allowed</li>
      * </ul>
      * <p>
-     * Bussnis Customer Rules are:
+     * Business Customer Rules are:
      * <ul>
      * <li>Company with only one Address and one Contact</li>
      * <li>The Address of the Company Contact has to match the Company Address</li>
-     * <li>one Communication form eatch type email, phone, mobile allowed</li>
+     * <li>One Communication from each type: "EMAIL, PHONE, MOBILE" is allowed</li>
      * </ul>
      *
      * @return null if instance is valid, else a string representing the invalidation.
@@ -424,7 +424,6 @@ public class Customer implements Serializable {
         if ( !flags.isEmpty() ) return "CustomerFlag must be empty";
         if ( !StringUtils.isBlank(keyAccounter) ) return "Keyaccounter is set";
         if ( !mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
-        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "Missing AddressLabel of type Invoice";
         if ( addressLabels.size() > 1 ) return "More than one AddressLabel is set";
 
         List<Communication.Type> allowedCommunicationTypes = new ArrayList<>();
@@ -462,10 +461,12 @@ public class Customer implements Serializable {
                     > 1 )
                 return "multiple EMAIL type communications found";
             if ( companies.stream().flatMap(company -> company.getCommunications().stream()).filter(communication -> communication.getType() == MOBILE).count()
-                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
+                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count()
+                    > 1 )
                 return "multiple MOBILE type communications found";
             if ( companies.stream().flatMap(company -> company.getCommunications().stream()).filter(communication -> communication.getType() == PHONE).count()
-                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count() > 1 )
+                    + companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == PHONE).count()
+                    > 1 )
                 return "multiple PHONE type communications found";
         }
         return null;
@@ -499,8 +500,8 @@ public class Customer implements Serializable {
         if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
         if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "No Addresslabel of type Invoice";
         if ( addressLabels.size() > 2 ) return "More than two AddressLables are set";
-        if ( contacts.stream().anyMatch(a -> a.getViolationMessages() != null) )
-            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )
+            return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( isConsumer() ) {

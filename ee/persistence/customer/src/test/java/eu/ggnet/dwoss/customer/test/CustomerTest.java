@@ -1,5 +1,6 @@
 package eu.ggnet.dwoss.customer.test;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -14,6 +15,8 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
+import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -109,7 +112,7 @@ public class CustomerTest {
         customer.getAddressLabels().add(new AddressLabel(company, null, customer.getCompanies().get(0).getAddresses().get(0), AddressType.INVOICE));
 
         assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
         assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
         assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
 
@@ -503,35 +506,137 @@ public class CustomerTest {
 
     @Test
     public void testGetViolationMessageValidSimpleConsumer() {
-        Customer customer = makeValidSimpleConsumer();
+        Customer simpleConsumer = makeValidSimpleConsumer();
 
-        customer.getCompanies().add(new Company());
-        assertThat(customer.getViolationMessage()).as("consumer with company is not valid").isNotNull();
+        simpleConsumer.getCompanies().add(new Company());
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with company is not valid").isNotNull();
 
-        customer.getCompanies().clear();
+        simpleConsumer.getCompanies().clear();
 
-        assertThat(customer.getViolationMessage()).as("consumer with contact and without company is valid").isNull();
-        customer.getContacts().clear();
-        assertThat(customer.getViolationMessage()).as("consumer without contact is invalid").isNotNull();
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with contact and without company is valid").isNull();
+        simpleConsumer.getContacts().clear();
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer without contact is invalid").isNotNull();
 
-        customer = makeValidSimpleConsumer();
+        simpleConsumer = makeValidSimpleConsumer();
 
-        customer.getAddressLabels().remove(customer.getAddressLabels().stream().filter(label -> label.getType() == AddressType.INVOICE).findAny().get());
-        assertThat(customer.getViolationMessage()).as("removing ONE AddressLabel of type INVOICE must always result in an invalid customer").isNotNull();
+        simpleConsumer.getAddressLabels().remove(simpleConsumer.getAddressLabels().stream().filter(label -> label.getType() == AddressType.INVOICE).findAny().get());
+        assertThat(simpleConsumer.getViolationMessage()).as("removing ONE AddressLabel of type INVOICE must always result in an invalid customer").isNotNull();
 
-        customer = makeValidSimpleConsumer();
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getAddressLabels().add(new AddressLabel(null, simpleConsumer.getContacts().get(0), simpleConsumer.getContacts().get(0).getAddresses().get(0), INVOICE));
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with two addressLabels of type INVOICE is invalid").isNull();
 
-        // testGetSimpleViolatonMessage from here
-        customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
-        assertThat(customer.getSimpleViolationMessage()).as("Customer is valid, not simple").isNotNull();
-        customer.getFlags().clear();
-        assertThat(customer.isSimple()).as("Customer is simple").isTrue();
-        customer.setKeyAccounter("keyAccounter");
-        assertThat(customer.isSimple()).as("Customer isn't simple").isFalse();
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getAddressLabels().add(new AddressLabel(null, simpleConsumer.getContacts().get(0), simpleConsumer.getContacts().get(0).getAddresses().get(0), SHIPPING));
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with two addressLabels of unequal types is valid").isNull();
+        simpleConsumer.getAddressLabels().add(new AddressLabel(null, simpleConsumer.getContacts().get(0), simpleConsumer.getContacts().get(0).getAddresses().get(0), SHIPPING));
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with three addressLabels is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        Contact invalidContact = new Contact(Sex.MALE, true, null, "invalid", "");
+        assertThat(invalidContact.getViolationMessage()).as("contact without lastName is invalid").isNotNull();
+        simpleConsumer.getContacts().add(invalidContact);
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with invalid contact is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        Company invalidCompany = new Company("", 0, true, "038483");
+        assertThat(invalidCompany.getViolationMessage()).as("company without name is invalid").isNotNull();
+        simpleConsumer.getCompanies().add(invalidCompany);
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with invalid company is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().get(0).getAddresses().clear();
+        assertThat(simpleConsumer.getContacts().stream().flatMap(contacts -> contacts.getAddresses().stream()).count())
+                .as("customer holds zero addresses").isEqualTo(0);
+
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer without addresses is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().get(0).getCommunications().clear();
+        assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer without communications is invalid").isNotNull();
+
     }
 
     @Test
-    public void testGetViolationMessageInValidSimpleConsumer() {
+    public void testGetSimpleViolationMessageValidSimpleConsumer() {
+        Customer simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with a flag is not simple").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.setKeyAccounter("keyAccounter");
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with keyAccounter is not simple").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getMandatorMetadata().add(new MandatorMetadata());
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with mandatorMetadata is not simple").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getAddressLabels().clear();
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer without AddressLabel is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getAddressLabels().add(new AddressLabel(null, simpleConsumer.getContacts().get(0), simpleConsumer.getContacts().get(0).getAddresses().get(0), AddressType.SHIPPING));
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two AddressLabel is not simple").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        Address address = new Address();
+        address.setCity("City");
+        address.setIsoCountry(Locale.GERMANY);
+        address.setStreet("street");
+        address.setZipCode("zipCode");
+        simpleConsumer.getContacts().get(0).getAddresses().add(address);
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with more than one address is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        Communication phone = new Communication(Type.PHONE, false);
+        phone.setIdentifier("36184165");
+        Communication mobile = new Communication(Type.MOBILE, false);
+        mobile.setIdentifier("64682552");
+        Communication email = new Communication(Type.EMAIL, false);
+        email.setIdentifier("email@mail.com");
+
+        simpleConsumer.getContacts().get(0).getCommunications().addAll(Arrays.asList(phone, mobile, email));
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with more than three communications is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        Communication skype = new Communication(Type.SKYPE, false);
+        skype.setIdentifier("skypeUser4832");
+        simpleConsumer.getContacts().get(0).getCommunications().add(skype);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with communication of type SKYPE is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().get(0).getCommunications().add(email);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
+        simpleConsumer.getContacts().get(0).getCommunications().add(email);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type EMAIL is valid").isNull();
+        Communication otherEmail = new Communication(Type.EMAIL, false);
+        email.setIdentifier("otherEmail@mail.com");
+        simpleConsumer.getContacts().get(0).getCommunications().add(otherEmail);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
+        simpleConsumer.getContacts().get(0).getCommunications().add(mobile);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type MOBILE is valid").isNull();
+        Communication otherMobile = new Communication(Type.MOBILE, false);
+        mobile.setIdentifier("16461385");
+        simpleConsumer.getContacts().stream().findAny().get().getCommunications().add(otherMobile);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type  is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
+        simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
+        simpleConsumer.getContacts().get(0).getCommunications().add(phone);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type PHONE is valid").isNull();
+        Communication otherPhone = new Communication(Type.PHONE, false);
+        mobile.setIdentifier("6541351");
+        simpleConsumer.getContacts().stream().findAny().get().getCommunications().add(otherPhone);
+        assertThat(customer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
+
+        simpleConsumer = makeValidSimpleConsumer();
 
     }
 
@@ -541,28 +646,13 @@ public class CustomerTest {
     }
 
     @Test
-    public void testGetViolationMessageInvalidSimpleBusinessCustomer() {
-
-    }
-
-    @Test
     public void testGetViolationMessageValidConsumer() {
         Customer customer = makeValidConsumer();
     }
 
     @Test
-    public void testGetViolationMessageInvalidConsumer() {
-
-    }
-
-    @Test
     public void testGetViolationMessageValidBusinessCustomer() {
         Customer customer = makeValidBusinessCustomer();
-    }
-
-    @Test
-    public void testGetViolationMessageInvalidBusinessCustomer() {
-
     }
 
 }
