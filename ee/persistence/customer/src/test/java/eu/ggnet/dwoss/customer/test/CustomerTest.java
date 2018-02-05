@@ -5,6 +5,7 @@ import org.junit.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
@@ -36,6 +37,23 @@ public class CustomerTest {
         contact = gen.makeContact();
         address = gen.makeAddress();
         communication = gen.makeCommunication();
+    }
+
+    public void testSimpleConsumer() {
+        Customer c = new Customer();
+        Contact con = new Contact();
+        con.setFirstName("Max");
+        con.setLastName("Mustermann");
+
+        c.add(con);
+
+        assertThat(c.isSimple()).overridingErrorMessage("Customer not simple, becaus: " + c.getSimpleViolationMessage()).isTrue();
+        assertThat(c.isConsumer()).isTrue();
+
+        SimpleCustomer sc = c.toSimple().get();
+
+        assertThat(sc.getFirstName()).as("simpleCustomer.firstName").isEqualTo(con.getFirstName());
+
     }
 
     @Test

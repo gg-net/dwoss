@@ -147,6 +147,12 @@ public class Customer implements Serializable {
     @Boost(0.5f)
     private String comment;
 
+    /**
+     * maximum of size2, consisting of
+     *
+     * @todo validation in violationMessage
+     *
+     */
     @Getter
     @Transient // Will be in the entity model later
     private List<AddressLabel> addressLabels = new ArrayList<>();
