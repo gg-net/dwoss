@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -509,10 +508,8 @@ public class Customer implements Serializable {
             if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
         }
         if ( isBusiness() ) {
-            if ( !Stream.concat(
-                    companies.stream().flatMap(c -> c.getCommunications().stream()),
-                    companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream())).findAny().isPresent() )
-                return "No Communication set on company or contact";
+            if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
+                return "No Communication ";
 
         }
         return null;
