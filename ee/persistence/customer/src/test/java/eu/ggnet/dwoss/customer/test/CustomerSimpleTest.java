@@ -24,10 +24,12 @@ import org.junit.Test;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,8 +39,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author jacob.weinhold
  */
 public class CustomerSimpleTest {
-    
-     public static Company makeValidCompany() {
+
+    public static Company makeValidCompany() {
         Company validcompany = new Company();
         validcompany.setName("Firma ABC");
         validcompany.getAddresses().add(makeValidAddress());
@@ -61,7 +63,23 @@ public class CustomerSimpleTest {
         Communication validCommunication = new Communication(Type.EMAIL, true);
         validCommunication.setIdentifier("Max.mustermann@mustermail.de");
 
-        assertThat(validCommunication.getViolationMessage()).as("valid Address").isNull();
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
+        return validCommunication;
+    }
+    
+    public static Communication makeValidCommunicationMobile() {
+        Communication validCommunication = new Communication(Type.MOBILE, true);
+        validCommunication.setIdentifier("0174 123456789");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
+        return validCommunication;
+    }
+    
+    public static Communication makeValidCommunicationLandline() {
+        Communication validCommunication = new Communication(Type.PHONE, true);
+        validCommunication.setIdentifier("040 123456789");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
@@ -312,4 +330,31 @@ public class CustomerSimpleTest {
     public void testGetSimpleViolationMessageSimpleBusinessCustomer() {
     }
 
+    @Test
+    public void testToSimpleConsumer() {
+        Customer makeValidSimpleConsumer = makeValidSimpleConsumer();
+        makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationMobile());
+        makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationLandline());
+        assertThat(makeValidSimpleConsumer.isSimple()).as("still simplecustomer").isTrue();   
+        SimpleCustomer simpleConsumerCustomer = makeValidSimpleConsumer.toSimple().get();
+
+        assertThat(simpleConsumerCustomer.getTitle()).as("title").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getTitle());
+        assertThat(simpleConsumerCustomer.getFirstName()).as("firstname").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getFirstName());
+        assertThat(simpleConsumerCustomer.getLastName()).as("lastname").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getLastName());
+        assertThat(simpleConsumerCustomer.getStreet()).as("street").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getAddresses().get(0).getStreet());
+        assertThat(simpleConsumerCustomer.getZipCode()).as("zipcode").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getAddresses().get(0).getZipCode());
+        assertThat(simpleConsumerCustomer.getCity()).as("city").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getAddresses().get(0).getCity());
+        assertThat(simpleConsumerCustomer.getIsoCountry()).as("isoCountry").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getAddresses().get(0).getIsoCountry());
+        assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
+        assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
+        assertThat(simpleConsumerCustomer.getEmail()).as("email").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
+
+        assertThat(simpleConsumerCustomer.getSex()).as("sex").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getSex());
+        assertThat(simpleConsumerCustomer.getSource()).as("source").isEqualTo(makeValidSimpleConsumer.getSource());
+        assertThat(simpleConsumerCustomer.getComment()).as("comment").isEqualTo(makeValidSimpleConsumer.getComment());
+
+        assertThat(simpleConsumerCustomer.getCompanyName()).as("companyName").isEqualTo(null);
+        assertThat(simpleConsumerCustomer.getTaxId()).as("taxId").isEqualTo(null);
+        
+    }
 }
