@@ -3,8 +3,7 @@ package eu.ggnet.dwoss.customer.test;
 import java.util.Arrays;
 import java.util.Locale;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -558,6 +557,7 @@ public class CustomerTest {
     }
 
     @Test
+    @Ignore
     public void testGetSimpleViolationMessageSimpleConsumer() {
         Customer simpleConsumer = makeValidSimpleConsumer();
         simpleConsumer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
