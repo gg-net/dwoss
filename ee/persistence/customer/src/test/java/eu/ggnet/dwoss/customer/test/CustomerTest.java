@@ -18,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author oliver.guenther
  */
-// Testtarget: isSimple, toSimple, isValid
 public class CustomerTest {
 
     public static Company makeValidCompany() {
