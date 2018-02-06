@@ -282,9 +282,9 @@ public class CustomerTest {
     @Test
     public void testIsVaild() {
         customer.getCompanies().clear();
-        customer.add(contact);
-        contact.add(communication);
-        contact.add(address);
+        customer.getContacts().add(contact);
+        contact.getCommunications().add(communication);
+        contact.getAddresses().add(address);
         assertThat(customer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
 
         customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
@@ -306,15 +306,15 @@ public class CustomerTest {
         customer.getContacts().clear();
         assertThat(customer.isValid()).as("Customer is not vaild, because there is no Company and no Contact is set").isFalse();
 
-        customer.add(contact);
+        customer.getContacts().add(contact);
         customer.getContacts().get(0).setLastName("");
         assertThat(customer.isValid()).as("Consumer Customer is not vaild, because the Contact do not have a LastName").isFalse();
 
         //transfrom to bussnes Customer
         customer.getContacts().clear();
         customer.getCompanies().add(company);
-        company.add(communication);
-        company.add(address);
+        company.getCommunications().add(communication);
+        company.getAddresses().add(address);
         customer.getAddressLabels().clear();
         customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
         assertThat(customer.isBusiness()).as("Customer is a Bussines Customer").isTrue();
@@ -327,11 +327,11 @@ public class CustomerTest {
 
         customer.getCompanies().clear();
         company.getAddresses().clear();
-        customer.add(company);
+        customer.getCompanies().add(company);
         assertThat(customer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
 
         customer.getCompanies().clear();
-        company.add(address);
+        company.getAddresses().add(address);
         company.getCommunications().clear();
         assertThat(customer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no Communication").isFalse();
 
@@ -339,10 +339,10 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseNoAddressLable() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         customer.getAddressLabels().clear();
 
@@ -351,10 +351,10 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseWrongAddressLable() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), gen.makeContact(), gen.makeAddress(), AddressType.SHIPPING));
 
@@ -363,22 +363,22 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseTwoCompanies() {
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         customer.getContacts().clear();
-        customer.add(company);
-        customer.add(company);
+        customer.getCompanies().add(company);
+        customer.getCompanies().add(company);
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are 2 Companies").isFalse();
     }
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseNoCustomerFlag() {
-        customer.add(contact);
+        customer.getContacts().add(contact);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         customer.getFlags().clear();
 
@@ -387,9 +387,9 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseBlankKeyAccount() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
-        customer.add(gen.makeMandatorMetadata());
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         customer.setKeyAccounter("");
 
@@ -398,8 +398,8 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidSimpleCustomerBecauseEmptyMandatorMetadata() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because the MandatorMetadata is empty").isFalse();
@@ -407,81 +407,81 @@ public class CustomerTest {
 
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseTwoContacts() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are 2 Contacts").isFalse();
     }
 
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseTwoAddress() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
-        customer.getContacts().get(0).add(address);
+        customer.getContacts().get(0).getAddresses().add(address);
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst with 2 Address").isFalse();
     }
 
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseFourCommunications() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
-        customer.getContacts().get(0).add(communication);
-        customer.getContacts().get(0).add(communication);
-        customer.getContacts().get(0).add(communication);
+        customer.getContacts().get(0).getCommunications().add(communication);
+        customer.getContacts().get(0).getCommunications().add(communication);
+        customer.getContacts().get(0).getCommunications().add(communication);
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 4 Communications").isFalse();
     }
 
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseDoubleCommunicationsTyp() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         Communication communicationEmail = new Communication();
         communicationEmail.setType(Type.EMAIL);
         communicationEmail.setIdentifier("040123456789");
 
-        customer.getContacts().get(0).add(communicationEmail);
-        customer.getContacts().get(0).add(communicationEmail);
+        customer.getContacts().get(0).getCommunications().add(communicationEmail);
+        customer.getContacts().get(0).getCommunications().add(communicationEmail);
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 2 Communications form the same typ").isFalse();
     }
 
     @Test
     public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseNotAllowedCommunication() {
-        customer.add(contact);
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getContacts().add(contact);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
         Communication icq = new Communication();
         icq.setType(Type.ICQ);
 
-        customer.getContacts().get(0).add(icq);
+        customer.getContacts().get(0).getCommunications().add(icq);
 
         assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have a Communications that is not allowed").isFalse();
     }
 
     @Test
     public void testToSimple() {
-        customer.add(contact);
+        customer.getContacts().add(contact);
         customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(gen.makeMandatorMetadata());
+        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
 
-        contact.add(communication);
+        contact.getCommunications().add(communication);
         contact.getCommunications().get(0).setType(Type.PHONE);
         contact.getCommunications().get(0).setIdentifier("040123456789");
 
@@ -491,7 +491,7 @@ public class CustomerTest {
 
     @Test
     public void testToNotSimple() {
-        customer.add(contact);
+        customer.getContacts().add(contact);
         assertThat(customer.isConsumer()).as("Customer is a ConsumerCustomer").isTrue();
         assertThat(customer.toSimple()).as("Customer can not convert to SimpleCustomer and is null").isEmpty();
     }

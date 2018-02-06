@@ -43,8 +43,8 @@ public class PreferedAddressLabelsTryOut {
 
             Customer customer = gen.makeCustomer();
             customer.getContacts().clear();
-            customer.add(gen.makeCompany());
-            customer.add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
 
             if ( !customer.isValid() ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
@@ -60,8 +60,8 @@ public class PreferedAddressLabelsTryOut {
         endKundenButton.addActionListener(ev -> {
             Customer customer = gen.makeCustomer();
             customer.getCompanies().clear();
-            customer.add(gen.makeContact());
-            customer.add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
 
             if ( !customer.isValid() ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
