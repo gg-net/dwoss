@@ -480,6 +480,7 @@ public class Customer implements Serializable {
      * <li>Either a Contact or a Company are set.</li>
      * <li>Contains only Contacts or Companies.</li>
      * <li>One AddressLabels of Type Invoice</li>
+     * <li>Only 2 AddressLabels</li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
@@ -497,8 +498,8 @@ public class Customer implements Serializable {
     public String getViolationMessage() {
         if ( contacts.isEmpty() && companies.isEmpty() ) return "Neither Contact nor Company are set.";
         if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
-        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "No Addresslabel of type Invoice";
         if ( addressLabels.size() > 2 ) return "More than two AddressLables are set";
+        if ( !addressLabels.stream().anyMatch(al -> al.getType() == INVOICE) ) return "No Addresslabel of type Invoice";
         if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )

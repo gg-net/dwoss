@@ -2,10 +2,8 @@ package eu.ggnet.dwoss.customer.test;
 
 import java.util.Locale;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -148,9 +146,10 @@ public class CustomerTest {
         assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there is no Company and no Contact is set").isFalse();
 
         makeValidConsumer = makeValidConsumer();
-
         Contact makeValidContact = makeValidContact();
         makeValidContact.setLastName("");
+        assertThat(makeValidContact.getViolationMessage()).as("not valid Contact").isNotNull();
+
         makeValidConsumer.getContacts().add(makeValidContact);
         assertThat(makeValidConsumer.isValid()).as("Consumer Customer is not vaild, because the Contact do not have a LastName").isFalse();
 
@@ -171,19 +170,42 @@ public class CustomerTest {
         assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because the Name of the Compnay is blank").isFalse();
 
         makeValidBusinessCustomer = makeValidBusinessCustomer();
-        makeValidBusinessCustomer.getCompanies().clear();
-        makeValidCompany = makeValidCompany();
-        makeValidCompany.getAddresses().clear();
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there is no AddressLable").isFalse();
 
-        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
-        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        AddressLabel shoppingAddressLabel = makeValidAddressLabel();
+        shoppingAddressLabel.setType(AddressType.SHIPPING);
+        assertThat(shoppingAddressLabel.getViolationMessage()).as("Valid AddressLabel").isNull();
+
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        makeValidBusinessCustomer.getAddressLabels().add(shoppingAddressLabel);
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there is no AddressLable with Type Invoice").isFalse();
+
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there are more than two AddressLables").isFalse();
 
         makeValidBusinessCustomer = makeValidBusinessCustomer();
         makeValidBusinessCustomer.getCompanies().clear();
         makeValidCompany = makeValidCompany();
-        makeValidCompany.getCommunications().clear();
-        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no Communication").isFalse();
+        makeValidCompany.getAddresses().clear();
+        assertThat(makeValidCompany.getViolationMessage()).as("company not valid").isNotNull();
 
+        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
+        
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getCompanies().clear();
+        makeValidCompany = makeValidCompany();
+        makeValidCompany.getCommunications().clear();
+        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
+        assertThat(makeValidCompany.getViolationMessage()).as("valid company without communication").isNull();
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").isFalse();
+   
     }
 
 }
