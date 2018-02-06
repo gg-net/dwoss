@@ -16,14 +16,14 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
-import java.util.Arrays;
-import java.util.Locale;
+import java.util.*;
 
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
@@ -43,6 +43,7 @@ public class CustomerSimpleTest {
     public static Company makeValidCompany() {
         Company validcompany = new Company();
         validcompany.setName("Firma ABC");
+        validcompany.setTaxId("textid123456789");
         validcompany.getAddresses().add(makeValidAddress());
         validcompany.getCommunications().add(makeValidCommunication());
 
@@ -51,7 +52,7 @@ public class CustomerSimpleTest {
     }
 
     public static Contact makeValidContact() {
-        Contact validContact = new Contact(Sex.MALE, true, "", "Testkunde", "Testkunde");
+        Contact validContact = new Contact(Sex.MALE, true, "Dr", "Max", "Mustermann");
         validContact.getCommunications().add(makeValidCommunication());
         validContact.getAddresses().add(makeValidAddress());
 
@@ -105,7 +106,7 @@ public class CustomerSimpleTest {
         Address address = makeValidAddress();
         assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
 
-        Company company = makeValidCompany();       
+        Company company = makeValidCompany();
         assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
 
         Customer customer = new Customer();
@@ -329,7 +330,7 @@ public class CustomerSimpleTest {
         makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationMobile());
         makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidSimpleConsumer.isSimple()).as("still simplecustomer").isTrue();
-        
+
         SimpleCustomer simpleConsumerCustomer = makeValidSimpleConsumer.toSimple().get();
 
         assertThat(simpleConsumerCustomer.getTitle()).as("title").isEqualTo(makeValidSimpleConsumer.getContacts().get(0).getTitle());
@@ -358,54 +359,70 @@ public class CustomerSimpleTest {
         makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationMobile());
         makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
-        
+
         Contact makeValidContact = makeValidContact();
         makeValidContact.getCommunications().clear();
-        assertThat(makeValidContact.getViolationMessage()).as("valid contact").isNull();   
-        
-        makeValidSimpleBusiness.getCompanies().get(0).getContacts().add(makeValidContact);        
+        assertThat(makeValidContact.getViolationMessage()).as("valid contact").isNull();
+
+        makeValidSimpleBusiness.getCompanies().get(0).getContacts().add(makeValidContact);
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
         
+        assertThat(makeValidSimpleBusiness.toSimple().isPresent()).as("to simple").isTrue();
         SimpleCustomer simpleConsumerCustomer = makeValidSimpleBusiness.toSimple().get();
+        
 
-        if ( !makeValidSimpleBusiness.getCompanies().get(0).getContacts().isEmpty() ) {
-            assertThat(simpleConsumerCustomer.getTitle()).as("title").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getTitle());
-            assertThat(simpleConsumerCustomer.getFirstName()).as("firstname").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getFirstName());
-            assertThat(simpleConsumerCustomer.getLastName()).as("lastname").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getLastName());
+        assertThat(simpleConsumerCustomer.getTitle()).as("title").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getTitle());
+        assertThat(simpleConsumerCustomer.getFirstName()).as("firstname").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getFirstName());
+        assertThat(simpleConsumerCustomer.getLastName()).as("lastname").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getLastName());
 
-            assertThat(simpleConsumerCustomer.getSex()).as("sex").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getSex());
+        assertThat(simpleConsumerCustomer.getSex()).as("sex").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getSex());
 
-            if ( !makeValidSimpleBusiness.getCompanies().get(0).getAddresses().isEmpty() ) {
-                assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getStreet())
-                        .as("address of contact have to be the same as on Address Street")
-                        .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getStreet());
+        //did Companys have a Address this Address have to match the Address on Contact
+        if ( !makeValidSimpleBusiness.getCompanies().get(0).getAddresses().isEmpty() ) {
+            assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getStreet())
+                    .as("address of contact have to be the same as on Address Street")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getStreet());
 
-                assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCity())
-                        .as("address of contact have to be the same as on Address City")
-                        .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getCity());
+            assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCity())
+                    .as("address of contact have to be the same as on Address City")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getCity());
 
-                assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getZipCode())
-                        .as("address of contact have to be the same as on Address zipcode")
-                        .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getZipCode());
-                
-                assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry())
-                        .as("address of contact have to be the same as on Address iso country")
-                        .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getIsoCountry());
+            assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getZipCode())
+                    .as("address of contact have to be the same as on Address zipcode")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getZipCode());
 
-            }
+            assertThat(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry())
+                    .as("address of contact have to be the same as on Address iso country")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getIsoCountry());
 
-        } else {
             assertThat(simpleConsumerCustomer.getStreet()).as("street").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getStreet());
             assertThat(simpleConsumerCustomer.getZipCode()).as("zipcode").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getZipCode());
             assertThat(simpleConsumerCustomer.getCity()).as("city").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getCity());
             assertThat(simpleConsumerCustomer.getIsoCountry()).as("isoCountry").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getAddresses().get(0).getIsoCountry());
+        } else {
+            assertThat(simpleConsumerCustomer.getStreet()).as("street").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+            assertThat(simpleConsumerCustomer.getZipCode()).as("zipcode").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+            assertThat(simpleConsumerCustomer.getCity()).as("city").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCity());
+            assertThat(simpleConsumerCustomer.getIsoCountry()).as("isoCountry").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+        }
 
+
+        if ( !makeValidSimpleBusiness.getCompanies().get(0).getCommunications().isEmpty() ) {
             assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
                     .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
             assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone")
                     .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
             assertThat(simpleConsumerCustomer.getEmail()).as("email")
                     .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
+
+        } else {
+            assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
+            assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
+            assertThat(simpleConsumerCustomer.getEmail()).as("email")
+                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
+
         }
 
         assertThat(simpleConsumerCustomer.getSource()).as("source").isEqualTo(makeValidSimpleBusiness.getSource());
@@ -415,5 +432,8 @@ public class CustomerSimpleTest {
         assertThat(simpleConsumerCustomer.getTaxId()).as("taxId").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getTaxId());
 
     }
+    
+    
+    
 
 }
