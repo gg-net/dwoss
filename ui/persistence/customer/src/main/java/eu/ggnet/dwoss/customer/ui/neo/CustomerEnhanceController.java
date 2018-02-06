@@ -217,20 +217,20 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         if ( isBusinessCustomer ) {
             cust.getCompanies().clear();
-            companyList.forEach(c -> cust.add(c));
+            companyList.forEach(c -> cust.getCompanies().add(c));
         } else {
             cust.getContacts().clear();
-            contactList.forEach(c -> cust.add(c));
+            contactList.forEach(c -> cust.getContacts().add(c));
         }
         cust.setKeyAccounter(keyAccounterTextField.getText());
 
         cust.getFlags().clear();
-        flagsSet.forEach(f -> cust.add(f));
+        flagsSet.forEach(f -> cust.getFlags().add(f));
 
         cust.setSource(sourceChoiceBox.getSelectionModel().getSelectedItem());
 
         cust.getMandatorMetadata().clear();
-        mandatorMetadata.forEach(m -> cust.add(m));
+        mandatorMetadata.forEach(m -> cust.getMandatorMetadata().add(m));
 
         //tansfer the List of Flags back to Set (remove duplicates)
         HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
@@ -464,7 +464,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 a.setCity("");
                 a.setStreet("");
                 a.setZipCode("");
-                c.add(a);
+                c.getAddresses().add(a);
 
                 addCompany(c);
             });

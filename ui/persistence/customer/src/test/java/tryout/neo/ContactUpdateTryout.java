@@ -35,13 +35,13 @@ public class ContactUpdateTryout {
         CustomerGenerator gen = new CustomerGenerator();
         Contact contact = gen.makeContact();
         contact.setTitle("Dr.");
-        contact.add(gen.makeAddress());
-        contact.add(gen.makeAddress());
-        contact.add(gen.makeAddress());
+        contact.getAddresses().add(gen.makeAddress());
+        contact.getAddresses().add(gen.makeAddress());
+        contact.getAddresses().add(gen.makeAddress());
         
-        contact.add(gen.makeCommunication());
-        contact.add(gen.makeCommunication());
-        contact.add(gen.makeCommunication());
+        contact.getCommunications().add(gen.makeCommunication());
+        contact.getCommunications().add(gen.makeCommunication());
+        contact.getCommunications().add(gen.makeCommunication());
         
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

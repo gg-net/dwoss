@@ -55,9 +55,9 @@ public class CustomerSimpleTryout {
         customer.getCompanies().clear();
         customer.getContacts().clear();
 
-        customer.add(CustomerFlag.ITC_CUSTOMER);
+        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
         customer.setKeyAccounter("Herr Meier");
-        customer.add(new MandatorMetadata());
+        customer.getMandatorMetadata().add(new MandatorMetadata());
 
         communicationEmail.setType(Type.MOBILE);
         communicationEmail.setIdentifier("040123456789");
@@ -67,17 +67,17 @@ public class CustomerSimpleTryout {
         contact.getAddresses().clear();
         contact.getCommunications().clear();
 
-        contact.add(address);
-        contact.add(communicationEmail);
+        contact.getAddresses().add(address);
+        contact.getCommunications().add(communicationEmail);
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton consumerCustomer = new JButton("Consumer Customer");
         consumerCustomer.addActionListener(ev -> {
-            customer.add(CustomerFlag.ITC_CUSTOMER);
+            customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             customer.setKeyAccounter("Herr Meier");
-            customer.add(new MandatorMetadata());
+            customer.getMandatorMetadata().add(new MandatorMetadata());
 
             communicationEmail.setType(Type.MOBILE);
             communicationEmail.setIdentifier("040123456789");
@@ -87,10 +87,10 @@ public class CustomerSimpleTryout {
             contact.getAddresses().clear();
             contact.getCommunications().clear();
 
-            contact.add(address);
-            contact.add(communicationEmail);
+            contact.getAddresses().add(address);
+            contact.getCommunications().add(communicationEmail);
 
-            customer.add(contact);
+            customer.getContacts().add(contact);
 
             System.out.println("IS simple: " + customer.getSimpleViolationMessage());
             System.out.println("Consumer Customer: " + customer.isConsumer());
@@ -104,9 +104,9 @@ public class CustomerSimpleTryout {
         bussinesCustomer.addActionListener(ev -> {
             Customer bc = gen.makeCustomer();
             bc.getContacts().clear();
-            bc.add(CustomerFlag.ITC_CUSTOMER);
+            bc.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             bc.setKeyAccounter("Herr Meier");
-            bc.add(new MandatorMetadata());
+            bc.getMandatorMetadata().add(new MandatorMetadata());
 
             communicationEmail.setType(Type.MOBILE);
             communicationEmail.setIdentifier("040123456789");
@@ -120,14 +120,14 @@ public class CustomerSimpleTryout {
             contact.getAddresses().clear();
             contact.getCommunications().clear();
 
-            contact.add(address);
-            contact.add(communicationEmail);
+            contact.getAddresses().add(address);
+            contact.getCommunications().add(communicationEmail);
 
-            company.add(contact);
-            company.add(address);
-            company.add(communicationEmail);
+            company.getContacts().add(contact);
+            company.getAddresses().add(address);
+            company.getCommunications().add(communicationEmail);
 
-            bc.add(company);
+            bc.getCompanies().add(company);
 
             System.out.println("IS simple: " + bc.getSimpleViolationMessage());
             System.out.println("Bussines Customer: " + bc.isBusiness());

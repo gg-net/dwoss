@@ -37,12 +37,12 @@ public class CompanyUpdateTryOut {
         CustomerGenerator gen = new CustomerGenerator();
         Company company = gen.makeCompany();
         company.setTaxId("Steuernummer");
-        gen.makeAddresses(5).forEach(a -> company.add(a));
-        gen.makeContacts(6).forEach(c -> company.add(c));
-        company.add(gen.makeCommunication());
-        company.add(gen.makeCommunication());
-        company.add(gen.makeCommunication());
-        company.add(gen.makeCommunication());
+        gen.makeAddresses(5).forEach(a -> company.getAddresses().add(a));
+        gen.makeContacts(6).forEach(c -> company.getContacts().add(c));
+        company.getCommunications().add(gen.makeCommunication());
+        company.getCommunications().add(gen.makeCommunication());
+        company.getCommunications().add(gen.makeCommunication());
+        company.getCommunications().add(gen.makeCommunication());
         company.getCommunications().get(new Random().nextInt(company.getCommunications().size() - 1)).setPrefered(true);
 
         JButton close = new JButton("Schliessen");
