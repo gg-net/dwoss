@@ -28,8 +28,10 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
+import static eu.ggnet.dwoss.customer.test.CustomerTest.makeValidBusinessCustomer;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static java.util.Locale.GERMANY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -153,7 +155,7 @@ public class CustomerSimpleTest {
     @Test
     public void testGetSimpleViolationMessageSimpleConsumer() {
         Customer simpleConsumer = makeValidSimpleConsumer();
-        simpleConsumer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
+        simpleConsumer.getFlags().add(CustomerFlag.values()[(int)Math.random() * (CustomerFlag.values().length - 1)]);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with a flag is not simple").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
@@ -265,6 +267,43 @@ public class CustomerSimpleTest {
 
     @Test
     public void testGetSimpleViolationMessageSimpleBusinessCustomer() {
+        Customer simpleBusinessCustomer = makeValidSimpleBusiness();
+        simpleBusinessCustomer.getFlags().add(CustomerFlag.values()[(int)Math.random() * (CustomerFlag.values().length - 1)]);
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with a flag is invalid").isNotNull();
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        simpleBusinessCustomer.setKeyAccounter("keyAccouter");
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with a keyAccounter is invalid").isNotNull();
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        simpleBusinessCustomer.getMandatorMetadata().add(new MandatorMetadata());
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with MandatorMetadata is invalid").isNotNull();
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        AddressLabel addressLabel = new AddressLabel(simpleBusinessCustomer.getCompanies().stream().findAny().get(), null, simpleBusinessCustomer.getCompanies().stream().findAny().get().getAddresses().stream().findAny().get(), SHIPPING);
+        simpleBusinessCustomer.getAddressLabels().add(addressLabel);
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one AddressLabel is invalid").isNotNull();
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        Company validCompany = makeValidBusinessCustomer().getCompanies().stream().findAny().get();
+        simpleBusinessCustomer.getCompanies().add(validCompany);
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one Company is invalid").isNotNull();
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        Address validAddress = new Address();
+        validAddress.setIsoCountry(GERMANY);
+        validAddress.setCity("Munich");
+        validAddress.setStreet("Teststraße");
+        validAddress.setZipCode("34243");
+        simpleBusinessCustomer.getCompanies().stream().findAny().get().getAddresses().add(validAddress);
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one Address is invalid");
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+        simpleBusinessCustomer.getCompanies().stream().findAny().get().getContacts().add(makeValidSimpleConsumer().getContacts().get(0));
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than Cone COntact is invalid");
+
+        simpleBusinessCustomer = makeValidSimpleBusiness();
+
     }
 
 }
