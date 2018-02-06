@@ -32,10 +32,8 @@ import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.Client;
 
 /**
  *
@@ -159,7 +157,7 @@ public class SelectExistingReportViewTryout {
             }
 
         };
-        Client.addSampleStub(ReportAgent.class, rastub);
+        Dl.remote().add(ReportAgent.class, rastub);
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 

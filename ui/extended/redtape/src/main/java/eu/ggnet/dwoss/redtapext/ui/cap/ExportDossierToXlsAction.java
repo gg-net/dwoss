@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.Workspace;
-
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
@@ -29,11 +26,10 @@ import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -47,18 +43,18 @@ public class ExportDossierToXlsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final String dossierId = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte DossierId eingeben:").trim();
+        final String dossierId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte DossierId eingeben:").trim();
         new SwingWorker<FileJacket, Object>() {
             @Override
             protected FileJacket doInBackground() throws Exception {
-                return lookup(DocumentSupporter.class).toXls(dossierId);
+                return Dl.remote().lookup(DocumentSupporter.class).toXls(dossierId);
             }
 
             @Override
             protected void done() {
                 try {
                     FileJacket fj = get();
-                    if ( fj == null ) UiAlert.show("Keine Rückgabewerte");
+                    if ( fj == null ) Ui.build().alert("Keine Rückgabewerte");
                     else Desktop.getDesktop().open(fj.toTemporaryFile());
                 } catch (InterruptedException | ExecutionException | IOException ex) {
                     Ui.handle(ex);

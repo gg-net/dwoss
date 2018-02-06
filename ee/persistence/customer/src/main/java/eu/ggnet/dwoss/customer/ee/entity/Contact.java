@@ -29,7 +29,6 @@ import org.hibernate.search.annotations.*;
 import eu.ggnet.dwoss.rules.AddressType;
 
 import lombok.*;
-import lombok.Builder;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -164,10 +163,22 @@ public class Contact implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @param c
+     * @deprecated use getCommunication.add
+     */
+    @Deprecated
     public void add(Communication c) {
         if ( c != null ) communications.add(c);
     }
 
+    /**
+     *
+     * @param a
+     * @deprecated use getAddress.add
+     */
+    @Deprecated
     public void add(Address a) {
         if ( a != null ) addresses.add(a);
     }
@@ -213,12 +224,12 @@ public class Contact implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( StringUtils.isBlank(lastName) ) return "LastName is blank";
-        if ( addresses.stream().anyMatch(a -> a.getViolationMessages() != null) )
-            return "Address: " + addresses.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
-        if ( communications.stream().anyMatch(a -> a.getViolationMessages() != null) )
-            return "Communications: " + communications.stream().filter(a -> a.getViolationMessages() != null).map(a -> a.getViolationMessages()).reduce((t, u) -> t + ", " + u).get();
+        if ( addresses.stream().anyMatch(a -> a.getViolationMessage() != null) )
+            return "Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
+        if ( communications.stream().anyMatch(a -> a.getViolationMessage() != null) )
+            return "Communications: " + communications.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         return null;
     }
 

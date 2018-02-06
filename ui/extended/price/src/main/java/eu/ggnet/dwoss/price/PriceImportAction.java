@@ -25,13 +25,11 @@ import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
-import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -52,13 +50,13 @@ public class PriceImportAction extends AccessableAction {
             return;
         }
         final String fileName = dialog.getSelectedFile().getPath();
-        if ( YES_OPTION == showConfirmDialog(lookup(Workspace.class).getMainFrame(), "PriceManagment: " + fileName + " importieren ?", "Import des PriceManagments II", YES_NO_OPTION, QUESTION_MESSAGE) ) {
+        if ( YES_OPTION == showConfirmDialog(UiCore.getMainFrame(), "PriceManagment: " + fileName + " importieren ?", "Import des PriceManagments II", YES_NO_OPTION, QUESTION_MESSAGE) ) {
             new SwingWorker<Object, Object>() {
                 @Override
                 protected Object doInBackground() throws Exception {
                     FileUtil.checkIfExcelFile(dialog.getSelectedFile());
                     FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
-                    lookup(Importer.class).fromXls(inFile, lookup(Guardian.class).getUsername());
+                    Dl.remote().lookup(Importer.class).fromXls(inFile, Dl.local().lookup(Guardian.class).getUsername());
                     return null;
                 }
 

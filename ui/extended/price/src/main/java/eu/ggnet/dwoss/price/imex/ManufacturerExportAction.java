@@ -21,9 +21,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -42,7 +41,7 @@ public class ManufacturerExportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
-                    .call(() -> lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
+                    .call(() -> Dl.remote().lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
         });
     }
 }

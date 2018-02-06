@@ -18,10 +18,9 @@ package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
 
-import org.openide.util.Lookup;
-
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.EjbConnectionConfigurationProvider;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -43,7 +42,7 @@ public class Configurations {
                 .password("admin")
                 .app("dwoss-server")
                 .build());
-        Optional.ofNullable(Lookup.getDefault().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
+        Optional.ofNullable(Dl.local().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
     }
 
     public static boolean containsConfig(String key) {

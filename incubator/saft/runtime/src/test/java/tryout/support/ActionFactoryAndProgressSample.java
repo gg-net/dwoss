@@ -4,14 +4,15 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.progress.ProgressObserver;
 import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.Client;
 
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.SMALL_ICON;
@@ -26,7 +27,7 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
     private final ProgressObserverStub progressObserver = new ProgressObserverStub();
 
     public ActionFactoryAndProgressSample() {
-        Client.addSampleStub(ProgressObserver.class, progressObserver);
+        Dl.remote().add(ProgressObserver.class, progressObserver);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        JOptionPane.showMessageDialog(null, "Ich wurde geklickt");
+                        Ui.build().alert("Ich wurde geklickt");
                     }
                 }, true),
                 new MetaAction("System", new AbstractAction("Saft Progress 4s") {

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.UiCore;
 
 public class GpuManagementAction extends AbstractAction {
 
@@ -33,7 +31,7 @@ public class GpuManagementAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OkCancelDialog<GpuListPanel> panel = new OkCancelDialog<>(lookup(Workspace.class).getMainFrame(),
+        OkCancelDialog<GpuListPanel> panel = new OkCancelDialog<>(UiCore.getMainFrame(),
                 "Liste aller Gpus", new GpuListPanel(new GpuListController()));
         panel.setVisible(true);
     }

@@ -4,17 +4,14 @@ import java.util.EnumSet;
 
 import javax.swing.JLabel;
 
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -28,7 +25,7 @@ public class RevenueReportSelectionViewTryout {
                 EnumSet.of(TradeName.FUJITSU),
                 EnumSet.of(TradeName.FUJITSU)
         )); // Not yet implemented
-        Client.addSampleStub(Mandators.class, mandatorSupporterMock);
+        Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 

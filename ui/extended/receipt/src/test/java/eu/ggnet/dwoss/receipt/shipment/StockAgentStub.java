@@ -14,13 +14,13 @@ import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.StockAgent;
 
 // TODO: Rename and move to subs
-public class ReceiptShipmentOperationStub implements StockAgent {
+public class StockAgentStub implements StockAgent {
 
     private List<Shipment> shipments;
 
     private final Random R = new Random();
 
-    public ReceiptShipmentOperationStub() {
+    public StockAgentStub() {
         shipments = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             shipments.add(new Shipment("Test-SH-" + i,

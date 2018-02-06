@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,15 +20,12 @@ import java.awt.Window;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.saft.Client;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
-
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
-
+import eu.ggnet.dwoss.receipt.UnitProcessor;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.stock.entity.Shipment;
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.saft.Dl;
 
 import lombok.Getter;
 
@@ -52,7 +49,7 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
     private boolean inclusionClosed;
 
     public ShipmentInclusionViewCask(java.awt.Window parent, Shipment shipment, StockTransaction stockTransaction) {
-        this(parent, shipment, stockTransaction, Client.lookup(UnitProcessor.class));
+        this(parent, shipment, stockTransaction, Dl.remote().lookup(UnitProcessor.class));
     }
 
     /** Creates new form ShipmentInclusion */

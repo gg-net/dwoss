@@ -24,23 +24,22 @@ import javax.swing.JOptionPane;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
-import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.ui.UiParent;
 import eu.ggnet.saft.core.ui.SwingCore;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
  * @author pascal.perau
  */
-@ServiceProvider(service = CustomerCos.class)
-public class OldCustomerCos implements CustomerCos {
+@ServiceProvider(service = CustomerUpi.class)
+public class OldCustomerUpi implements CustomerUpi {
 
     @Override
     public long createCustomer(UiParent parent) {
@@ -53,14 +52,14 @@ public class OldCustomerCos implements CustomerCos {
                 Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
         dialog.setVisible(true);
         if ( dialog.isOk() ) {
-            return lookup(OldCustomerAgent.class).store(view.getCustomer()).getId();
+            return Dl.remote().lookup(OldCustomerAgent.class).store(view.getCustomer()).getId();
         }
         return 0;
     }
 
     @Override
     public boolean updateCustomer(UiParent parent, long customerId) {
-        OldCustomer customer = lookup(OldCustomerAgent.class).findById(customerId);
+        OldCustomer customer = Dl.remote().lookup(OldCustomerAgent.class).findById(customerId);
         CustomerEditView ec = new CustomerEditView();
         ec.setCustomer(customer);
         // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
@@ -69,10 +68,10 @@ public class OldCustomerCos implements CustomerCos {
 
         boolean changed = false;
         if ( dialog.getCloseType() == CloseType.OK ) {
-            lookup(OldCustomerAgent.class).store(ec.getCustomer());
+            Dl.remote().lookup(OldCustomerAgent.class).store(ec.getCustomer());
             for (AddressChange addressChange : ec.getChangedAdresses()) {
                 if ( JOptionPane.showOptionDialog(dialog, "Adresse wurde geändert, soll diese Änderung an allen Dokumenten des Kunden übernommen werden?", "Adressänderung", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.YES_OPTION ) {
-                    lookup(AddressService.class).notifyAddressChange(addressChange);
+                    Dl.remote().lookup(AddressService.class).notifyAddressChange(addressChange);
                 }
                 changed = true;
             }

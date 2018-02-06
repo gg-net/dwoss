@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +28,9 @@ import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.ui.UserPreferences;
-import eu.ggnet.saft.core.ui.Workspace;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -51,8 +48,8 @@ public class DossierFilterView extends javax.swing.JFrame {
             instance = new DossierFilterView();
             DossierFilterModel model = new DossierFilterModel();
             DossierFilterController controller = new DossierFilterController();
-            instance.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
-            lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
+            instance.setLocationRelativeTo(UiCore.getMainFrame());
+            Dl.local().lookup(UserPreferences.class).loadLocation(instance.getClass(), instance);
             instance.setController(controller);
             controller.setView(instance);
             instance.setModel(model);
@@ -575,7 +572,7 @@ public class DossierFilterView extends javax.swing.JFrame {
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         if ( controller != null ) controller.cancelLoader();
-        lookup(UserPreferences.class).storeLocation(instance.getClass(), instance);
+        Dl.local().lookup(UserPreferences.class).storeLocation(instance.getClass(), instance);
         instance = null;
     }//GEN-LAST:event_formWindowClosing
 
@@ -684,10 +681,9 @@ public class DossierFilterView extends javax.swing.JFrame {
         JMenuItem historyItem = new JMenuItem(new AbstractAction("Verlauf") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                HtmlDialog dialog = new HtmlDialog(DossierFilterView.this, Dialog.ModalityType.MODELESS);
-
-                dialog.setText(DossierFormater.toHtmlHistory(filterModel.getSelected()));
-                dialog.setVisible(true);
+                Ui.exec(() -> {
+                    Ui.build(DossierFilterView.this).fx().show(() -> DossierFormater.toHtmlHistory(filterModel.getSelected()), () -> new HtmlPane());
+                });
             }
         });
         historyItem.setText("Verlauf");

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,7 @@ import java.util.List;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.StockAgent;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 // TODO: Ok,Canel Button richtig einbinden.
 // Return Values
@@ -41,7 +40,7 @@ public class SalesChannelManagerDialog extends javax.swing.JDialog {
         initComponents();
         salesChanelTable.setAutoCreateColumnsFromModel(true);
         salesChanelTable.setAutoCreateRowSorter(true);
-        List<Stock> stocks = new ArrayList<>(lookup(StockAgent.class).findAll(Stock.class));
+        List<Stock> stocks = new ArrayList<>(Dl.remote().lookup(StockAgent.class).findAll(Stock.class));
         stocks.add(null);
         salesChanelTable.setDefaultEditor(Stock.class, new StockTableEditor(stocks.toArray()));
         salesChanelTable.setDefaultRenderer(Stock.class, new StockTableCellRenderer());

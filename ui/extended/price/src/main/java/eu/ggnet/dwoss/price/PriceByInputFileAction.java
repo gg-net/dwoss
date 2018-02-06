@@ -24,12 +24,10 @@ import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
-import static eu.ggnet.saft.Client.lookup;
 import static javax.swing.JOptionPane.*;
 
 /**
@@ -47,11 +45,11 @@ public class PriceByInputFileAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         JFileChooser dialog = new JFileChooser();
         dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(lookup(Workspace.class).getMainFrame()) ) {
+        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) {
             return;
         }
         final String fileName = dialog.getSelectedFile().getPath();
-        if ( YES_OPTION == showConfirmDialog(lookup(Workspace.class).getMainFrame(),
+        if ( YES_OPTION == showConfirmDialog(UiCore.getMainFrame(),
                 "Xls Datei " + fileName + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern)",
                 "Preise erzeugen nach Referencedaten", YES_NO_OPTION, QUESTION_MESSAGE) ) {
             new SwingWorker<Object, Object>() {
@@ -59,7 +57,7 @@ public class PriceByInputFileAction extends AccessableAction {
                 protected Object doInBackground() throws Exception {
                     FileUtil.checkIfExcelFile(dialog.getSelectedFile());
                     FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
-                    FileJacket outFile = lookup(Exporter.class).toXlsByXls(inFile);
+                    FileJacket outFile = Dl.remote().lookup(Exporter.class).toXlsByXls(inFile);
                     Ui.osOpen(outFile.toTemporaryFile());
                     return null;
                 }

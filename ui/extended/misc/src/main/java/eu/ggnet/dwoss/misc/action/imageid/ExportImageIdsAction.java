@@ -22,9 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.op.ImageIdHandler;
 import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -46,7 +45,7 @@ public class ExportImageIdsAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Bilder Ids").call(() -> lookup(ImageIdHandler.class).exportMissing(saleschannel).toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Bilder Ids").call(() -> Dl.remote().lookup(ImageIdHandler.class).exportMissing(saleschannel).toTemporaryFile()));
         });
     }
 }

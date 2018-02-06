@@ -16,32 +16,25 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
-
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Set;
 
 import javax.validation.*;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.product.AbstractView;
 import eu.ggnet.dwoss.receipt.product.SimpleView;
-
+import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
 import eu.ggnet.dwoss.util.OkCancelDialog;
-
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 /**
  * Support Class for creation or edit of Products.
@@ -72,7 +65,7 @@ public class UiProductSupport {
      */
     public ProductSpec createOrEditPart(TradeName manufacturer, String partNo, TradeName selectedBrand, ProductGroup allowedEditGroup, Window parent) throws UserInfoException {
         validatePartNo(manufacturer, partNo);
-        ProductSpec productSpec = lookup(SpecAgent.class).findProductSpecByPartNoEager(partNo);
+        ProductSpec productSpec = Dl.remote().lookup(SpecAgent.class).findProductSpecByPartNoEager(partNo);
         boolean edit = false;
         if ( productSpec != null ) {
             edit = true;
@@ -93,17 +86,17 @@ public class UiProductSupport {
         simpleDialog.setVisible(true);
         if ( simpleDialog.isCancel() ) return null;
         ProductSpec spec = simpleView.getProductSpec();
-        if ( edit ) spec = lookup(ProductProcessor.class).refresh(spec, simpleView.getModel());
+        if ( edit ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getModel());
         AbstractView productView = AbstractView.newView(spec, simpleView.getModel().getFamily().getSeries().getBrand());
-        if ( edit ) productView.setGtin(lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin());
+        if ( edit ) productView.setGtin(Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin());
         OkCancelDialog productDialog = new OkCancelDialog(parent, "Artikeldetailkonfiguration", productView);
         productDialog.setVisible(true);
         if ( productDialog.isCancel() ) return null;
         validate(simpleView.getModel());
         validate(productView.getSpec());
-        if ( edit ) return lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
+        if ( edit ) return Dl.remote().lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
         // TODO: In Case of a Bundle autoupdate the name of the model.
-        else return lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getModel(), productView.getGtin());
+        else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getModel(), productView.getGtin());
     }
 
     private void validate(Object o) throws UserInfoException {

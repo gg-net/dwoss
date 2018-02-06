@@ -49,38 +49,38 @@ public class CompanyTest {
 
     @Test
     public void TestGetViolationMessages() {
-        assertThat(company.getViolationMessages()).as("Company with valid values").isNull();
+        assertThat(company.getViolationMessage()).as("Company with valid values").isNull();
     }
 
     @Test
     public void TestGetViolationMessagesNonValid() {
         company.setName("");
-        assertThat(company.getViolationMessages()).as("Company without name").isNotBlank();
+        assertThat(company.getViolationMessage()).as("Company without name").isNotBlank();
     }
 
     @Test
     public void TestGetViolationMessagesNonValid2() {
         company.getAddresses().clear();
-        assertThat(company.getViolationMessages()).as("Company without addresses").isNotBlank();
+        assertThat(company.getViolationMessage()).as("Company without addresses").isNotBlank();
     }
 
     @Test
     public void TestGetViolationMessagesNonValid3() {
         company.getAddresses().clear();
         company.getAddresses().add(new Address());
-        assertThat(company.getViolationMessages()).as("Company with invalid address").isNotBlank();
+        assertThat(company.getViolationMessage()).as("Company with invalid address").isNotBlank();
     }
 
     @Test
     public void TestGetViolationMessagesNonValid4() {
         company.getContacts().add(new Contact());
-        assertThat(company.getViolationMessages()).as("Company with invalid contact").isNotBlank();
+        assertThat(company.getViolationMessage()).as("Company with invalid contact").isNotBlank();
     }
 
-    // Todo implement getViolationMessages() for Communication
+    // Todo implement getViolationMessage() for Communication
     public void TestGetViolationMessagesNonValid5() {
         company.getCommunications().add(new Communication());
-        assertThat(company.getViolationMessages()).as("Company with invalid Communication").isNotBlank();
+        assertThat(company.getViolationMessage()).as("Company with invalid Communication").isNotBlank();
     }
 
 }

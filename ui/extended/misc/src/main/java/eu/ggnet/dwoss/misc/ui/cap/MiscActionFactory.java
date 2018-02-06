@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
-import eu.ggnet.dwoss.misc.ui.cap.UnitQualityReportAction;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,10 +40,8 @@ import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.search.ui.OpenSearchAction;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ActionFactory;
-
-import static eu.ggnet.saft.Client.hasFound;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -63,8 +59,8 @@ public class MiscActionFactory implements ActionFactory {
         String s = "Listings";
         actions.add(new MetaAction(s, new AllSalesListingAction()));
 
-        if ( hasFound(ListingActionService.class) ) {
-            Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = lookup(ListingActionService.class).listingActionConfigurations().stream()
+        if ( Dl.remote().contains(ListingActionService.class) ) {
+            Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = Dl.remote().lookup(ListingActionService.class).listingActionConfigurations().stream()
                     .collect(Collectors.groupingBy(ListingActionConfiguration::getLocation));
             if ( actionConfigs != null && !actionConfigs.isEmpty() ) {
                 for (List<ListingActionConfiguration> listingActionConfigurations : actionConfigs.values()) {
@@ -81,7 +77,7 @@ public class MiscActionFactory implements ActionFactory {
             actions.add(new MetaAction(s, new SalesListingCreateAction(new ListingActionConfiguration(Type.PDF, Location.LOCAL, SalesChannel.CUSTOMER, "PDF für Endkunden"))));
         }
 
-        List<Stock> allStocks = lookup(StockAgent.class).findAll(Stock.class);
+        List<Stock> allStocks = Dl.remote().lookup(StockAgent.class).findAll(Stock.class);
         for (Stock stock : allStocks) {
             for (ListType listType : MovementListingProducer.ListType.values()) {
                 actions.add(new MetaAction("Lager/Logistik", "Versand & Abholung", new MovementAction(listType, stock)));

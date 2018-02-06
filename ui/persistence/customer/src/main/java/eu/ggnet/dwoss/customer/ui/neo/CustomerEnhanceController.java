@@ -43,9 +43,8 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -147,13 +146,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void accept(Customer cust) {
-        if ( cust != null && cust.isVaild() ) {
-            if ( cust.isBussines() ) {
+        if ( cust != null && cust.isValid() ) {
+            if ( cust.isBusiness() ) {
                 isBusinessCustomer = true;
             }
             setCustomer(cust);
         } else {
-            UiAlert.message("Kunde ist inkompatibel: " + cust.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + cust.getViolationMessage()).show(AlertType.WARNING);
         }
     }
 
@@ -164,7 +163,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     public void setCustomer(Customer customer) {
         addressLabels.addAll(customer.getAddressLabels());
-        if ( customer.isBussines() ) {
+        if ( customer.isBusiness() ) {
             CustomerKindLabel.setText("Geschäftskunde");
             customerNameLabel.setText(customer.getCompanies().get(0).getName());
             companyList.setAll(customer.getCompanies());
@@ -218,20 +217,20 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         if ( isBusinessCustomer ) {
             cust.getCompanies().clear();
-            companyList.forEach(c -> cust.add(c));
+            companyList.forEach(c -> cust.getCompanies().add(c));
         } else {
             cust.getContacts().clear();
-            contactList.forEach(c -> cust.add(c));
+            contactList.forEach(c -> cust.getContacts().add(c));
         }
         cust.setKeyAccounter(keyAccounterTextField.getText());
 
         cust.getFlags().clear();
-        flagsSet.forEach(f -> cust.add(f));
+        flagsSet.forEach(f -> cust.getFlags().add(f));
 
         cust.setSource(sourceChoiceBox.getSelectionModel().getSelectedItem());
 
         cust.getMandatorMetadata().clear();
-        mandatorMetadata.forEach(m -> cust.add(m));
+        mandatorMetadata.forEach(m -> cust.getMandatorMetadata().add(m));
 
         //tansfer the List of Flags back to Set (remove duplicates)
         HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
@@ -465,7 +464,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 a.setCity("");
                 a.setStreet("");
                 a.setZipCode("");
-                c.add(a);
+                c.getAddresses().add(a);
 
                 addCompany(c);
             });

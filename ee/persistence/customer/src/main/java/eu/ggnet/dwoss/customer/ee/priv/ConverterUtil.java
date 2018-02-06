@@ -16,19 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.ee.priv;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.SalesChannel;
@@ -123,15 +117,15 @@ public class ConverterUtil {
      */
     public static Customer mergeFromOld(OldCustomer old, Customer customer, String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
         customer.setComment(old.getAnmerkung());
-        customer.clearFlags();
+        customer.getFlags().clear();
         for (CustomerFlag customerFlag : old.getFlags()) {
-            customer.add(customerFlag);
+            customer.getFlags().add(customerFlag);
         }
         customer.getAdditionalCustomerIds().clear();
         customer.getAdditionalCustomerIds().putAll(old.getAdditionalCustomerIds());
         customer.setSource(old.getSource());
         customer.setKeyAccounter(old.getKeyAccounter());
-        if ( customer.getContacts().isEmpty() ) customer.add(new Contact());
+        if ( customer.getContacts().isEmpty() ) customer.getContacts().add(new Contact());
         Contact contact = customer.getContacts().get(0);
         contact.setFirstName(old.getVorname() == null ? "" : old.getVorname());
         contact.setLastName(old.getNachname() == null ? "" : old.getNachname());
@@ -148,7 +142,7 @@ public class ConverterUtil {
         }
         contact.setPrefered(true);
         if ( !StringUtils.isBlank(old.getFirma()) || !customer.getCompanies().isEmpty() ) {
-            if ( customer.getCompanies().isEmpty() ) customer.add(new Company());
+            if ( customer.getCompanies().isEmpty() ) customer.getCompanies().add(new Company());
             Company company = customer.getCompanies().get(0);
             company.setName(old.getFirma());
             company.setLedger(old.getLedger());
@@ -157,20 +151,20 @@ public class ConverterUtil {
         }
         for (Type t : EnumSet.of(EMAIL, FAX, PHONE, MOBILE)) {
             if ( !StringUtils.isBlank(get(old, t)) || contact.prefered(t) != null ) {
-                if ( contact.prefered(t) == null ) contact.add(new Communication(t, true));
+                if ( contact.prefered(t) == null ) contact.getCommunications().add(new Communication(t, true));
                 contact.prefered(t).setIdentifier(get(old, t));
             }
         }
 
         if ( !StringUtils.isBlank(old.getREAdresse()) || contact.prefered(INVOICE) != null ) {
-            if ( contact.prefered(INVOICE) == null ) contact.add(new Address(INVOICE));
+            if ( contact.prefered(INVOICE) == null ) contact.getAddresses().add(new Address(INVOICE));
             Address rad = contact.prefered(INVOICE);
             rad.setStreet(old.getREAdresse());
             rad.setCity(old.getREOrt() == null ? "" : old.getREOrt());
             rad.setZipCode(old.getREPlz() == null ? "" : old.getREPlz());
         }
         if ( !StringUtils.isBlank(old.getLIAdresse()) || contact.prefered(SHIPPING) != null ) {
-            if ( contact.prefered(SHIPPING) == null ) contact.add(new Address(SHIPPING));
+            if ( contact.prefered(SHIPPING) == null ) contact.getAddresses().add(new Address(SHIPPING));
             Address sad = contact.prefered(SHIPPING);
             sad.setStreet(old.getLIAdresse());
             sad.setCity(old.getLIOrt() == null ? "" : old.getLIOrt());
@@ -191,7 +185,7 @@ public class ConverterUtil {
         else m.setPaymentMethod(old.getPaymentMethod());
         if ( old.getShippingCondition() == defaults.getShippingCondition() ) m.setShippingCondition(null);
         else m.setShippingCondition(old.getShippingCondition());
-        if ( customer.getMandatorMetadata(mandatorMatchCode) == null && m.isSet() ) customer.add(m);
+        if ( customer.getMandatorMetadata(mandatorMatchCode) == null && m.isSet() ) customer.getMandatorMetadata().add(m);
         return customer;
     }
 

@@ -27,13 +27,12 @@ import eu.ggnet.dwoss.stock.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.entity.Stock;
 import eu.ggnet.dwoss.stock.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Creates or uses a Transfer Transaction to move a Unit from one stock to another.
@@ -53,38 +52,12 @@ public class CreateSimpleAction extends AccessableAction {
             Ui.build().fxml().eval(CreateSelectionController.class)
                     .map(this::handleResult)
                     .ifPresent(c -> Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
-                    .map(v -> ReplyUtil.wrap(() -> lookup(StockTransactionProcessor.class)
-                    .perpareTransfer(v.stockUnits, v.destination.getId(), lookup(Guardian.class).getUsername(), v.comment))
+                    .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
+                    .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
                     ).filter(Ui.failure()::handle)
-                    .ifPresent(t -> UiAlert.show("Umfuhr angelegt")));
+                    .ifPresent(t -> Ui.build().alert("Umfuhr angelegt")));
         });
 
-// OLD Style
-//        Ui.choiceFxml(CreateSelectionController.class)
-//                .onOk(c -> {
-//                    if ( StringUtils.isBlank(c.refurbishIds()) ) throw new UserInfoException("Keine SopoNr eingeben");
-//                    if ( StringUtils.isBlank(c.comment()) ) throw new UserInfoException("Keine Kommentar eingegeben");
-//                    if ( c.target() == null ) throw new UserInfoException("Kein Ziellager ausgewählt");
-//                    List<String> refurbishIds = parseRefurbishIds(c.refurbishIds());
-//                    if ( refurbishIds.isEmpty() ) throw new UserInfoException("Keine SopoNr in " + c.refurbishIds() + " erkannt");
-//                    List<StockUnit> stockUnits = lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
-//                    if ( stockUnits.isEmpty() ) throw new UserInfoException("Keine der SopoNr(n) " + refurbishIds + " ist im Lager");
-//                    if ( stockUnits.stream().anyMatch(s -> s.isInTransaction()) )
-//                        throw new UserInfoException("Mindestens eine SopoNr ist auf einer Transaktion");
-//                    if ( unmatchingSourceAndDestination(stockUnits) )
-//                        throw new UserInfoException("Mindestens eine SopoNr ist nicht auf dem selben Ausgangslager");
-//                    return new CreateQuestionModel(stockUnits.get(0).getStock(), c.target(), stockUnits, c.comment());
-//                })
-//                .choiceFx(CreateQuestionView.class)
-//                .onOk(v -> {
-//                    lookup(StockTransactionProcessor.class).perpareTransfer(
-//                            v.model().stockUnits,
-//                            v.model().destination.getId(),
-//                            lookup(Guardian.class).getUsername(),
-//                            v.model().comment);
-//                    eu.ggnet.saft.core.Alert.show("Umfuhr anglegt.");
-//                    return null;
-//                }).exec();
     }
 
     private List<String> parseRefurbishIds(String rawRefurbishIds) {
@@ -114,7 +87,7 @@ public class CreateSimpleAction extends AccessableAction {
             if ( c.target() == null ) throw new UserInfoException("Kein Ziellager ausgewählt");
             List<String> refurbishIds = parseRefurbishIds(c.refurbishIds());
             if ( refurbishIds.isEmpty() ) throw new UserInfoException("Keine SopoNr in " + c.refurbishIds() + " erkannt");
-            List<StockUnit> stockUnits = lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
+            List<StockUnit> stockUnits = Dl.remote().lookup(StockAgent.class).findStockUnitsByRefurbishIdEager(refurbishIds);
             if ( stockUnits.isEmpty() ) throw new UserInfoException("Keine der SopoNr(n) " + refurbishIds + " ist im Lager");
             if ( stockUnits.stream().anyMatch(s -> s.isInTransaction()) )
                 throw new UserInfoException("Mindestens eine SopoNr ist auf einer Transaktion");

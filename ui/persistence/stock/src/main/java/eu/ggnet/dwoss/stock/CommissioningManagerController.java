@@ -22,21 +22,15 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
 import eu.ggnet.dwoss.rights.op.Authentication;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -58,7 +52,7 @@ public class CommissioningManagerController {
     private CommissioningManagerView view;
 
     public CommissioningManagerController() {
-        this(lookup(StockAgent.class), lookup(StockTransactionProcessor.class), lookup(Authentication.class));
+        this(Dl.remote().lookup(StockAgent.class), Dl.remote().lookup(StockTransactionProcessor.class), Dl.remote().lookup(Authentication.class));
     }
 
     public boolean executeTransmutation() {

@@ -17,14 +17,12 @@
 package eu.ggnet.dwoss.misc.action;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.op.PersistenceValidator;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 public class DatabaseValidationAction extends AbstractAction {
 
@@ -35,7 +33,7 @@ public class DatabaseValidationAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional.ofNullable(lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
+            Ui.progress().call(() -> Dl.remote().lookup(PersistenceValidator.class).validateDatabase()).map(fj -> fj.toTemporaryFile()).ifPresent(Ui::osOpen);
         });
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,12 +19,11 @@ package eu.ggnet.dwoss.misc.action;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  *
@@ -38,6 +37,8 @@ public class NextImageIdAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Die nächste BilderId ist " + lookup(SalesListingProducer.class).nextImageId());
+        Ui.exec(() -> {
+            Ui.build().alert().message("Die nächste BilderId ist " + Dl.remote().lookup(SalesListingProducer.class).nextImageId()).show(AlertType.INFO);
+        });
     }
 }

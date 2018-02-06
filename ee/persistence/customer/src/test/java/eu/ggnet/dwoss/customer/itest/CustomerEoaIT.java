@@ -42,7 +42,7 @@ public class CustomerEoaIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         Customer c = GEN.makeCustomer();
-        c.remove(CustomerFlag.SYSTEM_CUSTOMER); // Make sure no systemcustomer.
+        c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Make sure no systemcustomer.
         em.persist(c);
 
         utx.commit();
@@ -52,7 +52,7 @@ public class CustomerEoaIT extends ArquillianProjectArchive {
 
         assertTrue(eao.findAllSystemCustomerIds().isEmpty());
         c = GEN.makeCustomer();
-        c.add(CustomerFlag.SYSTEM_CUSTOMER); // Make sure it is a systemcustomer.
+        c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER); // Make sure it is a systemcustomer.
         em.persist(c);
         utx.commit();
 

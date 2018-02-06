@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +24,8 @@ import java.util.regex.PatternSyntaxException;
 import eu.ggnet.dwoss.receipt.AbstractController;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.ProductSpec;
-
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoFilter;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
-
-import static eu.ggnet.saft.Client.lookup;
-
+import eu.ggnet.dwoss.util.table.*;
+import eu.ggnet.saft.Dl;
 
 /*
  * To change this template, choose Tools | Templates
@@ -67,7 +62,7 @@ public class SpecListController extends AbstractController {
     private PojoTableModel<ProductSpec> model;
 
     public SpecListController() {
-        this(lookup(SpecAgent.class));
+        this(Dl.remote().lookup(SpecAgent.class));
     }
 
     public SpecListController(SpecAgent specAgent) {

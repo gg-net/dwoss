@@ -16,8 +16,6 @@
  */
 package eu.ggnet.saft.core.ops;
 
-import eu.ggnet.saft.Ops;
-
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
@@ -28,8 +26,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ops;
 import eu.ggnet.saft.api.auth.Accessable;
-import eu.ggnet.saft.Client;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.FxSaft;
 
@@ -126,8 +125,8 @@ public class FxOps {
 
     private static boolean authorised(Object o) {
         if ( !(o instanceof Accessable) ) return true; // Not even something with rights.
-        if ( !Client.hasFound(Guardian.class) ) return true; // No guardian, rights are ignored.
-        return Client.lookup(Guardian.class).getRights().contains(((Accessable)o).getNeededRight());
+        if ( !Dl.local().optional(Guardian.class).isPresent() ) return true; // No guardian, rights are ignored.
+        return Dl.local().lookup(Guardian.class).getRights().contains(((Accessable)o).getNeededRight());
     }
 
 }

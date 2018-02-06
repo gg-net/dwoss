@@ -21,8 +21,6 @@ import java.awt.event.*;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
-
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 
@@ -30,10 +28,8 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -152,16 +148,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        lookup(Workspace.class).shutdown();
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (Window w : Window.getWindows()) {
-                    w.setVisible(false);
-                    w.dispose();
-                }
-            }
-        });
+        UiCore.getMainFrame().setVisible(false); // Shuts down everything.
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
@@ -173,7 +160,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
                 Lookup.getDefault().lookup(Guardian.class).login(view.getUsername(), view.getPassword());
                 this.dispose();
             } catch (AuthenticationException ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
+                Ui.build(this).alert(ex.getMessage());
             } catch (Exception ex) {
                 Ui.handle(ex);
             }

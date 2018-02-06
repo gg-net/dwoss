@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -24,7 +24,7 @@ public class ShipmentUpdateTryout {
     @Test
     public void tryout() throws InterruptedException {
 
-        Client.addSampleStub(Mandators.class, new Mandators() {
+        Dl.remote().add(Mandators.class, new Mandators() {
 
             @Override
             public Mandator loadMandator() {

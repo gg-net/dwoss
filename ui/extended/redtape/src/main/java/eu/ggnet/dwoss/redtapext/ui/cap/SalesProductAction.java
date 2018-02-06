@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
 import eu.ggnet.dwoss.redtapext.ui.product.SalesProductViewCask;
-
 import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.UiCore;
 
 /**
  * @author bastian.venz
@@ -41,7 +38,7 @@ public class SalesProductAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         SalesProductViewCask cask = new SalesProductViewCask();
-        OkCancelDialog<SalesProductViewCask> dialog = new OkCancelDialog<>(lookup(Workspace.class).getMainFrame(), "Neuwarenartikel für Verkauf verwalten", cask);
+        OkCancelDialog<SalesProductViewCask> dialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Neuwarenartikel für Verkauf verwalten", cask);
         dialog.setVisible(enabled);
     }
 }

@@ -82,14 +82,14 @@ public class CustomerGenerator {
                 prefered = R.nextBoolean();
                 con.setPrefered(prefered);
             }
-            c.add(con);
+            c.getContacts().add(con);
         }
         if ( !prefered ) {
             c.getContacts().iterator().next().setPrefered(true);
         }
-        c.add(makeMandatorMetadata());
+        c.getMandatorMetadata().add(makeMandatorMetadata());
         if ( R.nextBoolean() ) {
-            c.add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
+            c.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
         c.setComment("Date ist eine Kommentar zum Kunden");
         return c;
@@ -105,13 +105,13 @@ public class CustomerGenerator {
         Company c = new Company();
         c.setLedger(R.nextInt(1000) + 1);
         c.setName(GEN.makeCompanyName());
-        c.add(makeAddress());
-        c.add(makeCommunication());
+        c.getAddresses().add(makeAddress());
+        c.getCommunications().add(makeCommunication());
         if ( c.getAddresses().isEmpty() || c.getCommunications().isEmpty() ) {
             Contact contact = makeContact();
             contact.getAddresses().clear();
-            contact.add(c.getAddresses().get(0));
-            c.add(contact);
+            contact.getAddresses().add(c.getAddresses().get(0));
+            c.getContacts().add(contact);
         }
         return c;
     }
@@ -123,11 +123,11 @@ public class CustomerGenerator {
      * @return the generated instances.
      */
     public List<Company> makeCompanies(int amount) {
-        List<Company> company = new ArrayList<>();
+        List<Company> companylist = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            company.add(makeCompany());
+            companylist.add(makeCompany());
         }
-        return company;
+        return companylist;
     }
 
     /**
@@ -143,8 +143,8 @@ public class CustomerGenerator {
         c.setLastName(n.getLast());
         c.setSex(n.getGender().ordinal() == 1 ? FEMALE : MALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        c.add(makeCommunication());
-        c.add(makeAddress());
+        c.getCommunications().add(makeCommunication());
+        c.getAddresses().add(makeAddress());
 
         return c;
     }
@@ -156,11 +156,11 @@ public class CustomerGenerator {
      * @return the generated instances.
      */
     public List<Contact> makeContacts(int amount) {
-        List<Contact> contacts = new ArrayList<>();
+        List<Contact> contactslist = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            contacts.add(makeContact());
+            contactslist.add(makeContact());
         }
-        return contacts;
+        return contactslist;
     }
 
     /**
@@ -234,7 +234,7 @@ public class CustomerGenerator {
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());
         m.setPaymentMethod(new RandomEnum<>(PaymentMethod.class).random());
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
-        EnumSet.allOf(SalesChannel.class).stream().filter(t -> R.nextInt(10) < 3).forEach(t -> m.add(t));
+        EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.add(t));
         return m;
     }
 
@@ -278,7 +278,7 @@ public class CustomerGenerator {
 
         MandatorMetadata makeMandatorMetadata = makeMandatorMetadata();
         makeMandatorMetadata.setMandatorMatchcode(mandatorMatchCode);
-        c.add(makeMandatorMetadata);
+        c.getMandatorMetadata().add(makeMandatorMetadata);
 
         return c;
     }

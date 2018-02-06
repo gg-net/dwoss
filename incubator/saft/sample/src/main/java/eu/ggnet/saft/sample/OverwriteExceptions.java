@@ -1,7 +1,5 @@
 package eu.ggnet.saft.sample;
 
-import javax.swing.JOptionPane;
-
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.sample.support.MainPanel;
@@ -17,7 +15,7 @@ public class OverwriteExceptions {
         UiCore.startSwing(() -> new MainPanel());
 
         UiCore.registerExceptionConsumer(IllegalArgumentException.class, (t) -> {
-            JOptionPane.showMessageDialog(null, "Important:" + t.getClass().getSimpleName() + " : " + t.getMessage());
+            Ui.build().alert("Important:" + t.getClass().getSimpleName() + " : " + t.getMessage());
         });
 
         Ui.exec(() -> {

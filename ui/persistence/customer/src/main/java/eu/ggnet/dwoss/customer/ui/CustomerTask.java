@@ -9,7 +9,6 @@ import java.util.*;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.saft.Client;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -19,6 +18,9 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.saft.Dl;
+
+import lombok.*;
 
 /**
  * Task to obtain all Customers from the database with partial results.
@@ -27,11 +29,15 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
  */
 public class CustomerTask extends Task<ObservableList<Customer>> {
 
-    private final Set<SearchField> customerFields;
+    @Getter
+    @Setter
+    private Set<SearchField> customerFields;
 
-    private final String searchsting;
+    @Getter
+    @Setter
+    private String searchsting;
 
-    private final CustomerAgent agent = Client.lookup(CustomerAgent.class);
+    private final CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
 
     private final ReadOnlyObjectWrapper<ObservableList<Customer>> partialResults
             = new ReadOnlyObjectWrapper<>(this, "partialResults",

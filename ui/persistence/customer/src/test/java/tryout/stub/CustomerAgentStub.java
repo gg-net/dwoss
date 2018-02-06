@@ -25,14 +25,14 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  *
@@ -167,7 +167,7 @@ public class CustomerAgentStub implements CustomerAgent {
         a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
         a.setStreet(simpleCustomer.getStreet());
         a.setZipCode(simpleCustomer.getZipCode());
-        cont.add(a);
+        cont.getAddresses().add(a);
 
         //one Communication form eatch type email, phone, mobile allowed
         Communication comm = new Communication();
@@ -185,10 +185,10 @@ public class CustomerAgentStub implements CustomerAgent {
         }
 
         //check if the Communication is valid with the right pattern
-        if ( comm.getViolationMessages() == null ) {
-            cont.add(comm);
+        if ( comm.getViolationMessage() == null ) {
+            cont.getCommunications().add(comm);
         } else {
-            UiAlert.message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
         }
 
         AddressLabel al = null;
@@ -202,24 +202,24 @@ public class CustomerAgentStub implements CustomerAgent {
             comp.setTaxId(simpleCustomer.getTaxId());
 
             //The Address of the Company Contact has to match the Company Address
-            comp.add(a);
-            comp.add(cont);
+            comp.getAddresses().add(a);
+            comp.getContacts().add(cont);
             //build AddressLabel
             al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
 
-            c.add(comp);
+            c.getCompanies().add(comp);
 
         } else {
             //Contains only one Contact or one Company.
             c.getCompanies().clear();
-            c.add(cont);
+            c.getContacts().add(cont);
             al = new AddressLabel(null, cont, a, AddressType.INVOICE);
         }
         c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
-        
+
         MandatorMetadata mandatorMetadata = new MandatorMetadata();
-        c.add(mandatorMetadata);
+        c.getMandatorMetadata().add(mandatorMetadata);
 
         System.out.println("Output form Stubs: " + c.toString());
         System.out.println("ViolationMessage " + c.getViolationMessage());

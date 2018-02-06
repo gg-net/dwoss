@@ -31,16 +31,14 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.common.exception.*;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 import eu.ggnet.saft.runtime.SwingClient;
 
-import static eu.ggnet.saft.Client.lookup;
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.ERROR;
-
-import eu.ggnet.dwoss.mandator.Mandators;
+import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
 /**
  * JavaFx entry Point.
@@ -70,7 +68,7 @@ public class RunClientFx extends Application {
         System.out.println("JavaFx start");
 
         if ( error != null ) {
-            UiAlert.title("Fehler im Init")
+            Ui.build().alert().title("Fehler im Init")
                     .nl("Fehler in der Initialisierung oder Verbindung")
                     .nl("Später noch mal probieren oder Technik kontaktieren")
                     .nl()
@@ -86,7 +84,7 @@ public class RunClientFx extends Application {
         Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
             swingClient.show("(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
-                    + lookup(Mandators.class).loadMandator().getCompany().getName(), getParameters());
+                    + Dl.local().lookup(CachedMandators.class).loadMandator().getCompany().getName(), getParameters());
         });
 
     }
@@ -101,7 +99,6 @@ public class RunClientFx extends Application {
         lookupConfig = Configurations.getConfigOrDefault(key);
 
         WildflyLookup wildflyLookup = new WildflyLookup(lookupConfig);
-        Client.setRemoteLookup(wildflyLookup);
         Dl.local().add(RemoteLookup.class, wildflyLookup);
 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new UnhandledExceptionCatcher());
@@ -109,8 +106,6 @@ public class RunClientFx extends Application {
         UiCore.overwriteFinalExceptionConsumer(new DwFinalExceptionConsumer());
         UiCore.registerExceptionConsumer(UserInfoException.class, new UserInfoExceptionConsumer());
         UiCore.registerExceptionConsumer(ConstraintViolationException.class, new ConstraintViolationConsumer());
-
-        Client.enableCache(Mandators.class);
 
         verifyRemoteConnection();
 
@@ -160,7 +155,7 @@ public class RunClientFx extends Application {
     private void verifyRemoteConnection() {
         try {
             // Try to load the Mandator.
-            Client.lookup(Mandators.class).loadMandator();
+            Dl.local().lookup(CachedMandators.class).loadMandator();
         } catch (Exception e) {
             error = e.getMessage() + " thrown by " + e.getClass().getSimpleName();
             LoggerFactory.getLogger(RunClientFx.class).error("Exception on remote connection test.", e);

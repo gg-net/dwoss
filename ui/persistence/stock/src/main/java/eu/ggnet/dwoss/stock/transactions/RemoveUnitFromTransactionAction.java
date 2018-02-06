@@ -19,13 +19,13 @@ package eu.ggnet.dwoss.stock.transactions;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.REMOVE_SINGE_UNIT_FROM_TRANSACTION;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Removes a unit from a Transaction.
@@ -43,8 +43,8 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new RemoveQuestionView()).ifPresent(v -> Ui.progress().call(() -> {
-                lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), lookup(Guardian.class).getUsername(), v.comment());
-                UiAlert.show("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt");
+                Dl.remote().lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment());
+                Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(AlertType.INFO);
                 return null;
             }));
         });

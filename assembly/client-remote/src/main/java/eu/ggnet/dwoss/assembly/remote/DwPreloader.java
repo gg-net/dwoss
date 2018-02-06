@@ -23,7 +23,6 @@ import javafx.animation.FadeTransition;
 import javafx.application.Preloader;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.*;

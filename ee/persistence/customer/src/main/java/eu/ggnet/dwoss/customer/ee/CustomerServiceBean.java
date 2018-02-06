@@ -95,9 +95,9 @@ public class CustomerServiceBean implements CustomerService {
     @Override
     public void updateCustomerFlags(long customerId, Set<CustomerFlag> flags) {
         Customer customer = customerEao.findById(customerId);
-        customer.clearFlags();
+        customer.getFlags().clear();
         for (CustomerFlag customerFlag : flags) {
-            customer.add(customerFlag);
+            customer.getFlags().add(customerFlag);
         }
     }
 

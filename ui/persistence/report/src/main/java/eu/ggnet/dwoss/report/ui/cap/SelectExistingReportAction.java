@@ -23,11 +23,11 @@ import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens a view of all reports to select a stored report for inspection.
@@ -43,8 +43,8 @@ public class SelectExistingReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView())
-                    .ifPresent(id -> Ui.build().fxml().show(() -> new In(Ui.progress().call(() -> lookup(ReportAgent.class).findReportResult(id)), true), ReportController.class));
+            Ui.build().fx().eval(() -> Dl.remote().lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView())
+                    .ifPresent(id -> Ui.build().fxml().show(() -> new In(Ui.progress().call(() -> Dl.remote().lookup(ReportAgent.class).findReportResult(id)), true), ReportController.class));
         });
     }
 }

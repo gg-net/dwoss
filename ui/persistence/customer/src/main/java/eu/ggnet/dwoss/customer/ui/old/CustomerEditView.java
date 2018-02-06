@@ -24,11 +24,13 @@ import javax.swing.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.auth.JComponentEnabler;
@@ -38,9 +40,6 @@ import lombok.Getter;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
 import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -82,7 +81,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
     public CustomerEditView() {
         initComponents();
 
-        shippingTerms = lookup(Mandators.class).loadShippingTerms();
+        shippingTerms = Dl.remote().lookup(Mandators.class).loadShippingTerms();
 
         shippingConditionBox.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -116,7 +115,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
         customerFlagsModel.setTable(customerFlagTable);
         customerFlagsModel.setFiltered(EnumSet.complementOf(EnumSet.of(CustomerFlag.SYSTEM_CUSTOMER))); // Systemcustomer is special.
 
-        Guardian guardian = lookup(Guardian.class);
+        Guardian guardian = Dl.local().lookup(Guardian.class);
 
         guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_TO_SYSTEM_CUSTOMER, isSystemCustomerCheck));
         guardian.add(new JComponentEnabler(UPDATE_CUSTOMER_PAYMENT_METHOD, paymentMethodBox));
@@ -178,7 +177,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
     }
 
     public List<String> getAllUsernames() {
-        List<String> allUsers = new ArrayList<>(lookup(Guardian.class).getAllUsernames());
+        List<String> allUsers = new ArrayList<>(Dl.local().lookup(Guardian.class).getAllUsernames());
         allUsers.add(null);
         return allUsers;
     }
@@ -201,7 +200,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
         if ( !original.toInvoiceAddress().equals(customer.toInvoiceAddress()) ) {
             changedAdresses.add(new AddressChange(
                     original.getId(),
-                    lookup(Guardian.class).getUsername(),
+                    Dl.local().lookup(Guardian.class).getUsername(),
                     INVOICE,
                     original.toInvoiceAddress(),
                     customer.toInvoiceAddress()));
@@ -209,7 +208,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
 
         if ( !original.toShippingAddress().equals(customer.toShippingAddress()) ) {
             changedAdresses.add(new AddressChange(original.getId(),
-                    lookup(Guardian.class).getUsername(),
+                    Dl.local().lookup(Guardian.class).getUsername(),
                     SHIPPING,
                     original.toInvoiceAddress(),
                     customer.toInvoiceAddress()));
@@ -848,7 +847,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
 
     private void customerFlagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerFlagActionPerformed
         if ( ((JCheckBox)evt.getSource()).isSelected() )
-        customer.getFlags().add(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
+            customer.getFlags().add(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
         else customer.getFlags().remove(CustomerFlag.valueOf(((JCheckBox)evt.getSource()).getActionCommand()));
     }//GEN-LAST:event_customerFlagActionPerformed
 
@@ -856,8 +855,8 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
         Ui.exec(() -> {
             Ui.build(this).dialog().eval(() -> customer.getAdditionalCustomerIds(), () -> new AdditionalCustomerIdsView())
                     .ifPresent(out -> {
-                    customer.getAdditionalCustomerIds().clear();
-                    customer.getAdditionalCustomerIds().putAll(out);
+                        customer.getAdditionalCustomerIds().clear();
+                        customer.getAdditionalCustomerIds().putAll(out);
                     });
         });
     }//GEN-LAST:event_addAdditionalCustomerIdsActionPerformed

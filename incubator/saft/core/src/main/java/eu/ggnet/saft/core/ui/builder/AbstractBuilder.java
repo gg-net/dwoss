@@ -32,7 +32,7 @@ import javafx.stage.Modality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.*;
@@ -177,7 +177,7 @@ public abstract class AbstractBuilder {
             w.setIconImages(SwingSaft.loadIcons(params.panelClazz));
             w.pack();
             w.setLocationRelativeTo(swingParent);
-            if ( storeLocation ) Client.lookup(UserPreferences.class).loadLocation(key, w);
+            if ( storeLocation ) Dl.local().lookup(UserPreferences.class).loadLocation(key, w);
             w.setVisible(true);
             return w;
         });
@@ -189,7 +189,7 @@ public abstract class AbstractBuilder {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(params.key());
                 // Store location.
-                if ( storeLocation ) Client.lookup(UserPreferences.class).storeLocation(key, window);
+                if ( storeLocation ) Dl.local().lookup(UserPreferences.class).storeLocation(key, window);
             }
         });
         return window;

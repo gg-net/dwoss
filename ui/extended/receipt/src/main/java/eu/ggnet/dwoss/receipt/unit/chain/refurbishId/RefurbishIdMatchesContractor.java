@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,13 +18,11 @@ package eu.ggnet.dwoss.receipt.unit.chain.refurbishId;
 
 import java.util.Objects;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
-
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
-
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Dl;
 
 /**
  * Tries to lookup the refurbishId in the Database, continues if it doesn't exist.
@@ -41,9 +39,9 @@ public class RefurbishIdMatchesContractor implements ChainLink<String> {
 
     @Override
     public ChainLink.Result<String> execute(String value) {
-        if ( !Client.hasFound(MandatorService.class) )
+        if ( !Dl.remote().contains(MandatorService.class) )
             return new ChainLink.Result<>(value, ValidationStatus.WARNING, "Kein MandatorService");
-        if ( Client.lookup(MandatorService.class).isAllowedRefurbishId(contractor, value) ) return new ChainLink.Result<>(value);
+        if ( Dl.remote().lookup(MandatorService.class).isAllowedRefurbishId(contractor, value) ) return new ChainLink.Result<>(value);
         return new ChainLink.Result<>(value, ValidationStatus.ERROR, "SopoNr ist nicht für Lieferant " + contractor.getName() + " zulässig");
     }
 }

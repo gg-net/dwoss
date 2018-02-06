@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,17 +27,14 @@ import javax.swing.*;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.Client;
-import eu.ggnet.saft.core.ui.Workspace;
-
 import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
-
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ToolbarComponent;
 
-import static eu.ggnet.saft.Client.lookup;
+import stock.upi.StockUpi;
 
 /**
  *
@@ -49,7 +46,7 @@ public class LocationSelectorViewCask extends javax.swing.JPanel implements Tool
     /** Creates new form LocationSelectorViewCask */
     public LocationSelectorViewCask() {
         initComponents();
-        List<Stock> allStocks = lookup(StockAgent.class).findAll(Stock.class);
+        List<Stock> allStocks = Dl.remote().lookup(StockAgent.class).findAll(Stock.class);
         Stock stock = allStocks.stream().findFirst().get();
         locationBox.setModel(new DefaultComboBoxModel(allStocks.toArray()));
         locationBox.setRenderer(new DefaultListCellRenderer() {
@@ -63,20 +60,20 @@ public class LocationSelectorViewCask extends javax.swing.JPanel implements Tool
             }
 
         });
-        if ( Client.hasFound(MandatorService.class) ) {
+        if ( Dl.remote().contains(MandatorService.class) ) {
 
             try {
                 Set<InetAddress> adresses = Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
                         .flatMap(ni -> Collections.list(ni.getInetAddresses()).stream()).collect(Collectors.toCollection(HashSet::new));
                 ClientLocation cl = new ClientLocation(adresses);
-                stock = allStocks.stream().filter((t) -> t.getId() == lookup(MandatorService.class).getLocationStockId(cl)).findFirst().get();
+                stock = allStocks.stream().filter((t) -> t.getId() == Dl.remote().lookup(MandatorService.class).getLocationStockId(cl)).findFirst().get();
             } catch (SocketException ex) {
                 Logger.getLogger(LocationSelectorViewCask.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
         locationBox.setSelectedItem(stock);
-        lookup(Workspace.class).setValue(stock);
+        Dl.local().lookup(StockUpi.class).setActiveStock(stock.toPicoStock());
     }
 
     @SuppressWarnings("unchecked")
@@ -118,7 +115,7 @@ public class LocationSelectorViewCask extends javax.swing.JPanel implements Tool
     }// </editor-fold>//GEN-END:initComponents
 
     private void locationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationBoxActionPerformed
-        lookup(Workspace.class).setValue((Stock)locationBox.getSelectedItem());
+        Dl.local().lookup(StockUpi.class).setActiveStock(((Stock)locationBox.getSelectedItem()).toPicoStock());
     }//GEN-LAST:event_locationBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

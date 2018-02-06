@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,19 +19,14 @@ package eu.ggnet.dwoss.price;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.dwoss.price.Exporter;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
-
+import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
-import eu.ggnet.dwoss.util.HtmlDialog;
-
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javax.swing.JOptionPane.showInputDialog;
-import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -45,16 +40,16 @@ public class GenerateOnePriceAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String refurbishId = showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte SopoNr eingeben :");
+        String refurbishId = showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr eingeben :");
         if ( refurbishId == null || refurbishId.isEmpty() ) return;
-        PriceEngineResult per = lookup(Exporter.class).onePrice(refurbishId);
+        PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
         if ( per == null ) {
-            showMessageDialog(lookup(Workspace.class).getMainFrame(), "Kein Ergebins für SopoNr: " + refurbishId);
+            Ui.build().alert("Kein Ergebins für SopoNr: " + refurbishId);
         }
         String html = PriceEngineResultFormater.toSimpleHtml(per);
-        HtmlDialog dialog = new HtmlDialog(lookup(Workspace.class).getMainFrame(), Dialog.ModalityType.MODELESS);
+        HtmlDialog dialog = new HtmlDialog(UiCore.getMainFrame(), Dialog.ModalityType.MODELESS);
         dialog.setText(html);
-        dialog.setLocationRelativeTo(lookup(Workspace.class).getMainFrame());
+        dialog.setLocationRelativeTo(UiCore.getMainFrame());
         dialog.setVisible(true);
     }
 }

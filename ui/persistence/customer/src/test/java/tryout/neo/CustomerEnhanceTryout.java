@@ -28,7 +28,8 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -49,20 +50,20 @@ public class CustomerEnhanceTryout {
             Customer customer = gen.makeCustomer();
             customer.getContacts().clear();
 
-            customer.add(gen.makeCompany());
-            customer.add(gen.makeCompany());
-            customer.add(gen.makeCompany());
-            customer.add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
 
             customer.setSource(Source.ONEADO);
             customer.setKeyAccounter("Herr Meier");
-            customer.add(CustomerFlag.ITC_CUSTOMER);
-            customer.add(CustomerFlag.CS_UPDATE_CANDIDATE);
+            customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+            customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
-            customer.add(new MandatorMetadata());
+            customer.getMandatorMetadata().add(new MandatorMetadata());
 
             if ( customer.getViolationMessage() != null ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
@@ -79,20 +80,20 @@ public class CustomerEnhanceTryout {
             Customer customer = gen.makeCustomer();
             customer.getCompanies().clear();
 
-            customer.add(gen.makeContact());
-            customer.add(gen.makeContact());
-            customer.add(gen.makeContact());
-            customer.add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
 
             customer.setSource(Source.ONEADO);
-            customer.add(CustomerFlag.ITC_CUSTOMER);
-            customer.add(CustomerFlag.CS_UPDATE_CANDIDATE);
+            customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+            customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
-            customer.add(new MandatorMetadata());
+            customer.getMandatorMetadata().add(new MandatorMetadata());
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
             if ( customer.getViolationMessage() != null ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }

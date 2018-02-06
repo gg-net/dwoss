@@ -16,13 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.List;
@@ -31,22 +24,24 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -80,10 +75,10 @@ public class DocumentUpdateController {
     public void addPosition(long dossierId, PositionType type, String refurbishId, boolean forceAdd) throws UserInfoException {
         switch (type) {
             case UNIT:
-                List<Position> result = lookup(UnitOverseer.class)
+                List<Position> result = Dl.remote().lookup(UnitOverseer.class)
                         .createUnitPosition(refurbishId, document.getId()).request(new SwingInteraction(view));
                 for (Position p : result) {
-                    if ( p.getType() == UNIT ) lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
+                    if ( p.getType() == UNIT ) Dl.remote().lookup(UnitOverseer.class).lockStockUnit(dossierId, p.getRefurbishedId());
                 }
                 document.appendAll(result);
                 break;
@@ -91,7 +86,7 @@ public class DocumentUpdateController {
                 createServicePosition();
                 break;
             case PRODUCT_BATCH:
-                SalesProduct pb = createProductBatchPosition(lookup(RedTapeAgent.class).findAll(SalesProduct.class));
+                SalesProduct pb = createProductBatchPosition(Dl.remote().lookup(RedTapeAgent.class).findAll(SalesProduct.class));
                 if ( pb != null ) {
                     Position p = Position.builder()
                             .amount(1)
@@ -101,7 +96,7 @@ public class DocumentUpdateController {
                             .name(pb.getName())
                             .uniqueUnitProductId(pb.getUniqueUnitProductId())
                             .price((pb.getPrice() == null) ? 0. : pb.getPrice())
-                            .bookingAccount(Client.lookup(Mandators.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
+                            .bookingAccount(Dl.local().lookup(CachedMandators.class).loadPostLedger().get(type, document.getTaxType()).orElse(null))
                             .build();
                     document.append(editPosition(p));
                 }
@@ -110,7 +105,7 @@ public class DocumentUpdateController {
                 document.append(createCommentPosition());
                 break;
             case SHIPPING_COST:
-                ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
                 break;
         }
     }
@@ -123,7 +118,7 @@ public class DocumentUpdateController {
      */
     public Position editPosition(final Position pos) {
         return Ui.build().parent(view).title("Position bearbeiten").swing()
-                .eval(() -> new PositionAndTaxType(pos, document.getTaxType()), () -> OkCancel.wrap(new PositionUpdateCask()))
+                .eval(() -> new PositionAndTaxType(pos, document.getTaxType()), () -> OkCancelWrap.consumerVetoResult(new PositionUpdateCask()))
                 .map(Reply::getPayload)
                 .orElse(null);
     }
@@ -143,7 +138,7 @@ public class DocumentUpdateController {
 
     public void createServicePosition() {
         document.append(Ui.build().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten").swing()
-                .eval(() -> OkCancel.wrap(new ServiceViewCask(document.getTaxType())))
+                .eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(document.getTaxType())))
                 .map(Reply::getPayload)
                 .orElse(null));
     }
@@ -170,10 +165,10 @@ public class DocumentUpdateController {
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
             if ( document.getInvoiceAddress() == document.getShippingAddress() ) {
-                document.setInvoiceAddress(lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
+                document.setInvoiceAddress(Dl.remote().lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
                 document.setShippingAddress(document.getInvoiceAddress());
             }
-            document.setInvoiceAddress(lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
+            document.setInvoiceAddress(Dl.remote().lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
             view.refreshAddressArea();
         }
     }
@@ -188,7 +183,7 @@ public class DocumentUpdateController {
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
         if ( dialog.getCloseType() == CloseType.OK ) {
-            document.setShippingAddress(lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
+            document.setShippingAddress(Dl.remote().lookup(RedTapeWorker.class).requestAddressByDescription(dauv.getAddress()));
             view.refreshAddressArea();
         }
     }
@@ -198,7 +193,7 @@ public class DocumentUpdateController {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
-        Addresses addresses = lookup(RedTapeWorker.class).requestAdressesByCustomer(view.getCustomerId());
+        Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(view.getCustomerId());
         document.setInvoiceAddress(addresses.getInvoice());
         document.setShippingAddress(addresses.getShipping());
         view.refreshAddressArea();
@@ -234,7 +229,7 @@ public class DocumentUpdateController {
                 return false;
             case JOptionPane.YES_OPTION:
                 if ( document.getDossier().isDispatch() ) {
-                    ShippingCostHelper.modifyOrAddShippingCost(document, lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                    ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
                 } else {
                     ShippingCostHelper.removeShippingCost(document);
                 }

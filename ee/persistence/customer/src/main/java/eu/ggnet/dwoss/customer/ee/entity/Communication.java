@@ -17,10 +17,12 @@
 package eu.ggnet.dwoss.customer.ee.entity;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
@@ -48,7 +50,22 @@ public class Communication implements Serializable {
      */
     public enum Type {
 
-        PHONE, MOBILE, FAX, ICQ, SKYPE, EMAIL, FACEBOOK
+        PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX, ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
+
+        private final String validPattern;
+
+        private Type() {
+            this(null);
+        }
+
+        private Type(String validPattern) {
+            this.validPattern = validPattern;
+        }
+
+        public Optional<String> getValidPattern() {
+            return Optional.ofNullable(validPattern);
+        }
+
     }
 
     @Id
@@ -104,15 +121,13 @@ public class Communication implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
-        //new email pattern with longet domains
-        //"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        //old pattern "^[A-Z0-9._%-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
-        if ( type.equals(Type.EMAIL) && !identifier.matches(Communication.EMAIL_PATTERN) ) return "the Communication are missmatchting the EMail Pattern";
-        if ( (type.equals(Type.MOBILE) || type.equals(Type.PHONE) || type.equals(Type.FAX)) && !identifier.matches(Communication.PHONE_PATTERN) ) return "the Communication are missmatchting the Phone Pattern";
-
-
-        return null;
+    public String getViolationMessage() {
+        if ( type == null ) return "Type is null";
+        if ( StringUtils.isBlank(identifier) ) return "Identifier is blank";
+        return type.getValidPattern()
+                .map(pattern -> identifier.matches(pattern))
+                .map(b -> (b ? null : "Identifier " + identifier + " vom Type: " + type + " passt nicht auf pattern " + type.getValidPattern().get()))
+                .orElse(null);
     }
 
 }

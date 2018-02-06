@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,10 +22,10 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.progress.ProgressObserver;
-import lombok.Data;
 
-import static eu.ggnet.saft.Client.lookup;
+import lombok.Data;
 
 /**
  * HiddenMonitorDisplayer, considered for usage in a {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)
@@ -43,7 +43,7 @@ public class HiddenMonitorDisplayer implements Runnable {
     @Override
     public void run() {
         try {
-            ProgressObserver po = lookup(ProgressObserver.class);
+            ProgressObserver po = Dl.remote().lookup(ProgressObserver.class);
             if ( !po.hasProgress() ) return;
             SortedSet<Integer> remoteKeys = po.getActiveProgressKeys();
             if ( remoteKeys.equals(localKeys) ) return; // no new progress, all is tracked.

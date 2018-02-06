@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.dwoss.stock.StockTransactionManagerController;
-import eu.ggnet.dwoss.stock.StockTransactionManagerModel;
-import eu.ggnet.dwoss.stock.StockTransactionManagerView;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.stock.*;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -39,7 +35,7 @@ public class OpenStockTransactionManager extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        StockTransactionManagerView view = new StockTransactionManagerView(lookup(Workspace.class).getMainFrame());
+        StockTransactionManagerView view = new StockTransactionManagerView(UiCore.getMainFrame());
         StockTransactionManagerModel model = new StockTransactionManagerModel();
         StockTransactionManagerController controller = new StockTransactionManagerController();
         view.setModel(model);

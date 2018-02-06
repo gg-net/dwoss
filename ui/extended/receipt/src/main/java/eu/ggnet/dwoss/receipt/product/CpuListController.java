@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -27,14 +25,10 @@ import javax.swing.SwingUtilities;
 import eu.ggnet.dwoss.receipt.AbstractController;
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoFilter;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.table.*;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -66,7 +60,7 @@ public class CpuListController extends AbstractController {
     private CpuFilter filter;
 
     public CpuListController() {
-        this(lookup(SpecAgent.class));
+        this(Dl.remote().lookup(SpecAgent.class));
     }
 
     public CpuListController(SpecAgent specAgent) {

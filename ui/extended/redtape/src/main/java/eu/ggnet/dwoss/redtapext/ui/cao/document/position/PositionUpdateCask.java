@@ -33,11 +33,13 @@ import org.jdesktop.beansbinding.*;
 
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.TwoDigits;
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
@@ -45,9 +47,6 @@ import eu.ggnet.saft.core.swing.VetoableOnOk;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
 import static eu.ggnet.dwoss.rules.PositionType.*;
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
 
 /**
  *
@@ -141,7 +140,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     public void accept(PositionAndTaxType posAndTax) {
         if ( posAndTax == null ) return;
         this.position = posAndTax.getPosition();
-        PostLedger postLedger = lookup(Mandators.class).loadPostLedger();
+        PostLedger postLedger = Dl.local().lookup(CachedMandators.class).loadPostLedger();
         final List<Ledger> ledgers = postLedger.getAlternatives(position.getType(), posAndTax.getTaxType());
         bookingAccountBox.setModel(new DefaultComboBoxModel(ledgers.toArray()));
         this.positionTypeField.setText(position.getType() != null ? position.getType().getName() : "Nicht angegeben");
@@ -156,14 +155,14 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
 
         if ( position.getBookingAccount().isPresent() ) { // Remapping of the ledger.
             if ( !ledgers.contains(position.getBookingAccount().get()) ) {
-                UiAlert.show(this, "Buchungskonto " + position.getBookingAccount().get() + " nicht für diese Position und Steuer konfiguriert. Wurde auf Standard gesetzt");
+                Ui.build(this).alert("Buchungskonto " + position.getBookingAccount().get() + " nicht für diese Position und Steuer konfiguriert. Wurde auf Standard gesetzt");
                 if ( !ledgers.isEmpty() ) this.setBookingAccount(ledgers.get(0));
             } else {
                 this.setBookingAccount(ledgers.get(ledgers.indexOf(position.getBookingAccount().get())));
             }
         }
 
-        this.accessCos = lookup(Guardian.class);
+        this.accessCos = Dl.local().lookup(Guardian.class);
 
         if ( position.getDocument() != null && EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO).contains(position.getDocument().getType()) ) {
             disableComponents(preDecimalSpinner, postDecimalSpinner, nameArea, bookingAccountBox, priceField, afterTaxPriceField, descriptionArea);
@@ -340,17 +339,17 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
     @Override
     public boolean mayClose() {
         if ( StringUtils.isBlank(description) ) {
-            UiAlert.show(this, "Beschreibung darf nich leer sein.");
+            Ui.build(this).alert("Beschreibung darf nich leer sein.");
             return false;
         }
         if ( StringUtils.isBlank(positionName) ) {
-            UiAlert.show(this, "Name darf nich leer sein.");
+            Ui.build(this).alert("Name darf nich leer sein.");
             return false;
         }
         try {
             position.setPrice(Double.valueOf(priceField.getText().replace(",", ".")));
         } catch (NumberFormatException e) {
-            UiAlert.show(this, "Preisformat ist nicht lesbar");
+            Ui.build(this).alert("Preisformat ist nicht lesbar");
         }
         for (Binding binding : bindingGroup.getBindings()) {
             binding.save();

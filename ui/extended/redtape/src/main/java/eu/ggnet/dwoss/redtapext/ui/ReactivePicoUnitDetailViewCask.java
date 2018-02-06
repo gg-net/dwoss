@@ -76,7 +76,7 @@ public class ReactivePicoUnitDetailViewCask extends BorderPane implements Consum
             head.setText("(" + pu.id() + ") " + pu.shortDescription);
         });
         Ui.exec(() -> {
-            String content = Css.toHtml5WithStyle(Client.lookup(UnitOverseer.class).toDetailedHtml(pu.uniqueUnitId, Client.lookup(Guardian.class).getUsername()));
+            String content = Css.toHtml5WithStyle(Dl.remote().lookup(UnitOverseer.class).toDetailedHtml(pu.uniqueUnitId, Dl.local().lookup(Guardian.class).getUsername()));
             Platform.runLater(() -> {
                 webView.getEngine().loadContent(content);
                 progressIndicator.setVisible(false);

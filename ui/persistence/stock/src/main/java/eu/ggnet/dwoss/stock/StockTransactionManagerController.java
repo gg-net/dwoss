@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.stock;
 
-import java.awt.Dialog;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -30,15 +29,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -62,7 +58,7 @@ public class StockTransactionManagerController {
     private Logger L = LoggerFactory.getLogger(StockTransactionManagerController.class);
 
     public StockTransactionManagerController() {
-        this(lookup(StockAgent.class), lookup(StockTransactionProcessor.class));
+        this(Dl.remote().lookup(StockAgent.class), Dl.remote().lookup(StockTransactionProcessor.class));
     }
 
     public void reload() {
@@ -109,9 +105,9 @@ public class StockTransactionManagerController {
     }
 
     void showDetails(StockTransaction transaction) {
-        HtmlDialog detailDialog = new HtmlDialog(view, Dialog.ModalityType.MODELESS);
-        detailDialog.setText(StockTransactionFormater.toHtml(transaction));
-        detailDialog.setVisible(true);
+        Ui.exec(() -> {
+            Ui.build(view).fx().show(() -> StockTransactionFormater.toHtml(transaction), () -> new HtmlPane());
+        });
     }
 
     @SuppressWarnings("UseSpecificCatch")
@@ -120,7 +116,7 @@ public class StockTransactionManagerController {
         if ( comment == null || comment.trim().equals("") ) return;
         try {
             stockRotationOperation.cancel(transaction, Lookup.getDefault().lookup(Guardian.class).getUsername(), comment);
-            JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
+            JOptionPane.showMessageDialog(UiCore.getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
             model.remove(transaction);
         } catch (Exception ex) {
             Ui.handle(ex);

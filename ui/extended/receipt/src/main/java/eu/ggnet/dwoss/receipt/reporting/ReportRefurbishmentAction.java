@@ -20,10 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.Workspace;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.*;
 
 /**
  *
@@ -37,12 +34,12 @@ public class ReportRefurbishmentAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final ReportRefurbishmentDialog dialog = new ReportRefurbishmentDialog(lookup(Workspace.class).getMainFrame());
+        final ReportRefurbishmentDialog dialog = new ReportRefurbishmentDialog(UiCore.getMainFrame());
         dialog.setVisible(true);
         if ( !dialog.isOk() ) return;
         Ui.exec(() -> {
             Ui.osOpen(Ui.progress().title("Refurbishmentreport")
-                    .call(() -> lookup(RefurbishmentReporter.class).toXls(dialog.getContractor(), dialog.getStart(), dialog.getEnd()).toTemporaryFile()));
+                    .call(() -> Dl.remote().lookup(RefurbishmentReporter.class).toXls(dialog.getContractor(), dialog.getStart(), dialog.getEnd()).toTemporaryFile()));
         });
     }
 }

@@ -36,13 +36,13 @@ import eu.ggnet.dwoss.misc.op.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.ui.UiAlertBuilder.Type;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.AlertType;
 
-import static eu.ggnet.saft.Client.lookup;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
@@ -121,7 +121,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
     @Override
     public void accept(TradeName contractor) {
         this.contractor = contractor;
-        List<ReportLine> repaymentLines = lookup(ResolveRepayment.class).getRepaymentLines(contractor);
+        List<ReportLine> repaymentLines = Dl.remote().lookup(ResolveRepayment.class).getRepaymentLines(contractor);
         reportLineTable.setItems(FXCollections.observableList(repaymentLines));
     }
 
@@ -134,14 +134,14 @@ public class ResolveRepaymentController implements Initializable, FxController, 
         resolveButton.setDisable(true);
         ForkJoinPool.commonPool().execute(() -> {
             try {
-                ResolveResult result = lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, lookup(Guardian.class).getUsername(), commentField.getText());
-                eu.ggnet.saft.UiAlert.title("Repayment resolved")
+                ResolveResult result = Dl.remote().lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, Dl.local().lookup(Guardian.class).getUsername(), commentField.getText());
+                Ui.build().alert().title("Repayment resolved")
                         .parent(sopoField)
                         .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
                         .nl("Stock: " + result.stockMessage)
                         .nl("RedTape: " + result.redTapeMessage)
                         .nl("Report: " + result.reportMessage)
-                        .show(Type.INFO);
+                        .show(AlertType.INFO);
                 reset();
             } catch (UserInfoException ex) {
                 Ui.handle(ex);

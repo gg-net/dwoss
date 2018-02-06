@@ -22,7 +22,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -42,11 +43,11 @@ public class PreferedAddressLabelsTryOut {
 
             Customer customer = gen.makeCustomer();
             customer.getContacts().clear();
-            customer.add(gen.makeCompany());
-            customer.add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompany());
 
-            if ( !customer.isVaild() ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+            if ( !customer.isValid() ) {
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
@@ -59,11 +60,11 @@ public class PreferedAddressLabelsTryOut {
         endKundenButton.addActionListener(ev -> {
             Customer customer = gen.makeCustomer();
             customer.getCompanies().clear();
-            customer.add(gen.makeContact());
-            customer.add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContact());
 
-            if ( !customer.isVaild() ) {
-                UiAlert.show("customer is invalid" + customer.getViolationMessage());
+            if ( !customer.isValid() ) {
+                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }

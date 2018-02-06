@@ -20,9 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -37,7 +36,7 @@ public class AuditReportOnRollInAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Auditreport").call(() -> lookup(AuditReporter.class).onRollIn().toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).onRollIn().toTemporaryFile()));
         });
     }
 }

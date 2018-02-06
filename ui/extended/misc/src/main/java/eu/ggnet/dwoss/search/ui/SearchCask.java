@@ -67,7 +67,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
     private final Searcher searcher;
 
     public SearchCask() {
-        searcher = Client.lookup(Searcher.class);
+        searcher = Dl.remote().lookup(Searcher.class);
         // Creating and laying out the Ui
         StringProperty searchProperty = new SimpleStringProperty();
         ObservableList<ShortSearchResult> resultProperty = FXCollections.observableArrayList();

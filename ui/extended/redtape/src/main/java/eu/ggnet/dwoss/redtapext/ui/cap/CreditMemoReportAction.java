@@ -22,9 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Action to create the CreditMemo Report.
@@ -42,7 +41,7 @@ public class CreditMemoReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().title("Stornoreport Zeitraum").fx().eval(() -> new DateRangeChooserView())
-                    .ifPresent(r -> Ui.osOpen(Ui.progress().call(() -> lookup(CreditMemoReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile())));
+                    .ifPresent(r -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(CreditMemoReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile())));
         });
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,15 +18,11 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.awt.Component;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.stock.entity.Stock;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -42,7 +38,7 @@ public class AfterInvoiceInfoPanel extends javax.swing.JPanel {
     public AfterInvoiceInfoPanel() {
         initComponents();
 
-        stockSelectionBox.setModel(new DefaultComboBoxModel(lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0])));
+        stockSelectionBox.setModel(new DefaultComboBoxModel(Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0])));
         stockSelectionBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

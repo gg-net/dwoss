@@ -2,9 +2,9 @@ package eu.ggnet.saft.sample;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.UiAlert;
+import eu.ggnet.saft.Ui;
 
-import static eu.ggnet.saft.core.ui.UiAlertBuilder.Type.*;
+import static eu.ggnet.saft.core.ui.AlertType.*;
 
 /**
  *
@@ -17,20 +17,17 @@ public class Alerts {
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         // Normal
-        UiAlert.title("Nachricht").message("Eine Info").show(INFO);
+        Ui.build().alert().title("Nachricht").message("Eine Info").show(INFO);
 
-        UiAlert.title("Nachricht").message("Eine Warnung").show(WARNING);
+        Ui.build().alert().title("Nachricht").message("Eine Warnung").show(WARNING);
 
-        UiAlert.title("Nachricht").message("Ein Fehler").show(ERROR);
+        Ui.build().alert().title("Nachricht").message("Ein Fehler").show(ERROR);
         // Sehr lange Nachricht
-        UiAlert.title("Lange Nachricth")
+        Ui.build().alert().title("Lange Nachricth")
                 .message("Erste Zeile")
                 .nl("Zeite Zeile")
                 .nl("Dritte Zeile")
                 .show(INFO);
-
-        // Short form
-        UiAlert.show("Nachricht");
 
         JFrame f = new JFrame();
         f.getContentPane().add(new JLabel("Ein JFrame"));
@@ -38,7 +35,7 @@ public class Alerts {
         f.setSize(400, 400);
         f.setVisible(true);
 
-        UiAlert.show(f, "Title", "relative Nachricht", INFO);
+        Ui.build(f).alert().title("Title").message("relative Nachricht").show();
 
         f.setVisible(false);
         f.dispose();

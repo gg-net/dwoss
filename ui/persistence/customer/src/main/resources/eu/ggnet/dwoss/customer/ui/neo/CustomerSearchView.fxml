@@ -46,10 +46,10 @@
       </HBox>
     </top>
     <bottom>
-        <HBox fx:id="statusHbox" alignment="CENTER_RIGHT" spacing="5.0" BorderPane.alignment="CENTER">
+        <HBox fx:id="statusHbox" alignment="CENTER_RIGHT" minHeight="2.0" prefHeight="2.0" spacing="5.0" visible="false" BorderPane.alignment="CENTER">
             <children>
-                <ProgressBar fx:id="progressBar" progress="0.0" />
-                <ProgressIndicator fx:id="progressIndicator" progress="0.0" />
+                <ProgressBar fx:id="progressBar" progress="0.0" visible="false" />
+                <ProgressIndicator fx:id="progressIndicator" progress="0.0" visible="false" />
             </children>
          <padding>
             <Insets left="5.0" top="5.0" />

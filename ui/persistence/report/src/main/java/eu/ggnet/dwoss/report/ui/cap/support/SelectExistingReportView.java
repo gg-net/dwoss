@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.api.ui.Title;
@@ -176,7 +176,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
 
         Ui.exec(() -> {
             Ui.build().parent(this).dialog().eval(() -> dialog)
-                    .map(r -> Client.lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
+                    .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
                     .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {
                         reportListView.getSelectionModel().getSelectedItem().setName(r.getPayload());

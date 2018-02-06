@@ -108,18 +108,25 @@ public class MandatorMetadata implements Serializable {
     @Enumerated
     private PaymentMethod paymentMethod;
 
+    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<SalesChannel> allowedSalesChannels = new HashSet<>();
 
-    public Set<SalesChannel> getAllowedSalesChannels() {
-        return new HashSet<>(allowedSalesChannels);
-    }
-
+    /**
+     *
+     * @deprecated use getAllowedSalesChannels.clear();
+     */
+    @Deprecated
     public void clearSalesChannels() {
         allowedSalesChannels.clear();
     }
 
+    /**
+     *
+     * @deprecated use getAllowedSalesChannels.add();
+     */
+    @Deprecated
     public void add(SalesChannel s) {
         allowedSalesChannels.add(s);
     }
@@ -159,8 +166,11 @@ public class MandatorMetadata implements Serializable {
      * @return null if instance is valid, else a string representing the invalidation.
      */
     public String getViolationMessages() {
-        // TODO: fill me
-        //[[DWOSS-196]]
+        if ( shippingCondition == null ) return "No ShippingCondition is set";
+        if ( paymentCondition == null ) return "No PaymentCondition is set";
+        if ( paymentMethod == null ) return "No PaymentMethod is set";
+        if ( allowedSalesChannels.isEmpty() ) return "No SalesChannel is Listed add AllowedSalesChannels";
+
         return null;
     }
 

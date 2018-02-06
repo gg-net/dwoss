@@ -24,13 +24,11 @@ import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.Workspace;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -45,17 +43,17 @@ public class PriceBlockerAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            String refurbishedId = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte SopoNr zur Fixierung eines Preises eingeben:");
+            String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr zur Fixierung eines Preises eingeben:");
             if ( refurbishedId == null ) return;
-            PriceEngineResult per = lookup(Exporter.class).load(refurbishedId);
+            PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(refurbishedId);
             PriceBlockerViewCask pbp = new PriceBlockerViewCask(refurbishedId, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
-            OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(lookup(Workspace.class).getMainFrame(), "Price fixieren", pbp);
+            OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Price fixieren", pbp);
             view.setVisible(true);
             if ( view.isCancel() ) return;
             per.setCustomerPrice(pbp.getCustomerPrice());
             per.setRetailerPrice(pbp.getRetailerPrice());
             per.setUnitPriceFixed(Change.SET);
-            lookup(Importer.class).store(per, "Set directly via PriceBlocker", lookup(Guardian.class).getUsername());
+            Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }

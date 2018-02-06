@@ -31,7 +31,6 @@ import javax.swing.border.SoftBevelBorder;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.customer.api.CustomerCos;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
@@ -64,6 +63,8 @@ import eu.ggnet.statemachine.StateTransition;
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
+
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
@@ -305,9 +306,9 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        long customerId = Dl.local().lookup(CustomerCos.class).createCustomer(UiParent.of(view));
+        long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
         if ( customerId == 0 ) {
-            UiAlert.message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+            Ui.build().alert().message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
             return;
         }
         model.setPurchaseCustomer(customerId);
@@ -322,7 +323,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        if ( !Dl.local().lookup(CustomerCos.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
+        if ( !Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
         //reset search to avoid wrong customer selections
         model.setSearch(String.valueOf(recentCustomerId));
         view.searchResultList.setSelectedIndex(0);

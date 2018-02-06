@@ -44,7 +44,7 @@ import eu.ggnet.dwoss.report.entity.ReportLine;
 import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.HtmlPane;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 
@@ -229,7 +229,7 @@ public class RawReportView extends BorderPane {
      * @param input
      */
     public void storeComment(SimpleReportLine line, String input) {
-        if ( Client.lookup(ReportAgent.class).updateReportLineComment(line.getOptLock(), line.getId(), input) ) {
+        if ( Dl.remote().lookup(ReportAgent.class).updateReportLineComment(line.getOptLock(), line.getId(), input) ) {
             table.getSelectionModel().getSelectedItem().setComment(input);
             table.refresh();
         }
@@ -294,7 +294,7 @@ public class RawReportView extends BorderPane {
      */
     public void openDetailView(final long reportLineId) {
         Ui.exec(() -> {
-            Ui.build(this).fx().show(() -> Client.lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
+            Ui.build(this).fx().show(() -> Dl.remote().lookup(ReportAgent.class).findById(ReportLine.class, reportLineId).toHtml(), () -> new HtmlPane());
         });
     }
 
@@ -318,14 +318,14 @@ public class RawReportView extends BorderPane {
             protected Void call() throws Exception {
                 L.info("Starting Loader");
                 model.clear();
-                final long max = Client.lookup(ReportAgent.class).count(search);
+                final long max = Dl.remote().lookup(ReportAgent.class).count(search);
                 updateProgress(0, max);
                 List<SimpleReportLine> partial;
                 int amount = 1;
                 int last = 0;
                 do {
                     long t1 = System.currentTimeMillis();
-                    partial = Client.lookup(ReportAgent.class).findSimple(search, last, amount);
+                    partial = Dl.remote().lookup(ReportAgent.class).findSimple(search, last, amount);
                     long t2 = System.currentTimeMillis();
                     last += amount;
                     updateMessage("Loaded from " + last + " by " + amount);

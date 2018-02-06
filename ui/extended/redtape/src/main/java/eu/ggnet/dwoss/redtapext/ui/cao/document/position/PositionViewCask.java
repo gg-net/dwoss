@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.stock.format.StockUnitFormater;
 import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.core.ui.FxSaft;
@@ -71,8 +71,8 @@ public class PositionViewCask extends BorderPane implements Consumer<Position> {
             StringBuilder sb = new StringBuilder();
             sb.append(PositionFormater.toHtmlDetailed(pos)).append("<br />");
             if ( pos.getType() == PositionType.UNIT ) {
-                StockUnit su = Client.lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(pos.getUniqueUnitId());
-                UniqueUnit uu = Client.lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, pos.getUniqueUnitId());
+                StockUnit su = Dl.remote().lookup(StockAgent.class).findStockUnitByUniqueUnitIdEager(pos.getUniqueUnitId());
+                UniqueUnit uu = Dl.remote().lookup(UniqueUnitAgent.class).findByIdEager(UniqueUnit.class, pos.getUniqueUnitId());
                 if ( su != null ) sb.append(StockUnitFormater.detailedTransactionToHtml(su));
                 if ( uu != null ) sb.append(UniqueUnitFormater.toHtmlPriceInformation(uu.getPrices(), uu.getPriceHistory()))
                             .append(UniqueUnitFormater.toHtmlUniqueUnitHistory(uu));

@@ -1,6 +1,4 @@
-package eu.ggnet.saft.core.ui;
-
-import eu.ggnet.saft.core.ui.SwingCore;
+package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
@@ -9,15 +7,20 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.*;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import static eu.ggnet.saft.core.ui.AlertType.INFO;
 
 /**
  * Fluent Alert Dialog , replacement for JOptionPane.
@@ -27,21 +30,9 @@ import lombok.*;
  */
 @ToString
 @EqualsAndHashCode
-public class UiAlertBuilder {
+public class AlertBuilder {
 
-    private final static Logger L = LoggerFactory.getLogger(UiAlertBuilder.class);
-
-    @AllArgsConstructor
-    public enum Type {
-
-        INFO(JOptionPane.INFORMATION_MESSAGE),
-        WARNING(JOptionPane.WARNING_MESSAGE),
-        ERROR(JOptionPane.ERROR_MESSAGE);
-
-        @Getter
-        private final int optionPaneType;
-
-    }
+    private final static Logger L = LoggerFactory.getLogger(AlertBuilder.class);
 
     /**
      * The title.
@@ -63,13 +54,21 @@ public class UiAlertBuilder {
      */
     private Parent javafxParent = null;
 
+    public AlertBuilder(PreBuilder pre) {
+        swingParent = pre.swingParent;
+        if ( !StringUtils.isBlank(pre.title) ) title = pre.title;
+    }
+
+    public AlertBuilder() {
+    }
+
     /**
      * Set the title of the alert.
      *
      * @param title the title
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder title(String title) {
+    public AlertBuilder title(String title) {
         this.title = title;
         return this;
     }
@@ -80,7 +79,7 @@ public class UiAlertBuilder {
      * @param message the message
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder message(String message) {
+    public AlertBuilder message(String message) {
         this.message = message;
         return this;
     }
@@ -91,7 +90,7 @@ public class UiAlertBuilder {
      * @param message the message to append
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder nl(String message) {
+    public AlertBuilder nl(String message) {
         this.message += "\n" + message;
         return this;
     }
@@ -101,7 +100,7 @@ public class UiAlertBuilder {
      *
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder nl() {
+    public AlertBuilder nl() {
         this.message += "\n";
         return this;
     }
@@ -112,7 +111,7 @@ public class UiAlertBuilder {
      * @param swingParent the swing parent
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder parent(Component swingParent) {
+    public AlertBuilder parent(Component swingParent) {
         this.swingParent = swingParent;
         return this;
     }
@@ -123,9 +122,16 @@ public class UiAlertBuilder {
      * @param javafxParent the javafx parent
      * @return the alert for fluent usage.
      */
-    public UiAlertBuilder parent(Parent javafxParent) {
+    public AlertBuilder parent(Parent javafxParent) {
         this.javafxParent = javafxParent;
         return this;
+    }
+
+    /**
+     * Shows the final alert of type info.
+     */
+    public void show() {
+        show(INFO);
     }
 
     /**
@@ -134,7 +140,7 @@ public class UiAlertBuilder {
      *
      * @param type the type of the alert.
      */
-    public void show(Type type) {
+    public void show(AlertType type) {
         try {
             // TODO: At the moment, I only have a Swing implementation.
             SwingSaft.dispatch(() -> {

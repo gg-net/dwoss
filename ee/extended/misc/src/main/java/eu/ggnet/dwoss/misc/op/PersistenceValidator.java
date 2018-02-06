@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.ggnet.dwoss.misc.op;
+
+import java.util.Optional;
 
 import javax.ejb.Remote;
 
@@ -37,5 +39,5 @@ public interface PersistenceValidator {
      * <p/>
      * @return a Filejacket where a xls from the JExcel api is, that contains all Errors.
      */
-    FileJacket validateDatabase();
+    Optional<FileJacket> validateDatabase();
 }

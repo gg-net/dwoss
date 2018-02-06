@@ -20,12 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.StockAgent;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.Client;
+import eu.ggnet.saft.Dl;
 
 import static org.mockito.Mockito.mock;
 
@@ -38,13 +37,13 @@ public class AnnulationViewTryout {
     public static void main(String[] args) {
         StockAgent stockStub = mock(StockAgent.class);
 
-        Client.addSampleStub(StockAgent.class, stockStub);
+        Dl.remote().add(StockAgent.class, stockStub);
 
-        Position p1 = new PositionBuilder().name("P1").price(12.).tax(1.19).build();
-        Position p2 = new PositionBuilder().name("P2").price(20.).tax(1.19).build();
-        Position p3 = new PositionBuilder().name("P3").price(13.24).tax(1.19).build();
-        Position p4 = new PositionBuilder().name("P4").price(400.).tax(1.19).build();
-        Position p5 = new PositionBuilder().name("P5").price(1234.).tax(1.19).build();
+        Position p1 = Position.builder().amount(1).name("P1").price(12.).tax(1.19).build();
+        Position p2 = Position.builder().amount(1).name("P2").price(20.).tax(1.19).build();
+        Position p3 = Position.builder().amount(1).name("P3").price(13.24).tax(1.19).build();
+        Position p4 = Position.builder().amount(1).name("P4").price(400.).tax(1.19).build();
+        Position p5 = Position.builder().amount(1).name("P5").price(1234.).tax(1.19).build();
 
         List<AfterInvoicePosition> positions = new ArrayList<>();
         positions.add(new AfterInvoicePosition(p1));

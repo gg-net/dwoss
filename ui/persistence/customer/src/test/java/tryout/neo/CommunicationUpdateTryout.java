@@ -3,15 +3,12 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
 import eu.ggnet.saft.*;
 
-import tryout.stub.CustomerAgentStub;
 
 /*
  * Copyright (C) 2018 GG-Net GmbH
@@ -48,8 +45,8 @@ public class CommunicationUpdateTryout {
             comm.setType(Type.MOBILE);
             comm.setIdentifier("040123456789");
 
-            if ( comm.getViolationMessages() != null ) {
-                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            if ( comm.getViolationMessage() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessage());
             }
 
             Ui.exec(() -> {
@@ -61,8 +58,8 @@ public class CommunicationUpdateTryout {
 
         addButton.addActionListener(ev -> {
             comm.setType(null);
-            if ( comm.getViolationMessages() != null ) {
-                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            if ( comm.getViolationMessage() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessage());
             }
 
             Ui.exec(() -> {

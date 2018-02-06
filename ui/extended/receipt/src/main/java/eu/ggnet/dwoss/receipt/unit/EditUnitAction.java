@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,15 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.saft.core.ui.Workspace;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
-
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
+import eu.ggnet.dwoss.receipt.UnitProcessor;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
-import eu.ggnet.dwoss.util.UserInfoException;
-
-import static eu.ggnet.saft.Client.lookup;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT;
 
 /**
@@ -53,12 +51,12 @@ public class EditUnitAction extends AccessableAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        String refurbishedId = JOptionPane.showInputDialog(lookup(Workspace.class).getMainFrame(), "Bitte SopoNr/Seriennummer eingeben:");
+        String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr/Seriennummer eingeben:");
         try {
-            UiUnitSupport uiUnitSupport = new UiUnitSupport(lookup(UnitProcessor.class));
+            UiUnitSupport uiUnitSupport = new UiUnitSupport(Dl.remote().lookup(UnitProcessor.class));
             uiUnitSupport.editUnit(refurbishedId);
         } catch (UserInfoException ex) {
-            JOptionPane.showMessageDialog(lookup(Workspace.class).getMainFrame(), ex.getMessage(), "Nutzerfehler", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(UiCore.getMainFrame(), ex.getMessage(), "Nutzerfehler", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

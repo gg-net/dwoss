@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.UiAlert;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.AlertType;
 
 /**
  *
@@ -38,20 +38,22 @@ public class UserInfoExceptionConsumer implements Consumer<UserInfoException> {
     @Override
     public void accept(UserInfoException ex) {
         L.info("UserInfoException {}", ex.getMessage());
-        UiAlert.title(ex.getHead()).message(ex.getMessage())
-                .parent(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
+        Ui.build(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null))
+                .alert()
+                .title(ex.getHead())
+                .message(ex.getMessage())
                 .show(map(ex.getType()));
     }
 
-    private static UiAlertBuilder.Type map(UserInfoException.Type t1) {
+    private static AlertType map(UserInfoException.Type t1) {
         switch (t1) {
             case ERROR:
-                return UiAlertBuilder.Type.ERROR;
+                return AlertType.ERROR;
             case WARNING:
-                return UiAlertBuilder.Type.WARNING;
+                return AlertType.WARNING;
             case INFO:
             default:
-                return UiAlertBuilder.Type.INFO;
+                return AlertType.INFO;
         }
     }
 

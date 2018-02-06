@@ -20,11 +20,11 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.report.op.RevenueReporter;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_REVENUE_REPORT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Opens the revenue report selector.
@@ -41,7 +41,7 @@ public class ExportRevenueReportAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new RevenueReportSelectionView())
-                    .ifPresent(v -> Ui.osOpen(Ui.progress().call(() -> lookup(RevenueReporter.class).toXls(v.getStart(), v.getEnd(), v.getStep(), v.isExtraReported()).toTemporaryFile())));
+                    .ifPresent(v -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(RevenueReporter.class).toXls(v.getStart(), v.getEnd(), v.getStep(), v.isExtraReported()).toTemporaryFile())));
         });
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -44,5 +44,5 @@ public interface ImageIdHandler {
      */
     FileJacket exportMissing(SalesChannel salesChannel);
 
-    void importMissing(FileJacket inFile) throws UserInfoException;
+    Reply<Void> importMissing(FileJacket inFile);
 }

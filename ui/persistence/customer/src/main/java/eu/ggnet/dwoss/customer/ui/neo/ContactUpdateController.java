@@ -39,9 +39,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiAlert;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -104,8 +103,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void saveButtonHandling() {
         contact = getContact();
         //only get valid object out
-        if ( contact.getViolationMessages() != null ) {
-            UiAlert.message("Kontakt ist inkompatibel: " + contact.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+        if ( contact.getViolationMessage() != null ) {
+            Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
     }
@@ -113,9 +112,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private void saveAndCloseButtonHandling() {
         contact = getContact();
-        if ( contact.getViolationMessages() != null ) {
-
-            UiAlert.message("Kontakt ist inkompatibel: " + contact.getViolationMessages()).show(UiAlertBuilder.Type.WARNING);
+        if ( contact.getViolationMessage() != null ) {
+            Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
         Ui.closeWindowOf(lastNameTextField);
@@ -227,7 +225,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         //button behavior
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
-        
+
         //get overwriten in accept()
         lastNameTextField.setText("");
 
@@ -356,10 +354,10 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @Override
     public void accept(Contact cont
     ) {
-        if ( cont != null && cont.getViolationMessages() == null ) {
+        if ( cont != null && cont.getViolationMessage() == null ) {
             setContact(cont);
         } else {
-            UiAlert.message("Kontakt ist inkompatibel").show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kontakt ist inkompatibel").show(AlertType.WARNING);
         }
     }
 

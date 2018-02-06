@@ -1,11 +1,5 @@
 package tryout;
 
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.*;
@@ -17,16 +11,14 @@ import javax.swing.*;
 
 import org.junit.Test;
 
-import eu.ggnet.saft.Client;
 import eu.ggnet.dwoss.misc.op.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
-
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelManagerDialog;
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelTableModel;
-
 import eu.ggnet.dwoss.rules.SalesChannel;
-
 import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.model.SalesChannelLine;
+import eu.ggnet.saft.Dl;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.CUSTOMER;
 import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
@@ -46,7 +38,7 @@ public class SalesChannelManager {
         final Stock laden = new Stock(0, "Laden");
         final Stock lager = new Stock(1, "Lager");
 
-        Client.addSampleStub(StockAgent.class, new StockAgent() {
+        Dl.remote().add(StockAgent.class, new StockAgent() {
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
                 if ( entityClass.equals(Stock.class) ) return (List<T>)Arrays.asList(laden, lager);
@@ -168,7 +160,7 @@ public class SalesChannelManager {
                 .filter(l -> l.getDestination() != null) // No Destination change
                 .sorted(new LastCharsRefurbishIdSorter()) // Sort
                 .collect(Collectors.groupingBy(SalesChannelLine::getDestination,
-                                Collectors.mapping(SalesChannelLine::getRefurbishedId, Collectors.toList())));
+                        Collectors.mapping(SalesChannelLine::getRefurbishedId, Collectors.toList())));
 
         for (Entry<Stock, List<String>> entry : destinationsWithStockUnitIds.entrySet()) {
             System.out.println(entry.getKey().getName() + ",refurbishIds=" + entry.getValue());

@@ -25,9 +25,8 @@ import eu.ggnet.dwoss.price.imex.*;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.core.cap.ActionFactory;
 
-import static eu.ggnet.saft.Client.lookup;
-
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.saft.Dl;
 
 /**
  * ActionFactory for Prices.
@@ -41,7 +40,7 @@ public class PriceActionFactory implements ActionFactory {
     public List<MetaAction> createMetaActions() {
         List<MetaAction> actions = new ArrayList<>();
 
-        for (TradeName contractor : lookup(Mandators.class).loadContractors().all()) {
+        for (TradeName contractor : Dl.local().lookup(CachedMandators.class).loadContractors().all()) {
             if ( contractor.isManufacturer() ) {
                 actions.add(new MetaAction("Geschäftsführung", "Im-/Export", new ManufacturerExportAction(contractor)));
             } else {

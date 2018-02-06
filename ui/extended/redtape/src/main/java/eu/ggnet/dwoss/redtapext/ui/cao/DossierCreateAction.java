@@ -24,23 +24,21 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancel;
-
-
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 /**
  *
@@ -84,7 +82,7 @@ public class DossierCreateAction extends AbstractAction {
                 DocumentUpdateView docView = new DocumentUpdateView(doc);
                 docView.setController(new DocumentUpdateController(docView, doc));
                 docView.setCustomerValues(customer.getId());
-                return OkCancel.wrap(docView);
+                return OkCancelWrap.vetoResult(docView);
             }).filter(r -> handleFailure(r, doc))
                     .map(Reply::getPayload)
                     .ifPresent(this::handleSuccesses);

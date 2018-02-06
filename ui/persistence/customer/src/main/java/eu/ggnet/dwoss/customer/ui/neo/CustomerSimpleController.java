@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +37,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.UiAlertBuilder;
+import eu.ggnet.saft.core.ui.builder.AlertBuilder;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -120,11 +120,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private void saveAndCloseButtonHandling() {
         simpleCustomer = getSimpleCustomer();
 
-        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {
-            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
 
@@ -135,11 +135,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private void saveAndEnhanceUIButtonHandling() {
         simpleCustomer = getSimpleCustomer();
 
-        Customer tempCustomer = Client.lookup(CustomerAgent.class).store(simpleCustomer);
+        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
 
         //only get valid object out
         if ( tempCustomer.getViolationMessage() != null ) {
-            UiAlert.message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
 
@@ -248,12 +248,12 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @Override
     public void accept(Customer c) {
         if ( c != null ) {
-            if ( c.isBussines() ) {
+            if ( c.isBusiness() ) {
                 bussines = true;
             }
             setSimpleCustomer(c.toSimple().get());
         } else {
-            UiAlert.message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(UiAlertBuilder.Type.WARNING);
+            Ui.build().alert().message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
         }
 
     }

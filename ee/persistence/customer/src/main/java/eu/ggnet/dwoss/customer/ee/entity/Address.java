@@ -112,7 +112,7 @@ public class Address implements Serializable {
      * @return null if instance is valid, else a string representing the invalidation.
      */
     @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( StringUtils.isBlank(street) ) return "Street is blank";
         if ( StringUtils.isBlank(city) ) return "City is blank";
         if ( StringUtils.isBlank(zipCode) ) return "ZipCode is blank";

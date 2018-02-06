@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
@@ -47,7 +47,7 @@ public class DocumentUpdateViewTryout {
         // Test different settings of booking accounts in ledgers and in positions
         // Test comment
 
-        Client.addSampleStub(CustomerService.class, new CustomerServiceStub());
+        Dl.remote().add(CustomerService.class, new CustomerServiceStub());
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ( "Nimbus".equals(info.getName()) ) {
@@ -135,7 +135,7 @@ public class DocumentUpdateViewTryout {
                 .build()
         );
 
-        Client.addSampleStub(Mandators.class, new Mandators() {
+        Dl.remote().add(Mandators.class, new Mandators() {
 
             @Override
             public PostLedger loadPostLedger() {
@@ -177,7 +177,6 @@ public class DocumentUpdateViewTryout {
             }
 
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-
             @Override
             public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -205,10 +204,10 @@ public class DocumentUpdateViewTryout {
 
             //</editor-fold>
         });
-        Client.addSampleStub(RedTapeWorker.class, new RedTapeWorkerStub());
-        Client.addSampleStub(RedTapeAgent.class, null);
-        Client.addSampleStub(UnitOverseer.class, null);
-        Client.addSampleStub(Guardian.class, new AbstractGuardian() {
+        Dl.remote().add(RedTapeWorker.class, new RedTapeWorkerStub());
+        Dl.remote().add(RedTapeAgent.class, null);
+        Dl.remote().add(UnitOverseer.class, null);
+        Dl.local().add(Guardian.class, new AbstractGuardian() {
 
             {
                 setRights(new Operator("All Rights", 1, Arrays.asList(AtomicRight.values())));
@@ -226,7 +225,7 @@ public class DocumentUpdateViewTryout {
         view.setController(controller);
         view.setCustomerValues(1);
 
-        Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancel.wrap(view)).ifPresent(System.out::println);
+        Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancelWrap.vetoResult(view)).ifPresent(System.out::println);
 
 //        OkCancelDialog<DocumentUpdateView> cdDialog = new OkCancelDialog<>("Auftrag anlegen", view);
 //        cdDialog.setVisible(true);

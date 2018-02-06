@@ -23,10 +23,10 @@ import java.util.*;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
@@ -35,11 +35,11 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -91,7 +91,7 @@ public class AnnulationInvoiceAction extends AccessableAction {
             }
             doc.setType(DocumentType.ANNULATION_INVOICE);
             doc.setDirective(Directive.BALANCE_REPAYMENT);
-            Document d = lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), lookup(Guardian.class).getUsername());
+            Document d = Dl.remote().lookup(RedTapeWorker.class).update(doc, view.getStockLocation(), Dl.local().lookup(Guardian.class).getUsername());
             controller.reloadSelectionOnStateChange(d.getDossier());
         }
     }

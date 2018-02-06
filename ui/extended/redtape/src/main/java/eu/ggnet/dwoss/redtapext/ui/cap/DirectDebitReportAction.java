@@ -16,15 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.dwoss.redtapext.ee.reporting.DirectDebitReporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.redtapext.ee.reporting.DirectDebitReporter;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -39,7 +37,7 @@ public class DirectDebitReportAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Lastschriftenreport").call(() -> lookup(DirectDebitReporter.class).toXls().toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Lastschriftenreport").call(() -> Dl.remote().lookup(DirectDebitReporter.class).toXls().toTemporaryFile()));
         });
     }
 }

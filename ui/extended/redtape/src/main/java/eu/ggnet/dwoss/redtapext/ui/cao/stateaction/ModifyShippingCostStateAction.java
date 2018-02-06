@@ -21,15 +21,15 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  *
@@ -60,14 +60,14 @@ public class ModifyShippingCostStateAction extends DefaultStateTransitionAction 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Document document = lookup(RedTapeWorker.class).stateChange(cdoc, transition, lookup(Guardian.class).getUsername());
+        Document document =Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername());
 
         int confirmDialog = JOptionPane.showConfirmDialog(parent, createWindowText(),
                 "Automatische Versandkostenkalkulation", JOptionPane.YES_NO_CANCEL_OPTION);
         if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.modifyOrAddShippingCost(document, cdoc.getShippingCondition());
 
         if ( confirmDialog != JOptionPane.CANCEL_OPTION )
-            controller.reloadSelectionOnStateChange(lookup(RedTapeWorker.class).update(document, null, lookup(Guardian.class).getUsername()).getDossier());
+            controller.reloadSelectionOnStateChange(Dl.remote().lookup(RedTapeWorker.class).update(document, null, Dl.local().lookup(Guardian.class).getUsername()).getDossier());
 
     }
 }

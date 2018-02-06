@@ -22,13 +22,13 @@ import eu.ggnet.dwoss.report.ReportAgent;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.swing.OkCancel;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
-import static eu.ggnet.saft.Client.lookup;
 
 /**
  * Create a new sales report.
@@ -44,10 +44,10 @@ public class CreateNewReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().swing().eval(() -> OkCancel.wrap(new CreateNewReportView()))
+            Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new CreateNewReportView()))
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
-                    .ifPresent(v -> Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class));
+                    .ifPresent(v -> Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class));
         });
     }
 

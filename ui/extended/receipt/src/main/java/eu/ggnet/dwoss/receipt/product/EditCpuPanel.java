@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,25 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-
 import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-
-import static eu.ggnet.saft.Client.lookup;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -53,7 +44,7 @@ public class EditCpuPanel extends javax.swing.JPanel implements IPreClose {
     private ComboBoxController<Cpu.Manufacturer> manufacturers;
 
     public EditCpuPanel(List<Cpu> cpus) {
-        this(lookup(ProductProcessor.class), cpus);
+        this(Dl.remote().lookup(ProductProcessor.class), cpus);
     }
 
     /**

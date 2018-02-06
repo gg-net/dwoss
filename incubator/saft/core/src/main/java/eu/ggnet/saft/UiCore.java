@@ -5,9 +5,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import javax.swing.JFrame;
@@ -18,6 +18,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.exception.ExceptionUtil;
 import eu.ggnet.saft.core.exception.SwingExceptionDialog;
@@ -30,6 +33,8 @@ import eu.ggnet.saft.core.ui.*;
  */
 public class UiCore {
 
+    private final static Logger L = LoggerFactory.getLogger(UiCore.class);
+
     // Package private for Ui usage.
     final static ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
@@ -39,9 +44,13 @@ public class UiCore {
     @SuppressWarnings("unchecked")
     private static final Map<Class, Consumer> EXCEPTION_CONSUMER = new HashMap<>();
 
+    private static final Set<Runnable> ON_SHUTDOWN = new HashSet<>();
+
     private static JFrame mainFrame = null; // Frame in Swing Mode
 
     private static Stage mainStage = null; // Frame in Fx Mode
+
+    private static AtomicBoolean shuttingDown = new AtomicBoolean(false); // Shut down handler.
 
     private static Consumer<Throwable> finalConsumer = (b) -> {
         Runnable r = () -> {
@@ -109,11 +118,24 @@ public class UiCore {
 
             @Override
             public void windowClosed(WindowEvent e) {
+                // Shutdownhandler
+                if ( !shuttingDown.compareAndSet(false, true) ) return; // enure no loops.
+                ON_SHUTDOWN.forEach(Runnable::run);
+                for (Window window : Frame.getWindows()) {
+                    window.setVisible(false);
+                    window.dispose();
+                }
                 EXECUTOR_SERVICE.shutdownNow();
                 Platform.exit();
             }
 
         });
+    }
+
+    public static void addOnShutdown(Runnable runnable) {
+        if ( runnable == null ) return;
+        L.info("Adding on Shutdown {}", runnable);
+        ON_SHUTDOWN.add(runnable);
     }
 
     /**

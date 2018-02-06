@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.Stock;
-
 import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
@@ -29,23 +24,19 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.saft.core.ui.Workspace;
+import eu.ggnet.dwoss.receipt.product.StockDialog;
+import eu.ggnet.dwoss.receipt.unit.*;
+import eu.ggnet.dwoss.rules.ReceiptOperation;
+import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 
-
-import eu.ggnet.dwoss.receipt.product.ComboBoxDialog;
-import eu.ggnet.dwoss.receipt.unit.*;
-
-import eu.ggnet.dwoss.rules.ReceiptOperation;
-
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import eu.ggnet.dwoss.util.UserInfoException;
-
 import lombok.Value;
-
-import static eu.ggnet.saft.Client.lookup;
+import stock.upi.StockUpi;
 
 /**
  * Ui support for the unit Operations.
@@ -98,7 +89,7 @@ public class UiUnitSupport {
                 stockTransaction,
                 result.getUnitModel().getOperation(),
                 result.getUnitModel().getOperationComment(),
-                lookup(Guardian.class).getUsername()
+                Dl.local().lookup(Guardian.class).getUsername()
         );
     }
 
@@ -109,7 +100,7 @@ public class UiUnitSupport {
      * @throws UserInfoException if the unit may not be edited.
      */
     public void editUnit(String refurbishedIdOrSerial) throws UserInfoException {
-        Window parent = lookup(Workspace.class).getMainFrame();
+        Window parent = UiCore.getMainFrame();
         if ( refurbishedIdOrSerial == null || refurbishedIdOrSerial.trim().equals("") ) return;
         refurbishedIdOrSerial = refurbishedIdOrSerial.trim().toUpperCase();
         UnitProcessor.EditableUnit eu = unitProcessor.findEditableUnit(refurbishedIdOrSerial);
@@ -121,7 +112,7 @@ public class UiUnitSupport {
 
         UniqueUnit uu = eu.getUniqueUnit();
         if ( eu.getStockUnit() != null )
-            uu = optionalChangeStock(eu.getUniqueUnit(), eu.getStockUnit(), lookup(Workspace.class).getValue(Stock.class), parent, lookup(Guardian.class).getUsername());
+            uu = optionalChangeStock(eu.getUniqueUnit(), eu.getStockUnit(), Dl.local().lookup(StockUpi.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
 
         UnitAndModel result = createEditUnit(parent, uu, eu.getOperation(), eu.getPartNo(), null);
         if ( result == null ) return;
@@ -131,7 +122,7 @@ public class UiUnitSupport {
                 result.getUnitModel().getProduct(),
                 result.getUnitModel().getOperation(),
                 result.getUnitModel().getOperationComment(),
-                lookup(Guardian.class).getUsername()
+                Dl.local().lookup(Guardian.class).getUsername()
         );
     }
 
@@ -180,21 +171,21 @@ public class UiUnitSupport {
         return new UnitAndModel(model, uniqueUnit);
     }
 
-    private UniqueUnit optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, Stock localStock, Window parent, String account) {
+    private UniqueUnit optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, PicoStock localStock, Window parent, String account) {
         if ( !stockUnit.isInStock() ) return uniqueUnit;
-        if ( localStock.equals(stockUnit.getStock()) ) return uniqueUnit;
+        if ( localStock.getId() == stockUnit.getStock().getId() ) return uniqueUnit;
         if ( stockUnit.isInTransaction() ) {
             JOptionPane.showMessageDialog(parent,
-                    "Achtung, Gerät ist nicht auf " + localStock.getName() + ",\n"
+                    "Achtung, Gerät ist nicht auf " + localStock.getShortDescription() + ",\n"
                     + "aber Gerät ist auch auf einer Transaktion.\n"
                     + "Automatische Lageränderung nicht möglich !");
             return uniqueUnit;
         }
         int option = JOptionPane.showConfirmDialog(parent,
-                "Gerät steht nicht auf " + localStock.getName() + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
+                "Gerät steht nicht auf " + localStock.getShortDescription() + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
                 "Standortabweichung", JOptionPane.YES_NO_OPTION);
         if ( option == JOptionPane.YES_OPTION ) {
-            ComboBoxDialog<Stock> dialog = new ComboBoxDialog<>(parent, lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]), new StockCellRenderer());
+            StockDialog dialog = new StockDialog(parent, Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]), new StockCellRenderer());
             dialog.setSelection(localStock);
             dialog.setVisible(true);
             if ( dialog.isOk() ) return unitProcessor.transfer(uniqueUnit, dialog.getSelection().getId(), account);
