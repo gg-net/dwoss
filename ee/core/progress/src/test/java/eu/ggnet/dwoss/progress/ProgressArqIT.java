@@ -14,8 +14,6 @@ import eu.ggnet.dwoss.progress.support.MonitorFactorySupportBean;
 import eu.ggnet.saft.api.progress.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
 public class ProgressArqIT {
@@ -40,11 +38,10 @@ public class ProgressArqIT {
 
     @Test
     public void monitor() {
-        assertThat(monitorer).isNotNull().as("monitorer");
-        assertNotNull(monitorer);
-        monitorer.doSomething();
-        assertNotNull(progressObserver);
-        assertFalse(progressObserver.hasProgress());
+        assertThat(monitorer).as("monitorer").isNotNull();
+        assertThat(progressObserver).as("progressObserver").isNotNull();
+        monitorer.doSomething(); // Do some activity in backgeoung
+        assertThat(progressObserver.hasProgress()).as("active progress").isFalse();
     }
 
 }

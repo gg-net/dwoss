@@ -63,12 +63,9 @@ import static javax.persistence.CascadeType.*;
     ,
     @NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true")
     ,
-    @NamedQuery(name = "Document.findOpenInvoiceUnpaidByTypePaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = true AND d.type = ?1 AND d.dossier.paymentMethod = ?2")
-    ,
-    @NamedQuery(name = "Document.findOpenAnulationByCustomerPaymentMethod", query = "SELECT d FROM Document d WHERE d.closed = FALSE AND d.active = TRUE AND d.dossier.customerId = ?1 AND d.type IN (?2) AND d.dossier.paymentMethod=?3 AND d.directive=?4")
-    ,
     @NamedQuery(name = "Document.productIdAndType", query = "SELECT DISTINCT p.document FROM Position p WHERE p.uniqueUnitProductId = ?1 AND p.document.active = TRUE AND p.document.type = ?2 ORDER BY p.document.actual DESC")
 })
+@SuppressWarnings("PersistenceUnitPresent")
 public class Document extends IdentifiableEntity implements Serializable, Comparable<Document> {
 
     /**

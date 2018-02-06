@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.redtape.itest.eao.RedTapeHelper;
 import eu.ggnet.dwoss.redtape.test.PositionTest;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -58,6 +59,7 @@ public class ArquillianProjectArchive {
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
+                .addClass(RedTapeHelper.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
                 .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement

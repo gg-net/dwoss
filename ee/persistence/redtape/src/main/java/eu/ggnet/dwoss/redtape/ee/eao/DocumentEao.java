@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.redtape.ee.eao;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
@@ -26,6 +27,13 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PaymentMethod;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+
+import com.mysema.query.jpa.impl.JPAQuery;
+
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
+import static eu.ggnet.dwoss.redtape.ee.entity.QDocument.document;
+import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
 
 /**
  *
@@ -112,29 +120,32 @@ public class DocumentEao extends AbstractEao<Document> {
      * @param paymentMethod The paymentMethod
      * @return documents where the dossier has the {@link PaymentMethod}, the type matches, and no {@link Condition} PAID is not set.
      */
-    public List<Document> findOpenInvoiceUnpaidByTypePaymentMethod(PaymentMethod paymentMethod) {
-        List<Document> docs = em.createNamedQuery("Document.findOpenInvoiceUnpaidByTypePaymentMethod", Document.class)
-                .setParameter(1, DocumentType.INVOICE)
-                .setParameter(2, paymentMethod).getResultList();
-        for (Document document : new ArrayList<>(docs)) {
-            if ( document.getConditions().contains(Condition.PAID) ) docs.remove(document);
-        }
-        return docs;
+    public List<Document> findInvoiceUnpaid(PaymentMethod paymentMethod) {
+        return new JPAQuery(em)
+                .from(document)
+                .where(document.active.eq(true).and(document.type.eq(DocumentType.INVOICE).and(document.dossier.paymentMethod.eq(paymentMethod))))
+                .list(document)
+                .stream()
+                .filter(d -> !d.getConditions().contains(Condition.PAID))
+                .collect(Collectors.toList());
     }
 
     /**
      * Get the documents of type ANULATION_INVOICE and CREDIT_MEMO where customerId matches, paymentMethod is DIRECT_DEBIT and directive is BALANCE_REPAYMENT.
      * <p/>
      * @param customerId The customerId that has to match with the document.dossier.customerId.
+     * @param paymentMethod the paymentMethod as filter.
      * @return documents of type ANULATION_INVOICE and CREDIT_MEMO where customerId matches, paymentMethod is DIRECT_DEBIT and directive is BALANCE_REPAYMENT.
      */
-    public List<Document> findOpenAnulationByCustomerPaymentMethod(long customerId) {
-        return em.createNamedQuery("Document.findOpenAnulationByCustomerPaymentMethod", Document.class)
-                .setParameter(1, customerId)
-                .setParameter(2, Arrays.asList(new DocumentType[]{DocumentType.ANNULATION_INVOICE, DocumentType.CREDIT_MEMO}))
-                .setParameter(3, PaymentMethod.DIRECT_DEBIT)
-                .setParameter(4, Document.Directive.BALANCE_REPAYMENT)
-                .getResultList();
+    public List<Document> findUnBalancedAnulation(long customerId, PaymentMethod paymentMethod) {
+        return new JPAQuery(em)
+                .from(document)
+                .where(document.active.eq(true)
+                        .and(document.dossier.customerId.eq(customerId))
+                        .and(document.type.in(EnumSet.of(ANNULATION_INVOICE, CREDIT_MEMO)))
+                        .and(document.dossier.paymentMethod.eq(paymentMethod))
+                        .and(document.directive.eq(BALANCE_REPAYMENT)))
+                .list(document);
     }
 
     /**
