@@ -39,6 +39,51 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author jacob.weinhold
  */
 public class CustomerSimpleTest {
+    
+     public static Company makeValidCompany() {
+        Company validcompany = new Company();
+        validcompany.setName("Firma ABC");
+        validcompany.getAddresses().add(makeValidAddress());
+        validcompany.getCommunications().add(makeValidCommunication());
+
+        assertThat(validcompany.getViolationMessage()).as("valid Company").isNull();
+        return validcompany;
+    }
+
+    public static Contact makeValidContact() {
+        Contact validContact = new Contact(Sex.MALE, true, "", "Testkunde", "Testkunde");
+        validContact.getCommunications().add(makeValidCommunication());
+        validContact.getAddresses().add(makeValidAddress());
+
+        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
+        return validContact;
+    }
+
+    public static Communication makeValidCommunication() {
+        Communication validCommunication = new Communication(Type.EMAIL, true);
+        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Address").isNull();
+        return validCommunication;
+    }
+
+    public static Address makeValidAddress() {
+        Address validAddress = new Address();
+        validAddress.setCity("Munich");
+        validAddress.setIsoCountry(Locale.GERMANY);
+        validAddress.setStreet("Straße");
+        validAddress.setZipCode("123456");
+
+        assertThat(validAddress.getViolationMessage()).as("valid Address").isNull();
+        return validAddress;
+    }
+
+    public static AddressLabel makeValidAddressLabel() {
+        AddressLabel validAddressLabel = new AddressLabel(makeValidCompany(), makeValidContact(), makeValidAddress(), AddressType.INVOICE);
+
+        assertThat(validAddressLabel.getViolationMessage()).as("valid validAddressLabel").isNull();
+        return validAddressLabel;
+    }
 
     public static Customer makeValidSimpleBusiness() {
         Address address = new Address();

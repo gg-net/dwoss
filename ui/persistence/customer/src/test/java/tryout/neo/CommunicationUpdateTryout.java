@@ -45,8 +45,8 @@ public class CommunicationUpdateTryout {
             comm.setType(Type.MOBILE);
             comm.setIdentifier("040123456789");
 
-            if ( comm.getViolationMessages() != null ) {
-                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            if ( comm.getViolationMessage() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessage());
             }
 
             Ui.exec(() -> {
@@ -58,8 +58,8 @@ public class CommunicationUpdateTryout {
 
         addButton.addActionListener(ev -> {
             comm.setType(null);
-            if ( comm.getViolationMessages() != null ) {
-                System.out.println("Communication ViolationMessages: " + comm.getViolationMessages());
+            if ( comm.getViolationMessage() != null ) {
+                System.out.println("Communication ViolationMessages: " + comm.getViolationMessage());
             }
 
             Ui.exec(() -> {

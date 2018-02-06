@@ -121,7 +121,7 @@ public class Communication implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( type == null ) return "Type is null";
         if ( StringUtils.isBlank(identifier) ) return "Identifier is blank";
         return type.getValidPattern()

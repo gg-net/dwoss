@@ -124,7 +124,7 @@ public class AddressLabel {
      * @return null if instance is valid, else a string representing the invalidation.
      */
     @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( address == null ) return "Address is null";
         if ( address.getViolationMessage() != null ) return "Address: " + address.getViolationMessage();
         if ( company == null && contact == null ) return "Company and Contact are null.";

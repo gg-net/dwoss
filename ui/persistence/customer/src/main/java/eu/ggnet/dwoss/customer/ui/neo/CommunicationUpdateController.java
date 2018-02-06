@@ -97,8 +97,8 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         communication = getCommunication();
 
         //only get valid object out
-        if ( communication.getViolationMessages() != null ) {
-            Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessages()).show(AlertType.WARNING);
+        if ( communication.getViolationMessage() != null ) {
+            Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
 

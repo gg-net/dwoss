@@ -185,7 +185,7 @@ public class CustomerAgentStub implements CustomerAgent {
         }
 
         //check if the Communication is valid with the right pattern
-        if ( comm.getViolationMessages() == null ) {
+        if ( comm.getViolationMessage() == null ) {
             cont.getCommunications().add(comm);
         } else {
             Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);

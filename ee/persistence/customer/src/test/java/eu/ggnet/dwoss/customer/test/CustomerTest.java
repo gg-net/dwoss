@@ -2,10 +2,8 @@ package eu.ggnet.dwoss.customer.test;
 
 import java.util.Locale;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -13,306 +11,200 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.rules.CustomerFlag;
 
+import static eu.ggnet.dwoss.customer.test.CustomerTest.makeValidConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
  * @author oliver.guenther
  */
-// Testtarget: isSimple, toSimple, isValid
 public class CustomerTest {
 
-    private final CustomerGenerator gen = new CustomerGenerator();
+    public static Company makeValidCompany() {
+        Company validcompany = new Company();
+        validcompany.setName("Firma ABC");
+        validcompany.getAddresses().add(makeValidAddress());
+        validcompany.getCommunications().add(makeValidCommunication());
 
-    private Customer customer;
-
-    private Company company;
-
-    private Contact contact;
-
-    private Address address;
-
-    private Communication communication;
-
-    @Before
-    public void executedBeforeEach() {
-        customer = new Customer();
-
-        contact = new Contact();
-        contact.setFirstName("Max");
-        contact.setLastName("Mustermann");
-
-        company = new Company();
-        company.setName("Firma ABC");
-
-        address = new Address();
-        address.setStreet("Postallee 23");
-        address.setZipCode("21234");
-        address.setCity("Hamburg");
-        address.setIsoCountry(Locale.GERMANY);
-
-        communication = new Communication();
-        communication.setType(Type.EMAIL);
-        communication.setIdentifier("test@test.de");
-
+        assertThat(validcompany.getViolationMessage()).as("valid Company").isNull();
+        return validcompany;
     }
 
-    public static Customer makeValidConsumer() {
+    public static Contact makeValidContact() {
         Contact validContact = new Contact(Sex.MALE, true, "", "Testkunde", "Testkunde");
-        validContact.getCommunications().add(new Communication(Type.EMAIL, true));
-        validContact.getCommunications().get(0).setIdentifier("Max.mustermann@mustermail.de");
+        validContact.getCommunications().add(makeValidCommunication());
+        validContact.getAddresses().add(makeValidAddress());
+
+        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
+        return validContact;
+    }
+
+    public static Communication makeValidCommunication() {
+        Communication validCommunication = new Communication(Type.EMAIL, true);
+        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Address").isNull();
+        return validCommunication;
+    }
+
+    public static Address makeValidAddress() {
         Address validAddress = new Address();
         validAddress.setCity("Munich");
         validAddress.setIsoCountry(Locale.GERMANY);
         validAddress.setStreet("Straße");
         validAddress.setZipCode("123456");
-        validContact.getAddresses().add(validAddress);
+
+        assertThat(validAddress.getViolationMessage()).as("valid Address").isNull();
+        return validAddress;
+    }
+
+    public static AddressLabel makeValidAddressLabel() {
+        AddressLabel validAddressLabel = new AddressLabel(makeValidCompany(), makeValidContact(), makeValidAddress(), AddressType.INVOICE);
+
+        assertThat(validAddressLabel.getViolationMessage()).as("valid validAddressLabel").isNull();
+        return validAddressLabel;
+    }
+
+    public static Customer makeValidConsumer() {
+        Contact validContact = makeValidContact();
+
         Customer customer = new Customer();
         customer.getContacts().add(validContact);
 
-        customer.getAddressLabels().add(new AddressLabel(null, validContact, customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
+        customer.getAddressLabels().add(makeValidAddressLabel());
+
         assertThat(customer.getViolationMessage()).as("customer does not violate any role").isNull();
         assertThat(customer.isConsumer()).as("customer is a consumer").isTrue();
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
 
         customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
+
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
         assertThat(customer.getViolationMessage()).as("customer does not violate any role").isNull();
         assertThat(customer.isValid()).as("customer is valid customer").isTrue();
-
         return customer;
 
     }
 
     public static Customer makeValidBusinessCustomer() {
-
-        Address address = new Address();
-        address.setStreet("Postallee 23");
-        address.setZipCode("21234");
-        address.setCity("Hamburg");
-        address.setIsoCountry(Locale.GERMANY);
-        assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
-
-        Company company = new Company("Musterfirma", 0, true, "1203223");
-        company.getAddresses().add(address);
-        company.getCommunications().add(new Communication(Type.EMAIL, true));
-        company.getCommunications().get(0).setIdentifier("ceoA@gmx.net");
-
-        company.getCommunications().add(new Communication(Type.EMAIL, false));
-        company.getCommunications().get(1).setIdentifier("ceoB@gmx.net");
-
-        assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
-
         Customer customer = new Customer();
-        customer.getCompanies().add(company);
+        customer.getContacts().clear();
+        customer.getCompanies().add(makeValidCompany());
+        customer.getAddressLabels().add(makeValidAddressLabel());
 
-        customer.getAddressLabels().add(new AddressLabel(company, null, customer.getCompanies().get(0).getAddresses().get(0), AddressType.INVOICE));
         assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
         assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+
+        customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
+        assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
+
         assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
-
         return customer;
-
     }
 
     @Test
     public void testOutPut() {
-        assertThat(customer).describedAs("customer").isNotNull();
+        Customer makeValidConsumer = makeValidConsumer();
+        assertThat(makeValidConsumer).describedAs("customer").isNotNull();
     }
 
     @Test
-    public void testIsVaild() {
-        customer.getCompanies().clear();
-        customer.getContacts().add(contact);
-        contact.getCommunications().add(communication);
-        contact.getAddresses().add(address);
-        assertThat(customer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
+    public void testIsVaildConsumerCostmer() {
+        Customer makeValidConsumer = makeValidConsumer();
+        assertThat(makeValidConsumer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
 
-        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        assertThat(customer.isValid()).as("Consumer Customer is vaild").isTrue();
+        makeValidConsumer = makeValidConsumer();
+        makeValidConsumer.getAddressLabels().add(makeValidAddressLabel());
+        assertThat(makeValidConsumer.isValid()).as("Consumer Customer is vaild").isTrue();
 
-        customer.getAddressLabels().clear();
-        assertThat(customer.isValid()).as("Customer is not vaild, because there is no AddressLable").isFalse();
+        makeValidConsumer = makeValidConsumer();
+        makeValidConsumer.getAddressLabels().clear();
+        assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there is no AddressLable").isFalse();
 
-        customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), gen.makeContact(), gen.makeAddress(), AddressType.SHIPPING));
-        assertThat(customer.isValid()).as("Customer is not vaild, because there is no AddressLable with Type Invoice").isFalse();
+        makeValidConsumer = makeValidConsumer();
+        AddressLabel shoppingAddressLabel = makeValidAddressLabel();
+        shoppingAddressLabel.setType(AddressType.SHIPPING);
+        assertThat(shoppingAddressLabel.getViolationMessage()).as("Valid AddressLabel").isNull();
 
-        customer.getAddressLabels().clear();
-        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        assertThat(customer.isValid()).as("Customer is not vaild, because there are more than two AddressLables").isFalse();
+        makeValidConsumer.getAddressLabels().clear();
+        makeValidConsumer.getAddressLabels().add(shoppingAddressLabel);
+        assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there is no AddressLable with Type Invoice").isFalse();
 
-        customer.getCompanies().clear();
-        customer.getContacts().clear();
-        assertThat(customer.isValid()).as("Customer is not vaild, because there is no Company and no Contact is set").isFalse();
+        makeValidConsumer = makeValidConsumer();
+        makeValidConsumer.getAddressLabels().clear();
+        makeValidConsumer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidConsumer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidConsumer.getAddressLabels().add(makeValidAddressLabel());
+        assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there are more than two AddressLables").isFalse();
 
-        customer.getContacts().add(contact);
-        customer.getContacts().get(0).setLastName("");
-        assertThat(customer.isValid()).as("Consumer Customer is not vaild, because the Contact do not have a LastName").isFalse();
+        makeValidConsumer = makeValidConsumer();
+        makeValidConsumer.getCompanies().clear();
+        makeValidConsumer.getContacts().clear();
+        assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there is no Company and no Contact is set").isFalse();
 
-        //transfrom to bussnes Customer
-        customer.getContacts().clear();
-        customer.getCompanies().add(company);
-        company.getCommunications().add(communication);
-        company.getAddresses().add(address);
-        customer.getAddressLabels().clear();
-        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
-        assertThat(customer.isBusiness()).as("Customer is a Bussines Customer").isTrue();
-        assertThat(customer.isValid()).as("Bussnis Customer is vaild").isTrue();
+        makeValidConsumer = makeValidConsumer();
+        Contact makeValidContact = makeValidContact();
+        makeValidContact.setLastName("");
+        assertThat(makeValidContact.getViolationMessage()).as("not valid Contact").isNotNull();
 
-        customer.getCompanies().clear();
-        company.setName("");
-        customer.getCompanies().add(company);
-        assertThat(customer.isValid()).as("Bussnis Customer is not vaild, because the Name of the Compnay is blank").isFalse();
-
-        customer.getCompanies().clear();
-        company.getAddresses().clear();
-        customer.getCompanies().add(company);
-        assertThat(customer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
-
-        customer.getCompanies().clear();
-        company.getAddresses().add(address);
-        company.getCommunications().clear();
-        assertThat(customer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no Communication").isFalse();
+        makeValidConsumer.getContacts().add(makeValidContact);
+        assertThat(makeValidConsumer.isValid()).as("Consumer Customer is not vaild, because the Contact do not have a LastName").isFalse();
 
     }
 
     @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseNoAddressLable() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
+    public void testIsVaildBussnisCostmer() {
 
-        customer.getAddressLabels().clear();
+        Customer makeValidBusinessCustomer = makeValidBusinessCustomer();
 
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there is no AddressLable").isFalse();
-    }
+        assertThat(makeValidBusinessCustomer.isBusiness()).as("Customer is a Bussines Customer").isTrue();
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is vaild").isTrue();
 
-    @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseWrongAddressLable() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
+        makeValidBusinessCustomer.getCompanies().clear();
+        Company makeValidCompany = makeValidCompany();
+        makeValidCompany.setName("");
+        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because the Name of the Compnay is blank").isFalse();
 
-        customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), gen.makeContact(), gen.makeAddress(), AddressType.SHIPPING));
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there is no AddressLable").isFalse();
 
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because the AddressLable is from wrong type").isFalse();
-    }
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        AddressLabel shoppingAddressLabel = makeValidAddressLabel();
+        shoppingAddressLabel.setType(AddressType.SHIPPING);
+        assertThat(shoppingAddressLabel.getViolationMessage()).as("Valid AddressLabel").isNull();
 
-    @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseTwoCompanies() {
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        makeValidBusinessCustomer.getAddressLabels().add(shoppingAddressLabel);
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there is no AddressLable with Type Invoice").isFalse();
 
-        customer.getContacts().clear();
-        customer.getCompanies().add(company);
-        customer.getCompanies().add(company);
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getAddressLabels().clear();
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there are more than two AddressLables").isFalse();
 
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are 2 Companies").isFalse();
-    }
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getCompanies().clear();
+        makeValidCompany = makeValidCompany();
+        makeValidCompany.getAddresses().clear();
+        assertThat(makeValidCompany.getViolationMessage()).as("company not valid").isNotNull();
 
-    @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseNoCustomerFlag() {
-        customer.getContacts().add(contact);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        customer.getFlags().clear();
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there is no CustomerFlag").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseBlankKeyAccount() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        customer.setKeyAccounter("");
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because the KeyAccounter is blank").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidSimpleCustomerBecauseEmptyMandatorMetadata() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because the MandatorMetadata is empty").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseTwoContacts() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are 2 Contacts").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseTwoAddress() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        customer.getContacts().get(0).getAddresses().add(address);
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst with 2 Address").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseFourCommunications() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        customer.getContacts().get(0).getCommunications().add(communication);
-        customer.getContacts().get(0).getCommunications().add(communication);
-        customer.getContacts().get(0).getCommunications().add(communication);
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 4 Communications").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseDoubleCommunicationsTyp() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        Communication communicationEmail = new Communication();
-        communicationEmail.setType(Type.EMAIL);
-        communicationEmail.setIdentifier("040123456789");
-
-        customer.getContacts().get(0).getCommunications().add(communicationEmail);
-        customer.getContacts().get(0).getCommunications().add(communicationEmail);
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have 2 Communications form the same typ").isFalse();
-    }
-
-    @Test
-    public void testIsVaildForANoneValidCunsomerSimpleCustomerBecauseNotAllowedCommunication() {
-        customer.getContacts().add(contact);
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(gen.makeMandatorMetadata());
-
-        Communication icq = new Communication();
-        icq.setType(Type.ICQ);
-
-        customer.getContacts().get(0).getCommunications().add(icq);
-
-        assertThat(customer.isSimple()).as("SimpleCustomer is not vaild, because there are Contacst have a Communications that is not allowed").isFalse();
+        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
+        
+        makeValidBusinessCustomer = makeValidBusinessCustomer();
+        makeValidBusinessCustomer.getCompanies().clear();
+        makeValidCompany = makeValidCompany();
+        makeValidCompany.getCommunications().clear();
+        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
+        assertThat(makeValidCompany.getViolationMessage()).as("valid company without communication").isNull();
+        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").isFalse();
+   
     }
 
 }
