@@ -130,11 +130,9 @@ public class CustomerSimpleTest {
 
     public static Customer makeValidSimpleConsumer() {
         Customer customer = new Customer();
-
         Contact makeValidContact = makeValidContact();
         makeValidContact.getCommunications().add(makeValidCommunication());
         customer.getContacts().add(makeValidContact);
-
         customer.getAddressLabels().add(makeValidAddressLabel());
 
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
