@@ -16,7 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -29,50 +30,47 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author jens.papenhagen
  */
 public class CommunicationTest {
-    
+
     private Communication communication;
-    
+
     @Before
     public void executedBeforeEach() {
         communication = new Communication();
         communication.setType(SKYPE);
         communication.setIdentifier("skypename");
     }
-    
-    
+
     @Test
-    public void GetViolationMessages(){
+    public void GetViolationMessages() {
         assertThat(communication.getViolationMessage()).as("Communication with valid values").isNull();
     }
-    
-    
+
     @Test
-    public void GetViolationMessagesForEMail(){
+    public void GetViolationMessagesForEMail() {
         communication.setType(EMAIL);
         communication.setIdentifier("test@test.de");
         assertThat(communication.getViolationMessage()).as("Communication have a vaild E-Mail").isNull();
     }
-    
+
     @Test
-    public void GetViolationMessagesForPhone(){
+    public void GetViolationMessagesForPhone() {
         communication.setType(FAX);
         communication.setIdentifier("0401234567");
         assertThat(communication.getViolationMessage()).as("Communication with valid Phonenumber").isNull();
     }
-    
-    
+
     @Test
-    public void GetNonViolationMessagesForEMail(){
+    public void GetNonViolationMessagesForEMail() {
         communication.setType(EMAIL);
         communication.setIdentifier("falscheemail@@test.de");
         assertThat(communication.getViolationMessage()).as("Communication with nonvalid E-Mail").isNotBlank();
     }
-    
+
     @Test
-    public void GetNonViolationMessagesForPhone(){
+    public void GetNonViolationMessagesForPhone() {
         communication.setType(Type.FAX);
         communication.setIdentifier("0123586Buchstaben");
         assertThat(communication.getViolationMessage()).as("Communication with nonvalid Phonenumber").isNotBlank();
     }
-    
+
 }

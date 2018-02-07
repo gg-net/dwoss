@@ -56,7 +56,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        return optionalFetchEager(eao.find(search,start,limit));
+        return optionalFetchEager(eao.find(search, start, limit));
     }
 
     @Override

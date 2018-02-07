@@ -422,9 +422,12 @@ public class Customer implements Serializable {
      * Returns null, if the customer is simple otherwise a string, why the customer is not simple.
      * Overall Rules are:
      * <ul>
-     * <li>Either a Contact or a Company are set.</li>
-     * <li>Contains only one Contact or one Company.</li>
-     * <li>One AddressLabels of Type Invoice</li>
+     * <li>Either a Contact or a Company are set</li>
+     * <li>Contains only one Contact or one Company</li>
+     * <li>Exactly One AddressLabels which is of Type Invoice</li>
+     * <li>No CustomerFlag is set</li>
+     * <li>No KeyAccounter is set</li>
+     * <li>No MandatorMetadata is set</li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
@@ -435,7 +438,7 @@ public class Customer implements Serializable {
      * <p>
      * Business Customer Rules are:
      * <ul>
-     * <li>Company with only one Address and one Contact</li>
+     * <li>Company with only one Address, one Contact and no Communication</li>
      * <li>The Address of the Company Contact has to match the Company Address</li>
      * <li>One Communication from each type: "EMAIL, PHONE, MOBILE" is allowed</li>
      * </ul>
@@ -474,6 +477,8 @@ public class Customer implements Serializable {
         if ( isBusiness() ) {
             if ( companies.get(0).getContacts().size() == 0 )
                 return "SimpleBusinessCustomer has no contact";
+            if ( companies.get(0).getCommunications().size() != 0 )
+                return "SimpleBusinessCustomer's violates it's rule not to have a Company with Communication.";
             if ( companies.get(0).getContacts().size() > 1 )
                 return "SimpleBusinessCustomer has more than one Contact";
             if ( companies.size() > 1 )
@@ -523,7 +528,7 @@ public class Customer implements Serializable {
      * <li>A least one Contact.</li>
      * </ul>
      * <p>
-     * Bussnis Customer Rules are:
+     * Business Customer Rules are:
      * <ul>
      * <li>A least one Company.</li>
      * </ul>
@@ -545,7 +550,8 @@ public class Customer implements Serializable {
         }
         if ( isBusiness() ) {
             if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() == 0 ) return "BusinessCustomer has no Address.";
-            if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
+            if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent()
+                    && !companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
                 return "No Communication ";
 
         }
