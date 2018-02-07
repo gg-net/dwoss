@@ -23,7 +23,6 @@ import org.junit.Test;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
@@ -45,7 +44,6 @@ public class CustomerSimpleTest {
         validcompany.setName("Firma ABC");
         validcompany.setTaxId("textid123456789");
         validcompany.getAddresses().add(makeValidAddress());
-        validcompany.getCommunications().add(makeValidCommunication());
 
         assertThat(validcompany.getViolationMessage()).as("valid Company").isNull();
         return validcompany;
@@ -53,7 +51,6 @@ public class CustomerSimpleTest {
 
     public static Contact makeValidContact() {
         Contact validContact = new Contact(Sex.MALE, true, "Dr", "Max", "Mustermann");
-        validContact.getCommunications().add(makeValidCommunication());
         validContact.getAddresses().add(makeValidAddress());
 
         assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
@@ -107,6 +104,7 @@ public class CustomerSimpleTest {
         assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
 
         Company company = makeValidCompany();
+        company.getCommunications().add(makeValidCommunication());
         assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
 
         Customer customer = new Customer();
@@ -125,25 +123,11 @@ public class CustomerSimpleTest {
     public static Customer makeValidSimpleConsumer() {
         Customer customer = new Customer();
 
-        Contact contact = new Contact();
-        contact.setFirstName("Max");
-        contact.setLastName("Mustermann");
-        customer.getContacts().add(contact);
+        Contact makeValidContact = makeValidContact();
+        makeValidContact.getCommunications().add(makeValidCommunication());
+        customer.getContacts().add(makeValidContact);
 
-        Address address = new Address();
-        address.setStreet("Postallee 23");
-        address.setZipCode("21234");
-        address.setCity("Hamburg");
-        address.setIsoCountry(Locale.GERMANY);
-        contact.getAddresses().add(address);
-
-        Communication communication = new Communication();
-        communication.setType(Type.EMAIL);
-        communication.setIdentifier("test@test.de");
-        contact.getCommunications().add(communication);
-
-        AddressLabel invoiceLabel = new AddressLabel(null, customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE);
-        customer.getAddressLabels().add(invoiceLabel);
+        customer.getAddressLabels().add(makeValidAddressLabel());
 
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
         assertThat(customer.getSimpleViolationMessage()).as("customer does not violate any rule").isNull();
@@ -230,11 +214,7 @@ public class CustomerSimpleTest {
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two AddressLabel is not simple").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
-        Address address = new Address();
-        address.setCity("City");
-        address.setIsoCountry(Locale.GERMANY);
-        address.setStreet("street");
-        address.setZipCode("zipCode");
+        Address address = makeValidAddress();
         simpleConsumer.getContacts().get(0).getAddresses().add(address);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with more than one address is invalid").isNotNull();
 
@@ -327,6 +307,8 @@ public class CustomerSimpleTest {
     @Test
     public void testToSimpleConsumer() {
         Customer makeValidSimpleConsumer = makeValidSimpleConsumer();
+        makeValidSimpleConsumer.getContacts().get(0).getCommunications().clear();
+        makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunication());
         makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationMobile());
         makeValidSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidSimpleConsumer.isSimple()).as("still simplecustomer").isTrue();
@@ -356,20 +338,20 @@ public class CustomerSimpleTest {
     @Test
     public void testToSimpleBussnis() {
         Customer makeValidSimpleBusiness = makeValidSimpleBusiness();
+        makeValidSimpleBusiness.getCompanies().get(0).getCommunications().clear();
+        makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunication());
         makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationMobile());
         makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
 
         Contact makeValidContact = makeValidContact();
-        makeValidContact.getCommunications().clear();
         assertThat(makeValidContact.getViolationMessage()).as("valid contact").isNull();
 
         makeValidSimpleBusiness.getCompanies().get(0).getContacts().add(makeValidContact);
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
-        
+
         assertThat(makeValidSimpleBusiness.toSimple().isPresent()).as("to simple").isTrue();
         SimpleCustomer simpleConsumerCustomer = makeValidSimpleBusiness.toSimple().get();
-        
 
         assertThat(simpleConsumerCustomer.getTitle()).as("title").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getTitle());
         assertThat(simpleConsumerCustomer.getFirstName()).as("firstname").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getFirstName());
@@ -406,7 +388,6 @@ public class CustomerSimpleTest {
             assertThat(simpleConsumerCustomer.getIsoCountry()).as("isoCountry").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
         }
 
-
         if ( !makeValidSimpleBusiness.getCompanies().get(0).getCommunications().isEmpty() ) {
             assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
                     .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
@@ -432,8 +413,5 @@ public class CustomerSimpleTest {
         assertThat(simpleConsumerCustomer.getTaxId()).as("taxId").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getTaxId());
 
     }
-    
-    
-    
 
 }
