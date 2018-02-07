@@ -88,13 +88,15 @@ public class CustomerTest {
 
     public static Customer makeValidBusinessCustomer() {
         Customer customer = new Customer();
-        customer.getContacts().clear();
         customer.getCompanies().add(makeValidCompany());
+        customer.getCompanies().get(0).getContacts().add(makeValidContact());
+        customer.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());
+        customer.getCompanies().get(0).getAddresses().add(makeValidAddress());
         customer.getAddressLabels().add(makeValidAddressLabel());
 
         assertThat(customer.getViolationMessage()).as("customer does not violate any rule").isNull();
         assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
 
         customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isFalse();
@@ -196,7 +198,7 @@ public class CustomerTest {
 
         makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
         assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
-        
+
         makeValidBusinessCustomer = makeValidBusinessCustomer();
         makeValidBusinessCustomer.getCompanies().clear();
         makeValidCompany = makeValidCompany();
@@ -204,7 +206,7 @@ public class CustomerTest {
         makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
         assertThat(makeValidCompany.getViolationMessage()).as("valid company without communication").isNull();
         assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").isFalse();
-   
+
     }
 
 }

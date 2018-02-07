@@ -39,8 +39,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author jacob.weinhold
  */
 public class CustomerSimpleTest {
-    
-     public static Company makeValidCompany() {
+
+    public static Company makeValidCompany() {
         Company validcompany = new Company();
         validcompany.setName("Firma ABC");
         validcompany.getAddresses().add(makeValidAddress());
@@ -95,9 +95,15 @@ public class CustomerSimpleTest {
 
         Company company = new Company("Musterfirma", 0, true, "1203223");
         company.getAddresses().add(address);
-        company.getCommunications().add(new Communication(Type.EMAIL, true));
-        company.getCommunications().get(0).setIdentifier("hans-juergen@gmx.net");
+        company.getCommunications().add(new Communication(Type.PHONE, true));
+        company.getCommunications().get(0).setIdentifier("01234567");
         assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
+
+        Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
+        validContact.getCommunications().add(makeValidCommunication());
+        validContact.getAddresses().add(makeValidAddress());
+        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
+        company.getContacts().add(validContact);
 
         Customer customer = new Customer();
         customer.getCompanies().add(company);
@@ -345,9 +351,7 @@ public class CustomerSimpleTest {
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
         simpleBusinessCustomer.getCompanies().stream().findAny().get().getContacts().add(makeValidSimpleConsumer().getContacts().get(0));
-        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than Cone COntact is invalid");
-
-        simpleBusinessCustomer = makeValidSimpleBusiness();
+        assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one Contact is invalid");
 
     }
 

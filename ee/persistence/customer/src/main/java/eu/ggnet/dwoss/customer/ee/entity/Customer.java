@@ -431,8 +431,10 @@ public class Customer implements Serializable {
         allowedCommunicationTypes.add(PHONE);
 
         if ( isConsumer() ) {
-            if ( contacts.size() > 1 ) return "More than one Contact";
-            if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 ) return "Contact has more than one address";
+            if ( contacts.size() > 1 )
+                return "More than one Contact";
+            if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 )
+                return "Contact has more than one address";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "Contact of the consumer  has more than 3 communications";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
@@ -445,11 +447,19 @@ public class Customer implements Serializable {
                 return "multiple PHONE type communications found";
         }
         if ( isBusiness() ) {
-            if ( companies.size() > 1 ) return "More than one Company";
-            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 ) return "The Company has more than one Address";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).count() > 1 ) return "The Company has more than one Contact";
-            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).
-                    equals(companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getAddresses().stream()).findAny().isPresent()) )
+            if ( companies.get(0).getContacts().size() == 0 )
+                return "SimpleBusinessCustomer has no contact";
+            if ( companies.get(0).getContacts().size() > 1 )
+                return "SimpleBusinessCustomer has more than one Contact";
+            if ( companies.size() > 1 )
+                return "SimpleBusinessCustomer has more than one Company";
+            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() != 1 )
+                return "SimpleBusinessCustomer's Company has not exactly one address";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getAddresses().stream()).count() != 1 )
+                return "SimpleBusinessCustomer's Contact has not exactly one address";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).count() > 1 )
+                return "The Company has more than one Contact";
+            if ( !companies.get(0).getAddresses().get(0).equals(companies.get(0).getContacts().get(0).getAddresses().get(0)) )
                 return "The Address of the Company mismatches the Address of the Contact from the Company";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "The Company of the Business Customer has more than 3 Communications";
@@ -479,7 +489,7 @@ public class Customer implements Serializable {
      * <ul>
      * <li>Either a Contact or a Company are set.</li>
      * <li>Contains only Contacts or Companies.</li>
-     * <li>One AddressLabels of Type Invoice</li>
+     * <li>One AddressLabel of Type Invoice</li>
      * <li>Only 2 AddressLabels</li>
      * </ul>
      * <p>
@@ -509,6 +519,7 @@ public class Customer implements Serializable {
             if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
         }
         if ( isBusiness() ) {
+            if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() == 0 ) return "BusinessCustomer has no Address.";
             if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
                 return "No Communication ";
 
