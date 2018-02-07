@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.test;
 
 import java.util.Locale;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -179,20 +178,22 @@ public class CustomerSimpleTest {
 
     }
 
-    @Ignore
     @Test
     public void testToSimpleBusiness() {
         Customer makeValidSimpleBusiness = makeValidSimpleBusiness();
         makeValidSimpleBusiness.getCompanies().get(0).getCommunications().clear();
-        makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunication());
-        makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationMobile());
-        makeValidSimpleBusiness.getCompanies().get(0).getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
 
         Contact makeValidContact = makeValidContact();
+        makeValidContact.getCommunications().clear();
+        makeValidContact.getCommunications().add(makeValidCommunication());
+        makeValidContact.getCommunications().add(makeValidCommunicationMobile());
+        makeValidContact.getCommunications().add(makeValidCommunicationLandline());
         assertThat(makeValidContact.getViolationMessage()).as("valid contact").isNull();
 
+        makeValidSimpleBusiness.getCompanies().get(0).getContacts().clear();
         makeValidSimpleBusiness.getCompanies().get(0).getContacts().add(makeValidContact);
+  
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
 
         assertThat(makeValidSimpleBusiness.toSimple().isPresent()).as("to simple").isTrue();
@@ -233,23 +234,12 @@ public class CustomerSimpleTest {
             assertThat(simpleConsumerCustomer.getIsoCountry()).as("isoCountry").isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
         }
 
-        if ( !makeValidSimpleBusiness.getCompanies().get(0).getCommunications().isEmpty() ) {
-            assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
-            assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
-            assertThat(simpleConsumerCustomer.getEmail()).as("email")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
-
-        } else {
-            assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
-            assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
-            assertThat(simpleConsumerCustomer.getEmail()).as("email")
-                    .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
-
-        }
+        assertThat(simpleConsumerCustomer.getMobilePhone()).as("mobilePhone")
+                .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
+        assertThat(simpleConsumerCustomer.getLandlinePhone()).as("landlinePhone")
+                .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().get());
+        assertThat(simpleConsumerCustomer.getEmail()).as("email")
+                .isEqualTo(makeValidSimpleBusiness.getCompanies().get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().get());
 
         assertThat(simpleConsumerCustomer.getSource()).as("source").isEqualTo(makeValidSimpleBusiness.getSource());
         assertThat(simpleConsumerCustomer.getComment()).as("comment").isEqualTo(makeValidSimpleBusiness.getComment());
