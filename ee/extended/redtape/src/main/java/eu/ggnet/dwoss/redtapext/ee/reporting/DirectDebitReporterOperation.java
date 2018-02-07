@@ -16,16 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.LucidCalc;
-
 import java.io.File;
 import java.util.*;
 
@@ -41,15 +31,15 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-
-import eu.ggnet.dwoss.rules.PaymentMethod;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
 
-import static eu.ggnet.lucidcalc.CFormat.FontStyle.*;
+import static eu.ggnet.dwoss.rules.PaymentMethod.DIRECT_DEBIT;
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
-import static eu.ggnet.lucidcalc.CFormat.Representation.*;
+import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;
+import static eu.ggnet.lucidcalc.CFormat.Representation.SHORT_DATE;
 import static java.awt.Color.*;
 
 /**
@@ -81,14 +71,14 @@ public class DirectDebitReporterOperation implements DirectDebitReporter {
         m.worked(10);
 
         DocumentEao docEao = new DocumentEao(redTapeEm);
-        List<Document> documents = docEao.findOpenInvoiceUnpaidByTypePaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        List<Document> documents = docEao.findInvoiceUnpaid(DIRECT_DEBIT);
 
         Set<Long> customers = new HashSet<>();
         for (Document document : documents) {
             customers.add(document.getDossier().getCustomerId());
         }
         for (Long customerId : customers) {
-            documents.addAll(docEao.findOpenAnulationByCustomerPaymentMethod(customerId));
+            documents.addAll(docEao.findUnBalancedAnulation(customerId, DIRECT_DEBIT));
         }
         List<Object[]> rows = new ArrayList<>();
         for (Document doc : documents) {

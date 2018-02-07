@@ -335,17 +335,41 @@ public class Customer implements Serializable {
         if ( isBusiness() ) {
             SimpleCustomer sc = new SimpleCustomer();
             sc.setId(id);
+
             sc.setTitle(companies.get(0).getContacts().get(0).getTitle());
             sc.setFirstName(companies.get(0).getContacts().get(0).getFirstName());
             sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
-            sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
-            sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
-            sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
-            sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
-            sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
-            sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
-            sc.setEmail(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
             sc.setSex(companies.get(0).getContacts().get(0).getSex());
+
+            //if the Company have a Contact use this Address
+            if ( !companies.get(0).getContacts().get(0).getAddresses().isEmpty() ) {
+                sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
+                sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
+                sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
+                sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+            } else {
+                sc.setStreet(companies.get(0).getAddresses().get(0).getStreet());
+                sc.setZipCode(companies.get(0).getAddresses().get(0).getZipCode());
+                sc.setCity(companies.get(0).getAddresses().get(0).getCity());
+                sc.setIsoCountry(companies.get(0).getAddresses().get(0).getIsoCountry());
+            }
+
+            //fist check the Contact for the needed Communications than use the Communications on the Company
+            if ( !companies.get(0).getContacts().get(0).getCommunications().isEmpty() ) {
+                sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+                sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+                sc.setEmail(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
+            }
+            if ( sc.getMobilePhone() == null ) {
+                sc.setMobilePhone(companies.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
+            }
+            if ( sc.getLandlinePhone() == null ) {
+                sc.setLandlinePhone(companies.get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
+            }
+            if ( sc.getEmail() == null ) {
+                sc.setEmail(companies.get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
+            }
+
             sc.setSource(source);
             sc.setComment(comment);
             sc.setCompanyName(companies.get(0).getName());
@@ -353,6 +377,7 @@ public class Customer implements Serializable {
 
             return Optional.of(sc);
         }
+
         throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
     }
 

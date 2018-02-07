@@ -43,7 +43,7 @@ public class CustomerTest {
         Communication validCommunication = new Communication(Type.EMAIL, true);
         validCommunication.setIdentifier("Max.mustermann@mustermail.de");
 
-        assertThat(validCommunication.getViolationMessage()).as("valid Address").isNull();
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
