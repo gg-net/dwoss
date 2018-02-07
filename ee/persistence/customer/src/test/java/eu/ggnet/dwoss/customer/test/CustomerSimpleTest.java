@@ -145,7 +145,6 @@ public class CustomerSimpleTest {
     }
 
     @Test
-
     public void testToSimpleConsumer() {
         Customer makeValidSimpleConsumer = makeValidSimpleConsumer();
         makeValidSimpleConsumer.getContacts().get(0).getCommunications().clear();

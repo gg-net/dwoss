@@ -165,7 +165,7 @@ public class MandatorMetadata implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( shippingCondition == null ) return "No ShippingCondition is set";
         if ( paymentCondition == null ) return "No PaymentCondition is set";
         if ( paymentMethod == null ) return "No PaymentMethod is set";
