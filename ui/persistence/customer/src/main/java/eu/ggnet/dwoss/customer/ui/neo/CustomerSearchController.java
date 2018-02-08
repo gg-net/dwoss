@@ -33,9 +33,8 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
@@ -98,6 +97,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     private CustomerTaskService CUSTOMER_TASK_SERVICE;
 
+    private ContextMenu contextMenu;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         resultListView.setCellFactory(listView -> {
@@ -115,10 +116,10 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         });
 
         //Create a ContextMenu
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem viewCustomer = new MenuItem("Mandatenstandard des Kunden Anzeigen");
-        MenuItem viewCompleteCustomer = new MenuItem("Kunden Anzeigen");
-        MenuItem editCustomer = new MenuItem("Kunden editieren");
+        contextMenu = new ContextMenu();
+        MenuItem viewCustomer = new MenuItem("Kunden anzeigen mit Mandatenstandard");
+        MenuItem viewCompleteCustomer = new MenuItem("Kunde anzeigen");
+        MenuItem editCustomer = new MenuItem("Kunde anpassen");
 
         //actions for the context menu
         viewCustomer.setOnAction((ActionEvent event) -> {
@@ -173,10 +174,20 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         //add contextmenu to listview
         resultListView.setContextMenu(contextMenu);
 
-        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
-
         customerFields = fillSet();
+        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
         observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
+
+        if ( observableCustomers.isEmpty() ) {
+            Customer c = new Customer();
+            Company com = new Company();
+            com.setName("Leider keine Kunden gefunden");
+            c.getCompanies().add(com);
+            observableCustomers.add(c);
+            contextMenu.getItems().forEach((item) -> {
+                item.setDisable(true);
+            });
+        }
 
         resultListView.setItems(observableCustomers);
 
@@ -192,6 +203,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         // Binding all Ui Properties
         searchProperty.bind(searchField.textProperty());
+
 
         progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
         progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
@@ -231,8 +243,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     }
 
     private void search() {
-        CUSTOMER_TASK_SERVICE.setCustomerFields(customerFields);
+        CUSTOMER_TASK_SERVICE.setCustomerFields(fillSet());
         CUSTOMER_TASK_SERVICE.setSearchsting(searchProperty.get());
+        observableCustomers.clear();
+        resultListView.getContextMenu().getItems().forEach((item) -> {
+            item.setDisable(false);
+        });
+
         if ( CUSTOMER_TASK_SERVICE.getState() == READY ) {
             CUSTOMER_TASK_SERVICE.start();
         } else {

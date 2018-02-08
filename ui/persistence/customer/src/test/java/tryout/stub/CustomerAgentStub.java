@@ -17,6 +17,7 @@
 package tryout.stub;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 
@@ -53,7 +54,9 @@ public class CustomerAgentStub implements CustomerAgent {
     {
         CUSTOMERS = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            CUSTOMERS.add(CGEN.makeCustomer());
+            Customer customer = CGEN.makeCustomer();
+            customer.getMandatorMetadata().add(CGEN.makeMandatorMetadata());
+            CUSTOMERS.add(customer);
         }
     }
 
@@ -61,7 +64,7 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public <T> long count(Class<T> entityClass) {
         if ( entityClass.equals(Customer.class) ) {
-            return CUSTOMERS.size();
+            return SLOW;
         }
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -120,9 +123,18 @@ public class CustomerAgentStub implements CustomerAgent {
         return list;
     }
 
+    /**
+     * this methoes drops NPE like hell because many fields of the genaratet customer get checkt
+     *
+     * @param search
+     * @param customerFields
+     * @param start
+     * @param limit
+     * @return
+     */
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        L.info("SearchString {},{},start={},limit={}",search,customerFields,start,limit);
+        L.info("SearchString {},{},start={},limit={}", search, customerFields.size(), start, limit);
 
         try {
             Thread.sleep(200L, SLOW);
@@ -130,17 +142,67 @@ public class CustomerAgentStub implements CustomerAgent {
             L.error("InterruptedException get throw");
         }
 
-        if (start >= CUSTOMERS.size() ) return Collections.emptyList();
-        if (limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
-        List<Customer> result = CUSTOMERS.subList(start, limit+start);
+        if ( start >= CUSTOMERS.size() ) return Collections.emptyList();
+        if ( limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
+        List<Customer> result = CUSTOMERS.subList(start, limit + start);
 
-        if(customerFields.contains(SearchField.LASTNAME)){
+        List<Customer> tempList = new ArrayList<>();
+        if ( customerFields.contains(SearchField.LASTNAME) ) {
+            result.forEach(c -> {
+                c.getContacts().stream().filter((contact) -> (contact.getLastName().contains(search))).forEachOrdered((sa) -> {
+                    tempList.add(c);
+                });
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
 
+        if ( customerFields.contains(SearchField.FIRSTNAME) ) {
+            result.forEach((customer) -> {
+                customer.getContacts().stream().filter((cont) -> (cont.getFirstName().contains(search))).forEachOrdered((_item) -> {
+                    tempList.add(customer);
+                });
+            });
+        }
+        if ( customerFields.contains(SearchField.ID) ) {
+            result.stream().filter((customer) -> (customer.getId() == Integer.parseInt(search))).forEachOrdered((customer) -> {
+                tempList.add(customer);
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
+        if ( customerFields.contains(SearchField.COMPANY) ) {
+            result.forEach((customer) -> {
+                customer.getCompanies().stream().filter((com) -> (com.getName().contains(search))).forEachOrdered((_item) -> {
+                    tempList.add(customer);
+                });
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
+        if ( customerFields.contains(SearchField.ADDRESS) ) {
             for (Customer customer : result) {
+
+                customer.getContacts().forEach((contact) -> {
+                    contact.getAddresses().stream().map((addr) -> {
+                        if ( addr.getStreet().contains(search) ) {
+                            tempList.add(customer);
+                        }
+                        return addr;
+                    }).map((addr) -> {
+                        if ( addr.getCity().contains(search) ) {
+                            tempList.add(customer);
+                        }
+                        return addr;
+                    }).filter((addr) -> (addr.getZipCode().contains(search))).forEachOrdered((_item) -> {
+                        tempList.add(customer);
+                    });
+                });
+                result.clear();
+                result.addAll(tempList);
 
             }
         }
-
 
         L.info("Returning {}", result);
         return result;
