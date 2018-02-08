@@ -23,7 +23,6 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.rules.AddressType;
@@ -60,14 +59,13 @@ public class CustomerEnhanceTryout {
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
-            customer.getMandatorMetadata().add(new MandatorMetadata());
 
             if ( customer.getViolationMessage() != null ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
                 return;
             }
-            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
+
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).ifPresent(System.out::println);
@@ -89,9 +87,7 @@ public class CustomerEnhanceTryout {
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
             customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
-            customer.getMandatorMetadata().add(new MandatorMetadata());
-            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.INVOICE));
-            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
+
             if ( customer.getViolationMessage() != null ) {
                 Ui.build().alert("customer is invalid" + customer.getViolationMessage());
 
