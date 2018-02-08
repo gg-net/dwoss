@@ -29,6 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MandatorMetadataTest {
 
+  
+
     public static MandatorMetadata makeValidMandatorMetadata() {
         MandatorMetadata validMandatorMetadata = new MandatorMetadata();
         validMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
@@ -39,6 +41,8 @@ public class MandatorMetadataTest {
         assertThat(validMandatorMetadata.getViolationMessage()).as("valid Communication").isNull();
         return validMandatorMetadata;
     }
+
+   
 
     @Test
     public void testGetViolationMessages() {
