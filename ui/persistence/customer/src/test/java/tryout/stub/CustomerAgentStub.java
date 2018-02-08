@@ -21,19 +21,19 @@ import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -59,6 +59,7 @@ public class CustomerAgentStub implements CustomerAgent {
             CUSTOMERS.add(customer);
         }
     }
+
 
     @Override
     public <T> long count(Class<T> entityClass) {
@@ -213,14 +214,11 @@ public class CustomerAgentStub implements CustomerAgent {
     }
 
     @Override
-    public Customer store(SimpleCustomer simpleCustomer) {
+    public Reply<Customer> store(SimpleCustomer simpleCustomer) {
         L.info("Input form Stubs: " + simpleCustomer.toString());
 
         //convert the SimpleCustomer to a Customer
-        boolean bussines = false;
-        if ( !simpleCustomer.getCompanyName().trim().isEmpty() ) {
-            bussines = true;
-        }
+        boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
 
         Customer c = new Customer();
 
@@ -239,33 +237,18 @@ public class CustomerAgentStub implements CustomerAgent {
         cont.getAddresses().add(a);
 
         //one Communication form eatch type email, phone, mobile allowed
-        Communication comm = new Communication();
         if ( simpleCustomer.getEmail() != null ) {
-            comm.setType(Type.EMAIL);
-            comm.setIdentifier(simpleCustomer.getEmail());
+            cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
         }
         if ( simpleCustomer.getLandlinePhone() != null ) {
-            comm.setType(Type.PHONE);
-            comm.setIdentifier(simpleCustomer.getLandlinePhone());
+            cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));
         }
         if ( simpleCustomer.getMobilePhone() != null ) {
-            comm.setType(Type.MOBILE);
-            comm.setIdentifier(simpleCustomer.getMobilePhone());
+            cont.getCommunications().add(new Communication(Type.MOBILE, simpleCustomer.getMobilePhone()));
         }
 
-        //check if the Communication is valid with the right pattern
-        if ( comm.getViolationMessage() == null ) {
-            cont.getCommunications().add(comm);
-        } else {
-            Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
-        }
-
-        AddressLabel al = null;
+        AddressLabel al;
         if ( bussines ) {
-            //Either a Contact or a Company are set.
-            //Contains only one Contact or one Company.
-            c.getContacts().clear();
-
             Company comp = new Company();
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
@@ -279,21 +262,14 @@ public class CustomerAgentStub implements CustomerAgent {
             c.getCompanies().add(comp);
 
         } else {
-            //Contains only one Contact or one Company.
-            c.getCompanies().clear();
             c.getContacts().add(cont);
             al = new AddressLabel(null, cont, a, AddressType.INVOICE);
         }
-        c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
+        c.setSource(simpleCustomer.getSource());
 
-        MandatorMetadata mandatorMetadata = new MandatorMetadata();
-        c.getMandatorMetadata().add(mandatorMetadata);
-
-        L.info("Output form Stubs: " + c.toString());
-        L.info("ViolationMessage " + c.getViolationMessage());
-
-        return c;
+        if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
+        return Reply.success(c);
     }
 
 }

@@ -17,19 +17,20 @@
 package tryout.neo;
 
 import java.util.Locale;
+import java.util.Optional;
 
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.api.Reply;
 
 import tryout.stub.CustomerAgentStub;
 
@@ -44,7 +45,7 @@ public class CustomerSimpleTryout {
     public static Customer makeValidCustomer() {
         Customer customer = gen.makeCustomer();
         Contact contact = gen.makeContact();
-        
+
         Address address = gen.makeAddress();
 
         customer.getCompanies().clear();
@@ -52,7 +53,7 @@ public class CustomerSimpleTryout {
         customer.getFlags().clear();
         customer.getMandatorMetadata().clear();
 
-        
+
 
         address.setIsoCountry(Locale.GERMANY);
 
@@ -66,12 +67,12 @@ public class CustomerSimpleTryout {
 
         return customer;
     }
-    
+
     public static Communication makeValidCommunication(){
         Communication communicationMobile = new Communication();
         communicationMobile.setType(Type.MOBILE);
         communicationMobile.setIdentifier("040123456789");
-        
+
         return communicationMobile;
     }
 
@@ -90,7 +91,13 @@ public class CustomerSimpleTryout {
             System.out.println("Consumer Customer: " + consumerCustomer.isConsumer());
 
             Ui.exec(() -> {
-                Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class);
+                if ( !result.isPresent() ) return;
+                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                if ( !Ui.failure().handle(reply) ) return;
+                if ( !result.get().continueEnhance ) return;
+                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
             });
         });
 
@@ -98,13 +105,13 @@ public class CustomerSimpleTryout {
         bussinesCustomer.addActionListener(ev -> {
             Customer bussnisCustomer = makeValidCustomer();
             Contact tempcon = bussnisCustomer.getContacts().get(0);
-            
+
             Company company = gen.makeCompany();
             company.getContacts().clear();
             company.getContacts().add(tempcon);
-            
+
             company.getCommunications().clear();
-            bussnisCustomer.getContacts().clear();            
+            bussnisCustomer.getContacts().clear();
 
             bussnisCustomer.getCompanies().add(company);
 
@@ -112,7 +119,13 @@ public class CustomerSimpleTryout {
             System.out.println("Bussines Customer: " + bussnisCustomer.isBusiness());
 
             Ui.exec(() -> {
-                Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class);
+                if ( !result.isPresent() ) return;
+                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                if ( !Ui.failure().handle(reply) ) return;
+                if ( !result.get().continueEnhance ) return;
+                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
             });
         });
 

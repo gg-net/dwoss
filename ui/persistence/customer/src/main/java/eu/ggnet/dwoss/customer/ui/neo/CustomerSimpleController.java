@@ -30,17 +30,16 @@ import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.saft.*;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.builder.AlertBuilder;
 import eu.ggnet.saft.core.ui.AlertType;
 
-import static javafx.stage.Modality.WINDOW_MODAL;
+import lombok.AllArgsConstructor;
 
 /**
  * Controller class for the editor view of a SimpleCustomer. Allows the user to
@@ -49,9 +48,18 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  * @author jens.papenhagen
  */
 @Title("Kunden Editieren")
-public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<SimpleCustomer> {
+public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<CustomerContinue> {
 
-    private SimpleCustomer simpleCustomer;
+    @AllArgsConstructor
+    public static class CustomerContinue {
+
+        public SimpleCustomer simpleCustomer;
+
+        public boolean continueEnhance;
+
+    }
+
+    private CustomerContinue result = null;
 
     private boolean bussines = false;
 
@@ -118,51 +126,25 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndCloseButtonHandling() {
-        simpleCustomer = getSimpleCustomer();
-
-        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
-
-        //only get valid object out
-        if ( tempCustomer.getViolationMessage() != null ) {
-            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
-            return;
-        }
-
+        result = new CustomerContinue(getSimpleCustomer(), false);
         Ui.closeWindowOf(kid);
     }
 
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
-        simpleCustomer = getSimpleCustomer();
-
-        Customer tempCustomer = Dl.remote().lookup(CustomerAgent.class).store(simpleCustomer);
-
-        //only get valid object out
-        if ( tempCustomer.getViolationMessage() != null ) {
-            Ui.build().alert().message("Kunde ist inkompatibel: " + tempCustomer.getViolationMessage()).show(AlertType.WARNING);
-            return;
-        }
-
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(kid).fxml().eval(() -> tempCustomer, CustomerEnhanceController.class);
-        });
-        //close this window
-        simpleCustomer = null;
+        result = new CustomerContinue(getSimpleCustomer(), true);
         Ui.closeWindowOf(kid);
     }
 
     @FXML
     private void cancelButtonHandling() {
-        simpleCustomer = null;
         Ui.closeWindowOf(kid);
     }
 
     @FXML
     private void changeUI() {
         bussines ^= true; //tournaround of the boolean
-
-        simpleCustomer = getSimpleCustomer();
-        setSimpleCustomer(simpleCustomer);
+        setSimpleCustomer(getSimpleCustomer());
     }
 
     /**
@@ -190,7 +172,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         });
         genderChoiseBox.getItems().addAll(Sex.values());
         genderChoiseBox.getSelectionModel().selectFirst();
-        
+
         sourceChoiseBox.setConverter(new StringConverter<Source>() {
             @Override
             public Source fromString(String personString) {
@@ -208,10 +190,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         });
         sourceChoiseBox.getItems().addAll(Source.values());
         sourceChoiseBox.getSelectionModel().selectFirst();
-        
+
         //get overwriten in accept()
         lastNameTextField.setText("");
-        streetTextField.setText("");       
+        streetTextField.setText("");
 
         //button behavior
         //enable the save and "saveAndEnhanceUI" button only on filled TextFields
@@ -250,23 +232,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @Override
     public void accept(Customer c) {
-        if ( c != null ) {
-            if ( c.isBusiness() ) {
-                bussines = true;
-            }
-            setSimpleCustomer(c.toSimple().get());
-        } else {
-            Ui.build().alert().message("Kunde ist nicht in SimpleCustomer umwandelbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
+        if ( c == null ) return;
+        if ( !c.isSimple() ) {
+            Ui.build().alert().message("Kunde ist nicht als SimpleCustomer darstellbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
+            return;
         }
-
-    }
-
-    @Override
-    public SimpleCustomer getResult() {
-        if ( simpleCustomer == null ) {
-            return null;
-        }
-        return simpleCustomer;
+        bussines = c.isBusiness();
+        setSimpleCustomer(c.toSimple().get());
     }
 
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
@@ -305,12 +277,12 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //select the choicebox
         if ( simpleCustomer.getSex() != null ) {
             genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
-        } 
+        }
 
         if ( simpleCustomer.getSource() != null ) {
             sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
-        } 
-
+        }
+        if ( simpleCustomer.getId() > 0 ) changeUIButton.setDisable(true); // Disable UI Change on allready pesistend Customer.
     }
 
     private SimpleCustomer getSimpleCustomer() {
@@ -335,6 +307,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setComment(commentTextArea.getText());
 
         return sc;
+    }
+
+    @Override
+    public CustomerContinue getResult() {
+        return result;
     }
 
 }
