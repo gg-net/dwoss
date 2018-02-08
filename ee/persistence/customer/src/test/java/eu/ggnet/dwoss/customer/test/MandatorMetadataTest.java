@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
@@ -30,44 +29,54 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class MandatorMetadataTest {
 
-    private MandatorMetadata mandatorMetadata;
+  
 
-    @Before
-    public void executeBeforeEach() {
-        mandatorMetadata = new MandatorMetadata();
-        mandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
-        mandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
-        mandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        mandatorMetadata.add(SalesChannel.UNKNOWN);
+    public static MandatorMetadata makeValidMandatorMetadata() {
+        MandatorMetadata validMandatorMetadata = new MandatorMetadata();
+        validMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
+        validMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
+        validMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
+        validMandatorMetadata.add(SalesChannel.UNKNOWN);
+
+        assertThat(validMandatorMetadata.getViolationMessage()).as("valid Communication").isNull();
+        return validMandatorMetadata;
     }
+
+   
 
     @Test
     public void testGetViolationMessages() {
+        MandatorMetadata makeValidMandatorMetadata = makeValidMandatorMetadata();
+        assertThat(makeValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata with valid values").isNull();
         assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata with valid values").isNull();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid() {
-        mandatorMetadata.setShippingCondition(null);
-        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without ShippingCondition").isNotBlank();
+    public void testGetViolationMessagesNonValidShippingCondition() {
+        MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
+        makeInValidMandatorMetadata.setShippingCondition(null);
+        assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without ShippingCondition").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid2() {
-        mandatorMetadata.setPaymentCondition(null);
-        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without PaymentCondition").isNotBlank();
+    public void testGetViolationMessagesNonValidPaymentCondition() {
+        MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
+        makeInValidMandatorMetadata.setPaymentCondition(null);
+        assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without PaymentCondition").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid3() {
-        mandatorMetadata.setPaymentMethod(null);
-        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without Payment Method").isNotBlank();
+    public void testGetViolationMessagesNonValidPaymentMethod() {
+        MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
+        makeInValidMandatorMetadata.setPaymentMethod(null);
+        assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Payment Method").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid4() {
-        mandatorMetadata.clearSalesChannels();
-        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
+    public void testGetViolationMessagesNonSalesChannels() {
+        MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
+        makeInValidMandatorMetadata.clearSalesChannels();
+        assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
     }
 
 }
