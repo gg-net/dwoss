@@ -16,19 +16,27 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.saft.api.Reply;
+
 
 /**
  *
@@ -36,6 +44,8 @@ import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
  */
 @Stateless
 public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgent {
+
+    private final static Logger L = LoggerFactory.getLogger(CustomerAgentBean.class);
 
     @Inject
     @Customers
@@ -65,8 +75,62 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     }
 
     @Override
-    public Customer store(SimpleCustomer simpleCustomer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Reply<Customer> store(SimpleCustomer simpleCustomer) {
+        L.warn("Simulating Store : " + simpleCustomer.toString());
+
+        //convert the SimpleCustomer to a Customer
+        boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
+
+        Customer c = new Customer();
+
+        Contact cont = new Contact();
+        cont.setFirstName(simpleCustomer.getFirstName());
+        cont.setLastName(simpleCustomer.getLastName());
+        cont.setSex(simpleCustomer.getSex());
+        cont.setTitle(simpleCustomer.getTitle());
+
+        //Contact with only one Address
+        Address a = new Address();
+        a.setCity(simpleCustomer.getCity());
+        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
+        a.setStreet(simpleCustomer.getStreet());
+        a.setZipCode(simpleCustomer.getZipCode());
+        cont.getAddresses().add(a);
+
+        //one Communication form eatch type email, phone, mobile allowed
+        if ( simpleCustomer.getEmail() != null ) {
+            cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
+        }
+        if ( simpleCustomer.getLandlinePhone() != null ) {
+            cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));
+        }
+        if ( simpleCustomer.getMobilePhone() != null ) {
+            cont.getCommunications().add(new Communication(Type.MOBILE, simpleCustomer.getMobilePhone()));
+        }
+
+        AddressLabel al;
+        if ( bussines ) {
+            Company comp = new Company();
+            comp.setName(simpleCustomer.getCompanyName());
+            comp.setTaxId(simpleCustomer.getTaxId());
+
+            //The Address of the Company Contact has to match the Company Address
+            comp.getAddresses().add(a);
+            comp.getContacts().add(cont);
+            //build AddressLabel
+            al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
+
+            c.getCompanies().add(comp);
+
+        } else {
+            c.getContacts().add(cont);
+            al = new AddressLabel(null, cont, a, AddressType.INVOICE);
+        }
+        c.getAddressLabels().add(al);
+        c.setSource(simpleCustomer.getSource());
+
+        if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
+        return Reply.success(c);
     }
 
 }

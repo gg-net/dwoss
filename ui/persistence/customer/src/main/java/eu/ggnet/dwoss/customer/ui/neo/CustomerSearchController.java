@@ -19,8 +19,10 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.*;
 
-import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,12 +33,13 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.FxSaft;
@@ -119,7 +122,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         //actions for the context menu
         viewCustomer.setOnAction((ActionEvent event) -> {
-            //open toHtml(String matchcode, DefaultCustomerSalesdata defaults) 
+            //open toHtml(String matchcode, DefaultCustomerSalesdata defaults)
             if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
                 Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
 
@@ -138,7 +141,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             }
         });
         viewCompleteCustomer.setOnAction((ActionEvent event) -> {
-            //open toHtml(String salesRow, String comment) 
+            //open toHtml(String salesRow, String comment)
             if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
                 Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
                 Ui.exec(() -> {
@@ -153,7 +156,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem.isSimple() ) {
                     Ui.exec(() -> {
-                        Ui.build().fxml().eval(() -> selectedItem, CustomerSimpleController.class);
+                        Ui.build().fxml().show(() -> selectedItem, CustomerSimpleController.class);
                     });
                 } else {
                     Ui.exec(() -> {

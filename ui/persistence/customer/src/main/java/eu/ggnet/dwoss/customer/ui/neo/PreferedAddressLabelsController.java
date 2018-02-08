@@ -100,38 +100,32 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressContactListView.setCellFactory(cb -> new ContactListCell());
         shippingAddressAddressListView.setCellFactory(cb -> new AddressListCell());
 
-        InvalidationListener invoiceWebViewListener = new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                if ( !invoiceAddressAddressListView.getSelectionModel().isEmpty() ) {
-                    AddressLabel addressLabel = new AddressLabel(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem(),
-                            invoiceAddressContactListView.getSelectionModel().getSelectedItem(),
-                            invoiceAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.INVOICE);
-                    invoiceAddressWebView.getEngine().loadContent(
-                            addressLabel.toHtml());
+        InvalidationListener invoiceWebViewListener = (Observable observable) -> {
+            if ( !invoiceAddressAddressListView.getSelectionModel().isEmpty() ) {
+                AddressLabel addressLabel = new AddressLabel(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem(),
+                        invoiceAddressContactListView.getSelectionModel().getSelectedItem(),
+                        invoiceAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.INVOICE);
+                invoiceAddressWebView.getEngine().loadContent(
+                        addressLabel.toHtml());
 
-                } else
-                    invoiceAddressWebView.getEngine().loadContent("");
-            }
+            } else
+                invoiceAddressWebView.getEngine().loadContent("");
         };
 
         this.invoiceAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
         this.invoiceAddressCompanyListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
         this.invoiceAddressContactListView.getSelectionModel().selectedIndexProperty().addListener(invoiceWebViewListener);
 
-        InvalidationListener shippingWebViewListener = new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                if ( !shippingAddressAddressListView.getSelectionModel().isEmpty() ) {
-                    AddressLabel addressLabel = new AddressLabel(shippingAddressCompanyListView.getSelectionModel().getSelectedItem(),
-                            shippingAddressContactListView.getSelectionModel().getSelectedItem(),
-                            shippingAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.SHIPPING);
-                    shippingAddressWebView.getEngine().loadContent(
-                            addressLabel.toHtml());
+        InvalidationListener shippingWebViewListener = (Observable observable) -> {
+            if ( !shippingAddressAddressListView.getSelectionModel().isEmpty() ) {
+                AddressLabel addressLabel = new AddressLabel(shippingAddressCompanyListView.getSelectionModel().getSelectedItem(),
+                        shippingAddressContactListView.getSelectionModel().getSelectedItem(),
+                        shippingAddressAddressListView.getSelectionModel().getSelectedItem(), AddressType.SHIPPING);
+                shippingAddressWebView.getEngine().loadContent(
+                        addressLabel.toHtml());
 
-                } else
-                    shippingAddressWebView.getEngine().loadContent("");
-            }
+            } else
+                shippingAddressWebView.getEngine().loadContent("");
         };
 
         this.shippingAddressAddressListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
@@ -159,29 +153,22 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressContactListView.getItems().addAll(customer.getContacts());
         shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
-        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
+        InvalidationListener saveButtonDisablingListener = (Observable observable) -> {
+            boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
+                    && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
+                        || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
 
-            @Override
-            public void invalidated(Observable observable) {
+            boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
+                                              && shippingAddressCompanyListView.getSelectionModel().isEmpty()
+                                              && shippingAddressContactListView.getSelectionModel().isEmpty())
+                    || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
+                        && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
 
-                boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
-                        && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
-                            || (!invoiceAddressContactListView.getSelectionModel().isEmpty()));
+            if ( isInvoiceAddressValid && isShippingAddressValid )
+                saveButton.setDisable(false);
 
-                boolean isShippingAddressValid = (shippingAddressAddressListView.getSelectionModel().isEmpty()
-                                                  && shippingAddressCompanyListView.getSelectionModel().isEmpty()
-                                                  && shippingAddressContactListView.getSelectionModel().isEmpty())
-                        || ((!shippingAddressAddressListView.getSelectionModel().isEmpty())
-                            && (!shippingAddressCompanyListView.getSelectionModel().isEmpty() || !shippingAddressContactListView.getSelectionModel().isEmpty()));
-
-                if ( isInvoiceAddressValid && isShippingAddressValid )
-                    saveButton.setDisable(false);
-
-                else
-                    saveButton.setDisable(true);
-
-            }
-
+            else
+                saveButton.setDisable(true);
         };
         invoiceAddressCompanyListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         invoiceAddressContactListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
@@ -263,7 +250,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
             shippingLabel = new AddressLabel(shippingLabelCompany, invoiceLabelContact, shippingAddress, SHIPPING);
 
         this.resultAdressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
-
+        Ui.closeWindowOf(saveButton);
     }
 
     @FXML

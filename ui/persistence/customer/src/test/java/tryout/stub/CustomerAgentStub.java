@@ -20,44 +20,44 @@ import java.util.*;
 
 import javax.persistence.LockModeType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
  * @author jens.papenhagen
  */
 public class CustomerAgentStub implements CustomerAgent {
-    
+
     private final int AMOUNT = 200;
-    
+
     private final int SLOW = 40;
-    
+
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
-    
+
     private final CustomerGenerator CGEN = new CustomerGenerator();
-    
+
     private final List<Customer> CUSTOMERS;
-    
+
     {
         CUSTOMERS = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             CUSTOMERS.add(CGEN.makeCustomer());
         }
     }
-    
-    
+
+
     @Override
     public <T> long count(Class<T> entityClass) {
         if ( entityClass.equals(Customer.class) ) {
@@ -71,38 +71,38 @@ public class CustomerAgentStub implements CustomerAgent {
     public <T> List<T> findAll(Class<T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> List<T> findAll(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id) {
         return (T)CGEN.makeCustomer();
-        
+
     }
-    
+
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findById(Class< T> entityClass, Object id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findById(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -115,54 +115,51 @@ public class CustomerAgentStub implements CustomerAgent {
         for (int i = 0; i < 25; i++) {
             list.add(CGEN.makeCustomer());
         }
-        
+
         L.info("Returning {}", list);
         return list;
     }
-    
+
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
         L.info("SearchString {},{},start={},limit={}",search,customerFields,start,limit);
-        
+
         try {
             Thread.sleep(200L, SLOW);
         } catch (InterruptedException ex) {
             L.error("InterruptedException get throw");
         }
-        
+
         if (start >= CUSTOMERS.size() ) return Collections.emptyList();
         if (limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
         List<Customer> result = CUSTOMERS.subList(start, limit+start);
-        
+
         if(customerFields.contains(SearchField.LASTNAME)){
-           
+
             for (Customer customer : result) {
-                
+
             }
         }
-        
-        
+
+
         L.info("Returning {}", result);
         return result;
     }
-    
+
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
         return CUSTOMERS.size();
     }
-    
+
     @Override
-    public Customer store(SimpleCustomer simpleCustomer) {
+    public Reply<Customer> store(SimpleCustomer simpleCustomer) {
         L.info("Input form Stubs: " + simpleCustomer.toString());
 
         //convert the SimpleCustomer to a Customer
-        boolean bussines = false;
-        if ( !simpleCustomer.getCompanyName().trim().isEmpty() ) {
-            bussines = true;
-        }
-        
+        boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
+
         Customer c = new Customer();
-        
+
         Contact cont = new Contact();
         cont.setFirstName(simpleCustomer.getFirstName());
         cont.setLastName(simpleCustomer.getLastName());
@@ -178,33 +175,18 @@ public class CustomerAgentStub implements CustomerAgent {
         cont.getAddresses().add(a);
 
         //one Communication form eatch type email, phone, mobile allowed
-        Communication comm = new Communication();
         if ( simpleCustomer.getEmail() != null ) {
-            comm.setType(Type.EMAIL);
-            comm.setIdentifier(simpleCustomer.getEmail());
+            cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
         }
         if ( simpleCustomer.getLandlinePhone() != null ) {
-            comm.setType(Type.PHONE);
-            comm.setIdentifier(simpleCustomer.getLandlinePhone());
+            cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));
         }
         if ( simpleCustomer.getMobilePhone() != null ) {
-            comm.setType(Type.MOBILE);
-            comm.setIdentifier(simpleCustomer.getMobilePhone());
+            cont.getCommunications().add(new Communication(Type.MOBILE, simpleCustomer.getMobilePhone()));
         }
 
-        //check if the Communication is valid with the right pattern
-        if ( comm.getViolationMessage() == null ) {
-            cont.getCommunications().add(comm);
-        } else {
-            Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
-        }
-        
-        AddressLabel al = null;
+        AddressLabel al;
         if ( bussines ) {
-            //Either a Contact or a Company are set.
-            //Contains only one Contact or one Company.
-            c.getContacts().clear();
-            
             Company comp = new Company();
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
@@ -214,25 +196,18 @@ public class CustomerAgentStub implements CustomerAgent {
             comp.getContacts().add(cont);
             //build AddressLabel
             al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
-            
+
             c.getCompanies().add(comp);
-            
+
         } else {
-            //Contains only one Contact or one Company.
-            c.getCompanies().clear();
             c.getContacts().add(cont);
             al = new AddressLabel(null, cont, a, AddressType.INVOICE);
         }
-        c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
-        
-        MandatorMetadata mandatorMetadata = new MandatorMetadata();
-        c.getMandatorMetadata().add(mandatorMetadata);
-        
-        L.info("Output form Stubs: " + c.toString());
-        L.info("ViolationMessage " + c.getViolationMessage());
-        
-        return c;
+        c.setSource(simpleCustomer.getSource());
+
+        if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
+        return Reply.success(c);
     }
-    
+
 }

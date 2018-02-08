@@ -24,6 +24,7 @@ import javax.ejb.Remote;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -65,8 +66,8 @@ public interface CustomerAgent extends RemoteAgent {
      * Stores a simple customer.
      *
      * @param simpleCustomer
-     * @return returns the stored customer.
+     * @return returns a reply with the stored customer or empty with failure.
      */
-    Customer store(SimpleCustomer simpleCustomer);
+    Reply<Customer> store(SimpleCustomer simpleCustomer);
 
 }

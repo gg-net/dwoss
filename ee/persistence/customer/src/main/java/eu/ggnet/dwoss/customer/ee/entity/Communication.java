@@ -103,6 +103,11 @@ public class Communication implements Serializable {
         this.prefered = prefered;
     }
 
+    public Communication(Type type, String identifier) {
+        this.type = type;
+        this.identifier = identifier;
+    }
+
     /**
      * Html representation of the class.
      *
