@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -394,15 +396,26 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         .map(additionalCustomerID -> additionalCustomerID.type)
                         .collect(Collectors.toList())
                         .containsAll(Arrays.asList(ExternalSystem.values())));
-                deleteButton.setDisable(additionalCustomerIDsListView.getItems().isEmpty());
+
             }
         });
         editButton.setDisable(true);
-        additionalCustomerIDsListView.getSelectionModel().selectedItemProperty().addListener(new InvalidationListener() {
+        deleteButton.setDisable(true);
+        additionalCustomerIDsListView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+
             @Override
-            public void invalidated(javafx.beans.Observable observable) {
-                editButton.setDisable(additionalCustomerIDsListView.getSelectionModel().isEmpty());
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if ( newValue.intValue() < 0 ) {
+                    editButton.setDisable(true);
+                    deleteButton.setDisable(true);
+
+                } else {
+                    editButton.setDisable(false);
+                    deleteButton.setDisable(false);
+                }
+
             }
+
         });
 
         HBox buttonsHBox = new HBox();
