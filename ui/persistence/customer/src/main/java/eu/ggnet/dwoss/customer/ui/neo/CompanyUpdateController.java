@@ -152,9 +152,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddAddressButton() {
         Address addresse = new Address();
-        addresse.setCity("Stadt");
-        addresse.setStreet("Strasse");
-        addresse.setZipCode("123456");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
@@ -198,7 +195,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddComButton() {
         Communication communication = new Communication();
-        communication.setIdentifier("");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
@@ -241,7 +237,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddContactButton() {
         Contact contact = new Contact();
-        contact.setLastName("Nachnahme");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
                     a -> {
@@ -452,7 +447,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      */
     private void setCompany(Company comp) {
         contactsList.addAll(comp.getContacts());
-        addressList.addAll(comp.getAddresses());
+        if ( comp.getAddresses() != null ) {
+            addressList.addAll(comp.getAddresses());
+        }
         communicationsList.addAll(comp.getCommunications());
 
         //fill the listViews
@@ -466,7 +463,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         contactListView.setItems(contactsList);
         contactListView.getSelectionModel().selectFirst();
 
-        companyNameTextField.setText(comp.getName());
+        if ( comp.getName() != null ) {
+            companyNameTextField.setText(comp.getName());
+        }
+
         taxIdTextField.setText(comp.getTaxId());
         ledgerTextField.setText("" + comp.getLedger());
     }

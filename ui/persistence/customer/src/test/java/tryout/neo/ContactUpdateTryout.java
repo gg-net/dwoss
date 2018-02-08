@@ -24,7 +24,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
 import eu.ggnet.saft.*;
 
-
 /**
  *
  * @author jens.papenhagen
@@ -38,23 +37,31 @@ public class ContactUpdateTryout {
         contact.getAddresses().add(gen.makeAddress());
         contact.getAddresses().add(gen.makeAddress());
         contact.getAddresses().add(gen.makeAddress());
-        
+
         contact.getCommunications().add(gen.makeCommunication());
         contact.getCommunications().add(gen.makeCommunication());
         contact.getCommunications().add(gen.makeCommunication());
-        
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
-        run.addActionListener(ev -> {
+        JButton editButton = new JButton("edit");
+        editButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(System.out::println);;
+                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(System.out::println);
+            });
+        });
+
+        JButton addButton = new JButton("add");
+        addButton.addActionListener(ev -> {
+            Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> new Contact(), ContactUpdateController.class).ifPresent(System.out::println);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(run);
+        p.add(editButton);
+        p.add(addButton);
         p.add(close);
 
         UiCore.startSwing(() -> p);

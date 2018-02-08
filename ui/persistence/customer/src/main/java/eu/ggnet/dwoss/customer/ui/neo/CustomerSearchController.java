@@ -20,8 +20,7 @@ import java.net.URL;
 import java.util.*;
 
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,9 +28,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.ui.CustomerTask;
+import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.FxSaft;
@@ -46,6 +51,8 @@ import static javafx.concurrent.Worker.State.READY;
  */
 @Title("Kunden Suche")
 public class CustomerSearchController implements Initializable, FxController, ClosedListener {
+
+    private final static Logger L = LoggerFactory.getLogger(CustomerSearchController.class);
 
     @FXML
     private Button searchButton;
@@ -86,11 +93,10 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     private StringProperty searchProperty = new SimpleStringProperty();
 
-    private CustomerTask LOADING_CUSTOMER_TASK;
+    private CustomerTaskService CUSTOMER_TASK_SERVICE;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        resultListView = new ListView<>();
         resultListView.setCellFactory(listView -> {
             return new ListCell<Customer>() {
                 @Override
@@ -105,10 +111,69 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             };
         });
 
-        LOADING_CUSTOMER_TASK = new CustomerTask(searchProperty.get(), customerFields);
+        //Create a ContextMenu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem viewCustomer = new MenuItem("Mandatenstandard des Kunden Anzeigen");
+        MenuItem viewCompleteCustomer = new MenuItem("Kunden Anzeigen");
+        MenuItem editCustomer = new MenuItem("Kunden editieren");
+
+        //actions for the context menu
+        viewCustomer.setOnAction((ActionEvent event) -> {
+            //open toHtml(String matchcode, DefaultCustomerSalesdata defaults) 
+            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
+                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
+
+                DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
+                        .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
+                        .paymentCondition(PaymentCondition.CUSTOMER)
+                        .shippingCondition(ShippingCondition.DEALER_ONE)
+                        .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
+
+                String matchcode = selectedItem.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
+
+                Ui.exec(() -> {
+                    Ui.build().title("Mandatenstandard des Kunden Anzeigen").fx().show(() -> selectedItem.toHtml(matchcode, defaults), () -> new HtmlPane());
+                });
+
+            }
+        });
+        viewCompleteCustomer.setOnAction((ActionEvent event) -> {
+            //open toHtml(String salesRow, String comment) 
+            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
+                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
+                Ui.exec(() -> {
+                    Ui.build().title("Kunden Ansicht").fx().show(() -> selectedItem.toHtml(), () -> new HtmlPane());
+                });
+
+            }
+
+        });
+        editCustomer.setOnAction((ActionEvent event) -> {
+            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
+                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
+                if ( selectedItem.isSimple() ) {
+                    Ui.exec(() -> {
+                        Ui.build().fxml().eval(() -> selectedItem, CustomerSimpleController.class);
+                    });
+                } else {
+                    Ui.exec(() -> {
+                        Ui.build().fxml().eval(() -> selectedItem, CustomerEnhanceController.class);
+                    });
+                }
+            }
+
+        });
+
+        // Add MenuItemes to ContextMenu
+        contextMenu.getItems().addAll(viewCustomer, viewCompleteCustomer, editCustomer);
+
+        //add contextmenu to listview
+        resultListView.setContextMenu(contextMenu);
+
+        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
 
         customerFields = fillSet();
-        observableCustomers = LOADING_CUSTOMER_TASK.getPartialResults();
+        observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
 
         resultListView.setItems(observableCustomers);
 
@@ -125,16 +190,15 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         // Binding all Ui Properties
         searchProperty.bind(searchField.textProperty());
 
-        progressBar.progressProperty().bind(LOADING_CUSTOMER_TASK.progressProperty());
-        progressIndicator.progressProperty().bind(LOADING_CUSTOMER_TASK.progressProperty());
+        progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
+        progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
 
         //hidde the HBox
-        progressBar.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
-        progressIndicator.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
-        statusHbox.visibleProperty().bind(LOADING_CUSTOMER_TASK.runningProperty());
+        progressBar.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+        progressIndicator.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+        statusHbox.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
 
-        Ui.progress().observe(LOADING_CUSTOMER_TASK);
-        Ui.exec(LOADING_CUSTOMER_TASK);
+        Ui.progress().observe(CUSTOMER_TASK_SERVICE);
     }
 
     /**
@@ -164,25 +228,23 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     }
 
     private void search() {
-        if ( LOADING_CUSTOMER_TASK.getState() == READY ) {
-            LOADING_CUSTOMER_TASK.setCustomerFields(customerFields);
-            LOADING_CUSTOMER_TASK.setSearchsting(searchProperty.get());
+        CUSTOMER_TASK_SERVICE.setCustomerFields(customerFields);
+        CUSTOMER_TASK_SERVICE.setSearchsting(searchProperty.get());
+        if ( CUSTOMER_TASK_SERVICE.getState() == READY ) {
+            CUSTOMER_TASK_SERVICE.start();
         } else {
-            LOADING_CUSTOMER_TASK.setCustomerFields(customerFields);
-            LOADING_CUSTOMER_TASK.setSearchsting(searchProperty.get());
+            CUSTOMER_TASK_SERVICE.restart();
         }
     }
 
     @Override
     public void closed() {
         FxSaft.dispatch(() -> {
-            if ( LOADING_CUSTOMER_TASK.isRunning() ) {
-                LOADING_CUSTOMER_TASK.cancel();
+            if ( CUSTOMER_TASK_SERVICE.isRunning() ) {
+                CUSTOMER_TASK_SERVICE.cancel();
             }
             return null;
         });
-
-        Ui.closeWindowOf(kid);
     }
 
 }

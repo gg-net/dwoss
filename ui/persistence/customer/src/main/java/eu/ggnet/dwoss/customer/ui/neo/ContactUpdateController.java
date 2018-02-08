@@ -105,7 +105,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         //only get valid object out
         if ( contact.getViolationMessage() != null ) {
             Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
-            return;
         }
     }
 
@@ -145,10 +144,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddAddressButton() {
         Address addresse = new Address();
-        addresse.setCity("Stadt");
-        addresse.setStreet("Strasse");
-        addresse.setZipCode("123456");
-
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class).ifPresent(
                     a -> {
@@ -191,7 +186,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @FXML
     private void handleAddComButton() {
         Communication communication = new Communication();
-        communication.setIdentifier("");
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class).ifPresent(
                     a -> {
@@ -352,9 +346,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
     }
 
     @Override
-    public void accept(Contact cont
-    ) {
-        if ( cont != null && cont.getViolationMessage() == null ) {
+    public void accept(Contact cont) {
+        if ( cont != null ) {
             setContact(cont);
         } else {
             Ui.build().alert().message("Kontakt ist inkompatibel").show(AlertType.WARNING);
@@ -363,7 +356,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     @Override
     public Contact getResult() {
-
+        if ( contact == null ) {
+            return null;
+        }
         return contact;
     }
 
@@ -375,7 +370,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void setContact(Contact cont) {
         titleTextField.setText(cont.getTitle());
         firstNameTextField.setText(cont.getFirstName());
-        lastNameTextField.setText(cont.getLastName());
+        if ( cont.getLastName() != null ) {
+            lastNameTextField.setText(cont.getLastName());
+        }
 
         if ( cont.getSex() != null ) {
             genderBox.getSelectionModel().select(cont.getSex());

@@ -33,8 +33,7 @@ import eu.ggnet.saft.*;
 public class CommunicationUpdateTryout {
 
     public static void main(String[] args) {
-        CustomerGenerator gen = new CustomerGenerator();
-        Communication comm = gen.makeCommunication();
+        Communication comm = new Communication();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -57,13 +56,8 @@ public class CommunicationUpdateTryout {
         JButton addButton = new JButton("Add");
 
         addButton.addActionListener(ev -> {
-            comm.setType(null);
-            if ( comm.getViolationMessage() != null ) {
-                System.out.println("Communication ViolationMessages: " + comm.getViolationMessage());
-            }
-
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> comm, CommunicationUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> new Communication(), CommunicationUpdateController.class).ifPresent(System.out::println);
             });
         });
 
