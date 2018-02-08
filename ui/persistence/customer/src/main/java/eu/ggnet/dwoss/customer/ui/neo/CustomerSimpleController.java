@@ -189,6 +189,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             }
         });
         genderChoiseBox.getItems().addAll(Sex.values());
+        genderChoiseBox.getSelectionModel().selectFirst();
+        
         sourceChoiseBox.setConverter(new StringConverter<Source>() {
             @Override
             public Source fromString(String personString) {
@@ -205,6 +207,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             }
         });
         sourceChoiseBox.getItems().addAll(Source.values());
+        sourceChoiseBox.getSelectionModel().selectFirst();
         
         //get overwriten in accept()
         lastNameTextField.setText("");
@@ -302,15 +305,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //select the choicebox
         if ( simpleCustomer.getSex() != null ) {
             genderChoiseBox.getSelectionModel().select(simpleCustomer.getSex());
-        } else {
-            genderChoiseBox.getSelectionModel().selectFirst();
-        }
+        } 
 
         if ( simpleCustomer.getSource() != null ) {
             sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
-        } else {
-            sourceChoiseBox.getSelectionModel().selectFirst();
-        }
+        } 
 
     }
 

@@ -158,9 +158,16 @@ public class AddressUpdateController implements Initializable, FxController, Con
     private void setAddress(Address a) {
         Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
         countrybox.getSelectionModel().select(tempLocale);
-        zipcode.setText(a.getZipCode());
-        city.setText(a.getCity());
-        street.setText(a.getStreet());
+        if ( a.getCity() != null ) {
+            city.setText(a.getCity());
+        }
+        if ( a.getZipCode() != null ) {
+            zipcode.setText(a.getZipCode());
+        }
+        if ( a.getStreet() != null ) {
+            street.setText(a.getStreet());
+        }
+
     }
 
     /**

@@ -28,7 +28,7 @@
                   <Region maxWidth="1.7976931348623157E308" minWidth="50.0" HBox.hgrow="ALWAYS" />
                   <Label text="Quelle:" />
                   <ChoiceBox fx:id="sourceChoiseBox" prefWidth="150.0" />
-                  <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Button" />
+                  <Button fx:id="changeUIButton" contentDisplay="RIGHT" minWidth="75.0" mnemonicParsing="false" onAction="#changeUI" text="Geschäftskunde" />
                </children>
             </HBox>
             <HBox fx:id="companyHBox" maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="1.0" VBox.vgrow="ALWAYS" />
