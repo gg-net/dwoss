@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.net.URL;
 import java.util.*;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
@@ -90,10 +91,12 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private Set<SearchField> customerFields;
 
     private ObservableList<Customer> observableCustomers = FXCollections.observableArrayList();
-
+ 
     private StringProperty searchProperty = new SimpleStringProperty();
 
     private CustomerTaskService CUSTOMER_TASK_SERVICE;
+
+    private ContextMenu contextMenu;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -112,10 +115,10 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         });
 
         //Create a ContextMenu
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem viewCustomer = new MenuItem("Mandatenstandard des Kunden Anzeigen");
-        MenuItem viewCompleteCustomer = new MenuItem("Kunden Anzeigen");
-        MenuItem editCustomer = new MenuItem("Kunden editieren");
+        contextMenu = new ContextMenu();
+        MenuItem viewCustomer = new MenuItem("Kunden anzeigen mit Mandatenstandard");
+        MenuItem viewCompleteCustomer = new MenuItem("Kunde anzeigen");
+        MenuItem editCustomer = new MenuItem("Kunde anpassen");
 
         //actions for the context menu
         viewCustomer.setOnAction((ActionEvent event) -> {
@@ -170,10 +173,20 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         //add contextmenu to listview
         resultListView.setContextMenu(contextMenu);
 
-        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
-
         customerFields = fillSet();
+        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
         observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
+
+        if ( observableCustomers.isEmpty() ) {
+            Customer c = new Customer();
+            Company com = new Company();
+            com.setName("Leider keine Kunden gefunden");
+            c.getCompanies().add(com);
+            observableCustomers.add(c);
+            contextMenu.getItems().forEach((item) -> {
+                item.setDisable(true);
+            });
+        }
 
         resultListView.setItems(observableCustomers);
 
@@ -189,7 +202,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         // Binding all Ui Properties
         searchProperty.bind(searchField.textProperty());
-
+       
+        
         progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
         progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
 
@@ -223,13 +237,18 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         if ( address.isSelected() ) {
             set.add(Customer.SearchField.ADDRESS);
         }
-
+        
         return set;
     }
 
     private void search() {
-        CUSTOMER_TASK_SERVICE.setCustomerFields(customerFields);
+        CUSTOMER_TASK_SERVICE.setCustomerFields(fillSet());
         CUSTOMER_TASK_SERVICE.setSearchsting(searchProperty.get());
+        observableCustomers.clear();
+        resultListView.getContextMenu().getItems().forEach((item) -> {
+            item.setDisable(false);
+        });
+
         if ( CUSTOMER_TASK_SERVICE.getState() == READY ) {
             CUSTOMER_TASK_SERVICE.start();
         } else {

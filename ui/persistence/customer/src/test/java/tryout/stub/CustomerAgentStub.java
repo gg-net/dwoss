@@ -17,6 +17,7 @@
 package tryout.stub;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 
@@ -39,29 +40,30 @@ import eu.ggnet.saft.core.ui.AlertType;
  * @author jens.papenhagen
  */
 public class CustomerAgentStub implements CustomerAgent {
-    
+
     private final int AMOUNT = 200;
-    
+
     private final int SLOW = 40;
-    
+
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
-    
+
     private final CustomerGenerator CGEN = new CustomerGenerator();
-    
+
     private final List<Customer> CUSTOMERS;
-    
+
     {
         CUSTOMERS = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            CUSTOMERS.add(CGEN.makeCustomer());
+            Customer customer = CGEN.makeCustomer();
+            customer.getMandatorMetadata().add(CGEN.makeMandatorMetadata());
+            CUSTOMERS.add(customer);
         }
     }
-    
-    
+
     @Override
     public <T> long count(Class<T> entityClass) {
         if ( entityClass.equals(Customer.class) ) {
-            return CUSTOMERS.size();
+            return SLOW;
         }
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -71,38 +73,38 @@ public class CustomerAgentStub implements CustomerAgent {
     public <T> List<T> findAll(Class<T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> List<T> findAll(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id) {
         return (T)CGEN.makeCustomer();
-        
+
     }
-    
+
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findById(Class< T> entityClass, Object id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findById(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -115,42 +117,101 @@ public class CustomerAgentStub implements CustomerAgent {
         for (int i = 0; i < 25; i++) {
             list.add(CGEN.makeCustomer());
         }
-        
+
         L.info("Returning {}", list);
         return list;
     }
-    
+
+    /**
+     * this methoes drops NPE like hell because many fields of the genaratet customer get checkt
+     *
+     * @param search
+     * @param customerFields
+     * @param start
+     * @param limit
+     * @return
+     */
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        L.info("SearchString {},{},start={},limit={}",search,customerFields,start,limit);
-        
+        L.info("SearchString {},{},start={},limit={}", search, customerFields.size(), start, limit);
+
         try {
             Thread.sleep(200L, SLOW);
         } catch (InterruptedException ex) {
             L.error("InterruptedException get throw");
         }
-        
-        if (start >= CUSTOMERS.size() ) return Collections.emptyList();
-        if (limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
-        List<Customer> result = CUSTOMERS.subList(start, limit+start);
-        
-        if(customerFields.contains(SearchField.LASTNAME)){
-           
+
+        if ( start >= CUSTOMERS.size() ) return Collections.emptyList();
+        if ( limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
+        List<Customer> result = CUSTOMERS.subList(start, limit + start);
+
+        List<Customer> tempList = new ArrayList<>();
+        if ( customerFields.contains(SearchField.LASTNAME) ) {
+            result.forEach(c -> {
+                c.getContacts().stream().filter((contact) -> (contact.getLastName().contains(search))).forEachOrdered((sa) -> {
+                    tempList.add(c);
+                });
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
+
+        if ( customerFields.contains(SearchField.FIRSTNAME) ) {
+            result.forEach((customer) -> {
+                customer.getContacts().stream().filter((cont) -> (cont.getFirstName().contains(search))).forEachOrdered((_item) -> {
+                    tempList.add(customer);
+                });
+            });
+        }
+        if ( customerFields.contains(SearchField.ID) ) {
+            result.stream().filter((customer) -> (customer.getId() == Integer.parseInt(search))).forEachOrdered((customer) -> {
+                tempList.add(customer);
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
+        if ( customerFields.contains(SearchField.COMPANY) ) {
+            result.forEach((customer) -> {
+                customer.getCompanies().stream().filter((com) -> (com.getName().contains(search))).forEachOrdered((_item) -> {
+                    tempList.add(customer);
+                });
+            });
+            result.clear();
+            result.addAll(tempList);
+        }
+        if ( customerFields.contains(SearchField.ADDRESS) ) {
             for (Customer customer : result) {
-                
+
+                customer.getContacts().forEach((contact) -> {
+                    contact.getAddresses().stream().map((addr) -> {
+                        if ( addr.getStreet().contains(search) ) {
+                            tempList.add(customer);
+                        }
+                        return addr;
+                    }).map((addr) -> {
+                        if ( addr.getCity().contains(search) ) {
+                            tempList.add(customer);
+                        }
+                        return addr;
+                    }).filter((addr) -> (addr.getZipCode().contains(search))).forEachOrdered((_item) -> {
+                        tempList.add(customer);
+                    });
+                });
+                result.clear();
+                result.addAll(tempList);
+
             }
         }
-        
-        
+
         L.info("Returning {}", result);
         return result;
     }
-    
+
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
         return CUSTOMERS.size();
     }
-    
+
     @Override
     public Customer store(SimpleCustomer simpleCustomer) {
         L.info("Input form Stubs: " + simpleCustomer.toString());
@@ -160,9 +221,9 @@ public class CustomerAgentStub implements CustomerAgent {
         if ( !simpleCustomer.getCompanyName().trim().isEmpty() ) {
             bussines = true;
         }
-        
+
         Customer c = new Customer();
-        
+
         Contact cont = new Contact();
         cont.setFirstName(simpleCustomer.getFirstName());
         cont.setLastName(simpleCustomer.getLastName());
@@ -198,13 +259,13 @@ public class CustomerAgentStub implements CustomerAgent {
         } else {
             Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
         }
-        
+
         AddressLabel al = null;
         if ( bussines ) {
             //Either a Contact or a Company are set.
             //Contains only one Contact or one Company.
             c.getContacts().clear();
-            
+
             Company comp = new Company();
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
@@ -214,9 +275,9 @@ public class CustomerAgentStub implements CustomerAgent {
             comp.getContacts().add(cont);
             //build AddressLabel
             al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
-            
+
             c.getCompanies().add(comp);
-            
+
         } else {
             //Contains only one Contact or one Company.
             c.getCompanies().clear();
@@ -225,14 +286,14 @@ public class CustomerAgentStub implements CustomerAgent {
         }
         c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
-        
+
         MandatorMetadata mandatorMetadata = new MandatorMetadata();
         c.getMandatorMetadata().add(mandatorMetadata);
-        
+
         L.info("Output form Stubs: " + c.toString());
         L.info("ViolationMessage " + c.getViolationMessage());
-        
+
         return c;
     }
-    
+
 }
