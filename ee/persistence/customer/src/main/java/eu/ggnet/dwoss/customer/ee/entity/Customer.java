@@ -420,28 +420,30 @@ public class Customer implements Serializable {
     }
 
     /**
-     * Returns null, if the customer is simple otherwise a string, why the customer is not simple.
+     * Returns null, if the customer is simple.
      * Overall Rules are:
      * <ul>
-     * <li>Either a Contact or a Company are set</li>
+     * <li>Either a Contact or a Company is set</li>
      * <li>Contains only one Contact or one Company</li>
-     * <li>Exactly One AddressLabels which is of Type Invoice</li>
+     * <li>Exactly One AddressLabels of Type Invoice</li>
      * <li>No CustomerFlag is set</li>
      * <li>No KeyAccounter is set</li>
      * <li>No MandatorMetadata is set</li>
+     * <li>Communications are only allowed to be of one of the following types: EMAIL, PHONE, MOBILE </li>
+     * <li>Communications on a simple Customer mustn't be more frequent than one from each allowed type </li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
      * <ul>
      * <li>Contact with only one Address</li>
-     * <li>one Communication from each type: "EMAIL, PHONE, MOBILE" is allowed</li>
+     * <li>Contact has at least one Communication</li>
      * </ul>
      * <p>
      * Business Customer Rules are:
      * <ul>
      * <li>Company with only one Address, one Contact and no Communication</li>
-     * <li>The Address of the Company Contact has to match the Company Address</li>
-     * <li>One Communication from each type: "EMAIL, PHONE, MOBILE" is allowed</li>
+     * <li>The Company's Contact has at least one Communication</li>
+     * <li>The Address of the Company's Contact has to match the Company's Address</li>
      * </ul>
      *
      * @return null if instance is valid, else a string representing the invalidation.
@@ -518,20 +520,20 @@ public class Customer implements Serializable {
      * Returns null, if the Customer is valid.
      * Overall Rules are:
      * <ul>
-     * <li>Either a Contact or a Company are set.</li>
-     * <li>Contains only Contacts or Companies.</li>
+     * <li>Either a Contact or a Company is set</li>
+     * <li>Contains only Contacts or Companies</li>
      * <li>One AddressLabel of Type Invoice</li>
      * <li>Only 2 AddressLabels</li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
      * <ul>
-     * <li>A least one Contact.</li>
+     * <li>At least one Contact with at least one Communication.</li>
      * </ul>
      * <p>
      * Business Customer Rules are:
      * <ul>
-     * <li>A least one Company.</li>
+     * <li>At least one Company and one Communication either on the Company or the Company's Contact.</li>
      * </ul>
      *
      * @return null if instance is valid, else a string representing the invalidation.
@@ -562,7 +564,7 @@ public class Customer implements Serializable {
             if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() == 0 ) return "BusinessCustomer has no Address.";
             if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent()
                     && !companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
-                return "BusinessCustomer: No Communication ";
+                return "BusinessCustomer: No Communication";
             if ( Stream.concat(companies.stream().flatMap(cmp -> cmp.getCommunications().stream()), companies.stream().flatMap(cmp -> cmp.getContacts().stream()).flatMap(cntct -> cntct.getCommunications().stream())).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
                 return "Communications: " + companies.stream().flatMap(cmp -> cmp.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).map(comm -> comm.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
 

@@ -50,12 +50,13 @@ public class CustomerViolationMessageTest {
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without AddressLabels is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        businessCustomer.getContacts().add(makeValidContact());
-        assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with a Contact is invalid").isNotNull();
+        businessCustomer.getAddressLabels().add(makeValidShippingAddressLabel());
+        assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with two AddressLabels of different Types is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        businessCustomer.getContacts().add(makeValidContact());
-        assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with a Contact is invalid").isNotNull();
+        businessCustomer.getCompanies().forEach(cmp -> cmp.getCommunications().clear());
+        businessCustomer.getCompanies().forEach(cmp -> cmp.getContacts().forEach(cntct -> cntct.getCommunications().clear()));
+        assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without Communication is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
         Communication invalidPhoneCommunication = new Communication(Type.PHONE, false);
