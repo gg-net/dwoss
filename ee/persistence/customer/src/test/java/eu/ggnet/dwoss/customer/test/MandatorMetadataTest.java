@@ -51,28 +51,28 @@ public class MandatorMetadataTest {
     }
 
     @Test
-    public void testGetViolationMessagesNonValid() {
+    public void testGetViolationMessagesNonValidShippingCondition() {
         MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
         makeInValidMandatorMetadata.setShippingCondition(null);
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without ShippingCondition").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid2() {
+    public void testGetViolationMessagesNonValidPaymentCondition() {
         MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
         makeInValidMandatorMetadata.setPaymentCondition(null);
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without PaymentCondition").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid3() {
+    public void testGetViolationMessagesNonValidPaymentMethod() {
         MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
         makeInValidMandatorMetadata.setPaymentMethod(null);
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Payment Method").isNotBlank();
     }
 
     @Test
-    public void testGetViolationMessagesNonValid4() {
+    public void testGetViolationMessagesNonSalesChannels() {
         MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
         makeInValidMandatorMetadata.clearSalesChannels();
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
