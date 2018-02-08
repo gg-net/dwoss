@@ -157,20 +157,25 @@ public class MandatorMetadata implements Serializable {
     }
 
     /**
+     * <p>
+     * <p>
+     * /**
      * Returns null, if the MandatorMetadata is valid.
      * Rules are:
      * <ul>
-     * <li>....</li>
+     * <li>ShippingCondition must be set</li>
+     * <li>PaymentCondition must be set</li>
+     * <li>PaymentMethod must be set</li>
+     * <li>A SalesChannel must be set</li>
      * </ul>
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    public String getViolationMessages() {
+    public String getViolationMessage() {
         if ( shippingCondition == null ) return "No ShippingCondition is set";
         if ( paymentCondition == null ) return "No PaymentCondition is set";
         if ( paymentMethod == null ) return "No PaymentMethod is set";
-        if ( allowedSalesChannels.isEmpty() ) return "No SalesChannel is Listed add AllowedSalesChannels";
-
+        if ( allowedSalesChannels.isEmpty() ) return "No SalesChannel is listed";
         return null;
     }
 

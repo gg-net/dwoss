@@ -43,31 +43,31 @@ public class MandatorMetadataTest {
 
     @Test
     public void testGetViolationMessages() {
-        assertThat(mandatorMetadata.getViolationMessages()).as("MandatorMetadata with valid values").isNull();
+        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata with valid values").isNull();
     }
 
     @Test
     public void testGetViolationMessagesNonValid() {
         mandatorMetadata.setShippingCondition(null);
-        assertThat(mandatorMetadata.getViolationMessages()).as("MandatorMetadata without ShippingCondition").isNotBlank();
+        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without ShippingCondition").isNotBlank();
     }
 
     @Test
     public void testGetViolationMessagesNonValid2() {
         mandatorMetadata.setPaymentCondition(null);
-        assertThat(mandatorMetadata.getViolationMessages()).as("MandatorMetadata without PaymentCondition").isNotBlank();
+        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without PaymentCondition").isNotBlank();
     }
 
     @Test
     public void testGetViolationMessagesNonValid3() {
         mandatorMetadata.setPaymentMethod(null);
-        assertThat(mandatorMetadata.getViolationMessages()).as("MandatorMetadata without Payment Method").isNotBlank();
+        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without Payment Method").isNotBlank();
     }
 
     @Test
     public void testGetViolationMessagesNonValid4() {
         mandatorMetadata.clearSalesChannels();
-        assertThat(mandatorMetadata.getViolationMessages()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
+        assertThat(mandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
     }
 
 }

@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ee.entity;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -544,15 +545,26 @@ public class Customer implements Serializable {
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
+
+        if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
+            return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
+
         if ( isConsumer() ) {
-            if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() ) return "Consumer: No Address on any Contact";
-            if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() ) return "Consumer: No Communication on any Contact";
+            if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() )
+                return "Consumer: No Address on any Contact";
+            if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
+                return "Consumer: No Communication on any Contact";
+            if ( contacts.stream().flatMap(cntct -> cntct.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
+                return "Communications: " + contacts.stream().flatMap(cntct -> cntct.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).map(comm -> comm.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
+
         }
         if ( isBusiness() ) {
             if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() == 0 ) return "BusinessCustomer has no Address.";
             if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent()
                     && !companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
-                return "No Communication ";
+                return "BusinessCustomer: No Communication ";
+            if ( Stream.concat(companies.stream().flatMap(cmp -> cmp.getCommunications().stream()), companies.stream().flatMap(cmp -> cmp.getContacts().stream()).flatMap(cntct -> cntct.getCommunications().stream())).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
+                return "Communications: " + companies.stream().flatMap(cmp -> cmp.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).map(comm -> comm.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
 
         }
         return null;
