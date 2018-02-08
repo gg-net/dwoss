@@ -21,7 +21,6 @@ import java.util.Locale;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 
 import javax.swing.*;
 
@@ -30,7 +29,6 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
-import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.saft.*;
 
 import tryout.stub.CustomerAgentStub;
@@ -41,26 +39,20 @@ import tryout.stub.CustomerAgentStub;
  */
 public class CustomerSimpleTryout {
 
-    public static void main(String[] args) {
-        //stub for the new Costumer modell with generator needed
-        Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
+    private static CustomerGenerator gen = new CustomerGenerator();
 
-        CustomerGenerator gen = new CustomerGenerator();
+    public static Customer makeValidCustomer() {
         Customer customer = gen.makeCustomer();
-        Company company = gen.makeCompany();
         Contact contact = gen.makeContact();
-        Communication communicationEmail = new Communication();
+        
         Address address = gen.makeAddress();
 
         customer.getCompanies().clear();
         customer.getContacts().clear();
+        customer.getFlags().clear();
+        customer.getMandatorMetadata().clear();
 
-        customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-        customer.setKeyAccounter("Herr Meier");
-        customer.getMandatorMetadata().add(new MandatorMetadata());
-
-        communicationEmail.setType(Type.MOBILE);
-        communicationEmail.setIdentifier("040123456789");
+        
 
         address.setIsoCountry(Locale.GERMANY);
 
@@ -68,77 +60,64 @@ public class CustomerSimpleTryout {
         contact.getCommunications().clear();
 
         contact.getAddresses().add(address);
-        contact.getCommunications().add(communicationEmail);
+        contact.getCommunications().add(makeValidCommunication());
+
+        customer.getContacts().add(contact);
+
+        return customer;
+    }
+    
+    public static Communication makeValidCommunication(){
+        Communication communicationMobile = new Communication();
+        communicationMobile.setType(Type.MOBILE);
+        communicationMobile.setIdentifier("040123456789");
+        
+        return communicationMobile;
+    }
+
+    public static void main(String[] args) {
+        //stub for the new Costumer modell with generator needed
+        Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton consumerCustomer = new JButton("Consumer Customer");
-        consumerCustomer.addActionListener(ev -> {
-            customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-            customer.setKeyAccounter("Herr Meier");
-            customer.getMandatorMetadata().add(new MandatorMetadata());
+        JButton consumerCustomerButton = new JButton("Consumer Customer");
+        consumerCustomerButton.addActionListener(ev -> {
+            Customer consumerCustomer = makeValidCustomer();
 
-            communicationEmail.setType(Type.MOBILE);
-            communicationEmail.setIdentifier("040123456789");
-
-            address.setIsoCountry(Locale.GERMANY);
-
-            contact.getAddresses().clear();
-            contact.getCommunications().clear();
-
-            contact.getAddresses().add(address);
-            contact.getCommunications().add(communicationEmail);
-
-            customer.getContacts().add(contact);
-
-            System.out.println("IS simple: " + customer.getSimpleViolationMessage());
-            System.out.println("Consumer Customer: " + customer.isConsumer());
+            System.out.println("IS simple: " + consumerCustomer.getSimpleViolationMessage());
+            System.out.println("Consumer Customer: " + consumerCustomer.isConsumer());
 
             Ui.exec(() -> {
-                Ui.build().parent(consumerCustomer).fxml().eval(() -> customer, CustomerSimpleController.class).ifPresent(System.out::println);
+                Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 
         JButton bussinesCustomer = new JButton("Bussines Customer");
         bussinesCustomer.addActionListener(ev -> {
-            Customer bc = gen.makeCustomer();
-            bc.getContacts().clear();
-            bc.getFlags().add(CustomerFlag.ITC_CUSTOMER);
-            bc.setKeyAccounter("Herr Meier");
-            bc.getMandatorMetadata().add(new MandatorMetadata());
-
-            communicationEmail.setType(Type.MOBILE);
-            communicationEmail.setIdentifier("040123456789");
-
-            address.setIsoCountry(Locale.GERMANY);
-
+            Customer bussnisCustomer = makeValidCustomer();
+            Contact tempcon = bussnisCustomer.getContacts().get(0);
+            
+            Company company = gen.makeCompany();
             company.getContacts().clear();
-            company.getAddresses().clear();
+            company.getContacts().add(tempcon);
+            
             company.getCommunications().clear();
+            bussnisCustomer.getContacts().clear();            
 
-            contact.getAddresses().clear();
-            contact.getCommunications().clear();
+            bussnisCustomer.getCompanies().add(company);
 
-            contact.getAddresses().add(address);
-            contact.getCommunications().add(communicationEmail);
-
-            company.getContacts().add(contact);
-            company.getAddresses().add(address);
-            company.getCommunications().add(communicationEmail);
-
-            bc.getCompanies().add(company);
-
-            System.out.println("IS simple: " + bc.getSimpleViolationMessage());
-            System.out.println("Bussines Customer: " + bc.isBusiness());
+            System.out.println("IS simple: " + bussnisCustomer.getSimpleViolationMessage());
+            System.out.println("Bussines Customer: " + bussnisCustomer.isBusiness());
 
             Ui.exec(() -> {
-                Ui.build().parent(consumerCustomer).fxml().eval(() -> bc, CustomerSimpleController.class).ifPresent(System.out::println);
+                Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class).ifPresent(System.out::println);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(consumerCustomer);
+        p.add(consumerCustomerButton);
         p.add(bussinesCustomer);
         p.add(close);
 

@@ -39,19 +39,29 @@ import eu.ggnet.saft.core.ui.AlertType;
  * @author jens.papenhagen
  */
 public class CustomerAgentStub implements CustomerAgent {
-
+    
     private final int AMOUNT = 200;
-
+    
     private final int SLOW = 40;
-
+    
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
-
+    
     private final CustomerGenerator CGEN = new CustomerGenerator();
-
+    
+    private final List<Customer> CUSTOMERS;
+    
+    {
+        CUSTOMERS = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            CUSTOMERS.add(CGEN.makeCustomer());
+        }
+    }
+    
+    
     @Override
     public <T> long count(Class<T> entityClass) {
         if ( entityClass.equals(Customer.class) ) {
-            return AMOUNT;
+            return CUSTOMERS.size();
         }
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -61,38 +71,38 @@ public class CustomerAgentStub implements CustomerAgent {
     public <T> List<T> findAll(Class<T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> List<T> findAll(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id) {
         return (T)CGEN.makeCustomer();
-
+        
     }
-
+    
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> List<T> findAllEager(Class< T> entityClass, int start, int amount) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> T findById(Class< T> entityClass, Object id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> T findById(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id, LockModeType lockModeType) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -105,56 +115,54 @@ public class CustomerAgentStub implements CustomerAgent {
         for (int i = 0; i < 25; i++) {
             list.add(CGEN.makeCustomer());
         }
-
+        
+        L.info("Returning {}", list);
         return list;
     }
-
+    
     @Override
     public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        List<Customer> list = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
-            list.add(CGEN.makeCustomer());
-        }
+        L.info("SearchString {},{},start={},limit={}",search,customerFields,start,limit);
+        
         try {
-            Thread.sleep(1000L, SLOW);
+            Thread.sleep(200L, SLOW);
         } catch (InterruptedException ex) {
-
+            L.error("InterruptedException get throw");
         }
-
-        //debug
-        System.out.println("--------------------------------------");
-        System.out.println("Debug from CustomerAgentStub");
-        if ( customerFields != null ) {
-            System.out.println("Set größe. " + customerFields.size());
+        
+        if (start >= CUSTOMERS.size() ) return Collections.emptyList();
+        if (limit >= CUSTOMERS.size() ) limit = CUSTOMERS.size();
+        List<Customer> result = CUSTOMERS.subList(start, limit+start);
+        
+        if(customerFields.contains(SearchField.LASTNAME)){
+           
+            for (Customer customer : result) {
+                
+            }
         }
-        System.out.println("Listgröße: " + list.size());
-        list.forEach((customer) -> {
-            customer.getCompanies().forEach((company) -> {
-                System.out.println("Company Name: " + company.getName());
-            });
-        });
-        System.out.println("--------------------------------------");
-
-        return list;
+        
+        
+        L.info("Returning {}", result);
+        return result;
     }
-
+    
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
-        return 50;
+        return CUSTOMERS.size();
     }
-
+    
     @Override
     public Customer store(SimpleCustomer simpleCustomer) {
-        System.out.println("Input form Stubs: " + simpleCustomer.toString());
+        L.info("Input form Stubs: " + simpleCustomer.toString());
 
         //convert the SimpleCustomer to a Customer
         boolean bussines = false;
         if ( !simpleCustomer.getCompanyName().trim().isEmpty() ) {
             bussines = true;
         }
-
+        
         Customer c = new Customer();
-
+        
         Contact cont = new Contact();
         cont.setFirstName(simpleCustomer.getFirstName());
         cont.setLastName(simpleCustomer.getLastName());
@@ -190,13 +198,13 @@ public class CustomerAgentStub implements CustomerAgent {
         } else {
             Ui.build().alert().message("CustomerAgentStub - Eingabefehler in einem der Kommunikationswege. Bitte überprüfen Sie Diese.").show(AlertType.WARNING);
         }
-
+        
         AddressLabel al = null;
         if ( bussines ) {
             //Either a Contact or a Company are set.
             //Contains only one Contact or one Company.
             c.getContacts().clear();
-
+            
             Company comp = new Company();
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
@@ -206,9 +214,9 @@ public class CustomerAgentStub implements CustomerAgent {
             comp.getContacts().add(cont);
             //build AddressLabel
             al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
-
+            
             c.getCompanies().add(comp);
-
+            
         } else {
             //Contains only one Contact or one Company.
             c.getCompanies().clear();
@@ -217,14 +225,14 @@ public class CustomerAgentStub implements CustomerAgent {
         }
         c.getAddressLabels().clear();
         c.getAddressLabels().add(al);
-
+        
         MandatorMetadata mandatorMetadata = new MandatorMetadata();
         c.getMandatorMetadata().add(mandatorMetadata);
-
-        System.out.println("Output form Stubs: " + c.toString());
-        System.out.println("ViolationMessage " + c.getViolationMessage());
-
+        
+        L.info("Output form Stubs: " + c.toString());
+        L.info("ViolationMessage " + c.getViolationMessage());
+        
         return c;
     }
-
+    
 }

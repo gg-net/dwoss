@@ -20,9 +20,10 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController;
+import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
 import eu.ggnet.saft.*;
-
 
 /**
  *
@@ -37,15 +38,28 @@ public class AddressUpdateTryout {
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
-        JButton run = new JButton("OpenUi");
-        run.addActionListener(ev -> {
+        JButton editButton = new JButton("Edit");
+        editButton.addActionListener(ev -> {
+
+            if ( address.getViolationMessage() != null ) {
+                System.out.println("Address ViolationMessages: " + address.getViolationMessage());
+            }
+
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);;
+                Ui.build().fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);
+            });
+        });
+
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(ev -> {
+            Ui.exec(() -> {
+                Ui.build().fxml().eval(() -> new Address(), AddressUpdateController.class).ifPresent(System.out::println);
             });
         });
 
         JPanel p = new JPanel();
-        p.add(run);
+        p.add(editButton);
+        p.add(addButton);
         p.add(close);
 
         UiCore.startSwing(() -> p);
