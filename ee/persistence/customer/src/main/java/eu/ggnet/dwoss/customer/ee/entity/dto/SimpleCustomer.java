@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity.dto;
 
+import java.io.Serializable;
+
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 
@@ -27,7 +29,7 @@ import lombok.Data;
  * @author oliver.guenther
  */
 @Data
-public class SimpleCustomer {
+public class SimpleCustomer implements Serializable {
 
     private long id;
 

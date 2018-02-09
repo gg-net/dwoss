@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.spec.entity;
 
-import javax.swing.JOptionPane;
-
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 
@@ -32,13 +30,7 @@ public class SpecOfflineConstructor {
 
     private static SpecOfflineConstructor instance;
 
-    public long counter;
-
-    private SpecOfflineConstructor() {
-        String messages= "Warning: The " + this.getClass().getSimpleName() + " is in use.\n In a Prodcutive Environment, this will very probably cause Datalose!";
-        JOptionPane.showMessageDialog(null, messages,"Warning, OfflineConstructor in use",JOptionPane.WARNING_MESSAGE);
-        counter = 0;
-    }
+    public long counter = 0;
 
     public static SpecOfflineConstructor getInstance() {
         if (instance == null) {

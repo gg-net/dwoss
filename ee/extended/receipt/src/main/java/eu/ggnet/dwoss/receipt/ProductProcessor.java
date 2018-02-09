@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,14 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.entity.piece.Gpu;
+import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -99,6 +96,16 @@ public interface ProductProcessor {
      * @return the persisted and detached ProductFamily
      */
     ProductFamily create(final TradeName brand, final ProductGroup group, ProductSeries series, final String familyName);
+
+    /**
+     * Creates and persists a ProductSeries.
+     *
+     * @param brand      the brand
+     * @param group      the group
+     * @param seriesName the series.
+     * @return the persisted and detache entity
+     */
+    Reply<ProductSeries> create(final TradeName brand, final ProductGroup group, final String seriesName);
 
     /**
      * Creates a new ProductSpec and the relating Product and SopoProduct.

@@ -27,6 +27,8 @@ import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.util.INoteModel;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
@@ -186,7 +188,8 @@ public abstract class ProductSpec implements Serializable, EagerAble {
      * <p>
      * @param id the database id, normally auto generated.
      */
-    ProductSpec(long id) {
+    public ProductSpec(long id) {
+        LoggerFactory.getLogger(ProductSpec.class).error("Usage of " + this.getClass().getName() + " id constructor. Will fail in a productive system");
         this.id = id;
     }
 

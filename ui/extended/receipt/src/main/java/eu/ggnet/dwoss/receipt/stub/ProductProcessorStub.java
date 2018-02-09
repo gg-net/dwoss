@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,23 @@
  */
 package eu.ggnet.dwoss.receipt.stub;
 
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.entity.Notebook;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.entity.AllInOne;
-import eu.ggnet.dwoss.spec.entity.Monitor;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.SpecOfflineConstructor;
-
 import java.util.*;
 
 import javax.enterprise.inject.Alternative;
 import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
-
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-
 import eu.ggnet.dwoss.spec.SpecAgent;
 import eu.ggnet.dwoss.spec.assist.SpecPu;
 import eu.ggnet.dwoss.spec.entity.Desktop.Hdd;
 import eu.ggnet.dwoss.spec.entity.Desktop.Odd;
 import eu.ggnet.dwoss.spec.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.entity.ProductSpec.Extra;
+import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.entity.piece.*;
+import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.*;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;
@@ -440,5 +427,12 @@ public class ProductProcessorStub implements ProductProcessor {
         family.setName(familyName);
         family.setSeries(series);
         return family;
+    }
+
+    @Override
+    public Reply<ProductSeries> create(TradeName brand, ProductGroup group, String seriesName) {
+        ProductSeries series = soc.newProductSeries(brand, group, SpecPu.DEFAULT_NAME);
+        serieses.add(series);
+        return Reply.success(series);
     }
 }
