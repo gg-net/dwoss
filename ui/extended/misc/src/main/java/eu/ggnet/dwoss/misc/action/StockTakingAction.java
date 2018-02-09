@@ -16,21 +16,22 @@
  */
 package eu.ggnet.dwoss.misc.action;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
 import javax.swing.*;
 
+import javafx.scene.control.Alert;
+
 import eu.ggnet.dwoss.misc.op.StockTaking;
 import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.api.Reply;
 
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -54,30 +55,18 @@ public class StockTakingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) return;
-        final File inFile = dialog.getSelectedFile();
-        if ( YES_OPTION != showConfirmDialog(UiCore.getMainFrame(),
-                "Inventur" + (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.getPath() + " vervollständigen ?", "Inventur vervollständigen",
-                YES_NO_OPTION, QUESTION_MESSAGE) ) return;
-
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                FileUtil.checkIfExcelFile(inFile);
-                return Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", inFile), (stock == null ? null : stock.getId()));
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    Desktop.getDesktop().open(get().toTemporaryFile());
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    Ui.handle(ex);
-                }
-            }
-        }.execute();
+        Ui.exec(() -> {
+            Optional<File> inFile = Ui.fileChooser().open();
+            if ( !inFile.isPresent() ) return;
+            Ui.build().dialog().eval(
+                    () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
+                    .filter(b -> b == OK)
+                    .map(b ->  TikaUtil.isExcel(inFile.get()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.getId()))))
+                   .ifPresent( f -> Ui.osOpen(f.toTemporaryFile()));
+        });
 
     }
 }
