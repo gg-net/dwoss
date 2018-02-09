@@ -36,6 +36,7 @@ import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * This Logic is used in Reciept to handle all modifications to ProductSpec,Product and SopoProduct.
@@ -393,5 +394,18 @@ public class ProductProcessorOperation implements ProductProcessor {
         product.setGtin(gtin);
         L.debug("updateing {}", product);
         return spec;
+    }
+
+    @Override
+    public Reply<ProductSeries> create(TradeName brand, ProductGroup group, String seriesName) {
+        EntityManager em = specEm;
+        // 1. check if there exits a model anytwhere with the same name. -> throw Exception
+        ProductSeriesEao seriesEoa = new ProductSeriesEao(em);
+        ProductSeries series = seriesEoa.find(seriesName);
+        if ( series != null ) Reply.failure("There exits a series " + series + " but we want to create it");
+        // 2. Create Family
+        series = new ProductSeries(brand, group, seriesName);
+        em.persist(series);
+        return Reply.success(series);
     }
 }

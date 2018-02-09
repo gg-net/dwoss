@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,10 +22,13 @@ import javax.persistence.*;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 import eu.ggnet.dwoss.spec.assist.Specs;
 import eu.ggnet.dwoss.spec.entity.ProductSeries;
+import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
+import com.mysema.query.jpa.impl.JPAQuery;
+
+import static eu.ggnet.dwoss.spec.entity.QProductSeries.productSeries;
 /**
  * Entity Access Object for the CPU.
  *
@@ -63,5 +66,9 @@ public class ProductSeriesEao extends AbstractEao<ProductSeries> {
         } catch (NoResultException ex) {
             return null;
         }
+    }
+
+    public ProductSeries find(String name) {
+        return new JPAQuery(em).from(productSeries).where(productSeries.name.eq(name)).singleResult(productSeries);
     }
 }

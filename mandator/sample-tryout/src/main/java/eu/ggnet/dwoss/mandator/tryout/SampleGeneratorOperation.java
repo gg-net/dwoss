@@ -19,10 +19,8 @@ package eu.ggnet.dwoss.mandator.tryout;
 import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import javax.annotation.PostConstruct;
 import javax.ejb.*;
 import javax.inject.Inject;
 
@@ -45,7 +43,8 @@ import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 
-import lombok.Getter;
+import static javax.ejb.LockType.READ;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
  * Sample Genaerator.
@@ -53,7 +52,6 @@ import lombok.Getter;
  *
  * @author oliver.guenther
  */
-@Startup
 @Singleton
 public class SampleGeneratorOperation implements Serializable {
 
@@ -98,18 +96,28 @@ public class SampleGeneratorOperation implements Serializable {
     /**
      * If true this generator is generating samples.
      */
-    @Getter
     private boolean generating = false;
 
     /**
      * If true this generator has completed generating samples.
      */
-    @Getter
     private boolean generated = false;
 
+    @Lock(READ)
+    public boolean isGenerating() {
+        return generating;
+    }
+
+    @Lock(READ)
+    public boolean isGenerated() {
+        return generated;
+    }
+
     // TODO: Super candidat für Background opperation. Dann kann man das generated auch über ein Future lösen :-)
+    @Lock(READ)
     @Asynchronous
-    public Future<Boolean> generateSampleData() {
+    @TransactionAttribute(REQUIRES_NEW)
+    public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
             generating = true;
             L.info("Generating Persistence Data");
@@ -130,7 +138,7 @@ public class SampleGeneratorOperation implements Serializable {
             L.info("Persistence Data generated");
             generating = false;
             generated = true;
-            return new AsyncResult<>(true);
+            return;
         }
 
         generating = false;
@@ -140,7 +148,6 @@ public class SampleGeneratorOperation implements Serializable {
         if ( uniqueUnitEao.count() > 0 ) error("UniqueUnit is not empty, disabling data generation");
         if ( dossierEao.count() > 0 ) error("RedTape is not empty, disabling data generation");
         if ( reportLineEao.count() > 0 ) error("Report is not empty, disabling data generation");
-        return new AsyncResult<>(false);
     }
 
     private void error(String msg) {
@@ -148,9 +155,5 @@ public class SampleGeneratorOperation implements Serializable {
 //        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("", msg));
     }
 
-    @PostConstruct
-    public void init() {
-        generateSampleData();
-    }
 
 }

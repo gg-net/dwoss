@@ -86,22 +86,22 @@ public class UiProductSupport {
         simpleDialog.setVisible(true);
         if ( simpleDialog.isCancel() ) return null;
         ProductSpec spec = simpleView.getProductSpec();
-        if ( edit ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getModel());
-        AbstractView productView = AbstractView.newView(spec, simpleView.getModel().getFamily().getSeries().getBrand());
+        if ( edit ) spec = Dl.remote().lookup(ProductProcessor.class).refresh(spec, simpleView.getSelectedModel().get());
+        AbstractView productView = AbstractView.newView(spec, simpleView.getSelectedModel().get().getFamily().getSeries().getBrand());
         if ( edit ) productView.setGtin(Dl.remote().lookup(UniqueUnitAgent.class).findById(Product.class, spec.getProductId()).getGtin());
         OkCancelDialog productDialog = new OkCancelDialog(parent, "Artikeldetailkonfiguration", productView);
         productDialog.setVisible(true);
         if ( productDialog.isCancel() ) return null;
-        validate(simpleView.getModel());
+        validate(simpleView.getSelectedModel().get());
         validate(productView.getSpec());
         if ( edit ) return Dl.remote().lookup(ProductProcessor.class).update(productView.getSpec(), productView.getGtin());
         // TODO: In Case of a Bundle autoupdate the name of the model.
-        else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getModel(), productView.getGtin());
+        else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getSelectedModel().get(), productView.getGtin());
     }
 
     private void validate(Object o) throws UserInfoException {
         Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(o);
-        if ( !validate.isEmpty() ) throw new UserInfoException(ConstraintViolationFormater.toMultiLine(new ArrayList<ConstraintViolation<?>>(validate), true));
+        if ( !validate.isEmpty() ) throw new UserInfoException(ConstraintViolationFormater.toMultiLine(new ArrayList<>(validate), true));
     }
 
     public void validatePartNo(TradeName manufacturer, String partNo) throws UserInfoException {

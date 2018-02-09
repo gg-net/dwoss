@@ -33,13 +33,17 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.FxSaft;
 
@@ -157,11 +161,18 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem.isSimple() ) {
                     Ui.exec(() -> {
-                        Ui.build().fxml().show(() -> selectedItem, CustomerSimpleController.class);
+                        Optional<CustomerContinue> result = Ui.build().parent(resultListView).fxml().eval(() -> selectedItem, CustomerSimpleController.class);
+                        if ( !result.isPresent() ) return;
+                        Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                        if ( !Ui.failure().handle(reply) ) return;
+                        if ( !result.get().continueEnhance ) return;
+                        Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                                .ifPresent(c -> Ui.build().alert("Would store + " + c));
                     });
                 } else {
                     Ui.exec(() -> {
-                        Ui.build().fxml().eval(() -> selectedItem, CustomerEnhanceController.class);
+                        Ui.build().fxml().eval(() -> selectedItem, CustomerEnhanceController.class)
+                                .ifPresent(c -> Ui.build().alert("Would store + " + c));
                     });
                 }
             }

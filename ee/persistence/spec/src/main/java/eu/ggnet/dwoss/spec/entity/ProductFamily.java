@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.slf4j.LoggerFactory;
 
 import static javax.persistence.CascadeType.*;
 
@@ -74,6 +76,7 @@ public class ProductFamily implements Serializable, INamed {
      * @param id the database id, normally auto generated.
      */
     ProductFamily(long id) {
+        LoggerFactory.getLogger(ProductSpec.class).error("Usage of " + this.getClass().getName() + " id constructor. Will fail in a productive system");
         this.id = id;
     }
 

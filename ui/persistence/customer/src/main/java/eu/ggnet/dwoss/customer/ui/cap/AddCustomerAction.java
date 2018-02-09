@@ -52,4 +52,5 @@ public class AddCustomerAction extends AbstractAction {
                     .ifPresent(c -> Ui.build().alert("Would store + " + c));
         });
     }
+
 }

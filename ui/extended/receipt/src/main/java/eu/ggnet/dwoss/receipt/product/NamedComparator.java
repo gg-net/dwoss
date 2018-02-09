@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,8 +31,6 @@ public class NamedComparator implements Comparator<INamed> {
         if ( o1 == o2 ) return 0;
         if ( o1 == null ) return -1;
         if ( o2 == null ) return +1;
-        if ( o1.getName() == o2.getName() ) return 0;
-        if ( o1.getName() == null ) return -1;
         return o1.getName().compareTo(o2.getName());
     }
 

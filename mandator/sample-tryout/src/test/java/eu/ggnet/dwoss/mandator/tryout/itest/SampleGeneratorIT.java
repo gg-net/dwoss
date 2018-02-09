@@ -70,9 +70,8 @@ public class SampleGeneratorIT {
 
     @Test
     public void testSampleTryout() throws InterruptedException {
-        for (int i = 0; i < 10 && !gen.isGenerated(); i++) {
+        while (gen.isGenerating()) {
             Thread.sleep(1000);
-
         }
         assertThat(gen.isGenerated()).as("Generated").isTrue();
     }

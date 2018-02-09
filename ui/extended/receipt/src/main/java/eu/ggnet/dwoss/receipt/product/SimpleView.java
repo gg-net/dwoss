@@ -16,13 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+
+import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.rules.ProductGroup;
@@ -32,68 +35,51 @@ import eu.ggnet.dwoss.spec.entity.*;
 import eu.ggnet.dwoss.spec.format.SpecFormater;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 
 import lombok.Getter;
+
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 
     @Getter
     private final TradeName manufacturer;
 
-    private NamedComparator namedComparator = new NamedComparator();
+    private final NamedComparator INAMED_COMPARATOR = new NamedComparator();
 
     private ProductSpec spec;
 
-    private List<ProductSeries> serieses;
-
-    private List<ProductFamily> filteredFamilies;
-
-    private List<ProductModel> filteredModels;
+    private List<ProductSeries> allSeries;
 
     private Window parent;
 
-    private ProductProcessor receiptProductLogic;
+    private ProductProcessor productProcessor;
 
     private SpecAgent specAgent;
+
+    private final KeyAdapter ENABLE_ADD_BUTTONS = new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            enableAddButtons();
+        }
+    };
 
     SimpleView(TradeName manufacturer) {
         this.manufacturer = Objects.requireNonNull(manufacturer, "Manufacturer must not be null");
         if ( !manufacturer.isManufacturer() ) throw new IllegalArgumentException("Manufacturer " + manufacturer + " is not a Manufacturer");
         initComponents();
-        receiptProductLogic = Dl.remote().lookup(ProductProcessor.class);
+        productProcessor = Dl.remote().lookup(ProductProcessor.class);
         specAgent = Dl.remote().lookup(SpecAgent.class);
-        this.serieses = specAgent.findAll(ProductSeries.class);
-        seriesBox.setRenderer(new ListCellRenderer() {
-            protected DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                Component component = defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if ( value instanceof ProductSeries ) {
-                    ((JLabel)component).setText(((ProductSeries)value).getName());
-                } else if ( value == null ) {
-                    ((JLabel)component).setText("");
-                }
-                return component;
-            }
-        });
-        brandBox.setModel(new DefaultComboBoxModel(manufacturer.getBrands().toArray()));
-        groupBox.setModel(new DefaultComboBoxModel(EnumSet.complementOf(EnumSet.of(ProductGroup.COMMENTARY)).toArray()));
+        allSeries = specAgent.findAll(ProductSeries.class);
+        brandBox.setModel(new DefaultComboBoxModel<>(manufacturer.getBrands().toArray()));
+        groupBox.setModel(new DefaultComboBoxModel<>(EnumSet.complementOf(EnumSet.of(ProductGroup.COMMENTARY)).toArray()));
         updateSeries();
         updateFamily();
         updateModel();
-        familyBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                checkFamily();
-            }
-        });
-        modelBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                checkModel();
-            }
-        });
+        seriesBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
+        familyBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
+        modelBox.getEditor().getEditorComponent().addKeyListener(ENABLE_ADD_BUTTONS);
     }
 
     /**
@@ -134,13 +120,12 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         brandBox.setSelectedItem(series.getBrand());
         groupBox.setSelectedItem(series.getGroup());
         updateSeries();
-        seriesBox.setSelectedItem(series);
+        seriesBox.setSelectedItem(series.getName());
         updateFamily();
         familyBox.setSelectedItem(spec.getModel().getFamily().getName());
         updateModel();
         modelBox.setSelectedItem(spec.getModel().getName());
-        checkFamily();
-        checkModel();
+        enableAddButtons();
         htmlInfoPane.setText(SpecFormater.toHtml(spec));
     }
 
@@ -153,16 +138,19 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         return spec;
     }
 
+    @Override
+    public void setParent(Window parent) {
+        this.parent = parent;
+    }
+
     // TODO: Describe somethere, that in the Editmode the Model is not set to the spec, but must be done in an active transaction.
     // merge productSpec. merge model. set Model. commit
     @Override
     public boolean pre(CloseType type) {
         if ( type != CloseType.OK ) return true;
-        String msg = null;
-        if ( getModel() == null ) {
-            String modelName = (String)modelBox.getSelectedItem();
-            if ( modelName == null || modelName.trim().equals("") ) return error("Kein Modell ausgewählt");
-            return error("Modell " + modelName + " noch nicht hinzugefügt");
+        if ( !getSelectedModel().isPresent() ) {
+            Ui.build(this).alert("Model nicht ausgewählt oder nicht hinzugefügt");
+            return false;
         }
         // The new ProductSpec Mode
         if ( spec == null ) {
@@ -170,104 +158,6 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
             spec.setPartNo(partNoField.getText());
         }
         return true;
-    }
-
-    /**
-     * Changes the SeriesBox contents in dependency of the brand and group.
-     */
-    private void updateSeries() {
-        TradeName brand = (TradeName)brandBox.getSelectedItem();
-        ProductGroup group = (ProductGroup)groupBox.getSelectedItem();
-        List<ProductSeries> filteredSerieses = new ArrayList<ProductSeries>();
-        for (ProductSeries series : serieses) {
-            if ( series.getBrand().equals(brand) && series.getGroup().equals(group) ) {
-                filteredSerieses.add(series);
-            }
-        }
-        filteredSerieses.add(null); // For no Selection
-        Collections.sort(filteredSerieses, namedComparator);
-        seriesBox.setModel(new DefaultComboBoxModel(filteredSerieses.toArray()));
-    }
-
-    /**
-     * Changes the FamilyBox contents.
-     * This filtering is done in dependency of two cases:
-     * <ul>
-     * <li>series box has valid selection, take this as parent</li>
-     * <li>series box has invalid selection, take brand and group as parent</li>
-     * </ul>
-     */
-    private void updateFamily() {
-        ProductSeries selectedSeries = (ProductSeries)seriesBox.getSelectedItem();
-        filteredFamilies = new ArrayList<ProductFamily>();
-        filteredFamilies.add(null);
-        if ( selectedSeries == null ) {
-            TradeName brand = (TradeName)brandBox.getSelectedItem();
-            ProductGroup group = (ProductGroup)groupBox.getSelectedItem();
-            for (ProductSeries series : serieses) {
-                if ( series.getBrand().equals(brand) && series.getGroup().equals(group) ) {
-                    filteredFamilies.addAll(series.getFamilys());
-                }
-            }
-        } else {
-            filteredFamilies.addAll(selectedSeries.getFamilys());
-        }
-        Collections.sort(filteredFamilies, namedComparator);
-        String[] names = new String[filteredFamilies.size()];
-        for (int i = 0; i < filteredFamilies.size(); i++) {
-            ProductFamily family = filteredFamilies.get(i);
-            if ( family == null ) names[i] = null;
-            else names[i] = family.getName();
-        }
-        familyBox.setModel(new DefaultComboBoxModel(names));
-    }
-
-    @Override
-    public void setParent(Window parent) {
-        this.parent = parent;
-    }
-
-    /**
-     * Changes the ModelBox contents. This filtering is done in dependency of two cases:
-     * <ul>
-     * <li>family box has valid selection, take selection as parent</li>
-     * <li>family box has invalid selection, but series box has valid selection, take series selection as parent</li>
-     * <li>series box and family box have invalid selection, take brand and group as parent</li>
-     * </ul>
-     */
-    private void updateModel() {
-        filteredModels = new ArrayList<ProductModel>();
-        filteredModels.add(null);
-        if ( familyBox.getSelectedIndex() == -1 || filteredFamilies.get(familyBox.getSelectedIndex()) == null ) {
-            if ( seriesBox.getSelectedItem() == null ) {
-                TradeName brand = (TradeName)brandBox.getSelectedItem();
-                ProductGroup group = (ProductGroup)groupBox.getSelectedItem();
-                for (ProductSeries series : serieses) {
-                    if ( series.getBrand().equals(brand) && series.getGroup().equals(group) ) {
-                        for (ProductFamily family : series.getFamilys()) {
-                            filteredModels.addAll(family.getModels());
-                        }
-
-                    }
-                }
-            } else {
-                ProductSeries selectedSeries = (ProductSeries)seriesBox.getSelectedItem();
-                for (ProductFamily family : selectedSeries.getFamilys()) {
-                    filteredModels.addAll(family.getModels());
-                }
-            }
-        } else {
-            ProductFamily selectFamily = filteredFamilies.get(familyBox.getSelectedIndex());
-            filteredModels.addAll(selectFamily.getModels());
-        }
-        Collections.sort(filteredModels, namedComparator);
-        String[] names = new String[filteredModels.size()];
-        for (int i = 0; i < filteredModels.size(); i++) {
-            ProductModel model = filteredModels.get(i);
-            if ( model == null ) names[i] = null;
-            else names[i] = model.getName();
-        }
-        modelBox.setModel(new DefaultComboBoxModel(names));
     }
 
     private TradeName getBrand() {
@@ -278,41 +168,9 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         return (ProductGroup)groupBox.getSelectedItem();
     }
 
-    private ProductSeries getSeries() {
-        return (ProductSeries)seriesBox.getSelectedItem();
-    }
-
-    private ProductFamily getFamily() {
-        if ( familyBox.getEditor().getItem() == null ) return null;
-        for (ProductFamily family : filteredFamilies) {
-            if ( family != null && family.getName() != null && family.getName().equals(familyBox.getEditor().getItem()) ) return family;
-        }
-        return null;
-    }
-
-    public ProductModel getModel() {
-        if ( modelBox.getEditor().getItem() == null ) return null;
-        for (ProductModel model : filteredModels) {
-            if ( model == null ) continue;
-            if ( model.getName() == null ) continue;
-            if ( model.getName().equals(modelBox.getEditor().getItem()) ) return model;
-        }
-        return null;
-    }
-
     private boolean error(String msg) {
         JOptionPane.showMessageDialog(this, msg, "Fehler", JOptionPane.ERROR_MESSAGE);
         return false;
-    }
-
-    private void checkModel() {
-        if ( getModel() != null ) addModelButton.setEnabled(false);
-        else addModelButton.setEnabled(true);
-    }
-
-    private void checkFamily() {
-        if ( getFamily() != null ) addFamilyButton.setEnabled(false);
-        else addFamilyButton.setEnabled(true);
     }
 
     /**
@@ -324,6 +182,96 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
      */
     private boolean warn(String msg) {
         return JOptionPane.showConfirmDialog(this, msg, "Warnung", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION;
+    }
+
+    private TradeName getSelectedBrand() {
+        return (TradeName)brandBox.getSelectedItem();
+    }
+
+    private ProductGroup getSelectedGroup() {
+        return (ProductGroup)groupBox.getSelectedItem();
+    }
+
+    private List<ProductSeries> getFilteredSeries() {
+        List<ProductSeries> filteredSerieses = new ArrayList<>();
+        for (ProductSeries series : allSeries) {
+            if ( series.getBrand().equals(getSelectedBrand()) && series.getGroup().equals(getSelectedGroup()) ) {
+                filteredSerieses.add(series);
+            }
+        }
+        Collections.sort(filteredSerieses, INAMED_COMPARATOR);
+        return filteredSerieses;
+    }
+
+    private Optional<ProductSeries> getSelectedSeries() {
+        return getFilteredSeries().stream().filter(s -> s.getName().equals(seriesBox.getEditor().getItem())).findAny();
+    }
+
+    private Optional<ProductFamily> getSelectedFamily() {
+        return getFilteredFamilies().stream().filter(s -> s.getName().equals(familyBox.getEditor().getItem())).findAny();
+    }
+
+    public Optional<ProductModel> getSelectedModel() {
+        return getFilteredModels().stream().filter(s -> s.getName().equals(modelBox.getEditor().getItem())).findAny();
+    }
+
+    private List<ProductFamily> getFilteredFamilies() {
+        return getSelectedSeries()
+                .map(ProductSeries::getFamilys)
+                .orElseGet(() -> getFilteredSeries().stream().flatMap((ProductSeries s) -> s.getFamilys().stream()).collect(Collectors.toSet()))
+                .stream()
+                .sorted(INAMED_COMPARATOR)
+                .collect(Collectors.toList());
+    }
+
+    private List<ProductModel> getFilteredModels() {
+        return getSelectedFamily()
+                .map(ProductFamily::getModels)
+                .orElseGet(() -> getFilteredFamilies().stream().flatMap((ProductFamily f) -> f.getModels().stream()).collect(Collectors.toSet()))
+                .stream()
+                .sorted(INAMED_COMPARATOR)
+                .collect(Collectors.toList());
+    }
+
+    private String[] toNamesAndNull(List<? extends INamed> inamed) {
+        return inamed.stream().map(INamed::getName).collect(Collectors.toCollection(() -> new ArrayList<>(Arrays.asList((String)null)))).toArray(new String[]{});
+    }
+
+    /**
+     * Changes the SeriesBox contents in dependency of the brand and group.
+     */
+    private void updateSeries() {
+        seriesBox.setModel(new DefaultComboBoxModel<>(toNamesAndNull(getFilteredSeries())));
+    }
+
+    /**
+     * Changes the FamilyBox contents.
+     * This filtering is done in dependency of two cases:
+     * <ul>
+     * <li>series box has valid selection, take this as parent</li>
+     * <li>series box has invalid selection, take brand and group as parent</li>
+     * </ul>
+     */
+    private void updateFamily() {
+        familyBox.setModel(new DefaultComboBoxModel<>(toNamesAndNull(getFilteredFamilies())));
+    }
+
+    /**
+     * Changes the ModelBox contents. This filtering is done in dependency of two cases:
+     * <ul>
+     * <li>family box has valid selection, take selection as parent</li>
+     * <li>family box has invalid selection, but series box has valid selection, take series selection as parent</li>
+     * <li>series box and family box have invalid selection, take brand and group as parent</li>
+     * </ul>
+     */
+    private void updateModel() {
+        modelBox.setModel(new DefaultComboBoxModel<>(toNamesAndNull(getFilteredModels())));
+    }
+
+    private void enableAddButtons() {
+        addModelButton.setEnabled(!getSelectedModel().isPresent());
+        addFamilyButton.setEnabled(!getSelectedFamily().isPresent());
+        addSeriesButton.setEnabled(!getSelectedSeries().isPresent());
     }
 
     /**
@@ -342,9 +290,9 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        modelBox = new javax.swing.JComboBox();
-        familyBox = new javax.swing.JComboBox();
-        seriesBox = new javax.swing.JComboBox();
+        modelBox = new javax.swing.JComboBox<>();
+        familyBox = new javax.swing.JComboBox<>();
+        seriesBox = new javax.swing.JComboBox<>();
         groupBox = new javax.swing.JComboBox();
         brandBox = new javax.swing.JComboBox();
         editButton = new javax.swing.JButton();
@@ -353,6 +301,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         partNoField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         htmlInfoPane = new javax.swing.JTextPane();
+        addSeriesButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -405,7 +354,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         add(jLabel3, gridBagConstraints);
 
         modelBox.setEditable(true);
-        modelBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        modelBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         modelBox.setMinimumSize(new java.awt.Dimension(150, 25));
         modelBox.setPreferredSize(new java.awt.Dimension(150, 25));
         modelBox.addActionListener(new java.awt.event.ActionListener() {
@@ -423,7 +372,7 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         add(modelBox, gridBagConstraints);
 
         familyBox.setEditable(true);
-        familyBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        familyBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         familyBox.setMinimumSize(new java.awt.Dimension(150, 25));
         familyBox.setPreferredSize(new java.awt.Dimension(150, 25));
         familyBox.addActionListener(new java.awt.event.ActionListener() {
@@ -440,7 +389,8 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(familyBox, gridBagConstraints);
 
-        seriesBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        seriesBox.setEditable(true);
+        seriesBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         seriesBox.setMinimumSize(new java.awt.Dimension(72, 25));
         seriesBox.setPreferredSize(new java.awt.Dimension(150, 25));
         seriesBox.addActionListener(new java.awt.event.ActionListener() {
@@ -558,41 +508,52 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         gridBagConstraints.weighty = 3.0;
         gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(jScrollPane1, gridBagConstraints);
+
+        addSeriesButton.setText("hinzufügen");
+        addSeriesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSeriesButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipadx = 14;
+        add(addSeriesButton, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void brandBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brandBoxActionPerformed
         updateSeries();
         updateFamily();
         updateModel();
+        enableAddButtons();
     }//GEN-LAST:event_brandBoxActionPerformed
 
     private void groupBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_groupBoxActionPerformed
         updateSeries();
         updateFamily();
         updateModel();
+        enableAddButtons();
     }//GEN-LAST:event_groupBoxActionPerformed
 
     private void seriesBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_seriesBoxActionPerformed
         updateFamily();
         updateModel();
+        enableAddButtons();
     }//GEN-LAST:event_seriesBoxActionPerformed
 
     private void familyBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_familyBoxActionPerformed
         updateModel();
-        checkFamily();
+        enableAddButtons();
     }//GEN-LAST:event_familyBoxActionPerformed
 
     private void addModelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addModelButtonActionPerformed
         String modelName = (String)modelBox.getSelectedItem();
-        if ( modelName == null ) {
+        if ( StringUtils.isBlank(modelName) ) {
             error("Keine Modellname hinterlegt!");
             return;
         }
-        if ( modelName.startsWith(" ") || modelName.endsWith(" ") ) {
-            error("Model hat am Anfang oder Ende Freizeichen, nicht erlaubt");
-            return;
-        }
-        for (ProductSeries series : serieses) {
+        for (ProductSeries series : allSeries) {
             for (ProductFamily family : series.getFamilys()) {
                 for (ProductModel model : family.getModels()) {
                     if ( model.getName().equals(modelName) ) {
@@ -602,39 +563,34 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
                 }
             }
         }
-        if ( getSeries() == null ) {
+        if ( !getSelectedSeries().isPresent() ) {
             if ( !warn("Keine Serie und Familie ausgewählt, es werde Standartwerte verwendet.") ) return;
-        } else if ( getFamily() == null ) {
+        } else if ( !getSelectedFamily().isPresent() ) {
             if ( !warn("Keine Familie ausgewählt, es wird ein Standartwert verwendet.") ) return;
         }
-        ProductModel model = receiptProductLogic.create(getBrand(), getGroup(), getSeries(), getFamily(), modelName);
+        ProductModel model = productProcessor.create(getBrand(), getGroup(), getSelectedSeries().orElse(null), getSelectedFamily().orElse(null), modelName);
         // TODO: Add Model to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Modell " + model.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         parent.setEnabled(false);
-        serieses = specAgent.findAll(ProductSeries.class);
+        allSeries = specAgent.findAll(ProductSeries.class);
         parent.setEnabled(true);
         updateSeries();
         updateFamily();
         updateModel();
-        seriesBox.setSelectedItem(model.getFamily().getSeries());
+        seriesBox.setSelectedItem(model.getFamily().getSeries().getName());
         familyBox.setSelectedItem(model.getFamily().getName());
         modelBox.setSelectedItem(model.getName());
-        checkFamily();
-        checkModel();
+        enableAddButtons();
     }//GEN-LAST:event_addModelButtonActionPerformed
 
     private void addFamilyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFamilyButtonActionPerformed
         String familyName = (String)familyBox.getSelectedItem();
-        if ( familyName == null ) {
+        if ( StringUtils.isBlank(familyName) ) {
             error("Keine Familienname hinterlegt!");
             return;
         }
-        if ( familyName.startsWith(" ") || familyName.endsWith(" ") ) {
-            error("Familie hat am Anfang oder Ende Freizeichen, nicht erlaubt");
-            return;
-        }
-        for (ProductSeries series : serieses) {
+        for (ProductSeries series : allSeries) {
             for (ProductFamily family : series.getFamilys()) {
                 if ( family.getName().equals(familyName) ) {
                     error("Familie " + familyName + " existiert schon in " + series.getName());
@@ -642,26 +598,26 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
                 }
             }
         }
-        if ( getSeries() == null ) {
+        if ( !getSelectedSeries().isPresent() ) {
             if ( !warn("Keine Serie ausgewählt, es wird ein Standartwert verwendet.") ) return;
         }
-        ProductFamily family = receiptProductLogic.create(getBrand(), getGroup(), getSeries(), familyName);
+        ProductFamily family = productProcessor.create(getBrand(), getGroup(), getSelectedSeries().orElse(null), familyName);
         // TODO: Add Family to local list in a better way
         // TODO: And show the active backgroundprogress.
         JOptionPane.showMessageDialog(this, "Familie " + family.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
         parent.setEnabled(false);
-        serieses = specAgent.findAll(ProductSeries.class);
+        allSeries = specAgent.findAll(ProductSeries.class);
         parent.setEnabled(true);
         updateSeries();
         updateFamily();
         updateModel();
-        seriesBox.setSelectedItem(family.getSeries());
+        seriesBox.setSelectedItem(family.getSeries().getName());
         familyBox.setSelectedItem(family.getName());
-        checkFamily();
+        enableAddButtons();
     }//GEN-LAST:event_addFamilyButtonActionPerformed
 
     private void modelBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modelBoxActionPerformed
-        checkModel();
+        enableAddButtons();
     }//GEN-LAST:event_modelBoxActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -680,12 +636,38 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         partNoField.setText(result);
     }//GEN-LAST:event_editButtonActionPerformed
 
+    private void addSeriesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSeriesButtonActionPerformed
+        final String seriesName = (String)seriesBox.getSelectedItem();
+        if ( StringUtils.isBlank(seriesName) ) {
+            error("Keinen Serienname hinterlegt!");
+            return;
+        }
+
+        if ( allSeries.stream().map(ProductSeries::getName).anyMatch(n -> seriesName.trim().equals(n)) ) {
+            error("Serie " + seriesName + " existiert schon");
+            return; // Found an equal, so nothing to do
+        }
+        Reply<ProductSeries> reply = productProcessor.create(getBrand(), getGroup(), seriesName);
+        if ( !Ui.failure().handle(reply) ) return;
+        ProductSeries series = reply.getPayload();
+        JOptionPane.showMessageDialog(this, "Serie " + series.getName() + " wurde hinzugefügt.\nAktualisiere Lokale Liste.");
+        parent.setEnabled(false);
+        allSeries = specAgent.findAll(ProductSeries.class);
+        parent.setEnabled(true);
+        updateSeries();
+        updateFamily();
+        updateModel();
+        seriesBox.setSelectedItem(series.getName());
+        enableAddButtons();
+    }//GEN-LAST:event_addSeriesButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFamilyButton;
     private javax.swing.JButton addModelButton;
+    private javax.swing.JButton addSeriesButton;
     private javax.swing.JComboBox brandBox;
     private javax.swing.JButton editButton;
-    private javax.swing.JComboBox familyBox;
+    private javax.swing.JComboBox<String> familyBox;
     private javax.swing.JComboBox groupBox;
     private javax.swing.JTextPane htmlInfoPane;
     private javax.swing.JLabel jLabel1;
@@ -695,23 +677,9 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JComboBox modelBox;
+    private javax.swing.JComboBox<String> modelBox;
     private javax.swing.JTextField partNoField;
-    private javax.swing.JComboBox seriesBox;
+    private javax.swing.JComboBox<String> seriesBox;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String[] args) throws Exception {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        SimpleView view = new SimpleView(TradeName.SAMSUNG, "LX.AAAAA.BBB");
-        // SimpleView view = new SimpleView(receiptCos.spec().findAll().get(0), receiptCos);
-
-        OkCancelDialog<SimpleView> dialog = new OkCancelDialog<>("Übersicht", view);
-//        dialog.setSize(new Dimension(400, 200));
-        dialog.setVisible(true);
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            System.out.println(view.getProductSpec());
-            System.out.println(view.getModel());
-        }
-        System.exit(0);
-    }
 }
