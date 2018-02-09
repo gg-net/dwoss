@@ -54,8 +54,6 @@ import static javafx.stage.Modality.WINDOW_MODAL;
 @Title("Firmen Editieren")
 public class CompanyUpdateController implements Initializable, FxController, Consumer<Company>, ResultProducer<Company> {
 
-    private final Pattern decimalPattern = Pattern.compile("\\d+");
-
     @FXML
     private TextField companyNameTextField;
 

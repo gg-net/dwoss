@@ -53,27 +53,17 @@ public class CustomerSimpleTryout {
         customer.getFlags().clear();
         customer.getMandatorMetadata().clear();
 
-
-
         address.setIsoCountry(Locale.GERMANY);
 
         contact.getAddresses().clear();
         contact.getCommunications().clear();
 
         contact.getAddresses().add(address);
-        contact.getCommunications().add(makeValidCommunication());
+        contact.getCommunications().add(new Communication(Type.MOBILE, "040123456789"));
 
         customer.getContacts().add(contact);
 
         return customer;
-    }
-
-    public static Communication makeValidCommunication(){
-        Communication communicationMobile = new Communication();
-        communicationMobile.setType(Type.MOBILE);
-        communicationMobile.setIdentifier("040123456789");
-
-        return communicationMobile;
     }
 
     public static void main(String[] args) {
