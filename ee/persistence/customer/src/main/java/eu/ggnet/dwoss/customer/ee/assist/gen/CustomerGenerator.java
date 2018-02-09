@@ -91,7 +91,7 @@ public class CustomerGenerator {
         if ( R.nextBoolean() ) {
             c.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
-        c.setComment("Date ist eine Kommentar zum Kunden");
+        c.setComment("Das ist ein Kommentar zum Kunden");
         return c;
     }
 

@@ -32,7 +32,7 @@
                         <Label text="Kunden Nummer" />
                         <Label fx:id="KIDLabel" text="Label" />
                         <Region minWidth="20.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Firma:" />
+                        <Label fx:id="customerTypeLabel" text="Firma:" />
                         <Label fx:id="customerNameLabel" text="firmennname" />
                     </children>
                 </HBox>
