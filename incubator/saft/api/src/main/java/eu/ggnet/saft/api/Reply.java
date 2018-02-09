@@ -32,12 +32,21 @@ public final class Reply<T> implements Serializable {
 
     private final boolean success;
 
+    /**
+     * The payload, the actual useful result, probally null in the failure case.
+     */
     @Getter
     private final T payload;
 
+    /**
+     * A short summary of the reply, probally null in the success case.
+     */
     @Getter
     private final String summary;
 
+    /**
+     * A longer information, probally null in the success case.
+     */
     @Getter
     private final String detailDescription;
 

@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 import javax.swing.AbstractAction;
 
@@ -35,8 +36,10 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
+
 
 /**
  *
@@ -90,7 +93,10 @@ public class DocumentPrintAction extends AbstractAction {
                     RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
                     for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
                         if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
-                            this.document = Dl.remote().lookup(RedTapeWorker.class).stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername());
+                            this.document = Optional.of(Dl.remote().lookup(RedTapeWorker.class)
+                                    .stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername()))
+                                    .filter(Ui.failure()::handle)
+                                    .map(Reply::getPayload).orElse(document);
                         }
                     }
                 }

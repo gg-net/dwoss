@@ -120,7 +120,7 @@ public class SampleGeneratorOperation implements Serializable {
     @TransactionAttribute(REQUIRES_NEW)
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
-            SubMonitor m = monitorFactory.newSubMonitor("Data generator", 0);
+            SubMonitor m = monitorFactory.newSubMonitor("Data generator", 7);
             m.start();
             generating = true;
             L.info("Generating Persistence Data");

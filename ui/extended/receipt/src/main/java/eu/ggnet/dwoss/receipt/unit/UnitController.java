@@ -20,6 +20,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.*;
 
@@ -113,6 +114,9 @@ public class UnitController {
     @Getter
     @Setter
     private UnitModel model;
+
+    private ReentrantLock lock = new ReentrantLock();
+
 
     private final UiProductSupport uiProductSupport = new UiProductSupport();
 
@@ -275,30 +279,34 @@ public class UnitController {
     }
 
     private <T> T validateValue(T value, List<ChainLink<T>> chain, UnitModel.Survey validationStatus) {
-        validationStatus.validating("Wert wird geprüft");
-        view.updateValidationStatus();
+        lock.lock();
+        try {
+            validationStatus.validating("Wert wird geprüft");
+            view.updateValidationStatus();
 
-        Result<T> result = Chains.execute(chain, value);
+            Result<T> result = Chains.execute(chain, value);
 
-        L.debug("After Chain (optionals={}, metaunit.partno.isSet={}, metaunit.mfgDate.isSet={}) : {}",
-                result.hasOptionals(), model.getMetaUnit().getPartNo().isSet(), model.getMetaUnit().getMfgDate().isSet(), result);
+            L.debug("After Chain (optionals={}, metaunit.partno.isSet={}, metaunit.mfgDate.isSet={}) : {}",
+                    result.hasOptionals(), model.getMetaUnit().getPartNo().isSet(), model.getMetaUnit().getMfgDate().isSet(), result);
 
-        if ( result.hasOptionals() && result.getOptional().getPartNo() != null && !model.getMetaUnit().getPartNo().isSet() ) {
-            model.getMetaUnit().getPartNo().setValue(result.getOptional().getPartNo());
-            validatePartNoAndLoadDetails();
+            if ( result.hasOptionals() && result.getOptional().getPartNo() != null && !model.getMetaUnit().getPartNo().isSet() ) {
+                model.getMetaUnit().getPartNo().setValue(result.getOptional().getPartNo());
+                validatePartNoAndLoadDetails();
+            }
+
+            if ( result.hasOptionals() && result.getOptional().getMfgDate() != null && !model.getMetaUnit().getMfgDate().isSet() ) {
+                model.getMetaUnit().getMfgDate().setValue(result.getOptional().getMfgDate());
+                validateMfgDate();
+            }
+
+            validationStatus.setStatus(result.getValid(), result.getMessage());
+            view.updateValidationStatus();
+
+            updateActions();
+            return result.getValue();
+        } finally {
+            lock.unlock();
         }
-
-        if ( result.hasOptionals() && result.getOptional().getMfgDate() != null && !model.getMetaUnit().getMfgDate().isSet() ) {
-            model.getMetaUnit().getMfgDate().setValue(result.getOptional().getMfgDate());
-            validateMfgDate();
-        }
-
-        validationStatus.setStatus(result.getValid(), result.getMessage());
-        view.updateValidationStatus();
-
-        updateActions();
-
-        return result.getValue();
     }
 
     void updateChains() {
@@ -315,12 +323,9 @@ public class UnitController {
         final boolean enabled = model.getMetaUnit().isOkOrWarn();
         final List<Action> updateActions = changedActions(enabled);
         if ( updateActions == null ) return;
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (Action action : updateActions) {
-                    action.setEnabled(enabled);
-                }
+        EventQueue.invokeLater(() -> {
+            for (Action action : updateActions) {
+                action.setEnabled(enabled);
             }
         });
     }

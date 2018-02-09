@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.gen;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-
 import java.util.*;
 
 import javax.ejb.*;
@@ -33,6 +29,7 @@ import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
@@ -44,6 +41,7 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rules.CustomerFlag.SYSTEM_CUSTOMER;
@@ -205,7 +203,12 @@ public class RedTapeGeneratorOperation {
                 RedTapeStateTransition transition = (RedTapeStateTransition)transitions.get(R.nextInt(transitions.size()));
                 if ( transition.getHints().contains(RedTapeStateTransition.Hint.CREATES_ANNULATION_INVOICE)
                         || transition.getHints().contains(RedTapeStateTransition.Hint.CREATES_CREDIT_MEMO) ) break;
-                doc = redTapeWorker.stateChange(cd, transition, "JUnit");
+                Reply<Document> reply = redTapeWorker.stateChange(cd, transition, "JUnit"); // Never fails.
+                if ( reply.hasSucceded() ) doc = reply.getPayload();
+                else {
+                    LOG.error("Fail on startChange {}", reply.getSummary());
+                    break;
+                }
             }
             dossiers.add(doc.getDossier());
             m.worked(1, doc.getDossier().getIdentifier());

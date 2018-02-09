@@ -104,7 +104,7 @@ public class PriceEngine {
             per.setCustomerPrice(result.getCustomerPrice());
             per.setRetailerToCustomerPricePercentage(result.getRetailerToCustomerPricePercentage());
         } else {
-            L.warn("No Estimator found");
+            L.debug("No Estimator found for {},{}", uu, spec);
             per.setSpecial("NO ESTIMATION");
         }
         per.consumeLog(log);

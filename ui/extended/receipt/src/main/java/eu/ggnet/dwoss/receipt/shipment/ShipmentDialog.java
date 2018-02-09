@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.shipment;
 
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.entity.Shipment;
@@ -49,8 +51,12 @@ public class ShipmentDialog extends javax.swing.JDialog {
         this.model = controller.getModel();
         this.controller = controller;
         controller.setView(this);
-        shipmentTable.setModel(model);
-        model.setTable(shipmentTable);
+        try {
+            shipmentTable.setModel(model);
+            model.setTable(shipmentTable);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            LoggerFactory.getLogger(ShipmentDialog.class).error("Exception happend were we expected it. So bug is found, now we need to fix it, {}, {}", e.getClass().getName(), e.getMessage());
+        }
         filterStatus = new ComboBoxController<>(filterStatusbox, Shipment.Status.values());
         filterOwner = new ComboBoxController<>(filterOwnerbox, Dl.local().lookup(CachedMandators.class).loadContractors().all().toArray());
         if ( parent != null ) setLocationRelativeTo(parent);
@@ -238,17 +244,6 @@ public class ShipmentDialog extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        shipmentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         shipmentTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         shipmentTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -269,7 +264,7 @@ public class ShipmentDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-                            .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 91, Short.MAX_VALUE))
+                            .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(exitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

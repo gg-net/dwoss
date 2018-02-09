@@ -18,14 +18,18 @@ package eu.ggnet.dwoss.redtapext.ui.cao.stateaction;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 import javax.swing.JOptionPane;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
@@ -53,7 +57,12 @@ public class RemoveShippingCostStateAction extends DefaultStateTransitionAction 
 
         if ( confirmDialog == JOptionPane.YES_OPTION ) ShippingCostHelper.removeShippingCost(cdoc.getDocument());
 
-        if ( confirmDialog != JOptionPane.CANCEL_OPTION )
-            controller.reloadSelectionOnStateChange(Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername()).getDossier());
+        if ( confirmDialog != JOptionPane.CANCEL_OPTION ) {
+            Optional.of(Dl.remote().lookup(RedTapeWorker.class).stateChange(cdoc, transition, Dl.local().lookup(Guardian.class).getUsername()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(Document::getDossier)
+                    .ifPresent(d -> controller.reloadSelectionOnStateChange(d));
+        }
     }
 }
