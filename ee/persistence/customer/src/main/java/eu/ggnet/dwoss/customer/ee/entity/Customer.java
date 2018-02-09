@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
@@ -56,7 +57,7 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @Indexed
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
-public class Customer implements Serializable {
+public class Customer implements Serializable, EagerAble {
 
     /**
      * Fields for detailed Search.
@@ -662,4 +663,12 @@ public class Customer implements Serializable {
         return sb.toString();
     }
 
+    @Override
+    public void fetchEager() {
+        companies.size();
+        companies.forEach(c -> c.getCommunications().size());
+        companies.forEach(c -> c.getAddresses().size());
+        companies.forEach(c -> c.getContacts().size());
+        contacts.size();
+    }
 }

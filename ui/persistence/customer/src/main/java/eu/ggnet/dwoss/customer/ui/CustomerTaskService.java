@@ -11,7 +11,6 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 
 import javafx.application.Platform;
-import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
@@ -36,32 +35,32 @@ public class CustomerTaskService extends Service<ObservableList<Customer>> {
     @Getter
     @Setter
     private String searchsting;
-
+    
+    private final int batch = 5;
+    
     private final CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
 
-    private final ObservableList<Customer> partialResults = FXCollections.observableArrayList(new ArrayList());
+    private ObservableList<Customer> partialResults = FXCollections.observableArrayList();
 
-    public final ObservableList<Customer> getPartialResults() {
+    public ObservableList<Customer> getPartialResults() {
         return partialResults;
     }
 
 
     @Override
     protected Task<ObservableList<Customer>> createTask() {
+        long limit = agent.countSearch(searchsting, customerFields);
+        
         return new Task<ObservableList<Customer>>() {
             @Override
             protected ObservableList<Customer> call() throws Exception {
                 partialResults.clear();
-
-                long count = agent.countSearch(searchsting, customerFields);
-                int batch = 5;
-
-                for (int start = 0; start <= count && !isCancelled(); start += batch) {
-                    List<Customer> result = agent.search(searchsting, customerFields, start, batch);
+                for (int start = 0; start <= limit && !isCancelled(); start+= batch) {
+                    List<Customer> result = agent.search(searchsting, customerFields, start, batch );
                     Platform.runLater(() -> {
                         partialResults.addAll(result);
                     });
-                    updateProgress(start, count);
+                    updateProgress(start, batch);
                 }
 
                 return partialResults;

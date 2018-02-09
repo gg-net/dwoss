@@ -17,7 +17,6 @@
 package tryout.stub;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 

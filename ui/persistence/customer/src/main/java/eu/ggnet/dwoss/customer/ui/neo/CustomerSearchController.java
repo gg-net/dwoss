@@ -93,15 +93,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     @FXML
     private HBox statusHbox;
 
-    private Set<SearchField> customerFields;
+    private Set<SearchField> customerFields = new HashSet<>();
 
     private ObservableList<Customer> observableCustomers = FXCollections.observableArrayList();
 
     private StringProperty searchProperty = new SimpleStringProperty();
 
     private CustomerTaskService CUSTOMER_TASK_SERVICE;
-
-    private ContextMenu contextMenu;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -111,16 +109,16 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 protected void updateItem(Customer item, boolean empty) {
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
-                        this.setGraphic(null);
+                        setText("");
                     } else {
-                        this.setText(item.toName());
+                        setText(item.toName() );
                     }
                 }
             };
         });
 
         //Create a ContextMenu
-        contextMenu = new ContextMenu();
+        ContextMenu contextMenu = new ContextMenu();
         MenuItem viewCustomer = new MenuItem("Kunden anzeigen mit Mandatenstandard");
         MenuItem viewCompleteCustomer = new MenuItem("Kunde anzeigen");
         MenuItem editCustomer = new MenuItem("Kunde anpassen");
@@ -185,7 +183,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         //add contextmenu to listview
         resultListView.setContextMenu(contextMenu);
 
-        customerFields = fillSet();
         CUSTOMER_TASK_SERVICE = new CustomerTaskService();
         observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
 
@@ -215,7 +212,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         // Binding all Ui Properties
         searchProperty.bind(searchField.textProperty());
 
-
         progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
         progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
 
@@ -229,32 +225,33 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     /**
      * fill the Set for filter the Search
-     *
-     * @return a Set of Enums form Customer.SearchField
+     * <p>
      */
-    private Set<SearchField> fillSet() {
-        Set<SearchField> set = new HashSet<>();
-        if ( kid.isSelected() ) {
-            set.add(Customer.SearchField.ID);
-        }
-        if ( lastname.isSelected() ) {
-            set.add(Customer.SearchField.LASTNAME);
-        }
-        if ( firstname.isSelected() ) {
-            set.add(Customer.SearchField.FIRSTNAME);
-        }
-        if ( company.isSelected() ) {
-            set.add(Customer.SearchField.COMPANY);
-        }
-        if ( address.isSelected() ) {
-            set.add(Customer.SearchField.ADDRESS);
+    private void fillSet() {
+        if ( customerFields != null ) {
+            customerFields.clear();
         }
 
-        return set;
+        if ( kid.isSelected() ) {
+            customerFields.add(Customer.SearchField.ID);
+        }
+        if ( lastname.isSelected() ) {
+            customerFields.add(Customer.SearchField.LASTNAME);
+        }
+        if ( firstname.isSelected() ) {
+            customerFields.add(Customer.SearchField.FIRSTNAME);
+        }
+        if ( company.isSelected() ) {
+            customerFields.add(Customer.SearchField.COMPANY);
+        }
+        if ( address.isSelected() ) {
+            customerFields.add(Customer.SearchField.ADDRESS);
+        }
     }
 
     private void search() {
-        CUSTOMER_TASK_SERVICE.setCustomerFields(fillSet());
+        fillSet();
+        CUSTOMER_TASK_SERVICE.setCustomerFields(customerFields);
         CUSTOMER_TASK_SERVICE.setSearchsting(searchProperty.get());
         observableCustomers.clear();
         resultListView.getContextMenu().getItems().forEach((item) -> {
