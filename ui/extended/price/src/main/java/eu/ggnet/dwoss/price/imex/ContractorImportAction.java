@@ -18,22 +18,21 @@ package eu.ggnet.dwoss.price.imex;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
-import javax.swing.JFileChooser;
-import javax.swing.SwingWorker;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.FileUtil;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -51,40 +50,64 @@ public class ContractorImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO: Make the importer generic.
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) return;
-        final File inFile = dialog.getSelectedFile();
-        if ( YES_OPTION != showConfirmDialog(UiCore.getMainFrame(),
-                "Fehlende " + contractor.getName() + " Daten aus der Datei:" + inFile.getPath() + " importieren ?",
-                "Fehlende Liferanten Daten importieren",
-                YES_NO_OPTION, QUESTION_MESSAGE) ) return;
+        String user = Dl.local().lookup(Guardian.class).getUsername();
 
-        new SwingWorker<Reply<Void>, Void>() {
-            @Override
-            protected Reply<Void> doInBackground() throws Exception {
-                FileUtil.checkIfExcelFile(inFile);
-                FileJacket in = new FileJacket("in", ".xls", inFile);
-                String user = Dl.local().lookup(Guardian.class).getUsername();
-                if ( contractor.isManufacturer() ) return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, in, user);
-                return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, in, user);
-            }
+        Ui.exec(() -> {
+            Optional<File> inFile = Ui.fileChooser().open();
+            if ( !inFile.isPresent() ) return;
+            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Fehlende " + contractor.getName() + " Daten aus der Datei:" + inFile.get().getPath() + " importieren ?"))
+                    .filter(b -> b == OK)
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map((File f) -> {
+                        if ( contractor.isManufacturer() ) {
+                            Ui.progress().call(() -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), user));
+                        } else {
+                            Ui.progress().call(() -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), user));
+                        }
+                        return f;
+                    }).ifPresent(c
+                    -> Ui.build().dialog().eval(() -> new Alert(INFORMATION, "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen"))
+                            .filter(b -> b == OK).isPresent()
+            );
 
-            @Override
-            protected void done() {
-                try {
-                    Reply<Void> result = get();
-                    new DetailDialog(UiCore.getMainFrame())
-                            .head(contractor.getName() + " Import")
-                            .message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen")
-                            .overview(result.getSummary())
-                            .details(result.getDetailDescription())
-                            .showDialog();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
-                }
-            }
-        }.execute();
+        });
+
+//        // TODO: Make the importer generic.
+//        JFileChooser dialog = new JFileChooser();
+//        dialog.setFileHidingEnabled(true);
+//        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) return;
+//        final File inFile = dialog.getSelectedFile();
+//        if ( YES_OPTION != showConfirmDialog(UiCore.getMainFrame(),
+//                "Fehlende " + contractor.getName() + " Daten aus der Datei:" + inFile.getPath() + " importieren ?",
+//                "Fehlende Liferanten Daten importieren",
+//                YES_NO_OPTION, QUESTION_MESSAGE) ) return;
+//
+//        new SwingWorker<Reply<Void>, Void>() {
+//            @Override
+//            protected Reply<Void> doInBackground() throws Exception {
+//                FileUtil.checkIfExcelFile(inFile);
+//                FileJacket in = new FileJacket("in", ".xls", inFile);
+//                String user = Dl.local().lookup(Guardian.class).getUsername();
+//                if ( contractor.isManufacturer() ) return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, in, user);
+//                return Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, in, user);
+//            }
+//
+//            @Override
+//            protected void done() {
+//                try {
+//        Reply<Void> result = get();
+//        new DetailDialog(UiCore.getMainFrame())
+//                .head(contractor.getName() + " Import")
+//                .message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen")
+//                .overview(result.getSummary())
+//                .details(result.getDetailDescription())
+//                .showDialog();
+//                } catch (InterruptedException | ExecutionException ex) {
+//                    Ui.handle(ex);
+//                }
+//            }
+//        }.execute();
     }
 }
