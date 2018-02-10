@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ee;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -33,6 +34,9 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
@@ -52,7 +56,13 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     private EntityManager em;
 
     @Inject
-    private CustomerEao eao;
+    private CustomerEao customerEao;
+
+    @Inject
+    private Mandator mandator;
+
+    @Inject
+    private DefaultCustomerSalesdata salesdata;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -60,18 +70,18 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     }
 
     @Override
-    public List<Customer> search(String search, Set<SearchField> customerFields) {
-        return optionalFetchEager(eao.find(search));
+    public List<PicoCustomer> search(String search, Set<SearchField> customerFields) {
+        return customerEao.find(search).stream().map(Customer::toPico).collect(Collectors.toList());
     }
 
     @Override
-    public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        return optionalFetchEager(eao.find(search, start, limit));
+    public List<PicoCustomer> search(String search, Set<SearchField> customerFields, int start, int limit) {
+        return customerEao.find(search, start, limit).stream().map(Customer::toPico).collect(Collectors.toList());
     }
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
-        return eao.countFind(search);
+        return customerEao.countFind(search);
     }
 
     @Override
@@ -131,6 +141,16 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
         if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
         return Reply.success(c);
+    }
+
+    @Override
+    public String findCustomerAsMandatorHtml(long id) {
+        return Optional.ofNullable(customerEao.findById(id)).map(c -> c.toHtml(mandator.getMatchCode(), salesdata)).orElse("Kein Kunde mit id " + id + " vorhanden");
+    }
+
+    @Override
+    public String findCustomerAsHtml(long id) {
+        return Optional.ofNullable(customerEao.findById(id)).map(Customer::toHtml).orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
 }

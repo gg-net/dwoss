@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
+import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.opi.UiCustomer;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,7 +30,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;

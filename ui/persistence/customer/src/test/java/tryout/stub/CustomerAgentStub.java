@@ -17,6 +17,7 @@
 package tryout.stub;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
 
@@ -31,6 +32,7 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.rules.AddressType;
 import eu.ggnet.saft.api.Reply;
 
@@ -80,12 +82,6 @@ public class CustomerAgentStub implements CustomerAgent {
     }
 
     @Override
-    public <T> T findByIdEager(Class< T> entityClass, Object id) {
-        return (T)CGEN.makeCustomer();
-
-    }
-
-    @Override
     public <T> List<T> findAllEager(Class< T> entityClass) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -112,10 +108,17 @@ public class CustomerAgentStub implements CustomerAgent {
     //</editor-fold>
 
     @Override
-    public List<Customer> search(String search, Set<SearchField> customerFields) {
-        List<Customer> list = new ArrayList<>();
+    public <T> T findByIdEager(Class< T> entityClass, Object id) {
+        if ( entityClass.equals(Customer.class) ) return (T)CGEN.makeCustomer();
+        return null;
+
+    }
+
+    @Override
+    public List<PicoCustomer> search(String search, Set<SearchField> customerFields) {
+        List<PicoCustomer> list = new ArrayList<>();
         for (int i = 0; i < 25; i++) {
-            list.add(CGEN.makeCustomer());
+            list.add(CGEN.makeCustomer().toPico());
         }
 
         L.info("Returning {}", list);
@@ -132,7 +135,7 @@ public class CustomerAgentStub implements CustomerAgent {
      * @return
      */
     @Override
-    public List<Customer> search(String search, Set<SearchField> customerFields, int start, int limit) {
+    public List<PicoCustomer> search(String search, Set<SearchField> customerFields, int start, int limit) {
         L.info("SearchString {},{},start={},limit={}", search, customerFields.size(), start, limit);
 
         try {
@@ -204,7 +207,7 @@ public class CustomerAgentStub implements CustomerAgent {
         }
 
         L.info("Returning {}", result);
-        return result;
+        return result.stream().map(Customer::toPico).collect(Collectors.toList());
     }
 
     @Override
@@ -269,6 +272,16 @@ public class CustomerAgentStub implements CustomerAgent {
 
         if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
         return Reply.success(c);
+    }
+
+    @Override
+    public String findCustomerAsMandatorHtml(long id) {
+        return "Showing a Customer with MandatorHtml";
+    }
+
+    @Override
+    public String findCustomerAsHtml(long id) {
+        return "Showing a Customer as Html";
     }
 
 }

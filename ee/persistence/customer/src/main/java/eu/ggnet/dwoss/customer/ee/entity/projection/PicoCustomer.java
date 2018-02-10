@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +14,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package eu.ggnet.dwoss.customer.ee.entity.projection;
+
+import java.io.Serializable;
+
+import lombok.Value;
+
 /**
- * The public customer api.
+ * A Pico Customer concept.
+ *
+ * @author oliver.guenther
  */
-package eu.ggnet.dwoss.customer.api;
+@Value
+public class PicoCustomer implements Serializable {
+
+    /**
+     * id of the customer.
+     */
+    private final long id;
+
+    /**
+     * a short description.
+     */
+    private final String shortDescription;
+
+}

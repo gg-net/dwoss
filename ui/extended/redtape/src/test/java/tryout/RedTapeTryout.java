@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.opi.CustomerService;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;

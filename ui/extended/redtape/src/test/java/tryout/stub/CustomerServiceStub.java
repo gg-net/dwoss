@@ -1,8 +1,11 @@
 package tryout.stub;
 
+import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
+import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.opi.UiCustomer;
+
 import java.util.*;
 
-import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;

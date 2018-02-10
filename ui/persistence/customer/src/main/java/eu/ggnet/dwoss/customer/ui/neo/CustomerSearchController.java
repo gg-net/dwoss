@@ -34,12 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -82,7 +82,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     private CheckBox address;
 
     @FXML
-    private ListView<Customer> resultListView;
+    private ListView<PicoCustomer> resultListView;
 
     @FXML
     private ProgressBar progressBar;
@@ -93,42 +93,47 @@ public class CustomerSearchController implements Initializable, FxController, Cl
     @FXML
     private HBox statusHbox;
 
-    private Set<SearchField> customerFields = new HashSet<>();
+    private final CustomerAgent AGENT = Dl.remote().lookup(CustomerAgent.class);
 
-    private ObservableList<Customer> observableCustomers = FXCollections.observableArrayList();
+    private final Set<SearchField> SEARCH_FIELDS = new HashSet<>();
 
-    private StringProperty searchProperty = new SimpleStringProperty();
+    private ObservableList<PicoCustomer> observableCustomers = FXCollections.observableArrayList();
+
+    private final StringProperty SEARCH_PROPERTY = new SimpleStringProperty();
 
     private CustomerTaskService CUSTOMER_TASK_SERVICE;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         resultListView.setCellFactory(listView -> {
-            return new ListCell<Customer>() {
+            return new ListCell<PicoCustomer>() {
                 @Override
-                protected void updateItem(Customer item, boolean empty) {
+                protected void updateItem(PicoCustomer item, boolean empty) {
                     super.updateItem(item, empty);
+//                    Platform.runLater(() -> { // WTF i need this, i don't know, but otherwise
                     if ( item == null || empty ) {
                         setText("");
                     } else {
-                        setText(item.toName() );
+                        setText(item.getShortDescription());
                     }
+                    //                  });
                 }
             };
         });
 
         //Create a ContextMenu
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem viewCustomer = new MenuItem("Kunden anzeigen mit Mandatenstandard");
-        MenuItem viewCompleteCustomer = new MenuItem("Kunde anzeigen");
-        MenuItem editCustomer = new MenuItem("Kunde anpassen");
+        MenuItem viewCustomer = new MenuItem("Detailansicht");
+        MenuItem viewCompleteCustomer = new MenuItem("Detailansicht inc. aller Mandatendetails");
+        MenuItem editCustomer = new MenuItem("Bearbeiten");
 
         //actions for the context menu
         viewCustomer.setOnAction((ActionEvent event) -> {
             //open toHtml(String matchcode, DefaultCustomerSalesdata defaults)
-            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
-                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
-
+            if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
+            PicoCustomer selectedCustomer = resultListView.getSelectionModel().getSelectedItem();
+            /*
+            JENS 2
                 DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
                         .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                         .paymentCondition(PaymentCondition.CUSTOMER)
@@ -136,45 +141,40 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                         .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
 
                 String matchcode = selectedItem.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
-
-                Ui.exec(() -> {
-                    Ui.build().title("Mandatenstandard des Kunden Anzeigen").fx().show(() -> selectedItem.toHtml(matchcode, defaults), () -> new HtmlPane());
-                });
-
-            }
+             */
+            Ui.exec(() -> {
+                Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.getId())), () -> new HtmlPane());
+            });
         });
         viewCompleteCustomer.setOnAction((ActionEvent event) -> {
             //open toHtml(String salesRow, String comment)
-            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
-                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
-                Ui.exec(() -> {
-                    Ui.build().title("Kunden Ansicht").fx().show(() -> selectedItem.toHtml(), () -> new HtmlPane());
-                });
-
-            }
-
+            if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
+            PicoCustomer selectedCustomer = resultListView.getSelectionModel().getSelectedItem();
+            Ui.exec(() -> {
+                Ui.build(statusHbox).title("Kunden Ansicht").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsHtml(selectedCustomer.getId())), () -> new HtmlPane());
+            });
         });
         editCustomer.setOnAction((ActionEvent event) -> {
-            if ( resultListView.getSelectionModel().getSelectedItem() != null ) {
-                Customer selectedItem = resultListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem.isSimple() ) {
-                    Ui.exec(() -> {
-                        Optional<CustomerContinue> result = Ui.build().parent(resultListView).fxml().eval(() -> selectedItem, CustomerSimpleController.class);
-                        if ( !result.isPresent() ) return;
-                        Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                        if ( !Ui.failure().handle(reply) ) return;
-                        if ( !result.get().continueEnhance ) return;
-                        Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
-                                .ifPresent(c -> Ui.build().alert("Would store + " + c));
-                    });
+            if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
+            PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
+            Ui.exec(() -> {
+                Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
+                if ( customer.isSimple() ) {
+                    L.info("Edit Simple Customer {}", customer.getId());
+                    Optional<CustomerContinue> result = Ui.build(resultListView).fxml()
+                            .eval(() -> customer, CustomerSimpleController.class);
+                    if ( !result.isPresent() ) return;
+                    Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                    if ( !Ui.failure().handle(reply) ) return;
+                    if ( !result.get().continueEnhance ) return;
+                    Ui.build(statusHbox).fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                            .ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
                 } else {
-                    Ui.exec(() -> {
-                        Ui.build().fxml().eval(() -> selectedItem, CustomerEnhanceController.class)
-                                .ifPresent(c -> Ui.build().alert("Would store + " + c));
-                    });
+                    L.info("Edit (Complex) Customer {}", customer.getId());
+                    Ui.build(statusHbox).fxml().eval(() -> customer, CustomerEnhanceController.class)
+                            .ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
                 }
-            }
-
+            });
         });
 
         // Add MenuItemes to ContextMenu
@@ -186,6 +186,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         CUSTOMER_TASK_SERVICE = new CustomerTaskService();
         observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
 
+        /*
+        JENS 1
         if ( observableCustomers.isEmpty() ) {
             Customer c = new Customer();
             Company com = new Company();
@@ -196,7 +198,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 item.setDisable(true);
             });
         }
-
+         */
         resultListView.setItems(observableCustomers);
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
@@ -210,7 +212,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
         });
 
         // Binding all Ui Properties
-        searchProperty.bind(searchField.textProperty());
+        SEARCH_PROPERTY.bind(searchField.textProperty());
 
         progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
         progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
@@ -228,31 +230,31 @@ public class CustomerSearchController implements Initializable, FxController, Cl
      * <p>
      */
     private void fillSet() {
-        if ( customerFields != null ) {
-            customerFields.clear();
+        if ( SEARCH_FIELDS != null ) {
+            SEARCH_FIELDS.clear();
         }
 
         if ( kid.isSelected() ) {
-            customerFields.add(Customer.SearchField.ID);
+            SEARCH_FIELDS.add(Customer.SearchField.ID);
         }
         if ( lastname.isSelected() ) {
-            customerFields.add(Customer.SearchField.LASTNAME);
+            SEARCH_FIELDS.add(Customer.SearchField.LASTNAME);
         }
         if ( firstname.isSelected() ) {
-            customerFields.add(Customer.SearchField.FIRSTNAME);
+            SEARCH_FIELDS.add(Customer.SearchField.FIRSTNAME);
         }
         if ( company.isSelected() ) {
-            customerFields.add(Customer.SearchField.COMPANY);
+            SEARCH_FIELDS.add(Customer.SearchField.COMPANY);
         }
         if ( address.isSelected() ) {
-            customerFields.add(Customer.SearchField.ADDRESS);
+            SEARCH_FIELDS.add(Customer.SearchField.ADDRESS);
         }
     }
 
     private void search() {
         fillSet();
-        CUSTOMER_TASK_SERVICE.setCustomerFields(customerFields);
-        CUSTOMER_TASK_SERVICE.setSearchsting(searchProperty.get());
+        CUSTOMER_TASK_SERVICE.setCustomerFields(SEARCH_FIELDS);
+        CUSTOMER_TASK_SERVICE.setSearchsting(SEARCH_PROPERTY.get());
         observableCustomers.clear();
         resultListView.getContextMenu().getItems().forEach((item) -> {
             item.setDisable(false);
