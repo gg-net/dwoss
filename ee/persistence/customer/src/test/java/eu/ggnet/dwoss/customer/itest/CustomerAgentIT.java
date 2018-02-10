@@ -16,24 +16,22 @@
  */
 package eu.ggnet.dwoss.customer.itest;
 
-import java.util.*;
+import java.util.Locale;
 
 import javax.ejb.EJB;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
-
 import eu.ggnet.dwoss.rules.AddressType;
-
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
