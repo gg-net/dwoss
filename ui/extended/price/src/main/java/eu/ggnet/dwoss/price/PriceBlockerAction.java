@@ -18,17 +18,21 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -42,21 +46,36 @@ public class PriceBlockerAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr zur Fixierung eines Preises eingeben:");
-            if ( refurbishedId == null ) return;
-            PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(refurbishedId);
-            PriceBlockerViewCask pbp = new PriceBlockerViewCask(refurbishedId, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
-            OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Price fixieren", pbp);
-            view.setVisible(true);
-            if ( view.isCancel() ) return;
-            per.setCustomerPrice(pbp.getCustomerPrice());
-            per.setRetailerPrice(pbp.getRetailerPrice());
-            per.setUnitPriceFixed(Change.SET);
-            Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
+
+        Ui.build().title("Bitte SopoNr zur Fixierung eines Preises eingeben").dialog().eval(() -> {
+            Dialog<String> dialog = new Dialog<>();
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+
+            TextField username = new TextField();
+            username.setPromptText("SopoNr");
+
+            grid.add(new Label("Bitte SopoNr zur Fixierung eines Preises eingeben: "), 0, 0);
+            grid.add(username, 1, 0);
+
+            dialog.getDialogPane().setContent(grid);
+            dialog.getDialogPane().getButtonTypes().addAll(OK, CANCEL);
+            return dialog;
+        }).ifPresent(r -> {
+            if ( r == null ) return;
+            PriceEngineResult per = ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).load(r)).getPayload();
+            PriceBlockerViewCask pbp = new PriceBlockerViewCask(r, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
+            Ui.build().title("Preise fixieren").swing().eval(() -> OkCancelWrap.result(pbp)).ifPresent(rr -> {
+                per.setCustomerPrice(rr.getPayload().customerPr);
+                per.setRetailerPrice(rr.getPayload().retailerPr);
+                per.setUnitPriceFixed(Change.SET);
+                Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+
+            });
+        });
+
     }
 
 }

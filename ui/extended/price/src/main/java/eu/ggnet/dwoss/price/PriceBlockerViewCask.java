@@ -23,18 +23,28 @@ import javax.swing.JOptionPane;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
+
+import lombok.AllArgsConstructor;
 
 /**
  * Ui for setting on price fixed.
  * <p/>
  * @author bastian.venz
  */
-public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClose {
+public class PriceBlockerViewCask extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Prices> {
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
     private Converter<Double, String> taxedConverter = new CurrencyConverter(GlobalConfig.DEFAULT_TAX.getTax());
+
+    @Override
+    public boolean mayClose() {
+        return pre(CloseType.OK);
+    }
 
     private class CurrencyConverter extends Converter<Double, String> {
 
@@ -63,6 +73,19 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
             }
         }
     };
+
+    @AllArgsConstructor
+    public static class Prices {
+
+        public double retailerPr;
+
+        public double customerPr;
+    }
+
+    @Override
+    public Prices getResult() {
+        return new Prices(retailerPrice, customerPrice);
+    }
 
     private double retailerPrice;
 
@@ -279,7 +302,6 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
-    @Override
     public boolean pre(CloseType type) {
         if ( type == CloseType.CANCEL ) return true;
         if ( retailerBrutto.getText().trim().equals("") || retailerNetto.getText().trim().equals("")
@@ -324,21 +346,5 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Testmain
-     * <p/>
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);
-        OkCancelDialog<PriceBlockerViewCask> cancelDialog = new OkCancelDialog<>("Test", pbp);
-
-        cancelDialog.setMinimumSize(pbp.getMinimumSize());
-        cancelDialog.setPreferredSize(pbp.getPreferredSize());
-        cancelDialog.setVisible(true);
-        System.out.println(cancelDialog.getSubContainer().getCustomerPrice());
-        System.out.println(cancelDialog.getSubContainer().getRetailerPrice());
-        System.exit(0);
-    }
+    
 }
