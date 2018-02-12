@@ -45,13 +45,16 @@ public class GenerateOnePriceAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         String refurbishId = showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr eingeben :");
         if ( refurbishId == null || refurbishId.isEmpty() ) return;
-        PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
-        if ( per == null ) {
-            Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishId).show(AlertType.WARNING);
+        try {
+            PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
+            Ui.exec(() -> {
+                Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
+            });
+        } catch (NullPointerException ex) {
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishId).show(AlertType.WARNING);
+            });
         }
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
-        });
 
     }
 
