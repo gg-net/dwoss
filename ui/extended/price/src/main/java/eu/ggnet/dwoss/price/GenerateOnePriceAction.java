@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.util.HtmlPane;
 
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javafx.stage.Modality.WINDOW_MODAL;
@@ -46,7 +47,7 @@ public class GenerateOnePriceAction extends AccessableAction {
         if ( refurbishId == null || refurbishId.isEmpty() ) return;
         PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
         if ( per == null ) {
-            Ui.build().alert("Kein Ergebins für SopoNr: " + refurbishId);
+            Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishId).show(AlertType.WARNING);
         }
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());

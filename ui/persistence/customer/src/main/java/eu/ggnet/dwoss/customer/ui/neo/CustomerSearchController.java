@@ -132,16 +132,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             //open toHtml(String matchcode, DefaultCustomerSalesdata defaults)
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer selectedCustomer = resultListView.getSelectionModel().getSelectedItem();
-            /*
-            JENS 2
-                DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
-                        .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
-                        .paymentCondition(PaymentCondition.CUSTOMER)
-                        .shippingCondition(ShippingCondition.DEALER_ONE)
-                        .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
-
-                String matchcode = selectedItem.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
-             */
             Ui.exec(() -> {
                 Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.getId())), () -> new HtmlPane());
             });
@@ -185,20 +175,6 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         CUSTOMER_TASK_SERVICE = new CustomerTaskService();
         observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
-
-        /*
-        JENS 1
-        if ( observableCustomers.isEmpty() ) {
-            Customer c = new Customer();
-            Company com = new Company();
-            com.setName("Leider keine Kunden gefunden");
-            c.getCompanies().add(com);
-            observableCustomers.add(c);
-            contextMenu.getItems().forEach((item) -> {
-                item.setDisable(true);
-            });
-        }
-         */
         resultListView.setItems(observableCustomers);
 
         progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
