@@ -131,4 +131,20 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(businesspayload).as("check that store the same customer").isEqualTo(c2);
 
     }
+
+    @Ignore
+    @Test
+    public void testFindCustomerAsMandatorHtml() {
+        String feedback = "Kein Kunde mit id 123 vorhanden";
+        String findCustomerAsMandatorHtml = agent.findCustomerAsMandatorHtml(123);
+        assertThat(findCustomerAsMandatorHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
+    }
+
+    @Ignore
+    @Test
+    public void testFindCustomerAsHtml() {
+        String feedback = "Kein Kunde mit id 123 vorhanden";
+        String findCustomerAsHtml = agent.findCustomerAsHtml(123);
+        assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
+    }
 }
