@@ -16,16 +16,18 @@
  */
 package eu.ggnet.dwoss.price;
 
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
-import eu.ggnet.dwoss.util.HtmlDialog;
+import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.util.HtmlPane;
+
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
+import static javafx.stage.Modality.WINDOW_MODAL;
 import static javax.swing.JOptionPane.showInputDialog;
 
 /**
@@ -46,10 +48,10 @@ public class GenerateOnePriceAction extends AccessableAction {
         if ( per == null ) {
             Ui.build().alert("Kein Ergebins für SopoNr: " + refurbishId);
         }
-        String html = PriceEngineResultFormater.toSimpleHtml(per);
-        HtmlDialog dialog = new HtmlDialog(UiCore.getMainFrame(), Dialog.ModalityType.MODELESS);
-        dialog.setText(html);
-        dialog.setLocationRelativeTo(UiCore.getMainFrame());
-        dialog.setVisible(true);
+        Ui.exec(() -> {
+            Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
+        });
+
     }
+
 }
