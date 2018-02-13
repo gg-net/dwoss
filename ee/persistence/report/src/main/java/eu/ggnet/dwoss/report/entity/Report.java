@@ -45,7 +45,7 @@ import static eu.ggnet.dwoss.report.entity.Report.ViewMode.DEFAULT;
 public class Report extends IdentifiableEntity implements Serializable, EagerAble {
 
     @Value
-    public final static class OptimisticKey {
+    public final static class OptimisticKey implements Serializable {
 
         private final long id;
 
