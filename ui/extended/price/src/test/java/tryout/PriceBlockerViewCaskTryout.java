@@ -16,11 +16,12 @@
  */
 package tryout;
 
+import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.price.PriceBlockerViewCask;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
-
 
 /**
  *
@@ -29,8 +30,8 @@ import eu.ggnet.saft.core.swing.OkCancelWrap;
 public class PriceBlockerViewCaskTryout {
 
     public static void main(String[] args) {
+        UiCore.startSwing(() -> new JLabel("MainApp"));
 
-        
         PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);
 
         Ui.exec(() -> {

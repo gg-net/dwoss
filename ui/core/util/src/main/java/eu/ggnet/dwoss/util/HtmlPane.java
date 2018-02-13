@@ -19,9 +19,17 @@ package eu.ggnet.dwoss.util;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.print.PrinterJob;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
+
+import eu.ggnet.saft.Ui;
+
+import static javafx.geometry.Pos.CENTER_RIGHT;
 
 /**
  * Html Pane for Strings.
@@ -33,12 +41,29 @@ public class HtmlPane extends BorderPane implements Consumer<String> {
     private WebView webView;
 
     public HtmlPane() {
+        Button close = new Button("Schließen");
+        close.setOnAction(e -> Ui.closeWindowOf(this));
+        Button print = new Button("Drucken");
+        print.setOnAction((ActionEvent event) -> {
+            PrinterJob job = PrinterJob.createPrinterJob();
+            if ( job == null ) return;
+            boolean cont = job.showPrintDialog(null);
+            if ( !cont ) return;
+            webView.getEngine().print(job);
+            job.endJob();
+        });
+
         // new WebView must happen on the FxThead.
         dispatch(() -> {
             setPadding(new Insets(5));
             webView = new WebView();
             setCenter(webView);
         });
+
+        FlowPane fp = new FlowPane(print, close);
+        fp.setHgap(5);
+        fp.setAlignment(CENTER_RIGHT);
+        setBottom(fp);
     }
 
     @Override
