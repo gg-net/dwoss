@@ -16,12 +16,15 @@
  */
 package eu.ggnet.dwoss.price;
 
+import java.io.File;
+
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 @Remote
 public interface Importer {
@@ -39,10 +42,11 @@ public interface Importer {
      * </ul>
      *
      * @param jacket  the file in a jacket
-     * @param monitor an optional monitor
+     * @param arranger
+     * @return return a Reply of File
      * @throws UserInfoException
      */
-    void fromXls(FileJacket jacket, String arranger) throws UserInfoException;
+    Reply<File> fromXls(FileJacket jacket, String arranger) throws UserInfoException;
 
     /**
      * Uses the Engine in the Background, and imports all Prices direct.

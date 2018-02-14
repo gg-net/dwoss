@@ -33,6 +33,7 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -66,11 +67,12 @@ public class ImporterOperation implements Importer {
      * </ul>
      *
      * @param jacket  the file in a jacket
-     * @param monitor an optional monitor
+     * @param arranger
+     * @return a Reply of FileJacket
      * @throws UserInfoException
      */
     @Override
-    public void fromXls(FileJacket jacket, String arranger) throws UserInfoException {
+    public Reply<File> fromXls(FileJacket jacket, String arranger) throws UserInfoException {
         final SubMonitor m = monitorFactory.newSubMonitor("Import from Xls", 10);
         m.start();
         File f = jacket.toTemporaryFile();
@@ -89,6 +91,7 @@ public class ImporterOperation implements Importer {
             throw new UserInfoException(reader.getErrors());
         }
         core.store(imports, "ImportPriceManagementOperation.fromXls()", arranger, m);
+        return Reply.success(f);
     }
 
     /**
