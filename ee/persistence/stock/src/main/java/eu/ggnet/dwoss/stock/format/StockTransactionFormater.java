@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,7 @@ package eu.ggnet.dwoss.stock.format;
 import java.text.DateFormat;
 import java.util.*;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionParticipation;
-import eu.ggnet.dwoss.stock.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
+import eu.ggnet.dwoss.stock.entity.*;
 
 public class StockTransactionFormater {
 
@@ -48,20 +45,7 @@ public class StockTransactionFormater {
             groupSet.add(position.getStockUnit() == null ? position.getDescription() : position.getStockUnit().getRefurbishId() + " - " + position.getStockUnit().getName());
         }
 
-        String details = "<html>"
-                + "<head>"
-                + "<style type=\"text/css\">"
-                + "body  {"
-                + "font: 8px Verdana, Arial, Helvetica, sans-serif;"
-                + "}"
-                + "p {"
-                + "margin-bottom: 2px;"
-                + "margin-top: 2px;"
-                + "}"
-                + "</style>"
-                + "</head>"
-                + "<body>"
-                + "<table><tr><td>"
+        String details = "<table><tr><td>"
                 + "<h3><u><i>Transaktion Nummer:</i></u> " + tx.getId()
                 + "<br /><u><i>Type:</i></u> " + tx.getType()
                 + "<br /><u><i>Status:</i></u> " + tx.getStatus().getType()
@@ -95,25 +79,13 @@ public class StockTransactionFormater {
             details += "</p>";
         }
 
-        details += "<hr /></body></html>";
+        details += "<hr />";
         return details;
     }
 
     public static String toHtml(List<StockTransaction> transactions) {
 
-        String details = "<html>"
-                + "<head>"
-                + "<style type=\"text/css\">"
-                + "body  {"
-                + "font: 8px Verdana, Arial, Helvetica, sans-serif;"
-                + "}"
-                + "p {"
-                + "margin-bottom: 2px;"
-                + "margin-top: 2px;"
-                + "}"
-                + "</style>"
-                + "</head>"
-                + "<body>";
+        String details = "";
 
         for (StockTransaction tx : transactions) {
             details += "<table><tr><td>"
@@ -172,8 +144,6 @@ public class StockTransactionFormater {
             }
             details += "<hr />";
         }
-
-        details += "</body></html>";
         return details;
     }
 }

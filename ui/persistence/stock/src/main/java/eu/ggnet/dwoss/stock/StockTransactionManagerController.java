@@ -27,6 +27,7 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.stock.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
 import eu.ggnet.dwoss.util.HtmlPane;
@@ -106,7 +107,7 @@ public class StockTransactionManagerController {
 
     void showDetails(StockTransaction transaction) {
         Ui.exec(() -> {
-            Ui.build(view).fx().show(() -> StockTransactionFormater.toHtml(transaction), () -> new HtmlPane());
+            Ui.build(view).fx().show(() -> Css.toHtml5WithStyle(StockTransactionFormater.toHtml(transaction)), () -> new HtmlPane());
         });
     }
 
