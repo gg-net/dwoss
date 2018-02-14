@@ -1,25 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-Copyright (C) 2018 GG-Net GmbH
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
+
     <f:view contentType="text/html">
         <h:head>
             <title>Monitorseite</title>
@@ -27,45 +12,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </h:head>
         <h:body>
             <h:form>
-                <p:poll intervall="2" update="@form:progressTable"/>
-                
-                <h:dataTable id="progressTable" value="#{progressObserverOperation.getActiveProgressKeys()}" var="k" columnClasses="none,none,none,right,right,right,right">
-                    <h:column>  
-                        <f:facet name="header">Key</f:facet>  
-                        <h:outputText value="#{k}"/>  
-                    </h:column>                
-                    <h:column>  
-                        <f:facet name="header">Title</f:facet>  
-                            #{progressObserverOperation.getMonitor(k).getTitle()}  
-                    </h:column>                
-                    <h:column>  
-                        <f:facet name="header">Message</f:facet>  
-                            #{progressObserverOperation.getMonitor(k).getMessage()}  
-                    </h:column>
-                    <h:column>  
-                        <f:facet name="header">Started</f:facet>
-                            #{progressObserverOperation.getMonitor(k).isStarted()}  
-                    </h:column>
-                    <h:column>  
-                        <f:facet name="header">Finished</f:facet>
-                            #{progressObserverOperation.getMonitor(k).isFinished()}  
-                    </h:column>
-                    <h:column>  
-                        <f:facet name="header">Stale</f:facet>
-                            #{progressObserverOperation.getMonitor(k).isStale()}  
-                    </h:column>
-                    <h:column>  
-                        <f:facet name="header">Status</f:facet>
+                <p:poll interval="2" update="@form:progressTable"/>
+
+                <p:dataTable id="progressTable" value="#{progressObserverOperation.getActiveProgressKeys()}" var="k" stickyHeader="true" reflow="true">
+                    <p:column headerText="Key" sortBy="#{k}" priority="1" >  
+                        #{k}
+                    </p:column>                
+                    <p:column headerText="Title" priority="2">  
+                        #{progressObserverOperation.getMonitor(k).getTitle()}  
+                    </p:column>                
+                    <p:column headerText="Message" priority="6">                           
+                        #{progressObserverOperation.getMonitor(k).getMessage()}  
+                    </p:column>
+                    <p:column headerText="Started" priority="6">  
+                        #{progressObserverOperation.getMonitor(k).isStarted()}  
+                    </p:column>
+                    <p:column headerText="Finished" priority="6">  
+                        #{progressObserverOperation.getMonitor(k).isFinished()}  
+                    </p:column>
+                    <p:column headerText="Stale" priority="6">  
+                        #{progressObserverOperation.getMonitor(k).isStale()}  
+                    </p:column>
+                    <p:column headerText="Status" priority="4">  
                         <div class="w3-blue" style="width: #{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%;">
                             <h:outputText value="#{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%"/>
                         </div>
-                    </h:column>
-                </h:dataTable >
+                    </p:column>
+                </p:dataTable>
                 <br />
                 <p class="smallFont">Page get reloaded every 2 seconds</p>
 
 
-                <h:outputStylesheet library="css" name="style.css"/>
+                <f:facet name="last">
+                    <h:outputStylesheet library="css" name="style.css"/>
+                </f:facet>
             </h:form>
         </h:body>
     </f:view>
