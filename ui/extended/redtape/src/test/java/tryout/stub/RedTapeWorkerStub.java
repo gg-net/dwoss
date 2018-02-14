@@ -1,19 +1,15 @@
 package tryout.stub;
 
-import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
-import eu.ggnet.statemachine.StateTransition;
-
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
+import eu.ggnet.statemachine.StateTransition;
 
 /**
  *
@@ -57,7 +53,7 @@ public class RedTapeWorkerStub implements RedTapeWorker {
     }
 
     @Override
-    public Document stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
+    public Reply<Document> stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:m="http://metawidget.org/faces" >
+      xmlns:f="http://java.sun.com/jsf/core">
+
     <f:view contentType="text/html">
         <h:head>
             <title>Deutsche Warenwirtschaft Server</title>
@@ -13,6 +13,7 @@
             <p style="width: 100%; align-content: center; font-size: xx-large">Deutsche Warenwirtschft Server - <h:outputText value="#{server.companyName}"/></p>
             <hr />
             Misc:
+            <h:link value="Monitor" outcome="misc/monitor" /> ,
             <h:link value="Mandator" outcome="misc/mandator" />,
             <h:link value="Users" outcome="misc/users" />
             | Search:
@@ -27,8 +28,8 @@
                 <p:dataList id="display" value="#{server.inspectJndi()}" var="result" >
                     #{result}
                 </p:dataList>
-            </h:form>
 
+            </h:form>
         </h:body>
     </f:view>
 </html>

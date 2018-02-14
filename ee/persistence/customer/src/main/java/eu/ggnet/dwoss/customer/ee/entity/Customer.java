@@ -29,8 +29,10 @@ import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
@@ -56,7 +58,7 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @Indexed
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
-public class Customer implements Serializable {
+public class Customer implements Serializable, EagerAble {
 
     /**
      * Fields for detailed Search.
@@ -478,9 +480,9 @@ public class Customer implements Serializable {
                 return "multiple PHONE type communications found";
         }
         if ( isBusiness() ) {
-            if ( companies.get(0).getContacts().size() == 0 )
+            if ( companies.get(0).getContacts().isEmpty() )
                 return "SimpleBusinessCustomer has no contact";
-            if ( companies.get(0).getCommunications().size() != 0 )
+            if ( !companies.get(0).getCommunications().isEmpty() )
                 return "SimpleBusinessCustomer's violates it's rule not to have a Company with Communication.";
             if ( companies.get(0).getContacts().size() > 1 )
                 return "SimpleBusinessCustomer has more than one Contact";
@@ -662,4 +664,25 @@ public class Customer implements Serializable {
         return sb.toString();
     }
 
+    public PicoCustomer toPico() {
+        return new PicoCustomer(id, toName());
+    }
+
+    @Override
+    public void fetchEager() {
+        getMandatorMetadata().size();
+        companies.forEach(c -> {
+            c.getCommunications().size();
+            c.getAddresses().size();
+            c.getContacts().size();
+            c.getContacts().forEach(con -> {
+                con.getAddresses().size();
+                con.getCommunications().size();
+            });
+        });
+        contacts.forEach(c -> {
+            c.getAddresses().size();
+            c.getCommunications().size();
+        });
+    }
 }

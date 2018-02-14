@@ -18,17 +18,19 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.Optional;
 
-import javax.swing.JFileChooser;
-import javax.swing.SwingWorker;
+import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.*;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Action to create an XLS Report of possible sales, initiated by an XLS File containing only partNo.
@@ -43,27 +45,19 @@ public class PriceByInputFileAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(UiCore.getMainFrame()) ) {
-            return;
-        }
-        final String fileName = dialog.getSelectedFile().getPath();
-        if ( YES_OPTION == showConfirmDialog(UiCore.getMainFrame(),
-                "Xls Datei " + fileName + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern)",
-                "Preise erzeugen nach Referencedaten", YES_NO_OPTION, QUESTION_MESSAGE) ) {
-            new SwingWorker<Object, Object>() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    FileUtil.checkIfExcelFile(dialog.getSelectedFile());
-                    FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
-                    FileJacket outFile = Dl.remote().lookup(Exporter.class).toXlsByXls(inFile);
-                    Ui.osOpen(outFile.toTemporaryFile());
-                    return null;
-                }
+        Ui.exec(() -> {
+            Optional<File> inFile = Ui.fileChooser().open();
+            if ( !inFile.isPresent() ) return;
+            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + inFile.get().getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
+                    .filter(b -> b == OK)
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
+                    .ifPresent(r -> Ui.osOpen(r.toTemporaryFile()));
 
-            }.execute();
-        }
+        });
+
     }
 
 }

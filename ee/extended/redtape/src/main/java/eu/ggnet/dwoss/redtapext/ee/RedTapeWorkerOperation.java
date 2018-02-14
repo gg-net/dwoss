@@ -16,19 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateComplaintWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateCapitalAssetReturnsWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateOrderWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateBlockWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateInvoiceWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeUpdateRepaymentWorkflow;
-import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -46,9 +33,11 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateMachine;
+import eu.ggnet.dwoss.redtapext.ee.workflow.*;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.assist.Stocks;
 import eu.ggnet.dwoss.stock.eao.StockUnitEao;
@@ -59,6 +48,7 @@ import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rules.DocumentType.*;
@@ -290,15 +280,19 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * @return the Document in the new state.
      */
     @Override
-    public Document stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
-        EnumSet<CustomerFlag> customerFlags = EnumSet.noneOf(CustomerFlag.class);
-        customerFlags.addAll(cdoc.getCustomerFlags());
-        L.info("stateChange with {} on {}", transition.getName(), cdoc);
-        stateMachine.stateChange(cdoc, transition);
-        // INFO: This is a stupid solution.
-        if ( !customerFlags.equals(cdoc.getCustomerFlags()) )
-            customerService.updateCustomerFlags(cdoc.getDocument().getDossier().getCustomerId(), cdoc.getCustomerFlags());
-        return internalUpdate(cdoc.getDocument(), null, arranger);
+    public Reply<Document> stateChange(CustomerDocument cdoc, StateTransition<CustomerDocument> transition, String arranger) {
+        try {
+            EnumSet<CustomerFlag> customerFlags = EnumSet.noneOf(CustomerFlag.class);
+            customerFlags.addAll(cdoc.getCustomerFlags());
+            L.info("stateChange with {} on {}", transition.getName(), cdoc);
+            stateMachine.stateChange(cdoc, transition);
+            // INFO: This is a stupid solution.
+            if ( !customerFlags.equals(cdoc.getCustomerFlags()) )
+                customerService.updateCustomerFlags(cdoc.getDocument().getDossier().getCustomerId(), cdoc.getCustomerFlags());
+            return Reply.success(internalUpdate(cdoc.getDocument(), null, arranger));
+        } catch (RuntimeException re) {
+            return Reply.failure(re.getMessage());
+        }
     }
 
     // TODO: Rename to represent the forced detached

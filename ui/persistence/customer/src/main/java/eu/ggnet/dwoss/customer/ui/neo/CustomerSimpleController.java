@@ -194,6 +194,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //get overwriten in accept()
         lastNameTextField.setText("");
         streetTextField.setText("");
+        zipcodeTextField.setText("");
+        cityTextField.setText("");
+        countryTextField.setText("");
 
         //button behavior
         //enable the save and "saveAndEnhanceUI" button only on filled TextFields
@@ -204,7 +207,20 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                         Bindings.createBooleanBinding(()
                                 -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
                         )
-                ));
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> zipcodeTextField.getText().trim().isEmpty(), zipcodeTextField.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> countryTextField.getText().trim().isEmpty(), countryTextField.textProperty()
+                        )
+                )
+        );
 
         saveAndEnhanceUIButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
@@ -213,7 +229,20 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                         Bindings.createBooleanBinding(()
                                 -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
                         )
-                ));
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> zipcodeTextField.getText().trim().isEmpty(), zipcodeTextField.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
+                        )
+                ).or(
+                        Bindings.createBooleanBinding(()
+                                -> countryTextField.getText().trim().isEmpty(), countryTextField.textProperty()
+                        )
+                )
+        );
 
         // force the zipcode field to be numeric only, becuase the ledger get saved as an int
         zipcodeTextField.textFormatterProperty().set(
@@ -268,6 +297,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         zipcodeTextField.setText(simpleCustomer.getZipCode());
         cityTextField.setText(simpleCustomer.getCity());
         countryTextField.setText(new Locale("", simpleCustomer.getIsoCountry()).getDisplayName());
+        
         landLineTextField.setText(simpleCustomer.getLandlinePhone());
         mobileTextField.setText(simpleCustomer.getMobilePhone());
         emailTextField.setText(simpleCustomer.getEmail());

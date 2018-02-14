@@ -21,7 +21,7 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.customer.api.AddressService;
+import eu.ggnet.dwoss.customer.opi.AddressService;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.event.AddressChange;

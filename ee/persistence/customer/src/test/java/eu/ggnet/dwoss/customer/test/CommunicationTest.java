@@ -31,9 +31,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommunicationTest {
 
     public static Communication makeValidCommunication() {
-        Communication validCommunication = new Communication(Type.EMAIL, true);
-        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
-
+        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
+        
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }

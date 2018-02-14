@@ -64,11 +64,11 @@ public class RedTapeStateOperationIT extends ArquillianProjectArchive {
 
         //update document
         doc1 = redTapeWorker.update(doc1, null, "Me");
-        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.I_PAY_AND_INVOICE, "Test");
+        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.I_PAY_AND_INVOICE, "Test").getPayload();
         assertTrue("Set " + doc1.getConditions() + " should contain " + Document.Condition.PAID, doc1.getConditions().contains(Document.Condition.PAID));
         assertEquals("Type should be Invoice", DocumentType.INVOICE, doc1.getType());
 
-        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.I_PICK_UP, "Test");
+        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.I_PICK_UP, "Test").getPayload();
         assertTrue("Set " + doc1.getConditions() + " should contain " + Document.Condition.PICKED_UP, doc1.getConditions().contains(Document.Condition.PICKED_UP));
 
         //Generate Dossier -- Now Sent
@@ -82,10 +82,10 @@ public class RedTapeStateOperationIT extends ArquillianProjectArchive {
         //update document
         doc1 = redTapeWorker.update(doc1, null, "Me");
 
-        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.II_PAY, "Test");
+        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.II_PAY, "Test").getPayload();
         assertTrue("Set " + doc1.getConditions() + " should contain " + Document.Condition.PAID, doc1.getConditions().contains(Document.Condition.PAID));
 
-        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.II_SEND_AND_INVOICE, "Test");
+        doc1 = redTapeWorker.stateChange(new CustomerDocument(new HashSet<>(), doc1, DEFAULT, ADVANCE_PAYMENT), RedTapeStateTransitions.II_SEND_AND_INVOICE, "Test").getPayload();
         assertTrue("Set " + doc1.getConditions() + " should contain " + Document.Condition.SENT, doc1.getConditions().contains(Document.Condition.SENT));
         assertEquals("Type should be Invoice", DocumentType.INVOICE, doc1.getType());
     }

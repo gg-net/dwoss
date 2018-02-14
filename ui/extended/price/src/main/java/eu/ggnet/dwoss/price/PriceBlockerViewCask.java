@@ -23,14 +23,19 @@ import javax.swing.JOptionPane;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.swing.VetoableOnOk;
+
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 /**
  * Ui for setting on price fixed.
  * <p/>
  * @author bastian.venz
  */
-public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClose {
+public class PriceBlockerViewCask extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Prices> {
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
@@ -63,6 +68,20 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
             }
         }
     };
+
+    @AllArgsConstructor
+    @ToString
+    public static class Prices {
+
+        public double retailerPr;
+
+        public double customerPr;
+    }
+
+    @Override
+    public Prices getResult() {
+        return new Prices(retailerPrice, customerPrice);
+    }
 
     private double retailerPrice;
 
@@ -127,6 +146,33 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
         double oldcustomerPriceNetto = this.customerPrice;
         this.customerPrice = customerPrice;
         firePropertyChange(PROP_CUSTOMERPRICE, oldcustomerPriceNetto, customerPrice);
+    }
+
+    @Override
+    public boolean mayClose() {
+        if ( retailerBrutto.getText().trim().equals("") || retailerNetto.getText().trim().equals("")
+                || customerBrutto.getText().trim().equals("") || customerNetto.getText().trim().equals("") ) {
+
+            JOptionPane.showMessageDialog(this, "Ein Preis ist nicht gesetzt!", "Fehler beim Verifizieren der Preise", JOptionPane.ERROR_MESSAGE);
+            return false;
+
+        }
+        StringBuilder confirmString = new StringBuilder("Die Momentane Preise sind: (Netto / Brutto)\nEndkunde: ");
+        confirmString.append(customerNetto.getText());
+        confirmString.append(" / ");
+        confirmString.append(customerBrutto.getText());
+        confirmString.append("\nHändler: ");
+
+        confirmString.append(retailerNetto.getText());
+        confirmString.append(" /");
+        confirmString.append(retailerBrutto.getText());
+
+        confirmString.append("\n\nStimmen die Preise so?");
+
+        if ( JOptionPane.showConfirmDialog(this, confirmString.toString(), "Überprüfung der Preise", JOptionPane.YES_NO_OPTION) == 0 ) {
+            return true;
+        }
+        return false;
     }
 
     /** This method is called from within the constructor to
@@ -279,34 +325,6 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
         bindingGroup.bind();
     }// </editor-fold>//GEN-END:initComponents
 
-    @Override
-    public boolean pre(CloseType type) {
-        if ( type == CloseType.CANCEL ) return true;
-        if ( retailerBrutto.getText().trim().equals("") || retailerNetto.getText().trim().equals("")
-                || customerBrutto.getText().trim().equals("") || customerNetto.getText().trim().equals("") ) {
-
-            JOptionPane.showMessageDialog(this, "Ein Preis ist nicht gesetzt!", "Fehler beim Verifizieren der Preise", JOptionPane.ERROR_MESSAGE);
-            return false;
-
-        }
-        StringBuilder confirmString = new StringBuilder("Die Momentane Preise sind: (Netto / Brutto)\nEndkunde: ");
-        confirmString.append(customerNetto.getText());
-        confirmString.append(" / ");
-        confirmString.append(customerBrutto.getText());
-        confirmString.append("\nHändler: ");
-
-        confirmString.append(retailerNetto.getText());
-        confirmString.append(" /");
-        confirmString.append(retailerBrutto.getText());
-
-        confirmString.append("\n\nStimmen die Preise so?");
-
-        if ( JOptionPane.showConfirmDialog(this, confirmString.toString(), "Überprüfung der Preise", JOptionPane.YES_NO_OPTION) == 0 ) {
-            return true;
-        }
-        return false;
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField customerBrutto;
     private javax.swing.JTextField customerNetto;
@@ -324,21 +342,4 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Testmain
-     * <p/>
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);
-        OkCancelDialog<PriceBlockerViewCask> cancelDialog = new OkCancelDialog<>("Test", pbp);
-
-        cancelDialog.setMinimumSize(pbp.getMinimumSize());
-        cancelDialog.setPreferredSize(pbp.getPreferredSize());
-        cancelDialog.setVisible(true);
-        System.out.println(cancelDialog.getSubContainer().getCustomerPrice());
-        System.out.println(cancelDialog.getSubContainer().getRetailerPrice());
-        System.exit(0);
-    }
 }

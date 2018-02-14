@@ -23,6 +23,7 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
@@ -40,7 +41,7 @@ public interface CustomerAgent extends RemoteAgent {
      * @param customerFields optional fileds to be only used.
      * @return a list of customers.
      */
-    List<Customer> search(String search, Set<Customer.SearchField> customerFields);
+    List<PicoCustomer> search(String search, Set<Customer.SearchField> customerFields);
 
     /**
      * Returns a list of customers, based on the search parameter, reduced by the fields and a start/limit
@@ -51,7 +52,7 @@ public interface CustomerAgent extends RemoteAgent {
      * @param limit          the ending result
      * @return a list of customers.
      */
-    List<Customer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
+    List<PicoCustomer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
 
     /**
      * Count the result of the search.
@@ -70,4 +71,19 @@ public interface CustomerAgent extends RemoteAgent {
      */
     Reply<Customer> store(SimpleCustomer simpleCustomer);
 
+    /**
+     * Returns a html representation of the customer enhanced by the actual active mandator.
+     *
+     * @param id the id of the customer
+     * @return a html representation of the customer enhanced by the actual active mandator.
+     */
+    String findCustomerAsMandatorHtml(long id);
+
+    /**
+     * Returns a full html representation of the customer.
+     *
+     * @param id the id of the customer
+     * @return a html representation of the customer.
+     */
+    String findCustomerAsHtml(long id);
 }

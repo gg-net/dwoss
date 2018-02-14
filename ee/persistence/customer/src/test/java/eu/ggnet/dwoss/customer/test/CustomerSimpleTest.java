@@ -55,24 +55,21 @@ public class CustomerSimpleTest {
     }
 
     public static Communication makeValidCommunication() {
-        Communication validCommunication = new Communication(Type.EMAIL, true);
-        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
+        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
 
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
     public static Communication makeValidCommunicationMobile() {
-        Communication validCommunication = new Communication(Type.MOBILE, true);
-        validCommunication.setIdentifier("0174 123456789");
+        Communication validCommunication = new Communication(Type.MOBILE, "0174 123456789");
 
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
     public static Communication makeValidCommunicationLandline() {
-        Communication validCommunication = new Communication(Type.PHONE, true);
-        validCommunication.setIdentifier("040 123456789");
+        Communication validCommunication = new Communication(Type.PHONE, "040 123456789");
 
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
@@ -109,8 +106,7 @@ public class CustomerSimpleTest {
         assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
 
         Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
-        Communication validCommunication = new Communication(Type.EMAIL, true);
-        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
+        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");        
         validContact.getCommunications().add(validCommunication);
         validContact.getAddresses().add(makeValidAddress());
         assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
@@ -190,7 +186,7 @@ public class CustomerSimpleTest {
 
         makeValidSimpleBusiness.getCompanies().get(0).getContacts().clear();
         makeValidSimpleBusiness.getCompanies().get(0).getContacts().add(makeValidContact);
-  
+
         assertThat(makeValidSimpleBusiness.isSimple()).as("still simplecustomer").isTrue();
 
         assertThat(makeValidSimpleBusiness.toSimple().isPresent()).as("to simple").isTrue();

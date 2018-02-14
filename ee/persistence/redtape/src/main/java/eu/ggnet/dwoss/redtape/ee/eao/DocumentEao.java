@@ -140,11 +140,11 @@ public class DocumentEao extends AbstractEao<Document> {
     public List<Document> findUnBalancedAnulation(long customerId, PaymentMethod paymentMethod) {
         return new JPAQuery(em)
                 .from(document)
-                .where(document.active.eq(true)
+                .where(document.directive.eq(BALANCE_REPAYMENT)
                         .and(document.dossier.customerId.eq(customerId))
+                        .and(document.active.eq(true))
                         .and(document.type.in(EnumSet.of(ANNULATION_INVOICE, CREDIT_MEMO)))
-                        .and(document.dossier.paymentMethod.eq(paymentMethod))
-                        .and(document.directive.eq(BALANCE_REPAYMENT)))
+                        .and(document.dossier.paymentMethod.eq(paymentMethod)))
                 .list(document);
     }
 

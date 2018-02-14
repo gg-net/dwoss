@@ -136,19 +136,15 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with more than one Address violates SimpleCustomer's Rules").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
-        Communication phone = new Communication(Type.PHONE, false);
-        phone.setIdentifier("36184165");
-        Communication mobile = new Communication(Type.MOBILE, false);
-        mobile.setIdentifier("64682552");
-        Communication email = new Communication(Type.EMAIL, false);
-        email.setIdentifier("email@mail.com");
+        Communication phone = new Communication(Type.PHONE, "36184165");
+        Communication mobile = new Communication(Type.MOBILE, "64682552");
+        Communication email = new Communication(Type.EMAIL, "email@mail.com");
 
         simpleConsumer.getContacts().get(0).getCommunications().addAll(Arrays.asList(phone, mobile, email));
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with more than three communications is invalid").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
-        Communication skype = new Communication(Type.SKYPE, false);
-        skype.setIdentifier("skypeUser4832");
+        Communication skype = new Communication(Type.SKYPE, "skypeUser4832");
         simpleConsumer.getContacts().get(0).getCommunications().add(skype);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with communication of type SKYPE is invalid").isNotNull();
 
@@ -408,8 +404,7 @@ class CustomerTestUtil {
         assertThat(company.getViolationMessage()).as("Company does not violate any rule").isNull();
 
         Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
-        Communication validCommunication = new Communication(Type.EMAIL, true);
-        validCommunication.setIdentifier("Max.mustermann@mustermail.de");
+        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
         validContact.getCommunications().add(validCommunication);
         validContact.getAddresses().add(makeValidAddress());
         assertThat(validContact.getViolationMessage()).as("Contact is valid").isNull();

@@ -25,11 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.DetailDialog;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
+import static eu.ggnet.saft.core.ui.AlertType.WARNING;
 
 /**
  *
@@ -42,10 +44,19 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
     @Override
     public void accept(Throwable b) {
         L.error("Systemfehler: {} , {}", b.getClass().getSimpleName(), b.getMessage());
-        SwingSaft.execute(() -> {
-            DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", extractDeepestMessage(b),
-                    getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b));
-        });
+        if ( b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
+        String deepestMessage = extractDeepestMessage(b);
+        if ( deepestMessage.contains("EJBCLIENT000025") ) {
+            Ui.build().title("Netzwerkfehler").alert()
+                    .message("Es ist eine Netzwerkproblem aufgetreten")
+                    .nl("Bitte das aktuelle Fenster einmal schliessen und noch einmal versuchen")
+                    .show(WARNING);
+        } else {
+            SwingSaft.execute(() -> {
+                DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,
+                        getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b));
+            });
+        }
     }
 
     public static String getUserInfo() {

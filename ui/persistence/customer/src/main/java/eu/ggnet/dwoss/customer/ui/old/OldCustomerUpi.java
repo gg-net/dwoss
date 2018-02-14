@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.customer.api.AddressService;
+import eu.ggnet.dwoss.customer.opi.AddressService;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
