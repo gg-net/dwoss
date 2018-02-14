@@ -20,8 +20,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
+
 
 public class CpuManagementAction extends AbstractAction {
 
@@ -31,8 +32,8 @@ public class CpuManagementAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OkCancelDialog<CpuListPanel> panel = new OkCancelDialog<>(UiCore.getMainFrame(),
-                 "Liste aller Cpus", new CpuListPanel(new CpuListController()));
-        panel.setVisible(true);
+        Ui.exec(() -> {
+            Ui.build().swing().eval(() -> OkCancelWrap.result(new CpuListPanel(new CpuListController()))).isPresent();
+        });
     }
 }

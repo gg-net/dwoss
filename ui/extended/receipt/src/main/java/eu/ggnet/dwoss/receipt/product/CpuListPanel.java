@@ -21,12 +21,13 @@ import java.awt.Window;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.util.IView;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  *
  * @author pascal.perau
  */
-public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
+public class CpuListPanel extends javax.swing.JPanel implements IView<Window>, ResultProducer<Integer> {
 
     private CpuListController controller;
 
@@ -144,5 +145,10 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
     @Override
     public void setParent(Window window) {
         this.view = window;
+    }
+
+    @Override
+    public Integer getResult() {
+       return 1;
     }
 }
