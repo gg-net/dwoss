@@ -16,11 +16,25 @@
  */
 package eu.ggnet.dwoss.receipt.unit;
 
+import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.dwoss.receipt.unit.AddCommentCask.Comment;
+
+import lombok.AllArgsConstructor;
+
 /**
  *
  * @author bastian.venz
  */
-public class AddCommentCask extends javax.swing.JPanel {
+public class AddCommentCask extends javax.swing.JPanel implements ResultProducer<Comment> {
+
+    @AllArgsConstructor
+    public static class Comment {
+
+        public String Comment;
+
+        public String RefurbishId;
+
+    }
 
     /** Creates new form AddCommentCask */
     public AddCommentCask() {
@@ -89,4 +103,9 @@ public class AddCommentCask extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField refurbishField;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Comment getResult() {
+        return new Comment(getComment(), getRefurbishId());
+    }
 }
