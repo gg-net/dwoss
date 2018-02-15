@@ -148,7 +148,7 @@ public class UnitController {
     }
 
     public void createOrEditPart(String partNo) throws UserInfoException {
-        if ( uiProductSupport != null ) uiProductSupport.createOrEditPart(model.getMode(), partNo, view);
+        if ( uiProductSupport != null ) uiProductSupport.createOrEditPart(model.getMode(), partNo, view).getPayload();
         validatePartNoAndLoadDetails();
     }
 

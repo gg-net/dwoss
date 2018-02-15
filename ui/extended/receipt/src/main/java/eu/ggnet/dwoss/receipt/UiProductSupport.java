@@ -35,6 +35,7 @@ import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * Support Class for creation or edit of Products.
@@ -47,8 +48,8 @@ public class UiProductSupport {
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     // UnitController und EditPRoductAction
-    public void createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
-        createOrEditPart(manufacturer, partNo, null, null, parent);
+    public Reply<ProductSpec> createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
+        return Reply.success(createOrEditPart(manufacturer, partNo, null, null, parent));
     }
 
     // DesktopBundleView and internal.
