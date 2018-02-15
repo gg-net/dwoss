@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ public class Cpu implements Serializable {
      */
     public static enum Manufacturer implements INoteModel {
 
-        AMD("AMD", EnumSet.of(ATHLON, PHENOM, SEMPRON, TURION, OPTERON, AMD_A, AMD_C, AMD_E, AMD_V, AMD_FX, AMD_G)),
+        AMD("AMD", EnumSet.of(ATHLON, PHENOM, SEMPRON, TURION, OPTERON, AMD_A, AMD_C, AMD_E, AMD_V, AMD_FX, AMD_G, AMD_RYZEN)),
         INTEL("Intel", EnumSet.of(ATOM, CELERON, PENTIUM, CORE, CORE_I3, CORE_I5, CORE_I7, CORE_M, XEON)),
         NVIDIA("nVidia", EnumSet.of(TEGRA)),
         MEDIATEK("MediaTek", EnumSet.of(MT)),
@@ -105,7 +105,8 @@ public class Cpu implements Serializable {
         MT("MT"),
         APPLE_A("A Series"),
         AMD_G("G Series"),
-        CORE_M("Core Mobile");
+        CORE_M("Core Mobile"),
+        AMD_RYZEN("Ryzen");
 
         String note;
 
