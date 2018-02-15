@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.unit;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.uniqueunit.op.AddUnitHistory;
