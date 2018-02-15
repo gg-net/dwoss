@@ -21,8 +21,11 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
+import javafx.scene.control.Alert;
+
 import org.openide.util.Lookup;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import eu.ggnet.saft.core.auth.AccessableAction;
@@ -30,11 +33,13 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
+import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  * Delete a Unit from the Database.
@@ -49,18 +54,23 @@ public class DeleteUnitAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        UnitDestroyer deleteUnitOp = Dl.remote().lookup(UnitDestroyer.class);
+        String refurbishedId = showInputDialog(UiCore.getMainFrame(), "SopoNr die gelöscht werden soll:");
+        if ( refurbishedId == null || refurbishedId.isEmpty() ) return;
         try {
-            Window mainFrame = UiCore.getMainFrame();
-            UnitDestroyer deleteUnitOp = Dl.remote().lookup(UnitDestroyer.class);
-            String refurbishedId = showInputDialog(mainFrame, "SopoNr die gelöscht werden soll:");
-            if ( refurbishedId == null ) return;
-            UniqueUnit uniqueUnit = deleteUnitOp.verifyScarpOrDeleteAble(refurbishedId);
-            if ( JOptionPane.YES_OPTION != showConfirmDialog(mainFrame,
-                    "SopoNr " + refurbishedId + " wirklich löschen ?", "Löschung", YES_NO_OPTION) ) return;
-            deleteUnitOp.delete(uniqueUnit, "Löschung aus UI", Lookup.getDefault().lookup(Guardian.class).getUsername());
-            showMessageDialog(mainFrame, "SopoNr " + refurbishedId + " ist gelöscht.");
-        } catch (UserInfoException ex) {
-            JOptionPane.showMessageDialog(UiCore.getMainFrame(), ex.getMessage());
+            UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> deleteUnitOp.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
+            Ui.exec(() -> {
+                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich gelöschen ?"))
+                        .filter(b -> b == OK)
+                        .ifPresent(r -> {
+                            deleteUnitOp.delete(uniqueUnit, "Löschung aus UI", Dl.remote().lookup(Guardian.class).getUsername());
+                            Ui.build().alert().message("SopoNr " + refurbishedId + " ist gelöscht.").show(AlertType.INFO);
+                        });
+            });
+        } catch (NullPointerException ex) {
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishedId).show(AlertType.WARNING);
+            });
         }
     }
 }
