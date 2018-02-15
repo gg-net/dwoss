@@ -106,4 +106,5 @@ public class GpuListController extends AbstractController {
             model.add(editGpu);
         }
     }
+
 }
