@@ -16,28 +16,28 @@
  */
 package tryout;
 
+
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import org.junit.Test;
+import eu.ggnet.dwoss.misc.files.*;
 
 /**
  *
  * @author jens.papenhagen
  */
-public class FileListViewCaskFX {
+public class FileListViewCaskFXTryout {
 
-    private boolean complete = false;
+    private static boolean complete = false;
 
-    @Test
-    public void runTryout() throws InterruptedException {
+    
+    public static void main(String[] args) throws InterruptedException {
         JFXPanel jfxPanel = new JFXPanel(); // To start the platform
 
         Platform.runLater(() -> {
             Stage stage = new Stage();
-            Scene scene = new Scene(new eu.ggnet.dwoss.misc.files.FileListViewCaskFX());
+            Scene scene = new Scene(new FileListViewCaskFX());
 
             stage.setScene(scene);
             stage.setTitle("FileListViewCaskFX");
@@ -49,7 +49,5 @@ public class FileListViewCaskFX {
         while (!complete) {
             Thread.sleep(500);
         }
-
     }
-
 }

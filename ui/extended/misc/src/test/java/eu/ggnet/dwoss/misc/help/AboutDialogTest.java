@@ -2,7 +2,7 @@ package eu.ggnet.dwoss.misc.help;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -12,11 +12,11 @@ public class AboutDialogTest {
 
     @Test
     public void testLoadChangelog() {
-        assertNotNull(AboutDialog.loadProperties());
+        assertThat(AboutDialog.loadProperties()).as("load Properties").isNotNull();
     }
 
     @Test
     public void testLoadImage() {
-        assertNotNull(AboutDialog.LOGO_IMAGE);
+        assertThat(AboutDialog.LOGO_IMAGE).as("load LOGO_IMAGE").isNotNull();
     }
 }
