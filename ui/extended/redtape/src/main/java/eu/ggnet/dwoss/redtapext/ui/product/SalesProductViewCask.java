@@ -33,6 +33,7 @@ import eu.ggnet.dwoss.util.table.PojoColumn;
 import eu.ggnet.dwoss.util.table.PojoTableModel;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  * A UI to add a {@link SalesProduct} for Sale. <br />
@@ -40,7 +41,7 @@ import eu.ggnet.saft.Ui;
  * <p/>
  * @author bastian.venz
  */
-public class SalesProductViewCask extends javax.swing.JPanel {
+public class SalesProductViewCask extends javax.swing.JPanel implements ResultProducer<Integer> {
 
     public class SalesProductTableModel extends PojoTableModel<SalesProduct> {
 
@@ -83,6 +84,11 @@ public class SalesProductViewCask extends javax.swing.JPanel {
         }
         productTable.setModel(salesProductTableModel);
         salesProductTableModel.setTable(productTable);
+    }
+
+    @Override
+    public Integer getResult() {
+        return 1;
     }
 
     /** Creates new form SalesProductViewCask */

@@ -21,13 +21,14 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ui.product.SalesProductViewCask;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 /**
  * @author bastian.venz
  * @author oliver.guenther
  * @author pascal.perau
+ * @author jens.papenhagen
  */
 public class SalesProductAction extends AbstractAction {
 
@@ -38,7 +39,8 @@ public class SalesProductAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         SalesProductViewCask cask = new SalesProductViewCask();
-        OkCancelDialog<SalesProductViewCask> dialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Neuwarenartikel für Verkauf verwalten", cask);
-        dialog.setVisible(enabled);
+        Ui.exec(() -> {
+            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().eval(() -> OkCancelWrap.result(cask)).isPresent();
+        });
     }
 }
