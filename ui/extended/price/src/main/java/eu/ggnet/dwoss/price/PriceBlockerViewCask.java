@@ -23,14 +23,19 @@ import javax.swing.JOptionPane;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
 import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.api.ui.ResultProducer;
+
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 /**
  * Ui for setting on price fixed.
  * <p/>
  * @author bastian.venz
  */
-public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClose {
+public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClose, ResultProducer<Prices> {
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
@@ -63,6 +68,20 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
             }
         }
     };
+
+    @AllArgsConstructor
+    @ToString
+    public static class Prices {
+
+        public double retailerPr;
+
+        public double customerPr;
+    }
+
+    @Override
+    public Prices getResult() {
+        return new Prices(retailerPrice, customerPrice);
+    }
 
     private double retailerPrice;
 

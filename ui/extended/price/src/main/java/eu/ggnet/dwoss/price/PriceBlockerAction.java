@@ -17,16 +17,21 @@
 package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
+import javafx.scene.control.*;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
+
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -42,21 +47,33 @@ public class PriceBlockerAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr zur Fixierung eines Preises eingeben:");
-            if ( refurbishedId == null || refurbishedId.isEmpty()) return;
-            PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(refurbishedId);
-            PriceBlockerViewCask pbp = new PriceBlockerViewCask(refurbishedId, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
-            OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Price fixieren", pbp);
-            view.setVisible(true);
-            if ( view.isCancel() ) return;
-            per.setCustomerPrice(pbp.getCustomerPrice());
-            per.setRetailerPrice(pbp.getRetailerPrice());
-            per.setUnitPriceFixed(Change.SET);
-            Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
-        } catch (UserInfoException ex) {
-            Ui.handle(ex);
-        }
-    }
+        Ui.exec(() -> {
+            Ui.build().title("Bitte SopoNr eingeben :").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("Bitte SopoNr eingeben :");
+                return dialog;
+            }).filter(r -> {
+                try {
+                    PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(r).getPayload();
+                    PriceBlockerViewCask pbp = new PriceBlockerViewCask(r, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
+                    Ui.build().title("Preise fixieren").swing().eval(() -> OkCancelWrap.result(pbp))
+                            .filter(Ui.failure()::handle)
+                            .map(Reply::getPayload)
+                            .ifPresent(f -> {
+                                per.setCustomerPrice(f.customerPr);
+                                per.setRetailerPrice(f.retailerPr);
+                                per.setUnitPriceFixed(Change.SET);
+                            });
+                    Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+                    return false;
+                } catch (UserInfoException ex) {
+                    Ui.exec(() -> {
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
+                    });
+                    return false;
+                }
 
+            });
+        });
+    }
 }
