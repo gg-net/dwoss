@@ -98,7 +98,9 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         VGA_ADAPTER("VGA-Adapter"),
         MAGSAFE_POWER_ADAPTER("MagSafe Power Adapter"),
         REPLACEMENT_STRAP("Ersatzarmband"),
-        BLUE_LIGHT_FILTER("Blaulichtfilter");
+        BLUE_LIGHT_FILTER("Blaulichtfilter"),
+        REALSENSE_3D_CAM("RealSense 3D Kamera"),
+        ITEGATED_SIM("Integrierte Sim");
 
         @Getter
         private final String note;

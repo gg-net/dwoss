@@ -16,20 +16,16 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import java.awt.Desktop;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
+import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  *
@@ -43,23 +39,18 @@ public class ExportDossierToXlsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final String dossierId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte DossierId eingeben:").trim();
-        new SwingWorker<FileJacket, Object>() {
-            @Override
-            protected FileJacket doInBackground() throws Exception {
-                return Dl.remote().lookup(DocumentSupporter.class).toXls(dossierId);
-            }
+        final String dossierId = showInputDialog(UiCore.getMainFrame(), "Bitte DossierId eingeben:").trim();
+        if ( dossierId == null || dossierId.isEmpty() ) return;
+        try {
+            FileJacket toXls = Dl.remote().lookup(DocumentSupporter.class).toXls(dossierId);
+             Ui.exec(() -> {
+                Ui.osOpen(toXls.toTemporaryFile());
+            });
+        } catch (NullPointerException ex) {
+            Ui.exec(() -> {
+                Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
+            });
+        }
 
-            @Override
-            protected void done() {
-                try {
-                    FileJacket fj = get();
-                    if ( fj == null ) Ui.build().alert("Keine Rückgabewerte");
-                    else Desktop.getDesktop().open(fj.toTemporaryFile());
-                } catch (InterruptedException | ExecutionException | IOException ex) {
-                    Ui.handle(ex);
-                }
-            }
-        }.execute();
     }
 }

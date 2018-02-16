@@ -21,12 +21,13 @@ import java.awt.Window;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.util.IView;
 import eu.ggnet.dwoss.util.OkCancelDialog;
+import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  *
  * @author pascal.perau
  */
-public class GpuListPanel extends javax.swing.JPanel implements IView {
+public class GpuListPanel extends javax.swing.JPanel implements IView, ResultProducer<Integer> {
 
     private GpuListController controller;
 
@@ -145,5 +146,10 @@ public class GpuListPanel extends javax.swing.JPanel implements IView {
         panel.setVisible(true);
         System.exit(0);
 
+    }
+
+    @Override
+    public Integer getResult() {
+        return 1;
     }
 }

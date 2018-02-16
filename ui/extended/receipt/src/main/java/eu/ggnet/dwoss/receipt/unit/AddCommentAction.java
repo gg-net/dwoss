@@ -16,15 +16,14 @@
  */
 package eu.ggnet.dwoss.receipt.unit;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.uniqueunit.op.AddUnitHistory;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_COMMENT_UNIQUE_UNIT_HISTORY;
 
@@ -40,14 +39,18 @@ public class AddCommentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Window mainFrame = UiCore.getMainFrame();
-        OkCancelDialog<AddCommentCask> okCancelDialog = new OkCancelDialog<>(mainFrame, "Füge eine Unit Kommentar hinzu", new AddCommentCask());
+
+        OkCancelDialog<AddCommentCask> okCancelDialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Füge eine Unit Kommentar hinzu", new AddCommentCask());
         okCancelDialog.setVisible(true);
         if ( okCancelDialog.isCancel() ) return;
-        String comment = okCancelDialog.getSubContainer().getComment();
-        String refurbishId = okCancelDialog.getSubContainer().getRefurbishId();
-        String username = Dl.local().lookup(Guardian.class).getUsername();
-        Dl.remote().lookup(AddUnitHistory.class).addCommentHistory(refurbishId, comment, username);
+
+        Ui.exec(() -> {
+            Ui.build().title("Füge eine Unit Kommentar hinzu")
+                    .swing()
+                    .eval(() -> OkCancelWrap.result(new AddCommentCask()))
+                    .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class)
+                    .addCommentHistory(r.getPayload().RefurbishId, r.getPayload().Comment, Dl.local().lookup(Guardian.class).getUsername()));
+        });
     }
 
 }

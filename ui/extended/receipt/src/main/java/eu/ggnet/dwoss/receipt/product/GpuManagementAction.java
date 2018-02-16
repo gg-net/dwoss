@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 public class GpuManagementAction extends AbstractAction {
 
@@ -31,8 +31,9 @@ public class GpuManagementAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        OkCancelDialog<GpuListPanel> panel = new OkCancelDialog<>(UiCore.getMainFrame(),
-                "Liste aller Gpus", new GpuListPanel(new GpuListController()));
-        panel.setVisible(true);
+        Ui.exec(() -> {
+            Ui.build().swing().eval(() -> OkCancelWrap.result(new GpuListPanel(new GpuListController()))).isPresent();
+        });
+        
     }
 }

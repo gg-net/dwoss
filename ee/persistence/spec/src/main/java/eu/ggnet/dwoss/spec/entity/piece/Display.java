@@ -217,7 +217,7 @@ public class Display implements Serializable {
         IPAD_PRO("2732 x 2048"),
         WVGA("854 x 480"),
         QHD_1440P("QHD (2160 x 1440)"),
-        _4K("4K (4096 x 2306)");
+        _4K("Real 4K (4096 x 2306)");
 
         private final String note;
 

@@ -89,39 +89,51 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         return validAddressLabel;
     }
 
+    private static Customer makeValidConsumerCustomer() {
+        Customer c = new Customer();
+        c.getContacts().add(makeValidContact());
+        assertThat(c.isConsumer()).as("Consumer Customer").isTrue();
+        assertThat(c.isValid()).as("Consumer Customer is Valid").isTrue();
+
+        return c;
+    }
+
+    private static Customer makeValidBussnisCustomer() {
+        Customer c = new Customer();
+        c.getCompanies().add(makeValidCompany());
+        c.getCompanies().get(0).getContacts().add(makeValidContact());
+        c.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());
+        c.getCompanies().get(0).getAddresses().add(makeValidAddress());
+        c.getAddressLabels().add(makeValidAddressLabel());
+        assertThat(c.isBusiness()).as("Business Customer").isTrue();
+        assertThat(c.isValid()).as("Business Customer is Valid").isTrue();
+
+        return c;
+    }
+
     /**
      * store i will test the store methode
-     *
-     * @throws Exception
+     * <p>
      */
     @Ignore
     @Test
-    public void testStore() throws Exception {
+    public void testStoreForConsumerCustomer() {
+        Customer c1 = makeValidConsumerCustomer();
 
-        Customer c1 = new Customer();
-        c1.getContacts().add(makeValidContact());
-        assertThat(c1.isConsumer()).as("Consumer Customer").isTrue();
-        assertThat(c1.isValid()).as("Consumer Customer is Valid").isTrue();
-
-        Customer c2 = new Customer();
-        c2.getCompanies().add(makeValidCompany());
-        c2.getCompanies().get(0).getContacts().add(makeValidContact());
-        c2.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());
-        c2.getCompanies().get(0).getAddresses().add(makeValidAddress());
-        c2.getAddressLabels().add(makeValidAddressLabel());
-
-        assertThat(c1.isConsumer()).as("Consumer Customer").isTrue();
-        assertThat(c1.isValid()).as("Consumer Customer is Valid").isTrue();
         assertThat(c1.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        Customer payload = agent.store(c1.toSimple().get()).getPayload();
+        Customer consumerpayload = agent.store(c1.toSimple().get()).getPayload();
 
-        assertThat(payload.isValid()).as("the payload is a valid customer").isTrue();
-        assertThat(payload.isConsumer()).as("Consumer Customer").isTrue();
-        assertThat(payload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
-        assertThat(payload).as("check that store the same customer").isEqualTo(c1);
+        assertThat(consumerpayload.isValid()).as("the payload is a valid customer").isTrue();
+        assertThat(consumerpayload.isConsumer()).as("Consumer Customer").isTrue();
+        assertThat(consumerpayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
+        assertThat(consumerpayload).as("check that store the same customer").isEqualTo(c1);
+    }
 
-        assertThat(c2.isBusiness()).as("Business Customer").isTrue();
-        assertThat(c2.isValid()).as("Business Customer is Valid").isTrue();
+    @Ignore
+    @Test
+    public void testStoreForBussnisCustomer() {
+        Customer c2 = makeValidBussnisCustomer();
+
         assertThat(c2.isSimple()).as("Customer can be transform to a simple customer").isTrue();
         Customer businesspayload = agent.store(c2.toSimple().get()).getPayload();
 
@@ -129,7 +141,6 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(businesspayload.isBusiness()).as("Business Customer").isTrue();
         assertThat(businesspayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
         assertThat(businesspayload).as("check that store the same customer").isEqualTo(c2);
-
     }
 
     @Ignore
@@ -146,5 +157,15 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         String feedback = "Kein Kunde mit id 123 vorhanden";
         String findCustomerAsHtml = agent.findCustomerAsHtml(123);
         assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
+    }
+
+    @Ignore
+    @Test
+    /**
+     * Testing the save progress in the DB
+     */
+    public void testFindById() {
+        //TODO Olli fragen wie Arquillian
+        agent.findById(Customer.class, 123);
     }
 }

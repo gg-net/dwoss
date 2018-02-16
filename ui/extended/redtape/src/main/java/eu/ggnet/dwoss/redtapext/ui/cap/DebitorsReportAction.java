@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.DebitorsReporter;
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
@@ -37,12 +37,9 @@ public class DebitorsReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final DateRangeChooserDialog question = new DateRangeChooserDialog(UiCore.getMainFrame());
-        question.setTitle("Reportzeitraum für Debitoren");
-        question.setVisible(true);
-        if ( !question.isOk() ) return;
-        Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(question.getStart(), question.getEnd()).toTemporaryFile()));
+         Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+           Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
         });
+
     }
 }

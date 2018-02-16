@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
+import javafx.scene.control.Alert;
 
 import org.openide.util.Lookup;
 
@@ -28,6 +28,8 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Closes the last Week.
@@ -42,11 +44,12 @@ public class LastWeekCloseAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final RedTapeCloser closer = Dl.remote().lookup(RedTapeCloser.class);
-        if ( JOptionPane.YES_OPTION != JOptionPane.showConfirmDialog(UiCore.getMainFrame(), "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?",
-                "Wochen-/Tagesabschluss", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) ) return;
+        Ui.exec(() -> {
+            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
+                    .filter(b -> b == OK)
+                    .map(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloser.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())));
 
-        Ui.exec(Ui.progress().wrap(() -> closer.executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())));
+        });
 
     }
 }

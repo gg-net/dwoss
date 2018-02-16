@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.*;
 
 import static javax.swing.Action.NAME;
@@ -39,15 +39,13 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        DateRangeChooserDialog dialog = new DateRangeChooserDialog(UiCore.getMainFrame());
-        dialog.setVisible(true);
         L.debug("Start generating OptimizedCreditMemoReport.");
-        if ( dialog.isOk() ) {
-            L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", dialog.getStart(), dialog.getEnd());
-            Ui.exec(() -> {
-                Ui.osOpen(Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(dialog.getStart(), dialog.getEnd()).toTemporaryFile());
-            });
-        }
-        L.debug("Done generating OptimizedCreditMemoReport.");
+        Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+            L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", r.getStartAsDate(), r.getEndAsDate());
+            Ui.progress().title("Sage Export")
+                    .call(() -> Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile());
+            L.debug("Done generating OptimizedCreditMemoReport.");
+        });
+
     }
 }

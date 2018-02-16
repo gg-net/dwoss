@@ -18,19 +18,21 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
+import java.util.Optional;
 
-import javax.swing.JFileChooser;
-import javax.swing.SwingWorker;
+import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.FileUtil;
-import eu.ggnet.saft.*;
+import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.util.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
-import static javax.swing.JOptionPane.*;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -44,31 +46,19 @@ public class PriceImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser dialog = new JFileChooser();
-        dialog.setFileHidingEnabled(true);
-        if ( JFileChooser.APPROVE_OPTION != dialog.showOpenDialog(null) ) {
-            return;
-        }
-        final String fileName = dialog.getSelectedFile().getPath();
-        if ( YES_OPTION == showConfirmDialog(UiCore.getMainFrame(), "PriceManagment: " + fileName + " importieren ?", "Import des PriceManagments II", YES_NO_OPTION, QUESTION_MESSAGE) ) {
-            new SwingWorker<Object, Object>() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    FileUtil.checkIfExcelFile(dialog.getSelectedFile());
-                    FileJacket inFile = new FileJacket("in", ".xls", new File(fileName));
-                    Dl.remote().lookup(Importer.class).fromXls(inFile, Dl.local().lookup(Guardian.class).getUsername());
-                    return null;
-                }
+        Ui.exec(() -> {
+            Optional<File> inFile = Ui.fileChooser().open();
+            if ( !inFile.isPresent() ) return;
+            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + inFile.get().getPath() + " importieren ?"))
+                    .filter(b -> b == OK)
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(f -> ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername())
+            )).filter(Ui.failure()::handle)
+                    .isPresent();
 
-                @Override
-                protected void done() {
-                    try {
-                        get();
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Ui.handle(ex);
-                    }
-                }
-            }.execute();
-        }
+        });
+
     }
 }

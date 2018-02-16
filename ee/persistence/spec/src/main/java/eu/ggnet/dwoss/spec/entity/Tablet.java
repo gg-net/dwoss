@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ public class Tablet extends DisplayAbleDesktop {
     @Override
     public Set<Extra> getDefaultExtras() {
         return EnumSet.of(BLUETOOTH, CARD_READER, FINGER_SCANNER, KAMERA, UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, WLAN_AC, BATTERY_INTEGRATED,
-                LTE, COVER, GORILLA_GLASS, DUAL_SIM, LIGHTNING, IPS_DISPLAY, USB_TYPE_C,BLUE_LIGHT_FILTER);
+                LTE, COVER, GORILLA_GLASS, DUAL_SIM, LIGHTNING, IPS_DISPLAY, USB_TYPE_C, BLUE_LIGHT_FILTER, REALSENSE_3D_CAM, ITEGATED_SIM);
     }
 
     @Override

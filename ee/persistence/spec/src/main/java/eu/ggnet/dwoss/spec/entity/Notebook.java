@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ public class Notebook extends DisplayAbleDesktop {
     public Set<Extra> getDefaultExtras() {
         return EnumSet.of(BLUETOOTH, CARD_READER, FINGER_SCANNER, CONVERTABLE, KAMERA, THREE_D, TOUCH,
                 UMTS, USB_3, WLAN_TO_G, WLAN_TO_N, BATTERY_INTEGRATED, DUAL_DISPLAY_TABLET, LTE, DUAL_LOAD, THUNDERBOLT, KEYBOARD_BACKGROUND_LIGHT,
-                LIGHTNING, IPS_DISPLAY, WLAN_AC, USB_TYPE_C,THREE_SIXTY_DEGREE_TORQUE_HINGE, BLUE_LIGHT_FILTER);
+                LIGHTNING, IPS_DISPLAY, WLAN_AC, USB_TYPE_C, THREE_SIXTY_DEGREE_TORQUE_HINGE, BLUE_LIGHT_FILTER, REALSENSE_3D_CAM);
     }
 
     @Override

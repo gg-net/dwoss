@@ -20,9 +20,11 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
-import eu.ggnet.dwoss.util.DateRangeChooserDialog;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
+
+
+import eu.ggnet.dwoss.util.DateRangeChooserView;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN_XML;
 
@@ -37,14 +39,12 @@ public class SageExportAction extends AccessableAction {
         super(EXPORT_DOCUMENTS_FOR_SAGE_IN_XML);
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        final DateRangeChooserDialog dialog = new DateRangeChooserDialog(UiCore.getMainFrame());
-        dialog.setVisible(true);
-        if ( !dialog.isOk() ) return;
-        Ui.exec(() -> {
-            Ui.progress().title("Sage Export")
-                    .call(() -> Dl.remote().lookup(SageExporter.class).toXml(dialog.getStart(), dialog.getEnd()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+       Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+           Ui.progress().title("Sage Export")
+                    .call(() -> Dl.remote().lookup(SageExporter.class).toXml(r.getStartAsDate(), r.getEndAsDate()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
         });
 
     }
