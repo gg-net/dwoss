@@ -108,15 +108,13 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         cont.getAddresses().add(a);
 
         //one Communication form eatch type email, phone, mobile allowed
-        if ( simpleCustomer.getEmail() != null ) {
+        if ( !StringUtils.isBlank(simpleCustomer.getEmail()) )
             cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
-        }
-        if ( simpleCustomer.getLandlinePhone() != null ) {
+        if ( !StringUtils.isBlank(simpleCustomer.getLandlinePhone()) )
             cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));
-        }
-        if ( simpleCustomer.getMobilePhone() != null ) {
+        if ( !StringUtils.isBlank(simpleCustomer.getMobilePhone()) )
             cont.getCommunications().add(new Communication(Type.MOBILE, simpleCustomer.getMobilePhone()));
-        }
+
 
         AddressLabel al;
         if ( bussines ) {

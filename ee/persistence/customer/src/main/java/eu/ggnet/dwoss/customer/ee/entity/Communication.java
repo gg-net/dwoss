@@ -128,7 +128,7 @@ public class Communication implements Serializable {
      */
     public String getViolationMessage() {
         if ( type == null ) return "Type is null";
-        if ( StringUtils.isBlank(identifier) ) return "Identifier is blank";
+        if ( StringUtils.isBlank(identifier) ) return type + " Identifier is blank";
         return type.getValidPattern()
                 .map(pattern -> identifier.matches(pattern))
                 .map(b -> (b ? null : "Identifier " + identifier + " vom Type: " + type + " passt nicht auf pattern " + type.getValidPattern().get()))

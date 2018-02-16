@@ -198,7 +198,7 @@ public class CustomerTest {
         makeValidCompany.getCommunications().clear();
         makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
         assertThat(makeValidCompany.getViolationMessage()).as("valid company without communication").isNull();
-        assertThat(makeValidBusinessCustomer).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").returns(true, c -> c.isValid());
+        assertThat(makeValidBusinessCustomer).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").returns(false, c -> c.isValid());
 
     }
 

@@ -484,7 +484,6 @@ public class Customer implements Serializable, EagerAble {
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-
         if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
             return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
 
