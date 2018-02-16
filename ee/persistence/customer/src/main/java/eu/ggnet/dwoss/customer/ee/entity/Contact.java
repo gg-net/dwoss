@@ -164,26 +164,6 @@ public class Contact implements Serializable {
     }
 
     /**
-     *
-     * @param c
-     * @deprecated use getCommunication.add
-     */
-    @Deprecated
-    public void add(Communication c) {
-        if ( c != null ) communications.add(c);
-    }
-
-    /**
-     *
-     * @param a
-     * @deprecated use getAddress.add
-     */
-    @Deprecated
-    public void add(Address a) {
-        if ( a != null ) addresses.add(a);
-    }
-
-    /**
      * Returns a human readable representation of title, first and lastname.
      *
      * @return a human readable representation of title, first and lastname.

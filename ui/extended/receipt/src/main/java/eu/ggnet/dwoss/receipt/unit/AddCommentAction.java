@@ -39,17 +39,11 @@ public class AddCommentAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        OkCancelDialog<AddCommentCask> okCancelDialog = new OkCancelDialog<>(UiCore.getMainFrame(), "Füge eine Unit Kommentar hinzu", new AddCommentCask());
-        okCancelDialog.setVisible(true);
-        if ( okCancelDialog.isCancel() ) return;
-
         Ui.exec(() -> {
             Ui.build().title("Füge eine Unit Kommentar hinzu")
                     .swing()
                     .eval(() -> OkCancelWrap.result(new AddCommentCask()))
-                    .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class)
-                    .addCommentHistory(r.getPayload().RefurbishId, r.getPayload().Comment, Dl.local().lookup(Guardian.class).getUsername()));
+                    .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class).addCommentHistory(r.getPayload().RefurbishId, r.getPayload().Comment, Dl.local().lookup(Guardian.class).getUsername()));
         });
     }
 

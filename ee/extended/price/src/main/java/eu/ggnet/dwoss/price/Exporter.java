@@ -22,6 +22,7 @@ import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 /**
  * Remote Interface for the {@link ExporterOperation}.
@@ -53,7 +54,7 @@ public interface Exporter {
      * @return The PriceEngineResult or Null if Id not found
      * @throws UserInfoException if the unitId is not a Number
      */
-    PriceEngineResult load(String refurbishId) throws UserInfoException;
+    Reply<PriceEngineResult> load(String refurbishId) throws UserInfoException;
 
     /**
      * Calculates a Price for on Unit.

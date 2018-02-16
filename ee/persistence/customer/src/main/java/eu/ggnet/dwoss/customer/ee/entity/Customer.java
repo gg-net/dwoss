@@ -170,71 +170,6 @@ public class Customer implements Serializable, EagerAble {
     }
 
     /**
-     * Defensivly adds an instance to {@link Customer#companies}.
-     * Null values or duplicates will be ignored.
-     * <p>
-     * @param c the {@link Company}
-     * @deprecated use {@link Customer#getCompanies()} add.
-     */
-    @Deprecated
-    public void add(Company c) {
-        if ( c != null ) companies.add(c);
-    }
-
-    /**
-     * Defensivly adds an instance to {@link Customer#contacts}.
-     * Null values or duplicates will be ignored.
-     * <p>
-     * @param c the {@link Contact}
-     * @deprecated use {@link Customer#getContacts()} add.
-     */
-    @Deprecated
-    public void add(Contact c) {
-        if ( c != null ) contacts.add(c);
-    }
-
-    /**
-     * Defensivly adds an instance to {@link Customer#mandatorMetadata}.
-     * Null values or duplicates will be ignored.
-     * <p>
-     * @param m the {@link MandatorMetadata}
-     * @deprecated use {@link Customer#getMandatorMetadatas()} add.
-     */
-    @Deprecated
-    public void add(MandatorMetadata m) {
-        if ( m != null ) mandatorMetadata.add(m);
-    }
-
-    /**
-     * Defensivly add customerFlag.
-     * <p>
-     * @param customerFlag
-     * @deprecated use {@link Customer#getFlags()} add.
-     */
-    @Deprecated
-    public void add(CustomerFlag customerFlag) {
-        if ( customerFlag != null ) flags.add(customerFlag);
-    }
-
-    /**
-     *
-     * @param customerFlag
-     * @deprecated use {@link Customer#getFlags()} remove.
-     */
-    @Deprecated
-    public void remove(CustomerFlag customerFlag) {
-        flags.remove(customerFlag);
-    }
-
-    /**
-     * @deprecated use {@link Customer#getFlags()} clear.
-     */
-    @Deprecated
-    public void clearFlags() {
-        flags.clear();
-    }
-
-    /**
      * Returns an addresslabel with prefered elements for invoice never null.
      * This method returns never null, but all elements may be null.
      * The following rules are applied;
@@ -431,8 +366,8 @@ public class Customer implements Serializable, EagerAble {
      * <li>No CustomerFlag is set</li>
      * <li>No KeyAccounter is set</li>
      * <li>No MandatorMetadata is set</li>
-     * <li>Communications are only allowed to be of one of the following types: EMAIL, PHONE, MOBILE </li>
-     * <li>Communications on a simple Customer mustn't be more frequent than one from each allowed type </li>
+     * <li>Communications are only allowed to be of one of the following types: EMAIL, PHONE, MOBILE</li>
+     * <li>Communications on a simple Customer mustn't be more frequent than one from each allowed type</li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
@@ -467,8 +402,8 @@ public class Customer implements Serializable, EagerAble {
                 return "Contact has more than one address";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "Contact of the consumer  has more than 3 communications";
-            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )
-                return "Communications not allowed for consumers were found";
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() > 0 )
+                return "At least one Communication Type not allowed for consumers were found";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
                 return "multiple EMAIL type communications found";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == MOBILE).count() > 1 )
@@ -546,7 +481,6 @@ public class Customer implements Serializable, EagerAble {
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-
         if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
             return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
 
