@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
 import eu.ggnet.saft.*;
@@ -30,7 +32,7 @@ import eu.ggnet.saft.core.ui.AlertType;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  *
@@ -46,7 +48,7 @@ public class ScrapUnitAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         UnitDestroyer destroyer = Dl.remote().lookup(UnitDestroyer.class);
         String refurbishedId = showInputDialog(UiCore.getMainFrame(), "SopoNr die verschrottet werden soll:");
-        if ( refurbishedId == null || refurbishedId.isEmpty() ) return;
+        if ( StringUtils.isBlank(refurbishedId) ) return;
         try {
             UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> destroyer.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
             Ui.exec(() -> {

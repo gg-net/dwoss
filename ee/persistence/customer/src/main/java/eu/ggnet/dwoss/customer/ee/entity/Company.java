@@ -153,36 +153,6 @@ public class Company implements Serializable {
         return null;
     }
 
-    @Deprecated
-    public void add(Contact c) {
-        if ( c != null ) contacts.add(c);
-    }
-
-    @Deprecated
-    public void add(Address a) {
-        if ( a != null ) addresses.add(a);
-    }
-
-    @Deprecated
-    public void add(Communication c) {
-        if ( c != null ) communications.add(c);
-    }
-
-    @Deprecated
-    public void remove(Contact c) {
-        contacts.remove(c);
-    }
-
-    @Deprecated
-    public void remove(Address a) {
-        addresses.remove(a);
-    }
-
-    @Deprecated
-    public void remove(Communication c) {
-        communications.remove(c);
-    }
-
     /**
      * Html representation of the class.
      *
