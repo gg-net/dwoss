@@ -41,7 +41,7 @@ public class CustomerTest {
 
     public static Communication makeValidCommunication() {
         Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
-        
+
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
@@ -106,13 +106,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void testOutPut() {
-        Customer makeValidConsumer = makeValidConsumer();
-        assertThat(makeValidConsumer).describedAs("customer").isNotNull();
-    }
-
-    @Test
-    public void testIsVaildConsumerCostmer() {
+    public void testIsVaildConsumerCustomer() {
         Customer makeValidConsumer = makeValidConsumer();
         assertThat(makeValidConsumer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
 
@@ -156,7 +150,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void testIsVaildBussnisCostmer() {
+    public void testIsVaildBusinessCustomer() {
 
         Customer makeValidBusinessCustomer = makeValidBusinessCustomer();
 
@@ -204,7 +198,7 @@ public class CustomerTest {
         makeValidCompany.getCommunications().clear();
         makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
         assertThat(makeValidCompany.getViolationMessage()).as("valid company without communication").isNull();
-        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").isFalse();
+        assertThat(makeValidBusinessCustomer).as("Bussnis Customer is not vaild, the Compnay is valid but has no an Communications").returns(true, c -> c.isValid());
 
     }
 
