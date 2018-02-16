@@ -61,11 +61,11 @@ public class StockTakingAction extends AbstractAction {
             Ui.build().dialog().eval(
                     () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
                     .filter(b -> b == OK)
-                    .map(b ->  TikaUtil.isExcel(inFile.get()))
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
                     .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.getId()))))
-                   .ifPresent( f -> Ui.osOpen(f.toTemporaryFile()));
+                    .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));
         });
 
     }
