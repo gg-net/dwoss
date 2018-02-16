@@ -458,10 +458,7 @@ public class Customer implements Serializable, EagerAble {
         if ( !mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
         if ( addressLabels.size() > 1 ) return "More than one AddressLabel is set";
 
-        List<Communication.Type> allowedCommunicationTypes = new ArrayList<>();
-        allowedCommunicationTypes.add(EMAIL);
-        allowedCommunicationTypes.add(MOBILE);
-        allowedCommunicationTypes.add(PHONE);
+        List<Communication.Type> allowedCommunicationTypes = Arrays.asList(EMAIL, MOBILE, PHONE);
 
         if ( isConsumer() ) {
             if ( contacts.size() > 1 )

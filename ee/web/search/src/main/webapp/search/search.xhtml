@@ -12,7 +12,7 @@
         </h:head>
         <h:body>
             <h:form id="search">
-                <p:growl id="growl" showDetail="true" sticky="true" />
+                <p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>
 
                 <p:layout fullPage="true">
                     <p:layoutUnit id="top" position="north" header="Search" >
@@ -23,6 +23,7 @@
                         </h:panelGrid>
                     </p:layoutUnit>
                     <p:layoutUnit id="center" position="center" header="Output">
+                        <p:messages autoUpdate="true"/>
                         <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="20"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      rowsPerPageTemplate="20,50,100" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">

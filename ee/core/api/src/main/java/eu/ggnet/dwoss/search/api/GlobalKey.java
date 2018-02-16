@@ -21,7 +21,7 @@ import java.io.Serializable;
 import lombok.Value;
 
 /**
- * Global Key to identify an entiy uniquely.
+ * Global Key to identify an entity uniquely.
  *
  * @author oliver.guenther
  */
@@ -29,7 +29,7 @@ import lombok.Value;
 public class GlobalKey implements Serializable {
 
     /**
-     * Identifies a application component. For now, we know which components exist in every final depolyment.
+     * Identifies an application component. For now, we know which components exist in every final depolyment.
      * If this changes in the future, we must convert the componets to some string representation.
      */
     public static enum Component {
