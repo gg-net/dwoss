@@ -43,6 +43,19 @@ public class GenerateOnePriceAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+//        Ui.exec(() -> {
+//            Ui.build().fx().eval(() -> "Bitte SopoNr eingebe:",() -> new InputPane())
+//                    .ifPresent(r -> {
+//                        PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(r);
+//                        if(per == null){
+//                            Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING); 
+//                            return;
+//                        }
+//                        Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
+//                    });
+//        });
+
         String refurbishId = showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr eingeben :");
         if ( refurbishId == null || refurbishId.isEmpty() ) return;
         try {
