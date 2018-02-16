@@ -45,6 +45,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,7 @@ import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
@@ -313,15 +315,22 @@ public class ExporterOperation implements Exporter {
      *
      * @param refurbishId the unitid
      * @return The PriceEngineResult or Null if Id not found
-     * @throws UserInfoException if the unitId is not a Number
+     * @throws UserInfoException if the unitId is not a Number or to not get found
      */
     @Override
-    public PriceEngineResult load(String refurbishId) throws UserInfoException {
+    public Reply<PriceEngineResult> load(String refurbishId) throws UserInfoException {
+        if(!StringUtils.isNumeric(refurbishId)){
+            throw new UserInfoException("refurbishId", "refurbishId is not a number");
+        }
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
+        if(uu == null){
+            throw new UserInfoException("UniqueUnit", "UniqueUnit not forund");
+        }
         PriceEngineResult per = new PriceEngineResult(uu);
         per.setRetailerPrice(uu.getPrice(PriceType.RETAILER));
         per.setCustomerPrice(uu.getPrice(PriceType.CUSTOMER));
-        return per;
+        
+        return Reply.success(per);
     }
 
     /**
