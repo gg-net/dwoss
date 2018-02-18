@@ -11,35 +11,21 @@
         </h:head>
         <h:body>
             <h:form>
-                <p:poll interval="2" update="@form:progressTable"/>
+                <p:poll interval="1" update="@form:progressTable"/>
 
                 <p:dataTable id="progressTable" value="#{progressObserverOperation.getActiveProgressKeys()}" var="k" stickyHeader="true" reflow="true">
-                    <p:column headerText="Key" sortBy="#{k}" priority="1" >  
-                        #{k}
-                    </p:column>                
-                    <p:column headerText="Title" priority="2">  
-                        #{progressObserverOperation.getMonitor(k).getTitle()}  
-                    </p:column>                
-                    <p:column headerText="Message" priority="6">                           
-                        #{progressObserverOperation.getMonitor(k).getMessage()}  
+                    <p:column headerText="Title" priority="2" width="20%">
+                        #{progressObserverOperation.getMonitor(k).getTitle()}
                     </p:column>
-                    <p:column headerText="Started" priority="6">  
-                        #{progressObserverOperation.getMonitor(k).isStarted()}  
-                    </p:column>
-                    <p:column headerText="Finished" priority="6">  
-                        #{progressObserverOperation.getMonitor(k).isFinished()}  
-                    </p:column>
-                    <p:column headerText="Stale" priority="6">  
-                        #{progressObserverOperation.getMonitor(k).isStale()}  
-                    </p:column>
-                    <p:column headerText="Status" priority="4">  
+                    <p:column headerText="Progress" priority="4" width="80%">
                         <div class="w3-blue" style="width: #{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%;">
                             <h:outputText value="#{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%"/>
                         </div>
+                        #{progressObserverOperation.getMonitor(k).getMessage()}
                     </p:column>
                 </p:dataTable>
                 <br />
-                <p class="smallFont">Page get reloaded every 2 seconds</p>
+                <p class="smallFont">Page get reloaded every seconds</p>
 
                 <f:facet name="last">
                     <h:outputStylesheet library="css" name="style.css"/>

@@ -16,15 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,37 +44,37 @@ public class CompanyTest {
     }
 
     @Test
-    public void TestGetViolationMessages() {
+    public void TestGetViolationMessages() { // TODO: Lucas
         assertThat(company.getViolationMessage()).as("Company with valid values").isNull();
     }
 
     @Test
-    public void TestGetViolationMessagesNonValid() {
+    public void TestGetViolationMessagesNonValid() { // TODO: Lucas
         company.setName("");
         assertThat(company.getViolationMessage()).as("Company without name").isNotBlank();
     }
 
     @Test
-    public void TestGetViolationMessagesNonValid2() {
+    public void TestGetViolationMessagesNonValid2() { // TODO: Lucas
         company.getAddresses().clear();
         assertThat(company.getViolationMessage()).as("Company without addresses").isNotBlank();
     }
 
     @Test
-    public void TestGetViolationMessagesNonValid3() {
+    public void TestGetViolationMessagesNonValid3() { // TODO: Lucas
         company.getAddresses().clear();
         company.getAddresses().add(new Address());
         assertThat(company.getViolationMessage()).as("Company with invalid address").isNotBlank();
     }
 
     @Test
-    public void TestGetViolationMessagesNonValid4() {
+    public void TestGetViolationMessagesNonValid4() { // TODO: Lucas
         company.getContacts().add(new Contact());
         assertThat(company.getViolationMessage()).as("Company with invalid contact").isNotBlank();
     }
 
     // Todo implement getViolationMessage() for Communication
-    public void TestGetViolationMessagesNonValid5() {
+    public void TestGetViolationMessagesNonValid5() { // TODO: Lucas
         company.getCommunications().add(new Communication());
         assertThat(company.getViolationMessage()).as("Company with invalid Communication").isNotBlank();
     }

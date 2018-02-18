@@ -46,7 +46,7 @@ public class AddCustomerAction extends AbstractAction {
             Optional<CustomerContinue> result = Ui.build().fxml().eval(CustomerSimpleController.class);
             if ( !result.isPresent() ) return;
             Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-            if ( !Ui.failure().handle(reply) ) return;
+            if ( Ui.failure().handle(reply) ) return;
             if ( !result.get().continueEnhance ) return;
             Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
                     .ifPresent(c -> Ui.build().alert("Would store + " + c));
