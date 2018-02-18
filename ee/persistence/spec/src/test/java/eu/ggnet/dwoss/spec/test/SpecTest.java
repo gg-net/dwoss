@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.spec.test;
 
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -10,16 +14,15 @@ import org.junit.*;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.Monitor;
-import eu.ggnet.dwoss.spec.entity.Notebook;
-import eu.ggnet.dwoss.spec.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.Monitor;
+import eu.ggnet.dwoss.spec.ee.entity.Notebook;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
-import eu.ggnet.dwoss.spec.entity.piece.*;
 
 import static org.junit.Assert.assertTrue;
 

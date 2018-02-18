@@ -29,8 +29,8 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ToolbarComponent;
 

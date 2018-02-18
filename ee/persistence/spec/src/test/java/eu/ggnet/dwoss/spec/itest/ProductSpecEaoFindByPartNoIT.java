@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
 
 import java.util.EnumSet;
@@ -14,11 +19,10 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
-import eu.ggnet.dwoss.spec.entity.*;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

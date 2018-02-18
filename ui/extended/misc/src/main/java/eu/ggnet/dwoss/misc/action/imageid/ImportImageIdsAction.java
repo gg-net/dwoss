@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.misc.op.ImageIdHandler;
+import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.Dl;

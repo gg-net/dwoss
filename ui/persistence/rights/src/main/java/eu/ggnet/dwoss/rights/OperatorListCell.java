@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.rights;
 
-import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;

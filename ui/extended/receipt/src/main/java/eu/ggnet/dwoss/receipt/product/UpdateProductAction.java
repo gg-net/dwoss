@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;

@@ -2,7 +2,7 @@ package eu.ggnet.dwoss.uniqueunit.test;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

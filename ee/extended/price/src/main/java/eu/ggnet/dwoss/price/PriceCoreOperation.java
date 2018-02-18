@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.price;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+
 import java.util.Map.Entry;
 import java.util.*;
 
@@ -32,22 +36,21 @@ import eu.ggnet.dwoss.price.engine.PriceEngine;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.saft.api.progress.IMonitor;
 
 import lombok.Data;
 
 import static eu.ggnet.dwoss.price.engine.PriceEngineResult.Change.*;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 
 /**
  * Contains all business methods for price generaimport static de.dw.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -182,8 +185,8 @@ public class PriceCoreOperation {
          * Whould need to import this information allso. (Need to change the report itself and the export) */
         if ( per.getManufacturerPartPriceFixed() == SET ) type = "productfixed";
 
-        uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER, per.getCustomerPrice(), arranger + " - " + type + ", " + comment);
-        uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.entity.PriceType.RETAILER, per.getRetailerPrice(), arranger + " - " + type + ", " + comment);
+        uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER, per.getCustomerPrice(), arranger + " - " + type + ", " + comment);
+        uniqueUnit.setPrice(eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.RETAILER, per.getRetailerPrice(), arranger + " - " + type + ", " + comment);
         uniqueUnit.setWarranty(Warranty.values()[per.getWarrantyId()]);
     }
 

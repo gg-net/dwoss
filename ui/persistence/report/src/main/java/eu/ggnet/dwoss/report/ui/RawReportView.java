@@ -38,10 +38,10 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.partial.SimpleReportLine;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;

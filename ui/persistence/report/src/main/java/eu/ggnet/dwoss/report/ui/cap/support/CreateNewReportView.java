@@ -24,9 +24,9 @@ import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.Report.ViewMode;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.entity.Report;
+import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;

@@ -16,6 +16,20 @@
  */
 package eu.ggnet.dwoss.receipt.stub;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.entity.SpecOfflineConstructor;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.entity.AllInOne;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.Notebook;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.entity.Monitor;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+
 import java.util.*;
 
 import javax.enterprise.inject.Alternative;
@@ -24,14 +38,12 @@ import javax.persistence.LockModeType;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.spec.entity.Desktop.Hdd;
-import eu.ggnet.dwoss.spec.entity.Desktop.Odd;
-import eu.ggnet.dwoss.spec.entity.Desktop.Os;
-import eu.ggnet.dwoss.spec.entity.ProductSpec.Extra;
-import eu.ggnet.dwoss.spec.entity.*;
-import eu.ggnet.dwoss.spec.entity.piece.*;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.*;

@@ -18,8 +18,7 @@ package eu.ggnet.dwoss.receipt;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 /**

@@ -21,7 +21,7 @@ import java.awt.Component;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
 /**
  * Cell Renderer for the Stock Class.

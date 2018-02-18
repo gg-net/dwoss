@@ -16,6 +16,24 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.spec.ee.eao.GpuEao;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.eao.DisplayEao;
+import eu.ggnet.dwoss.spec.ee.entity.DisplayAble;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.eao.CpuEao;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSeriesEao;
+import eu.ggnet.dwoss.spec.ee.eao.ProductModelEao;
+import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.eao.ProductFamilyEao;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,17 +43,14 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.*;
-import eu.ggnet.dwoss.spec.emo.DisplayEmo;
-import eu.ggnet.dwoss.spec.emo.ProductModelEmo;
-import eu.ggnet.dwoss.spec.entity.*;
-import eu.ggnet.dwoss.spec.entity.piece.*;
-import eu.ggnet.dwoss.spec.format.SpecFormater;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.emo.DisplayEmo;
+import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.saft.api.Reply;
 
 /**

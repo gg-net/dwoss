@@ -16,14 +16,14 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import eu.ggnet.dwoss.spec.entity.Tablet;
-import eu.ggnet.dwoss.spec.entity.Notebook;
-import eu.ggnet.dwoss.spec.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.entity.AllInOne;
-import eu.ggnet.dwoss.spec.entity.Monitor;
-import eu.ggnet.dwoss.spec.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.entity.Desktop;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.Tablet;
+import eu.ggnet.dwoss.spec.ee.entity.Notebook;
+import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
+import eu.ggnet.dwoss.spec.ee.entity.AllInOne;
+import eu.ggnet.dwoss.spec.ee.entity.Monitor;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IView;
 import eu.ggnet.dwoss.util.IPreClose;

@@ -19,7 +19,7 @@ package tryout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionEditorController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

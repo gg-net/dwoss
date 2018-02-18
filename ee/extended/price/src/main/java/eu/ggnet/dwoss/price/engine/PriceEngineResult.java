@@ -16,17 +16,17 @@
  */
 package eu.ggnet.dwoss.price.engine;
 
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceHistory;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import java.io.Serializable;
 import java.util.*;
 
 import eu.ggnet.dwoss.price.engine.support.TraceCollector;
-import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
 import lombok.Data;
 

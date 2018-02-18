@@ -24,10 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.util.SwingTraversalUtil;
-import eu.ggnet.dwoss.spec.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.entity.BasicSpec.Color;
-import eu.ggnet.dwoss.spec.entity.BasicSpec.VideoPort;
-import eu.ggnet.dwoss.spec.entity.ProductSpec.Extra;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.Color;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.VideoPort;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 

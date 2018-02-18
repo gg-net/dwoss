@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.UiCore;

@@ -37,11 +37,11 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
-import eu.ggnet.dwoss.report.api.ReportExporter;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type;
+import eu.ggnet.dwoss.report.ee.api.ReportExporter;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

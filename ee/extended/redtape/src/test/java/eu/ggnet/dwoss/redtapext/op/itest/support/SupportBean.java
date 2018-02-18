@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.redtapext.op.itest.support;
 
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -10,12 +15,11 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.emo.StockLocationDiscoverer;
-import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
-import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;
+import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 
 /**
  *

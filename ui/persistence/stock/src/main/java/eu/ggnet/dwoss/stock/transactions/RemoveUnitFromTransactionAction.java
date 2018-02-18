@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.transactions;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;

@@ -33,8 +33,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Dl;

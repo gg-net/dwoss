@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.receipt.unit.chain.string.*;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
 
 /**
  * The Chains for Acer.

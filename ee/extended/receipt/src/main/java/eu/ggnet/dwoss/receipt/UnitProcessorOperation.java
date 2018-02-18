@@ -16,6 +16,20 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
@@ -38,24 +52,22 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.eao.*;
-import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
-import eu.ggnet.dwoss.stock.emo.StockLocationDiscoverer;
-import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 
 /**
  * Receipt Operation for Units.

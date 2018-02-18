@@ -172,9 +172,9 @@
         </report-pu.default-datasource>
         <report-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.report.entity.Report</class>
-                <class>eu.ggnet.dwoss.report.entity.ReportLine</class>
-                <class>eu.ggnet.dwoss.report.entity.partial.SimpleReportLine</class>
+                <class>eu.ggnet.dwoss.report.ee.entity.Report</class>
+                <class>eu.ggnet.dwoss.report.ee.entity.ReportLine</class>
+                <class>eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </report-pu.classes>
@@ -186,8 +186,8 @@
         </rights-pu.default-datasource>
         <rights-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.rights.entity.Operator</class>
-                <class>eu.ggnet.dwoss.rights.entity.Persona</class>
+                <class>eu.ggnet.dwoss.rights.ee.entity.Operator</class>
+                <class>eu.ggnet.dwoss.rights.ee.entity.Persona</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </rights-pu.classes>
@@ -199,21 +199,21 @@
         </spec-pu.default-datasource>
         <spec-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.spec.entity.AllInOne</class>
-                <class>eu.ggnet.dwoss.spec.entity.BasicSpec</class>
-                <class>eu.ggnet.dwoss.spec.entity.Desktop</class>
-                <class>eu.ggnet.dwoss.spec.entity.DesktopBundle</class>
-                <class>eu.ggnet.dwoss.spec.entity.DisplayAbleDesktop</class>
-                <class>eu.ggnet.dwoss.spec.entity.Monitor</class>
-                <class>eu.ggnet.dwoss.spec.entity.Notebook</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductFamily</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductModel</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductSeries</class>
-                <class>eu.ggnet.dwoss.spec.entity.ProductSpec</class>
-                <class>eu.ggnet.dwoss.spec.entity.Tablet</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Cpu</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Display</class>
-                <class>eu.ggnet.dwoss.spec.entity.piece.Gpu</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.AllInOne</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.BasicSpec</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.Desktop</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.DesktopBundle</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.DisplayAbleDesktop</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.Monitor</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.Notebook</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.ProductFamily</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.ProductModel</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.ProductSeries</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.ProductSpec</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.Tablet</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.piece.Cpu</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.piece.Display</class>
+                <class>eu.ggnet.dwoss.spec.ee.entity.piece.Gpu</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </spec-pu.classes>
@@ -225,15 +225,15 @@
         </stock-pu.default-datasource>
         <stock-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.stock.entity.LogicTransaction</class>
-                <class>eu.ggnet.dwoss.stock.entity.Shipment</class>
-                <class>eu.ggnet.dwoss.stock.entity.Stock</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockLocation</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransaction</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionParticipation</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionPosition</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockTransactionStatus</class>
-                <class>eu.ggnet.dwoss.stock.entity.StockUnit</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.LogicTransaction</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.Shipment</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.Stock</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockLocation</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockTransaction</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus</class>
+                <class>eu.ggnet.dwoss.stock.ee.entity.StockUnit</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </stock-pu.classes>
@@ -245,12 +245,12 @@
         </uniqueunit-pu.default-datasource>
         <uniqueunit-pu.classes>
           <![CDATA[
-                <class>eu.ggnet.dwoss.uniqueunit.entity.PriceHistory</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.Product</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.UnitCollection</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit</class>
-                <class>eu.ggnet.dwoss.uniqueunit.entity.UniqueUnitHistory</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.Product</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit</class>
+                <class>eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory</class>
                 <exclude-unlisted-classes>true</exclude-unlisted-classes>
           ]]>
         </uniqueunit-pu.classes>

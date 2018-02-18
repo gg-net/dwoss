@@ -23,8 +23,8 @@ import javax.swing.UIManager;
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
 import eu.ggnet.dwoss.receipt.UnitProcessor;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.saft.Dl;
 
 import lombok.Getter;

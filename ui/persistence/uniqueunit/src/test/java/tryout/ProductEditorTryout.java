@@ -8,8 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.uniqueunit.assist.gen.ProductGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.ProductGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductEditorController;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

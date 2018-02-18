@@ -22,9 +22,9 @@ import javafx.application.Platform;
 import javafx.stage.Modality;
 
 import eu.ggnet.dwoss.receipt.AbstractController;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.Guardian;
 

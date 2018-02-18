@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.unit;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.uniqueunit.op.AddUnitHistory;
+import eu.ggnet.dwoss.uniqueunit.ee.op.AddUnitHistory;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;

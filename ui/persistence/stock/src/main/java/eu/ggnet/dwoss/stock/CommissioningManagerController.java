@@ -16,14 +16,19 @@
  */
 package eu.ggnet.dwoss.stock;
 
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+
 import java.awt.EventQueue;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
-import eu.ggnet.dwoss.rights.op.Authentication;
-import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

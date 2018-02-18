@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.misc.op.listings.SalesListingProducer;
+import eu.ggnet.dwoss.misc.ee.listings.SalesListingProducer;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.ui.AlertType;

@@ -26,7 +26,7 @@ import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.api.IsStateful;
+import eu.ggnet.dwoss.common.api.IsStateful;
 import eu.ggnet.dwoss.discover.Discovery;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.cap.RemoteLookup;

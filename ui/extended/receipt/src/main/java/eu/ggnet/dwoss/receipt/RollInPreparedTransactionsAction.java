@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.receipt;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -28,8 +28,8 @@ import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
-import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.PREPARED;
-import static eu.ggnet.dwoss.stock.entity.StockTransactionType.ROLL_IN;
+import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.PREPARED;
+import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionType.ROLL_IN;
 
 /**
  *

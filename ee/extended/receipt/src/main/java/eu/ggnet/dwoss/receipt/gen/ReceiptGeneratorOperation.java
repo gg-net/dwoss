@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.receipt.gen;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+
 import java.util.*;
 
 import javax.ejb.*;
@@ -31,22 +38,20 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.receipt.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UnitProcessor;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
-import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
-import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.op.ProductOperation;
+import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
+import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.op.ProductOperation;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.COMMENTARY;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 @Stateless

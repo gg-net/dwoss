@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.product;
 
 import java.util.Comparator;
 
-import eu.ggnet.dwoss.spec.entity.INamed;
+import eu.ggnet.dwoss.spec.ee.entity.INamed;
 
 /**
  *

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.misc.saleschannel;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.saft.Dl;
 
 // TODO: Ok,Canel Button richtig einbinden.

@@ -5,13 +5,13 @@ import java.util.*;
 import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.entity.Report;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.ReportLine.Storeable;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.entity.Report;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.*;
@@ -26,57 +26,57 @@ public class SimpleReportLineTryout {
     public static void main(String[] args) {
         ReportAgent rastub = new ReportAgent() {
 
-            List<eu.ggnet.dwoss.report.entity.partial.SimpleReportLine> all
-                    = Arrays.asList(eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ACER).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+            List<eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine> all
+                    = Arrays.asList(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ACER).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                             .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                             .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.DELL).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.DELL).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(10).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.HP).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.HP).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(23).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.EMACHINES).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.EMACHINES).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ONESELF).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ONESELF).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.LENOVO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.LENOVO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
                                     .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ALSO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
+                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ALSO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
                                     .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
                                     .reportingDate(new Date()).build()
                     );
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass) {
-                if ( entityClass.equals(eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.class) ) return (List<T>)all;
+                if ( entityClass.equals(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.class) ) return (List<T>)all;
                 return Collections.EMPTY_LIST;
             }
 
             @Override
             public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
-                if ( entityClass.equals(eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.class) ) {
+                if ( entityClass.equals(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.class) ) {
                     if ( start > all.size() ) return Collections.EMPTY_LIST;
                     if ( start < 0 ) start = 0;
                     if ( amount + start > all.size() ) amount = all.size() - start;
@@ -86,8 +86,8 @@ public class SimpleReportLineTryout {
             }
 
             @Override
-            public List<eu.ggnet.dwoss.report.entity.partial.SimpleReportLine> findSimple(SearchParameter search, int firstResult, int maxResults) {
-                return findAll(eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.class, firstResult, maxResults);
+            public List<eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine> findSimple(SearchParameter search, int firstResult, int maxResults) {
+                return findAll(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.class, firstResult, maxResults);
             }
 
             @Override
@@ -97,7 +97,7 @@ public class SimpleReportLineTryout {
 
             @Override
             public <T> long count(Class<T> entityClass) {
-                if ( entityClass.equals(eu.ggnet.dwoss.report.entity.partial.SimpleReportLine.class) ) return all.size();
+                if ( entityClass.equals(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.class) ) return all.size();
                 return 0;
             }
 

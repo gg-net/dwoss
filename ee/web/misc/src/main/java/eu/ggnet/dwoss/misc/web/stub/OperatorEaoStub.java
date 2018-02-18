@@ -22,8 +22,8 @@ import java.util.List;
 import javax.enterprise.inject.Alternative;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 /**
  *
