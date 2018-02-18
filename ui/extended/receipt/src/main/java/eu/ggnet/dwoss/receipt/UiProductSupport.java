@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Set;

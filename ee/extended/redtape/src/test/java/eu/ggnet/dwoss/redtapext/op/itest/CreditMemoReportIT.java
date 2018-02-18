@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;

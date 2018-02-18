@@ -17,8 +17,8 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;

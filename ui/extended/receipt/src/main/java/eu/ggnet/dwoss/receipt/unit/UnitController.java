@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.MetaValue;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink.Result;

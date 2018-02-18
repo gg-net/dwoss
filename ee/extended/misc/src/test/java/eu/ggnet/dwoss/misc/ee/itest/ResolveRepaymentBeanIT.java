@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
 import eu.ggnet.dwoss.misc.ee.ResolveRepaymentBean;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ee.ReportAgent;

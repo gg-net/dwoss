@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package stock.upi.impl;
+package eu.ggnet.dwoss.stock.upi.impl;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -22,7 +22,8 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
 
 import lombok.Getter;
 import lombok.Setter;
-import stock.upi.StockUpi;
+
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
  *

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
+
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;

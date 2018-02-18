@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.receipt.unit.UnitModel;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;

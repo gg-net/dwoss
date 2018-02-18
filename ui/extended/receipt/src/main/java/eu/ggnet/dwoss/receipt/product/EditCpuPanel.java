@@ -21,7 +21,7 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.util.*;

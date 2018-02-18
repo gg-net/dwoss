@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2018 GG-Net GmbH
+/* 
+ * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,23 +13,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-package eu.ggnet.dwoss.customer.ee.entity.JacobValidationPlayGround;
-
-/**
  *
- * @author jacob.weinhold
  */
-public class Main {
-
-    public static void main(String[] args) {
-        Address address = new Address();
-        address.setCity("London");
-        Country GB = new Country();
-        GB.setIso2("GB");
-        address.setCountry(GB);
-        address.setStreet1("Oxfort street");
-        address.setZipCode("22848");
-
-    }
-}
+/**
+ * Receipt Operations.
+ * Hint: Ready to be moved to core.
+ */
+package eu.ggnet.dwoss.receipt.ee;

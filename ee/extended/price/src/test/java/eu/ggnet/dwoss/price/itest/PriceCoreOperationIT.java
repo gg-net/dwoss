@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.price.PriceCoreOperation;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;

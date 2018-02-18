@@ -27,7 +27,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseerRest;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;

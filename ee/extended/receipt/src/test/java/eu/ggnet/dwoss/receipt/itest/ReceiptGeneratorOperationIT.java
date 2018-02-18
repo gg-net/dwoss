@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

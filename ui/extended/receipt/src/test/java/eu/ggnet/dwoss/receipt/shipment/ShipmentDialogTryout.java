@@ -15,8 +15,8 @@ import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 
-import stock.upi.StockUpi;
-import stock.upi.impl.StockUpiImpl;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
+import eu.ggnet.dwoss.stock.upi.impl.StockUpiImpl;
 
 /**
  *

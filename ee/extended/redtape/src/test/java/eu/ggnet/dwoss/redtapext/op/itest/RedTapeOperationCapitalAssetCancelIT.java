@@ -16,7 +16,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;

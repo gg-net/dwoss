@@ -21,7 +21,7 @@ import java.awt.Window;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;

@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -40,7 +41,8 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import lombok.Value;
-import stock.upi.StockUpi;
+
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
  * Ui support for the unit Operations.

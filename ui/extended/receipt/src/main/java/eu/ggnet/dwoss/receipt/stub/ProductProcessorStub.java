@@ -35,7 +35,7 @@ import java.util.*;
 import javax.enterprise.inject.Alternative;
 import javax.persistence.LockModeType;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;

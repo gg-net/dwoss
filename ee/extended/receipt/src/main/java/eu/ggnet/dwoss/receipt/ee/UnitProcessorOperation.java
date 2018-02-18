@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt;
+package eu.ggnet.dwoss.receipt.ee;
 
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;

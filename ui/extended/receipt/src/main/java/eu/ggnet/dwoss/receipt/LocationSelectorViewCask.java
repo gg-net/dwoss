@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ToolbarComponent;
 
-import stock.upi.StockUpi;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
  *

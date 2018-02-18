@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.receipt.gen;
+package eu.ggnet.dwoss.receipt.ee.gen;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

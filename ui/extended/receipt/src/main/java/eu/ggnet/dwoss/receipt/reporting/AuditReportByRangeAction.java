@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.reporting;
 
+import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;

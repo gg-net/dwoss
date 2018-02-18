@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.unit.chain.serial;
 
 import java.util.Objects;
 
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 

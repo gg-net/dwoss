@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.Guardian;
 
-import stock.upi.StockUpi;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 public class ShipmentController extends AbstractController {
 

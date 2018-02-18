@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.unit.chain;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.chain.partno.*;
 import eu.ggnet.dwoss.receipt.unit.chain.serial.SerialAvailable;
 import eu.ggnet.dwoss.receipt.unit.chain.serial.SerialWasOnceInStock;

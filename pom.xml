@@ -391,12 +391,16 @@
                 <!-- For the the full documentation call: mvn markdown-page-generator:generate javadoc:javadoc -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.0.0</version>
                 <configuration>
                     <groups>
                         <group>
                             <title>Common Core + API's (EE/UI)</title>
-                            <packages>eu.ggnet.dwoss.search.api*:eu.ggnet.dwoss.customer.api*:eu.ggnet.dwoss.rights.api*:eu.ggnet.dwoss.uniqueunit.api*:eu.ggnet.dwoss.common*:eu.ggnet.dwoss.configuration*:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
+                            <packages>eu.ggnet.dwoss.common*:eu.ggnet.dwoss.configuration*:eu.ggnet.dwoss.rules*:eu.ggnet.dwoss.event*:eu.ggnet.dwoss.mandator*:eu.ggnet.dwoss.progress*</packages>
+                        </group>
+                        <group>
+                            <title>Search (EE/UI)</title>
+                            <packages>eu.ggnet.dwoss.search*</packages>
                         </group>
                         <group>
                             <title>Persistence - Customer (EE/UI)</title>
@@ -571,7 +575,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.18</version>
+                <version>1.16.18</version> <!-- x.x.20 fails in netbeans -->
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
