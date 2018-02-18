@@ -16,20 +16,28 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
+import java.awt.Dialog;
 import java.awt.Window;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+import javax.swing.JFrame;
+
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.api.ui.Once;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.*;
 
 import lombok.experimental.Accessors;
+
+import static eu.ggnet.saft.core.ui.builder.AbstractBuilder.callWithProgress;
 
 /*
     I - 4 Fälle:
@@ -133,9 +141,10 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer
      * @return
      */
-    private <P, V extends Pane> Optional intEval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+    private <T, P, V extends Pane> Optional<T> intEval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
         try {
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
+            // Phase I
             V pane = FxSaft.dispatch(javafxPaneProducer); // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
             P preResult = null;
@@ -150,11 +159,116 @@ public class FxBuilder extends AbstractBuilder {
             Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
             wait(window);
+            if ( pane instanceof ResultProducer ) return Optional.ofNullable((T)((ResultProducer)pane).getResult());
+            return null; // using the return value without a ResultProducer must fail.
+        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Internal implementation, breaks the compile safty of the public methodes.
+     *
+     * @param <P>
+     * @param <V>
+     * @param preProducer
+     * @param javafxPaneProducer
+     * @return
+     */
+    private <P, V extends Pane> Optional intEval2(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+        Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
+        PreBuilder b = new PreBuilder().id(id).title(title).frame(frame).modality(modality); // Refactor later
+
+        // Phase I
+        CompletableFuture<V> paneBuildFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                return javafxPaneProducer.call();
+            } catch (Exception ex) {
+                throw new CompletionException(ex);
+            }
+        }, Platform::runLater);
+
+        CompletableFuture<PaneAndParms<P>> paneAndParmsFuture
+                = paneBuildFuture.thenApplyAsync((V pane) -> new PaneAndParms(pane, buildParameterBackedUpByDefaults2(pane.getClass(), b)), UiCore.getExecutor());
+
+        if ( preProducer != null ) { // Optimise. Only if the preproducer is of type IdSupplier, it needs to be called before the once verifycation.
+            paneAndParmsFuture = paneAndParmsFuture.thenApply(t -> {
+                t.preResult = Ui.progress().call(preProducer);
+                t.params.optionalSupplyId(t.preResult);
+                return t; // Better, make a new t
+            });
+        }
+
+        paneAndParmsFuture.thenApply((PaneAndParms<P> t) -> {
+            if ( isOnceModeAndActiveWithSideeffect(t.params.key()) ) throw new OnceException();
+            return t;
+        });
+
+        if ( preProducer != null ) {
+            paneAndParmsFuture = paneAndParmsFuture.thenApply((PaneAndParms<P> t) -> {
+                ((Consumer)t.pane).accept(t.preResult);
+                return t;
+            });
+        }
+
+        return null;
+
+        /*
+        This is not jet complete or event tested. It's the first Idea to construct the hole Ui via Completable Futures.
+
+        try {
+            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
+            SwingSaft.enableCloser(window, pane);
+            wait(window);
             if ( pane instanceof ResultProducer ) return Optional.ofNullable(((ResultProducer)pane).getResult());
             return null; // using the return value without a ResultProducer must fail.
         } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }
+         */
+    }
+
+    protected Params buildParameterBackedUpByDefaults2(Class<?> panelClazz, PreBuilder b) {
+        Once onceAnnotation = panelClazz.getAnnotation(Once.class);
+        if ( onceAnnotation != null ) once = onceAnnotation.value();
+        return Params.builder()
+                .panelClazz(panelClazz)
+                .id(b.id)
+                .titleTemplate(b.title)
+                .framed(!b.frame ? panelClazz.getAnnotation(eu.ggnet.saft.api.ui.Frame.class) != null : b.frame)
+                .modalityType(toSwing(b.modality).orElse(Dialog.ModalityType.MODELESS)).build();
+    }
+
+    // For now I use this as an internal result class. Better splitt (one without result) and merge with params.
+    private static class PaneAndParms<Z> {
+
+        private Pane pane;
+
+        private Params params;
+
+        private Z preResult;
+
+        private boolean storeLocation;
+
+        public PaneAndParms(Pane pane, Params params) {
+            this.pane = pane;
+            this.params = params;
+        }
+
+    }
+
+    protected boolean isOnceModeAndActiveWithSideeffect(boolean once, String key) {
+        // Look into existing Instances, if in once mode and push up to the front if exist.
+        if ( once && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
+            Window window = SwingCore.ACTIVE_WINDOWS.get(key).get();
+            if ( window == null || !window.isVisible() ) SwingCore.ACTIVE_WINDOWS.remove(key);
+            else {
+                if ( window instanceof JFrame ) ((JFrame)window).setExtendedState(JFrame.NORMAL);
+                window.toFront();
+                return true;
+            }
+        }
+        return false;
     }
 
 }

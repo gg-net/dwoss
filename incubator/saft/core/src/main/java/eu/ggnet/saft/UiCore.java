@@ -88,6 +88,15 @@ public class UiCore {
     }
 
     /**
+     * Returns the Executor of the Ui.
+     *
+     * @return the Executor of the Ui.
+     */
+    public static Executor getExecutor() {
+        return EXECUTOR_SERVICE;
+    }
+
+    /**
      * Returns a property that represents background activity.
      *
      * @return a property that represents background activity
