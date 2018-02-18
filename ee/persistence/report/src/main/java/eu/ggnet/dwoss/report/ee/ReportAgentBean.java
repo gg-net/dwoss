@@ -244,6 +244,7 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
     }
 
     @Override
+    @AutoLogger
     public ViewReportResult prepareReport(ReportParameter p, boolean loadUnreported) {
         attachDanglingComplaints(p.getContractor(), p.getEnd());
         List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(p.getContractor(), (loadUnreported) ? null : p.getStart(), p.getEnd());

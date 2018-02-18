@@ -18,7 +18,7 @@
                         #{progressObserverOperation.getMonitor(k).getTitle()}
                     </p:column>
                     <p:column headerText="Progress" priority="4" width="80%">
-                        <div class="w3-blue" style="width: #{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%;">
+                        <div class="w3-blue" style="width: #{progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%;">
                             <h:outputText value="#{100-progressObserverOperation.getMonitor(k).getAbsolutRemainingTicks()}%"/>
                         </div>
                         #{progressObserverOperation.getMonitor(k).getMessage()}

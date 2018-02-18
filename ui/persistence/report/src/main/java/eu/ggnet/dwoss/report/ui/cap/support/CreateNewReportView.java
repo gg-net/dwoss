@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ui.cap.support;
 
-import java.util.function.Consumer;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
@@ -39,7 +37,7 @@ import eu.ggnet.saft.core.swing.VetoableOnOk;
  * <p>
  * @author oliver.guenther
  */
-public class CreateNewReportView extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<CreateNewReportView>, Consumer<Void> {
+public class CreateNewReportView extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<CreateNewReportView> {
 
     public CreateNewReportView() {
         initComponents();
@@ -74,8 +72,11 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
         return this;
     }
 
-    public void prepareTemplateText() {
-        if ( endDateChooser.getDate() == null || startDateChooser.getDate() == null || contractorComboBox.getSelectedItem() == null ) return;
+    private void prepareTemplateTextOnce() {
+        if ( !StringUtils.isBlank(nameTextField.getText())
+                || endDateChooser.getDate() == null
+                || startDateChooser.getDate() == null
+                || contractorComboBox.getSelectedItem() == null ) return;
         String text = ((TradeName)contractorComboBox.getSelectedItem()).getName() + " Report";
         text += " - " + DateFormats.ISO.format(startDateChooser.getDate());
         text += " bis " + DateFormats.ISO.format(endDateChooser.getDate());
@@ -219,15 +220,15 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
     }// </editor-fold>//GEN-END:initComponents
 
     private void contractorComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contractorComboBoxActionPerformed
-        prepareTemplateText();
+        prepareTemplateTextOnce();
     }//GEN-LAST:event_contractorComboBoxActionPerformed
 
     private void startDateChooserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startDateChooserMouseClicked
-        prepareTemplateText();
+        prepareTemplateTextOnce();
     }//GEN-LAST:event_startDateChooserMouseClicked
 
     private void endDateChooserPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_endDateChooserPropertyChange
-        prepareTemplateText();
+        prepareTemplateTextOnce();
     }//GEN-LAST:event_endDateChooserPropertyChange
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -243,10 +244,5 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
     public javax.swing.JCheckBox unreportedCheckBox;
     public javax.swing.JComboBox viewModeComboBox;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void accept(Void t) {
-        // Ignoere
-    }
 
 }
