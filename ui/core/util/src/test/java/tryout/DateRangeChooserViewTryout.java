@@ -30,7 +30,7 @@ public class DateRangeChooserViewTryout {
 
     public static void main(String[] args) {
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
-        Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(System.out::println);
+        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(System.out::println);
     }
 
 }

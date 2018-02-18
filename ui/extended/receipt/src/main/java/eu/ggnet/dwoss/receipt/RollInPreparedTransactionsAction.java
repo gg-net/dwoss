@@ -46,6 +46,7 @@ public class RollInPreparedTransactionsAction extends AccessableAction {
         Ui.exec(() -> {
             Ui.build().title("Stock Transactionen einrollen ?").swing()
                     .eval(() -> Dl.remote().lookup(StockAgent.class).findStockTransactionEager(ROLL_IN, PREPARED), () -> OkCancelWrap.consumerVetoResult(new RollInPreparedTransactionViewCask()))
+                    .opt()
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
                     .ifPresent(sts -> Ui.progress().call(() -> Dl.remote().lookup(StockTransactionProcessor.class).rollIn(sts, Dl.local().lookup(Guardian.class).getUsername())));

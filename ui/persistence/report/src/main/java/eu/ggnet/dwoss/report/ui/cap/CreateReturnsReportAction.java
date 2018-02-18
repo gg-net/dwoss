@@ -42,7 +42,7 @@ public class CreateReturnsReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new DateRangeChooserView())
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt()
                     .ifPresent(r -> {
                         Ui.build().swing().show(() -> Dl.remote().lookup(ReportAgent.class).findReportLinesByDocumentType(
                                 RETURNS, r.getStartAsDate(), r.getEndAsDate()), () -> new ReturnsReportView());

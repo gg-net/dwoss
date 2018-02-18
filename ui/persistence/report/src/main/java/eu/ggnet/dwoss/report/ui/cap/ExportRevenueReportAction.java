@@ -40,7 +40,7 @@ public class ExportRevenueReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new RevenueReportSelectionView())
+            Ui.build().fx().eval(() -> new RevenueReportSelectionView()).opt()
                     .ifPresent(v -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(RevenueReporter.class).toXls(v.getStart(), v.getEnd(), v.getStep(), v.isExtraReported()).toTemporaryFile())));
         });
     }

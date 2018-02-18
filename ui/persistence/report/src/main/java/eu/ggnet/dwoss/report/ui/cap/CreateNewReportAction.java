@@ -45,6 +45,7 @@ public class CreateNewReportAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new CreateNewReportView()))
+                    .opt()
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
                     .ifPresent(v -> Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class));

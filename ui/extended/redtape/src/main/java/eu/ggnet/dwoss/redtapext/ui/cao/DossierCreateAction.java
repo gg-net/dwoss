@@ -83,7 +83,7 @@ public class DossierCreateAction extends AbstractAction {
                 docView.setController(new DocumentUpdateController(docView, doc));
                 docView.setCustomerValues(customer.getId());
                 return OkCancelWrap.vetoResult(docView);
-            }).filter(r -> handleFailure(r, doc))
+            }).opt().filter(r -> handleFailure(r, doc))
                     .map(Reply::getPayload)
                     .ifPresent(this::handleSuccesses);
         });

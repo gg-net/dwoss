@@ -56,6 +56,7 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                     return new DescriptiveConsumer<>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
                         Ui.exec(() -> {
                             Ui.build().dialog().eval(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"), () -> new CreateQuestionView())
+                                    .opt()
                                     .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class).perpareTransfer(
                                     v.stockUnits,
                                     v.destination.getId(),

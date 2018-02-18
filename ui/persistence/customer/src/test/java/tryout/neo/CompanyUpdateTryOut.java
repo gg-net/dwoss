@@ -24,7 +24,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Company;
 import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -51,14 +52,14 @@ public class CompanyUpdateTryOut {
         JButton editButton = new JButton("edit");
         editButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> company, CompanyUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
-        
+
         JButton addButton = new JButton("add");
         addButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> new Company(), CompanyUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> new Company(), CompanyUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 

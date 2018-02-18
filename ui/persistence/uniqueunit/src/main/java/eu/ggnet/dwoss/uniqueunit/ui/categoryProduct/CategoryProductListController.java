@@ -24,7 +24,8 @@ import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.FxSaft;
@@ -117,6 +118,7 @@ public class CategoryProductListController implements Initializable, FxControlle
         if ( cp != null ) {
             Ui.exec(() -> {
                 Ui.build(root).dialog().eval(() -> new Alert(Alert.AlertType.WARNING, "Soll das CategoryProduct " + cp.getName() + " wirklich gelöscht werden?!", ButtonType.YES, ButtonType.NO))
+                        .opt()
                         .filter((type) -> type.equals(ButtonType.YES))
                         .map(i -> Dl.remote().lookup(UniqueUnitAgent.class).deleteCategoryProduct(cp.getId()))
                         .filter(Ui.failure()::handle)
@@ -189,6 +191,7 @@ public class CategoryProductListController implements Initializable, FxControlle
     private void openEdit(CategoryProduct cp) {
         Ui.exec(() -> {
             Ui.build(root).fxml().eval(() -> cp, CategoryProductEditorController.class)
+                    .opt()
                     .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOrUpdate(dto, Dl.local().lookup(Guardian.class).getUsername()))
                     .ifPresent(this::updateList);
         });

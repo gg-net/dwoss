@@ -20,11 +20,10 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AccessableAction;
-
-
 import eu.ggnet.dwoss.util.DateRangeChooserView;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOCUMENTS_FOR_SAGE_IN_XML;
 
@@ -39,11 +38,10 @@ public class SageExportAction extends AccessableAction {
         super(EXPORT_DOCUMENTS_FOR_SAGE_IN_XML);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-       Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
-           Ui.progress().title("Sage Export")
+        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
+            Ui.progress().title("Sage Export")
                     .call(() -> Dl.remote().lookup(SageExporter.class).toXml(r.getStartAsDate(), r.getEndAsDate()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
         });
 

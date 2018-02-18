@@ -42,7 +42,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     @SuppressWarnings("UseSpecificCatch")
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new RemoveQuestionView()).ifPresent(v -> Ui.progress().call(() -> {
+            Ui.build().fx().eval(() -> new RemoveQuestionView()).opt().ifPresent(v -> Ui.progress().call(() -> {
                 Dl.remote().lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment());
                 Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(AlertType.INFO);
                 return null;

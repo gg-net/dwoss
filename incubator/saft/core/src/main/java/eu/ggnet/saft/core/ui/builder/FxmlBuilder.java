@@ -126,17 +126,17 @@ public class FxmlBuilder extends AbstractBuilder {
      * @param fxmlControllerClass the swingPanelProducer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, V extends FxController & ResultProducer<T>> Optional<T> eval(Class<V> fxmlControllerClass) {
+    public <T, V extends FxController & ResultProducer<T>> Result<T> eval(Class<V> fxmlControllerClass) {
         try {
             Objects.requireNonNull(fxmlControllerClass, "The fx controller class is null, not allowed");
             Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, null);
             Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             ResultProducer<T> controller = loader.getController();
             SwingSaft.enableCloser(window, controller);
             wait(window);             // Relevant for the result.
-            return Optional.ofNullable(controller.getResult());             // Relevant for the result.
+            return new Result<>(Optional.ofNullable(controller.getResult()));             // Relevant for the result.
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -154,20 +154,20 @@ public class FxmlBuilder extends AbstractBuilder {
      * @param fxmlControllerClass the swingPanelProducer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, P, V extends FxController & Consumer<P> & ResultProducer<T>> Optional<T> eval(Callable<P> preProducer, Class<V> fxmlControllerClass) {
+    public <T, P, V extends FxController & Consumer<P> & ResultProducer<T>> Result<T> eval(Callable<P> preProducer, Class<V> fxmlControllerClass) {
         try {
             Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
             Objects.requireNonNull(fxmlControllerClass, "The javafxPaneProducer is null, not allowed");
             Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
             P preResult = callWithProgress(preProducer);
             p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
             FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, preResult); // Relevent for preproducer
             Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
             ResultProducer<T> controller = loader.getController();
             SwingSaft.enableCloser(window, controller);
             wait(window);            // Relevant for the result.
-            return Optional.ofNullable(controller.getResult());            // Relevant for the result.
+            return new Result<>(Optional.ofNullable(controller.getResult()));            // Relevant for the result.
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

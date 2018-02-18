@@ -78,16 +78,7 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
      */
     public <V extends Pane> void show(Callable<V> javafxPaneProducer) {
-        try {
-            Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = javafxPaneProducer.call();
-            Params p = buildParameterBackedUpByDefaults(pane.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, pane);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        intEval(null, javafxPaneProducer);
     }
 
     /**
@@ -101,20 +92,7 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
      */
     public <P, V extends Pane & Consumer<P>> void show(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
-        try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
-            Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = FxSaft.dispatch(javafxPaneProducer);
-            Params p = buildParameterBackedUpByDefaults(pane.getClass());
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            pane.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, pane);
-        } catch (InterruptedException | InvocationTargetException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        intEval(preProducer, javafxPaneProducer);
     }
 
     /**
@@ -127,19 +105,8 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer the producer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, V extends Pane & ResultProducer<T>> Optional<T> eval(Callable<V> javafxPaneProducer) {
-        try {
-            Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-            V pane = FxSaft.dispatch(javafxPaneProducer);  // Creating the panel on the right thread
-            Params p = buildParameterBackedUpByDefaults(pane.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
-            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, pane);
-            wait(window);
-            return Optional.ofNullable(pane.getResult());
-        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
+    public <T, V extends Pane & ResultProducer<T>> Result<T> eval(Callable<V> javafxPaneProducer) {
+        return new Result<>(intEval(null, javafxPaneProducer));
     }
 
     /**
@@ -153,20 +120,38 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer the producer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, P, V extends Pane & Consumer<P> & ResultProducer<T>> Optional<T> eval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+    public <T, P, V extends Pane & Consumer<P> & ResultProducer<T>> Result<T> eval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+        return new Result<>(intEval(preProducer, javafxPaneProducer));
+    }
+
+    /**
+     * Internal implementation, breaks the compile safty of the public methodes.
+     *
+     * @param <P>
+     * @param <V>
+     * @param preProducer
+     * @param javafxPaneProducer
+     * @return
+     */
+    private <P, V extends Pane> Optional intEval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
         try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
             V pane = FxSaft.dispatch(javafxPaneProducer); // Creating the panel on the right thread
             Params p = buildParameterBackedUpByDefaults(pane.getClass());
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
+            P preResult = null;
+            if ( preProducer != null ) {
+                preResult = callWithProgress(preProducer);
+                p.optionalSupplyId(preResult);
+            }
             if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
-            pane.accept(preResult); // Calling the preproducer and setting the result in the panel
+            if ( preProducer != null && pane instanceof Consumer ) {
+                ((Consumer)pane).accept(preResult); // Calling the preproducer and setting the result in the panel
+            }
             Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             SwingSaft.enableCloser(window, pane);
             wait(window);
-            return Optional.ofNullable(pane.getResult());
+            if ( pane instanceof ResultProducer ) return Optional.ofNullable(((ResultProducer)pane).getResult());
+            return null; // using the return value without a ResultProducer must fail.
         } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }

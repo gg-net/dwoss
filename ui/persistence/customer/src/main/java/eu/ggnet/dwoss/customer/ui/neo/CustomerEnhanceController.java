@@ -266,6 +266,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void handleSelectPreferedAddressLabelsButtonAction(ActionEvent event) {
         Ui.exec(() -> {
             Ui.build(commentTextArea).fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class)
+                    .opt()
                     .ifPresent(invoiceAddressLabelWithNullableShippingAddressLabel -> {
                         Customer c = getCustomer();
                         c.getAddressLabels().clear();
@@ -460,12 +461,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             addButton.setOnAction((ActionEvent e) -> {
 
                 Ui.exec(() -> {
-                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class).ifPresent(
-                            a -> {
-                                Platform.runLater(() -> {
-                                    contactList.add(a);
-                                });
-                            });
+                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class)
+                            .opt()
+                            .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
                 });
 
             });
@@ -537,45 +535,36 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a);
-                        });
-                    });
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class)
+                    .opt()
+                    .ifPresent(a -> Platform.runLater(() -> contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a)));
         });
     }
 
     private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            contactList.add(a);
-                        });
-                    });
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class)
+                    .opt()
+                    .filter(a -> a != null)
+                    .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
         });
     }
 
     private void editCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a);
-                        });
-                    });
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class)
+                    .opt()
+                    .filter(a -> a != null)
+                    .ifPresent(a -> Platform.runLater(() -> companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a)));
         });
     }
 
     private void addCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class).ifPresent(
-                    a -> {
-                        Platform.runLater(() -> {
-                            companyList.add(a);
-                        });
-                    });
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class)
+                    .opt()
+                    .filter(a -> a != null)
+                    .ifPresent(a -> Platform.runLater(() -> companyList.add(a)));
         });
     }
 
@@ -590,6 +579,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         Ui.exec(() -> {
             Ui.build(commentTextArea).fxml().eval(() -> getCustomer().getMandatorMetadata().get(0), MandatorMetaDataController.class)
+                    .opt()
                     .ifPresent(newMandatorMetaData -> {
                         MandatorMetadata oldMandatorMetadata = getCustomer().getMandatorMetadata().get(0);
                         oldMandatorMetadata.setMandatorMatchcode(newMandatorMetaData.getMandatorMatchcode());

@@ -43,7 +43,7 @@ public class SelectExistingReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> Dl.remote().lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView())
+            Ui.build().fx().eval(() -> Dl.remote().lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView()).opt()
                     .ifPresent(id -> Ui.build().fxml().show(() -> new In(Ui.progress().call(() -> Dl.remote().lookup(ReportAgent.class).findReportResult(id)), true), ReportController.class));
         });
     }

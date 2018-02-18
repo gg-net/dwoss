@@ -16,13 +16,13 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import eu.ggnet.saft.core.ui.FxSaft;
-import eu.ggnet.saft.core.ui.SwingCore;
-
 import java.io.File;
 import java.util.Optional;
 
 import javafx.stage.FileChooser;
+
+import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.core.ui.SwingCore;
 
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -43,7 +43,7 @@ public class FileChooserBuilder {
      * @return the selected file or empty.
      */
     // TODO: This is the only time we us a javafx component in all modes. It should be considered, that in the swing mode, the JFileChoser should be used.
-    public Optional<File> open() {
+    public Result<File> open() {
         SwingCore.ensurePlatformIsRunning();
         File file = FxSaft.dispatch(() -> {
             FileChooser fileChooser = new FileChooser();
@@ -51,7 +51,7 @@ public class FileChooserBuilder {
             else fileChooser.setTitle(title);
             return fileChooser.showOpenDialog(null);
         });
-        return Optional.ofNullable(file);
+        return new Result<>(Optional.ofNullable(file));
     }
 
 }

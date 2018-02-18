@@ -6,7 +6,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 
 /*
@@ -45,7 +46,7 @@ public class CommunicationUpdateTryout {
             }
 
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> comm, CommunicationUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> comm, CommunicationUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 
@@ -53,7 +54,7 @@ public class CommunicationUpdateTryout {
 
         addButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> new Communication(), CommunicationUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> new Communication(), CommunicationUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 

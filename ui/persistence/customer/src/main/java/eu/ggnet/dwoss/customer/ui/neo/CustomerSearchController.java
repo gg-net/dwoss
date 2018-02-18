@@ -152,17 +152,17 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 if ( customer.isSimple() ) {
                     L.info("Edit Simple Customer {}", customer.getId());
                     Optional<CustomerContinue> result = Ui.build(resultListView).fxml()
-                            .eval(() -> customer, CustomerSimpleController.class);
+                            .eval(() -> customer, CustomerSimpleController.class).opt();
                     if ( !result.isPresent() ) return;
                     Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
                     if ( Ui.failure().handle(reply) ) return;
                     if ( !result.get().continueEnhance ) return;
                     Ui.build(statusHbox).fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
-                            .ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
+                            .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
                 } else {
                     L.info("Edit (Complex) Customer {}", customer.getId());
                     Ui.build(statusHbox).fxml().eval(() -> customer, CustomerEnhanceController.class)
-                            .ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
+                            .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
                 }
             });
         });

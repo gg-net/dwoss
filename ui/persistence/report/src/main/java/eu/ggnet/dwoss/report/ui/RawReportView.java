@@ -262,6 +262,7 @@ public class RawReportView extends BorderPane {
         okButton.setText("Save");
 
         Ui.build().parent(this).dialog().eval(() -> dialog)
+                .opt()
                 .filter(result -> result == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), textarea.getText()));
     }
@@ -281,7 +282,7 @@ public class RawReportView extends BorderPane {
         dialogPane.setContent(grid);
         dialogPane.getButtonTypes().addAll(ButtonType.CANCEL, ButtonType.OK);
 
-        Ui.build(this).dialog().eval(() -> dialog).filter(response -> response == ButtonType.OK)
+        Ui.build(this).dialog().eval(() -> dialog).opt().filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> storeComment(table.getSelectionModel().getSelectedItem(), input));
 
     }

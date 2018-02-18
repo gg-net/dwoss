@@ -50,12 +50,16 @@ public class CreateSimpleAction extends AccessableAction {
 
         Ui.exec(() -> {
             Ui.build().fxml().eval(CreateSelectionController.class)
+                    .opt()
                     .map(this::handleResult)
-                    .ifPresent(c -> Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
-                    .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
-                    .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
-                    ).filter(Ui.failure()::handle)
-                    .ifPresent(t -> Ui.build().alert("Umfuhr angelegt")));
+                    .ifPresent(c -> {
+                        Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
+                                .opt()
+                                .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
+                                .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
+                                ).filter(Ui.failure()::handle)
+                                .ifPresent(t -> Ui.build().alert("Umfuhr angelegt"));
+                    });
         });
 
     }

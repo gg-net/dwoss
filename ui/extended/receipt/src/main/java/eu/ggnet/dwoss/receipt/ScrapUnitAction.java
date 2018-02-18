@@ -53,6 +53,7 @@ public class ScrapUnitAction extends AccessableAction {
             UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> destroyer.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
             Ui.exec(() -> {
                 Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich verschrotten ?"))
+                        .opt()
                         .filter(b -> b == OK)
                         .ifPresent(r -> {
                             String reason = showInputDialog(UiCore.getMainFrame(), "Bitte Grund angeben");

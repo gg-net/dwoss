@@ -23,7 +23,8 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -47,9 +48,10 @@ public class PriceImportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open();
+            Optional<File> inFile = Ui.fileChooser().open().opt();
             if ( !inFile.isPresent() ) return;
             Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + inFile.get().getPath() + " importieren ?"))
+                    .opt()
                     .filter(b -> b == OK)
                     .map(b -> TikaUtil.isExcel(inFile.get()))
                     .filter(Ui.failure()::handle)

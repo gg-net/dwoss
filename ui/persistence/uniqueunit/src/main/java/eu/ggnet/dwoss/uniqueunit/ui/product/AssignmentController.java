@@ -105,14 +105,15 @@ public class AssignmentController implements Initializable, FxController {
     private void addUnitCollection() {
         final PicoProduct selectedProduct = productList.getSelectionModel().getSelectedItem();
         if ( selectedProduct == null ) return;
-            Ui.exec(() -> {
-                Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
-                        .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOnProduct(selectedProduct.getId(), dto, Dl.local().lookup(Guardian.class).getUsername()))
-                        .filter(Ui.failure()::handle)
-                        .map(Reply::getPayload)
-                        .ifPresent(uc -> {
-                            unitCollectionList.getItems().add(uc);
-                        });
+        Ui.exec(() -> {
+            Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                    .opt()
+                    .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOnProduct(selectedProduct.getId(), dto, Dl.local().lookup(Guardian.class).getUsername()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .ifPresent(uc -> {
+                        unitCollectionList.getItems().add(uc);
+                    });
         });
     }
 
@@ -123,6 +124,7 @@ public class AssignmentController implements Initializable, FxController {
         if ( selectedUnitCollection == null ) return;
         Ui.exec(() -> {
             Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                    .opt()
                     .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).update(dto, Dl.local().lookup(Guardian.class).getUsername()))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)

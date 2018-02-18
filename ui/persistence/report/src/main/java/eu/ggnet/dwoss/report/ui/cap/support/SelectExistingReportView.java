@@ -176,6 +176,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
 
         Ui.exec(() -> {
             Ui.build().parent(this).dialog().eval(() -> dialog)
+                    .opt()
                     .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
                     .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {

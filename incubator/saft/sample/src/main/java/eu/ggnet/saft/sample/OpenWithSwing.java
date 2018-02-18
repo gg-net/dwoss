@@ -126,19 +126,19 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once InputPane via Fxml ");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().fxml().eval(SimpleFxmlController.class).ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
+                Ui.build().fxml().eval(SimpleFxmlController.class).opt().ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
             }));
             menu.add(b);
 
             b = new JMenuItem("Ui.build.dialog with javfx Alert");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).ifPresent(t -> Ui.build().alert().message("Result: " + t).show());
+                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).opt().ifPresent(t -> Ui.build().alert().message("Result: " + t).show());
             }));
             menu.add(b);
 
             b = new JMenuItem("Ui.build.dialog with javfx Alert (window modal)");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().modality(Modality.WINDOW_MODAL).dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
+                Ui.build().modality(Modality.WINDOW_MODAL).dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).opt().ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
             }));
             menu.add(b);
 

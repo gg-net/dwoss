@@ -16,7 +16,7 @@ public class FileOsOpen {
 
         // New Stype
         Ui.exec(() -> {
-            Ui.fileChooser().title("Bitte Datei auswählen, die das Betriebsystem öffnen kann").open()
+            Ui.fileChooser().title("Bitte Datei auswählen, die das Betriebsystem öffnen kann").open().opt()
                     .ifPresent(file -> Ui.osOpen(file));
         });
 
