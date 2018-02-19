@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.ReportAgent;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Dl;
@@ -42,7 +42,7 @@ public class CreateReturnsReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new DateRangeChooserView())
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt()
                     .ifPresent(r -> {
                         Ui.build().swing().show(() -> Dl.remote().lookup(ReportAgent.class).findReportLinesByDocumentType(
                                 RETURNS, r.getStartAsDate(), r.getEndAsDate()), () -> new ReturnsReportView());

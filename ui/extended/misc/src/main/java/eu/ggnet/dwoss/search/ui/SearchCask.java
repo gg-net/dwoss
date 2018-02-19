@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.op.Searcher;
+import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;

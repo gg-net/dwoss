@@ -34,7 +34,7 @@ import eu.ggnet.saft.core.cap.MainComponent;
 import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.Selector;
 
-import stock.upi.StockUpi;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 
 /**

@@ -36,12 +36,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.Dl;
 
 import lombok.Getter;
 
-import static eu.ggnet.dwoss.stock.entity.Shipment.Status.OPENED;
+import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
 import static java.lang.Double.MAX_VALUE;
 
 /**

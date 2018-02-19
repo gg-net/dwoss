@@ -4,7 +4,7 @@ import java.awt.Dimension;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.categoryProduct.CategoryProductListController;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;

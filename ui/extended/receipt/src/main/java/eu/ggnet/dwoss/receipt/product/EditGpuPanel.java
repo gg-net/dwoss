@@ -21,11 +21,11 @@ import java.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu.Series;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu.Type;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Series;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Type;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 

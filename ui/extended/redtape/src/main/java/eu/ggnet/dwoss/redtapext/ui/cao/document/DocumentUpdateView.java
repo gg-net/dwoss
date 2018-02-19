@@ -50,7 +50,8 @@ import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
@@ -683,7 +684,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
 
     private void taxChangeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_taxChangeButtonActionPerformed
         Ui.exec(() -> {
-            Ui.build(this).fx().eval(() -> new TaxChangePane()).ifPresent(taxType -> {
+            Ui.build(this).fx().eval(() -> new TaxChangePane()).opt().ifPresent(taxType -> {
                 L.debug("Changeing Tax to {}", taxType);
                 document.setTaxType(taxType);
                 final PostLedger ledgers = Dl.local().lookup(CachedMandators.class).loadPostLedger();

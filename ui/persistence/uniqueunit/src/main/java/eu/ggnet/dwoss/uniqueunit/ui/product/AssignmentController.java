@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,10 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -105,14 +108,15 @@ public class AssignmentController implements Initializable, FxController {
     private void addUnitCollection() {
         final PicoProduct selectedProduct = productList.getSelectionModel().getSelectedItem();
         if ( selectedProduct == null ) return;
-            Ui.exec(() -> {
-                Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
-                        .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOnProduct(selectedProduct.getId(), dto, Dl.local().lookup(Guardian.class).getUsername()))
-                        .filter(Ui.failure()::handle)
-                        .map(Reply::getPayload)
-                        .ifPresent(uc -> {
-                            unitCollectionList.getItems().add(uc);
-                        });
+        Ui.exec(() -> {
+            Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                    .opt()
+                    .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).createOnProduct(selectedProduct.getId(), dto, Dl.local().lookup(Guardian.class).getUsername()))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .ifPresent(uc -> {
+                        unitCollectionList.getItems().add(uc);
+                    });
         });
     }
 
@@ -123,6 +127,7 @@ public class AssignmentController implements Initializable, FxController {
         if ( selectedUnitCollection == null ) return;
         Ui.exec(() -> {
             Ui.build(root).fxml().eval(() -> new UnitCollection(), UnitCollectionEditorController.class)
+                    .opt()
                     .map(dto -> Dl.remote().lookup(UniqueUnitAgent.class).update(dto, Dl.local().lookup(Guardian.class).getUsername()))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)

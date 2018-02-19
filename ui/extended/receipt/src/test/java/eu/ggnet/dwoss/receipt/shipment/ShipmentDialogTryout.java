@@ -9,14 +9,14 @@ import org.junit.Test;
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
 
-import stock.upi.StockUpi;
-import stock.upi.impl.StockUpiImpl;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
+import eu.ggnet.dwoss.stock.upi.impl.StockUpiImpl;
 
 /**
  *

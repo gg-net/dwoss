@@ -17,9 +17,11 @@
 package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Window;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javafx.scene.control.Button;
@@ -55,25 +57,24 @@ public class DialogBuilder extends AbstractBuilder {
      * @param dialogProducer the javafx Dialog producer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, V extends Dialog<T>> Optional<T> eval(Callable<V> dialogProducer) {
+    public <T, V extends Dialog<T>> Result<T> eval(Callable<V> dialogProducer) {
         try {
             Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
 
             V dialog = FxSaft.dispatch(dialogProducer);
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
                 ((Button)b).setOnAction(e -> {
                     L.debug("Close on Dialog called");
-                    Ui.closeWindowOf(window);
+                    Ui.closeWindowOf(dialog.getDialogPane());
                 });
             });
+            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             wait(window);
-            return Optional.ofNullable(dialog.getResult());
-
-        } catch (Exception ex) {
+            return new Result<>(Optional.ofNullable(dialog.getResult()));
+        } catch (InterruptedException | RuntimeException | InvocationTargetException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -89,7 +90,7 @@ public class DialogBuilder extends AbstractBuilder {
      * @param dialogProducer the javafx Dialog producer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
-    public <T, P, V extends Dialog<T> & Consumer<P>> Optional<T> eval(Callable<P> preProducer, Callable<V> dialogProducer) {
+    public <T, P, V extends Dialog<T> & Consumer<P>> Result<T> eval(Callable<P> preProducer, Callable<V> dialogProducer) {
         try {
             Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
 
@@ -97,19 +98,19 @@ public class DialogBuilder extends AbstractBuilder {
             Params p = buildParameterBackedUpByDefaults(dialog.getClass());
             P preResult = callWithProgress(preProducer);
             p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return Optional.empty();
+            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
             dialog.accept(preResult); // Calling the preproducer and setting the result in the panel
             dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
                 ((Button)b).setOnAction(e -> {
                     L.debug("Close on Dialog called");
-                    Ui.closeWindowOf(window);
+                    Ui.closeWindowOf(dialog.getDialogPane());
                 });
             });
+            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
             wait(window);
-            return Optional.ofNullable(dialog.getResult());
-        } catch (Exception ex) {
+            return new Result<>(Optional.ofNullable(dialog.getResult()));
+        } catch (InterruptedException | RuntimeException | InvocationTargetException | ExecutionException ex) {
             throw new RuntimeException(ex);
         }
     }

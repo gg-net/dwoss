@@ -16,24 +16,17 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import java.awt.Window;
-import java.awt.event.ActionEvent;
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 
-import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import org.openide.util.Lookup;
-
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.saft.core.auth.Guardian;
-
-import eu.ggnet.saft.core.auth.AccessableAction;
-
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
@@ -61,6 +54,7 @@ public class DeleteUnitAction extends AccessableAction {
             UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> deleteUnitOp.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
             Ui.exec(() -> {
                 Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich gelöschen ?"))
+                        .opt()
                         .filter(b -> b == OK)
                         .ifPresent(r -> {
                             deleteUnitOp.delete(uniqueUnit, "Löschung aus UI", Dl.remote().lookup(Guardian.class).getUsername());

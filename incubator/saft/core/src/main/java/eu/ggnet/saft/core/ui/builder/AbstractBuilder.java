@@ -221,7 +221,7 @@ public abstract class AbstractBuilder {
         latch.await(); //TODO: What happens if we were called on the EventQueue ???
     }
 
-    private Optional<Dialog.ModalityType> toSwing(Modality m) {
+    protected Optional<Dialog.ModalityType> toSwing(Modality m) {
         if ( m == null ) return Optional.empty();
         switch (m) {
             case APPLICATION_MODAL:

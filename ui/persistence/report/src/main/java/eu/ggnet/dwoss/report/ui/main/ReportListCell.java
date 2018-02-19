@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.report.ui.main;
 
-import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.ee.entity.Report;
 
 import javafx.scene.control.*;
 import javafx.util.Callback;

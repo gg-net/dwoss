@@ -24,9 +24,9 @@ import javax.swing.UIManager;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.ProductGroup;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.DisplayAbleDesktop;
-import eu.ggnet.dwoss.spec.format.SpecFormater;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.DisplayAbleDesktop;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
 public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {

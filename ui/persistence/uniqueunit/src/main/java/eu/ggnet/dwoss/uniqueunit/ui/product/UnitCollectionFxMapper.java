@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,9 +30,8 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 
 /**

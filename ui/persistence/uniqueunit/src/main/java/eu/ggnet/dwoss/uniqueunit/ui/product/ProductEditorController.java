@@ -26,9 +26,9 @@ import javafx.util.converter.NumberStringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.ProductDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.ProductDto;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductFx.AdditionalPartNo;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductFx.Prices;
 import eu.ggnet.saft.Ui;

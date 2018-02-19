@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.Dl;

@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.util.table.*;
 
 import lombok.ToString;

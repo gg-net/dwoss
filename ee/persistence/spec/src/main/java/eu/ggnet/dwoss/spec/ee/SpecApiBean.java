@@ -21,7 +21,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
-import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 
 /**
  *

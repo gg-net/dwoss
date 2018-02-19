@@ -5,17 +5,22 @@
  */
 package tryout.stub;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+
 import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.api.Reply;
 
 /**

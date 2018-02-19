@@ -10,9 +10,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.emo.DisplayEmo;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.emo.DisplayEmo;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

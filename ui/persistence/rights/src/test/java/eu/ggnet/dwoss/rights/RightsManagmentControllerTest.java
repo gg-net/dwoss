@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.rights;
 
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 

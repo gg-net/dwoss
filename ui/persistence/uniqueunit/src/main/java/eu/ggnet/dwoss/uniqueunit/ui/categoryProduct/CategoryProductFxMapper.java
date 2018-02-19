@@ -21,9 +21,9 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
 /**
  * MapStruct Mapper for CategroyProduct and DTO.

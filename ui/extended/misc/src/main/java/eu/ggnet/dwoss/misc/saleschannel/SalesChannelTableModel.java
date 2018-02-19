@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.util.table.Column;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.model.SalesChannelLine;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 
 public class SalesChannelTableModel extends SimpleTableModel<SalesChannelLine> {
 

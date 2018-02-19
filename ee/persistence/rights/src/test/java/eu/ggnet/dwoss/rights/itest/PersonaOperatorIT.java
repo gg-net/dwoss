@@ -1,5 +1,6 @@
 package eu.ggnet.dwoss.rights.itest;
 
+import eu.ggnet.dwoss.rights.ee.RightsAgentBean;
 import eu.ggnet.dwoss.rights.itest.support.ArquillianProjectArchive;
 
 import javax.inject.Inject;
@@ -8,9 +9,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.rights.*;
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 import static org.assertj.core.api.Assertions.assertThat;

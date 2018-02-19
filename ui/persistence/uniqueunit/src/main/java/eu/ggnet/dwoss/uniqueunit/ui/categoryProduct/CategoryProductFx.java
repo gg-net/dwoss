@@ -12,7 +12,7 @@ import javafx.collections.*;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 
 import lombok.ToString;
 

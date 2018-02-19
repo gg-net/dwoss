@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.misc.op.ImageIdHandler;
+import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.Dl;
@@ -48,9 +48,10 @@ public class ImportImageIdsAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open();
+            Optional<File> inFile = Ui.fileChooser().open().opt();
             if ( !inFile.isPresent() ) return;
             Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "ImageIds aus der Datei:" + inFile.get().getPath() + " importieren ?"))
+                    .opt()
                     .filter(b -> b == OK)
                     .map(b -> TikaUtil.isExcel(inFile.get()))
                     .filter(Ui.failure()::handle)

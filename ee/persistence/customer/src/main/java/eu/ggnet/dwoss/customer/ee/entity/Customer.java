@@ -616,4 +616,10 @@ public class Customer implements Serializable, EagerAble {
             c.getCommunications().size();
         });
     }
+
+    // TODO: Remove after switch to new uis.
+    @PostLoad
+    private void postLoad() {
+        addressLabels.add(toPreferedInvoiceAddress());
+    }
 }

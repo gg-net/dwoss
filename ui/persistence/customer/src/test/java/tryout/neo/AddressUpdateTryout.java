@@ -16,12 +16,14 @@
  */
 package tryout.neo;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -44,14 +46,14 @@ public class AddressUpdateTryout {
             }
 
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> address, AddressUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> address, AddressUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 
         JButton addButton = new JButton("Add");
         addButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> new Address(), AddressUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> new Address(), AddressUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 

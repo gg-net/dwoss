@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.receipt.unit;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.uniqueunit.op.AddUnitHistory;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.*;
+import eu.ggnet.dwoss.uniqueunit.ee.op.AddUnitHistory;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
@@ -43,6 +43,7 @@ public class AddCommentAction extends AccessableAction {
             Ui.build().title("Füge eine Unit Kommentar hinzu")
                     .swing()
                     .eval(() -> OkCancelWrap.result(new AddCommentCask()))
+                    .opt()
                     .ifPresent(r -> Dl.remote().lookup(AddUnitHistory.class).addCommentHistory(r.getPayload().RefurbishId, r.getPayload().Comment, Dl.local().lookup(Guardian.class).getUsername()));
         });
     }

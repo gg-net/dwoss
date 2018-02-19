@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -56,6 +56,7 @@ public class ConsumerFactoryOfStockTransactions implements DescriptiveConsumerFa
                     return new DescriptiveConsumer<>("Umfuhr von " + su.getStock().getName() + " nach " + destination.getName(), (PicoUnit t1) -> {
                         Ui.exec(() -> {
                             Ui.build().dialog().eval(() -> new CreateQuestionModel(su, destination, "Umfuhr direkt durch Nutzer erzeugt"), () -> new CreateQuestionView())
+                                    .opt()
                                     .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class).perpareTransfer(
                                     v.stockUnits,
                                     v.destination.getId(),

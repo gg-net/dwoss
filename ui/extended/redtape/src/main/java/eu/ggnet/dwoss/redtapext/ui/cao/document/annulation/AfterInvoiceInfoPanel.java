@@ -20,8 +20,8 @@ import java.awt.Component;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
 
 /**

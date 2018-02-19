@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.rights.RightsAgent;
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.op.Authentication;
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;

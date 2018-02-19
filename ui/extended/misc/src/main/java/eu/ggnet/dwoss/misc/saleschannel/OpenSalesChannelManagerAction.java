@@ -26,11 +26,11 @@ import javax.swing.SwingWorker;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.misc.op.SalesChannelHandler;
+import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.model.SalesChannelLine;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;

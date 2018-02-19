@@ -20,10 +20,10 @@ import java.awt.Color;
 import java.io.File;
 import java.util.*;
 
-import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.dwoss.util.DateFormats.ISO;

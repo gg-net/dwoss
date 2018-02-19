@@ -18,13 +18,13 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
-import javafx.scene.control.*;
+import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -50,11 +50,12 @@ public class PriceBlockerAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte SopoNr eingeben :");
                 return dialog;
-            }).filter(r -> {
+            }).opt().filter(r -> {
                 try {
                     PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(r).getPayload();
                     PriceBlockerViewCask pbp = new PriceBlockerViewCask(r, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
                     Ui.build().title("Preise fixieren").swing().eval(() -> OkCancelWrap.result(pbp))
+                            .opt()
                             .filter(Ui.failure()::handle)
                             .map(Reply::getPayload)
                             .ifPresent(f -> {

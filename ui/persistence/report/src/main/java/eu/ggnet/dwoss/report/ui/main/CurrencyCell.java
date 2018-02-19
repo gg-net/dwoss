@@ -21,7 +21,7 @@ import java.text.NumberFormat;
 import javafx.scene.control.TableCell;
 import javafx.scene.paint.Color;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 /**
  * Displaying double as currency with color.

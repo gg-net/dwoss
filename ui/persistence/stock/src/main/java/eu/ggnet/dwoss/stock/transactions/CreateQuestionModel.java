@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.stock.transactions;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 
 /**
  * The CreateQuestionModel. This class assumes, that all data is valid.

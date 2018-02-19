@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.stock.transactions;
 import javafx.scene.control.*;
 import javafx.util.Callback;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
 /**
  *

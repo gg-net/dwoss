@@ -31,9 +31,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.dwoss.misc.op.ResolveRepayment;
-import eu.ggnet.dwoss.misc.op.ResolveRepayment.ResolveResult;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
+import eu.ggnet.dwoss.misc.ee.ResolveRepayment.ResolveResult;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;

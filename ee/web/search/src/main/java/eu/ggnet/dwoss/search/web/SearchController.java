@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.op.SearcherOperation;
+import eu.ggnet.dwoss.search.ee.SearcherOperation;
 
 import lombok.Getter;
 import lombok.Setter;

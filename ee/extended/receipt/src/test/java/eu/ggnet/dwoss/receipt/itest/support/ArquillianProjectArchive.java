@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.receipt.UnitDestroyer;
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.dwoss.receipt.itest.ReceiptGeneratorOperationIT;
 
 import static org.jboss.shrinkwrap.api.Filters.exclude;

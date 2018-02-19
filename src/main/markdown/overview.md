@@ -20,6 +20,7 @@ In the core the application has a simple layer model.
 2. EE (for the Server), UI (for the Client) -> layer
 	1. Core -> sublayer
 		- Non Persistence Projects, APIs.
+                - This layer is a little bit grubby. Some project depend on other projects in this layer. This may be cleaned up in the future.
 	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
 		- Only one data source per project.

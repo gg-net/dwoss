@@ -33,8 +33,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Dl;
@@ -176,6 +176,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
 
         Ui.exec(() -> {
             Ui.build().parent(this).dialog().eval(() -> dialog)
+                    .opt()
                     .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
                     .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {

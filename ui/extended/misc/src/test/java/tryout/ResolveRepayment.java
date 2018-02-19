@@ -47,7 +47,7 @@ public class ResolveRepayment {
             dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
             dialog.setContentText("Lieferant auswählen:");
             return dialog;
-        }).ifPresent(System.out::println);
+        }).opt().ifPresent(System.out::println);
     }
 
     public static void run() {

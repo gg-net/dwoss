@@ -5,14 +5,18 @@
  */
 package tryout.stub;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
 
 /**
  * A class that allows to create products with random predefined values.

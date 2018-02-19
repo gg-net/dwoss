@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.price.engine;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+
 import java.util.Objects;
 
 import javax.enterprise.inject.Instance;
@@ -30,8 +34,7 @@ import eu.ggnet.dwoss.price.api.Estimator;
 import eu.ggnet.dwoss.price.api.Estimator.Result;
 import eu.ggnet.dwoss.price.engine.support.TraceCollector;
 import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 
 import static eu.ggnet.dwoss.price.engine.PriceEngineResult.Change.SET;
 

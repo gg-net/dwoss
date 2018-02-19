@@ -225,10 +225,8 @@ public class DocumentUpdateViewTryout {
         view.setController(controller);
         view.setCustomerValues(1);
 
-        Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancelWrap.vetoResult(view)).ifPresent(System.out::println);
+        Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancelWrap.vetoResult(view)).opt().ifPresent(System.out::println);
 
-//        OkCancelDialog<DocumentUpdateView> cdDialog = new OkCancelDialog<>("Auftrag anlegen", view);
-//        cdDialog.setVisible(true);
     }
 
 }

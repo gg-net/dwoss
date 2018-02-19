@@ -23,7 +23,8 @@ import javafx.scene.control.Alert;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
@@ -46,7 +47,7 @@ public class LastWeekCloseAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
-                    .filter(b -> b == OK)
+                    .opt().filter(b -> b == OK)
                     .map(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloser.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())));
 
         });

@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
-import eu.ggnet.dwoss.receipt.UnitProcessor;
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.UiCore;

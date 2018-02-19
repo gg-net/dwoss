@@ -23,7 +23,7 @@ import javax.swing.UIManager;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.ProductGroup;
 
-import eu.ggnet.dwoss.spec.entity.Monitor;
+import eu.ggnet.dwoss.spec.ee.entity.Monitor;
 import eu.ggnet.dwoss.util.IPreClose;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 

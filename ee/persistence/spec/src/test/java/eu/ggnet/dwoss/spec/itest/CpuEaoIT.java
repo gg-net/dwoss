@@ -15,9 +15,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.CpuEao;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.CpuEao;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 
 import static org.junit.Assert.*;
 

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.stock.transactions;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
@@ -42,7 +42,7 @@ public class RemoveUnitFromTransactionAction extends AccessableAction {
     @SuppressWarnings("UseSpecificCatch")
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new RemoveQuestionView()).ifPresent(v -> Ui.progress().call(() -> {
+            Ui.build().fx().eval(() -> new RemoveQuestionView()).opt().ifPresent(v -> Ui.progress().call(() -> {
                 Dl.remote().lookup(StockTransactionProcessor.class).removeFromPreparedTransaction(v.refurbishId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment());
                 Ui.build().alert().message("SopoNr: " + v.refurbishId() + " aus Transaktion entfernt").show(AlertType.INFO);
                 return null;

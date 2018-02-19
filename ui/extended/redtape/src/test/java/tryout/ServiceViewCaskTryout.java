@@ -36,7 +36,7 @@ public class ServiceViewCaskTryout {
 
 // () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
         Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
-                .ifPresent(System.out::println);
+                .opt().ifPresent(System.out::println);
     }
 
 }

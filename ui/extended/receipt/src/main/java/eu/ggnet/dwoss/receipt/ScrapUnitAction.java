@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
+
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
@@ -23,7 +25,7 @@ import javafx.scene.control.Alert;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -53,6 +55,7 @@ public class ScrapUnitAction extends AccessableAction {
             UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> destroyer.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
             Ui.exec(() -> {
                 Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich verschrotten ?"))
+                        .opt()
                         .filter(b -> b == OK)
                         .ifPresent(r -> {
                             String reason = showInputDialog(UiCore.getMainFrame(), "Bitte Grund angeben");

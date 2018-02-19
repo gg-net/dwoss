@@ -8,8 +8,10 @@ package eu.ggnet.dwoss.uniqueunit.ui.product;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+
 import java.time.LocalDate;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -22,6 +24,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
 import lombok.Getter;
 import lombok.Setter;
 

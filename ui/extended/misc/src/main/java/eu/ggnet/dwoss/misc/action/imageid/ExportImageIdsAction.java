@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.misc.op.ImageIdHandler;
+import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

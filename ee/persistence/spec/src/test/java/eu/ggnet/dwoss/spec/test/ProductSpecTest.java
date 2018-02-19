@@ -1,5 +1,11 @@
 package eu.ggnet.dwoss.spec.test;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+
 import javax.validation.Validation;
 import javax.validation.Validator;
 
@@ -7,7 +13,6 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.entity.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
