@@ -42,7 +42,6 @@ import eu.ggnet.dwoss.util.table.PojoFilter;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 
-
 /**
  * @author bastian.venz
  * @author oliver.guenther
@@ -163,7 +162,7 @@ public class DossierFilterController {
             int last = nextToLoad;
             do {
                 L.debug("loading dossiers from {} to {}", last, amount);
-                foundDossiers =Dl.remote().lookup(RedTapeAgent.class).findAllEagerDescending(last, amount);
+                foundDossiers = Dl.remote().lookup(RedTapeAgent.class).findAllEagerDescending(last, amount);
                 last += amount;
                 publish(foundDossiers.toArray(new Dossier[0]));
                 L.debug("T({}) published: {}", Thread.currentThread().getName(), identifiers(foundDossiers));
