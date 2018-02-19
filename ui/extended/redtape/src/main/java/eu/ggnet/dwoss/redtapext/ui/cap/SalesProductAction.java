@@ -38,9 +38,8 @@ public class SalesProductAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        SalesProductViewCask cask = new SalesProductViewCask();
         Ui.exec(() -> {
-            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().eval(() -> OkCancelWrap.result(cask)).isPresent();
+            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().show(() -> OkCancelWrap.result(new SalesProductViewCask()));
         });
     }
 }
