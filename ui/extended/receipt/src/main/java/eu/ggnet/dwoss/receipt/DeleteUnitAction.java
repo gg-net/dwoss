@@ -65,8 +65,8 @@ public class DeleteUnitAction extends AccessableAction {
                             .opt()
                             .filter(b -> b == OK)
                             .ifPresent(rr -> {
-                                Dl.remote().lookup(UnitDestroyer.class).delete(uniqueUnit, "Löschung aus UI", Dl.remote().lookup(Guardian.class).getUsername());
-                                Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
+                                Dl.remote().lookup(UnitDestroyer.class).delete(uniqueUnit, "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());
+                                Ui.build().alert().message("SopoNr " + r + " ist gelöscht.").show(AlertType.INFO);
                             });
                     return false;
                 } catch (UserInfoException ex) {
