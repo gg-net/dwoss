@@ -68,7 +68,7 @@ public class ScrapUnitAction extends AccessableAction {
                                     dialog.setContentText("Bitte Grund angeben");
                                     return dialog;
                                 }).opt().filter(s -> {
-                                    Dl.remote().lookup(UnitDestroyer.class).scrap(uniqueUnit, s, Dl.remote().lookup(Guardian.class).getUsername());
+                                    Dl.remote().lookup(UnitDestroyer.class).scrap(uniqueUnit, s, Dl.local().lookup(Guardian.class).getUsername());
                                     Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
                                     return false;
                                 });
