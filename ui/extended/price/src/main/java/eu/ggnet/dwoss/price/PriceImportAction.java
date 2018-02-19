@@ -48,9 +48,7 @@ public class PriceImportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fileChooser()
-                    .open()
-                    .opt()
+            Ui.fileChooser().open().opt()
                     .ifPresent(f -> {
                         Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + f.getPath() + " importieren ?"))
                                 .opt()
