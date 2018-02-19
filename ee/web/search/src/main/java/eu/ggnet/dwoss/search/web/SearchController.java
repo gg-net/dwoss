@@ -69,5 +69,6 @@ public class SearchController implements Serializable {
     public void onRowSelect(SelectEvent event) {
         FacesMessage msg = new FacesMessage("SearchResult Selected", ((ShortSearchResult)event.getObject()).toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);
+
     }
 }

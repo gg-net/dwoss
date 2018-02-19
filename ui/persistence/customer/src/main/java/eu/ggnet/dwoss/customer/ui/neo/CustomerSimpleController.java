@@ -30,6 +30,8 @@ import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -114,7 +116,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    private TextField companyNameTextFiled = new TextField();
+    private TextField companyNameTextField = new TextField();
 
     private TextField ustIdTextField = new TextField();
 
@@ -275,13 +277,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         if ( bussines ) {
             headerLabel.setText("Geschäftskunde");
             changeUIButton.setText("Endkunde");
-            companyNameTextFiled.setText(simpleCustomer.getCompanyName());
+            companyNameTextField.setText(simpleCustomer.getCompanyName());
             ustIdTextField.setText(simpleCustomer.getTaxId());
             //fill the HBox for Company
             Label companyNameLable = new Label("Firma:");
             Label ustIdLable = new Label("ustID:");
 
-            companyHBox.getChildren().addAll(companyNameLable, companyNameTextFiled, ustIdLable, ustIdTextField);
+            companyHBox.getChildren().addAll(companyNameLable, companyNameTextField, ustIdLable, ustIdTextField);
             companyHBox.setSpacing(5.0);
         } else {
             headerLabel.setText("Endkunde");
@@ -297,7 +299,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         zipcodeTextField.setText(simpleCustomer.getZipCode());
         cityTextField.setText(simpleCustomer.getCity());
         countryTextField.setText(new Locale("", simpleCustomer.getIsoCountry()).getDisplayName());
-        
+
         landLineTextField.setText(simpleCustomer.getLandlinePhone());
         mobileTextField.setText(simpleCustomer.getMobilePhone());
         emailTextField.setText(simpleCustomer.getEmail());
@@ -325,13 +327,17 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setZipCode(zipcodeTextField.getText());
         sc.setCity(cityTextField.getText());
         sc.setIsoCountry(countryTextField.getText());
-        sc.setMobilePhone(mobileTextField.getText());
-        sc.setLandlinePhone(landLineTextField.getText());
-        sc.setEmail(emailTextField.getText());
+        if ( StringUtils.isNotBlank(mobileTextField.getText()) )
+            sc.setMobilePhone(mobileTextField.getText());
+        if ( StringUtils.isNotBlank(landLineTextField.getText()) )
+            sc.setLandlinePhone(landLineTextField.getText());
+        if ( StringUtils.isNotBlank(emailTextField.getText()) )
+            sc.setEmail(emailTextField.getText());
+
         sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
         sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
 
-        sc.setCompanyName(companyNameTextFiled.getText());
+        sc.setCompanyName(companyNameTextField.getText());
         sc.setTaxId(ustIdTextField.getText());
 
         sc.setComment(commentTextArea.getText());
