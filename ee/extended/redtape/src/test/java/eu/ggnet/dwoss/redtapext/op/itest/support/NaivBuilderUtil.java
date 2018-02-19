@@ -6,12 +6,12 @@ import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.rules.TaxType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.TwoDigits;
 
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
 
 /**
  *

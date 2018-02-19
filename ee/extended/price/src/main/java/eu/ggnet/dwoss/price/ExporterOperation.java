@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.lucidcalc.CFormat;
 import eu.ggnet.lucidcalc.TempCalcDocument;
 import eu.ggnet.lucidcalc.CBorder;
@@ -45,6 +45,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,18 +61,19 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.ProductSpecEao;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
-import eu.ggnet.dwoss.uniqueunit.format.ProductFormater;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
@@ -313,15 +315,22 @@ public class ExporterOperation implements Exporter {
      *
      * @param refurbishId the unitid
      * @return The PriceEngineResult or Null if Id not found
-     * @throws UserInfoException if the unitId is not a Number
+     * @throws UserInfoException if the unitId is not a Number or to not get found
      */
     @Override
-    public PriceEngineResult load(String refurbishId) throws UserInfoException {
+    public Reply<PriceEngineResult> load(String refurbishId) throws UserInfoException {
+        if(!StringUtils.isNumeric(refurbishId)){
+            throw new UserInfoException("refurbishId", "refurbishId is not a number");
+        }
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
+        if(uu == null){
+            throw new UserInfoException("UniqueUnit", "UniqueUnit not forund");
+        }
         PriceEngineResult per = new PriceEngineResult(uu);
         per.setRetailerPrice(uu.getPrice(PriceType.RETAILER));
         per.setCustomerPrice(uu.getPrice(PriceType.CUSTOMER));
-        return per;
+        
+        return Reply.success(per);
     }
 
     /**

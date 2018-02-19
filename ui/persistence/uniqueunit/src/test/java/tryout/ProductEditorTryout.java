@@ -1,22 +1,23 @@
 package tryout;
 
-import eu.ggnet.dwoss.uniqueunit.ui.product.ProductEditorController;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.ProductGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import javax.swing.JLabel;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javax.swing.JLabel;
+
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.ProductGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ui.product.ProductEditorController;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 public class ProductEditorTryout extends Application {
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
+    public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/articleEditor.fxml"));
 
         Scene scene = new Scene(root);
@@ -35,8 +36,7 @@ public class ProductEditorTryout extends Application {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
 //        launch(args);
 
         UiCore.startSwing(() -> new JLabel("Mainapplicakt"));
@@ -52,7 +52,7 @@ public class ProductEditorTryout extends Application {
          * Properties -> Sources
          */
         System.out.println(makeProduct);
-        Ui.build().fxml().eval(ProductEditorController.class).ifPresent(System.out::println);
+        Ui.build().fxml().eval(ProductEditorController.class).opt().ifPresent(System.out::println);
     }
 
 }

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.stock;
 
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
@@ -26,7 +30,6 @@ import javax.swing.*;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.stock.entity.*;
 import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
 import eu.ggnet.saft.core.auth.Guardian;
 

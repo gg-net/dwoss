@@ -16,21 +16,21 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.rules.DocumentType.CAPITAL_ASSET;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CUSTOMER;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 

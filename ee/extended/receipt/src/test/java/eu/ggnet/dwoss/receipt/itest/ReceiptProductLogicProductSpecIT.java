@@ -1,5 +1,15 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.entity.Desktop;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.entity.Notebook;
+
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -10,14 +20,12 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.receipt.itest.support.DatabaseCleaner;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.*;
-import eu.ggnet.dwoss.spec.entity.piece.*;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
 import static eu.ggnet.dwoss.rules.ProductGroup.NOTEBOOK;
 import static eu.ggnet.dwoss.rules.TradeName.ACER;

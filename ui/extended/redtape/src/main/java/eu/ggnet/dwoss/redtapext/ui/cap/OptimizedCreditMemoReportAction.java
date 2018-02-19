@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 
 import static javax.swing.Action.NAME;
 
@@ -40,7 +41,7 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         L.debug("Start generating OptimizedCreditMemoReport.");
-        Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
             L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", r.getStartAsDate(), r.getEndAsDate());
             Ui.progress().title("Sage Export")
                     .call(() -> Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile());

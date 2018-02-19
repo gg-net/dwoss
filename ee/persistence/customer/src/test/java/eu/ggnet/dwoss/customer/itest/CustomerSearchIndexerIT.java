@@ -27,8 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.priv.SearchSingleton;
+import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,13 +61,6 @@ public class CustomerSearchIndexerIT extends ArquillianProjectArchive {
             Thread.sleep(1000);
         }
         assertThat(search.isActive()).isFalse();
-
-        L.info("Thread Count={}", Thread.activeCount());
-        Thread.getAllStackTraces().keySet().stream().filter(t -> t.getName().startsWith("Hibernate Search sync consumer thread")).forEach(t -> {
-            L.info("IndexThread: {}, clazz={}", t.getName(), t.getClass().getName());
-        });
-        // TODO: If someone is interesed: find out which class which contains the search sync consumer an shut it down safly.
-
     }
 
 }

@@ -21,15 +21,14 @@ import java.awt.event.ActionEvent;
 import javafx.scene.control.ChoiceDialog;
 
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
 import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
-
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.saft.Dl;
 
 /**
  *
@@ -53,7 +52,7 @@ public class ResolveRepaymentAction extends AccessableAction {
                 dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
                 dialog.setContentText("Lieferant auswählen:");
                 return dialog;
-            }).ifPresent(c -> Ui.build().fxml().show(() -> c, ResolveRepaymentController.class));
+            }).opt().ifPresent(c -> Ui.build().fxml().show(() -> c, ResolveRepaymentController.class));
 
         });
     }

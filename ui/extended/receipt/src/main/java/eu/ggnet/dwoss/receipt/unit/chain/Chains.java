@@ -18,12 +18,12 @@ package eu.ggnet.dwoss.receipt.unit.chain;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
 
 /**
  *

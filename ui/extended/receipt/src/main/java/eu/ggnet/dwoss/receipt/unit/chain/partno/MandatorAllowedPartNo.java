@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.rules.TradeName;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 
 /**
  * Validates the PartNo is of a Brand that the Mandator may sale.

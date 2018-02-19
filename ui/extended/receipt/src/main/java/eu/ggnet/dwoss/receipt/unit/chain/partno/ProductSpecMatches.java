@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 
 /**
  * Validates the PartNo by Bean Validations of the Property.

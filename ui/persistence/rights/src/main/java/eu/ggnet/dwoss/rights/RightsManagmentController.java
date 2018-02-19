@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.rights;
 
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -37,8 +39,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;

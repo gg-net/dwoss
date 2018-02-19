@@ -16,12 +16,13 @@
  */
 package tryout;
 
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-import javax.swing.*;
-
-import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionEditorController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 import tryout.stub.UnitCollectionGenerator;
 
@@ -42,7 +43,7 @@ public class UnitCollectionEditorTryout {
      */
     public static void main(String[] args) throws InterruptedException {
 
-       UnitCollectionGenerator ucg = new UnitCollectionGenerator();
+        UnitCollectionGenerator ucg = new UnitCollectionGenerator();
         UnitCollection uc = ucg.generateUnitCollections().get(0);
 
         JButton close = new JButton("Schliessen");
@@ -52,7 +53,7 @@ public class UnitCollectionEditorTryout {
 
         run.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> uc, UnitCollectionEditorController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> uc, UnitCollectionEditorController.class).opt().ifPresent(System.out::println);
             });
         });
 

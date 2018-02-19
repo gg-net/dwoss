@@ -34,7 +34,7 @@ import java.awt.Color;
 import java.io.File;
 import java.util.*;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;

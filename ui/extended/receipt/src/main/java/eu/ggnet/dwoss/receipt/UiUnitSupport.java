@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+
 import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
@@ -27,16 +33,16 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.receipt.product.StockDialog;
 import eu.ggnet.dwoss.receipt.unit.*;
 import eu.ggnet.dwoss.rules.ReceiptOperation;
-import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import lombok.Value;
-import stock.upi.StockUpi;
+
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
  * Ui support for the unit Operations.

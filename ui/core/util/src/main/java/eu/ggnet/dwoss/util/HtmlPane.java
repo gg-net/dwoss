@@ -67,7 +67,7 @@ public class HtmlPane extends BorderPane implements Consumer<String> {
     }
 
     @Override
-    public void accept(String content) {
+    public void accept(String content) {      
         dispatch(() -> webView.getEngine().loadContent(content));
     }
 

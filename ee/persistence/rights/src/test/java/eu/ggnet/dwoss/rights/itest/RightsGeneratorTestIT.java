@@ -16,10 +16,10 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.rights.RightsAgent;
-import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+import eu.ggnet.dwoss.rights.ee.assist.gen.RightsGeneratorOperation;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 import static org.junit.Assert.assertEquals;
 

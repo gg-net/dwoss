@@ -18,14 +18,14 @@ package eu.ggnet.dwoss.receipt.unit.chain;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.chain.partno.*;
 import eu.ggnet.dwoss.receipt.unit.chain.serial.*;
 import eu.ggnet.dwoss.receipt.unit.chain.string.*;
 
 import eu.ggnet.dwoss.rules.TradeName;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
 
 /**
  * The Chains for Apple.

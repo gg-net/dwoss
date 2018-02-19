@@ -26,8 +26,8 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 
 public class CommissioningManagerView extends javax.swing.JDialog {
 

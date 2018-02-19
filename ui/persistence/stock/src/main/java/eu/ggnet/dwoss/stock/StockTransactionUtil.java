@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.stock;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 
 /**
  *

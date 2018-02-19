@@ -18,7 +18,7 @@
         <module>common</module>
         <module>progress</module>
         <module>api</module>
-        <module>misc</module>
+        <module>search</module>
     </modules>
 
 </project>

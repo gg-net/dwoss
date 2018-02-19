@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.rights;
 
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+
 import java.net.URL;
 import java.util.*;
 
@@ -31,7 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.saft.Dl;
 
 /**

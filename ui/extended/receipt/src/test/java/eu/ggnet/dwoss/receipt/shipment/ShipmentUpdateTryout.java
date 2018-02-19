@@ -10,7 +10,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.Dl;
 
 /**

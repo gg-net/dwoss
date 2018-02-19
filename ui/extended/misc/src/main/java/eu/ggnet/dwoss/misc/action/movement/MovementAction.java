@@ -25,8 +25,8 @@ import javax.swing.SwingWorker;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
-import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 

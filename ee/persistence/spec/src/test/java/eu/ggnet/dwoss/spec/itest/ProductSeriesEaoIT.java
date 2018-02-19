@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.ProductSeriesEao;
-import eu.ggnet.dwoss.spec.entity.ProductSeries;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.ProductSeriesEao;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 
 import static org.junit.Assert.*;
 

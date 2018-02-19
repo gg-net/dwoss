@@ -18,18 +18,19 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
+import javafx.scene.control.TextInputDialog;
+
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
-
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javafx.stage.Modality.WINDOW_MODAL;
-import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  *
@@ -43,19 +44,21 @@ public class GenerateOnePriceAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String refurbishId = showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr eingeben :");
-        if ( refurbishId == null || refurbishId.isEmpty() ) return;
-        try {
-            PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(refurbishId);
-            Ui.exec(() -> {
+        Ui.exec(() -> {
+            Ui.build().title("Bitte SopoNr eingeben :").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("Bitte SopoNr eingeben :");
+                return dialog;
+            }).opt().filter(r -> {
+                PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(r);
+                if ( per == null ) {
+                    Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
+                    return false;
+                }
                 Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
-            });
-        } catch (NullPointerException ex) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishId).show(AlertType.WARNING);
-            });
-        }
 
+                return false;
+            });
+        });
     }
-
 }

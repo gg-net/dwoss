@@ -30,15 +30,15 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.report.assist.Reports;
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.assist.Reports;
+import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.partno.PartNoSupport;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
@@ -48,8 +48,8 @@ import eu.ggnet.saft.api.Reply;
 import lombok.Value;
 
 import static eu.ggnet.dwoss.rules.TradeName.OTTO;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 
 /**
  * Importer implementation.

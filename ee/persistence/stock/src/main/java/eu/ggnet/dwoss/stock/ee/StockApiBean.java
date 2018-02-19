@@ -26,8 +26,8 @@ import javax.inject.Inject;
 
 import eu.ggnet.dwoss.stock.api.PicoStockUnit;
 import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.dwoss.stock.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 
 /**

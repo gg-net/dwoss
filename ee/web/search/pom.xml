@@ -50,21 +50,9 @@
             <artifactId>dwoss-ee-core-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-uniqueunit</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-report</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-misc</artifactId>
+            <artifactId>dwoss-ee-core-search</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

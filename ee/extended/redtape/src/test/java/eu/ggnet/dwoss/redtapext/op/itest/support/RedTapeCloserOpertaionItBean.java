@@ -27,15 +27,15 @@ import javax.persistence.EntityManager;
 
 import org.junit.Assert;
 
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
-import eu.ggnet.dwoss.report.entity.ReportLine;
-import eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType;
+import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.stock.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
 /**
  *
@@ -57,7 +57,7 @@ public class RedTapeCloserOpertaionItBean {
 
     public void checkReferences(long dossierId) {
         List<ReportLine> allLines = reportEao.findAll();
-        List<ReportLine> collect = allLines.stream().filter((eu.ggnet.dwoss.report.entity.ReportLine line) -> {
+        List<ReportLine> collect = allLines.stream().filter((eu.ggnet.dwoss.report.ee.entity.ReportLine line) -> {
             return line.getPositionType().equals(PositionType.PRODUCT_BATCH) && line.getDossierId() == dossierId;
         }).collect(Collectors.toList());
         Assert.assertEquals("Assert ten warranties to be present", 2, collect.size());

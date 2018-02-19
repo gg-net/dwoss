@@ -18,7 +18,9 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.ReportAgent;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
@@ -44,10 +46,14 @@ public class CreateNewReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new CreateNewReportView()))
+            Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new CreateNewReportView()))
+                    .opt()
                     .filter(Reply::hasSucceded)
                     .map(Reply::getPayload)
-                    .ifPresent(v -> Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class));
+                    .ifPresent(v -> {
+                        LoggerFactory.getLogger(CreateNewReportAction.class).info("{}", v.getParameter());
+                        Ui.build().fxml().show(() -> Ui.progress().call(() -> new In(Dl.remote().lookup(ReportAgent.class).prepareReport(v.getParameter(), v.loadUnreported()), false)), ReportController.class);
+                    });
         });
     }
 

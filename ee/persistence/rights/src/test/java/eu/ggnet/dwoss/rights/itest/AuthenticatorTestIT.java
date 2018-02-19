@@ -17,10 +17,10 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.rights.RightsAgent;
-import eu.ggnet.dwoss.rights.assist.gen.RightsGeneratorOperation;
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.op.Authentication;
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
+import eu.ggnet.dwoss.rights.ee.assist.gen.RightsGeneratorOperation;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static org.assertj.core.api.Assertions.assertThat;

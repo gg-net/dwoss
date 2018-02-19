@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
 import javafx.scene.control.TreeItem;
 
-import eu.ggnet.dwoss.uniqueunit.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
 
 import lombok.Getter;
 import lombok.Setter;

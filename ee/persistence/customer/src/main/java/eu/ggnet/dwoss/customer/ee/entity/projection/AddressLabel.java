@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity.projection;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -35,7 +36,7 @@ import lombok.Setter;
  * @author oliver.guenther
  */
 // Class to be changed. For now it is a projection. will be an entity.
-public class AddressLabel {
+public class AddressLabel implements Serializable {
 
     @Getter
     private long id;
@@ -72,8 +73,7 @@ public class AddressLabel {
      * Returns a HTML representation of the address label.
      * If this label is empty, an appropriated text is shown.
      *
-     * @param showType if true shows the type.
-     * @return
+     * @return a html representation of the address label.
      */
     public String toHtml() {
         if ( isEmpty() ) return "Keine bevorzugten Addresdaten hinterlegt";

@@ -42,7 +42,7 @@ public class AsyncRunThenPopUp {
 
     public static void saftNew() {
         Ui.exec(() -> {
-            Ui.build().swing().eval(() -> HardWorker.work2s("per", "Eine leere Adresse"), () -> new DocumentAdressUpdateViewOkCanceler())
+            Ui.build().swing().eval(() -> HardWorker.work2s("per", "Eine leere Adresse"), () -> new DocumentAdressUpdateViewOkCanceler()).opt()
                     .map(Ui.progress().wrap(t -> HardWorker.work2s("middle", t)))
                     .map(t -> Ui.build().swing().eval(() -> t, () -> new DocumentAdressUpdateViewOkCanceler()))
                     .ifPresent(t -> HardWorker.work2s("post", t));

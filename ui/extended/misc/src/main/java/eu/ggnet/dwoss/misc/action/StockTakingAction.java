@@ -20,14 +20,17 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Optional;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.misc.op.StockTaking;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.*;
+import eu.ggnet.dwoss.misc.ee.StockTaking;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.util.TikaUtil;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -56,16 +59,17 @@ public class StockTakingAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open();
+            Optional<File> inFile = Ui.fileChooser().open().opt();
             if ( !inFile.isPresent() ) return;
             Ui.build().dialog().eval(
                     () -> new Alert(CONFIRMATION, (stock == null ? "" : " für " + stock.getName()) + " aus der Datei:" + inFile.get().getPath() + " vervollständigen ?"))
+                    .opt()
                     .filter(b -> b == OK)
-                    .map(b ->  TikaUtil.isExcel(inFile.get()))
+                    .map(b -> TikaUtil.isExcel(inFile.get()))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
                     .map(f -> Ui.progress().call(() -> Dl.remote().lookup(StockTaking.class).fullfillDetails(new FileJacket("in", ".xls", f), (stock == null ? null : stock.getId()))))
-                   .ifPresent( f -> Ui.osOpen(f.toTemporaryFile()));
+                    .ifPresent(f -> Ui.osOpen(f.toTemporaryFile()));
         });
 
     }

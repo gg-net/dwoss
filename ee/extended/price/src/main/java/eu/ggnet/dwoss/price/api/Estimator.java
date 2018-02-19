@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.price.api;
 
 import java.io.Serializable;
 
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import lombok.Value;
 

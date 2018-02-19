@@ -4,17 +4,17 @@ import java.util.*;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.report.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
-import eu.ggnet.dwoss.report.assist.gen.ReportLineGenerator;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 
-import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.INVOICED;
-import static eu.ggnet.dwoss.report.ReportAgent.ViewReportResult.Type.REPAYMENTS;
+import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.INVOICED;
+import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.REPAYMENTS;
 
 /**
  *

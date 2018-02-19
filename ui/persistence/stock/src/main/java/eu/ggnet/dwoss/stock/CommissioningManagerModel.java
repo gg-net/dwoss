@@ -33,10 +33,9 @@ import javax.swing.ListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
-
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 public class CommissioningManagerModel {

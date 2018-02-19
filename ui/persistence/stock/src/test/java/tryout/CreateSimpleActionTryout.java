@@ -16,6 +16,12 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+
 import java.awt.Dimension;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -26,9 +32,8 @@ import javax.swing.JPanel;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.entity.*;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
