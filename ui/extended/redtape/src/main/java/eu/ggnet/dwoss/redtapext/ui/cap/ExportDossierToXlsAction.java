@@ -21,10 +21,8 @@ import java.awt.event.ActionEvent;
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
 
@@ -45,15 +43,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte DossierId eingeben:");
                 return dialog;
-            }).opt().filter(r -> {
-                FileJacket toXls = Dl.remote().lookup(DocumentSupporter.class).toXls(r);
-                if ( toXls == null ) {
-                    Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
-                    return false;
-                }
-                Ui.osOpen(toXls.toTemporaryFile());
-                return false;
-            });
+            }).opt().ifPresent(r -> Ui.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile()));
         });
     }
 }
