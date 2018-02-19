@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import eu.ggnet.dwoss.report.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
 
-import eu.ggnet.dwoss.report.api.MarginCalculator;
+import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 
 /**
  *

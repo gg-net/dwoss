@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.misc.op.PersistenceValidator;
+import eu.ggnet.dwoss.misc.ee.PersistenceValidator;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 

@@ -29,6 +29,6 @@ public class RevenueReportSelectionViewTryout {
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.build().fx().eval(() -> new RevenueReportSelectionView()).ifPresent(System.out::println);
+        Ui.build().fx().eval(() -> new RevenueReportSelectionView()).opt().ifPresent(System.out::println);
     }
 }

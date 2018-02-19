@@ -20,7 +20,7 @@ import java.awt.BorderLayout;
 import java.util.List;
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.Ui;
 

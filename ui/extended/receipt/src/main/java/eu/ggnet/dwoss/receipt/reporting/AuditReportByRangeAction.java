@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.reporting;
 
+import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -37,7 +39,7 @@ public class AuditReportByRangeAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().title("Audit Report nach Datum").fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+            Ui.build().title("Audit Report nach Datum").fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
                 Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).byRange(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
             });
         });

@@ -16,17 +16,17 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.search.api.*;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Condition;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Condition;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 

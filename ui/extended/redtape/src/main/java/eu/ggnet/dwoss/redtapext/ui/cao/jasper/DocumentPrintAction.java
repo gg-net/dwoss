@@ -40,7 +40,6 @@ import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-
 /**
  *
  * @author pascal.perau
@@ -86,6 +85,7 @@ public class DocumentPrintAction extends AbstractAction {
             CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
             boolean mailAvailable = customer.getEmail() != null && !customer.getEmail().trim().isEmpty();
             Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
+                    .opt()
                     .filter(c -> c.isCorrectlyBriefed())
                     .ifPresent(c -> Ui.progress().call(() -> {
                 CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());

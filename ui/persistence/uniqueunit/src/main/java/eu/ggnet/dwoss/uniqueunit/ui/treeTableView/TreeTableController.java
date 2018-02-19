@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.treeTableView;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
+
 import java.net.URL;
 import java.util.*;
 
@@ -37,7 +42,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.*;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.CategoryProductGenerator;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.ProductGenerator;

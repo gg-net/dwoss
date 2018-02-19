@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javafx.scene.control.TextInputDialog;
+
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.*;
@@ -25,7 +27,6 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
-import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  *
@@ -39,18 +40,20 @@ public class ExportDossierToXlsAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        final String dossierId = showInputDialog(UiCore.getMainFrame(), "Bitte DossierId eingeben:").trim();
-        if ( dossierId == null || dossierId.isEmpty() ) return;
-        try {
-            FileJacket toXls = Dl.remote().lookup(DocumentSupporter.class).toXls(dossierId);
-             Ui.exec(() -> {
+        Ui.exec(() -> {
+            Ui.build().title("Bitte DossierId eingeben").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("Bitte DossierId eingeben:");
+                return dialog;
+            }).opt().filter(r -> {
+                FileJacket toXls = Dl.remote().lookup(DocumentSupporter.class).toXls(r);
+                if ( toXls == null ) {
+                    Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
+                    return false;
+                }
                 Ui.osOpen(toXls.toTemporaryFile());
+                return false;
             });
-        } catch (NullPointerException ex) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
-            });
-        }
-
+        });
     }
 }

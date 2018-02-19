@@ -1,5 +1,14 @@
 package eu.ggnet.dwoss.receipt.unit;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -8,19 +17,17 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.receipt.ProductProcessor;
-import eu.ggnet.dwoss.receipt.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
-import eu.ggnet.dwoss.spec.entity.*;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.Reply;
 

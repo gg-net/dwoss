@@ -25,8 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import lombok.*;
 

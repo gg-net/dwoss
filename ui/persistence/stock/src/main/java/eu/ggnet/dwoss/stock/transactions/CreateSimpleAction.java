@@ -22,10 +22,10 @@ import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -50,12 +50,16 @@ public class CreateSimpleAction extends AccessableAction {
 
         Ui.exec(() -> {
             Ui.build().fxml().eval(CreateSelectionController.class)
+                    .opt()
                     .map(this::handleResult)
-                    .ifPresent(c -> Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
-                    .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
-                    .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
-                    ).filter(Ui.failure()::handle)
-                    .ifPresent(t -> Ui.build().alert("Umfuhr angelegt")));
+                    .ifPresent(c -> {
+                        Ui.build().dialog().eval(() -> c, () -> new CreateQuestionView())
+                                .opt()
+                                .map(v -> ReplyUtil.wrap(() -> Dl.remote().lookup(StockTransactionProcessor.class)
+                                .perpareTransfer(v.stockUnits, v.destination.getId(), Dl.local().lookup(Guardian.class).getUsername(), v.comment))
+                                ).filter(Ui.failure()::handle)
+                                .ifPresent(t -> Ui.build().alert("Umfuhr angelegt"));
+                    });
         });
 
     }

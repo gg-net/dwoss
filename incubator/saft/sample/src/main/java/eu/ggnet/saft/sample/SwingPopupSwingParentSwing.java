@@ -39,7 +39,7 @@ public class SwingPopupSwingParentSwing {
         String adress = "Hans Mustermann\nMusterstrasse 22\n12345 Musterhausen";
         // Swing Panel in Swing Dialog
         Ui.exec(() -> {
-            Ui.build(label).swing().eval(() -> adress, () -> new DocumentAdressUpdateViewOkCanceler()).ifPresent(System.out::println);
+            Ui.build(label).swing().eval(() -> adress, () -> new DocumentAdressUpdateViewOkCanceler()).opt().ifPresent(System.out::println);
         });
     }
 }

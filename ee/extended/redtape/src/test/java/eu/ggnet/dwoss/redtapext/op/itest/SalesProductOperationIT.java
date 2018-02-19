@@ -9,14 +9,14 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtapext.op.itest.support.DatabaseCleaner;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.format.SpecFormater;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static org.junit.Assert.assertTrue;

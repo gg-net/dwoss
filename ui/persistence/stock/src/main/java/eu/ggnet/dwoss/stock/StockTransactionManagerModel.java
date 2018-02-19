@@ -21,9 +21,9 @@ import java.util.List;
 
 import javax.swing.AbstractListModel;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
 
 import lombok.Getter;
 import lombok.Setter;

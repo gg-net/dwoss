@@ -22,7 +22,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 
 /**
  *
@@ -48,14 +49,14 @@ public class ContactUpdateTryout {
         JButton editButton = new JButton("edit");
         editButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> contact, ContactUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 
         JButton addButton = new JButton("add");
         addButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> new Contact(), ContactUpdateController.class).ifPresent(System.out::println);
+                Ui.build().fxml().eval(() -> new Contact(), ContactUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 

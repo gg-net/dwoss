@@ -119,6 +119,7 @@ public class DocumentUpdateController {
     public Position editPosition(final Position pos) {
         return Ui.build().parent(view).title("Position bearbeiten").swing()
                 .eval(() -> new PositionAndTaxType(pos, document.getTaxType()), () -> OkCancelWrap.consumerVetoResult(new PositionUpdateCask()))
+                .opt()
                 .map(Reply::getPayload)
                 .orElse(null);
     }
@@ -139,6 +140,7 @@ public class DocumentUpdateController {
     public void createServicePosition() {
         document.append(Ui.build().parent(view).title("Diensleistung/Kleinteil hinzufügen o. bearbeiten").swing()
                 .eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(document.getTaxType())))
+                .opt()
                 .map(Reply::getPayload)
                 .orElse(null));
     }

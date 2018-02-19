@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt;
 
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Set;
@@ -26,11 +28,11 @@ import eu.ggnet.dwoss.receipt.product.AbstractView;
 import eu.ggnet.dwoss.receipt.product.SimpleView;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.format.SpecFormater;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;

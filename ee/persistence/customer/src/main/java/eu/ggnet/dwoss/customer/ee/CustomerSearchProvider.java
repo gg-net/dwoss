@@ -40,7 +40,6 @@ public class CustomerSearchProvider implements SearchProvider {
 
     @Override
     public int estimateMaxResults(SearchRequest request) {
-        // TODO: Test Speed, never used that.
         return customerEao.countFind(request.getSearch());
     }
 
@@ -53,7 +52,6 @@ public class CustomerSearchProvider implements SearchProvider {
 
     @Override
     public String details(GlobalKey key) {
-        // TODO: How about some safty mesures.
         return customerEao.findById(key.getId()).toHtml();
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,21 +19,30 @@ package eu.ggnet.dwoss.util;
 import java.io.File;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TempUtil {
 
+    private final static Logger L = LoggerFactory.getLogger(TempUtil.class);
+
     private static File tryPath(File path, String subPath) {
+        L.debug("tryPath(path={},subPath={}) path.isDirectory()={}, path.canWrite()={}", path, subPath, path.isDirectory(), path.canWrite());
         if ( path.isDirectory() && path.canWrite() ) {
             File outputPath = new File(path, subPath);
             if ( !outputPath.exists() ) {
                 if ( !outputPath.mkdirs() ) {
+                    L.debug("tryPath() outpath={} didn't exist, but mkdirs() was not successful. Returning null", outputPath);
                     return null;
                 }
             } else if ( !(outputPath.isDirectory() && outputPath.canWrite()) ) {
+                L.debug("tryPath() outpath={} exist, but not accessable. Returning null", outputPath);
                 return null;
             }
+            L.debug("tryPath() success. Returning outpath={}", outputPath);
             return outputPath;
         }
+        L.debug("tryPath() path={} not accessable. Returning null", path);
         return null;
     }
 
@@ -45,6 +54,7 @@ public class TempUtil {
      * @throws RuntimeException if somthing goes wrong.
      */
     public static File getDirectory(String name) throws RuntimeException {
+        L.info("getDirectory(name={})", name);
         File outputPath = null;
         if ( SystemUtils.JAVA_IO_TMPDIR != null )
             outputPath = tryPath(new File(SystemUtils.JAVA_IO_TMPDIR), name);
@@ -52,8 +62,8 @@ public class TempUtil {
             outputPath = tryPath(new File(SystemUtils.USER_HOME), "Temp/" + name);
         if ( outputPath == null ) {
             if ( SystemUtils.IS_OS_WINDOWS ) {
-                outputPath = tryPath(new File("C:/Temp/"), name);
-                if ( outputPath == null ) outputPath = tryPath(new File("D:/Temp/"), name);
+                outputPath = tryPath(new File("C:/"), "Temp/" + name);
+                if ( outputPath == null ) outputPath = tryPath(new File("D:/"), "Temp/" + name);
             }
         }
         if ( outputPath == null ) throw new RuntimeException("No usable Templocation found, giving up");

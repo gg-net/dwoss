@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
-import eu.ggnet.dwoss.uniqueunit.entity.dto.UnitCollectionDto;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;

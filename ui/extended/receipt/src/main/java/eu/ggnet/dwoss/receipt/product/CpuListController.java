@@ -23,8 +23,8 @@ import java.util.regex.PatternSyntaxException;
 import javax.swing.SwingUtilities;
 
 import eu.ggnet.dwoss.receipt.AbstractController;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.piece.Cpu;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.table.*;

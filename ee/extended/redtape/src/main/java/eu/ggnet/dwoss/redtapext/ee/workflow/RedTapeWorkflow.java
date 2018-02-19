@@ -37,9 +37,9 @@ import eu.ggnet.dwoss.redtape.ee.emo.RedTapeCounterEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.stock.emo.EquilibrationResult;
-import eu.ggnet.dwoss.stock.emo.LogicTransactionEmo;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.stock.ee.emo.EquilibrationResult;
+import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 

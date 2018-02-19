@@ -40,7 +40,7 @@ public class CreditMemoReportAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().title("Stornoreport Zeitraum").fx().eval(() -> new DateRangeChooserView())
+            Ui.build().title("Stornoreport Zeitraum").fx().eval(() -> new DateRangeChooserView()).opt()
                     .ifPresent(r -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(CreditMemoReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile())));
         });
     }

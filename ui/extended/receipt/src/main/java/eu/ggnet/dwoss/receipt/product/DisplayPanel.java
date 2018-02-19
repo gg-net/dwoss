@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.receipt.product;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.spec.entity.piece.Display;
-import eu.ggnet.dwoss.spec.entity.piece.Display.Ration;
-import eu.ggnet.dwoss.spec.entity.piece.Display.Resolution;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Ration;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.dwoss.util.NamedEnumCellRenderer;

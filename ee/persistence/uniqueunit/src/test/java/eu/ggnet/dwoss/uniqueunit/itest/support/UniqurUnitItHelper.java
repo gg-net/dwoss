@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.uniqueunit.itest.support;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -27,10 +31,9 @@ import eu.ggnet.dwoss.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 
 /**
  *

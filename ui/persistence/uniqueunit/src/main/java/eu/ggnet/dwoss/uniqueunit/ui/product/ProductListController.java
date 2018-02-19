@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.Ui;
@@ -249,7 +249,7 @@ public class ProductListController implements Initializable, FxController, Close
     private void create() {
         Ui.exec(() -> {
             Ui.build().parent(tableView).fxml().eval(ProductEditorController.class)
-                    .ifPresent(System.out::println);
+                    .opt().ifPresent(System.out::println);
         });
     }
 
@@ -257,7 +257,7 @@ public class ProductListController implements Initializable, FxController, Close
     private void edit() {
         Ui.exec(() -> {
             Ui.build().parent(tableView).fxml().eval(() -> tableView.getSelectionModel().getSelectedItem(), ProductEditorController.class)
-                    .ifPresent(System.out::println);
+                    .opt().ifPresent(System.out::println);
         });
     }
 }

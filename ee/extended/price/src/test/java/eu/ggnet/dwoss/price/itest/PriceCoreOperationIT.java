@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.price.itest;
 
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -11,11 +16,10 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.price.PriceCoreOperation;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-import eu.ggnet.dwoss.receipt.gen.ReceiptGeneratorOperation;
-import eu.ggnet.dwoss.stock.assist.gen.StockGeneratorOperation;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.entity.*;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier;
+import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
+import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

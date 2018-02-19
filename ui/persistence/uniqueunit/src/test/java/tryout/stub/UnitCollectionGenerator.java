@@ -19,9 +19,9 @@ package tryout.stub;
 import java.util.*;
 
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.uniqueunit.assist.gen.UniqueUnitGenerator;
-import eu.ggnet.dwoss.uniqueunit.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.entity.UnitCollection;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 
 /**
  *

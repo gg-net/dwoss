@@ -11,10 +11,10 @@ import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.product.DesktopBundleView;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.rules.*;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.assist.gen.SpecGenerator;
-import eu.ggnet.dwoss.spec.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
+import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**

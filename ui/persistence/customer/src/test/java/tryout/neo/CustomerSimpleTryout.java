@@ -81,12 +81,12 @@ public class CustomerSimpleTryout {
             System.out.println("Consumer Customer: " + consumerCustomer.isConsumer());
 
             Ui.exec(() -> {
-                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class);
+                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class).opt();
                 if ( !result.isPresent() ) return;
                 Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
                 if ( !Ui.failure().handle(reply) ) return;
                 if ( !result.get().continueEnhance ) return;
-                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
                         .ifPresent(c -> Ui.build().alert("Would store + " + c));
             });
         });
@@ -109,12 +109,12 @@ public class CustomerSimpleTryout {
             System.out.println("Bussines Customer: " + bussnisCustomer.isBusiness());
 
             Ui.exec(() -> {
-                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class);
+                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class).opt();
                 if ( !result.isPresent() ) return;
                 Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
                 if ( !Ui.failure().handle(reply) ) return;
                 if ( !result.get().continueEnhance ) return;
-                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
                         .ifPresent(c -> Ui.build().alert("Would store + " + c));
             });
         });

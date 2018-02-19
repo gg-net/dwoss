@@ -10,9 +10,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.eao.GpuEao;
-import eu.ggnet.dwoss.spec.entity.piece.Gpu;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.eao.GpuEao;
+import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.report.ui.returns;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 import javafx.beans.property.*;
 

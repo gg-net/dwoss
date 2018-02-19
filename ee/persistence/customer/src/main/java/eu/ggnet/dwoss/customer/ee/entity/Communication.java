@@ -49,8 +49,9 @@ public class Communication implements Serializable {
      * Represents some of the common ways to communicate nowadays.
      */
     public enum Type {
-
-        PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX, ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
+        // TODO: Reanable the Phonepattern if DWOSS-255 is fixed
+        // PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
+        PHONE, MOBILE, FAX, ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
 
         private final String validPattern;
 

@@ -22,7 +22,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
 /**
  *

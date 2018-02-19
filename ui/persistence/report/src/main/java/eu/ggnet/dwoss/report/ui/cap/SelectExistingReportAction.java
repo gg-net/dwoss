@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.ReportAgent;
-import eu.ggnet.dwoss.report.entity.Report;
+import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
@@ -43,7 +43,7 @@ public class SelectExistingReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> Dl.remote().lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView())
+            Ui.build().fx().eval(() -> Dl.remote().lookup(ReportAgent.class).findAll(Report.class), () -> new SelectExistingReportView()).opt()
                     .ifPresent(id -> Ui.build().fxml().show(() -> new In(Ui.progress().call(() -> Dl.remote().lookup(ReportAgent.class).findReportResult(id)), true), ReportController.class));
         });
     }

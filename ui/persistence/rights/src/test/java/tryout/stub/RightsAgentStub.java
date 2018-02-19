@@ -6,12 +6,11 @@ import javax.persistence.LockModeType;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import eu.ggnet.dwoss.rights.RightsAgent;
-
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 
-import eu.ggnet.dwoss.rights.entity.Operator;
-import eu.ggnet.dwoss.rights.entity.Persona;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
 /**
  *

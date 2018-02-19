@@ -5,6 +5,9 @@ import java.util.Random;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import javafx.scene.control.Alert;
+import javafx.stage.Modality;
+
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.IdSupplier;
@@ -14,8 +17,13 @@ import eu.ggnet.saft.sample.support.*;
 
 import lombok.Value;
 
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+
 /**
- * Opening a JavaFX Pane as popup Dialog, blocking the hole application.
+ * Opening a JavaFX Pane import static javafx.stage.Modality.APPLICATION_MODAL;
+ * as popup Dialog
+ * import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+ * , blocking the hole application.
  *
  * @author oliver.guenther
  */
@@ -118,9 +126,22 @@ public class OpenWithSwing {
 
             b = new JMenuItem("Once InputPane via Fxml ");
             b.addActionListener((e) -> Ui.exec(() -> {
-                Ui.build().fxml().eval(SimpleFxmlController.class).ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
+                Ui.build().fxml().eval(SimpleFxmlController.class).opt().ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
             }));
             menu.add(b);
+
+            b = new JMenuItem("Ui.build.dialog with javfx Alert");
+            b.addActionListener((e) -> Ui.exec(() -> {
+                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).opt().ifPresent(t -> Ui.build().alert().message("Result: " + t).show());
+            }));
+            menu.add(b);
+
+            b = new JMenuItem("Ui.build.dialog with javfx Alert (window modal)");
+            b.addActionListener((e) -> Ui.exec(() -> {
+                Ui.build().modality(Modality.WINDOW_MODAL).dialog().eval(() -> new Alert(CONFIRMATION, "Bitte eine Knopf drücken")).opt().ifPresent(t -> Ui.build().alert().message("Ok pressed with Input: " + t).show());
+            }));
+            menu.add(b);
+
             main.getMenuBar().add(menu);
 
             b = new JMenuItem("Consumer with Random Id Supplier");

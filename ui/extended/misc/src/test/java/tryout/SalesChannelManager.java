@@ -1,5 +1,11 @@
 package tryout;
 
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.*;
@@ -11,13 +17,12 @@ import javax.swing.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.misc.op.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
+import eu.ggnet.dwoss.misc.ee.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelManagerDialog;
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelTableModel;
 import eu.ggnet.dwoss.rules.SalesChannel;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.stock.model.SalesChannelLine;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.saft.Dl;
 
 import static eu.ggnet.dwoss.rules.SalesChannel.CUSTOMER;

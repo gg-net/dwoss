@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.uniqueunit.UniqueUnitAgent;
+import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;

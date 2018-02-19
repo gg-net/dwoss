@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.stock;
 
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -28,8 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.Css;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;

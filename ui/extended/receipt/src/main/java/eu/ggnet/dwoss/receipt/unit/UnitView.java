@@ -29,11 +29,11 @@ import org.apache.commons.lang3.SystemUtils;
 import eu.ggnet.dwoss.receipt.unit.UnitModel.Survey;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.Warranty;
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Equipment;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticComment;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.StaticInternalComment;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticComment;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.StaticInternalComment;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.saft.Dl;
@@ -43,8 +43,8 @@ import eu.ggnet.saft.core.ui.UserPreferences;
 import lombok.Getter;
 import lombok.Setter;
 
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.REFURBISHED_ID;
-import static eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit.Identifier.SERIAL;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 
 /**
  *

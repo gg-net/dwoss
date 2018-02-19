@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
+import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.eao.StockEao;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -50,31 +57,29 @@ import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeWorkflow;
-import eu.ggnet.dwoss.report.assist.Reports;
-import eu.ggnet.dwoss.report.eao.ReportLineEao;
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.assist.Reports;
+import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.stock.eao.*;
-import eu.ggnet.dwoss.stock.emo.StockTransactionEmo;
-import eu.ggnet.dwoss.stock.entity.*;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
+import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.api.progress.IMonitor;
 import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
-import static eu.ggnet.dwoss.report.entity.ReportLine.SingleReferenceType.WARRANTY;
+import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.rules.PaymentMethod.*;
 import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.CONTRACTOR_REFERENCE;
-import static eu.ggnet.dwoss.uniqueunit.entity.PriceType.MANUFACTURER_COST;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
 
 /**

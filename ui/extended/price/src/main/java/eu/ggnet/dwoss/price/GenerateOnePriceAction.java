@@ -24,8 +24,8 @@ import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
-
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;
 
@@ -49,14 +49,14 @@ public class GenerateOnePriceAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte SopoNr eingeben :");
                 return dialog;
-            }).filter(r -> {
+            }).opt().filter(r -> {
                 PriceEngineResult per = Dl.remote().lookup(Exporter.class).onePrice(r);
-                if(per == null){
-                     Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
-                     return false;
+                if ( per == null ) {
+                    Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
+                    return false;
                 }
                 Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(per)), () -> new HtmlPane());
-                
+
                 return false;
             });
         });

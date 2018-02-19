@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.report.op.RevenueReporter;
+import eu.ggnet.dwoss.report.ee.op.RevenueReporter;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -40,7 +40,7 @@ public class ExportRevenueReportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new RevenueReportSelectionView())
+            Ui.build().fx().eval(() -> new RevenueReportSelectionView()).opt()
                     .ifPresent(v -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(RevenueReporter.class).toXls(v.getStart(), v.getEnd(), v.getStep(), v.isExtraReported()).toTemporaryFile())));
         });
     }

@@ -1,17 +1,17 @@
 package eu.ggnet.dwoss.receipt.shipment;
 
-import eu.ggnet.dwoss.stock.entity.Shipment;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ee.entity.Shipment;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 
 import java.util.*;
 
 import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.stock.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
 
 // TODO: Rename and move to subs
 public class StockAgentStub implements StockAgent {

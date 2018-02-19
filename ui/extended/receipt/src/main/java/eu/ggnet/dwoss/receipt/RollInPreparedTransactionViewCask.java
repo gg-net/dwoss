@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.receipt;
 import java.util.List;
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.format.StockTransactionFormater;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
 

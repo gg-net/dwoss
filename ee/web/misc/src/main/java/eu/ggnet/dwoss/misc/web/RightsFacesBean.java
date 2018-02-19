@@ -23,8 +23,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import eu.ggnet.dwoss.rights.eao.OperatorEao;
-import eu.ggnet.dwoss.rights.entity.Operator;
+import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
+import eu.ggnet.dwoss.rights.ee.entity.Operator;
 
 /**
  *

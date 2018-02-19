@@ -4,7 +4,7 @@ import java.awt.Component;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -32,7 +32,7 @@ public class SwingCore {
     /**
      * Active Windows Collection. Is used to get a window by a key if its already active.
      */
-    public final static Map<String, WeakReference<Window>> ACTIVE_WINDOWS = new HashMap<>();
+    public final static Map<String, WeakReference<Window>> ACTIVE_WINDOWS = new ConcurrentHashMap<>();
 
     /**
      * Holds a mapping of all Scenes in JFXPanels. Used to discover parent windows if in a wrapped JFXPanel.
@@ -59,6 +59,20 @@ public class SwingCore {
         }
         cdl.await();
         return fxp;
+    }
+
+    /**
+     * Wrap a pane into a JFXPanel via a CompletableFuture using the right ui threads.
+     *
+     * @param pane a Pane to be wrapped.
+     * @return a CompletableFuture creating the JFXPanel
+     */
+    public static CompletableFuture<JFXPanel> wrapcf(Pane pane) {
+        return CompletableFuture.supplyAsync(() -> jfxPanel()).thenApplyAsync((JFXPanel fxp) -> {
+            fxp.setScene(new Scene(pane, Color.TRANSPARENT));
+            swingParentHelper.put(fxp.getScene(), fxp);
+            return fxp;
+        }, Platform::runLater);
     }
 
     private static JFXPanel jfxPanel() {

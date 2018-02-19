@@ -75,10 +75,7 @@ public class DossierUpdateAction extends AbstractAction {
                 view.setController(controller);
                 view.setCustomerValues(id);
                 return OkCancelWrap.vetoResult(view);
-            })
-                    .filter(this::handleFailure)
-                    .map(Reply::getPayload)
-                    .ifPresent(this::handleSuccess);
+            }).opt().filter(this::handleFailure).map(Reply::getPayload).ifPresent(this::handleSuccess);
         });
 
     }

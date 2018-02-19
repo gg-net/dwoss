@@ -22,7 +22,7 @@ import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
-import eu.ggnet.dwoss.report.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rules.TradeName;
 
 import lombok.Getter;

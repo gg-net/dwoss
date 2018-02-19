@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
+
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -8,12 +12,11 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.receipt.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.*;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.SpecPu;
-import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.junit.Assert.*;

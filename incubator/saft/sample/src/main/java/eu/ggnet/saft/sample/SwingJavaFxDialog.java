@@ -43,7 +43,7 @@ public class SwingJavaFxDialog {
             dialog.getDialogPane().setContent(grid);
             dialog.getDialogPane().getButtonTypes().addAll(OK, CANCEL);
             return dialog;
-        }).ifPresent(System.out::println);
+        }).opt().ifPresent(System.out::println);
 
     }
 

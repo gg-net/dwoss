@@ -36,10 +36,10 @@ import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.format.UniqueUnitFormater;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.Tuple2;
 
 /**

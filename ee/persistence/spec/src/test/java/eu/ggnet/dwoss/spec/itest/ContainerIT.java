@@ -1,5 +1,6 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.itest.support.ContainerITGeneratorHelper;
 import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
 
@@ -12,8 +13,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.*;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
 
 import static org.junit.Assert.*;
 

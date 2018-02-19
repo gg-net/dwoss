@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.spec.itest;
 
+import eu.ggnet.dwoss.spec.ee.emo.ProductModelEmo;
+import eu.ggnet.dwoss.spec.ee.emo.ProductSeriesEmo;
+import eu.ggnet.dwoss.spec.ee.emo.ProductFamilyEmo;
 import eu.ggnet.dwoss.spec.itest.support.ArquillianProjectArchive;
 
 import javax.inject.Inject;
@@ -12,9 +15,8 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.spec.emo.*;
-import eu.ggnet.dwoss.spec.entity.ProductModel;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

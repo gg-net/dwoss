@@ -6,12 +6,12 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.stock.entity.Stock;
-import eu.ggnet.dwoss.stock.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.entity.StockTransactionType;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
+import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
 
-import static eu.ggnet.dwoss.stock.entity.StockTransactionStatusType.*;
+import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
 import static org.junit.Assert.*;
 
 /**

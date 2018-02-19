@@ -16,10 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,48 +31,63 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CommunicationTest {
 
     public static Communication makeValidCommunication() {
-        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
-        
+        Communication validCommunication = new Communication(EMAIL, "max.mustermann@gmail.com");
+
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
     @Test
-    public void GetViolationMessages() {
+    public void testValidMessage() { 
         Communication makeValidCommunication = makeValidCommunication();
         assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid values").isNull();
     }
 
     @Test
-    public void GetViolationMessagesForEMail() {
+    public void testValidEmail() {
         Communication makeValidCommunication = makeValidCommunication();
         makeValidCommunication.setType(EMAIL);
         makeValidCommunication.setIdentifier("test@test.de");
-        assertThat(makeValidCommunication.getViolationMessage()).as("Communication have a vaild E-Mail").isNull();
+        assertThat(makeValidCommunication.getViolationMessage()).as("Communication have a vaild email").isNull();
     }
 
     @Test
-    public void GetViolationMessagesForPhone() {
+    public void testValidPhonenumber() { 
         Communication makeValidCommunication = makeValidCommunication();
-        makeValidCommunication.setType(FAX);
+        makeValidCommunication.setType(PHONE); 
         makeValidCommunication.setIdentifier("0401234567");
-        assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid Phonenumber").isNull();
+        assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid phonenumber").isNull();
     }
 
     @Test
-    public void GetNonViolationMessagesForEMail() {
+    public void testNonValidEmail() { 
         Communication makeInvalidCommunication = makeValidCommunication();
         makeInvalidCommunication.setType(EMAIL);
         makeInvalidCommunication.setIdentifier("falscheemail@@test.de");
-        assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid E-Mail").isNotBlank();
+        assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid email").isNotBlank();
     }
 
     @Test
-    public void GetNonViolationMessagesForPhone() {
+    public void testNonValidPhonenumber() { 
         Communication makeInvalidCommunication = makeValidCommunication();
-        makeInvalidCommunication.setType(Type.FAX);
+        makeInvalidCommunication.setType(PHONE);
         makeInvalidCommunication.setIdentifier("0123586Buchstaben");
-        assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid Phonenumber").isNotBlank();
+        assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid phonenumber").isNotBlank();
+    }
+
+    @Test
+    @Ignore
+    public void phoneNumbers() {
+        String phonePattern = Communication.PHONE_PATTERN;
+        assertThat(phonePattern).as("phonePattern").isNotBlank();
+        assertThat("012345").matches(phonePattern);
+        assertThat("  012345").doesNotMatch(phonePattern);
+        assertThat("  012345  ").doesNotMatch(phonePattern);
+        assertThat("012345   ").doesNotMatch(phonePattern);
+        assertThat("0123 12345").matches(phonePattern);
+
+        assertThat("0049 (123) 12345").matches(phonePattern);
+        assertThat("+49 (123) 12345").matches(phonePattern);
     }
 
 }

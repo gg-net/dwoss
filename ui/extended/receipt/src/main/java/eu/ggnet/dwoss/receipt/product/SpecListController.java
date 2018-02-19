@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import eu.ggnet.dwoss.receipt.AbstractController;
-import eu.ggnet.dwoss.spec.SpecAgent;
-import eu.ggnet.dwoss.spec.entity.ProductSpec;
+import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.util.table.*;
 import eu.ggnet.saft.Dl;
 

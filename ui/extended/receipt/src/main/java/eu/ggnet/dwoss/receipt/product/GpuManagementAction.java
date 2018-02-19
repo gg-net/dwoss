@@ -20,8 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.saft.Ui;
 
 public class GpuManagementAction extends AbstractAction {
 
@@ -32,8 +31,8 @@ public class GpuManagementAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().swing().eval(() -> OkCancelWrap.result(new GpuListPanel(new GpuListController()))).isPresent();
+            Ui.build().swing().show(() -> new GpuListPanel(new GpuListController())); 
         });
-        
+
     }
 }

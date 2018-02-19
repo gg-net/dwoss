@@ -22,11 +22,11 @@ import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
-import eu.ggnet.dwoss.report.assist.Reports;
-import eu.ggnet.dwoss.rights.assist.Rights;
-import eu.ggnet.dwoss.spec.assist.Specs;
-import eu.ggnet.dwoss.stock.assist.Stocks;
-import eu.ggnet.dwoss.uniqueunit.assist.UniqueUnits;
+import eu.ggnet.dwoss.report.ee.assist.Reports;
+import eu.ggnet.dwoss.rights.ee.assist.Rights;
+import eu.ggnet.dwoss.spec.ee.assist.Specs;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.util.Utils;
 
 /**

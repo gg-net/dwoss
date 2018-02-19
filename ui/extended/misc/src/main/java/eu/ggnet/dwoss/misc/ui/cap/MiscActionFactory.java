@@ -33,13 +33,13 @@ import eu.ggnet.dwoss.misc.action.listings.SalesListingCreateAction;
 import eu.ggnet.dwoss.misc.action.movement.MovementAction;
 import eu.ggnet.dwoss.misc.help.AboutAction;
 import eu.ggnet.dwoss.misc.help.ShowMandatorAction;
-import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer;
-import eu.ggnet.dwoss.misc.op.movement.MovementListingProducer.ListType;
+import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
+import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.rules.SalesChannel;
 import eu.ggnet.dwoss.search.ui.OpenSearchAction;
-import eu.ggnet.dwoss.stock.StockAgent;
-import eu.ggnet.dwoss.stock.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ActionFactory;
 
