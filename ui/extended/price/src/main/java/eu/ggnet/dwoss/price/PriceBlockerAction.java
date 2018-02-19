@@ -80,9 +80,7 @@ public class PriceBlockerAction extends AccessableAction {
                     Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
                     return false;
                 } catch (UserInfoException ex) {
-                    Ui.exec(() -> {
-                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show();
-                    });
+                    Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show();
                     return false;
                 }
 
