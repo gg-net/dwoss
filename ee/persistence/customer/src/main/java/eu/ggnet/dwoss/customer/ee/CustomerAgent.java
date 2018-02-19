@@ -66,7 +66,7 @@ public interface CustomerAgent extends RemoteAgent {
     /**
      * Stores a simple customer.
      *
-     * @param simpleCustomer
+     * @param simpleCustomer the simpleCustomer
      * @return returns a reply with the stored customer or empty with failure.
      */
     Reply<Customer> store(SimpleCustomer simpleCustomer);

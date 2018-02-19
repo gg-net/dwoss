@@ -388,6 +388,38 @@
         </pluginManagement>
         <plugins>
             <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                            <goal>prepare-agent-integration</goal>
+                            <goal>report</goal>
+                            <goal>report-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>merge</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <fileSets>
+                                <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <!-- For the the full documentation call: mvn markdown-page-generator:generate javadoc:javadoc -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -461,7 +493,7 @@
                     </groups>
                     <overview>${project.build.directory}/html/overview.html</overview>
                     <show>private</show>
-                    <javadocVersion>1.8</javadocVersion>
+                    <javadocVersion>1.8.0</javadocVersion>
                     <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
                     <docletArtifact>
                         <groupId>org.umlgraph</groupId>
@@ -988,14 +1020,8 @@
                         </configuration>
                         <executions>
                             <execution>
-                                <id>integration-test</id>
                                 <goals>
                                     <goal>integration-test</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>verify</id>
-                                <goals>
                                     <goal>verify</goal>
                                 </goals>
                             </execution>
@@ -1032,5 +1058,62 @@
         </profile>
     </profiles>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.20</version>
+                <reportSets>
+                    <reportSet>
+                        <id>unit-tests</id>
+                        <reports>
+                            <report>report</report>
+                        </reports>
+                    </reportSet>
+
+                    <reportSet>
+                        <id>integration-tests</id>
+                        <reports>
+                            <report>failsafe-report-only</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <reportSets>
+                    <reportSet>
+                        <id>jacoco-report</id>
+                        <reports>
+                            <report>report</report>
+                            <report>report-integration</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
