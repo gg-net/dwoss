@@ -21,7 +21,8 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -38,7 +39,7 @@ public class CommunicationTest {
     }
 
     @Test
-    public void testValidMessage() { 
+    public void testValidMessage() {
         Communication makeValidCommunication = makeValidCommunication();
         assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid values").isNull();
     }
@@ -52,15 +53,15 @@ public class CommunicationTest {
     }
 
     @Test
-    public void testValidPhonenumber() { 
+    public void testValidPhonenumber() {
         Communication makeValidCommunication = makeValidCommunication();
-        makeValidCommunication.setType(PHONE); 
+        makeValidCommunication.setType(PHONE);
         makeValidCommunication.setIdentifier("0401234567");
         assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid phonenumber").isNull();
     }
 
     @Test
-    public void testNonValidEmail() { 
+    public void testNonValidEmail() {
         Communication makeInvalidCommunication = makeValidCommunication();
         makeInvalidCommunication.setType(EMAIL);
         makeInvalidCommunication.setIdentifier("falscheemail@@test.de");
@@ -68,15 +69,15 @@ public class CommunicationTest {
     }
 
     @Test
-    public void testNonValidPhonenumber() { 
+    public void testNonValidPhonenumber() {
         Communication makeInvalidCommunication = makeValidCommunication();
         makeInvalidCommunication.setType(PHONE);
         makeInvalidCommunication.setIdentifier("0123586Buchstaben");
         assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid phonenumber").isNotBlank();
     }
 
-    @Test
     @Ignore
+    @Test
     public void phoneNumbers() {
         String phonePattern = Communication.PHONE_PATTERN;
         assertThat(phonePattern).as("phonePattern").isNotBlank();

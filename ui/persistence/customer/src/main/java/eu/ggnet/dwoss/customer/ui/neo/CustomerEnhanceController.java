@@ -26,10 +26,12 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
@@ -48,8 +50,6 @@ import eu.ggnet.saft.api.ui.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.ButtonType.OK;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -365,6 +365,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         //create a dialog to add AdditionalCustomerId instances to the additionalCustomerIDsListView
         Button addButton = new Button("Hinzufügen");
         addButton.setMinWidth(80.0);
+        addButton.setOnAction((event) -> new AdditionalCustomerIDsDialogHandler());
+
         // disable the add button if every type of ExternalSystem enum is already contained in the listView
         additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
             addButton.setDisable(additionalCustomerIDsListView.getItems().stream()
@@ -387,7 +389,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             }
         });
         Button editButton = new Button("Bearbeiten");
-        editButton.setOnAction((event) -> {
+        editButton.setOnAction((event)
+                -> new AdditionalCustomerIDsDialogHandler(additionalCustomerIDsListView.getSelectionModel()));
 
         // disable the add button if every type of ExternalSystem enum is already contained in the listView
         additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
@@ -398,9 +401,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
         editButton.setDisable(true);
         deleteButton.setDisable(true);
-        additionalCustomerIDsListView.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
-            editButton.setDisable(n.intValue() < 0);
-            deleteButton.setDisable(n.intValue() < 0);
+        additionalCustomerIDsListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            editButton.setDisable(newValue.intValue() < 0);
+            deleteButton.setDisable(newValue.intValue() < 0);
         });
 
         HBox buttonsHBox = new HBox();
@@ -462,11 +465,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             addButton
                     .setOnAction((ActionEvent e) -> {
 
-                Ui.exec(() -> {
-                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class)
-                            .opt()
-                            .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
-                });
+                        Ui.exec(() -> {
+                            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class
+                            )
+                                    .opt()
+                                    .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
+                        });
 
                     });
             delButton.setOnAction((ActionEvent e) -> {
@@ -537,7 +541,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class)
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class
+            )
                     .opt()
                     .ifPresent(a -> Platform.runLater(() -> contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a)));
         });
@@ -546,7 +551,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addContact(Contact contact) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class)
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class
+            )
                     .opt()
                     .filter(a -> a != null)
                     .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
@@ -556,7 +562,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void editCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class)
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class
+            )
                     .opt()
                     .filter(a -> a != null)
                     .ifPresent(a -> Platform.runLater(() -> companyList.set(companyListView.getSelectionModel().getSelectedIndex(), a)));
@@ -566,7 +573,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private void addCompany(Company company) {
         Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class)
+            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class
+            )
                     .opt()
                     .filter(a -> a != null)
                     .ifPresent(a -> Platform.runLater(() -> companyList.add(a)));
@@ -583,7 +591,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void handleMandatorMetaDataButtonAction(ActionEvent event) {
 
         Ui.exec(() -> {
-            Ui.build(commentTextArea).fxml().eval(() -> getCustomer().getMandatorMetadata().get(0), MandatorMetaDataController.class)
+            Ui.build(commentTextArea).fxml().eval(() -> getCustomer().getMandatorMetadata().get(0), MandatorMetaDataController.class
+            )
                     .opt()
                     .ifPresent(newMandatorMetaData -> {
                         MandatorMetadata oldMandatorMetadata = getCustomer().getMandatorMetadata().get(0);
@@ -639,4 +648,92 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         }
     }
 
+    private class AdditionalCustomerIDsDialogHandler implements EventHandler<ActionEvent> {
+
+        private MultipleSelectionModel<AdditionalCustomerID> selectionModel;
+
+        public AdditionalCustomerIDsDialogHandler() {
+        }
+
+        public AdditionalCustomerIDsDialogHandler(MultipleSelectionModel<AdditionalCustomerID> selectionModel) {
+            this.selectionModel = selectionModel;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+
+            Dialog<AdditionalCustomerID> dialog = new Dialog<>();
+            if ( selectionModel == null )
+                dialog.setTitle("Zusätzliche Kundennummer hinzufügen.");
+            else
+                dialog.setTitle("Zusätzliche Kundennummer bearbeiten.");
+
+            ButtonType addButtonType;
+            if ( selectionModel == null )
+                addButtonType = new ButtonType("Hinzufügen", ButtonData.OK_DONE);
+            else
+                addButtonType = new ButtonType("Änderungen speichern", ButtonData.OK_DONE);
+
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+            TextField customerId = new TextField();
+            customerId.setPromptText("Kundennummer");
+
+            ChoiceBox externalSystemChoiceBox;
+            if ( selectionModel != null ) {
+                externalSystemChoiceBox = new ChoiceBox(FXCollections.observableArrayList(Arrays.asList(selectionModel.getSelectedItem().type)));
+                externalSystemChoiceBox.getSelectionModel().select(0);
+                customerId.setText(selectionModel.getSelectedItem().value);
+
+            } else {
+                // filter ExternalSystem types which are already contained in the listView
+                externalSystemChoiceBox = new ChoiceBox(Arrays.stream(ExternalSystem.values())
+                        .filter(externalSystem
+                                -> !additionalCustomerIDsListView.getItems()
+                                .stream()
+                                .map(additionalCustomerID -> additionalCustomerID.type)
+                                .collect(Collectors.toList())
+                                .contains(externalSystem))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList)));
+            }
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            grid.add(new Label("ExternalSystem:"), 0, 0);
+            grid.add(externalSystemChoiceBox, 1, 0);
+            grid.add(new Label("Kundennummer:"), 0, 1);
+            grid.add(customerId, 1, 1);
+            Node dialogAddButton = dialog.getDialogPane().lookupButton(addButtonType);
+            dialogAddButton.setDisable(true);
+            InvalidationListener addButtonDisabler = (javafx.beans.Observable observable) -> {
+                dialogAddButton.setDisable(externalSystemChoiceBox.getSelectionModel().isEmpty() || customerId.getText().isEmpty());
+            };
+            externalSystemChoiceBox.getSelectionModel().selectedIndexProperty().addListener(addButtonDisabler);
+            customerId.textProperty().addListener(addButtonDisabler);
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(dialogButton -> {
+                if ( dialogButton == addButtonType ) {
+                    return new AdditionalCustomerID((ExternalSystem)externalSystemChoiceBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
+                }
+                return null;
+            });
+            Ui.exec(() -> {
+
+                Optional<AdditionalCustomerID> result = Ui.build(additionalCustomerIDsListView).modality(WINDOW_MODAL).dialog().eval(() -> dialog).opt();
+
+                if ( selectionModel == null )
+                    result.ifPresent(additionalId -> {
+                        additionalCustomerIDsListView.getItems().add(additionalId);
+                        additionalCustomerIDsListView.refresh();
+                    });
+                else
+                    result.ifPresent(additionalId -> {
+                        selectionModel.getSelectedItem().setValue(additionalId.getValue());
+                        additionalCustomerIDsListView.refresh();
+                    });
+            });
+
+        }
+
+    }
 }

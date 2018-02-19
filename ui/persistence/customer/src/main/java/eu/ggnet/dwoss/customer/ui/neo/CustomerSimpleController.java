@@ -33,6 +33,7 @@ import javafx.util.converter.IntegerStringConverter;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -43,6 +44,8 @@ import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import lombok.AllArgsConstructor;
+
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Controller class for the editor view of a SimpleCustomer. Allows the user to
@@ -129,14 +132,29 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndCloseButtonHandling() {
-        result = new CustomerContinue(getSimpleCustomer(), false);
-        Ui.closeWindowOf(kid);
+        try {
+            SimpleCustomer simpleCustomer = getSimpleCustomer();
+            result = new CustomerContinue(getSimpleCustomer(), false);
+            Ui.closeWindowOf(kid);
+        } catch (IllegalStateException e) {
+            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, e.getMessage(), OK);
+            alert.show();
+
+        }
+
     }
 
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
-        result = new CustomerContinue(getSimpleCustomer(), true);
-        Ui.closeWindowOf(kid);
+
+        try {
+            SimpleCustomer simpleCustomer = getSimpleCustomer();
+            result = new CustomerContinue(getSimpleCustomer(), true);
+            Ui.closeWindowOf(kid);
+        } catch (IllegalStateException e) {
+            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, e.getMessage(), OK);
+            alert.show();
+        }
     }
 
     @FXML
@@ -263,7 +281,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @Override
-    public void accept(Customer c) {
+    public void accept(Customer c
+    ) {
         if ( c == null ) return;
         if ( !c.isSimple() ) {
             Ui.build().alert().message("Kunde ist nicht als SimpleCustomer darstellbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
@@ -318,7 +337,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         if ( simpleCustomer.getId() > 0 ) changeUIButton.setDisable(true); // Disable UI Change on allready pesistend Customer.
     }
 
-    private SimpleCustomer getSimpleCustomer() {
+    private SimpleCustomer getSimpleCustomer() throws IllegalStateException {
         SimpleCustomer sc = new SimpleCustomer();
 
         sc.setTitle(titleTextField.getText());
@@ -329,17 +348,30 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setCity(cityTextField.getText());
         sc.setIsoCountry(countryTextField.getText());
         if ( StringUtils.isNotBlank(mobileTextField.getText()) ) {
+
+            Communication communication = new Communication(Type.MOBILE, mobileTextField.getText());
+
+            if ( communication.getViolationMessage() != null )
+                throw new IllegalStateException(communication.getViolationMessage());
+
             sc.setMobilePhone(mobileTextField.getText());
         }
         if ( StringUtils.isNotBlank(landLineTextField.getText()) ) {
-            if ( !Pattern.matches(Communication.PHONE_PATTERN, landLineTextField.getText()) )
-                return null;
+
+            Communication communication = new Communication(Type.PHONE, landLineTextField.getText());
+            if ( communication.getViolationMessage() != null )
+                throw new IllegalStateException(communication.getViolationMessage());
+
             sc.setLandlinePhone(landLineTextField.getText());
 
         }
         if ( StringUtils.isNotBlank(emailTextField.getText()) ) {
-            if ( !Pattern.matches(Communication.EMAIL_PATTERN, emailTextField.getText()) )
-                return null;
+
+            Communication communication = new Communication(Type.EMAIL, emailTextField.getText());
+
+            if ( communication.getViolationMessage() != null )
+                throw new IllegalStateException(communication.getViolationMessage());
+
             sc.setEmail(emailTextField.getText());
         }
 
