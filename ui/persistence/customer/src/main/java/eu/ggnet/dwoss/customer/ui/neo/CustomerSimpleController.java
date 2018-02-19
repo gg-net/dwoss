@@ -32,6 +32,7 @@ import javafx.util.converter.IntegerStringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -327,12 +328,20 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setZipCode(zipcodeTextField.getText());
         sc.setCity(cityTextField.getText());
         sc.setIsoCountry(countryTextField.getText());
-        if ( StringUtils.isNotBlank(mobileTextField.getText()) )
+        if ( StringUtils.isNotBlank(mobileTextField.getText()) ) {
             sc.setMobilePhone(mobileTextField.getText());
-        if ( StringUtils.isNotBlank(landLineTextField.getText()) )
+        }
+        if ( StringUtils.isNotBlank(landLineTextField.getText()) ) {
+            if ( !Pattern.matches(Communication.PHONE_PATTERN, landLineTextField.getText()) )
+                return null;
             sc.setLandlinePhone(landLineTextField.getText());
-        if ( StringUtils.isNotBlank(emailTextField.getText()) )
+
+        }
+        if ( StringUtils.isNotBlank(emailTextField.getText()) ) {
+            if ( !Pattern.matches(Communication.EMAIL_PATTERN, emailTextField.getText()) )
+                return null;
             sc.setEmail(emailTextField.getText());
+        }
 
         sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
         sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
