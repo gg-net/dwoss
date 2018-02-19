@@ -187,16 +187,15 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             }
         });
 
-        // Binding all Ui Properties
-        SEARCH_PROPERTY.bind(searchField.textProperty());
-
-        progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
-        progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
-
         //hidde the HBox
         progressBar.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
         progressIndicator.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
         statusHbox.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+
+        // Binding all Ui Properties
+        SEARCH_PROPERTY.bind(searchField.textProperty());
+        progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
+        progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
 
         Ui.progress().observe(CUSTOMER_TASK_SERVICE);
     }

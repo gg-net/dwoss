@@ -22,15 +22,11 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
@@ -48,8 +44,7 @@ import eu.ggnet.saft.api.ui.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.ButtonType.OK;
+import static javafx.scene.control.Alert.AlertType;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -389,25 +384,26 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         Button editButton = new Button("Bearbeiten");
         editButton.setOnAction((event) -> {
 
-        // disable the add button if every type of ExternalSystem enum is already contained in the listView
-        additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
-            addButton.setDisable(additionalCustomerIDsListView.getItems().stream()
-                    .map(additionalCustomerID -> additionalCustomerID.type)
-                    .collect(Collectors.toList())
-                    .containsAll(Arrays.asList(ExternalSystem.values())));
-        });
-        editButton.setDisable(true);
-        deleteButton.setDisable(true);
-        additionalCustomerIDsListView.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
-            editButton.setDisable(n.intValue() < 0);
-            deleteButton.setDisable(n.intValue() < 0);
-        });
+            // disable the add button if every type of ExternalSystem enum is already contained in the listView
+            additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
+                addButton.setDisable(additionalCustomerIDsListView.getItems().stream()
+                        .map(additionalCustomerID -> additionalCustomerID.type)
+                        .collect(Collectors.toList())
+                        .containsAll(Arrays.asList(ExternalSystem.values())));
+            });
+            editButton.setDisable(true);
+            deleteButton.setDisable(true);
+            additionalCustomerIDsListView.getSelectionModel().selectedIndexProperty().addListener((ob, o, n) -> {
+                editButton.setDisable(n.intValue() < 0);
+                deleteButton.setDisable(n.intValue() < 0);
+            });
 
-        HBox buttonsHBox = new HBox();
-        buttonsHBox.getChildren().addAll(addButton, editButton, deleteButton);
-        buttonsHBox.setSpacing(3.0);
-        additionalCustomerIDsVBox.getChildren().addAll(ExternalSystemIDsLabel, buttonsHBox, additionalCustomerIDsListView);
-        additionalCustomerIDsVBox.setMinWidth(120.0);
+            HBox buttonsHBox = new HBox();
+            buttonsHBox.getChildren().addAll(addButton, editButton, deleteButton);
+            buttonsHBox.setSpacing(3.0);
+            additionalCustomerIDsVBox.getChildren().addAll(ExternalSystemIDsLabel, buttonsHBox, additionalCustomerIDsListView);
+            additionalCustomerIDsVBox.setMinWidth(120.0);
+        });
     }
 
     /**
@@ -462,11 +458,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             addButton
                     .setOnAction((ActionEvent e) -> {
 
-                Ui.exec(() -> {
-                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class)
-                            .opt()
-                            .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
-                });
+                        Ui.exec(() -> {
+                            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class)
+                                    .opt()
+                                    .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
+                        });
 
                     });
             delButton.setOnAction((ActionEvent e) -> {
