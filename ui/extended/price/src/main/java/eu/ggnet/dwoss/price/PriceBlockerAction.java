@@ -18,7 +18,8 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
@@ -29,7 +30,6 @@ import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
-import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -59,15 +59,29 @@ public class PriceBlockerAction extends AccessableAction {
                             .filter(Ui.failure()::handle)
                             .map(Reply::getPayload)
                             .ifPresent(f -> {
-                                per.setCustomerPrice(f.customerPr);
-                                per.setRetailerPrice(f.retailerPr);
-                                per.setUnitPriceFixed(Change.SET);
+                                Ui.build().dialog().eval(() -> {
+                                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                                    alert.setContentText("Stimmt der Kunden Preis: " + f.customerPr + " und Händler Preis " + f.retailerPr);
+                                    ButtonType buttonTypeYes = new ButtonType("Ja", ButtonBar.ButtonData.YES);
+                                    ButtonType buttonTypeNo = new ButtonType("Nein", ButtonBar.ButtonData.NO);
+                                    alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
+                                    return alert;
+                                }).opt().filter(b -> {
+                                    if ( b.getButtonData() == ButtonBar.ButtonData.YES ) {
+                                        per.setCustomerPrice(f.customerPr);
+                                        per.setRetailerPrice(f.retailerPr);
+                                        per.setUnitPriceFixed(Change.SET);
+                                        return false;
+                                    }
+                                    return false;
+                                });
+
                             });
                     Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
                     return false;
                 } catch (UserInfoException ex) {
                     Ui.exec(() -> {
-                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show();
                     });
                     return false;
                 }
