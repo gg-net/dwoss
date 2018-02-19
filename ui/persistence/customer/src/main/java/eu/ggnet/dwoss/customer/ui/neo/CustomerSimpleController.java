@@ -30,6 +30,8 @@ import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -325,9 +327,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setZipCode(zipcodeTextField.getText());
         sc.setCity(cityTextField.getText());
         sc.setIsoCountry(countryTextField.getText());
-        sc.setMobilePhone(mobileTextField.getText());
-        sc.setLandlinePhone(landLineTextField.getText());
-        sc.setEmail(emailTextField.getText());
+        if ( StringUtils.isNotBlank(mobileTextField.getText()) )
+            sc.setMobilePhone(mobileTextField.getText());
+        if ( StringUtils.isNotBlank(landLineTextField.getText()) )
+            sc.setLandlinePhone(landLineTextField.getText());
+        if ( StringUtils.isNotBlank(emailTextField.getText()) )
+            sc.setEmail(emailTextField.getText());
+
         sc.setSex(genderChoiseBox.getSelectionModel().getSelectedItem());
         sc.setSource(sourceChoiseBox.getSelectionModel().getSelectedItem());
 

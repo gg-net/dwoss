@@ -402,7 +402,7 @@ public class Customer implements Serializable, EagerAble {
                 return "Contact has more than one address";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "Contact of the consumer  has more than 3 communications";
-            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() > 0 )
+            if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).findAny().isPresent() )
                 return "At least one Communication Type not allowed for consumers were found";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )
                 return "multiple EMAIL type communications found";
