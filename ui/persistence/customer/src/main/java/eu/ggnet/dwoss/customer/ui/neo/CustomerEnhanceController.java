@@ -411,6 +411,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         buttonsHBox.setSpacing(3.0);
         additionalCustomerIDsVBox.getChildren().addAll(ExternalSystemIDsLabel, buttonsHBox, additionalCustomerIDsListView);
         additionalCustomerIDsVBox.setMinWidth(120.0);
+
     }
 
     /**

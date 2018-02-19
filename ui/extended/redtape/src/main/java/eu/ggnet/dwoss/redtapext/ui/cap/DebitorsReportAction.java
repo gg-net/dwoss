@@ -38,9 +38,10 @@ public class DebitorsReportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
-            Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+        Ui.exec(() -> {
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
+                Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+            });
         });
-
     }
 }

@@ -24,6 +24,7 @@ import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;
@@ -50,12 +51,18 @@ public class UpdateProductAction extends AccessableAction {
                 return dialog;
             }).opt().filter(r -> {
                 Product product = Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(r);
-                if(product == null){
+                if ( product == null ) {
                     Ui.build().alert().message("Artikel " + r + " existiert nicht, bitte über Aufnahme erfassen").show(AlertType.WARNING);
                     return false;
                 }
-                ReplyUtil.wrap(() -> new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), r, UiCore.getMainFrame()));
-                return false;
+                try {
+                    new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), r, UiCore.getMainFrame());
+                    return false;
+                } catch (UserInfoException ex) {
+                    Ui.build().alert().message("Kein Ergebins für Produkt: " + ex.getMessage()).show();
+                    return false;
+                }
+
             });
         });
     }
