@@ -119,9 +119,24 @@ public class CustomerSimpleTryout {
             });
         });
 
+        JButton nullCustomer = new JButton(" Create SimpleCustomer");
+        nullCustomer.addActionListener(ev -> {
+            Ui.exec(() -> {
+                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(CustomerSimpleController.class).opt();
+                if ( !result.isPresent() ) return;
+                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                if ( !Ui.failure().handle(reply) ) return;
+                if ( !result.get().continueEnhance ) return;
+                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
+                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
+            });
+        });
+        
+        
         JPanel p = new JPanel();
         p.add(consumerCustomerButton);
         p.add(bussinesCustomer);
+        p.add(nullCustomer);
         p.add(close);
 
         UiCore.startSwing(() -> p);
