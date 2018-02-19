@@ -38,12 +38,13 @@ public class SageExportAction extends AccessableAction {
         super(EXPORT_DOCUMENTS_FOR_SAGE_IN_XML);
     }
 
-    @Override
+ @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
-            Ui.progress().title("Sage Export")
-                    .call(() -> Dl.remote().lookup(SageExporter.class).toXml(r.getStartAsDate(), r.getEndAsDate()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+        Ui.exec(() -> {
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
+                Ui.progress().title("Sage Export")
+                        .call(() -> Dl.remote().lookup(SageExporter.class).toXml(r.getStartAsDate(), r.getEndAsDate()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
+            });
         });
-
     }
 }
