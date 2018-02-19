@@ -21,9 +21,11 @@ import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -47,24 +49,33 @@ public class DeleteUnitAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UnitDestroyer deleteUnitOp = Dl.remote().lookup(UnitDestroyer.class);
-        String refurbishedId = showInputDialog(UiCore.getMainFrame(), "SopoNr die gelöscht werden soll:");
-        if ( refurbishedId == null || refurbishedId.isEmpty() ) return;
-        try {
-            UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> deleteUnitOp.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
-            Ui.exec(() -> {
-                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich gelöschen ?"))
-                        .opt()
-                        .filter(b -> b == OK)
-                        .ifPresent(r -> {
-                            deleteUnitOp.delete(uniqueUnit, "Löschung aus UI", Dl.remote().lookup(Guardian.class).getUsername());
-                            Ui.build().alert().message("SopoNr " + refurbishedId + " ist gelöscht.").show(AlertType.INFO);
-                        });
+        Ui.exec(() -> {
+            Ui.build().title("SopoNr die gelöscht werden soll").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("SopoNr die gelöscht werden soll:");
+                return dialog;
+            }).opt().filter(r -> {
+                try {
+                    UniqueUnit uniqueUnit = Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r);
+                    if ( uniqueUnit == null ) {
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
+                        return false;
+                    }
+                    Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich gelöschen ?"))
+                            .opt()
+                            .filter(b -> b == OK)
+                            .ifPresent(rr -> {
+                                Dl.remote().lookup(UnitDestroyer.class).delete(uniqueUnit, "Löschung aus UI", Dl.remote().lookup(Guardian.class).getUsername());
+                                Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
+                            });
+                    return false;
+                } catch (UserInfoException ex) {
+                    Ui.exec(() -> {
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
+                    });
+                    return false;
+                }
             });
-        } catch (NullPointerException ex) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishedId).show(AlertType.WARNING);
-            });
-        }
+        });
     }
 }

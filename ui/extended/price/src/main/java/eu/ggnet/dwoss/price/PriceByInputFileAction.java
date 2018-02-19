@@ -17,8 +17,6 @@
 package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
@@ -47,19 +45,17 @@ public class PriceByInputFileAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open().opt();
-            if ( !inFile.isPresent() ) return;
-            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + inFile.get().getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
-                    .opt()
-                    .filter(b -> b == OK)
-                    .map(b -> TikaUtil.isExcel(inFile.get()))
-                    .filter(Ui.failure()::handle)
-                    .map(Reply::getPayload)
-                    .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
-                    .ifPresent(r -> Ui.osOpen(r.toTemporaryFile()));
-
+            Ui.fileChooser()
+                    .open().opt().ifPresent(r -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + r.getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
+                                .opt()
+                                .filter(b -> b == OK)
+                                .map(b -> TikaUtil.isExcel(r))
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
+                                .ifPresent(c -> Ui.osOpen(c.toTemporaryFile()));
+                    });
         });
-
     }
-
 }

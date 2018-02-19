@@ -22,7 +22,6 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.redtapext.ui.product.SalesProductViewCask;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 /**
  * @author bastian.venz
@@ -38,9 +37,8 @@ public class SalesProductAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        SalesProductViewCask cask = new SalesProductViewCask();
         Ui.exec(() -> {
-            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().eval(() -> OkCancelWrap.result(cask)).opt().isPresent(); // TODO: Jens
+            Ui.build().title("Neuwarenartikel für Verkauf verwalten").swing().show(() -> new SalesProductViewCask());
         });
     }
 }

@@ -19,13 +19,13 @@ package eu.ggnet.dwoss.receipt;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 
 import java.awt.event.ActionEvent;
+import java.util.Optional;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 
-import org.apache.commons.lang3.StringUtils;
-
-import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -34,7 +34,6 @@ import eu.ggnet.saft.core.ui.AlertType;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
-import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  *
@@ -48,27 +47,40 @@ public class ScrapUnitAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UnitDestroyer destroyer = Dl.remote().lookup(UnitDestroyer.class);
-        String refurbishedId = showInputDialog(UiCore.getMainFrame(), "SopoNr die verschrottet werden soll:");
-        if ( StringUtils.isBlank(refurbishedId) ) return;
-        try {
-            UniqueUnit uniqueUnit = ReplyUtil.wrap(() -> destroyer.verifyScarpOrDeleteAble(refurbishedId)).getPayload();
-            Ui.exec(() -> {
-                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + refurbishedId + " wirklich verschrotten ?"))
-                        .opt()
-                        .filter(b -> b == OK)
-                        .ifPresent(r -> {
-                            String reason = showInputDialog(UiCore.getMainFrame(), "Bitte Grund angeben");
-                            if ( reason == null || reason.isEmpty() ) return;
-                            destroyer.scrap(uniqueUnit, reason, Dl.remote().lookup(Guardian.class).getUsername());
-                            Ui.build().alert().message("SopoNr " + refurbishedId + " ist verschrottet.").show(AlertType.INFO);
-                        });
+        Ui.exec(() -> {
+            Ui.build().title("SopoNr die verschrottet werden soll").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("SopoNr die verschrottet werden soll:");
+                return dialog;
+            }).opt().filter(r -> {
+                try {
+                    UniqueUnit uniqueUnit = Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r);
+                    if ( uniqueUnit == null ) {
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
+                        return false;
+                    }
+                    Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
+                            .opt()
+                            .filter(b -> b == OK)
+                            .ifPresent(rr -> {
+                                Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
+                                    TextInputDialog dialog = new TextInputDialog();
+                                    dialog.setContentText("Bitte Grund angeben");
+                                    return dialog;
+                                }).opt().filter(s -> {
+                                    Dl.remote().lookup(UnitDestroyer.class).scrap(uniqueUnit, s, Dl.remote().lookup(Guardian.class).getUsername());
+                                    Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
+                                    return false;
+                                });
+                            });
+                    return false;
+                } catch (UserInfoException ex) {
+                    Ui.exec(() -> {
+                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
+                    });
+                    return false;
+                }
             });
-        } catch (NullPointerException ex) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kein Ergebins für SopoNr: " + refurbishedId).show(AlertType.WARNING);
-            });
-        }
-
+        });
     }
 }

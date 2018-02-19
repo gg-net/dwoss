@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.price.imex;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
@@ -52,29 +51,30 @@ public class ContractorImportAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String user = Dl.local().lookup(Guardian.class).getUsername();
-
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open().opt();
-            if ( !inFile.isPresent() ) return;
-            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Fehlende " + contractor.getName() + " Daten aus der Datei:" + inFile.get().getPath() + " importieren ?"))
-                    .opt()
-                    .filter(b -> b == OK)
-                    .map(b -> TikaUtil.isExcel(inFile.get()))
-                    .filter(Ui.failure()::handle)
-                    .map(Reply::getPayload)
-                    .map((File f) -> {
-                        if ( contractor.isManufacturer() ) {
-                            Ui.progress().call(() -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), user));
-                        } else {
-                            Ui.progress().call(() -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), user));
+            Ui.fileChooser()
+                    .open()
+                    .opt().ifPresent(r -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Fehlende " + contractor.getName() + " Daten aus der Datei:" + r.getPath() + " importieren ?"))
+                                .opt()
+                                .filter(b -> b == OK)
+                                .map(b -> TikaUtil.isExcel(r))
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .map((File f) -> {
+                                    if ( contractor.isManufacturer() ) {
+                                        Ui.progress().call(()
+                                                -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
+                                    } else {
+                                        Ui.progress().call(()
+                                                -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
+                                    }
+                                    return f;
+                                }).ifPresent(c -> {
+                            Ui.build().alert().message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen").show(AlertType.INFO);
                         }
-                        return f;
-                    }).ifPresent(c
-                    -> Ui.build().alert().message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen").show(AlertType.INFO)
-            );
-
-        }
-        );
+                        );
+                    });
+        });
     }
 }

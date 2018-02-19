@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.receipt.product;
 
 import java.awt.event.ActionEvent;
 
+import javafx.scene.control.TextInputDialog;
+
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -27,7 +29,6 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
-import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  * Allow the modification of a Product/Part.
@@ -42,16 +43,20 @@ public class UpdateProductAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        String partNo = showInputDialog(UiCore.getMainFrame(), "Bitte Artikelnummer des Herstellers eingeben:");
-        if ( partNo == null || partNo.isEmpty() ) return;
-        try {
-            Product product = Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(partNo);
-            ReplyUtil.wrap(() -> new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), partNo, UiCore.getMainFrame() ));           
-        } catch (NullPointerException ex) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Artikel " + partNo + " existiert nicht, bitte über Aufnahme erfassen").show(AlertType.WARNING);
+        Ui.exec(() -> {
+            Ui.build().title("Bitte Artikelnummer des Herstellers eingeben").dialog().eval(() -> {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setContentText("Bitte Artikelnummer des Herstellers eingeben:");
+                return dialog;
+            }).opt().filter(r -> {
+                Product product = Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(r);
+                if(product == null){
+                    Ui.build().alert().message("Artikel " + r + " existiert nicht, bitte über Aufnahme erfassen").show(AlertType.WARNING);
+                    return false;
+                }
+                ReplyUtil.wrap(() -> new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), r, UiCore.getMainFrame()));
+                return false;
             });
-        }
+        });
     }
 }

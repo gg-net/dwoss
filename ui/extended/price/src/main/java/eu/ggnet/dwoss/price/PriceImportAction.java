@@ -23,13 +23,13 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.TikaUtil;
+import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -48,19 +48,28 @@ public class PriceImportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Optional<File> inFile = Ui.fileChooser().open().opt();
-            if ( !inFile.isPresent() ) return;
-            Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + inFile.get().getPath() + " importieren ?"))
+            Ui.fileChooser()
+                    .open()
                     .opt()
-                    .filter(b -> b == OK)
-                    .map(b -> TikaUtil.isExcel(inFile.get()))
-                    .filter(Ui.failure()::handle)
-                    .map(Reply::getPayload)
-                    .map(f -> ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername())
-            )).filter(Ui.failure()::handle)
-                    .isPresent();
-
+                    .ifPresent(f -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + f.getPath() + " importieren ?"))
+                                .opt()
+                                .filter(b -> b == OK)
+                                .map(b -> TikaUtil.isExcel(f))
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .map(ff -> {
+                                    try {
+                                        Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername());
+                                        return false;
+                                    } catch (UserInfoException ex) {
+                                        Ui.exec(() -> {
+                                            Ui.build().alert().message("Lesefehler: " + ex.getMessage()).show(AlertType.WARNING);
+                                        });
+                                        return false;
+                                    }
+                                });
+                    });
         });
-
     }
 }
