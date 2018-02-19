@@ -41,7 +41,7 @@ public class SageExportAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().fx().eval(() -> new DateRangeChooserView()).ifPresent(r -> {
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
                 Ui.progress().title("Sage Export")
                         .call(() -> Dl.remote().lookup(SageExporter.class).toXml(r.getStartAsDate(), r.getEndAsDate()).toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
             });
