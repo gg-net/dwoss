@@ -45,6 +45,7 @@ import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.ui.AlertType;
 import eu.ggnet.saft.core.ui.FxSaft;
 
 import static java.lang.Double.MAX_VALUE;
@@ -149,7 +150,9 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
                 Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
-                if ( customer.isSimple() ) {
+                if ( !customer.isValid() ) {
+                    Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
+                } else                if ( customer.isSimple() ) {
                     L.info("Edit Simple Customer {}", customer.getId());
                     Optional<CustomerContinue> result = Ui.build(resultListView).fxml()
                             .eval(() -> customer, CustomerSimpleController.class).opt();
@@ -159,7 +162,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                     if ( !result.get().continueEnhance ) return;
                     Ui.build(statusHbox).fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
                             .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
-                } else {
+                } else if ( customer.isBusiness() ) {
                     L.info("Edit (Complex) Customer {}", customer.getId());
                     Ui.build(statusHbox).fxml().eval(() -> customer, CustomerEnhanceController.class)
                             .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
