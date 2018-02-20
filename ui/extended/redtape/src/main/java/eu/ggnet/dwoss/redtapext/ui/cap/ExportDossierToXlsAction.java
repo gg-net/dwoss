@@ -17,12 +17,15 @@
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
 
@@ -43,7 +46,20 @@ public class ExportDossierToXlsAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte DossierId eingeben:");
                 return dialog;
-            }).opt().ifPresent(r -> Ui.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile()));
+            }).opt().filter(r -> {
+                try {
+                    File toTemporaryFile = Ui.progress().title("Dossier: " + r).call(Dl.remote().lookup(DocumentSupporter.class).toXls(r)::toTemporaryFile);
+                    if ( toTemporaryFile == null ) {
+                        Ui.build().alert().message("Dossier " + r + " existiert nicht").show(AlertType.WARNING);
+                        return false;
+                    }
+                    Ui.osOpen(toTemporaryFile);
+                    return false;
+                } catch (NullPointerException ex) {
+                    Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
+                    return false;
+                }
+            });
         });
     }
 }
