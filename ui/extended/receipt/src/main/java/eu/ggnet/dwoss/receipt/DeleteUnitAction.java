@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
@@ -34,7 +33,6 @@ import eu.ggnet.saft.core.ui.AlertType;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.DELETE_UNIQUE_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
-import static javax.swing.JOptionPane.showInputDialog;
 
 /**
  * Delete a Unit from the Database.
@@ -70,9 +68,7 @@ public class DeleteUnitAction extends AccessableAction {
                             });
                     return false;
                 } catch (UserInfoException ex) {
-                    Ui.exec(() -> {
-                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
-                    });
+                    Ui.handle(ex);
                     return false;
                 }
             });

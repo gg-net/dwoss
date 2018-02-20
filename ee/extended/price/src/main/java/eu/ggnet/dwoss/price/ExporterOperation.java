@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,6 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.SRowFormater;
-import eu.ggnet.lucidcalc.SActionAdapter;
-import eu.ggnet.lucidcalc.SFormulaAction;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.LucidCalcReader;
-import eu.ggnet.lucidcalc.SFormula;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.CCellReference;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.CCellReferenceAdapter;
-import eu.ggnet.lucidcalc.SUtil;
-
 import java.awt.Color;
 import java.io.File;
 import java.util.*;
@@ -45,18 +24,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-
 import eu.ggnet.dwoss.price.engine.PriceEngine;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -68,20 +42,21 @@ import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
+import static eu.ggnet.dwoss.price.engine.PriceEngineResult.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static eu.ggnet.lucidcalc.CFormat.Representation.*;
 import static eu.ggnet.lucidcalc.SUtil.SR;
-import static eu.ggnet.dwoss.price.engine.PriceEngineResult.*;
 import static java.awt.Color.*;
 
 /**
@@ -118,7 +93,7 @@ public class ExporterOperation implements Exporter {
 
     @Inject
     private PriceEngine priceEngine;
-    
+
     /**
      * Export PriceManagement as Xls.
      * <p/>
@@ -128,7 +103,7 @@ public class ExporterOperation implements Exporter {
     public FileJacket toXls() {
         SubMonitor m = monitorFactory.newSubMonitor("Exporting the PriceManagement II", 100);
         List<PriceEngineResult> pers = priceCore.loadAndCalculate(m.newChild(80));
-        
+
         Collections.sort(pers);
         m.setWorkRemaining(pers.size() + 1);
         m.worked(1);
@@ -315,22 +290,15 @@ public class ExporterOperation implements Exporter {
      *
      * @param refurbishId the unitid
      * @return The PriceEngineResult or Null if Id not found
-     * @throws UserInfoException if the unitId is not a Number or to not get found
+     * @throws UserInfoException if the unitId is not a Number
      */
     @Override
-    public Reply<PriceEngineResult> load(String refurbishId) throws UserInfoException {
-        if(!StringUtils.isNumeric(refurbishId)){
-            throw new UserInfoException("refurbishId", "refurbishId is not a number");
-        }
+    public PriceEngineResult load(String refurbishId) throws UserInfoException {
         UniqueUnit uu = new UniqueUnitEao(uuEm).findByIdentifier(Identifier.REFURBISHED_ID, refurbishId);
-        if(uu == null){
-            throw new UserInfoException("UniqueUnit", "UniqueUnit not forund");
-        }
         PriceEngineResult per = new PriceEngineResult(uu);
         per.setRetailerPrice(uu.getPrice(PriceType.RETAILER));
         per.setCustomerPrice(uu.getPrice(PriceType.CUSTOMER));
-        
-        return Reply.success(per);
+        return per;
     }
 
     /**

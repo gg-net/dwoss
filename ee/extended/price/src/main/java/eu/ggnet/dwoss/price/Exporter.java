@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,8 @@ package eu.ggnet.dwoss.price;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * Remote Interface for the {@link ExporterOperation}.
@@ -54,7 +52,7 @@ public interface Exporter {
      * @return The PriceEngineResult or Null if Id not found
      * @throws UserInfoException if the unitId is not a Number
      */
-    Reply<PriceEngineResult> load(String refurbishId) throws UserInfoException;
+    PriceEngineResult load(String refurbishId) throws UserInfoException;
 
     /**
      * Calculates a Price for on Unit.

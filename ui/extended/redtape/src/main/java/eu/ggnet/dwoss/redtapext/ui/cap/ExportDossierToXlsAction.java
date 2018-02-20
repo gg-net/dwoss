@@ -56,7 +56,7 @@ public class ExportDossierToXlsAction extends AccessableAction {
                     Ui.osOpen(toTemporaryFile);
                     return false;
                 } catch (NullPointerException ex) {
-                    Ui.build().alert().message("Keine Rückgabewerte").show(AlertType.WARNING);
+                    Ui.handle(ex);
                     return false;
                 }
             });

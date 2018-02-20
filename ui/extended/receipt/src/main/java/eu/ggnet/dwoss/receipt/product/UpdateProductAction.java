@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -56,10 +55,10 @@ public class UpdateProductAction extends AccessableAction {
                     return false;
                 }
                 try {
-                    new UiProductSupport().createOrEditPart(product.getTradeName().getManufacturer(), r, UiCore.getMainFrame());
+                    UiProductSupport.createOrEditPart(product.getTradeName().getManufacturer(), r, UiCore.getMainFrame());
                     return false;
                 } catch (UserInfoException ex) {
-                    Ui.build().alert().message("Kein Ergebins für Produkt: " + ex.getMessage()).show();
+                    Ui.handle(ex);
                     return false;
                 }
 
