@@ -244,10 +244,13 @@ public class Customer implements Serializable, EagerAble {
     }
 
     /**
-     * Converts the customer to the simple dto form if possible.
-     * If the customer is to complex, it cannot be converted an therefor an empty optional is returned.
+     * Converts the customer to a SimpleCustomer if possible.
+     * <p>
+     * The customer has to be Simple({@link #isSimple()}) or else an empty optional is returned.
+     * For an optional of a SimpleCustomer the customer has to be either a consumer({@link #isConsumer()}) or a business customer({@link #isBusiness()}).
      *
-     * @return an optional of the simple customer
+     * @throws RuntimeException if the customer {@link #isSimple()} but neither a consumer({@link #isConsumer()}) or a business customer({@link #isBusiness()}).
+     * @return an optional of the simple customer.
      */
     public Optional<SimpleCustomer> toSimple() {
         if ( !isSimple() ) return Optional.empty();
@@ -320,14 +323,9 @@ public class Customer implements Serializable, EagerAble {
     }
 
     /**
-     * Validtes a simple customer.
-     * Rules are:
-     * <ul>
-     * <li>either a contact or a companie is set, but never both</li>
-     * <li>At least one contact has a address</li>
-     * </ul>
+     * Validtes a simple customer via the {@link #getSimpleViolationMessage()} method.
      *
-     * @return true for a Vaild Customer
+     * @return true if {@link #getSimpleViolationMessage()} returns null for the customer.
      */
     public boolean isSimple() {
         return getSimpleViolationMessage() == null;
