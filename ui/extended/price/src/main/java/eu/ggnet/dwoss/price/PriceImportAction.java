@@ -61,9 +61,7 @@ public class PriceImportAction extends AccessableAction {
                                         Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername());
                                         return false;
                                     } catch (UserInfoException ex) {
-                                        Ui.exec(() -> {
-                                            Ui.build().alert().message("Lesefehler: " + ex.getMessage()).show(AlertType.WARNING);
-                                        });
+                                        Ui.build().alert().message("Lesefehler: " + ex.getMessage()).show(AlertType.WARNING);
                                         return false;
                                     }
                                 });
