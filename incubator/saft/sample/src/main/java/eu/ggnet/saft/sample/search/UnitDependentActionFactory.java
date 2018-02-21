@@ -30,7 +30,10 @@ public class UnitDependentActionFactory implements DescriptiveConsumerFactory<Mi
 
     @Override
     public List<DescriptiveConsumer<MicroUnit>> of(MicroUnit t) {
-        if ( t.uniqueUnitId != 1 ) return new ArrayList<>();
+        if ( t.uniqueUnitId != 1 ) {
+            System.out.println("Keine dependent Action, da id != 1");
+            return new ArrayList<>();
+        }
         try {
             Thread.sleep(2000);
         } catch (InterruptedException ex) {

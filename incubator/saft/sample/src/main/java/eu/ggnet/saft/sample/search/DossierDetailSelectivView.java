@@ -28,8 +28,6 @@ import eu.ggnet.saft.api.ui.ClosedListener;
 import eu.ggnet.saft.api.ui.Title;
 import eu.ggnet.saft.Ops;
 
-import static java.lang.Double.MAX_VALUE;
-
 /**
  *
  * @author oliver.guenther
@@ -45,7 +43,6 @@ public class DossierDetailSelectivView extends BorderPane implements Consumer<Mi
 
     public DossierDetailSelectivView() {
         header = new TextField();
-        header.setPrefWidth(MAX_VALUE);
         setTop(header);
         body = new TextArea();
         progressIndicator = new ProgressIndicator();

@@ -26,8 +26,6 @@ import javafx.scene.layout.StackPane;
 
 import eu.ggnet.saft.api.ui.Title;
 
-import static java.lang.Double.MAX_VALUE;
-
 /**
  *
  * @author oliver.guenther
@@ -43,10 +41,9 @@ public class UnitDetailView extends BorderPane implements Consumer<MicroUnit> {
 
     public UnitDetailView() {
         header = new TextField();
-        header.setPrefWidth(MAX_VALUE);
         setTop(header);
         body = new TextArea();
-        progressIndicator = new ProgressIndicator();        
+        progressIndicator = new ProgressIndicator();
         setCenter(new StackPane(body,progressIndicator));
     }
 
