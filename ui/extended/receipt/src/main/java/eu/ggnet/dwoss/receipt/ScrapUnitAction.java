@@ -23,8 +23,6 @@ import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -54,16 +52,22 @@ public class ScrapUnitAction extends AccessableAction {
                 return dialog;
             }).opt().ifPresent(r -> {
                 Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
-                        .opt().ifPresent(rr -> {
+                        .opt()
+                        .ifPresent(rr -> {
                             Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
                                 TextInputDialog dialog = new TextInputDialog();
                                 dialog.setContentText("Bitte Grund angeben");
                                 return dialog;
-                            }).opt().ifPresent(s -> {
-                                Dl.remote().lookup(UnitDestroyer.class)
-                                        .scrap(ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)).getPayload(), s, Dl.local().lookup(Guardian.class).getUsername());
-                                Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
-                            });
+                            })
+                                    .opt()
+                                    .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
+                                    .filter(Ui.failure()::handle)
+                                    .map(Reply::getPayload)
+                                    .ifPresent(u -> {
+                                        Dl.remote().lookup(UnitDestroyer.class).scrap(u, r, Dl.local().lookup(Guardian.class).getUsername());
+                                        Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
+                                    });
+
                         });
 
             });

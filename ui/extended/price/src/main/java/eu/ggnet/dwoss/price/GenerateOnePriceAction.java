@@ -20,11 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
@@ -47,11 +49,12 @@ public class GenerateOnePriceAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte SopoNr eingeben :");
                 return dialog;
-            }).opt().ifPresent(r -> {
-                Ui.build().modality(WINDOW_MODAL).title("SopoNr")
-                        .fx()
-                        .show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(Dl.remote().lookup(Exporter.class).onePrice(r))), () -> new HtmlPane());
-            });
+            })
+                    .opt()
+                    .map(r -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).onePrice(r)))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .ifPresent(p -> Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(p)), () -> new HtmlPane()));
         });
     }
 }

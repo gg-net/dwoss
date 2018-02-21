@@ -53,9 +53,8 @@ public class PriceImportAction extends AccessableAction {
                                 .map(b -> TikaUtil.isExcel(f))
                                 .filter(Ui.failure()::handle)
                                 .map(Reply::getPayload)
-                                .ifPresent(ff -> {
-                                    ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername()));
-                                });
+                                .map(ff -> ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername())))
+                                .filter(Ui.failure()::handle);
                     });
         });
     }

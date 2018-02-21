@@ -42,7 +42,8 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             L.debug("Start generating OptimizedCreditMemoReport.");
-            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
+            Ui.build().fx().eval(() -> new DateRangeChooserView())
+                    .opt().ifPresent(r -> {
                 L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", r.getStartAsDate(), r.getEndAsDate());
                 Ui.osOpen(Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile());
                 L.debug("Done generating OptimizedCreditMemoReport.");

@@ -23,7 +23,6 @@ import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -55,9 +54,11 @@ public class DeleteUnitAction extends AccessableAction {
             }).opt().ifPresent(r -> {
                 Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich gelöschen ?"))
                         .opt()
-                        .ifPresent(rr -> {
-                            Dl.remote().lookup(UnitDestroyer.class)
-                                    .delete(ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)).getPayload(), "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());
+                        .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
+                        .filter(Ui.failure()::handle)
+                        .map(Reply::getPayload)
+                        .ifPresent(u -> {
+                            Dl.remote().lookup(UnitDestroyer.class).delete(u, "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());
                             Ui.build().alert().message("SopoNr " + r + " ist gelöscht.").show(AlertType.INFO);
                         });
             });

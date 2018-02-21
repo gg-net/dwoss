@@ -24,6 +24,7 @@ import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.saft.*;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
@@ -46,10 +47,12 @@ public class UpdateProductAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte Artikelnummer des Herstellers eingeben:");
                 return dialog;
-            }).opt().ifPresent(r -> {
-                ReplyUtil.wrap(() -> UiProductSupport
-                        .createOrEditPart(Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(r).getTradeName().getManufacturer(), r, UiCore.getMainFrame()));
-            });
+            }).opt()
+                    .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UniqueUnitAgent.class).findProductByPartNo(s)))
+                    .filter(Ui.failure()::handle)
+                    .map(Reply::getPayload)
+                    .map(p -> ReplyUtil.wrap(() -> UiProductSupport.createOrEditPart(p.getTradeName().getManufacturer(), p.getPartNo(), UiCore.getMainFrame())))
+                    .filter(Ui.failure()::handle);
         });
     }
 }
