@@ -21,18 +21,19 @@ import java.awt.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -52,28 +53,19 @@ public class ScrapUnitAction extends AccessableAction {
                 dialog.setContentText("SopoNr die verschrottet werden soll:");
                 return dialog;
             }).opt().ifPresent(r -> {
-                try {
-                    UniqueUnit uniqueUnit = Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r);
-                    if ( uniqueUnit == null ) {
-                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
-                        return;
-                    }
-                    Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
-                            .opt()
-                            .filter(b -> b == OK)
-                            .ifPresent(rr -> {
-                                Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
-                                    TextInputDialog dialog = new TextInputDialog();
-                                    dialog.setContentText("Bitte Grund angeben");
-                                    return dialog;
-                                }).opt().ifPresent(s -> {
-                                    Dl.remote().lookup(UnitDestroyer.class).scrap(uniqueUnit, s, Dl.local().lookup(Guardian.class).getUsername());
-                                    Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
-                        });
+                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
+                        .opt().ifPresent(rr -> {
+                            Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
+                                TextInputDialog dialog = new TextInputDialog();
+                                dialog.setContentText("Bitte Grund angeben");
+                                return dialog;
+                            }).opt().ifPresent(s -> {
+                                Dl.remote().lookup(UnitDestroyer.class)
+                                        .scrap(ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)).getPayload(), s, Dl.local().lookup(Guardian.class).getUsername());
+                                Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
                             });
-                } catch (UserInfoException ex) {
-                    Ui.handle(ex);
-                }
+                        });
+
             });
         });
     }

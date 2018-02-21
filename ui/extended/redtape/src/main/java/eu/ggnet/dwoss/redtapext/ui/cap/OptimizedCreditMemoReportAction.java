@@ -44,7 +44,7 @@ public class OptimizedCreditMemoReportAction extends AbstractAction {
             L.debug("Start generating OptimizedCreditMemoReport.");
             Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
                 L.info("Generating OptimizedCreditMemoReport file for daterange {} to {}", r.getStartAsDate(), r.getEndAsDate());
-                Ui.osOpen(Ui.progress().title("Sage Export").call(() -> Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+                Ui.osOpen(Dl.remote().lookup(CreditMemoReporter.class).toOptimizedXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile());
                 L.debug("Done generating OptimizedCreditMemoReport.");
             });
         });

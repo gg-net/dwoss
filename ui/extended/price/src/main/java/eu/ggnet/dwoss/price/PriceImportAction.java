@@ -20,13 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
+import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -53,14 +53,8 @@ public class PriceImportAction extends AccessableAction {
                                 .map(b -> TikaUtil.isExcel(f))
                                 .filter(Ui.failure()::handle)
                                 .map(Reply::getPayload)
-                                .map(ff -> {
-                                    try {
-                                        Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername());
-                                        return false;
-                                    } catch (UserInfoException ex) {
-                                        Ui.build().alert().message("Lesefehler: " + ex.getMessage()).show(AlertType.WARNING);
-                                        return false;
-                                    }
+                                .ifPresent(ff -> {
+                                    ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername()));
                                 });
                     });
         });
