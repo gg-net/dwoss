@@ -53,8 +53,7 @@ public class OpenWithSwing {
 
             JMenuItem b = new JMenuItem("Once");
             b.addActionListener((e) -> Ui.exec(() -> {
-                SwingBuilder swing = Ui.build().swing();
-                swing.show(() -> new PanelOnceDialog());
+                Ui.build().swing().show(() -> new PanelOnceDialog());
             }));
             menu.add(b);
 

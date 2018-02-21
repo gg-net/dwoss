@@ -34,8 +34,10 @@ public class HtmlPaneTryout extends Application {
 
     public static void main(String[] args) {
 //        launch(args);
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
-        Ui.build().fx().show(() -> "<h1>Heading</h1><p>Hallo Welt</p>", () -> new HtmlPane());
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
+            Ui.build().fx().show(() -> "<h1>Heading</h1><p>Hallo Welt</p>", () -> new HtmlPane());
+        });
     }
 
     @Override

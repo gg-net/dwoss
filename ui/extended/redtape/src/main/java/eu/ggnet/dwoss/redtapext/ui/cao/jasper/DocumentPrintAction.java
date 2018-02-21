@@ -84,26 +84,27 @@ public class DocumentPrintAction extends AbstractAction {
             JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, type);
             CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
             boolean mailAvailable = customer.getEmail() != null && !customer.getEmail().trim().isEmpty();
-            Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
-                    .opt()
-                    .filter(c -> c.isCorrectlyBriefed())
-                    .ifPresent(c -> Ui.progress().call(() -> {
-                CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
-                for (StateTransition<CustomerDocument> stateTransition : Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
-                    RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
-                    for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
-                        if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
-                            this.document = Optional.of(Dl.remote().lookup(RedTapeWorker.class)
-                                    .stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername()))
-                                    .filter(Ui.failure()::handle)
-                                    .map(Reply::getPayload).orElse(document);
+            Ui.exec(() -> {
+                Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
+                        .opt()
+                        .filter(c -> c.isCorrectlyBriefed())
+                        .ifPresent(c -> Ui.progress().call(() -> {
+                    CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
+                    for (StateTransition<CustomerDocument> stateTransition : Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
+                        RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
+                        for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
+                            if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
+                                this.document = Optional.of(Dl.remote().lookup(RedTapeWorker.class)
+                                        .stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername()))
+                                        .filter(Ui.failure()::handle)
+                                        .map(Reply::getPayload).orElse(document);
+                            }
                         }
                     }
-                }
-                controller.reloadSelectionOnStateChange(Dl.remote().lookup(DocumentSupporter.class).briefed(document, Dl.local().lookup(Guardian.class).getUsername()));
-                return null;
-            }));
-
+                    controller.reloadSelectionOnStateChange(Dl.remote().lookup(DocumentSupporter.class).briefed(document, Dl.local().lookup(Guardian.class).getUsername()));
+                    return null;
+                }));
+            });
         });
 
     }

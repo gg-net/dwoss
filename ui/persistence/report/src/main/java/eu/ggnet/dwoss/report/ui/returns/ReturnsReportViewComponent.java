@@ -89,7 +89,9 @@ public class ReturnsReportViewComponent extends javax.swing.JPanel {
     private void reportLineTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reportLineTableMouseClicked
         if ( evt.getClickCount() != 2 ) return;
         int convertRowIndexToModel = reportLineTable.convertRowIndexToModel(reportLineTable.getSelectedRow());
-        Ui.build().parent(this).fx().show(() -> model.getLines().get(convertRowIndexToModel).getReportLine().toHtml(), () -> new HtmlPane());
+        Ui.exec(() -> {
+            Ui.build().parent(this).fx().show(() -> model.getLines().get(convertRowIndexToModel).getReportLine().toHtml(), () -> new HtmlPane());
+        });
     }//GEN-LAST:event_reportLineTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

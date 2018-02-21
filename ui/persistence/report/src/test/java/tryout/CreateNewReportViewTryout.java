@@ -42,10 +42,11 @@ public class CreateNewReportViewTryout {
 
         Dl.remote().add(Mandators.class, mandators);
 
-        UiCore.startSwing(() -> new JLabel("Application"));
-
-        Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new CreateNewReportView())).opt().ifPresent(v -> System.out.println(v.getPayload().getParameter()));
-
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Application"));
+            Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new CreateNewReportView()))
+                    .opt().ifPresent(v -> System.out.println(v.getPayload().getParameter()));
+        });
     }
 
 }

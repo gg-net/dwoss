@@ -68,12 +68,14 @@ public class RunClientFx extends Application {
         System.out.println("JavaFx start");
 
         if ( error != null ) {
-            Ui.build().alert().title("Fehler im Init")
-                    .nl("Fehler in der Initialisierung oder Verbindung")
-                    .nl("Später noch mal probieren oder Technik kontaktieren")
-                    .nl()
-                    .nl(error)
-                    .show(ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler im Init")
+                        .nl("Fehler in der Initialisierung oder Verbindung")
+                        .nl("Später noch mal probieren oder Technik kontaktieren")
+                        .nl()
+                        .nl(error)
+                        .show(ERROR);
+            });
             return;
         }
 

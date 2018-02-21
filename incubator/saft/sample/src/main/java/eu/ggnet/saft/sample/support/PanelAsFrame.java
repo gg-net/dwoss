@@ -26,7 +26,9 @@ public class PanelAsFrame extends javax.swing.JPanel implements ClosedListener {
 
     @Override
     public void closed() {
-        Ui.build().alert().title("ClosedListener Info").message("ClosedListener was called").nl(this.getClass().getName()).show(AlertType.INFO);
+        Ui.exec(() -> {
+            Ui.build().alert().title("ClosedListener Info").message("ClosedListener was called").nl(this.getClass().getName()).show(AlertType.INFO);
+        });
     }
 
     /**

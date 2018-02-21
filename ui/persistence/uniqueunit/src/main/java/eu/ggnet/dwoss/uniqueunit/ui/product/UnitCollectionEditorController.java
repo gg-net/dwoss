@@ -104,7 +104,9 @@ public class UnitCollectionEditorController implements Initializable, FxControll
      */
     private void save(ActionEvent event) {
         if ( StringUtils.isBlank(nameExtension.getText()) ) {
-            Ui.build().alert().message("Es muss ein Name gesetzt werden").show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Es muss ein Name gesetzt werden").show(AlertType.WARNING);
+            });
             return;
         }
 
@@ -123,7 +125,9 @@ public class UnitCollectionEditorController implements Initializable, FxControll
             //check if the pricetype is in the list
             for (Price items : listViewPrices.getItems()) {
                 if ( items.getType() == priceType.getSelectionModel().getSelectedItem() ) {
-                    Ui.build().alert().message("Dieser Preistyp wurde schon angelegt").show(AlertType.WARNING);
+                    Ui.exec(() -> {
+                        Ui.build().alert().message("Dieser Preistyp wurde schon angelegt").show(AlertType.WARNING);
+                    });
                     return;
                 }
             }

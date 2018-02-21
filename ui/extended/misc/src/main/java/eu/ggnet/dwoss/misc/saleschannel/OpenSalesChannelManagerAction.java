@@ -90,7 +90,9 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
                         protected void done() {
                             try {
                                 String msg = (get() ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt");
-                                Ui.build().alert(msg);
+                                Ui.exec(() -> {
+                                    Ui.build().alert().message(msg);
+                                });
                             } catch (InterruptedException | ExecutionException ex) {
                                 Ui.handle(ex);
                             }

@@ -41,16 +41,20 @@ public class ResolveRepayment {
     }
 
     public static void selector() {
-        Ui.build().dialog().eval(() -> {
-            ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(ACER, TradeName.values());
-            dialog.setTitle("Gutschriften");
-            dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
-            dialog.setContentText("Lieferant auswählen:");
-            return dialog;
-        }).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            Ui.build().dialog().eval(() -> {
+                ChoiceDialog<TradeName> dialog = new ChoiceDialog<>(ACER, TradeName.values());
+                dialog.setTitle("Gutschriften");
+                dialog.setHeaderText(RESOLVE_REPAYMENT.toName());
+                dialog.setContentText("Lieferant auswählen:");
+                return dialog;
+            }).opt().ifPresent(System.out::println);
+        });
     }
 
     public static void run() {
-        Ui.build().fxml().show(ResolveRepaymentController.class);
+        Ui.exec(() -> {
+            Ui.build().fxml().show(ResolveRepaymentController.class);
+        });
     }
 }

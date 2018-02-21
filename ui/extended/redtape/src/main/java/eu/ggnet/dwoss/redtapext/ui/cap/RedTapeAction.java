@@ -43,7 +43,9 @@ public class RedTapeAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().swing().show(() -> RedTapeController.build().getView());
+        Ui.exec(() -> {
+            Ui.build().swing().show(() -> RedTapeController.build().getView());
+        });
     }
 
     static URL loadSmallIcon() {

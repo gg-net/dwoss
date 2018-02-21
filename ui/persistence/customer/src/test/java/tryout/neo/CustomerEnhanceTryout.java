@@ -61,7 +61,9 @@ public class CustomerEnhanceTryout {
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
 
             if ( customer.getViolationMessage() != null ) {
-                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                Ui.exec(() -> {
+                    Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                });
 
                 return;
             }
@@ -89,7 +91,9 @@ public class CustomerEnhanceTryout {
             customer.getAdditionalCustomerIds().put(ExternalSystem.SAGE, "testsage");
 
             if ( customer.getViolationMessage() != null ) {
-                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                Ui.exec(() -> {
+                    Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                });
 
                 return;
             }

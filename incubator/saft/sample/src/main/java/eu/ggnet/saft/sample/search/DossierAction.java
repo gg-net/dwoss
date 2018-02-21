@@ -33,7 +33,9 @@ public class DossierAction implements Consumer<MicroDossier> {
 
     @Override
     public void accept(MicroDossier t) {
-        Ui.build().alert().message("Showing " + t).show();
+        Ui.exec(() -> {
+            Ui.build().alert().message("Showing " + t).show();
+        });
     }
 
 }

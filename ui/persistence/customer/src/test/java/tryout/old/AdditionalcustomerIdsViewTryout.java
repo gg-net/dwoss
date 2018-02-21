@@ -37,8 +37,9 @@ public class AdditionalcustomerIdsViewTryout {
 
         Map<ExternalSystem, String> in = new HashMap<>();
         in.put(ExternalSystem.SAGE, "123412");
-
-        Ui.build().dialog().eval(() -> in, () -> new AdditionalCustomerIdsView()).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            Ui.build().dialog().eval(() -> in, () -> new AdditionalCustomerIdsView()).opt().ifPresent(System.out::println);
+        });
 
     }
 

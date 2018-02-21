@@ -29,8 +29,10 @@ import eu.ggnet.saft.UiCore;
 public class DateRangeChooserViewTryout {
 
     public static void main(String[] args) {
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
-        Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
+            Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(System.out::println);
+        });
     }
 
 }

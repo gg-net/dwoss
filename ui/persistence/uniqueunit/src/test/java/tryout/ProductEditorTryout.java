@@ -52,7 +52,9 @@ public class ProductEditorTryout extends Application {
          * Properties -> Sources
          */
         System.out.println(makeProduct);
-        Ui.build().fxml().eval(ProductEditorController.class).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            Ui.build().fxml().eval(ProductEditorController.class).opt().ifPresent(System.out::println);
+        });
     }
 
 }

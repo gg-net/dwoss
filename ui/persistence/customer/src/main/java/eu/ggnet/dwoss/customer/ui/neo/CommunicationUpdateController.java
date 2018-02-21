@@ -98,7 +98,9 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
         //only get valid object out
         if ( communication.getViolationMessage() != null ) {
-            Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessage()).show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessage()).show(AlertType.WARNING);
+            });
             return;
         }
 
@@ -125,7 +127,9 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         if ( c != null ) {
             setCommunication(c);
         } else {
-            Ui.build().alert().message("Kommunikationsweg ist inkompatibel");
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kommunikationsweg ist inkompatibel");
+            });
         }
 
     }
@@ -150,7 +154,7 @@ public class CommunicationUpdateController implements Initializable, FxControlle
         } else {
             commtypbox.getSelectionModel().selectFirst();
         }
-        
+
         if ( com.getIdentifier() != null ) {
             identifer.setText(com.getIdentifier());
         }

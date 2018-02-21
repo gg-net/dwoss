@@ -41,7 +41,9 @@ public class ReturnsReportTryout {
         }
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
-        Ui.build().swing().show(() -> list, () -> new ReturnsReportView());
+        Ui.exec(() -> {
+            Ui.build().swing().show(() -> list, () -> new ReturnsReportView());
+        });
     }
 
 }

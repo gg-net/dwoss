@@ -284,7 +284,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     public void accept(Customer c) {
         if ( c == null ) return;
         if ( !c.isSimple() ) {
-            Ui.build().alert().message("Kunde ist nicht als SimpleCustomer darstellbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kunde ist nicht als SimpleCustomer darstellbar " + c.getSimpleViolationMessage()).show(AlertType.WARNING);
+            });
             return;
         }
         bussines = c.isBusiness();

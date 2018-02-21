@@ -86,8 +86,10 @@ public class SearchTryout {
             }
         });
 
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.build().fx().show(() -> new SearchCask());
+            Ui.build().fx().show(() -> new SearchCask());
+        });
     }
 }

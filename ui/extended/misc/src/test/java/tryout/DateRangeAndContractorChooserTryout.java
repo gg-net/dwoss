@@ -29,9 +29,11 @@ import eu.ggnet.saft.UiCore;
 public class DateRangeAndContractorChooserTryout {
 
     public static void main(String[] args) {
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).opt().ifPresent(System.out::println);
+            Ui.build().fx().eval(() -> new DateRangeAndContractorChooserView()).opt().ifPresent(System.out::println);
+        });
     }
 
 }

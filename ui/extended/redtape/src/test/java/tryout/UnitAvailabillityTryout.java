@@ -80,9 +80,9 @@ public class UnitAvailabillityTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
-
-        UiCore.startSwing(() -> new JLabel("Main Application"));
-
-        Ui.build().swing().show(() -> new UnitAvailabilityViewCask());
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Application"));
+            Ui.build().swing().show(() -> new UnitAvailabilityViewCask());
+        });
     }
 }

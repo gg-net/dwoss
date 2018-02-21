@@ -224,8 +224,9 @@ public class DocumentUpdateViewTryout {
 
         view.setController(controller);
         view.setCustomerValues(1);
-
-        Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancelWrap.vetoResult(view)).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            Ui.build().title("Dokument bearbeiten").swing().eval(() -> OkCancelWrap.vetoResult(view)).opt().ifPresent(System.out::println);
+        });
 
     }
 

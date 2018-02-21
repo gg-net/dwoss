@@ -137,7 +137,9 @@ public class CategoryProductEditorController implements Initializable, FxControl
     private void save(ActionEvent event) {
 
         if ( StringUtils.isBlank(name.getText()) ) {
-            Ui.build().alert().message("Es muss ein Name gesetzt werden").show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Es muss ein Name gesetzt werden").show(AlertType.WARNING);
+            });
             return;
         }
 // Old without mapper --- show all

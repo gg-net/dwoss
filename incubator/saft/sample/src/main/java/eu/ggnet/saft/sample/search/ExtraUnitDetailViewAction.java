@@ -30,7 +30,9 @@ public class ExtraUnitDetailViewAction implements Consumer<MicroUnit> {
 
     @Override
     public void accept(MicroUnit t) {
-        Ui.build().fx().show(() -> t, () -> new UnitDetailView());
+        Ui.exec(() -> {
+            Ui.build().fx().show(() -> t, () -> new UnitDetailView());
+        });
     }
 
 }

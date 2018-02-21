@@ -41,7 +41,9 @@ public class ActionFactoryAndProgressSample implements ActionFactory {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Ui.build().alert("Ich wurde geklickt");
+                        Ui.exec(() -> {
+                            Ui.build().alert("Ich wurde geklickt");
+                        });
                     }
                 }, true),
                 new MetaAction("System", new AbstractAction("Saft Progress 4s") {

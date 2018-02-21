@@ -104,7 +104,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
         contact = getContact();
         //only get valid object out
         if ( contact.getViolationMessage() != null ) {
-            Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
+            });
         }
     }
 
@@ -112,7 +114,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void saveAndCloseButtonHandling() {
         contact = getContact();
         if ( contact.getViolationMessage() != null ) {
-            Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
+            });
             return;
         }
         Ui.closeWindowOf(lastNameTextField);
@@ -333,7 +337,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
         if ( cont != null ) {
             setContact(cont);
         } else {
-            Ui.build().alert().message("Kontakt ist inkompatibel").show(AlertType.WARNING);
+            Ui.exec(() -> {
+                Ui.build().alert().message("Kontakt ist inkompatibel").show(AlertType.WARNING);
+            });
         }
     }
 

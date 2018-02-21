@@ -77,15 +77,16 @@ public class DossierCreateAction extends AbstractAction {
             Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
             doc.setInvoiceAddress(addresses.getInvoice());
             doc.setShippingAddress(addresses.getShipping());
-
-            Ui.build().parent(controller.getView()).swing().eval(() -> {
-                DocumentUpdateView docView = new DocumentUpdateView(doc);
-                docView.setController(new DocumentUpdateController(docView, doc));
-                docView.setCustomerValues(customer.getId());
-                return OkCancelWrap.vetoResult(docView);
-            }).opt().filter(r -> handleFailure(r, doc))
-                    .map(Reply::getPayload)
-                    .ifPresent(this::handleSuccesses);
+            Ui.exec(() -> {
+                Ui.build().parent(controller.getView()).swing().eval(() -> {
+                    DocumentUpdateView docView = new DocumentUpdateView(doc);
+                    docView.setController(new DocumentUpdateController(docView, doc));
+                    docView.setCustomerValues(customer.getId());
+                    return OkCancelWrap.vetoResult(docView);
+                }).opt().filter(r -> handleFailure(r, doc))
+                        .map(Reply::getPayload)
+                        .ifPresent(this::handleSuccesses);
+            });
         });
     }
 

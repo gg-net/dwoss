@@ -47,10 +47,12 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
         if ( b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
         String deepestMessage = extractDeepestMessage(b);
         if ( deepestMessage.contains("EJBCLIENT000025") ) {
-            Ui.build().title("Netzwerkfehler").alert()
-                    .message("Es ist eine Netzwerkproblem aufgetreten")
-                    .nl("Bitte das aktuelle Fenster einmal schliessen und noch einmal versuchen")
-                    .show(WARNING);
+            Ui.exec(() -> {
+                Ui.build().title("Netzwerkfehler").alert()
+                        .message("Es ist eine Netzwerkproblem aufgetreten")
+                        .nl("Bitte das aktuelle Fenster einmal schliessen und noch einmal versuchen")
+                        .show(WARNING);
+            });
         } else {
             SwingSaft.execute(() -> {
                 DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,

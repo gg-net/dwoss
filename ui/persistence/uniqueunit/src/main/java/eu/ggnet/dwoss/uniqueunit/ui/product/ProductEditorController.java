@@ -198,22 +198,28 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         p.setOptLock(pfx.getOptLock());
 
         if ( pfx.getName().length() == 0 ) {
-            Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
-                    .nl("Es ist kein Name angegeben.")
-                    .parent(submitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
+                        .nl("Es ist kein Name angegeben.")
+                        .parent(submitButton).show(AlertType.ERROR);
+            });
             return;
         }
         if ( StringUtils.isBlank(pfx.getDescription()) ) {
-            Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
-                    .nl("Es ist keine Beschreibung angegeben.")
-                    .parent(submitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
+                        .nl("Es ist keine Beschreibung angegeben.")
+                        .parent(submitButton).show(AlertType.ERROR);
+            });
             return;
         }
 
         if ( StringUtils.isBlank(pfx.getPartNo()) ) {
-            Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
-                    .nl("Es ist keine Artikelnummer gesetzt.")
-                    .parent(submitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Speichern des Produkts nicht möglich.")
+                        .nl("Es ist keine Artikelnummer gesetzt.")
+                        .parent(submitButton).show(AlertType.ERROR);
+            });
             return;
         }
 
@@ -305,24 +311,30 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         final PriceType selectedPriceType = priceTableComboBox.getValue();
 
         if ( priceTable.getItems().stream().map(Prices::getPriceType).anyMatch((t) -> t == selectedPriceType) ) {
-            Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
-                    .nl("Der Preistyp ist bereits gesetzt.")
-                    .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
+                        .nl("Der Preistyp ist bereits gesetzt.")
+                        .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            });
             return;
 
         }
         if ( priceTableComboBox.getSelectionModel().isEmpty() ) {
-            Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
-                    .nl("Kein Preistyp ausgewählt.")
-                    .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
+                        .nl("Kein Preistyp ausgewählt.")
+                        .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            });
             return;
         }
         Pattern pattern = Pattern.compile("[-+]?[0-9]*(\\.|,)?[0-9]+([eE][-+]?[0-9]+)?");
         Matcher m = pattern.matcher(s);
         if ( !m.matches() ) {
-            Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
-                    .nl("Die Preisangabe entspricht keiner gültigen Zahl")
-                    .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Hinzufügen des Preistyps nicht möglich")
+                        .nl("Die Preisangabe entspricht keiner gültigen Zahl")
+                        .parent(priceTableSubmitButton).show(AlertType.ERROR);
+            });
             return;
         }
 
@@ -356,16 +368,20 @@ public class ProductEditorController implements Initializable, Consumer<Product>
         TradeName tradeName = additionalPartNoTableComboBox.getValue();
 
         if ( textFieldString.length() == 0 ) {
-            Ui.build().alert().title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich.")
-                    .nl("Es ist keine Artikelnummer angegeben.")
-                    .parent(additionalPartNoTableSubmitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich.")
+                        .nl("Es ist keine Artikelnummer angegeben.")
+                        .parent(additionalPartNoTableSubmitButton).show(AlertType.ERROR);
+            });
             return;
         }
 
         if ( additionalPartNoTable.getItems().stream().map(AdditionalPartNo::getContractor).anyMatch(contractor -> contractor == tradeName) ) {
-            Ui.build().alert().title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich")
-                    .nl("Der Lieferant ist bereits vorhanden.")
-                    .parent(additionalPartNoTableSubmitButton).show(AlertType.ERROR);
+            Ui.exec(() -> {
+                Ui.build().alert().title("Fehler!").message("Hinzufügen der Artikelnummer nicht möglich")
+                        .nl("Der Lieferant ist bereits vorhanden.")
+                        .parent(additionalPartNoTableSubmitButton).show(AlertType.ERROR);
+            });
             return;
         }
 

@@ -27,8 +27,9 @@ public class RevenueReportSelectionViewTryout {
         )); // Not yet implemented
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
-
-        Ui.build().fx().eval(() -> new RevenueReportSelectionView()).opt().ifPresent(System.out::println);
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
+            Ui.build().fx().eval(() -> new RevenueReportSelectionView()).opt().ifPresent(System.out::println);
+        });
     }
 }

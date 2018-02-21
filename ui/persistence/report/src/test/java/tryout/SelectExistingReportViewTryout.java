@@ -183,8 +183,8 @@ public class SelectExistingReportViewTryout {
                 allReports.add(e);
             }
         }
-
-        Ui.build().fx().show(() -> allReports, () -> new SelectExistingReportView());
-
+        Ui.exec(() -> {
+            Ui.build().fx().show(() -> allReports, () -> new SelectExistingReportView());
+        });
     }
 }

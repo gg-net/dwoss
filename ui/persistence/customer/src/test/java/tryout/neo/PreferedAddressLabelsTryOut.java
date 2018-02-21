@@ -47,7 +47,9 @@ public class PreferedAddressLabelsTryOut {
             customer.getCompanies().add(gen.makeCompany());
 
             if ( !customer.isValid() ) {
-                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                Ui.exec(() -> {
+                    Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                });
 
                 return;
             }
@@ -64,8 +66,9 @@ public class PreferedAddressLabelsTryOut {
             customer.getContacts().add(gen.makeContact());
 
             if ( !customer.isValid() ) {
-                Ui.build().alert("customer is invalid" + customer.getViolationMessage());
-
+                 Ui.exec(() -> {
+                    Ui.build().alert("customer is invalid" + customer.getViolationMessage());
+                });
                 return;
             }
             Ui.exec(() -> {

@@ -32,11 +32,13 @@ import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 public class ServiceViewCaskTryout {
 
     public static void main(String[] args) {
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
 // () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
-        Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
-                .opt().ifPresent(System.out::println);
+            Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
+                    .opt().ifPresent(System.out::println);
+        });
     }
 
 }

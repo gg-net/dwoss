@@ -36,7 +36,7 @@ public class UnitDependentActionFactory implements DescriptiveConsumerFactory<Mi
         } catch (InterruptedException ex) {
             //
         }
-        return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> Ui.build().alert().message("Umfuhr ausgeführt").show()));
+        return Arrays.asList(new DescriptiveConsumer("Umfuhr in Lager XYZ", x -> Ui.exec(()-> Ui.build().alert().message("Umfuhr ausgeführt").show())));
     }
 
 }

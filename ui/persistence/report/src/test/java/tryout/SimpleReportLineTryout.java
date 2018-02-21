@@ -182,12 +182,14 @@ public class SimpleReportLineTryout {
 
         };
         Dl.remote().add(ReportAgent.class, rastub);
-        UiCore.startSwing(() -> new JLabel("Main Applikation"));
+        Ui.exec(() -> {
+            UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
-        Ui.build().fx().show(() -> {
-            RawReportView srl = new RawReportView();
-            srl.load(new SearchParameter());
-            return srl;
+            Ui.build().fx().show(() -> {
+                RawReportView srl = new RawReportView();
+                srl.load(new SearchParameter());
+                return srl;
+            });
         });
     }
 

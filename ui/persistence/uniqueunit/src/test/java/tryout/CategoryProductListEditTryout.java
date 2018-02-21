@@ -38,7 +38,9 @@ public class CategoryProductListEditTryout {
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
-            Ui.build().fxml().show(CategoryProductListController.class);
+            Ui.exec(() -> {
+                Ui.build().fxml().show(CategoryProductListController.class);
+            });
         });
 
         JTextField textField = new JTextField();
