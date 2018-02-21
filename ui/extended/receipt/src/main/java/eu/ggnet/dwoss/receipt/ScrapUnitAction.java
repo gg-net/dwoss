@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
+import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
@@ -52,12 +51,12 @@ public class ScrapUnitAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("SopoNr die verschrottet werden soll:");
                 return dialog;
-            }).opt().filter(r -> {
+            }).opt().ifPresent(r -> {
                 try {
                     UniqueUnit uniqueUnit = Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r);
                     if ( uniqueUnit == null ) {
                         Ui.build().alert().message("Kein Ergebins für SopoNr: " + r).show(AlertType.WARNING);
-                        return false;
+                        return;
                     }
                     Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
                             .opt()
@@ -67,18 +66,13 @@ public class ScrapUnitAction extends AccessableAction {
                                     TextInputDialog dialog = new TextInputDialog();
                                     dialog.setContentText("Bitte Grund angeben");
                                     return dialog;
-                                }).opt().filter(s -> {
+                                }).opt().ifPresent(s -> {
                                     Dl.remote().lookup(UnitDestroyer.class).scrap(uniqueUnit, s, Dl.local().lookup(Guardian.class).getUsername());
                                     Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
-                                    return false;
-                                });
+                        });
                             });
-                    return false;
                 } catch (UserInfoException ex) {
-                    Ui.exec(() -> {
-                        Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show(AlertType.WARNING);
-                    });
-                    return false;
+                    Ui.handle(ex);
                 }
             });
         });

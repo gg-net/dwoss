@@ -16,14 +16,13 @@
  */
 package eu.ggnet.dwoss.receipt;
 
-import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
-
 import java.awt.Window;
 import java.util.ArrayList;
 import java.util.Set;
 
 import javax.validation.*;
 
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.product.AbstractView;
 import eu.ggnet.dwoss.receipt.product.SimpleView;
 import eu.ggnet.dwoss.rules.ProductGroup;
@@ -37,7 +36,6 @@ import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * Support Class for creation or edit of Products.
@@ -50,8 +48,8 @@ public class UiProductSupport {
     private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     // UnitController und EditPRoductAction
-    public Reply<ProductSpec> createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
-        return Reply.success(createOrEditPart(manufacturer, partNo, null, null, parent));
+    public static ProductSpec createOrEditPart(TradeName manufacturer, String partNo, Window parent) throws UserInfoException {
+        return createOrEditPart(manufacturer, partNo, null, null, parent);
     }
 
     // DesktopBundleView and internal.
@@ -66,7 +64,7 @@ public class UiProductSupport {
      * @return the created or edited ProductSpec
      * @throws UserInfoException if not ok
      */
-    public ProductSpec createOrEditPart(TradeName manufacturer, String partNo, TradeName selectedBrand, ProductGroup allowedEditGroup, Window parent) throws UserInfoException {
+    public static ProductSpec createOrEditPart(TradeName manufacturer, String partNo, TradeName selectedBrand, ProductGroup allowedEditGroup, Window parent) throws UserInfoException {
         validatePartNo(manufacturer, partNo);
         ProductSpec productSpec = Dl.remote().lookup(SpecAgent.class).findProductSpecByPartNoEager(partNo);
         boolean edit = false;
@@ -102,12 +100,12 @@ public class UiProductSupport {
         else return Dl.remote().lookup(ProductProcessor.class).create(productView.getSpec(), simpleView.getSelectedModel().get(), productView.getGtin());
     }
 
-    private void validate(Object o) throws UserInfoException {
+    private static void validate(Object o) throws UserInfoException {
         Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(o);
         if ( !validate.isEmpty() ) throw new UserInfoException(ConstraintViolationFormater.toMultiLine(new ArrayList<>(validate), true));
     }
 
-    public void validatePartNo(TradeName manufacturer, String partNo) throws UserInfoException {
+    public static void validatePartNo(TradeName manufacturer, String partNo) throws UserInfoException {
         if ( manufacturer == null ) throw new UserInfoException("Kein Hersteller übergeben");
         if ( !manufacturer.isManufacturer() ) throw new UserInfoException(manufacturer + " ist kein Hersteller");
         if ( manufacturer.getPartNoSupport() == null ) return;

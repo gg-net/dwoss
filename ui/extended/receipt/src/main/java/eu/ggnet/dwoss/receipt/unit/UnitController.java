@@ -117,9 +117,6 @@ public class UnitController {
 
     private ReentrantLock lock = new ReentrantLock();
 
-
-    private final UiProductSupport uiProductSupport = new UiProductSupport();
-
     /**
      * Init the controller, call after setting view an model.
      */
@@ -148,7 +145,7 @@ public class UnitController {
     }
 
     public void createOrEditPart(String partNo) throws UserInfoException {
-        if ( uiProductSupport != null ) uiProductSupport.createOrEditPart(model.getMode(), partNo, view).getPayload();
+        UiProductSupport.createOrEditPart(model.getMode(), partNo, view);
         validatePartNoAndLoadDetails();
     }
 

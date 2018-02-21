@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,13 +21,12 @@ import java.awt.Window;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.util.IView;
 import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.api.ui.ResultProducer;
 
 /**
  *
  * @author pascal.perau
  */
-public class CpuListPanel extends javax.swing.JPanel implements IView<Window>, ResultProducer<Integer> {
+public class CpuListPanel extends javax.swing.JPanel implements IView<Window> {
 
     private CpuListController controller;
 
@@ -147,8 +146,4 @@ public class CpuListPanel extends javax.swing.JPanel implements IView<Window>, R
         this.view = window;
     }
 
-    @Override
-    public Integer getResult() {
-       return 1;
-    }
 }

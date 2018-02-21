@@ -17,12 +17,9 @@
 package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

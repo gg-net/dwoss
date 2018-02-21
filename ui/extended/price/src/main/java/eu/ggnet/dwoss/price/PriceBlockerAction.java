@@ -18,18 +18,15 @@ package eu.ggnet.dwoss.price;
 
 import java.awt.event.ActionEvent;
 
-import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
+import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
+import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -45,46 +42,21 @@ public class PriceBlockerAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().title("Bitte SopoNr eingeben :").dialog().eval(() -> {
-                TextInputDialog dialog = new TextInputDialog();
-                dialog.setContentText("Bitte SopoNr eingeben :");
-                return dialog;
-            }).opt().filter(r -> {
-                try {
-                    PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(r).getPayload();
-                    PriceBlockerViewCask pbp = new PriceBlockerViewCask(r, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
-                    Ui.build().title("Preise fixieren").swing().eval(() -> OkCancelWrap.result(pbp))
-                            .opt()
-                            .filter(Ui.failure()::handle)
-                            .map(Reply::getPayload)
-                            .ifPresent(f -> {
-                                Ui.build().dialog().eval(() -> {
-                                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                                    alert.setContentText("Stimmt der Kunden Preis: " + f.customerPr + " und Händler Preis " + f.retailerPr);
-                                    ButtonType buttonTypeYes = new ButtonType("Ja", ButtonBar.ButtonData.YES);
-                                    ButtonType buttonTypeNo = new ButtonType("Nein", ButtonBar.ButtonData.NO);
-                                    alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-                                    return alert;
-                                }).opt().filter(b -> {
-                                    if ( b.getButtonData() == ButtonBar.ButtonData.YES ) {
-                                        per.setCustomerPrice(f.customerPr);
-                                        per.setRetailerPrice(f.retailerPr);
-                                        per.setUnitPriceFixed(Change.SET);
-                                        return false;
-                                    }
-                                    return false;
-                                });
-
-                            });
-                    Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
-                    return false;
-                } catch (UserInfoException ex) {
-                    Ui.build().alert().message("Kein Ergebins für SopoNr: " + ex.getMessage()).show();
-                    return false;
-                }
-
-            });
-        });
+        try {
+            String refurbishedId = JOptionPane.showInputDialog(UiCore.getMainFrame(), "Bitte SopoNr zur Fixierung eines Preises eingeben:");
+            if ( refurbishedId == null ) return;
+            PriceEngineResult per = Dl.remote().lookup(Exporter.class).load(refurbishedId);
+            PriceBlockerViewCask pbp = new PriceBlockerViewCask(refurbishedId, per.getProductDescription(), per.getCustomerPrice(), per.getRetailerPrice());
+            OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Price fixieren", pbp);
+            view.setVisible(true);
+            if ( view.isCancel() ) return;
+            per.setCustomerPrice(pbp.getCustomerPrice());
+            per.setRetailerPrice(pbp.getRetailerPrice());
+            per.setUnitPriceFixed(Change.SET);
+            Dl.remote().lookup(Importer.class).store(per, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+        } catch (UserInfoException ex) {
+            Ui.handle(ex);
+        }
     }
+
 }
