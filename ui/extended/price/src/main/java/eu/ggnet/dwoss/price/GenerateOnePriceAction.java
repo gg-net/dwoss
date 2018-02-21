@@ -54,7 +54,9 @@ public class GenerateOnePriceAction extends AccessableAction {
                     .map(r -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).onePrice(r)))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
-                    .ifPresent(p -> Ui.build().modality(WINDOW_MODAL).title("SopoNr").fx().show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(p)), () -> new HtmlPane()));
+                    .ifPresent(p -> Ui.build().modality(WINDOW_MODAL).title("SopoNr")
+                            .fx()
+                            .show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(p)), () -> new HtmlPane()));
         });
     }
 }
