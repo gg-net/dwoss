@@ -19,8 +19,8 @@ package tryout;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.cap.RemoteLookup;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
@@ -32,13 +32,25 @@ import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 public class ServiceViewCaskTryout {
 
     public static void main(String[] args) {
-        Ui.exec(() -> {
+        
+        Dl.local().add(RemoteLookup.class,new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
+
             UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
 // () -> Position.builder().type(PositionType.SERVICE).price(30.).build()
             Ui.build().swing().eval(() -> OkCancelWrap.consumerVetoResult(new ServiceViewCask(GENERAL_SALES_TAX_DE_SINCE_2007)))
                     .opt().ifPresent(System.out::println);
-        });
+        
     }
 
 }

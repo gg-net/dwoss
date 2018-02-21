@@ -280,6 +280,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     /**
      * Updates the selection in case of data change.
+     *
      * @param dos
      */
     public void reloadSelectionOnStateChange(Dossier dos) {
@@ -308,7 +309,9 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openCreateCustomer() {
         long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
         if ( customerId == 0 ) {
-            Ui.build().alert().message("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+            Ui.exec(() -> {
+                Ui.build().alert("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+            });
             return;
         }
         model.setPurchaseCustomer(customerId);
