@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
+import org.apache.commons.lang.StringUtils;
+
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.saft.Dl;
@@ -45,7 +47,9 @@ public class ExportDossierToXlsAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte DossierId eingeben:");
                 return dialog;
-            }).opt().map(r -> ReplyUtil.wrap(() -> Ui.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile())))
+            }).opt()
+                    .filter(s -> !StringUtils.isBlank(s))
+                    .map(r -> ReplyUtil.wrap(() -> Ui.osOpen(Dl.remote().lookup(DocumentSupporter.class).toXls(r).toTemporaryFile())))
                     .filter(Ui.failure()::handle);
 
         });

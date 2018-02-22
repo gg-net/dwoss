@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.rules.Css;
@@ -51,6 +53,7 @@ public class GenerateOnePriceAction extends AccessableAction {
                 return dialog;
             })
                     .opt()
+                    .filter(s -> !StringUtils.isBlank(s))
                     .map(r -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).onePrice(r)))
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)

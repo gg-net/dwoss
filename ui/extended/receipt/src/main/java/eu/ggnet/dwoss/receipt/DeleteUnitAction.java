@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 
+import org.apache.commons.lang3.StringUtils;
+
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.saft.Dl;
@@ -51,17 +53,19 @@ public class DeleteUnitAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("SopoNr die gelöscht werden soll:");
                 return dialog;
-            }).opt().ifPresent(r -> {
-                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich gelöschen ?"))
-                        .opt()
-                        .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
-                        .filter(Ui.failure()::handle)
-                        .map(Reply::getPayload)
-                        .ifPresent(u -> {
-                            Dl.remote().lookup(UnitDestroyer.class).delete(u, "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());
-                            Ui.build().alert().message("SopoNr " + r + " ist gelöscht.").show(AlertType.INFO);
-                        });
-            });
+            }).opt()
+                    .filter(s -> !StringUtils.isBlank(s))
+                    .ifPresent(r -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich gelöschen ?"))
+                                .opt()
+                                .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .ifPresent(u -> {
+                                    Dl.remote().lookup(UnitDestroyer.class).delete(u, "Löschung aus UI", Dl.local().lookup(Guardian.class).getUsername());
+                                    Ui.build().alert().message("SopoNr " + r + " ist gelöscht.").show(AlertType.INFO);
+                                });
+                    });
         });
     }
 }

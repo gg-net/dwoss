@@ -18,8 +18,11 @@ package eu.ggnet.dwoss.receipt;
 
 import java.awt.event.ActionEvent;
 
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
+
+import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
@@ -32,6 +35,7 @@ import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -50,27 +54,32 @@ public class ScrapUnitAction extends AccessableAction {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("SopoNr die verschrottet werden soll:");
                 return dialog;
-            }).opt().ifPresent(r -> {
-                Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
-                        .opt()
-                        .ifPresent(rr -> {
-                            Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
-                                TextInputDialog dialog = new TextInputDialog();
-                                dialog.setContentText("Bitte Grund angeben");
-                                return dialog;
-                            })
-                                    .opt()
-                                    .map(s -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
-                                    .filter(Ui.failure()::handle)
-                                    .map(Reply::getPayload)
-                                    .ifPresent(u -> {
-                                        Dl.remote().lookup(UnitDestroyer.class).scrap(u, r, Dl.local().lookup(Guardian.class).getUsername());
-                                        Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
-                                    });
-
-                        });
-
-            });
+            }).opt()
+                    .filter(s -> !StringUtils.isBlank(s))
+                    .ifPresent(r -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "SopoNr " + r + " wirklich verschrotten ?"))
+                                .opt()
+                                .filter(b -> b == OK)
+                                .map(u -> ReplyUtil.wrap(() -> Dl.remote().lookup(UnitDestroyer.class).verifyScarpOrDeleteAble(r)))
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .ifPresent(u -> {
+                                    Ui.build().title("Bitte Grund angeben").dialog().eval(() -> {
+                                        TextInputDialog dialog = new TextInputDialog();
+                                        dialog.setContentText("Bitte Grund angeben");
+                                        dialog.getDialogPane()
+                                                .lookupButton(OK)
+                                                .disableProperty()
+                                                .bind(Bindings.createBooleanBinding(() -> dialog.getEditor().getText().trim().isEmpty(), dialog.getEditor().textProperty()));
+                                        return dialog;
+                                    }).opt()
+                                            .filter(s -> !StringUtils.isBlank(s))
+                                            .ifPresent(c -> {
+                                                Dl.remote().lookup(UnitDestroyer.class).scrap(u, c, Dl.local().lookup(Guardian.class).getUsername());
+                                                Ui.build().alert().message("SopoNr " + r + " ist verschrottet.").show(AlertType.INFO);
+                                            });
+                                });
+                    });
         });
     }
 }
