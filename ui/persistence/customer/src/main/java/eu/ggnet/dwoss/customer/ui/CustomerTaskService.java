@@ -47,7 +47,6 @@ public class CustomerTaskService extends Service<ObservableList<PicoCustomer>> {
         return partialResults;
     }
 
-
     @Override
     protected Task<ObservableList<PicoCustomer>> createTask() {
         long limit = agent.countSearch(searchsting, customerFields);
@@ -56,13 +55,17 @@ public class CustomerTaskService extends Service<ObservableList<PicoCustomer>> {
             @Override
             protected ObservableList<PicoCustomer> call() throws Exception {
                 Platform.runLater(() -> partialResults.clear());
-                for (int start = 0; start <= limit && !isCancelled(); start+= batch) {
+                for (int start = 0; start <= limit && !isCancelled(); start += batch) {
                     List<PicoCustomer> result = agent.search(searchsting, customerFields, start, batch);
-                    Platform.runLater(() -> partialResults.addAll(result));
-                    updateProgress(start, batch);
+                    Platform.runLater(()
+                            -> partialResults.addAll(result));
+                    updateProgress(start, limit);
                 }
-                if ( partialResults.isEmpty() )
-                    Platform.runLater(() -> partialResults.add(new PicoCustomer(0, "Kein Kunden gefunden")));
+                if ( partialResults.isEmpty() ) {
+                    Platform.runLater(()
+                            -> partialResults.add(new PicoCustomer(0, "Kein Kunden gefunden")));
+                }
+
                 return partialResults;
             }
         };

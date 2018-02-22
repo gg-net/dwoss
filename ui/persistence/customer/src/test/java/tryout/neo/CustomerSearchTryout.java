@@ -46,15 +46,10 @@ public class CustomerSearchTryout {
             });
         });
 
-
         JPanel p = new JPanel();
         p.add(run);
         p.add(close);
 
-        UiCore.startSwing(() -> p);
-        
-        
-        
+        UiCore.startSwing(() -> p);        
     }
-
 }

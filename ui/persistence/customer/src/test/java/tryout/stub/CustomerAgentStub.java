@@ -137,11 +137,6 @@ public class CustomerAgentStub implements CustomerAgent {
     public List<PicoCustomer> search(String search, Set<SearchField> customerFields, int start, int limit) {
         L.info("SearchString {},{},start={},limit={}", search, customerFields.size(), start, limit);
 
-        CUSTOMERS.forEach((customer) -> {
-            System.out.println("kunden nachname: " + customer.toName() );
-        });
-        
-        
         try {
             Thread.sleep(200L, SLOW);
         } catch (InterruptedException ex) {
@@ -170,10 +165,12 @@ public class CustomerAgentStub implements CustomerAgent {
             });
         }
         if ( customerFields.contains(SearchField.ID) ) {
-            result.stream().filter((customer) -> (customer.getId() == Integer.parseInt(search))).forEachOrdered((customer) -> {
-                tempList.add(customer);
-            });
-            result.addAll(tempList);
+            if ( search.matches("\\d*") ) {
+                result.stream().filter((customer) -> (customer.getId() == Long.parseLong(search))).forEachOrdered((customer) -> {
+                    tempList.add(customer);
+                });
+                result.addAll(tempList);
+            }
         }
         if ( customerFields.contains(SearchField.COMPANY) ) {
             result.forEach((customer) -> {
@@ -212,11 +209,8 @@ public class CustomerAgentStub implements CustomerAgent {
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
-        int start = 0;
-        int limit = CUSTOMERS.size();
 
-        List<PicoCustomer> search1 = search(search, customerFields, start, limit);
-        return search1.size();
+        return search(search, customerFields, 0, CUSTOMERS.size()).size();
     }
 
     @Override

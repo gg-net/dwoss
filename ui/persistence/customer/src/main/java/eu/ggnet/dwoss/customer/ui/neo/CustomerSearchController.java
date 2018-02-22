@@ -122,13 +122,98 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             };
         });
 
+        //bind the checkboxes to the Set of SearchField
+        bindCheckBoxes();
+
+        //add contextmenu to listview
+        resultListView.setContextMenu(buildContextMenu());
+
+        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
+        observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
+        resultListView.setItems(observableCustomers);
+
+        searchButton.setOnAction((ActionEvent event) -> search());
+        searchField.setOnKeyPressed((ke) -> {
+            if ( ke.getCode() == KeyCode.ENTER ) {
+                search();
+            }
+        });
+        SEARCH_PROPERTY.bind(searchField.textProperty());
+
+        // Needed, so the bar will fill the space, otherwise it keeps beeing small
+        progressBar.setMaxWidth(MAX_VALUE);
+        progressBar.setMaxHeight(MAX_VALUE);
+
+        //hidde the HBox
+        progressBar.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+        progressIndicator.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+        statusHbox.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
+
+        progressIndicator.setProgress(0);
+        progressBar.setProgress(0);
+
+        progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
+        progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
+
+        Ui.progress().observe(CUSTOMER_TASK_SERVICE);
+    }
+
+    /**
+     * bind the checkboxes to the Set of SearchField
+     * <p>
+     */
+    private void bindCheckBoxes() {
+        kid.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.ID);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.ID);
+            }
+        });
+        lastname.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.LASTNAME);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.LASTNAME);
+            }
+        });
+        lastname.setSelected(true);//for a nice default case
+        firstname.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.FIRSTNAME);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.FIRSTNAME);
+            }
+        });
+        company.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.COMPANY);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.COMPANY);
+            }
+        });
+        address.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( newValue ) {
+                SEARCH_FIELDS.add(SearchField.ADDRESS);
+            } else {
+                SEARCH_FIELDS.remove(SearchField.ADDRESS);
+            }
+        });
+    }
+
+    /**
+     * Build a ContextMenu for ListView of the search results for a better navigation
+     * 
+     * @return ContextMenu the filled ContextMenu
+     */
+    private ContextMenu buildContextMenu() {
         //Create a ContextMenu
         ContextMenu contextMenu = new ContextMenu();
         MenuItem viewCustomer = new MenuItem("Detailansicht");
         MenuItem viewCompleteCustomer = new MenuItem("Detailansicht inc. aller Mandatendetails");
         MenuItem editCustomer = new MenuItem("Bearbeiten");
 
-        //actions for the context menu
+        //adding actions to the context menu
         viewCustomer.setOnAction((ActionEvent event) -> {
             //open toHtml(String matchcode, DefaultCustomerSalesdata defaults)
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
@@ -137,6 +222,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.getId())), () -> new HtmlPane());
             });
         });
+        
         viewCompleteCustomer.setOnAction((ActionEvent event) -> {
             //open toHtml(String salesRow, String comment)
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
@@ -145,6 +231,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Ui.build(statusHbox).title("Kunden Ansicht").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsHtml(selectedCustomer.getId())), () -> new HtmlPane());
             });
         });
+        
         editCustomer.setOnAction((ActionEvent event) -> {
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
@@ -152,7 +239,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
                 if ( !customer.isValid() ) {
                     Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
-                } else                if ( customer.isSimple() ) {
+                } else if ( customer.isSimple() ) {
                     L.info("Edit Simple Customer {}", customer.getId());
                     Optional<CustomerContinue> result = Ui.build(resultListView).fxml()
                             .eval(() -> customer, CustomerSimpleController.class).opt();
@@ -170,67 +257,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             });
         });
 
-        // Add MenuItemes to ContextMenu
+        //add MenuItemes to ContextMenu
         contextMenu.getItems().addAll(viewCustomer, viewCompleteCustomer, editCustomer);
 
-        //add contextmenu to listview
-        resultListView.setContextMenu(contextMenu);
-
-        CUSTOMER_TASK_SERVICE = new CustomerTaskService();
-        observableCustomers = CUSTOMER_TASK_SERVICE.getPartialResults();
-        resultListView.setItems(observableCustomers);
-
-        progressBar.setMaxWidth(MAX_VALUE); // Needed, so the bar will fill the space, otherwise it keeps beeing small
-        progressBar.setMaxHeight(MAX_VALUE);// Needed, so the bar will fill the space, otherwise it keeps beeing small
-
-        searchButton.setOnAction((ActionEvent event) -> search());
-        searchField.setOnKeyPressed((ke) -> {
-            if ( ke.getCode() == KeyCode.ENTER ) {
-                search();
-            }
-        });
-
-        //hidde the HBox
-        progressBar.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
-        progressIndicator.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
-        statusHbox.visibleProperty().bind(CUSTOMER_TASK_SERVICE.runningProperty());
-
-        // Binding all Ui Properties
-        SEARCH_PROPERTY.bind(searchField.textProperty());
-        progressBar.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
-        progressIndicator.progressProperty().bind(CUSTOMER_TASK_SERVICE.progressProperty());
-
-        Ui.progress().observe(CUSTOMER_TASK_SERVICE);
-    }
-
-    /**
-     * fill the Set for filter the Search
-     * <p>
-     */
-    private void fillSet() {
-        if ( SEARCH_FIELDS != null ) {
-            SEARCH_FIELDS.clear();
-        }
-
-        if ( kid.isSelected() ) {
-            SEARCH_FIELDS.add(Customer.SearchField.ID);
-        }
-        if ( lastname.isSelected() ) {
-            SEARCH_FIELDS.add(Customer.SearchField.LASTNAME);
-        }
-        if ( firstname.isSelected() ) {
-            SEARCH_FIELDS.add(Customer.SearchField.FIRSTNAME);
-        }
-        if ( company.isSelected() ) {
-            SEARCH_FIELDS.add(Customer.SearchField.COMPANY);
-        }
-        if ( address.isSelected() ) {
-            SEARCH_FIELDS.add(Customer.SearchField.ADDRESS);
-        }
+        return contextMenu;
     }
 
     private void search() {
-        fillSet();
         CUSTOMER_TASK_SERVICE.setCustomerFields(SEARCH_FIELDS);
         CUSTOMER_TASK_SERVICE.setSearchsting(SEARCH_PROPERTY.get());
         observableCustomers.clear();
