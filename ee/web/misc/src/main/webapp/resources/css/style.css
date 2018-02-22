@@ -22,17 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 body{
     font-family: Arial, Helvetica, sans-serif;
 }
-th{
-    background-color: #198bc3;
-    color: white; 
-}
-td {
-    border-bottom: 1px solid #ddd;
-    padding-right: 10px;                
-}
-td.right {
-    text-align: right;
-}
 table {
     width: 100%; 
 }

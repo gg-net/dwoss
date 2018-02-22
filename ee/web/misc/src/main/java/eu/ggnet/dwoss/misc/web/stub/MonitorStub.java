@@ -18,11 +18,8 @@ package eu.ggnet.dwoss.misc.web.stub;
 
 import java.util.*;
 import java.util.concurrent.*;
-
 import javax.annotation.ManagedBean;
-
 import eu.ggnet.saft.api.progress.*;
-
 import java.util.stream.Collectors;
 
 /**
