@@ -192,7 +192,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
             invoiceAddressWebView.getEngine().loadContent(invoiceLabel.toHtml());
             if ( invoiceLabel.getCompany() != null )
                 invoiceAddressCompanyListView.getSelectionModel().select(invoiceLabel.getCompany());
-            if ( invoiceLabel.getCompany() != null )
+            if ( invoiceLabel.getContact() != null )
                 invoiceAddressContactListView.getSelectionModel().select(invoiceLabel.getContact());
 
             invoiceAddressAddressListView.getSelectionModel().select(invoiceLabel.getAddress());
@@ -215,7 +215,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
             if ( shippingLabel.getCompany() != null )
                 shippingAddressCompanyListView.getSelectionModel().select(shippingLabel.getCompany());
-            if ( shippingLabel.getCompany() != null )
+            if ( shippingLabel.getContact() != null )
                 shippingAddressContactListView.getSelectionModel().select(shippingLabel.getContact());
 
             shippingAddressAddressListView.getSelectionModel().select(shippingLabel.getAddress());
