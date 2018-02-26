@@ -365,15 +365,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         //create a dialog to add AdditionalCustomerId instances to the additionalCustomerIDsListView
         Button addButton = new Button("Hinzufügen");
         addButton.setMinWidth(80.0);
-        addButton.setOnAction((event) -> new AdditionalCustomerIDsDialogHandler());
-
-        // disable the add button if every type of ExternalSystem enum is already contained in the listView
-        additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
-            addButton.setDisable(additionalCustomerIDsListView.getItems().stream()
-                    .map(additionalCustomerID -> additionalCustomerID.type)
-                    .collect(Collectors.toList())
-                    .containsAll(Arrays.asList(ExternalSystem.values())));
-        });
+        addButton.setOnAction(new AdditionalCustomerIDsDialogHandler());
 
         Button deleteButton = new Button("Löschen");
         deleteButton.setMinWidth(80.0);
@@ -389,8 +381,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             }
         });
         Button editButton = new Button("Bearbeiten");
-        editButton.setOnAction((event)
-                -> new AdditionalCustomerIDsDialogHandler(additionalCustomerIDsListView.getSelectionModel()));
+        editButton.setOnAction(new AdditionalCustomerIDsDialogHandler(additionalCustomerIDsListView.getSelectionModel()));
 
         // disable the add button if every type of ExternalSystem enum is already contained in the listView
         additionalCustomerIDsListView.getItems().addListener((javafx.beans.Observable observable) -> {
@@ -670,20 +661,18 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 dialog.setTitle("Zusätzliche Kundennummer bearbeiten.");
 
             ButtonType addButtonType;
-            if ( selectionModel == null )
-                addButtonType = new ButtonType("Hinzufügen", ButtonData.OK_DONE);
-            else
-                addButtonType = new ButtonType("Änderungen speichern", ButtonData.OK_DONE);
+            String addButtonTitle = selectionModel == null ? "Hinzufügen" : "Änderungen speichern";
+            addButtonType = new ButtonType(addButtonTitle, ButtonData.OK_DONE);
 
             dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
             TextField customerId = new TextField();
             customerId.setPromptText("Kundennummer");
+            customerId.setText(selectionModel == null ? "" : selectionModel.getSelectedItem().getValue());
 
             ChoiceBox externalSystemChoiceBox;
             if ( selectionModel != null ) {
                 externalSystemChoiceBox = new ChoiceBox(FXCollections.observableArrayList(Arrays.asList(selectionModel.getSelectedItem().type)));
                 externalSystemChoiceBox.getSelectionModel().select(0);
-                customerId.setText(selectionModel.getSelectedItem().value);
 
             } else {
                 // filter ExternalSystem types which are already contained in the listView
@@ -724,17 +713,24 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
                 if ( selectionModel == null )
                     result.ifPresent(additionalId -> {
-                        additionalCustomerIDsListView.getItems().add(additionalId);
-                        additionalCustomerIDsListView.refresh();
+                        Platform.runLater(()
+                                -> {
+                            additionalCustomerIDsListView.getItems().add(additionalId);
+                            additionalCustomerIDsListView.refresh();
+                        });
                     });
                 else
                     result.ifPresent(additionalId -> {
-                        selectionModel.getSelectedItem().setValue(additionalId.getValue());
-                        additionalCustomerIDsListView.refresh();
+                        Platform.runLater(()
+                                -> {
+                            selectionModel.getSelectedItem().setValue(additionalId.getValue());
+                            additionalCustomerIDsListView.refresh();
+                        });
                     });
             });
 
         }
 
     }
+
 }

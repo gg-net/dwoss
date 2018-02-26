@@ -176,6 +176,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
         shippingAddressCompanyListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         shippingAddressContactListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+        shippingAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
 
         if ( customer.getAddressLabels()
                 .stream()
