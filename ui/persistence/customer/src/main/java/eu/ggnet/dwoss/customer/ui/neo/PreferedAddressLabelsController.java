@@ -132,27 +132,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         this.shippingAddressCompanyListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
         this.shippingAddressContactListView.getSelectionModel().selectedIndexProperty().addListener(shippingWebViewListener);
 
-        cancelButton = null;
-    }
-
-    @Override
-
-    public void accept(Customer inputCustomer) {
-
-        this.customer = inputCustomer;
-
-        invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
-        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressContactListView.getItems().addAll(company.getContacts()));
-        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressAddressListView.getItems().addAll(company.getAddresses()));
-        invoiceAddressContactListView.getItems().addAll(customer.getContacts());
-        invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
-
-        shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
-        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressContactListView.getItems().addAll(company.getContacts()));
-        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressAddressListView.getItems().addAll(company.getAddresses()));
-        shippingAddressContactListView.getItems().addAll(customer.getContacts());
-        shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
-
         InvalidationListener saveButtonDisablingListener = (Observable observable) -> {
             boolean isInvoiceAddressValid = (!invoiceAddressAddressListView.getSelectionModel().isEmpty())
                     && ((!invoiceAddressCompanyListView.getSelectionModel().isEmpty())
@@ -177,6 +156,25 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressCompanyListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         shippingAddressContactListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
         shippingAddressAddressListView.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
+    }
+
+    @Override
+
+    public void accept(Customer inputCustomer) {
+
+        this.customer = inputCustomer;
+
+        invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
+        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressContactListView.getItems().addAll(company.getContacts()));
+        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressAddressListView.getItems().addAll(company.getAddresses()));
+        invoiceAddressContactListView.getItems().addAll(customer.getContacts());
+        invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
+
+        shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
+        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressContactListView.getItems().addAll(company.getContacts()));
+        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressAddressListView.getItems().addAll(company.getAddresses()));
+        shippingAddressContactListView.getItems().addAll(customer.getContacts());
+        shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
         if ( customer.getAddressLabels()
                 .stream()
@@ -192,7 +190,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
             invoiceAddressWebView.getEngine().loadContent(invoiceLabel.toHtml());
             if ( invoiceLabel.getCompany() != null )
                 invoiceAddressCompanyListView.getSelectionModel().select(invoiceLabel.getCompany());
-            if ( invoiceLabel.getCompany() != null )
+            if ( invoiceLabel.getContact() != null )
                 invoiceAddressContactListView.getSelectionModel().select(invoiceLabel.getContact());
 
             invoiceAddressAddressListView.getSelectionModel().select(invoiceLabel.getAddress());
@@ -215,7 +213,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
             if ( shippingLabel.getCompany() != null )
                 shippingAddressCompanyListView.getSelectionModel().select(shippingLabel.getCompany());
-            if ( shippingLabel.getCompany() != null )
+            if ( shippingLabel.getContact() != null )
                 shippingAddressContactListView.getSelectionModel().select(shippingLabel.getContact());
 
             shippingAddressAddressListView.getSelectionModel().select(shippingLabel.getAddress());
