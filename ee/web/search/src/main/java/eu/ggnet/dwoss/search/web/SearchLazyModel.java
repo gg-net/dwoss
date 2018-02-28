@@ -54,6 +54,14 @@ public class SearchLazyModel extends LazyDataModel<ShortSearchResult> {
         searcher.initSearch(new SearchRequest(search));
     }
 
+    public SearcherOperation getSearcher() {
+        return searcher;
+    }
+
+    public void setSearcher(SearcherOperation searcher) {
+        this.searcher = searcher;
+    }
+
     private SearcherOperation searcher;
 
     public SearchLazyModel(SearcherOperation searcher) {

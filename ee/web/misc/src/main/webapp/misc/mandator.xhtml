@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <f:view contentType="text/html">
         <h:head>
             <title>Mandator - #{mandatorsBean.loadMandator().company.name}</title>
@@ -13,10 +14,24 @@
                 }
             </style>
         </h:head>
+
         <h:body>
             <h1>Mandator - #{mandatorsBean.loadMandator().company.name}</h1>
             <h:outputText escape="false" value="#{mandatorsBean.loadMandator().toHtml()}" />
+            <h2>Additional Mandator </h2>
+
+
+            <p:dataTable id="mandatorDataTable" value="#{mandatorsBean.loadContractors().allowedBrands.stream().collect(Collectors.toList())}" var="tn">
+                <p:column headerText="Title">
+                    #{tn.getName()}
+                </p:column>
+                <p:column headerText="Test2">
+
+                </p:column>
+            </p:dataTable>
+
         </h:body>
+
     </f:view>
 </html>
 
