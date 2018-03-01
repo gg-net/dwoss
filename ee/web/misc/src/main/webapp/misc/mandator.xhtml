@@ -16,22 +16,70 @@
         </h:head>
 
         <h:body>
-            <h1>Mandator - #{mandatorsBean.loadMandator().company.name}</h1>
-            <h:outputText escape="false" value="#{mandatorsBean.loadMandator().toHtml()}" />
-            <h2>Additional Mandator </h2>
+            <h1>Mandator - #{mandatorController.mandator.loadMandator().company.name}</h1>
+            <h:outputText escape="false" value="#{mandatorController.mandator.loadMandator().toHtml()}" />
+            <h2>Additional MandatorInfo </h2>
+            <p:dataList value="#{mandatorController.getAllContractors()}" var="contractor" emptyMessage="No contractors found">
+                <f:facet name="header">
+                    All our Contractors
+                </f:facet>
+                #{contractor.getName()}
+            </p:dataList>
+            <p:dataList value="#{mandatorController.getAllowedBrands()}" var="contractor">
+                <f:facet name="header">
+                    Allowed Brands
+                </f:facet>
+                #{contractor.getName()}
+            </p:dataList>
 
-
-            <p:dataTable id="mandatorDataTable" value="#{mandatorsBean.loadContractors().allowedBrands.stream().collect(Collectors.toList())}" var="tn">
-                <p:column headerText="Title">
-                    #{tn.getName()}
+            <h3>Shipping Terms</h3>
+            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition" >
+                <p:column headerText="Note">
+                    <h:outputText value="#{shippingCondition.note}"/>
                 </p:column>
-                <p:column headerText="Test2">
 
+                <p:column headerText="Price of One">
+                    <h:outputText value="#{shippingCondition.priceOfOne}"/>
+                </p:column>
+
+                <p:column headerText="Multiplicator">
+                    <h:outputText value="#{shippingCondition.multiplicator}"/>
                 </p:column>
             </p:dataTable>
+            <h3>Post Ledger</h3>
+            <p:tree value="#{mandatorController.root}" var="node" >
+                <p:treeNode >
+                    <h:outputText value="#{node}" />
+                </p:treeNode>
+            </p:tree>
+            <h3>Special System Customers</h3>
+
+            <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
+                <p:column headerText="Customer ID">
+                    <h:outputText value="#{specialSystemCustomer.key}"/>
+                </p:column>
+                <p:column headerText="DocumentType">
+                    <h:outputText value="#{specialSystemCustomer.value.name}"/>
+                </p:column>
+            </p:dataTable>
+            <h3>Receipt Customers</h3>
+            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" >
+                <p:column headerText="Customer ID">
+                    <h:outputText value="#{receiptCustomer.value}"/>
+                </p:column>
+                <p:column headerText="Contractor">
+                    <h:outputText value="#{receiptCustomer.key.contractor}"/>
+                </p:column>
+
+                <p:column headerText="ReceiptOperation">
+                    <h:outputText value="#{receiptCustomer.key.operation}"/>
+                </p:column>
+            </p:dataTable>
+
+
+
 
         </h:body>
 
     </f:view>
 </html>
-
