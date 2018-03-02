@@ -83,6 +83,11 @@ public class MandatorController implements Serializable {
         return new ArrayList<>(mandator.loadReceiptCustomers().getReceiptCustomers().entrySet());
     }
 
+    public int sortReceiptCustomers(Map.Entry<Key, Long> obj, Map.Entry<Key, Long> other) {
+        return obj.getValue().compareTo(other.getValue());
+
+    }
+
     @PostConstruct
     public void init() {
         root = new DefaultTreeNode("Root", null);

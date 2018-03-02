@@ -30,6 +30,7 @@ import org.primefaces.event.SelectEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.search.api.GlobalKey;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.SearcherOperation;
 
@@ -70,5 +71,13 @@ public class SearchController implements Serializable {
         FacesMessage msg = new FacesMessage("SearchResult Selected", ((ShortSearchResult)event.getObject()).toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);
 
+    }
+
+    public String getDetails(GlobalKey key) {
+        LOG.info("Key: " + key);
+        searcher.details(key);
+
+        LOG.info("Details: ");
+        return searcher.details(key);
     }
 }

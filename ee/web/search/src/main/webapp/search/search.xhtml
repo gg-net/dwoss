@@ -35,7 +35,7 @@
                                 <h:outputText value="#{sresult.key.component}:#{sresult.key.id}" />
                             </p:column>
                             <p:column width="15%" headerText="Details">
-                                <h:outputText value="#{sresult.getSearcher().details(sresult.key)}" />
+                                <h:outputText value="#{searchController.getDetails(sresult.key)}" />
                             </p:column>
 
                         </p:dataTable>

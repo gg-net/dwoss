@@ -33,7 +33,7 @@
             </p:dataList>
 
             <h3>Shipping Terms</h3>
-            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition" >
+            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
                 <p:column headerText="Note">
                     <h:outputText value="#{shippingCondition.note}"/>
                 </p:column>
@@ -55,20 +55,25 @@
             <h3>Special System Customers</h3>
 
             <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
-                <p:column headerText="Customer ID">
+                <p:column headerText="Customer ID" >
                     <h:outputText value="#{specialSystemCustomer.key}"/>
                 </p:column>
                 <p:column headerText="DocumentType">
                     <h:outputText value="#{specialSystemCustomer.value.name}"/>
                 </p:column>
             </p:dataTable>
+
             <h3>Receipt Customers</h3>
-            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" >
-                <p:column headerText="Customer ID">
+            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" sortBy="#{receiptCustomer.value}" sortOrder="ASCENDING">
+                <f:facet name="header">
+                    Single Column Sort
+                </f:facet>
+                <p:column headerText="Customer ID" >
                     <h:outputText value="#{receiptCustomer.value}"/>
+
                 </p:column>
-                <p:column headerText="Contractor">
-                    <h:outputText value="#{receiptCustomer.key.contractor}"/>
+                <p:column headerText="Contractor" >
+                    <h:outputText value="#{receiptCustomer.key.contractor}" />
                 </p:column>
 
                 <p:column headerText="ReceiptOperation">
