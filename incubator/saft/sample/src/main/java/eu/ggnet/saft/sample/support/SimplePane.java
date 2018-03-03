@@ -3,8 +3,7 @@ package eu.ggnet.saft.sample.support;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.api.ui.StoreLocation;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.ui.*;
 
 import static javafx.scene.text.Font.font;
 
@@ -14,6 +13,7 @@ import static javafx.scene.text.Font.font;
  */
 @Title("Extra Title of Simple Pane with Id={id}")
 @StoreLocation
+@Once
 public class SimplePane extends BorderPane {
 
     public SimplePane() {

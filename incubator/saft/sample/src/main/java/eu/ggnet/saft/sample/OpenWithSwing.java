@@ -12,7 +12,6 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.api.ui.StoreLocation;
-import eu.ggnet.saft.core.ui.builder.SwingBuilder;
 import eu.ggnet.saft.sample.support.*;
 
 import lombok.Value;
@@ -154,15 +153,15 @@ public class OpenWithSwing {
             menu = new JMenu("JavaFxFrames");
 
             b = new JMenuItem("Once");
-            b.addActionListener((e) -> Ui.exec(() -> {
+            b.addActionListener((e) -> {
                 Ui.build().fx().show(() -> new PaneAsFrame());
-            }));
+            });
             menu.add(b);
 
             b = new JMenuItem("Once With Self Closer");
-            b.addActionListener((e) -> Ui.exec(() -> {
+            b.addActionListener((e) -> {
                 Ui.build().fx().show(() -> new PaneAsFrameWithSelfCloser());
-            }));
+            });
             menu.add(b);
 
             b = new JMenuItem("Once Fxml");

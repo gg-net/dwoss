@@ -16,17 +16,18 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Dialog;
-import java.awt.Window;
+import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.layout.Pane;
 
 import eu.ggnet.saft.Ui;
@@ -35,6 +36,8 @@ import eu.ggnet.saft.api.ui.Once;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import static eu.ggnet.saft.core.ui.builder.AbstractBuilder.callWithProgress;
@@ -141,7 +144,7 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer
      * @return
      */
-    private <T, P, V extends Pane> Optional<T> intEval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+    private <T, P, V extends Pane> Optional<T> intEval2(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
         try {
             Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
             // Phase I
@@ -168,6 +171,7 @@ public class FxBuilder extends AbstractBuilder {
 
     /**
      * Internal implementation, breaks the compile safty of the public methodes.
+     * For now we have two normal execptions. The OnceException (allready open) and the NoSuchElementException (no result)
      *
      * @param <P>
      * @param <V>
@@ -175,21 +179,24 @@ public class FxBuilder extends AbstractBuilder {
      * @param javafxPaneProducer
      * @return
      */
-    private <P, V extends Pane> Optional intEval2(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
+    private <T, P, V extends Pane> CompletableFuture<T> intEval(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
         Objects.requireNonNull(javafxPaneProducer, "The javafxPaneProducer is null, not allowed");
-        PreBuilder b = new PreBuilder().id(id).title(title).frame(frame).modality(modality); // Refactor later
+        PreBuilder preBuilder = new PreBuilder().id(id).title(title).frame(frame).modality(modality).parent(swingParent); // Refactor later
 
-        // Phase I
-        CompletableFuture<V> paneBuildFuture = CompletableFuture.supplyAsync(() -> {
-            try {
-                return javafxPaneProducer.call();
-            } catch (Exception ex) {
-                throw new CompletionException(ex);
-            }
-        }, Platform::runLater);
+        // Produce the ui instance
+        CompletableFuture<V> paneBuildFuture = CompletableFuture
+                .runAsync(() -> L.info("Starting Saft Callback on UiCore.executor"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
+                .supplyAsync(() -> {
+                    try {
+                        return javafxPaneProducer.call();
+                    } catch (Exception ex) {
+                        throw new CompletionException(ex);
+                    }
+                }, Platform::runLater);
 
+        // Construct default parameters.
         CompletableFuture<PaneAndParms<P>> paneAndParmsFuture
-                = paneBuildFuture.thenApplyAsync((V pane) -> new PaneAndParms(pane, buildParameterBackedUpByDefaults2(pane.getClass(), b)), UiCore.getExecutor());
+                = paneBuildFuture.thenApplyAsync((V pane) -> new PaneAndParms(pane, buildParameterBackedUpByDefaults2(pane.getClass(), preBuilder), preBuilder.swingParent), UiCore.getExecutor());
 
         if ( preProducer != null ) { // Optimise. Only if the preproducer is of type IdSupplier, it needs to be called before the once verifycation.
             paneAndParmsFuture = paneAndParmsFuture.thenApply(t -> {
@@ -199,8 +206,8 @@ public class FxBuilder extends AbstractBuilder {
             });
         }
 
-        paneAndParmsFuture.thenApply((PaneAndParms<P> t) -> {
-            if ( isOnceModeAndActiveWithSideeffect(t.params.key()) ) throw new OnceException();
+        paneAndParmsFuture = paneAndParmsFuture.thenApply((PaneAndParms<P> t) -> {
+            if ( isOnceModeAndActiveWithSideeffect(once, t.params.key()) ) throw new OnceException();
             return t;
         });
 
@@ -211,31 +218,53 @@ public class FxBuilder extends AbstractBuilder {
             });
         }
 
-        return null;
+        paneAndParmsFuture = paneAndParmsFuture.thenApplyAsync((PaneAndParms<P> pp) -> {
+            pp.jfxPanel = SwingCore.wrapDirect(pp.pane);
+            return pp;
+        }, Platform::runLater);
 
-        /*
-        This is not jet complete or event tested. It's the first Idea to construct the hole Ui via Completable Futures.
 
-        try {
-            Window window = constructAndShow(SwingCore.wrap(pane), p, pane.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, pane);
-            wait(window);
-            if ( pane instanceof ResultProducer ) return Optional.ofNullable(((ResultProducer)pane).getResult());
-            return null; // using the return value without a ResultProducer must fail.
-        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
-         */
+        CompletableFuture<PaneAndWindow> paneAndWindowFuture = paneAndParmsFuture.thenApplyAsync((PaneAndParms<P> pp) -> {
+            try {
+                JComponent component = pp.jfxPanel;
+                final Window window = pp.params.framed
+                        ? BuilderUtil.newJFrame(pp.params.title(), component)
+                        : BuilderUtil.newJDailog(swingParent, pp.params.title(), component, pp.params.modalityType);
+                // Todo: the Icon Referenz Class is not ava
+                BuilderUtil.setWindowProperties(window, pp.pane.getClass(), swingParent, pp.pane.getClass(), pp.params.key());
+                BuilderUtil.enableCloser(window, pp.pane);
+                window.setVisible(true);
+                return new PaneAndWindow(pp.pane, window);
+            } catch (IOException e) {
+                throw new CompletionException(e);
+            }
+        }, EventQueue::invokeLater);
+
+        CompletableFuture resultFuture = paneAndWindowFuture.thenApplyAsync((PaneAndWindow pw) -> {
+            if ( pw.pane instanceof ResultProducer ) {         // Hint: in case of no resultproduce, the wait is also not needed
+                try {
+                    BuilderUtil.wait(pw.window);
+                } catch (InterruptedException | IllegalStateException | NullPointerException ex) {
+                    throw new CompletionException(ex);
+                }
+                Object result = ((ResultProducer)pw.pane).getResult();
+                if ( result == null ) throw new NoSuchElementException(); // Window was "canceld"
+                return result;
+            }
+            return null;
+        }, UiCore.getExecutor());
+
+        return resultFuture;
     }
 
-    protected Params buildParameterBackedUpByDefaults2(Class<?> panelClazz, PreBuilder b) {
-        Once onceAnnotation = panelClazz.getAnnotation(Once.class);
+    protected Params buildParameterBackedUpByDefaults2(Class<?> rootClass, PreBuilder b) {
+        Once onceAnnotation = rootClass.getAnnotation(Once.class);
         if ( onceAnnotation != null ) once = onceAnnotation.value();
         return Params.builder()
-                .panelClazz(panelClazz)
+                .rootClazz(rootClass)
                 .id(b.id)
                 .titleTemplate(b.title)
-                .framed(!b.frame ? panelClazz.getAnnotation(eu.ggnet.saft.api.ui.Frame.class) != null : b.frame)
+                .framed(!b.frame ? rootClass.getAnnotation(eu.ggnet.saft.api.ui.Frame.class) != null : b.frame)
                 .modalityType(toSwing(b.modality).orElse(Dialog.ModalityType.MODELESS)).build();
     }
 
@@ -248,12 +277,25 @@ public class FxBuilder extends AbstractBuilder {
 
         private Z preResult;
 
-        private boolean storeLocation;
+        private Window swingParent;
 
-        public PaneAndParms(Pane pane, Params params) {
+        private JFXPanel jfxPanel;
+
+        public PaneAndParms(Pane pane, Params params, Window swingParent) {
             this.pane = pane;
             this.params = params;
+            this.swingParent = swingParent;
         }
+
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private static class PaneAndWindow {
+
+        private Pane pane;
+
+        private Window window;
 
     }
 

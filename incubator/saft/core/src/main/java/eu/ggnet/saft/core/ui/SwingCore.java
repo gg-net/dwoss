@@ -4,7 +4,8 @@ import java.awt.Component;
 import java.awt.Window;
 import java.lang.ref.WeakReference;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -62,20 +63,19 @@ public class SwingCore {
     }
 
     /**
-     * Wrap a pane into a JFXPanel via a CompletableFuture using the right ui threads.
+     * Wrap a pane into a JFXPanel on the actual thread, the user must be aware, that this must be run on the JavaFx Thread.
      *
      * @param pane a Pane to be wrapped.
      * @return a CompletableFuture creating the JFXPanel
      */
-    public static CompletableFuture<JFXPanel> wrapcf(Pane pane) {
-        return CompletableFuture.supplyAsync(() -> jfxPanel()).thenApplyAsync((JFXPanel fxp) -> {
-            fxp.setScene(new Scene(pane, Color.TRANSPARENT));
-            swingParentHelper.put(fxp.getScene(), fxp);
-            return fxp;
-        }, Platform::runLater);
+    public static JFXPanel wrapDirect(Pane pane) {
+        JFXPanel fxp = jfxPanel();
+        fxp.setScene(new Scene(pane, Color.TRANSPARENT));
+        swingParentHelper.put(fxp.getScene(), fxp);
+        return fxp;
     }
 
-    private static JFXPanel jfxPanel() {
+    private static JFXPanel jfxPanel() { // HINT: Be sure, that this can be run on any thread.
         JFXPanel result;
         if ( startHelper != null ) {
             result = startHelper;

@@ -88,7 +88,7 @@ public class SwingSaft {
     public static <T> T dispatch(Callable<T> callable) throws ExecutionException, InterruptedException, InvocationTargetException {
         FutureTask<T> task = new FutureTask(callable);
         if ( EventQueue.isDispatchThread() ) task.run();
-        else EventQueue.invokeAndWait(task);
+        else EventQueue.invokeLater(task);
         return task.get();
     }
 

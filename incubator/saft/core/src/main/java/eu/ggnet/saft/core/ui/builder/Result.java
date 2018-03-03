@@ -19,6 +19,12 @@ package eu.ggnet.saft.core.ui.builder;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.Ui;
 
 /**
  * Result handler for ui activity, implements optional and completableFuture.
@@ -27,22 +33,47 @@ import java.util.concurrent.CompletableFuture;
  */
 public class Result<T> {
 
-    private final Optional<T> opt;
+    private final static Logger L = LoggerFactory.getLogger(Result.class);
+
+    private Optional<T> opt = null;
+
+    private CompletableFuture<T> cf = null;
 
     // TODO: Change the result and all producing classes to us the CompletableFuture for a full async callback implementaion.
     Result(Optional<T> opt) {
         this.opt = opt;
     }
 
+    public Result(CompletableFuture<T> cf) {
+        this.cf = cf;
+    }
+
     /**
      * Returns the result as optional, waiting for the completion of all possible async activity.
      * This method is blocking until a result is available or an exception happens. Make sure to
      * put this on a non ui thread. e.g. Ui.exec(() -> ...opt()...);
+     * Optional.
      *
      * @return the result as optional, waiting for the completion of all possible async activity.
      */
     public Optional<T> opt() {
-        return opt;
+        if ( opt != null ) return opt;
+        try {
+            return Optional.of(cf.get());
+        } catch (InterruptedException ex) {
+            Ui.handle(ex);
+        } catch (ExecutionException ex) {
+            if ( ex.getCause() instanceof OnceException ) {
+                L.info("OnceException in opt, returning empty");
+                return Optional.empty();
+            }
+            Ui.handle(ex);
+        } catch (NoSuchElementException ex) {
+            L.info("NoSuchElement in opt, returning empty");
+            return Optional.empty();
+        }
+        L.error("Impposible End, returning empty");
+        return Optional.empty();
     }
 
     /**
@@ -52,7 +83,8 @@ public class Result<T> {
      * @return a CompletableFuture
      */
     public CompletableFuture<T> cf() {
-        return CompletableFuture.supplyAsync(() -> opt.get());
+        if ( cf != null ) return cf;
+        return CompletableFuture.supplyAsync(() -> opt.get()); // Old style
     }
 
 }

@@ -27,6 +27,7 @@ import java.util.concurrent.*;
 
 import javax.swing.*;
 
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public abstract class AbstractBuilder {
     @Accessors(fluent = true)
     protected static class Params {
 
-        protected final Class<?> panelClazz;
+        protected final Class<?> rootClazz;
 
         @Getter
         @Setter
@@ -72,11 +73,11 @@ public abstract class AbstractBuilder {
         }
 
         protected String title() {
-            return titleTemplate == null ? TitleUtil.title(panelClazz, id) : titleTemplate;
+            return titleTemplate == null ? TitleUtil.title(rootClazz, id) : titleTemplate;
         }
 
         protected String key() {
-            return panelClazz.getName() + (id == null ? "" : ":" + id);
+            return rootClazz.getName() + (id == null ? "" : ":" + id);
         }
     }
 
@@ -87,7 +88,7 @@ public abstract class AbstractBuilder {
 
     /**
      * Sets the once mode.
-     * If set to true, an once mode is enable. This ensures that one one window of the same type is created and show.
+     * If setWindowProperties to true, an once mode is enable. This ensures that one one window of the same type is created and show.
      * If minimised it becomes reopend, if in the back it becomes moved to the front.
      * Default = true.
      */
@@ -139,7 +140,9 @@ public abstract class AbstractBuilder {
      *
      * @param key the key of the window in the internal registry.
      * @return true, if an active window was found.
+     * @deprecated use with supplied once value
      */
+    @Deprecated
     protected boolean isOnceModeAndActiveWithSideeffect(String key) {
         // Look into existing Instances, if in once mode and push up to the front if exist.
         if ( once && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
@@ -154,8 +157,25 @@ public abstract class AbstractBuilder {
         return false;
     }
 
+    protected boolean isOnceModeAndActiveWithSideeffect(boolean once, String key) {
+        // Look into existing Instances, if in once mode and push up to the front if exist.
+        if ( once && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
+            Window window = SwingCore.ACTIVE_WINDOWS.get(key).get();
+            if ( window == null || !window.isVisible() ) SwingCore.ACTIVE_WINDOWS.remove(key);
+            else {
+                if ( window instanceof JFrame ) ((JFrame)window).setExtendedState(JFrame.NORMAL);
+                window.toFront();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isStoreLocation(Class<?> key) {
+        return (key.getAnnotation(StoreLocation.class) != null);
+    }
+
     protected Window constructAndShow(JComponent component, Params params, Class<?> key) throws ExecutionException, InterruptedException, InvocationTargetException {
-        boolean storeLocation = (key.getAnnotation(StoreLocation.class) != null);
         Window window = SwingSaft.dispatch(() -> {
             Window w = null;
             if ( params.framed ) {
@@ -174,10 +194,10 @@ public abstract class AbstractBuilder {
                 dialog.getContentPane().add(component);
                 w = dialog;
             }
-            w.setIconImages(SwingSaft.loadIcons(params.panelClazz));
+            w.setIconImages(SwingSaft.loadIcons(params.rootClazz));
             w.pack();
             w.setLocationRelativeTo(swingParent);
-            if ( storeLocation ) Dl.local().lookup(UserPreferences.class).loadLocation(key, w);
+            if ( isStoreLocation(key) ) Dl.local().lookup(UserPreferences.class).loadLocation(key, w);
             w.setVisible(true);
             return w;
         });
@@ -189,7 +209,7 @@ public abstract class AbstractBuilder {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(params.key());
                 // Store location.
-                if ( storeLocation ) Dl.local().lookup(UserPreferences.class).storeLocation(key, window);
+                if ( isStoreLocation(key) ) Dl.local().lookup(UserPreferences.class).storeLocation(key, window);
             }
         });
         return window;
@@ -199,10 +219,10 @@ public abstract class AbstractBuilder {
         Once onceAnnotation = panelClazz.getAnnotation(Once.class);
         if ( onceAnnotation != null ) once = onceAnnotation.value();
         return Params.builder()
-                .panelClazz(panelClazz)
+                .rootClazz(panelClazz)
                 .id(AbstractBuilder.this.id)
                 .titleTemplate(AbstractBuilder.this.title)
-                .framed(!frame ? panelClazz.getAnnotation(Frame.class) != null : frame)
+                .framed(!frame ? panelClazz.getAnnotation(eu.ggnet.saft.api.ui.Frame.class) != null : frame)
                 .modalityType(toSwing(modality).orElse(Dialog.ModalityType.MODELESS)).build();
     }
 
@@ -243,6 +263,16 @@ public abstract class AbstractBuilder {
      */
     protected static <A> A callWithProgress(Callable<A> callable) {
         return Ui.progress().call(callable);
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private static class PaneAndWindow {
+
+        private Pane pane;
+
+        private Window window;
+
     }
 
 }
