@@ -1,9 +1,12 @@
 package eu.ggnet.saft.sample.support;
 
+import eu.ggnet.saft.api.ui.Once;
+
 /**
  *
  * @author oliver.guenther
  */
+@Once
 public class PanelOnceDialog extends javax.swing.JPanel {
 
     /**

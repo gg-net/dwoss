@@ -19,7 +19,8 @@ package eu.ggnet.saft.core.ui.builder;
 import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
@@ -35,6 +36,7 @@ import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.Once;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -171,7 +173,7 @@ public class FxBuilder extends AbstractBuilder {
 
     /**
      * Internal implementation, breaks the compile safty of the public methodes.
-     * For now we have two normal execptions. The OnceException (allready open) and the NoSuchElementException (no result)
+     * For now we have two normal execptions. The UiWorkflowBreak (allready open) and the NoSuchElementException (no result)
      *
      * @param <P>
      * @param <V>
@@ -185,7 +187,7 @@ public class FxBuilder extends AbstractBuilder {
 
         // Produce the ui instance
         CompletableFuture<V> paneBuildFuture = CompletableFuture
-                .runAsync(() -> L.info("Starting Saft Callback on UiCore.executor"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
+                .runAsync(() -> L.debug("Starting Saft Callback on UiCore.executor"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
                 .supplyAsync(() -> {
                     try {
                         return javafxPaneProducer.call();
@@ -207,7 +209,7 @@ public class FxBuilder extends AbstractBuilder {
         }
 
         paneAndParmsFuture = paneAndParmsFuture.thenApply((PaneAndParms<P> t) -> {
-            if ( isOnceModeAndActiveWithSideeffect(once, t.params.key()) ) throw new OnceException();
+            if ( isOnceModeAndActiveWithSideeffect(once, t.params.key()) ) throw new UiWorkflowBreak(Type.ONCE);
             return t;
         });
 
@@ -248,7 +250,7 @@ public class FxBuilder extends AbstractBuilder {
                     throw new CompletionException(ex);
                 }
                 Object result = ((ResultProducer)pw.pane).getResult();
-                if ( result == null ) throw new NoSuchElementException(); // Window was "canceld"
+                if ( result == null ) throw new UiWorkflowBreak(Type.NULL_RESULT);
                 return result;
             }
             return null;

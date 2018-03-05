@@ -150,6 +150,22 @@ public class OpenWithSwing {
             });
             menu.add(b);
 
+            b = new JMenuItem("OnceInput with Optional Result handling");
+            b.addActionListener((e) -> {
+                Ui.exec(() -> {
+                    Ui.build().fx().eval(() -> "Preload", () -> new OnceInputPane()).opt().ifPresent(r -> Ui.build().alert("Eingabe war:" + r));
+                });
+            });
+            menu.add(b);
+
+            b = new JMenuItem("OnceInput with CompletableFuture Result handling");
+            b.addActionListener((e) -> {
+                Ui.build().fx().eval(() -> "Preload", () -> new OnceInputPane()).cf()
+                        .thenAccept(r -> Ui.build().alert("Eingabe war:" + r))
+                        .handle(Ui.handler());
+            });
+            menu.add(b);
+
             menu = new JMenu("JavaFxFrames");
 
             b = new JMenuItem("Once");

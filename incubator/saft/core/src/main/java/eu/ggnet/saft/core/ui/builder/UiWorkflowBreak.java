@@ -16,11 +16,22 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
 /**
- * Used to indicate, that a once window is already open, so the completeable future chain is broken.
+ * Used to indicate, that a .
  *
  * @author oliver.guenther
  */
-public class OnceException extends RuntimeException {
+@Value
+@EqualsAndHashCode(callSuper = false)
+public class UiWorkflowBreak extends RuntimeException {
+
+    public static enum Type {
+        ONCE, NULL_RESULT
+    }
+
+    private Type type;
 
 }

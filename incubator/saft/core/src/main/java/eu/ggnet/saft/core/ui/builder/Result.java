@@ -63,14 +63,11 @@ public class Result<T> {
         } catch (InterruptedException ex) {
             Ui.handle(ex);
         } catch (ExecutionException ex) {
-            if ( ex.getCause() instanceof OnceException ) {
-                L.info("OnceException in opt, returning empty");
+            if ( ex.getCause() instanceof UiWorkflowBreak ) {
+                L.debug("{}, retruning empty", ex.getCause());
                 return Optional.empty();
             }
             Ui.handle(ex);
-        } catch (NoSuchElementException ex) {
-            L.info("NoSuchElement in opt, returning empty");
-            return Optional.empty();
         }
         L.error("Impposible End, returning empty");
         return Optional.empty();

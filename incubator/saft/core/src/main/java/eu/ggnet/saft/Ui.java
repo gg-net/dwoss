@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ForkJoinPool;
+import java.util.function.BiFunction;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -194,4 +195,16 @@ public class Ui {
         UiCore.handle(b);
     }
 
+    /**
+     * Retruns a handler, to be used in a CompletableFuture.handle().
+     *
+     * @param <Z>
+     * @return a handler.
+     */
+    public static <Z> BiFunction<Z, Throwable, Z> handler() {
+        return (Z t, Throwable u) -> {
+            if ( u != null ) Ui.handle(u);
+            return null;
+        };
+    }
 }

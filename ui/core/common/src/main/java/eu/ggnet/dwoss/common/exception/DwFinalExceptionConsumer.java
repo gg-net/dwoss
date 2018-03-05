@@ -29,6 +29,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
 import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
 import static eu.ggnet.saft.core.ui.AlertType.WARNING;
@@ -43,6 +44,10 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
 
     @Override
     public void accept(Throwable b) {
+        if ( b instanceof UiWorkflowBreak || b.getCause() instanceof UiWorkflowBreak ) {
+            L.debug("FinalExceptionConsumer catches UiWorkflowBreak, which is ignored by default");
+            return;
+        }
         L.error("Systemfehler: {} , {}", b.getClass().getSimpleName(), b.getMessage());
         if ( b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
         String deepestMessage = extractDeepestMessage(b);

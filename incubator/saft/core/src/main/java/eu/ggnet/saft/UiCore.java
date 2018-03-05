@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.saft.core.exception.ExceptionUtil;
 import eu.ggnet.saft.core.exception.SwingExceptionDialog;
 import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
 /**
  * The Core of the Saft UI, containing methods for startup or registering things.
@@ -53,6 +54,10 @@ public class UiCore {
     private static AtomicBoolean shuttingDown = new AtomicBoolean(false); // Shut down handler.
 
     private static Consumer<Throwable> finalConsumer = (b) -> {
+        if ( b instanceof UiWorkflowBreak || b.getCause() instanceof UiWorkflowBreak ) {
+            L.debug("FinalExceptionConsumer catches UiWorkflowBreak, which is ignored by default");
+            return;
+        }
         Runnable r = () -> {
             SwingExceptionDialog.show(SwingCore.mainFrame(), "Systemfehler", ExceptionUtil.extractDeepestMessage(b),
                     ExceptionUtil.toMultilineStacktraceMessages(b), ExceptionUtil.toStackStrace(b));
@@ -215,6 +220,7 @@ public class UiCore {
 
     /**
      * Allows to overwrite the default final consumer of all exceptions.
+     * Make sure to ignore the {@link UiWorkflowBreak} wrapped into a {@link CompletionException}.
      *
      * @param <T>      type of consumer
      * @param consumer the consumer
