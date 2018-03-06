@@ -40,6 +40,18 @@ public class PriceBlockerAction extends AccessableAction {
         super(UPDATE_SET_UNIT_PRICE);
     }
 
+    /**
+     * Make all actions full Saft usage.
+     * Use Ui.exec -> Ui.build idiom
+     * Wrap UserInfoException via ReplyUtil or replace on caller with Reply
+     * Replace simple progress SwingWorker with Ui.progess().call or like this
+     * Use Ui.failure::handle idiom
+     * Replace HtmlDialog or HtmlPanel with HtmlPane
+     * Replace OkCancelDialog with OkCancelWrap.....
+     * Replace IPreClose with VetoableOk
+     * Replace DateRangeChooserDialog with DateRangeChooserView
+     * Example ImportImageIdsAction
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -57,6 +69,40 @@ public class PriceBlockerAction extends AccessableAction {
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }
+
+//        Ui.exec(() -> {
+//
+//            Optional<String> sopoOptional = Ui.build().dialog().eval(
+//                    () -> {
+//
+//                        TextInputDialog dialog = new TextInputDialog();
+//                        dialog.setTitle("SopoNr Eingabe");
+//                        dialog.setHeaderText("SopoNr:");
+//                        dialog.setContentText("Bitte SopoNr zur Fixierung eines Preises eingeben:");
+//                        return dialog;
+//                    })
+//                    .opt();
+//
+//            sopoOptional.map(sopoNr -> ReplyUtil.wrap(() -> Dl.remote().lookup(Exporter.class).load(sopoNr)))
+//                    .filter(Ui.failure()::handle)
+//                    .map(Reply::getPayload)
+//                    .ifPresent(priceEngineResult -> {
+//                        PriceBlockerViewCask pbp = new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice());
+//                        OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Price fixieren", pbp);
+//                        view.setVisible(true);
+//                        if ( view.isCancel() )
+//                            return;
+//
+//                        priceEngineResult.setCustomerPrice(pbp.getCustomerPrice());
+//                        priceEngineResult.setRetailerPrice(pbp.getRetailerPrice());
+//                        priceEngineResult.setUnitPriceFixed(Change.SET);
+//
+//                        Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+//
+//                    });
+//
+//        }
+//        );
     }
 
 }
