@@ -19,6 +19,9 @@ package eu.ggnet.dwoss.customer.itest;
 import java.util.Locale;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
@@ -26,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -43,7 +47,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @EJB
-    private CustomerAgent agent;
+    private CustomerAgent customerAgent;
+
+    @Inject
+    @Customers
+    private EntityManager em;
+
+    @Inject
+    UserTransaction utx;
 
     private static Company makeValidCompany() {
         Company validcompany = new Company();
@@ -113,16 +124,21 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     /**
      * store i will test the store methode
+     * Customer is not valid in moment
      * <p>
+     * @throws java.lang.Exception
      */
     @Ignore
     @Test
-    public void testStoreForConsumerCustomer() {
+    public void testStoreForConsumerCustomer() throws Exception {
         Customer c1 = makeValidConsumerCustomer();
 
         assertThat(c1.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        Customer consumerpayload = agent.store(c1.toSimple().get()).getPayload();
-
+        utx.begin();
+        em.joinTransaction();
+        Customer consumerpayload = customerAgent.store(c1.toSimple().get()).getPayload();
+        utx.commit();
+        
         assertThat(consumerpayload.isValid()).as("the payload is a valid customer").isTrue();
         assertThat(consumerpayload.isConsumer()).as("Consumer Customer").isTrue();
         assertThat(consumerpayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
@@ -135,7 +151,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         Customer c2 = makeValidBussnisCustomer();
 
         assertThat(c2.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        Customer businesspayload = agent.store(c2.toSimple().get()).getPayload();
+        Customer businesspayload = customerAgent.store(c2.toSimple().get()).getPayload();
 
         assertThat(businesspayload.isValid()).as("the payload is a valid customer").isTrue();
         assertThat(businesspayload.isBusiness()).as("Business Customer").isTrue();
@@ -147,7 +163,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     @Test
     public void testFindCustomerAsMandatorHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
-        String findCustomerAsMandatorHtml = agent.findCustomerAsMandatorHtml(123);
+        String findCustomerAsMandatorHtml = customerAgent.findCustomerAsMandatorHtml(123);
         assertThat(findCustomerAsMandatorHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
@@ -155,7 +171,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     @Test
     public void testFindCustomerAsHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
-        String findCustomerAsHtml = agent.findCustomerAsHtml(123);
+        String findCustomerAsHtml = customerAgent.findCustomerAsHtml(123);
         assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
@@ -166,6 +182,6 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
      */
     public void testFindById() {
         //TODO Olli fragen wie Arquillian
-        agent.findById(Customer.class, 123);
+        customerAgent.findById(Customer.class, 123);
     }
 }
