@@ -75,9 +75,12 @@ public class SearchController implements Serializable {
 
     public String getDetails(GlobalKey key) {
         LOG.info("Key: " + key);
-        searcher.details(key);
+        try {
+            LOG.info("Details: " + searcher.details(key));
 
-        LOG.info("Details: ");
+        } catch (Exception e) {
+            LOG.info("Details Exception " + e.getMessage());
+        }
         return searcher.details(key);
     }
 }
