@@ -27,9 +27,6 @@
                         <p:dataTable id="searchresult" var="sresult" value="#{searchController.lazyModel}" paginator="true" rows="20"
                                      paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
                                      rowsPerPageTemplate="20,50,100" selectionMode="single" selection="#{searchController.selectedShortSearchResult}" lazy="true">
-                            <f:facet name="header">
-                                Expand rows to see detailed information
-                            </f:facet>
                             <p:ajax event="rowSelect" listener="#{searchController.onRowSelect}" />
                             <p:column headerText="Ergebnis">
                                 <h:outputText value="#{sresult.shortDescription}" />
@@ -37,24 +34,13 @@
                             <p:column width="15%" headerText="Key">
                                 <h:outputText value="#{sresult.key.component}:#{sresult.key.id}" />
                             </p:column>
-                            <!--                            <p:column width="15%" headerText="Details">
-                                                            <h:outputText value="#{searchController.getDetails(sresult.key)}"/>
-                                                        </p:column>-->
+                            <p:column width="15%" headerText="Details">
+                                <p:rowToggler />
+                            </p:column>
                             <p:rowExpansion>
-                                <p:panelGrid  columns="1" columnClasses="value">
-                                    <f:facet name="header">
-                                        panelGrid
-                                    </f:facet>
-                                    <h:outputText value="#{searchController.getDetails(sresult.key)}"/>
-                                </p:panelGrid>
-                            </p:rowExpansion>Saft PriceBlockerAction
-
+                                <h:outputText value="#{searchController.getDetails(sresult.key)}" escape="false"/>
+                            </p:rowExpansion>
                         </p:dataTable>
-
-
-
-
-
                     </p:layoutUnit>
                 </p:layout>
             </h:form>
