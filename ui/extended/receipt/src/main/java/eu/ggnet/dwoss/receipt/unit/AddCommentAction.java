@@ -40,7 +40,7 @@ public class AddCommentAction extends AccessableAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.build().title("Füge eine Unit Kommentar hinzu")
+            Ui.build().title("Füge einen Unit Kommentar hinzu")
                     .swing()
                     .eval(() -> OkCancelWrap.result(new AddCommentCask()))
                     .opt()

@@ -23,11 +23,12 @@ import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ReplyUtil;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.saft.*;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.swing.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -41,18 +42,6 @@ public class PriceBlockerAction extends AccessableAction {
         super(UPDATE_SET_UNIT_PRICE);
     }
 
-    /**
-     * Make all actions full Saft usage.
-     * Use Ui.exec -> Ui.build idiom
-     * Wrap UserInfoException via ReplyUtil or replace on caller with Reply
-     * Replace simple progress SwingWorker with Ui.progess().call or like this
-     * Use Ui.failure::handle idiom
-     * Replace HtmlDialog or HtmlPanel with HtmlPane
-     * Replace OkCancelDialog with OkCancelWrap.....
-     * Replace IPreClose with VetoableOk
-     * Replace DateRangeChooserDialog with DateRangeChooserView
-     * Example ImportImageIdsAction
-     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
@@ -73,17 +62,15 @@ public class PriceBlockerAction extends AccessableAction {
                     .map(Reply::getPayload)
                     .ifPresent(priceEngineResult -> {
                         PriceBlockerViewCask pbp = new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice());
-                        OkCancelDialog<PriceBlockerViewCask> view = new OkCancelDialog<>(UiCore.getMainFrame(), "Preis fixieren", pbp);
-                        view.setVisible(true);
-                        if ( view.isCancel() )
-                            return;
 
-                        priceEngineResult.setCustomerPrice(pbp.getCustomerPrice());
-                        priceEngineResult.setRetailerPrice(pbp.getRetailerPrice());
-                        priceEngineResult.setUnitPriceFixed(Change.SET);
+                        Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(pbp)).opt().ifPresent(reply -> {
 
-                        Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+                            priceEngineResult.setCustomerPrice(pbp.getCustomerPrice());
+                            priceEngineResult.setRetailerPrice(pbp.getRetailerPrice());
+                            priceEngineResult.setUnitPriceFixed(Change.SET);
+                            Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
 
+                        });
                     });
 
         }
