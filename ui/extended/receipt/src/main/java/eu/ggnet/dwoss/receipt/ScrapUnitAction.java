@@ -33,9 +33,6 @@ import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
