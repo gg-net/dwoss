@@ -16,74 +16,117 @@
         </h:head>
 
         <h:body>
-            <h1>Mandator - #{mandatorController.mandator.loadMandator().company.name}</h1>
-            <h:outputText escape="false" value="#{mandatorController.mandator.loadMandator().toHtml()}" />
-            <h2>Additional MandatorInfo </h2>
-            <p:dataList value="#{mandatorController.getAllContractors()}" var="contractor" emptyMessage="No contractors found">
-                <f:facet name="header">
-                    All our Contractors
-                </f:facet>
-                #{contractor.getName()}
-            </p:dataList>
-            <p:dataList value="#{mandatorController.getAllowedBrands()}" var="contractor">
-                <f:facet name="header">
-                    Allowed Brands
-                </f:facet>
-                #{contractor.getName()}
-            </p:dataList>
+            <h:form>
+                <h1>Mandator - #{mandatorController.mandator.loadMandator().company.name}</h1>
+                <h:outputText escape="false" value="#{mandatorController.mandator.loadMandator().toHtml()}" />
+                <!--EXTRA INFO-->
 
-            <h3>Shipping Terms</h3>
-            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
-                <p:column headerText="Note">
-                    <h:outputText value="#{shippingCondition.note}"/>
-                </p:column>
+                <h2>Additional MandatorInfo </h2>
 
-                <p:column headerText="Price of One">
-                    <h:outputText value="#{shippingCondition.priceOfOne}"/>
-                </p:column>
+                <p:panelGrid>
 
-                <p:column headerText="Multiplicator">
-                    <h:outputText value="#{shippingCondition.multiplicator}"/>
-                </p:column>
-            </p:dataTable>
-            <h3>Post Ledger</h3>
-            <p:tree value="#{mandatorController.root}" var="node" >
-                <p:treeNode >
-                    <h:outputText value="#{node}" />
-                </p:treeNode>
-            </p:tree>
-            <h3>Special System Customers</h3>
+                    <p:row>
+                        <p:column style="width: 50%">
+                            <p:dataList value="#{mandatorController.getAllowedBrands()}" var="contractor" emptyMessage="No allowed Brands found" >
+                                <f:facet name="header">
+                                    Allowed Brands
+                                </f:facet>
+                                #{contractor.getName()}
+                            </p:dataList>
 
-            <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
-                <p:column headerText="Customer ID" >
-                    <h:outputText value="#{specialSystemCustomer.key}"/>
-                </p:column>
-                <p:column headerText="DocumentType">
-                    <h:outputText value="#{specialSystemCustomer.value.name}"/>
-                </p:column>
-            </p:dataTable>
-
-            <h3>Receipt Customers</h3>
-            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" sortBy="#{receiptCustomer.value}" sortOrder="ASCENDING">
-                <f:facet name="header">
-                    Single Column Sort
-                </f:facet>
-                <p:column headerText="Customer ID" >
-                    <h:outputText value="#{receiptCustomer.value}"/>
-
-                </p:column>
-                <p:column headerText="Contractor" >
-                    <h:outputText value="#{receiptCustomer.key.contractor}" />
-                </p:column>
-
-                <p:column headerText="ReceiptOperation">
-                    <h:outputText value="#{receiptCustomer.key.operation}"/>
-                </p:column>
-            </p:dataTable>
+                        </p:column>
+                        <p:column >
+                            <p:dataList value="#{mandatorController.getAllContractors()}" var="contractor" emptyMessage="No contractors found" >
+                                <f:facet name="header">
+                                    All our Contractors
+                                </f:facet>
+                                #{contractor.getName()}
+                            </p:dataList>
+                        </p:column>
 
 
 
+                    </p:row>
+                    <p:row >
+                        <p:column>
+                            <h3>     Post Ledger </h3>
+                            <p:tree value="#{mandatorController.root}" var="node" >
 
+                                <p:treeNode >
+                                    <h:outputText value="#{node}" />
+                                </p:treeNode>
+                            </p:tree>
+                        </p:column>
+                        <p:column >
+                            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
+                                <f:facet name="header">
+                                    Shipping Terms
+                                </f:facet>
+                                <p:column headerText="Note">
+                                    <h:outputText value="#{shippingCondition.note}"/>
+                                </p:column>
+
+                                <p:column headerText="Price of One">
+                                    <h:outputText value="#{shippingCondition.priceOfOne}"/>
+                                </p:column>
+
+                                <p:column headerText="Multiplicator">
+                                    <h:outputText value="#{shippingCondition.multiplicator}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+
+
+                    </p:row>
+
+                    <p:row>
+
+
+                        <p:column >
+                            <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
+                                <f:facet name="header"> Special System Customers </f:facet>
+                                <p:column headerText="Customer ID" >
+                                    <h:outputText value="#{specialSystemCustomer.key}"/>
+                                </p:column>
+                                <p:column headerText="DocumentType">
+                                    <h:outputText value="#{specialSystemCustomer.value.name}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+
+
+                        <p:column>
+                            <f:facet name="header">Receipt Customers</f:facet>
+                            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" sortMode="multiple" >
+                                <f:facet name="header">
+                                    Single Column Sort
+                                </f:facet>
+                                <p:column headerText="Customer ID" sortBy="#{receiptCustomer.value}">
+                                    <h:outputText value="#{receiptCustomer.value}"/>
+
+                                </p:column>
+                                <p:column headerText="Contractor" sortBy="#{receiptCustomer.key.contractor}">
+                                    <h:outputText value="#{receiptCustomer.key.contractor}" />
+                                </p:column>
+
+                                <p:column headerText="ReceiptOperation" sortBy="#{receiptCustomer.key.operation}">
+                                    <h:outputText value="#{receiptCustomer.key.operation}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:column>
+                    </p:row>
+
+
+
+
+
+                </p:panelGrid>
+
+
+
+
+
+            </h:form>
         </h:body>
 
     </f:view>

@@ -95,12 +95,11 @@ public class MandatorController implements Serializable {
         Map<PositionType, TreeNode> levelOneNodes = new HashMap<>();
         Map<PositionType, Map<TaxType, TreeNode>> levelTwoNodes = new HashMap<>();
 
-        List<PositionType> posTypes = Arrays.<PositionType>asList(PositionType.values());
-        List<TaxType> taxTypes = Arrays.<TaxType>asList(TaxType.values());
-
         for (PositionType posType : PositionType.values()) {
             for (TaxType taxType : TaxType.values()) {
+
                 Optional<Ledger> opt = mandator.loadPostLedger().get(posType, taxType);
+
                 if ( opt.isPresent() ) {
 
                     LOG.debug("Tax" + taxType + "  Pos: "

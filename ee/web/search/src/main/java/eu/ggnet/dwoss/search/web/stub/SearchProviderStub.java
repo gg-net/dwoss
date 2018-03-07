@@ -69,6 +69,7 @@ public class SearchProviderStub implements SearchProvider {
 
     @Override
     public String details(GlobalKey key) {
+        // JW: copied an example here as I can't use Customer.class at this layer
         return "<table width=\"100%\"><tr><td colspan=2 ><b>Kid: 1604&nbsp;-&nbsp;Leon Breuer</b></td></tr><tr><td valign=top><b>Bevorzugte Rechnungs- und Lieferadresse</b><br />Leon Breuer<br />Gartenstraße 2<br />32427 Köln</td><td valign=top rowspan=4 ><b>Kontakt(e)</b>:<ul><li>Leon&nbsp;Breuer&nbsp;(m)&nbsp;<b>&oplus;</b><br />Adresse(n):<ul><li><i>Bevorzugte: Rechnungsadresse<br />Gartenstraße 2<br />DE&nbsp;32427&nbsp;Köln</i></li></ul>Kommunikationsinformationen:<ul><li>PHONE:&nbsp;+49 99 123456789</li><li>MOBILE:&nbsp;+49 555 12344321</li><li>EMAIL:&nbsp;breuer@example.com</li></ul></li></ul></td></tr><tr><td valign=top><b>Kundeneigenschaften</b>:<ul><li>Nachnahme bestätigt</li><li>Systemhauskunde</li></ul></td></tr><tr><td valign=top><b>Sonstiges</b>:<br />Weitere Kundennummer(n):<ul><li>SAGE: 76686238</li></ul></td></tr><tr><td valign=top><b>Mandantenspezifische Informationen</b>:<ul><li>Mandant: SAMPLE<ul><li>Versandkonditionen:DEALER_ONE</li><li>Zahlungskonditionen:Händler 3% Rabatt</li><li>Zahlungsmodalität:Nachnahme</li><li>Erlaubte Verkaufskanäle:[Händlerkanal, Endkundenkanal, Unbekannt]</li></ul></li></ul></tr></td></table>";
 
     }
