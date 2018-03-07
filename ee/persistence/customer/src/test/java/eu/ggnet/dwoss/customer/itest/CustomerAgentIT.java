@@ -24,7 +24,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -56,7 +55,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     @Inject
     UserTransaction utx;
 
-    private static Company makeValidCompany() {
+    public static Company makeValidCompany() {
         Company validcompany = new Company();
         validcompany.setName("Firma ABC");
         validcompany.setTaxId("textid123456789");
@@ -66,23 +65,36 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         return validcompany;
     }
 
-    private static Contact makeValidContact() {
+    public static Contact makeValidContact() {
         Contact validContact = new Contact(Sex.MALE, true, "Dr", "Max", "Mustermann");
         validContact.getAddresses().add(makeValidAddress());
-        validContact.getCommunications().add(makeValidCommunication());
 
         assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
         return validContact;
     }
 
-    private static Communication makeValidCommunication() {
+    public static Communication makeValidCommunication() {
         Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
 
         assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
         return validCommunication;
     }
 
-    private static Address makeValidAddress() {
+    public static Communication makeValidCommunicationMobile() {
+        Communication validCommunication = new Communication(Type.MOBILE, "0174 123456789");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
+        return validCommunication;
+    }
+
+    public static Communication makeValidCommunicationLandline() {
+        Communication validCommunication = new Communication(Type.PHONE, "040 123456789");
+
+        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
+        return validCommunication;
+    }
+
+    public static Address makeValidAddress() {
         Address validAddress = new Address();
         validAddress.setCity("Munich");
         validAddress.setIsoCountry(Locale.GERMANY);
@@ -93,33 +105,54 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         return validAddress;
     }
 
-    private static AddressLabel makeValidAddressLabel() {
+    public static AddressLabel makeValidAddressLabel() {
         AddressLabel validAddressLabel = new AddressLabel(makeValidCompany(), makeValidContact(), makeValidAddress(), AddressType.INVOICE);
 
         assertThat(validAddressLabel.getViolationMessage()).as("valid validAddressLabel").isNull();
         return validAddressLabel;
     }
 
-    private static Customer makeValidConsumerCustomer() {
-        Customer c = new Customer();
-        c.getContacts().add(makeValidContact());
-        assertThat(c.isConsumer()).as("Consumer Customer").isTrue();
-        assertThat(c.isValid()).as("Consumer Customer is Valid").isTrue();
+    public static Customer makeValidBusinessCustomer() {
+        Address address = makeValidAddress();
+        assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
 
-        return c;
+        Company company = new Company("Musterfirma", 0, true, "1203223");
+        company.getAddresses().add(address);
+        assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
+
+        Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
+        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
+        validContact.getCommunications().add(validCommunication);
+        validContact.getAddresses().add(makeValidAddress());
+        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
+        company.getContacts().add(validContact);
+
+        Customer customer = new Customer();
+        customer.getCompanies().add(company);
+        customer.getAddressLabels().add(makeValidAddressLabel());
+
+        assertThat(customer.getViolationMessage()).overridingErrorMessage("Customer is not valid because :", customer.getViolationMessage()).as("customer does not violate any rule").isNull();
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
+        assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
+
+        return customer;
     }
 
-    private static Customer makeValidBussnisCustomer() {
-        Customer c = new Customer();
-        c.getCompanies().add(makeValidCompany());
-        c.getCompanies().get(0).getContacts().add(makeValidContact());
-        c.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());
-        c.getCompanies().get(0).getAddresses().add(makeValidAddress());
-        c.getAddressLabels().add(makeValidAddressLabel());
-        assertThat(c.isBusiness()).as("Business Customer").isTrue();
-        assertThat(c.isValid()).as("Business Customer is Valid").isTrue();
+    public static Customer makeValidConsumer() {
+        Customer customer = new Customer();
+        Contact makeValidContact = makeValidContact();
+        makeValidContact.getCommunications().add(makeValidCommunication());
+        customer.getContacts().add(makeValidContact);
+        customer.getAddressLabels().add(makeValidAddressLabel());
 
-        return c;
+        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
+        assertThat(customer.getSimpleViolationMessage()).as("customer does not violate any rule").isNull();
+        assertThat(customer.isValid()).isTrue(); // optional
+
+        assertThat(customer.isConsumer()).isTrue();
+
+        return customer;
     }
 
     /**
@@ -128,27 +161,23 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
      * <p>
      * @throws java.lang.Exception
      */
-    @Ignore
     @Test
     public void testStoreForConsumerCustomer() throws Exception {
-        Customer c1 = makeValidConsumerCustomer();
+        Customer c1 = makeValidConsumer();
 
         assertThat(c1.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        utx.begin();
-        em.joinTransaction();
+
         Customer consumerpayload = customerAgent.store(c1.toSimple().get()).getPayload();
-        utx.commit();
-        
+
         assertThat(consumerpayload.isValid()).as("the payload is a valid customer").isTrue();
         assertThat(consumerpayload.isConsumer()).as("Consumer Customer").isTrue();
         assertThat(consumerpayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
         assertThat(consumerpayload).as("check that store the same customer").isEqualTo(c1);
     }
 
-    @Ignore
     @Test
     public void testStoreForBussnisCustomer() {
-        Customer c2 = makeValidBussnisCustomer();
+        Customer c2 = makeValidBusinessCustomer();
 
         assertThat(c2.isSimple()).as("Customer can be transform to a simple customer").isTrue();
         Customer businesspayload = customerAgent.store(c2.toSimple().get()).getPayload();
@@ -159,7 +188,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(businesspayload).as("check that store the same customer").isEqualTo(c2);
     }
 
-    @Ignore
+
     @Test
     public void testFindCustomerAsMandatorHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
@@ -167,7 +196,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(findCustomerAsMandatorHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
-    @Ignore
+
     @Test
     public void testFindCustomerAsHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
@@ -175,13 +204,4 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
-    @Ignore
-    @Test
-    /**
-     * Testing the save progress in the DB
-     */
-    public void testFindById() {
-        //TODO Olli fragen wie Arquillian
-        customerAgent.findById(Customer.class, 123);
-    }
-}
+ }
