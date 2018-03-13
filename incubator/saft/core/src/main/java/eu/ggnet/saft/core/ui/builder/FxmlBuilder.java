@@ -16,19 +16,24 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Window;
+import java.awt.EventQueue;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
 
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
 
 import lombok.experimental.Accessors;
+
 
 /*
     I - 4 Fälle:
@@ -58,13 +63,11 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class FxmlBuilder extends AbstractBuilder {
 
-    public FxmlBuilder() {
-        super();
-        SwingCore.ensurePlatformIsRunning();
-    }
+    private final PreBuilder preBuilder;
 
     public FxmlBuilder(PreBuilder pre) {
         super(pre);
+        this.preBuilder = pre;
         SwingCore.ensurePlatformIsRunning();
     }
 
@@ -77,16 +80,7 @@ public class FxmlBuilder extends AbstractBuilder {
      * @param fxmlControllerClass the swingPanelProducer of the JPanel, must not be null and must not return null.
      */
     public <V extends FxController> void show(Class<V> fxmlControllerClass) {
-        try {
-            Objects.requireNonNull(fxmlControllerClass, "The fx controller class is null, not allowed");
-            Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, null);
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
-            SwingSaft.enableCloser(window, loader.getController());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        internalShow(null, fxmlControllerClass);
     }
 
     /**
@@ -101,19 +95,7 @@ public class FxmlBuilder extends AbstractBuilder {
      *                            javafxPaneProducer swingPanelProducer the swingPanelProducer, must not be null and must not return null.
      */
     public <P, V extends FxController & Consumer<P>> void show(Callable<P> preProducer, Class<V> fxmlControllerClass) {
-        try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
-            Objects.requireNonNull(fxmlControllerClass, "The fx controller class is null, not allowed");
-            Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, preResult); // Relevent for preproducer
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
-            SwingSaft.enableCloser(window, loader.getController());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        internalShow(preProducer, fxmlControllerClass);
     }
 
     /**
@@ -127,19 +109,8 @@ public class FxmlBuilder extends AbstractBuilder {
      * @return the result of the evaluation, never null.
      */
     public <T, V extends FxController & ResultProducer<T>> Result<T> eval(Class<V> fxmlControllerClass) {
-        try {
-            Objects.requireNonNull(fxmlControllerClass, "The fx controller class is null, not allowed");
-            Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, null);
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            ResultProducer<T> controller = loader.getController();
-            SwingSaft.enableCloser(window, controller);
-            wait(window);             // Relevant for the result.
-            return new Result<>(Optional.ofNullable(controller.getResult()));             // Relevant for the result.
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new Result<>(internalShow(null, fxmlControllerClass)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
     }
 
     /**
@@ -155,22 +126,35 @@ public class FxmlBuilder extends AbstractBuilder {
      * @return the result of the evaluation, never null.
      */
     public <T, P, V extends FxController & Consumer<P> & ResultProducer<T>> Result<T> eval(Callable<P> preProducer, Class<V> fxmlControllerClass) {
-        try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
-            Objects.requireNonNull(fxmlControllerClass, "The javafxPaneProducer is null, not allowed");
-            Params p = buildParameterBackedUpByDefaults(fxmlControllerClass);
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            FXMLLoader loader = FxSaft.constructFxml(fxmlControllerClass, preResult); // Relevent for preproducer
-            Window window = constructAndShow(SwingCore.wrap(loader.getRoot()), p, fxmlControllerClass);
-            ResultProducer<T> controller = loader.getController();
-            SwingSaft.enableCloser(window, controller);
-            wait(window);            // Relevant for the result.
-            return new Result<>(Optional.ofNullable(controller.getResult()));            // Relevant for the result.
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return new Result<>(internalShow(preProducer, fxmlControllerClass)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
+    }
+
+    /**
+     * Internal implementation, breaks the compile safty of the public methodes.
+     * For now we have two normal execptions. The UiWorkflowBreak (allready open) and the NoSuchElementException (no result)
+     *
+     * @param <P>
+     * @param <V>
+     * @param preProducer
+     * @param javafxPaneProducer
+     * @return
+     */
+    private <T, P, V extends FxController> CompletableFuture<UiParameter> internalShow(Callable<P> preProducer, Class<V> fxmlControllerClass) {
+        Objects.requireNonNull(fxmlControllerClass, "The fxmlControllerClass is null, not allowed");
+        // TODO: the parent handling must be optimized. And the javaFx
+        UiParameter parm = UiParameter.builder().type(Type.FXML).id(preBuilder.id).title(preBuilder.title).frame(preBuilder.frame)
+                .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
+
+        // Produce the ui instance
+        return CompletableFuture
+                .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
+                .thenApplyAsync((v) -> parm.withRootClass(fxmlControllerClass).withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
+                .thenApply(BuilderUtil::breakIfOnceAndActive)
+                .thenApplyAsync(BuilderUtil::constructFxml, Platform::runLater)
+                .thenApplyAsync(BuilderUtil::consumePreResult, UiCore.getExecutor())
+                .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater)
+                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
     }
 
 }

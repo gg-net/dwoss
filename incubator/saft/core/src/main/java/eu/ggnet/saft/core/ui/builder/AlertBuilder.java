@@ -55,7 +55,7 @@ public class AlertBuilder {
     private Parent javafxParent = null;
 
     public AlertBuilder(PreBuilder pre) {
-        swingParent = pre.swingParent;
+        swingParent = pre.uiParent.getSwingParent();
         if ( !StringUtils.isBlank(pre.title) ) title = pre.title;
     }
 

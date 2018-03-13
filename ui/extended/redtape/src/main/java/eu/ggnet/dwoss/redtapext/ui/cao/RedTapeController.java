@@ -54,7 +54,7 @@ import eu.ggnet.dwoss.rules.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;
-import eu.ggnet.saft.api.ui.UiParent;
+import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;

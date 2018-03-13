@@ -17,13 +17,11 @@
 package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Component;
-import java.awt.Window;
 
 import javafx.scene.Parent;
 import javafx.stage.Modality;
 
-import eu.ggnet.saft.api.ui.UiParent;
-import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
@@ -35,7 +33,7 @@ public class PreBuilder {
      * Represents the parent of the ui element, optional.
      * The default is in the swingmode SwingCore.mainFrame();
      */
-    Window swingParent = SwingCore.mainFrame();
+    UiParent uiParent = UiParent.defaults();
 
     /**
      * Sets the once mode.
@@ -133,7 +131,7 @@ public class PreBuilder {
      * @return this as fluent usage
      */
     public PreBuilder parent(Component swingParent) {
-        this.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
+        this.uiParent = UiParent.of(swingParent);
         return this;
     }
 
@@ -144,7 +142,7 @@ public class PreBuilder {
      * @return this as fluent usage
      */
     public PreBuilder parent(Parent javaFxParent) {
-        this.swingParent = SwingCore.windowAncestor(javaFxParent).orElse(SwingCore.mainFrame());
+        this.uiParent = UiParent.of(javaFxParent);
         return this;
     }
 
@@ -155,9 +153,8 @@ public class PreBuilder {
      * @return this as fluent usage
      */
     public PreBuilder parent(UiParent uiParent) {
-        if ( uiParent == null ) return this;
-        if ( uiParent.getSwingParent() != null ) return parent(uiParent.getSwingParent());
-        return parent(uiParent.getJavafxParent());
+        if ( uiParent != null ) this.uiParent = uiParent;
+        return this;
     }
 
     /**
@@ -182,7 +179,7 @@ public class PreBuilder {
 
     /**
      * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * The mode: the fxs pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
      *
      * @return a new fxbuilder
      */

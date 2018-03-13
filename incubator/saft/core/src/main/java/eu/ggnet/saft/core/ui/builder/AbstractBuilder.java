@@ -123,7 +123,7 @@ public abstract class AbstractBuilder {
     }
 
     public AbstractBuilder(PreBuilder pre) {
-        this(pre.swingParent, pre.once, pre.id, pre.title, pre.frame, pre.modality);
+        this(pre.uiParent.getSwingParent(), pre.once, pre.id, pre.title, pre.frame, pre.modality);
     }
 
     public AbstractBuilder(Window swingParent, boolean once, String id, String title, boolean frame, Modality modality) {

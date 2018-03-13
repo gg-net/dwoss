@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.event.AddressChange;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.api.ui.UiParent;
+import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.core.ui.SwingCore;
 
 /**

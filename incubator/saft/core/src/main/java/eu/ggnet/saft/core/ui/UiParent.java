@@ -14,20 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.saft.api.ui;
+package eu.ggnet.saft.core.ui;
 
 import java.awt.Component;
+import java.awt.Window;
 
 import javafx.scene.Parent;
-
-import lombok.Getter;
+import javafx.stage.Stage;
 
 /**
  * Parent, that can hold either a swing or a javafx parent.
  *
  * @author oliver.guenther
  */
-@Getter
 public class UiParent {
 
     /**
@@ -50,16 +49,32 @@ public class UiParent {
         return new UiParent(javafxParent);
     }
 
-    private Component swingParent = null;
+    public static UiParent defaults() {
+        // Todo: Implemnt javaFx
+        return new UiParent(SwingCore.mainFrame());
+    }
 
-    private Parent javafxParent = null;
+    private Window swingParent = null;
+
+    private Stage javafxParent = null;
 
     private UiParent(Component swingParent) {
-        this.swingParent = swingParent;
+        //TODO: Implement JavaFx
+        if ( swingParent instanceof Window ) this.swingParent = (Window)this.swingParent;
+        else this.swingParent = SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
     }
 
     private UiParent(Parent javafxParent) {
-        this.javafxParent = javafxParent;
+        // TODO: Implement JavaFx Way
+        this.swingParent = SwingCore.windowAncestor(javafxParent).orElse(SwingCore.mainFrame());
+    }
+
+    public Window getSwingParent() {
+        return swingParent;
+    }
+
+    public Stage getJavafxParent() {
+        throw new IllegalArgumentException("Not jet implemented");
     }
 
 }

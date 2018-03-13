@@ -16,22 +16,26 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 
 /**
  * Used to indicate, that a .
  *
  * @author oliver.guenther
  */
-@Value
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class UiWorkflowBreak extends RuntimeException {
 
     public static enum Type {
         ONCE, NULL_RESULT
     }
 
-    private Type type;
+    @Getter
+    private final Type type;
+
+    UiWorkflowBreak(Type type) {
+        this.type = type;
+    }
 
 }

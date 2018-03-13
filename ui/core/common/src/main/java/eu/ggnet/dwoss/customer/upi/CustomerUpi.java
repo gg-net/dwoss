@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.upi;
 
-import eu.ggnet.saft.api.ui.UiParent;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  * This interface shall provide the possibility to create or modify Customers.

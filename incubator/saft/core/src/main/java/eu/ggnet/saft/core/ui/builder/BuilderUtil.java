@@ -23,17 +23,22 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 
 import javax.swing.*;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.StoreLocation;
+import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
+
+import static eu.ggnet.saft.core.ui.FxSaft.loadView;
 
 /**
  * Util class for all Builder based work.
@@ -146,6 +151,80 @@ public final class BuilderUtil {
         latch.await();
     }
 
+    static <V extends Pane> UiParameter producePane(Callable<V> producer, UiParameter parm) {
+        try {
+            V pane = producer.call();
+            return parm.withRootClass(pane.getClass()).withPane(pane);
+        } catch (Exception ex) {
+            throw new CompletionException(ex);
+        }
+    }
+
+    static UiParameter breakIfOnceAndActive(UiParameter in) {
+        // Look into existing Instances, if in once mode and push up to the front if exist.
+        String key = in.toKey();
+        if ( in.isOnce() && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
+            Window window = SwingCore.ACTIVE_WINDOWS.get(key).get();
+            if ( window == null || !window.isVisible() ) SwingCore.ACTIVE_WINDOWS.remove(key);
+            else {
+                if ( window instanceof JFrame ) ((JFrame)window).setExtendedState(JFrame.NORMAL);
+                window.toFront();
+                throw new UiWorkflowBreak(Type.ONCE);
+            }
+        }
+        return in;
+    }
+
+    static UiParameter consumePreResult(UiParameter in) {
+        return in.optionalConsumePreResult();
+    }
+
+    static UiParameter wrapPane(UiParameter in) {
+        return in.withJfxPanel(SwingCore.wrapDirect(in.getPane()));
+    }
+
+    static UiParameter constructFxml(UiParameter in) {
+        try {
+            Class<FxController> controllerClazz = (Class<FxController>)in.getRootClass();  // Cast is a shortcut.
+            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(loadView(controllerClazz), "No View for " + controllerClazz));
+            loader.load();
+            Objects.requireNonNull(loader.getController(), "No controller based on " + controllerClazz + ". Controller set in Fxml ?");
+            return in.withPane(loader.getRoot()).withController(loader.getController());
+        } catch (IOException ex) {
+            throw new CompletionException(ex);
+        }
+    }
+
+    static UiParameter constructSwing(UiParameter in) {
+        try {
+            Pane pane = in.getPane();
+            JComponent component = in.getJfxPanel();
+            final Window window = in.isFramed()
+                    ? BuilderUtil.newJFrame(in.toTitle(), component)
+                    : BuilderUtil.newJDailog(in.getUiParent().getSwingParent(), in.toTitle(), component, in.toSwingModality());
+            // Todo: the Icon Referenz Class is not ava
+            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().getSwingParent(), in.getRefernceClass(), in.toKey());
+            in.getClosedListenerImplemetation().ifPresent(ui -> BuilderUtil.enableCloser(window, ui));
+            window.setVisible(true);
+            return in.withWindow(window);
+        } catch (IOException e) {
+            throw new CompletionException(e);
+        }
+    }
+
+    static <T> T waitAndProduceResult(UiParameter in) {
+        if ( !(in.getType().selectRelevantInstance(in) instanceof ResultProducer) ) {
+            throw new IllegalStateException("Calling Produce Result on a none ResultProducer. Try show instead of eval");
+        }
+        try {
+            BuilderUtil.wait(in.getWindow());
+        } catch (InterruptedException | IllegalStateException | NullPointerException ex) {
+            throw new CompletionException(ex);
+        }
+        T result = ((ResultProducer<T>)in.getType().selectRelevantInstance(in)).getResult();
+        if ( result == null ) throw new UiWorkflowBreak(Type.NULL_RESULT);
+        return result;
+    }
 
     private static boolean isStoreLocation(Class<?> key) {
         return (key.getAnnotation(StoreLocation.class) != null);
