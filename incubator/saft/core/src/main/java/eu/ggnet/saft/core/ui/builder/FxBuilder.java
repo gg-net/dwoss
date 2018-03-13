@@ -63,7 +63,7 @@ import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
  */
 public class FxBuilder {
 
-    protected static final Logger L = LoggerFactory.getLogger(FxBuilder.class);
+    private static final Logger L = LoggerFactory.getLogger(FxBuilder.class);
 
     private final PreBuilder preBuilder;
 

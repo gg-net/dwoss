@@ -25,6 +25,9 @@ import java.util.function.Consumer;
 
 import javafx.application.Platform;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.FxController;
@@ -61,12 +64,13 @@ import lombok.experimental.Accessors;
  * @author oliver.guenther
  */
 @Accessors(fluent = true)
-public class FxmlBuilder extends AbstractBuilder {
+public class FxmlBuilder {
+
+    private static final Logger L = LoggerFactory.getLogger(FxmlBuilder.class);
 
     private final PreBuilder preBuilder;
 
     public FxmlBuilder(PreBuilder pre) {
-        super(pre);
         this.preBuilder = pre;
         SwingCore.ensurePlatformIsRunning();
     }

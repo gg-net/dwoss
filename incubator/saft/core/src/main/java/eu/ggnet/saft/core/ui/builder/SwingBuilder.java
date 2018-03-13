@@ -16,18 +16,21 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Window;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.EventQueue;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.SwingSaft;
+import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
 
 import lombok.experimental.Accessors;
 
@@ -60,12 +63,13 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class SwingBuilder extends AbstractBuilder {
 
-    public SwingBuilder() {
-        super();
-    }
+    private static final Logger L = LoggerFactory.getLogger(SwingBuilder.class);
+
+    private final PreBuilder preBuilder;
 
     public SwingBuilder(PreBuilder pre) {
         super(pre);
+        this.preBuilder = pre;
     }
 
     /**
@@ -77,16 +81,7 @@ public class SwingBuilder extends AbstractBuilder {
      * @param swingPanelProducer the swingPanelProducer of the JPanel, must not be null and must not return null.
      */
     public <V extends JPanel> void show(Callable<V> swingPanelProducer) {
-        try {
-            Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
-            V panel = SwingSaft.dispatch(swingPanelProducer);
-            Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, panel);
-        } catch (ExecutionException | InterruptedException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        internalShow(null, swingPanelProducer);
     }
 
     /**
@@ -100,20 +95,7 @@ public class SwingBuilder extends AbstractBuilder {
      * @param swingPanelProducer the swingPanelProducer, must not be null and must not return null.
      */
     public <P, V extends JPanel & Consumer<P>> void show(Callable<P> preProducer, Callable<V> swingPanelProducer) {
-        try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
-            Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
-            V panel = SwingSaft.dispatch(swingPanelProducer);
-            Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return;
-            panel.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, panel);
-        } catch (InterruptedException | InvocationTargetException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        internalShow(preProducer, swingPanelProducer);
     }
 
     /**
@@ -127,18 +109,8 @@ public class SwingBuilder extends AbstractBuilder {
      * @return the result of the evaluation, never null.
      */
     public <T, V extends JPanel & ResultProducer<T>> Result<T> eval(Callable<V> swingPanelProducer) {
-        try {
-            Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
-            V panel = SwingSaft.dispatch(swingPanelProducer);  // Creating the panel on the right thread
-            Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, panel);
-            wait(window);
-            return new Result<>(Optional.ofNullable(panel.getResult()));
-        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
+        return new Result<>(internalShow(null, swingPanelProducer)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
     }
 
     /**
@@ -153,22 +125,24 @@ public class SwingBuilder extends AbstractBuilder {
      * @return the result of the evaluation, never null.
      */
     public <T, P, V extends JPanel & Consumer<P> & ResultProducer<T>> Result<T> eval(Callable<P> preProducer, Callable<V> swingPanelProducer) {
-        try {
-            Objects.requireNonNull(preProducer, "The pre producer is null, not allowed");
-            Objects.requireNonNull(swingPanelProducer, "The swingPanelProducer is null, not allowed");
-            V panel = SwingSaft.dispatch(swingPanelProducer); // Creating the panel on the right thread
-            Params p = buildParameterBackedUpByDefaults(panel.getClass());
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            panel.accept(preResult); // Calling the preproducer and setting the result in the panel
-            Window window = constructAndShow(panel, p, panel.getClass()); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            SwingSaft.enableCloser(window, panel);
-            wait(window);
-            return new Result<>(Optional.ofNullable(panel.getResult()));
-        } catch (InterruptedException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
+        return new Result<>(internalShow(preProducer, swingPanelProducer)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
+    }
+
+    private <T, P, V extends JPanel> CompletableFuture<UiParameter> internalShow(Callable<P> preProducer, Callable<V> jpanelProducer) {
+        Objects.requireNonNull(jpanelProducer, "The jpanelaneProducer is null, not allowed");
+        // TODO: the parent handling must be optimized. And the javaFx
+        UiParameter parm = UiParameter.builder().type(Type.SWING).id(preBuilder.id).title(preBuilder.title).frame(preBuilder.frame)
+                .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
+
+        // Produce the ui instance
+        return CompletableFuture
+                .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
+                .thenApplyAsync(v -> BuilderUtil.produceJPanel(jpanelProducer, parm), EventQueue::invokeLater)
+                .thenApplyAsync((UiParameter p) -> p.withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
+                .thenApply(BuilderUtil::breakIfOnceAndActive)
+                .thenApply(BuilderUtil::consumePreResult)
+                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
     }
 
 }

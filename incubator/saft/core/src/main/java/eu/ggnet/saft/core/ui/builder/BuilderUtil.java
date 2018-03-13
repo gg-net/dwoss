@@ -28,12 +28,16 @@ import java.util.concurrent.*;
 import javax.swing.*;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
@@ -134,7 +138,7 @@ public final class BuilderUtil {
     static void wait(Window window) throws InterruptedException, IllegalStateException, NullPointerException {
         Objects.requireNonNull(window, "Window is null");
         if ( !window.isVisible() ) {
-            L.info("Wait on non visible window called, continue without latch");
+            L.debug("Wait on non visible window called, continue without latch");
             return;
         }
 
@@ -151,6 +155,15 @@ public final class BuilderUtil {
         latch.await();
     }
 
+    static <V extends JPanel> UiParameter produceJPanel(Callable<V> producer, UiParameter parm) {
+        try {
+            V panel = producer.call();
+            return parm.withRootClass(panel.getClass()).withJPanel(panel);
+        } catch (Exception ex) {
+            throw new CompletionException(ex);
+        }
+    }
+
     static <V extends Pane> UiParameter producePane(Callable<V> producer, UiParameter parm) {
         try {
             V pane = producer.call();
@@ -158,6 +171,33 @@ public final class BuilderUtil {
         } catch (Exception ex) {
             throw new CompletionException(ex);
         }
+    }
+
+    static <T, V extends Dialog<T>> UiParameter produceDialog(Callable<V> producer, UiParameter parm) {
+        try {
+            V dialog = producer.call();
+            return parm.withRootClass(dialog.getClass()).withDialog(dialog).withPane(dialog.getDialogPane());
+        } catch (Exception ex) {
+            throw new CompletionException(ex);
+        }
+    }
+
+    /**
+     * Modifies the Dialog to be used in a swing environment.
+     *
+     * @param in
+     * @return
+     */
+    static UiParameter modifyDialog(UiParameter in) {
+        Dialog dialog = in.getDialog();
+        dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
+        dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
+            ((Button)b).setOnAction(e -> {
+                L.debug("Close on Dialog called");
+                Ui.closeWindowOf(dialog.getDialogPane());
+            });
+        });
+        return in;
     }
 
     static UiParameter breakIfOnceAndActive(UiParameter in) {
@@ -180,7 +220,7 @@ public final class BuilderUtil {
     }
 
     static UiParameter wrapPane(UiParameter in) {
-        return in.withJfxPanel(SwingCore.wrapDirect(in.getPane()));
+        return in.withJPanel(SwingCore.wrapDirect(in.getPane()));
     }
 
     static UiParameter constructFxml(UiParameter in) {
@@ -197,12 +237,10 @@ public final class BuilderUtil {
 
     static UiParameter constructSwing(UiParameter in) {
         try {
-            Pane pane = in.getPane();
-            JComponent component = in.getJfxPanel();
+            JComponent component = in.getJPanel();
             final Window window = in.isFramed()
                     ? BuilderUtil.newJFrame(in.toTitle(), component)
                     : BuilderUtil.newJDailog(in.getUiParent().getSwingParent(), in.toTitle(), component, in.toSwingModality());
-            // Todo: the Icon Referenz Class is not ava
             BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().getSwingParent(), in.getRefernceClass(), in.toKey());
             in.getClosedListenerImplemetation().ifPresent(ui -> BuilderUtil.enableCloser(window, ui));
             window.setVisible(true);
@@ -213,7 +251,7 @@ public final class BuilderUtil {
     }
 
     static <T> T waitAndProduceResult(UiParameter in) {
-        if ( !(in.getType().selectRelevantInstance(in) instanceof ResultProducer) ) {
+        if ( !(in.getType().selectRelevantInstance(in) instanceof ResultProducer || in.getType().selectRelevantInstance(in) instanceof Dialog) ) {
             throw new IllegalStateException("Calling Produce Result on a none ResultProducer. Try show instead of eval");
         }
         try {
@@ -221,9 +259,16 @@ public final class BuilderUtil {
         } catch (InterruptedException | IllegalStateException | NullPointerException ex) {
             throw new CompletionException(ex);
         }
-        T result = ((ResultProducer<T>)in.getType().selectRelevantInstance(in)).getResult();
-        if ( result == null ) throw new UiWorkflowBreak(Type.NULL_RESULT);
-        return result;
+        if ( in.getType().selectRelevantInstance(in) instanceof ResultProducer ) {
+            T result = ((ResultProducer<T>)in.getType().selectRelevantInstance(in)).getResult();
+            if ( result == null ) throw new UiWorkflowBreak(Type.NULL_RESULT);
+            return result;
+        } else {
+            T result = ((Dialog<T>)in.getType().selectRelevantInstance(in)).getResult();
+            if ( result == null ) throw new UiWorkflowBreak(Type.NULL_RESULT);
+            return result;
+        }
+
     }
 
     private static boolean isStoreLocation(Class<?> key) {

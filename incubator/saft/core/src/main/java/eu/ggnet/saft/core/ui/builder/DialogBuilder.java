@@ -16,35 +16,36 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Window;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.EventQueue;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import javafx.scene.control.Button;
+import javafx.application.Platform;
 import javafx.scene.control.Dialog;
-import javafx.scene.layout.BorderPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
 
 /**
  *
  * @author oliver.guenther
  */
-public class DialogBuilder extends AbstractBuilder {
+public class DialogBuilder {
 
-    public DialogBuilder() {
-        super();
-        SwingCore.ensurePlatformIsRunning();
-    }
+    private static final Logger L = LoggerFactory.getLogger(DialogBuilder.class);
+
+    private final PreBuilder preBuilder;
 
     public DialogBuilder(PreBuilder pre) {
-        super(pre);
+        this.preBuilder = pre;
         SwingCore.ensurePlatformIsRunning();
     }
 
@@ -52,31 +53,13 @@ public class DialogBuilder extends AbstractBuilder {
      * Creates the javafx Dialog via the producer, shows it and returns the evaluated result as Optional.
      *
      * @param <T>            type of the result
-     * @param <P>            result type of the preProducer
      * @param <V>
      * @param dialogProducer the javafx Dialog producer, must not be null and must not return null.
      * @return the result of the evaluation, never null.
      */
     public <T, V extends Dialog<T>> Result<T> eval(Callable<V> dialogProducer) {
-        try {
-            Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
-
-            V dialog = FxSaft.dispatch(dialogProducer);
-            Params p = buildParameterBackedUpByDefaults(dialog.getClass());
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
-                ((Button)b).setOnAction(e -> {
-                    L.debug("Close on Dialog called");
-                    Ui.closeWindowOf(dialog.getDialogPane());
-                });
-            });
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            wait(window);
-            return new Result<>(Optional.ofNullable(dialog.getResult()));
-        } catch (InterruptedException | RuntimeException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
+        return new Result<>(internalShow(null, dialogProducer)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
     }
 
     /**
@@ -91,28 +74,26 @@ public class DialogBuilder extends AbstractBuilder {
      * @return the result of the evaluation, never null.
      */
     public <T, P, V extends Dialog<T> & Consumer<P>> Result<T> eval(Callable<P> preProducer, Callable<V> dialogProducer) {
-        try {
-            Objects.requireNonNull(dialogProducer, "The dialogProducer is null, not allowed");
+        return new Result<>(internalShow(preProducer, dialogProducer)
+                .thenApplyAsync(BuilderUtil::waitAndProduceResult, UiCore.getExecutor()));
+    }
 
-            V dialog = FxSaft.dispatch(dialogProducer);
-            Params p = buildParameterBackedUpByDefaults(dialog.getClass());
-            P preResult = callWithProgress(preProducer);
-            p.optionalSupplyId(preResult);
-            if ( isOnceModeAndActiveWithSideeffect(p.key()) ) return new Result<>(Optional.empty());
-            dialog.accept(preResult); // Calling the preproducer and setting the result in the panel
-            dialog.getDialogPane().getScene().setRoot(new BorderPane()); // Remove the DialogPane form the Scene, otherwise an Exception is thrown
-            dialog.getDialogPane().getButtonTypes().stream().map(t -> dialog.getDialogPane().lookupButton(t)).forEach(b -> { // Add Closing behavior on all buttons.
-                ((Button)b).setOnAction(e -> {
-                    L.debug("Close on Dialog called");
-                    Ui.closeWindowOf(dialog.getDialogPane());
-                });
-            });
-            Window window = constructAndShow(SwingCore.wrap(dialog.getDialogPane()), p, Dialog.class); // Constructing the JFrame/JDialog, setting the parameters and makeing it visible
-            wait(window);
-            return new Result<>(Optional.ofNullable(dialog.getResult()));
-        } catch (InterruptedException | RuntimeException | InvocationTargetException | ExecutionException ex) {
-            throw new RuntimeException(ex);
-        }
+    private <T, P, V extends Dialog<T>> CompletableFuture<UiParameter> internalShow(Callable<P> preProducer, Callable<V> dialogProducer) {
+        Objects.requireNonNull(dialogProducer, "The javafxPaneProducer is null, not allowed");
+        // TODO: the parent handling must be optimized. And the javaFx
+        UiParameter parm = UiParameter.builder().type(Type.DIALOG).id(preBuilder.id).title(preBuilder.title).frame(preBuilder.frame)
+                .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
+
+        // Produce the ui instance
+        return CompletableFuture
+                .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
+                .thenApplyAsync(v -> BuilderUtil.produceDialog(dialogProducer, parm), Platform::runLater)
+                .thenApplyAsync((UiParameter p) -> p.withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
+                .thenApply(BuilderUtil::breakIfOnceAndActive)
+                .thenApply(BuilderUtil::consumePreResult)
+                .thenApply(BuilderUtil::modifyDialog)
+                .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater)
+                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
     }
 
 }

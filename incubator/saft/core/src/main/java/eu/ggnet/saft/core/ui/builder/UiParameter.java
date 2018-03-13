@@ -22,7 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import javafx.embed.swing.JFXPanel;
+import javax.swing.JComponent;
+
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 
@@ -55,6 +56,7 @@ public class UiParameter {
             public Object selectRelevantInstance(UiParameter p) {
                 return p.getPane();
             }
+
         },
         FXML {
 
@@ -67,15 +69,15 @@ public class UiParameter {
 
             @Override
             public Object selectRelevantInstance(UiParameter p) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return p.getDialog();
             }
         }, SWING {
 
             @Override
             public Object selectRelevantInstance(UiParameter p) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                return p.getJPanel();
             }
-        }; // todo
+        };
 
         public abstract Object selectRelevantInstance(UiParameter p);
 
@@ -132,7 +134,7 @@ public class UiParameter {
 
     @Wither
     @Getter
-    private JFXPanel jfxPanel;
+    private JComponent jPanel;
 
     @Wither
     @Getter
@@ -141,6 +143,10 @@ public class UiParameter {
     @Wither
     @Getter
     private FxController controller;
+
+    @Wither
+    @Getter
+    private javafx.scene.control.Dialog dialog;
 
     @Builder
     UiParameter(Boolean once, Boolean frame, String id, String title, Modality modality, UiParent uiParent, Type type) {
