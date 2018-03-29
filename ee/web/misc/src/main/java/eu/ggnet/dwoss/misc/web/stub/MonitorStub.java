@@ -17,19 +17,29 @@
 package eu.ggnet.dwoss.misc.web.stub;
 
 import java.util.*;
-import java.util.concurrent.*;
-import javax.annotation.ManagedBean;
+
 import eu.ggnet.saft.api.progress.*;
+
 import java.util.stream.Collectors;
+
+import javax.ejb.Stateless;
+import javax.faces.event.ActionEvent;
+import javax.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * build a Stub with random scheduled progress
- * 
+ *
  * @author jens.papenhagen
  */
-@ManagedBean
+@Named
+@Stateless
 public class MonitorStub implements ProgressObserver {
 
+    private final static Logger LOG = LoggerFactory.getLogger(MonitorStub.class);
+    
     private final Map<Integer, HiddenMonitor> monitors = new HashMap<>();
 
     @Override
@@ -45,7 +55,7 @@ public class MonitorStub implements ProgressObserver {
         return monitors.get(key);
     }
 
-    public void add(HiddenMonitor m) {
+    public void setMonitor(HiddenMonitor m) {
         monitors.put(m.hashCode(), m);
     }
 
@@ -55,33 +65,36 @@ public class MonitorStub implements ProgressObserver {
                 .anyMatch(e -> !e.getValue().isFinished());
     }
 
-    public void scheduledMonitors() {
-        Runnable task = () -> {
-            HiddenMonitor hm = new HiddenMonitor();
-            hm.title("TestMonitor");
-            hm.setMessage("Progress 000");
+    public void buttonStartSampleAction(ActionEvent actionEvent) {
+        //       Runnable task = () -> {
+        
+        HiddenMonitor hm = new HiddenMonitor();
 
-            add(hm);
-            hm.start();
-            for (int i = 0; i < 20; i++) {
-                hm.worked(5, "Working on " + i);
-                try {
-                    Thread.sleep(2500);
-                } catch (InterruptedException ex) {
-                    System.out.println("InterruptedException in thread sleep");
-                }
+        hm.title("TestMonitor");
+        hm.setMessage("Progress 000");
+
+        setMonitor(hm);
+        hm.start();
+        
+        for (int i = 0; i < 100; i++) {
+            hm.worked(1, "Done: " + i);
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                LOG.debug("Problems with the sleep Thread");
             }
-            hm.finish();
-        };
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
-        ScheduledFuture<?> future = executor.schedule(task, new Random().nextLong(), TimeUnit.SECONDS);
-
-        try {
-            future.get();
-        } catch (InterruptedException | ExecutionException ex) {
-            System.out.println("InterruptedException or ExecutionException form Future");
         }
+        hm.finish();
+
+//        };
+                //        ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
+                //        ScheduledFuture<?> future = executor.schedule(task, new Random().nextLong(), TimeUnit.SECONDS);
+                //
+                //        try {
+                //            future.get();
+                //        } catch (InterruptedException | ExecutionException ex) {
+                //            System.out.println("InterruptedException or ExecutionException form Future");
+                //        }
     }
 
 }

@@ -35,13 +35,12 @@
                                 <h:outputText value="#{sresult.key.component}:#{sresult.key.id}" />
                             </p:column>
                             <p:column width="15%" headerText="Details">
-                                <h:outputText value="#{searchController.getDetails(sresult.key)}" />
+                                <p:rowToggler />
                             </p:column>
-
+                            <p:rowExpansion>
+                                <h:outputText value="#{searchController.getDetails(sresult.key)}" escape="false"/>
+                            </p:rowExpansion>
                         </p:dataTable>
-
-
-
                     </p:layoutUnit>
                 </p:layout>
             </h:form>

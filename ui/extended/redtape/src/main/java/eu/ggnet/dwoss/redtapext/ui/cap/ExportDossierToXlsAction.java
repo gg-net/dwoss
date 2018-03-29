@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import javafx.beans.binding.Bindings;
 import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +30,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_DOSSIER_TO_XLS;
+import static javafx.scene.control.ButtonType.OK;
 
 /**
  *
@@ -46,6 +48,10 @@ public class ExportDossierToXlsAction extends AccessableAction {
             Ui.build().title("Bitte DossierId eingeben").dialog().eval(() -> {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setContentText("Bitte DossierId eingeben:");
+                dialog.getDialogPane()
+                        .lookupButton(OK)
+                        .disableProperty()
+                        .bind(Bindings.createBooleanBinding(() -> dialog.getEditor().getText().trim().isEmpty(), dialog.getEditor().textProperty()));
                 return dialog;
             }).opt()
                     .filter(s -> !StringUtils.isBlank(s))

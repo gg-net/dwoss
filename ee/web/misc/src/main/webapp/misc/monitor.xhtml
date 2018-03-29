@@ -30,6 +30,12 @@
                 <f:facet name="last">
                     <h:outputStylesheet library="css" name="style.css"/>
                 </f:facet>
+                
+                <p:commandLink id="startSampels" actionListener="#{monitorStub.buttonStartSampleAction()}">
+                    <h:outputText value="runSample" />
+                </p:commandLink>
+                
+                
             </h:form>
         </h:body>
     </f:view>

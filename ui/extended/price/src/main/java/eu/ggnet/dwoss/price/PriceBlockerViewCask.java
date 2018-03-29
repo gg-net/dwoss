@@ -24,8 +24,9 @@ import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.swing.*;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;
@@ -35,7 +36,7 @@ import lombok.ToString;
  * <p/>
  * @author bastian.venz
  */
-public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClose, ResultProducer<Prices> {
+public class PriceBlockerViewCask extends javax.swing.JPanel implements VetoableOnOk, ResultProducer<Prices> {
 
     private Converter<Double, String> stringConverter = new CurrencyConverter();
 
@@ -299,7 +300,7 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
     }// </editor-fold>//GEN-END:initComponents
 
     @Override
-    public boolean pre(CloseType type) {
+    public boolean mayClose() {
         if ( retailerBrutto.getText().trim().equals("") || retailerNetto.getText().trim().equals("")
                 || customerBrutto.getText().trim().equals("") || customerNetto.getText().trim().equals("") ) {
 
@@ -348,15 +349,29 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements IPreClos
      * @param args
      */
     public static void main(String[] args) {
-
-        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);
+        // JW: old test can NOT be reproduced exactly as with a OkCancelVetoResult the CustomerPrice and RetailerPrice on the PriceBlockerViewCask
+        // can NOT be reached anymore. Is this meant to be?
+        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestet\n<b>BLARG</b>", 10d, 15d);
         OkCancelDialog<PriceBlockerViewCask> cancelDialog = new OkCancelDialog<>("Test", pbp);
+        cancelDialog.getSubContainer().getCustomerPrice();
 
-        cancelDialog.setMinimumSize(pbp.getMinimumSize());
-        cancelDialog.setPreferredSize(pbp.getPreferredSize());
-        cancelDialog.setVisible(true);
-        System.out.println(cancelDialog.getSubContainer().getCustomerPrice());
-        System.out.println(cancelDialog.getSubContainer().getRetailerPrice());
+        OkCancelVetoResult<Prices, PriceBlockerViewCask> okCancelVetoResult = OkCancelWrap.<Prices, PriceBlockerViewCask>vetoResult(pbp);
+        okCancelVetoResult.setMinimumSize(pbp.getMinimumSize());
+        okCancelVetoResult.setPreferredSize(pbp.getPreferredSize());
+        okCancelVetoResult.setVisible(true);
+
+        System.out.println(okCancelVetoResult.getResult().getPayload().customerPr);
+        System.out.println(okCancelVetoResult.getResult().getPayload().retailerPr);
         System.exit(0);
+
+//        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);
+//        OkCancelDialog<PriceBlockerViewCask> cancelDialog = new OkCancelDialog<>("Test", pbp);
+//
+//        cancelDialog.setMinimumSize(pbp.getMinimumSize());
+//        cancelDialog.setPreferredSize(pbp.getPreferredSize());
+//        cancelDialog.setVisible(true);
+//        System.out.println(cancelDialog.getSubContainer().getCustomerPrice());
+//        System.out.println(cancelDialog.getSubContainer().getRetailerPrice());
+//        System.exit(0);
     }
 }
