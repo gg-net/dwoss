@@ -134,6 +134,7 @@ public class UiCore {
      */
     public static void continueSwing(JFrame mainView) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
+        SwingCore.ensurePlatformIsRunning();
         Platform.setImplicitExit(false); // Need this, as we asume many javafx elements opening and closing.
         mainFrame = mainView;
         mainView.addWindowListener(new WindowAdapter() {
@@ -177,7 +178,7 @@ public class UiCore {
      */
     public static <T extends Component> void startSwing(final Callable<T> builder) {
         if ( isRunning() ) throw new IllegalStateException("UiCore is already initialised and running");
-
+        SwingCore.ensurePlatformIsRunning();
         try {
             JFrame panel = SwingSaft.dispatch(() -> {
                 T node = builder.call();

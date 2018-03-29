@@ -6,12 +6,12 @@ import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.*;
+import eu.ggnet.saft.core.cap.RemoteLookup;
 
 import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.INVOICED;
 import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.REPAYMENTS;
@@ -23,6 +23,18 @@ import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.REPAYME
 public class ReportViewTryout {
 
     public static void main(String[] args) {
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
+
         TradeName tradeName = TradeName.FUJITSU;
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
 
@@ -45,9 +57,7 @@ public class ReportViewTryout {
                         .end(new Date())
                         .build());
 
-        Ui.exec(() -> {
-            Ui.build().fxml().show(() -> new ReportController.In(result, false), ReportController.class);
-        });
+        Ui.build().fxml().show(() -> new ReportController.In(result, false), ReportController.class);
     }
 
 }

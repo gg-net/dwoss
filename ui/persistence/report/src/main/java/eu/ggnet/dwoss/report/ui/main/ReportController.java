@@ -34,6 +34,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Callback;
 
@@ -52,6 +54,7 @@ import lombok.Value;
 
 import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 
 /**
  * Controller for the report view.
@@ -357,6 +360,28 @@ public class ReportController implements Initializable, FxController, Consumer<R
             TableView<ReportLine> table = new TableView<>(FXCollections.observableArrayList(reportResult.getLines().get(type)));
             table.getColumns().addAll(getColumnModel());
             table.setEditable(true);
+            table.getSelectionModel().setSelectionMode(MULTIPLE);
+
+            MenuItem select = new MenuItem("Select");
+            select.setOnAction(e -> {
+                table.getSelectionModel().getSelectedItems().forEach(i -> i.setAddedToReport(true));
+                table.getSelectionModel().clearSelection();
+            });
+            MenuItem deselet = new MenuItem("Deselect");
+            deselet.setOnAction(e -> {
+                table.getSelectionModel().getSelectedItems().forEach(i -> i.setAddedToReport(false));
+                table.getSelectionModel().clearSelection();
+            });
+
+            ContextMenu cm = new ContextMenu();
+            cm.getItems().add(select);
+            cm.getItems().add(deselet);
+
+            table.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent t1) -> {
+                if ( t1.getButton() == MouseButton.SECONDARY ) {
+                    cm.show(table, t1.getScreenX(), t1.getScreenY());
+                }
+            });
 
             //built summary
             TableSummary sum = buildSummary(table);
