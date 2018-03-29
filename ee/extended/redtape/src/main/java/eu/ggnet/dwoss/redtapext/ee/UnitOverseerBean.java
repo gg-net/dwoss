@@ -16,13 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.eao.PositionEao;
-import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
-import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,12 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.log.AutoLogger;
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
+import eu.ggnet.dwoss.customer.opi.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyLocalBridge;
 import eu.ggnet.dwoss.redtape.ee.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
+import eu.ggnet.dwoss.redtape.ee.eao.*;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
@@ -50,6 +45,7 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
@@ -222,9 +218,11 @@ public class UnitOverseerBean implements UnitOverseer {
         }
         if ( !showPrices ) return re;
         re += "<hr />";
-        re += "<b>Preis-Informationen</b>";
+        re += "<b>Geräte Preis-Informationen</b>";
         re += UniqueUnitFormater.toHtmlPriceInformation(uniqueUnit.getPrices(), uniqueUnit.getPriceHistory());
-        return re;
+        re += "<b>Artikel Preis-Informationen</b>";
+        re += UniqueUnitFormater.toHtmlPriceInformation(uniqueUnit.getProduct().getPrices(), uniqueUnit.getProduct().getPriceHistory());
+        return Css.toHtml5WithStyle(re);
     }
 
     private static String wrap(String head, String foot, Object... elmes) {

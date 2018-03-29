@@ -106,22 +106,17 @@ public abstract class UniqueUnitFormater {
     public static String toHtmlDetailed(UniqueUnit unit) {
         if ( unit == null ) return "<h1>Keine UniqueUnit Spezifikation vorhanden.</h1>";
         Product p = unit.getProduct();
-        String re = "<b>SopoNr: " + unit.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID) + "</b>";
-        re += "<p>";
-        re += "Seriennummer: " + unit.getIdentifier(UniqueUnit.Identifier.SERIAL) + "<br />";
-        re += "Lieferant: " + unit.getContractor().getName();
-        re += "</p>";
-//        re += "<u>UniqueUnit.id:</u> " + unit.getId();
-        re += "<p>";
-        if ( p == null ) {
-            re += "<b>Keine ProductBeschreibung (UniqueUnit.product == null)</b>";
-        } else {
-//            re += " - <u>Product.id:</u> " + p.getId() + "<br />";
-            re += "<b>" + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + " (" + p.getPartNo() + ", Gtin:" + p.getGtin() + ")" + "</b>";
-//            re += (p.getEol() == null ? "" : "<u>Artikel End of Life:</u> " + DateFormats.ISO.format(p.getEol()) + "</br>");
-//            re += (p.getGtin() == null ? "" : "<u>GTIN (EAN):</u> " + p.getGtin() + "</br>");
-            re += "<p>" + p.getDescription() + "</p>";
-        }
+        String re = "<b>SopoNr/RefurbishedId: " + unit.getIdentifier(UniqueUnit.Identifier.REFURBISHED_ID)
+                + " - " + p.getGroup().getNote() + " - " + p.getTradeName().getName() + " " + p.getName() + "</b><br />";
+        re += "<table style=\"width:100%\">"
+                + "<tr>"
+                + "<th>Seriennummer</th><th>Artikelnummer</th><th>GTIN/EAN</th><th>Lieferantenartikelnummer</th><th>Lieferant</th>"
+                + "</tr><tr>"
+                + "<td>" + unit.getSerial() + "</td><td>" + p.getPartNo() + "</td><td>" + p.getGtin() + "</td>"
+                + "<td>" + Optional.ofNullable(p.getAdditionalPartNo(unit.getContractor())).orElse("Keine Daten") + "</td><td>" + unit.getContractor().getName() + "</td>"
+                + "</tr></table>";
+
+        re += "<p>" + p.getDescription() + "</p><p>";
 
         re += "Zubehör: " + UniqueUnitFormater.toSingleLineAccessories(unit) + "<br />";
         re += "Bemerkung: " + UniqueUnitFormater.toSingleLineComment(unit) + "<br />";
@@ -129,7 +124,7 @@ public abstract class UniqueUnitFormater {
         re += "Shipment: " + unit.getShipmentLabel() + " (" + unit.getShipmentId() + ")<br />";
         re += "</p>";
 
-        re += "<table border=\"1\">"
+        re += "<table style=\"width:100%\">"
                 + "<tr>"
                 + "<th>juristischer Zustand</th><th>optischer Zustand</th><th>Garantie</th><th>Shipment</th><th>Aufgenommen am</th><th>Mfg Date</th>"
                 + "</tr><tr>"
@@ -161,9 +156,8 @@ public abstract class UniqueUnitFormater {
 
         double customerPrice = unit.getPrice(PriceType.CUSTOMER);
         double retailerPrice = unit.getPrice(PriceType.RETAILER);
-//        double salePrice = unit.getPrice(PriceType.SALE);
 
-        re += "<table border=\"0\">"
+        re += "<table style=\"width:100%\">"
                 + "<tr>"
                 + "<th></th>"
                 + "<th align=\"right\">netto</th>"
@@ -180,11 +174,6 @@ public abstract class UniqueUnitFormater {
                 + "<td><b>Verkaufskanal: </b></td>"
                 + "<td align=\"left\">" + salesChannel + "</td>"
                 + "</tr>"
-                //                + "<tr>"
-                //                + "<td><b>Verkaufspreis: </b></td>"
-                //                + "<td align=\"right\">" + decFormat.format(salePrice) + " €</td>"
-                //                + "<td align=\"right\">" + decFormat.format((salePrice * (1 + GlobalConfig.TAX))) + " €</td>"
-                //                + "</tr>"
                 + "</table>";
         return re;
     }
