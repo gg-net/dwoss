@@ -68,7 +68,7 @@ public class FxBuilder {
     private final PreBuilder preBuilder;
 
     public FxBuilder(PreBuilder preBuilder) {
-        SwingCore.ensurePlatformIsRunning();
+        if ( UiCore.isSwing() ) SwingCore.ensurePlatformIsRunning();
         this.preBuilder = preBuilder;
     }
 
@@ -81,7 +81,7 @@ public class FxBuilder {
      * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
      */
     public <V extends Pane> void show(Callable<V> javafxPaneProducer) {
-        internalShow(null, javafxPaneProducer);
+        internalShow(null, javafxPaneProducer).handle(Ui.handler());
     }
 
     /**
@@ -95,7 +95,7 @@ public class FxBuilder {
      * @param javafxPaneProducer the producer of the JPanel, must not be null and must not return null.
      */
     public <P, V extends Pane & Consumer<P>> void show(Callable<P> preProducer, Callable<V> javafxPaneProducer) {
-        internalShow(preProducer, javafxPaneProducer);
+        internalShow(preProducer, javafxPaneProducer).handle(Ui.handler());
     }
 
     /**
@@ -146,14 +146,23 @@ public class FxBuilder {
                 .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
 
         // Produce the ui instance
-        return CompletableFuture
+        CompletableFuture<UiParameter> uniChain = CompletableFuture
                 .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
                 .thenApplyAsync(v -> BuilderUtil.producePane(javafxPaneProducer, parm), Platform::runLater)
                 .thenApplyAsync((UiParameter p) -> p.withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
-                .thenApply(BuilderUtil::breakIfOnceAndActive)
-                .thenApply(BuilderUtil::consumePreResult)
-                .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater)
-                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
+                .thenApply(BuilderUtil::breakIfOnceAndActive) // Siwng specific
+                .thenApply(BuilderUtil::consumePreResult);
+
+        if ( UiCore.isSwing() ) {
+            return uniChain
+                    .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater) // Swing Specific
+                    .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
+        } else if ( UiCore.isFx() ) {
+            return uniChain
+                    .thenApplyAsync(BuilderUtil::constructJavaFx, Platform::runLater);
+        } else {
+            throw new IllegalStateException("UiCore is neither Fx nor Swing");
+        }
     }
 
 }

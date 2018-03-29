@@ -109,6 +109,7 @@ public class UiParameter {
      * Optional value for the modality.
      * Default = null
      */
+    @Getter
     private Modality modality;
 
     /**
@@ -213,9 +214,9 @@ public class UiParameter {
     }
 
     /**
-     * Returns the modality for swing.
+     * Returns the modality for swingOrMain.
      *
-     * @return the modality for swing
+     * @return the modality for swingOrMain
      */
     public Dialog.ModalityType toSwingModality() {
         if ( modality == null ) return Dialog.ModalityType.MODELESS;

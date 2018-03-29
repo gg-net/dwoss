@@ -1,12 +1,10 @@
 package eu.ggnet.saft.core.ui.builder;
 
-import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JOptionPane;
 
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 
 import org.apache.commons.lang3.StringUtils;
@@ -44,30 +42,13 @@ public class AlertBuilder {
      */
     private String message;
 
-    /**
-     * A optional parent of Swing.
-     */
-    private Component swingParent = null;
-
-    /**
-     * A optional parent of JavaFx.
-     */
-    private Parent javafxParent = null;
+    private final UiParent parent;
 
     public AlertBuilder(PreBuilder pre) {
-        swingParent = pre.uiParent.getSwingParent();
+        parent = pre.uiParent;
         if ( !StringUtils.isBlank(pre.title) ) title = pre.title;
     }
 
-    public AlertBuilder() {
-    }
-
-    /**
-     * Set the title of the alert.
-     *
-     * @param title the title
-     * @return the alert for fluent usage.
-     */
     public AlertBuilder title(String title) {
         this.title = title;
         return this;
@@ -106,28 +87,6 @@ public class AlertBuilder {
     }
 
     /**
-     * Sets an optional (Swing) parent to alert.
-     *
-     * @param swingParent the swing parent
-     * @return the alert for fluent usage.
-     */
-    public AlertBuilder parent(Component swingParent) {
-        this.swingParent = swingParent;
-        return this;
-    }
-
-    /**
-     * Sets an optional (JavaFx) parent to alert.
-     *
-     * @param javafxParent the javafx parent
-     * @return the alert for fluent usage.
-     */
-    public AlertBuilder parent(Parent javafxParent) {
-        this.javafxParent = javafxParent;
-        return this;
-    }
-
-    /**
      * Shows the final alert of type info.
      */
     public void show() {
@@ -142,25 +101,24 @@ public class AlertBuilder {
      */
     public void show(AlertType type) {
         try {
-            // TODO: At the moment, I only have a Swing implementation.
-            SwingSaft.dispatch(() -> {
-                JOptionPane.showMessageDialog(discoverRoot(), message, title, type.getOptionPaneType());
-                return null;
-            });
+            if ( UiCore.isFx() ) {
+                FxSaft.dispatch(() -> {
+                    Alert alert = new Alert(type.getJavaFxType());
+                    alert.initOwner(parent.fxOrMain());
+                    alert.setTitle(title);
+                    alert.setContentText(message);
+                    alert.showAndWait();
+                    return null;
+                });
+            } else {
+                SwingSaft.dispatch(() -> {
+                    JOptionPane.showMessageDialog(parent.swingOrMain(), message, title, type.getOptionPaneType());
+                    return null;
+                });
+            }
         } catch (ExecutionException | InterruptedException | InvocationTargetException ex) {
             Ui.handle(ex);
         }
     }
 
-    private Component discoverRoot() {
-        if ( !UiCore.isRunning() ) L.warn("UiCore not running, Alert still usable, but not great");
-        if ( UiCore.isFx() ) {
-            L.warn("Root discovery in FxMode not yet implemented");
-            return null;
-        }
-        // In Swing mode.
-        if ( swingParent != null ) return SwingCore.windowAncestor(swingParent).orElse(SwingCore.mainFrame());
-        if ( javafxParent != null ) return SwingCore.windowAncestor(javafxParent).orElse(SwingCore.mainFrame());
-        return SwingCore.mainFrame();
-    }
 }

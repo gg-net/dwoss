@@ -38,7 +38,7 @@ public class SwingCore {
     /**
      * Holds a mapping of all Scenes in JFXPanels. Used to discover parent windows if in a wrapped JFXPanel.
      */
-    private static final Map<Scene, JFXPanel> swingParentHelper = new WeakHashMap<>();
+    private static final Map<Scene, JFXPanel> SWING_PARENT_HELPER = new WeakHashMap<>();
 
     public static JFrame mainFrame() {
         return UiCore.getMainFrame();
@@ -49,12 +49,12 @@ public class SwingCore {
         final CountDownLatch cdl = new CountDownLatch(1);
         if ( Platform.isFxApplicationThread() ) {
             fxp.setScene(new Scene(p, Color.TRANSPARENT));
-            swingParentHelper.put(fxp.getScene(), fxp);
+            SWING_PARENT_HELPER.put(fxp.getScene(), fxp);
             cdl.countDown();
         } else {
             Platform.runLater(() -> {
                 fxp.setScene(new Scene(p));
-                swingParentHelper.put(fxp.getScene(), fxp);
+                SWING_PARENT_HELPER.put(fxp.getScene(), fxp);
                 cdl.countDown();
             });
         }
@@ -71,7 +71,7 @@ public class SwingCore {
     public static JFXPanel wrapDirect(Pane pane) {
         JFXPanel fxp = jfxPanel();
         fxp.setScene(new Scene(pane, Color.TRANSPARENT));
-        swingParentHelper.put(fxp.getScene(), fxp);
+        SWING_PARENT_HELPER.put(fxp.getScene(), fxp);
         return fxp;
     }
 
@@ -114,6 +114,6 @@ public class SwingCore {
      */
     public static Optional<Window> windowAncestor(Node p) {
         if ( p == null ) return Optional.empty();
-        return windowAncestor(swingParentHelper.get(p.getScene()));
+        return windowAncestor(SWING_PARENT_HELPER.get(p.getScene()));
     }
 }

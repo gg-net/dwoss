@@ -19,7 +19,8 @@ package eu.ggnet.saft.core.ui.builder;
 import java.awt.EventQueue;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -31,8 +32,6 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
-
-import lombok.experimental.Accessors;
 
 
 /*
@@ -60,15 +59,13 @@ import lombok.experimental.Accessors;
  *
  * @author oliver.guenther
  */
-@Accessors(fluent = true)
-public class SwingBuilder extends AbstractBuilder {
+public class SwingBuilder {
 
     private static final Logger L = LoggerFactory.getLogger(SwingBuilder.class);
 
     private final PreBuilder preBuilder;
 
     public SwingBuilder(PreBuilder pre) {
-        super(pre);
         this.preBuilder = pre;
     }
 
@@ -81,7 +78,7 @@ public class SwingBuilder extends AbstractBuilder {
      * @param swingPanelProducer the swingPanelProducer of the JPanel, must not be null and must not return null.
      */
     public <V extends JPanel> void show(Callable<V> swingPanelProducer) {
-        internalShow(null, swingPanelProducer);
+        internalShow(null, swingPanelProducer).handle(Ui.handler());
     }
 
     /**
@@ -95,7 +92,7 @@ public class SwingBuilder extends AbstractBuilder {
      * @param swingPanelProducer the swingPanelProducer, must not be null and must not return null.
      */
     public <P, V extends JPanel & Consumer<P>> void show(Callable<P> preProducer, Callable<V> swingPanelProducer) {
-        internalShow(preProducer, swingPanelProducer);
+        internalShow(preProducer, swingPanelProducer).handle(Ui.handler());
     }
 
     /**

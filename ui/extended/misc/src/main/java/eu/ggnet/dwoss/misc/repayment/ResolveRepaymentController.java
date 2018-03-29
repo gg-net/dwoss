@@ -135,8 +135,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
         ForkJoinPool.commonPool().execute(() -> {
             try {
                 ResolveResult result = Dl.remote().lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, Dl.local().lookup(Guardian.class).getUsername(), commentField.getText());
-                Ui.build().alert().title("Repayment resolved")
-                        .parent(sopoField)
+                Ui.build(sopoField).alert().title("Repayment resolved")
                         .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
                         .nl("Stock: " + result.stockMessage)
                         .nl("RedTape: " + result.redTapeMessage)

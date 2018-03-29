@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import javax.swing.JFrame;
@@ -15,6 +16,7 @@ import javax.swing.JFrame;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -27,6 +29,8 @@ import eu.ggnet.saft.core.exception.SwingExceptionDialog;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
+import com.sun.javafx.stage.StageHelper;
+
 /**
  * The Core of the Saft UI, containing methods for startup or registering things.
  *
@@ -37,7 +41,19 @@ public class UiCore {
     private final static Logger L = LoggerFactory.getLogger(UiCore.class);
 
     // Package private for Ui usage.
-    final static ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
+    final static ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool(new ThreadFactory() {
+
+        private final ThreadGroup group = new ThreadGroup("ui-pool");
+
+        private final AtomicInteger counter = new AtomicInteger(0);
+
+        @Override
+        public Thread newThread(Runnable r) {
+            return new Thread(group, r, "Thread-" + counter.incrementAndGet() + "-" + r.toString());
+        }
+    });
+
+    private static final Map<Scene, JFXPanel> SWING_PARENT_HELPER = new WeakHashMap<>();
 
     private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
 
@@ -97,6 +113,7 @@ public class UiCore {
      *
      * @return the Executor of the Ui.
      */
+    // TODO: Change back later to ensure noone stops it from the outside.
     public static Executor getExecutor() {
         return EXECUTOR_SERVICE;
     }
@@ -202,6 +219,16 @@ public class UiCore {
             primaryStage.centerOnScreen();
             primaryStage.sizeToScene();
             primaryStage.show();
+            primaryStage.setOnCloseRequest((e) -> {
+                L.debug("Closing with {}", e);
+                if ( !shuttingDown.compareAndSet(false, true) ) return; // enure no loops.
+                ON_SHUTDOWN.forEach(Runnable::run);
+                // TODO: extra Window closeign ... see swing.
+                EXECUTOR_SERVICE.shutdownNow();
+                new ArrayList<>(StageHelper.getStages()).forEach((Stage s) -> { // new List as close, changes the list.
+                    if ( s != primaryStage ) s.close(); // Close all free stages.
+                });
+            });
             return null;
         });
     }

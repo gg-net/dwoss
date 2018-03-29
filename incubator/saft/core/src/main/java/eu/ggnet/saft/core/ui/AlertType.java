@@ -28,9 +28,14 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 public enum AlertType {
-    INFO(JOptionPane.INFORMATION_MESSAGE), WARNING(JOptionPane.WARNING_MESSAGE), ERROR(JOptionPane.ERROR_MESSAGE);
+    INFO(JOptionPane.INFORMATION_MESSAGE, javafx.scene.control.Alert.AlertType.INFORMATION),
+    WARNING(JOptionPane.WARNING_MESSAGE, javafx.scene.control.Alert.AlertType.WARNING),
+    ERROR(JOptionPane.ERROR_MESSAGE, javafx.scene.control.Alert.AlertType.ERROR);
 
     @Getter
     private final int optionPaneType;
+
+    @Getter
+    private final javafx.scene.control.Alert.AlertType javaFxType;
 
 }

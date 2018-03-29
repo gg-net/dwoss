@@ -37,11 +37,9 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class ProgressBuilder {
 
-    // TODO: Unused for now.
     @Setter
     @Getter
     private String title;
-
     /**
      * Wrapes a function with progress connectivity. Enables the progress information in the main ui while the supplied function is run.
      * Starts a progress display then the returned function is called and stops it, then its complete.

@@ -158,18 +158,18 @@ public class PreBuilder {
     }
 
     /**
-     * Initializes a new swing component handling.
-     * The mode: swing is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Initializes a new swingOrMain component handling.
+     * The mode: swingOrMain is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
      *
-     * @return a new swing builder
+     * @return a new swingOrMain builder
      */
     public SwingBuilder swing() {
         return new SwingBuilder(this);
     }
 
     /**
-     * Initializes a new fx dialog component handling.
-     * The mode: the fx dialog is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Initializes a new fxOrMain dialog component handling.
+     * The mode: the fxOrMain dialog is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
      *
      * @return a new dialog builder
      */
@@ -178,7 +178,7 @@ public class PreBuilder {
     }
 
     /**
-     * Initializes a new fx component handling.
+     * Initializes a new fxOrMain component handling.
      * The mode: the fxs pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
      *
      * @return a new fxbuilder
@@ -188,8 +188,8 @@ public class PreBuilder {
     }
 
     /**
-     * Initializes a new fx component handling.
-     * The mode: the fx pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
+     * Initializes a new fxOrMain component handling.
+     * The mode: the fxOrMain pane is relevant for the component to be wrapped. The Wrapping Ui is set in the UiCore.
      *
      * @return a new fxbuilder
      */
@@ -198,7 +198,7 @@ public class PreBuilder {
     }
 
     /**
-     * Initializes a alert, like the swing JOptionPane or the javafx 8u60 Alert.
+     * Initializes a alert, like the swingOrMain JOptionPane or the javafx 8u60 Alert.
      *
      * @return a new Ui.build().alert()builder.
      */

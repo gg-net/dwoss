@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.core.ui.Failure;
-import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.core.ui.builder.*;
 
 /*
@@ -46,7 +46,7 @@ public class Ui {
      * @return a new Ui builder.
      */
     public static PreBuilder build() {
-        return new PreBuilder().parent(SwingCore.mainFrame());
+        return new PreBuilder();
     }
 
     /**
@@ -152,21 +152,21 @@ public class Ui {
      * @param c the component which is the closest to the window.
      */
     public static void closeWindowOf(Component c) {
-        if ( !UiCore.isRunning() ) return;
-        if ( UiCore.isFx() ) throw new RuntimeException("Closing of embedded Swing in JavaFx not yet implemented");
-        SwingCore.windowAncestor(c).ifPresent((w) -> {
-            w.setVisible(false);
-            w.dispose();
-        });
+        UiParent.of(c).ifPresent(
+                p -> {
+                    p.setVisible(false);
+                    p.dispose();
+                },
+                fx -> fx.close());
     }
 
     public static void closeWindowOf(Node n) {
-        if ( !UiCore.isRunning() ) return;
-        if ( UiCore.isFx() ) throw new RuntimeException("Closing of JavaFx not yet implemented");
-        SwingCore.windowAncestor(n).ifPresent((w) -> {
-            w.setVisible(false);
-            w.dispose();
-        });
+        UiParent.of(n).ifPresent(
+                p -> {
+                    p.setVisible(false);
+                    p.dispose();
+                },
+                fx -> fx.close());
     }
 
     /**

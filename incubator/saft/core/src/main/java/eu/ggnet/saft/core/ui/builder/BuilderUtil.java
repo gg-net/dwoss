@@ -17,29 +17,34 @@
 package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Dialog.ModalityType;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import javax.swing.*;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UserPreferences;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
 
 import static eu.ggnet.saft.core.ui.FxSaft.loadView;
@@ -50,6 +55,44 @@ import static eu.ggnet.saft.core.ui.FxSaft.loadView;
  * @author oliver.guenther
  */
 public final class BuilderUtil {
+
+    /**
+     * A simple wrapper for the name generation to discover icons.
+     * The name is build like this:
+     * <ol>
+     * <li>If the referencing class ends with one of {@link IconConfig#VIEW_SUFFIXES} remove that part</li>
+     * <li>Generate name by permuting "Rest of referencing class
+     * name"{@link IconConfig#ICON_SUFFIXES}{@link IconConfig#SIZE_SUFFIXES}{@link IconConfig#FILES}</li>
+     * <li></li>
+     * <li></li>
+     * </ol>
+     */
+    private final static class IconConfig {
+
+        private final static java.util.List<String> VIEW_SUFFIXES = Arrays.asList("Controller", "View", "ViewCask", "Presenter");
+
+        private final static java.util.List<String> ICON_SUFFIXES = Arrays.asList("Icon");
+
+        private final static java.util.List<String> SIZE_SUFFIXES = Arrays.asList("", "_016", "_024", "_032", "_048", "_064", "_128", "_256", "_512");
+
+        private final static java.util.List<String> FILES = Arrays.asList(".png", ".jpg", ".gif");
+
+        private static Set<String> possibleIcons(Class<?> clazz) {
+            String head = VIEW_SUFFIXES
+                    .stream()
+                    .filter(s -> clazz.getSimpleName().endsWith(s))
+                    .map(s -> clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - s.length()))
+                    .findFirst()
+                    .orElse(clazz.getSimpleName());
+
+            return ICON_SUFFIXES.stream()
+                    .map(e -> head + e)
+                    .flatMap(h -> SIZE_SUFFIXES.stream().map(e -> h + e))
+                    .flatMap(h -> FILES.stream().map(e -> h + e))
+                    .collect(Collectors.toCollection(() -> new TreeSet<String>()));
+        }
+
+    }
 
     private final static Logger L = LoggerFactory.getLogger(BuilderUtil.class);
 
@@ -104,7 +147,7 @@ public final class BuilderUtil {
      * @throws IOException If icons could not be loaded.
      */
     static <T extends Window> T setWindowProperties(T window, Class<?> iconReferenzClass, Window relativeLocationAnker, Class<?> storeLocationClass, String windowKey) throws IOException { // IO Exeception based on loadIcons
-        window.setIconImages(SwingSaft.loadIcons(iconReferenzClass));
+        window.setIconImages(loadAwtImages(iconReferenzClass));
         window.pack();
         window.setLocationRelativeTo(relativeLocationAnker);
         if ( isStoreLocation(storeLocationClass) ) Dl.local().lookup(UserPreferences.class).loadLocation(storeLocationClass, window);
@@ -120,19 +163,6 @@ public final class BuilderUtil {
             }
         });
         return window;
-    }
-
-    static void enableCloser(Window window, Object uiElement) {
-        if ( uiElement instanceof ClosedListener ) {
-            window.addWindowListener(new WindowAdapter() {
-
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    ((ClosedListener)uiElement).closed();
-                }
-
-            });
-        }
     }
 
     static void wait(Window window) throws InterruptedException, IllegalStateException, NullPointerException {
@@ -158,6 +188,7 @@ public final class BuilderUtil {
     static <V extends JPanel> UiParameter produceJPanel(Callable<V> producer, UiParameter parm) {
         try {
             V panel = producer.call();
+            L.debug("produceJPanel: {}", panel);
             return parm.withRootClass(panel.getClass()).withJPanel(panel);
         } catch (Exception ex) {
             throw new CompletionException(ex);
@@ -167,6 +198,7 @@ public final class BuilderUtil {
     static <V extends Pane> UiParameter producePane(Callable<V> producer, UiParameter parm) {
         try {
             V pane = producer.call();
+            L.debug("producePane: {}", pane);
             return parm.withRootClass(pane.getClass()).withPane(pane);
         } catch (Exception ex) {
             throw new CompletionException(ex);
@@ -176,6 +208,7 @@ public final class BuilderUtil {
     static <T, V extends Dialog<T>> UiParameter produceDialog(Callable<V> producer, UiParameter parm) {
         try {
             V dialog = producer.call();
+            L.debug("produceDialog: {}", dialog);
             return parm.withRootClass(dialog.getClass()).withDialog(dialog).withPane(dialog.getDialogPane());
         } catch (Exception ex) {
             throw new CompletionException(ex);
@@ -183,7 +216,7 @@ public final class BuilderUtil {
     }
 
     /**
-     * Modifies the Dialog to be used in a swing environment.
+     * Modifies the Dialog to be used in a swingOrMain environment.
      *
      * @param in
      * @return
@@ -201,6 +234,7 @@ public final class BuilderUtil {
     }
 
     static UiParameter breakIfOnceAndActive(UiParameter in) {
+        // TODO: Implement the JavaFx way.
         // Look into existing Instances, if in once mode and push up to the front if exist.
         String key = in.toKey();
         if ( in.isOnce() && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
@@ -223,7 +257,7 @@ public final class BuilderUtil {
         return in.withJPanel(SwingCore.wrapDirect(in.getPane()));
     }
 
-    static UiParameter constructFxml(UiParameter in) {
+    static UiParameter produceFxml(UiParameter in) {
         try {
             Class<FxController> controllerClazz = (Class<FxController>)in.getRootClass();  // Cast is a shortcut.
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(loadView(controllerClazz), "No View for " + controllerClazz));
@@ -235,14 +269,57 @@ public final class BuilderUtil {
         }
     }
 
+    static UiParameter constructJavaFx(UiParameter in) {
+        L.warn("constructJavaFx is not yet complete, but should start to work");
+
+        Pane pane = in.getPane();
+
+        Stage stage = new Stage();
+        if ( !in.isFramed() ) stage.initOwner(in.getUiParent().fxOrMain());
+        if ( in.getModality() != null ) stage.initModality(in.getModality());
+        stage.setTitle(in.toTitle());
+        stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass()));
+
+//            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
+// Das fehlt noch
+        in.getClosedListenerImplemetation().ifPresent(elem -> stage.setOnCloseRequest(e -> elem.closed()));
+        stage.setScene(new Scene(pane));
+        stage.showAndWait();
+        return in;
+    }
+
+    static UiParameter constructDialog(UiParameter in) {
+        L.warn("constructJavaFx is not yet complete, but should start to work");
+
+        Dialog<?> dialog = in.getDialog();
+
+        if ( !in.isFramed() ) dialog.initOwner(in.getUiParent().fxOrMain());
+        if ( in.getModality() != null ) dialog.initModality(in.getModality());
+        dialog.setTitle(in.toTitle());
+//        stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass())); Not in dialog avialable.
+
+//            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
+// Das fehlt noch
+        in.getClosedListenerImplemetation().ifPresent(elem -> dialog.setOnCloseRequest(e -> elem.closed()));
+        dialog.showAndWait();
+        return in;
+    }
+
     static UiParameter constructSwing(UiParameter in) {
         try {
-            JComponent component = in.getJPanel();
+            JComponent component = in.getJPanel(); // Must be set at this point.
             final Window window = in.isFramed()
                     ? BuilderUtil.newJFrame(in.toTitle(), component)
-                    : BuilderUtil.newJDailog(in.getUiParent().getSwingParent(), in.toTitle(), component, in.toSwingModality());
-            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().getSwingParent(), in.getRefernceClass(), in.toKey());
-            in.getClosedListenerImplemetation().ifPresent(ui -> BuilderUtil.enableCloser(window, ui));
+                    : BuilderUtil.newJDailog(in.getUiParent().swingOrMain(), in.toTitle(), component, in.toSwingModality());
+            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
+            in.getClosedListenerImplemetation().ifPresent(elem -> window.addWindowListener(new WindowAdapter() {
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    elem.closed();
+                }
+
+            }));
             window.setVisible(true);
             return in.withWindow(window);
         } catch (IOException e) {
@@ -255,7 +332,7 @@ public final class BuilderUtil {
             throw new IllegalStateException("Calling Produce Result on a none ResultProducer. Try show instead of eval");
         }
         try {
-            BuilderUtil.wait(in.getWindow());
+            if ( UiCore.isSwing() ) BuilderUtil.wait(in.getWindow()); // Only needed in Swing mode. In JavaFx the showAndWait() is allways used.
         } catch (InterruptedException | IllegalStateException | NullPointerException ex) {
             throw new CompletionException(ex);
         }
@@ -275,4 +352,20 @@ public final class BuilderUtil {
         return (key.getAnnotation(StoreLocation.class) != null);
     }
 
+    private static java.util.List<java.awt.Image> loadAwtImages(Class<?> reference) throws IOException {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        return IconConfig.possibleIcons(reference).stream()
+                .map(n -> reference.getResource(n))
+                .filter(u -> u != null)
+                .map(t -> toolkit.getImage(t))
+                .collect(Collectors.toList());
+    }
+
+    private static java.util.List<Image> loadJavaFxImages(Class<?> reference) {
+        return IconConfig.possibleIcons(reference).stream()
+                .map(n -> reference.getResourceAsStream(n))
+                .filter(u -> u != null)
+                .map(r -> new Image(r))
+                .collect(Collectors.toList());
+    }
 }

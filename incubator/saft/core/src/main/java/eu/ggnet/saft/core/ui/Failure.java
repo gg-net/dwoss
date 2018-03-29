@@ -73,7 +73,8 @@ public class Failure {
     public <T> boolean handle(Reply<T> reply) {
         if ( reply == null ) throw new NullPointerException("Reply is null, not allowed");
         if ( reply.hasSucceded() ) return true;
-        Ui.build(swingParent).alert().title("Fehler")
+        Ui.build(swingParent).title("Fehler")
+                .alert()
                 .message(reply.getSummary())
                 .show(ERROR);
         return false;

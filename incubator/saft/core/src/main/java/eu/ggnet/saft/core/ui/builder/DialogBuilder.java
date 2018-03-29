@@ -85,15 +85,24 @@ public class DialogBuilder {
                 .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
 
         // Produce the ui instance
-        return CompletableFuture
+        CompletableFuture<UiParameter> uniChain = CompletableFuture
                 .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
                 .thenApplyAsync(v -> BuilderUtil.produceDialog(dialogProducer, parm), Platform::runLater)
                 .thenApplyAsync((UiParameter p) -> p.withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
                 .thenApply(BuilderUtil::breakIfOnceAndActive)
-                .thenApply(BuilderUtil::consumePreResult)
-                .thenApply(BuilderUtil::modifyDialog)
-                .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater)
-                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
+                .thenApply(BuilderUtil::consumePreResult);
+
+        if ( UiCore.isSwing() ) {
+            return uniChain
+                    .thenApply(BuilderUtil::modifyDialog)
+                    .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater) // Swing Specific
+                    .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
+        } else if ( UiCore.isFx() ) {
+            return uniChain
+                    .thenApplyAsync(BuilderUtil::constructDialog, Platform::runLater);
+        } else {
+            throw new IllegalStateException("UiCore is neither Fx nor Swing");
+        }
     }
 
 }

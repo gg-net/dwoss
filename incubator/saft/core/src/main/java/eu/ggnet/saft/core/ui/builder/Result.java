@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.Ui;
 
+import lombok.NonNull;
+
 /**
  * Result handler for ui activity, implements optional and completableFuture.
  *
@@ -35,16 +37,9 @@ public class Result<T> {
 
     private final static Logger L = LoggerFactory.getLogger(Result.class);
 
-    private Optional<T> opt = null;
-
     private CompletableFuture<T> cf = null;
 
-    // TODO: Change the result and all producing classes to us the CompletableFuture for a full async callback implementaion.
-    Result(Optional<T> opt) {
-        this.opt = opt;
-    }
-
-    public Result(CompletableFuture<T> cf) {
+    public Result(@NonNull CompletableFuture<T> cf) {
         this.cf = cf;
     }
 
@@ -57,14 +52,13 @@ public class Result<T> {
      * @return the result as optional, waiting for the completion of all possible async activity.
      */
     public Optional<T> opt() {
-        if ( opt != null ) return opt;
         try {
             return Optional.of(cf.get());
         } catch (InterruptedException ex) {
             Ui.handle(ex);
         } catch (ExecutionException ex) {
             if ( ex.getCause() instanceof UiWorkflowBreak ) {
-                L.debug("{}, retruning empty", ex.getCause());
+                L.debug(ex.getCause() + ", retruning empty");
                 return Optional.empty();
             }
             Ui.handle(ex);
@@ -80,8 +74,7 @@ public class Result<T> {
      * @return a CompletableFuture
      */
     public CompletableFuture<T> cf() {
-        if ( cf != null ) return cf;
-        return CompletableFuture.supplyAsync(() -> opt.get()); // Old style
+        return cf;
     }
 
 }

@@ -48,7 +48,7 @@ public class OldCustomerUpi implements CustomerUpi {
         CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
         view.setController(controller);
         controller.setView(view);
-        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::getSwingParent).orElse(null)).orElse(SwingCore.mainFrame()),
+        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::swingOrMain).orElse(null)).orElse(SwingCore.mainFrame()),
                 Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
         dialog.setVisible(true);
         if ( dialog.isOk() ) {
@@ -63,7 +63,7 @@ public class OldCustomerUpi implements CustomerUpi {
         CustomerEditView ec = new CustomerEditView();
         ec.setCustomer(customer);
         // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::getSwingParent).orElse(null)).orElse(SwingCore.mainFrame()), Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
+        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::swingOrMain).orElse(null)).orElse(SwingCore.mainFrame()), Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
         dialog.setVisible(true);
 
         boolean changed = false;
