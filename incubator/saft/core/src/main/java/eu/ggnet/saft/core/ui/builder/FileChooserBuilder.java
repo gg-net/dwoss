@@ -19,8 +19,10 @@ package eu.ggnet.saft.core.ui.builder;
 import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
+import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
+import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.ui.SwingCore;
 
 import lombok.Setter;
@@ -49,7 +51,7 @@ public class FileChooserBuilder {
             File result = fileChooser.showOpenDialog(null);
             if ( result == null ) throw new UiWorkflowBreak(NULL_RESULT);
             return result;
-        }));
+        }, Platform::runLater).thenApplyAsync(r -> r, UiCore.getExecutor())); // the last Apply is for the thread change only
     }
 
 }

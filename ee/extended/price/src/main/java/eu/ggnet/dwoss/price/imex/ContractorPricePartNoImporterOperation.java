@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.price.imex;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -39,6 +40,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
@@ -222,6 +224,7 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         reader.addColumn(0, String.class).addColumn(1, String.class).addColumn(2, String.class).addColumn(3, Double.class).addColumn(4, String.class);
         List<ContractorImport> imports = reader.read(inFile.toTemporaryFile(), ContractorImport.class);
         List<String> errors = reader.getErrors();
+        List<String> info = new ArrayList<>();
         m.worked(5);
         m.setWorkRemaining(imports.size() + 100);
 
@@ -254,12 +257,17 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(CONTRACTOR_REFERENCE, ci.getReferencePrice(), "Import by " + arranger);
+                info.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price to " + ci.getReferencePrice());
             } else {
                 errors.add(ci + " hat keinen Preis");
             }
             if ( ci.hasValidContractorPartNo(contractor) ) { // If partNo is valid, set it.
-                p.setAdditionalPartNo(contractor, ci.toNormalizeContractorPart(contractor));
-                updatedContractorPartNo++;
+                String contractorPartNo = ci.toNormalizeContractorPart(contractor);
+                if ( !contractorPartNo.equals(p.getAdditionalPartNo(contractor)) ) {
+                    p.setAdditionalPartNo(contractor, contractorPartNo);
+                    updatedContractorPartNo++;
+                    info.add(ProductFormater.toDetailedName(p) + " added/updated contractor part no to " + contractorPartNo);
+                }
             } else {
                 errors.add(ci.violationMessagesOfContractorPartNo(contractor));
             }
@@ -274,7 +282,8 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             Product product = uuEm.find(Product.class, line.getProductId());
             m.worked(1, "Updating ReportLine:" + line.getId());
             if ( product.getAdditionalPartNo(contractor) != null ) line.setContractorPartNo(product.getAdditionalPartNo(contractor));
-            if ( product.hasPrice(CONTRACTOR_REFERENCE) ) line.setContractorReferencePrice(product.getPrice(CONTRACTOR_REFERENCE));
+            if ( product.hasPrice(CONTRACTOR_REFERENCE) && line.getContractorReferencePrice() == 0 )
+                line.setContractorReferencePrice(product.getPrice(CONTRACTOR_REFERENCE));
             if ( product.getGtin() > 0 ) line.setGtin(product.getGtin()); // Overwrite, to be sure.
         }
 
@@ -284,9 +293,12 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
                 + "Preise aktualisiert: " + updatedPrices + "\n"
                 + "Lieferantenartikelnummer aktualisiert: " + updatedContractorPartNo;
         StringBuilder details = new StringBuilder();
-        for (Object error : errors) {
-            details.append(error.toString()).append("\n");
+        if ( !info.isEmpty() ) {
+            details.append("Infos\n-----\n");
+            info.forEach((i) -> details.append(i).append("\n"));
         }
+        details.append("-----\nFehler\n-----\n");
+        errors.forEach((error) -> details.append(error).append("\n"));
         m.finish();
 
         if ( updatedGtin + newPrices + updatedPrices + updatedContractorPartNo == 0 ) return Reply.failure(summary, details.toString());

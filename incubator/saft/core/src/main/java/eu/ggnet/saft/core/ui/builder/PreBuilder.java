@@ -131,7 +131,7 @@ public class PreBuilder {
      * @return this as fluent usage
      */
     public PreBuilder parent(Component swingParent) {
-        this.uiParent = UiParent.of(swingParent);
+        if ( swingParent != null ) this.uiParent = UiParent.of(swingParent);
         return this;
     }
 
@@ -142,7 +142,7 @@ public class PreBuilder {
      * @return this as fluent usage
      */
     public PreBuilder parent(Parent javaFxParent) {
-        this.uiParent = UiParent.of(javaFxParent);
+        if ( javaFxParent != null ) this.uiParent = UiParent.of(javaFxParent);
         return this;
     }
 

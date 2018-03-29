@@ -147,10 +147,10 @@ public abstract class UiParent {
     /**
      * Returns a new wrapped parrent of a swingOrMain component.
      *
-     * @param swingParent the swingparent to be wrapped.
+     * @param swingParent the swingparent to be wrapped, must not be null.
      * @return a new wrapped parrent of a swingOrMain component.
      */
-    public static UiParent of(Component swingParent) {
+    public static UiParent of(@NonNull Component swingParent) {
         if ( UiCore.isSwing() ) return new UiParentSwingModeSwingElement(swingParent);
         if ( UiCore.isFx() ) throw new IllegalArgumentException("Not yet implemented");
         throw new IllegalArgumentException("UiCore is neither in FX nore in Swing mode. Is the Core running ?");
@@ -159,10 +159,10 @@ public abstract class UiParent {
     /**
      * Returns a new wrapped parrent of a javafx parent.
      *
-     * @param javafxElement a javafxparent
+     * @param javafxElement a javafxparent, must not be null.
      * @return a new wrapped parrent of a javafx parent
      */
-    public static UiParent of(Node javafxElement) {
+    public static UiParent of(@NonNull Node javafxElement) {
         if ( UiCore.isSwing() ) return new UiParentSwingModeJavaFxElement(javafxElement);
         if ( UiCore.isFx() ) return new UiParentJavaFxModeJavaFxElement(javafxElement);
         throw new IllegalArgumentException("UiCore is neither in FX nore in Swing mode. Is the Core running ?");

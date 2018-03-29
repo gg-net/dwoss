@@ -21,15 +21,14 @@ import java.io.File;
 
 import javafx.scene.control.Alert;
 
+import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TikaUtil;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
@@ -63,17 +62,14 @@ public class ContractorImportAction extends AccessableAction {
                                 .map(Reply::getPayload)
                                 .map((File f) -> {
                                     if ( contractor.isManufacturer() ) {
-                                        Ui.progress().call(()
+                                        return Ui.progress().call(()
                                                 -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromManufacturerXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
-                                    } else {
-                                        Ui.progress().call(()
-                                                -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
                                     }
-                                    return f;
-                                }).ifPresent(c -> {
-                            Ui.build().alert().message("Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ") abgeschlossen").show(AlertType.INFO);
-                        }
-                        );
+                                    return Ui.progress().call(()
+                                            -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
+                                })
+                                .ifPresent(re -> DetailDialog.show(UiCore.getMainFrame(), re.hasSucceded() ? "Import erfolgreich" : "Import fehlerhaft",
+                        "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen", re.getSummary(), re.getDetailDescription()));
                     });
         });
     }
