@@ -29,7 +29,7 @@ import eu.ggnet.saft.Ui;
 public class OpenSearchAction extends AbstractAction {
 
     public OpenSearchAction() {
-        super("(Die neue) Suche");
+        super("Suche");
     }
 
     @Override

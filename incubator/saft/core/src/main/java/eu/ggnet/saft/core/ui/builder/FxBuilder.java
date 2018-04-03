@@ -155,6 +155,7 @@ public class FxBuilder {
 
         if ( UiCore.isSwing() ) {
             return uniChain
+                    .thenApplyAsync(BuilderUtil::createJFXPanel, EventQueue::invokeLater)
                     .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater) // Swing Specific
                     .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
         } else if ( UiCore.isFx() ) {

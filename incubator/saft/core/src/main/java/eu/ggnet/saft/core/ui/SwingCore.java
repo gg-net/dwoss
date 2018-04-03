@@ -75,6 +75,16 @@ public class SwingCore {
         return fxp;
     }
 
+    /**
+     * Registers a jfx panel in the ui parent helper.
+     * Needed for finding parents in javafx/swing mixed environments.
+     *
+     * @param fxp the jfxpanel
+     */
+    public static void mapParent(JFXPanel fxp) {
+        SWING_PARENT_HELPER.put(fxp.getScene(), fxp);
+    }
+
     private static JFXPanel jfxPanel() { // HINT: Be sure, that this can be run on any thread.
         JFXPanel result;
         if ( startHelper != null ) {

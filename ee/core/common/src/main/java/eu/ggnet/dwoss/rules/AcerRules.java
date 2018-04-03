@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 // TODO: I need an enum which represents: Manufactuers, Owners, Lieferanten, Firmen
 public class AcerRules {
 
-    private final static Pattern partNoPattern = Pattern.compile("[A-Z0-9]{2}\\.[A-Z0-9]{5}\\.[A-Z0-9]{3}");
+    public final static Pattern PART_NO_PATTERN = Pattern.compile("[A-Z0-9]{2}\\.[A-Z0-9]{5}\\.[A-Z0-9]{3}");
 
     /**
      * Generates the mfg date out of the Serial.
@@ -91,9 +91,10 @@ public class AcerRules {
      */
     public static String validatePartNo(String partNo) {
         if ( partNo == null ) return "PartNo must not be null";
-        if ( !partNoPattern.matcher(partNo).matches() ) {
+        if ( !PART_NO_PATTERN.matcher(partNo).matches() ) {
             return "PartNo for Acer is " + partNo + " and does not match XX.YYYYY.ZZZ";
         }
         return null;
     }
+
 }

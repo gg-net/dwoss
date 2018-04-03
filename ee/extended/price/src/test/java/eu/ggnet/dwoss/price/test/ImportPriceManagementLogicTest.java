@@ -14,7 +14,7 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.progress.IMonitor;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -37,4 +37,5 @@ public class ImportPriceManagementLogicTest {
 
         verify(core).store(eq(expected), eq("ImportPriceManagementOperation.fromXls()"), anyString(), any(IMonitor.class));
     }
+
 }

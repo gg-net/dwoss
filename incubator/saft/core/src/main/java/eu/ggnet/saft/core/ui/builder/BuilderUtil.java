@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
+import javafx.embed.swing.JFXPanel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,6 +37,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import org.slf4j.Logger;
@@ -253,8 +255,23 @@ public final class BuilderUtil {
         return in.optionalConsumePreResult();
     }
 
+    // Call only from Swing EventQueue
+    static UiParameter createJFXPanel(UiParameter in) {
+        return in.withJPanel(new JFXPanel());
+    }
+
+    /**
+     * Plafrom.runlater() : Wraps a pane into a jfxpanel, which must have been set on the in.getPanel.
+     *
+     * @param in
+     * @return modified in.
+     */
     static UiParameter wrapPane(UiParameter in) {
-        return in.withJPanel(SwingCore.wrapDirect(in.getPane()));
+        if ( !(in.getJPanel() instanceof JFXPanel) ) throw new IllegalArgumentException("JPanel not instance of JFXPanel : " + in);
+        JFXPanel fxp = (JFXPanel)in.getJPanel();
+        fxp.setScene(new Scene(in.getPane(), Color.TRANSPARENT));
+        SwingCore.mapParent(fxp);
+        return in;
     }
 
     static UiParameter produceFxml(UiParameter in) {
@@ -307,6 +324,7 @@ public final class BuilderUtil {
 
     static UiParameter constructSwing(UiParameter in) {
         try {
+            L.debug("constructSwing");
             JComponent component = in.getJPanel(); // Must be set at this point.
             final Window window = in.isFramed()
                     ? BuilderUtil.newJFrame(in.toTitle(), component)
@@ -321,6 +339,7 @@ public final class BuilderUtil {
 
             }));
             window.setVisible(true);
+            L.debug("constructSwing.setVisible(true)");
             return in.withWindow(window);
         } catch (IOException e) {
             throw new CompletionException(e);

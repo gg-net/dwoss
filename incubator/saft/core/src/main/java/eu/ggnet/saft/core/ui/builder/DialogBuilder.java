@@ -95,6 +95,7 @@ public class DialogBuilder {
         if ( UiCore.isSwing() ) {
             return uniChain
                     .thenApply(BuilderUtil::modifyDialog)
+                    .thenApplyAsync(BuilderUtil::createJFXPanel, EventQueue::invokeLater)
                     .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater) // Swing Specific
                     .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
         } else if ( UiCore.isFx() ) {

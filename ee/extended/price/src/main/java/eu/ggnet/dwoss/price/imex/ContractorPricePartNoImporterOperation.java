@@ -17,8 +17,9 @@
 package eu.ggnet.dwoss.price.imex;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map.Entry;
+import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.ejb.Stateless;
@@ -34,6 +35,7 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.rules.AcerRules;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.rules.partno.PartNoSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
@@ -120,11 +122,11 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         // TODO: optimize me
         public String toNormalizeContractorPart(TradeName contractor) {
             if ( contractor != OTTO ) return StringUtils.trim(contractorPartNo);
+            if ( contractorPartNo != null && Pattern.matches("[0-9]{8}", contractorPartNo) ) {
+                return StringUtils.trim(contractorPartNo.substring(0, 2) + "." + contractorPartNo.substring(2, 5) + "." + contractorPartNo.substring(5));
+            }
             if ( contractorPartNo != null && Pattern.matches("[0-9]{6}", contractorPartNo) ) {
                 return StringUtils.trim(contractorPartNo.substring(0, 3) + "." + contractorPartNo.substring(3));
-            }
-            if ( contractorPartNo != null && Pattern.matches("[0-9]{8}", contractorPartNo) ) {
-                return StringUtils.trim(contractorPartNo.substring(0, 2) + "." + contractorPartNo.substring(3, 6) + "." + contractorPartNo.substring(6));
             }
             return StringUtils.trim(contractorPartNo);
         }
@@ -223,10 +225,13 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         LucidCalcReader reader = new JExcelLucidCalcReader();
         reader.addColumn(0, String.class).addColumn(1, String.class).addColumn(2, String.class).addColumn(3, Double.class).addColumn(4, String.class);
         List<ContractorImport> imports = reader.read(inFile.toTemporaryFile(), ContractorImport.class);
+
         List<String> errors = reader.getErrors();
         List<String> info = new ArrayList<>();
+
+        List<ReportLine> missingContractorPartNo = reportLineEao.findMissingContractorPartNo(contractor); // here for size, needed down below
         m.worked(5);
-        m.setWorkRemaining(imports.size() + 100);
+        m.setWorkRemaining((int)(imports.size() + imports.size() * 0.5 + missingContractorPartNo.size()));
 
         int databaseLines = 0;
         int updatedGtin = 0;
@@ -234,39 +239,61 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         int updatedPrices = 0;
         int updatedContractorPartNo = 0;
 
+        Map<Product, SortedSet<ContractorImport>> importable = new HashMap<>();
+
         for (ContractorImport ci : imports) {
-            m.worked(1, "Importing (" + ci.manufacturerPartNo + ")");
+            m.worked(1, "Preparing and Sorting (" + ci.manufacturerPartNo + ")");
             if ( !ci.hasManufacturerPartNoOrGtin() ) {
                 errors.add("No ManufacturerPartNo or EAN found for " + ci);
                 continue;
             }
             Product p = null;
-            if ( !StringUtils.isBlank(ci.manufacturerPartNo) ) p = productEao.findByPartNo(ci.manufacturerPartNo); // First try finding it via the partNo
-            if ( p != null && p.getGtin() == 0 && ci.hasValidGtin() ) { // Optional set of gtin, if it is missing.
-                p.setGtin(Long.parseLong(ci.gtin));
-                updatedGtin++;
+            if ( ci.hasValidGtin() ) p = productEao.findByGtin(Long.parseLong(ci.gtin)); // First, try finding it via gtin
+            if ( p == null && !StringUtils.isBlank(ci.manufacturerPartNo) ) p = productEao.findByPartNo(ci.manufacturerPartNo); // Second try finding it via the partNo field raw
+            if ( p == null ) { // Third, try it by regex matching of part no patterns
+                Matcher matcher = AcerRules.PART_NO_PATTERN.matcher(ci.manufacturerPartNo); // Todo: implement more partno patterns an use them here, or add the type of import to this method.
+                if ( matcher.find() ) p = productEao.findByPartNo(matcher.group());
             }
-            if ( p == null && ci.hasValidGtin() ) p = productEao.findByGtin(Long.parseLong(ci.gtin)); // Second, try finding it via gtin
+
             if ( p == null ) {
                 errors.add("No UniqueUnit.Product Entity found for PartNo " + ci.manufacturerPartNo + " bzw. Gtin " + ci.gtin + ", Ignoring");
                 continue;
             }
             databaseLines++;
+            if ( importable.containsKey(p) ) { // sorting based on product
+                importable.get(p).add(ci);
+            } else {
+                SortedSet<ContractorImport> set = new TreeSet<>(Comparator.comparing(ContractorImport::getReferencePrice));
+                set.add(ci);
+                importable.put(p, set);
+            }
+        }
 
+        m.setWorkRemaining(missingContractorPartNo.size() + importable.size()); // update size
+
+        for (Entry<Product, SortedSet<ContractorImport>> entry : importable.entrySet()) {
+            Product p = entry.getKey();
+            ContractorImport ci = entry.getValue().first(); // only us the importline with the lowest price.
+            m.worked(1, "Importing " + ProductFormater.toDetailedName(p));
+            if ( p.getGtin() == 0 && ci.hasValidGtin() ) { // Optional set of gtin, if it is missing.
+                p.setGtin(Long.parseLong(ci.gtin));
+                updatedGtin++;
+            }
             if ( ci.getReferencePrice() > 0.01 && !TwoDigits.equals(p.getPrice(CONTRACTOR_REFERENCE), ci.getReferencePrice()) ) { // If price is valid and not equal, set it.
+                double oldPrice = p.getPrice(CONTRACTOR_REFERENCE);
                 if ( p.hasPrice(CONTRACTOR_REFERENCE) ) updatedPrices++;
                 else newPrices++;
                 p.setPrice(CONTRACTOR_REFERENCE, ci.getReferencePrice(), "Import by " + arranger);
-                info.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price to " + ci.getReferencePrice());
+                info.add(ProductFormater.toDetailedName(p) + " added/updated contractor reference price from " + oldPrice + " to " + ci.getReferencePrice());
             } else {
                 errors.add(ci + " hat keinen Preis");
             }
             if ( ci.hasValidContractorPartNo(contractor) ) { // If partNo is valid, set it.
                 String contractorPartNo = ci.toNormalizeContractorPart(contractor);
                 if ( !contractorPartNo.equals(p.getAdditionalPartNo(contractor)) ) {
+                    info.add(ProductFormater.toDetailedName(p) + " added/updated contractor partno from " + p.getAdditionalPartNo(contractor) + " to " + contractorPartNo);
                     p.setAdditionalPartNo(contractor, contractorPartNo);
                     updatedContractorPartNo++;
-                    info.add(ProductFormater.toDetailedName(p) + " added/updated contractor part no to " + contractorPartNo);
                 }
             } else {
                 errors.add(ci.violationMessagesOfContractorPartNo(contractor));
@@ -275,33 +302,60 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
         uuEm.flush();
         // Also update existing report lines, which have unset values.
         // TODO: This should happen from the report component on needed basis or as event call. not here.
-        List<ReportLine> missingContractorPartNo = reportLineEao.findMissingContractorPartNo(contractor);
-        m.setWorkRemaining(missingContractorPartNo.size());
+
         m.message("Updateing existing Reportlines");
+
+        int updatedReportLinePartNo = 0;
+        int updatedReportLineReferencePrice = 0;
+        int updatedReportLineGtin = 0;
+
         for (ReportLine line : missingContractorPartNo) {
             Product product = uuEm.find(Product.class, line.getProductId());
-            m.worked(1, "Updating ReportLine:" + line.getId());
-            if ( product.getAdditionalPartNo(contractor) != null ) line.setContractorPartNo(product.getAdditionalPartNo(contractor));
-            if ( product.hasPrice(CONTRACTOR_REFERENCE) && line.getContractorReferencePrice() == 0 )
+            m.worked(1, "Updating ReportLine: " + line.getId());
+            String head = "ReportLine(id=" + line.getId() + ") of " + ProductFormater.toDetailedName(product);
+            String msg = "";
+            if ( product.getAdditionalPartNo(contractor) != null ) {
+                line.setContractorPartNo(product.getAdditionalPartNo(contractor));
+                msg += " contractorPartNo:" + line.getContractorPartNo();
+                updatedReportLinePartNo++;
+            }
+            if ( product.hasPrice(CONTRACTOR_REFERENCE) && line.getContractorReferencePrice() == 0 ) {
                 line.setContractorReferencePrice(product.getPrice(CONTRACTOR_REFERENCE));
-            if ( product.getGtin() > 0 ) line.setGtin(product.getGtin()); // Overwrite, to be sure.
+                msg += " contractorReferencePrice:" + line.getContractorReferencePrice();
+                updatedReportLineReferencePrice++;
+            }
+            if ( product.getGtin() != line.getGtin() ) {
+                line.setGtin(product.getGtin());
+                msg += " gtin:" + line.getGtin();
+                updatedReportLineGtin++;
+            }
+            if ( StringUtils.isBlank(msg) ) {
+                errors.add(head + ", no updateable values found in product.");
+            } else {
+                info.add(head + " updated " + msg);
+            }
         }
 
         String summary = "Zeilen, mit gefunden (db)Artikeln: " + databaseLines + " (Entweder über PartNo oder Gtin)\n"
                 + "GTIN/EAN aktuallisiert: " + updatedGtin + "\n"
                 + "Neue Preise hinterlegt: " + newPrices + "\n"
                 + "Preise aktualisiert: " + updatedPrices + "\n"
-                + "Lieferantenartikelnummer aktualisiert: " + updatedContractorPartNo;
+                + "Lieferantenartikelnummer aktualisiert: " + updatedContractorPartNo + "\n"
+                + "Report-Fehlende GTIN/Preise/Artikelnummern Zeilen: " + missingContractorPartNo.size() + "\n"
+                + "Report-GTIN/EAN aktuallisiert: " + updatedReportLineGtin + "\n"
+                + "Report-Preise aktualisiert: " + updatedReportLineReferencePrice + "\n"
+                + "Report-Lieferantenartikelnummer aktualisiert: " + updatedReportLinePartNo;
         StringBuilder details = new StringBuilder();
         if ( !info.isEmpty() ) {
             details.append("Infos\n-----\n");
             info.forEach((i) -> details.append(i).append("\n"));
         }
-        details.append("-----\nFehler\n-----\n");
+        details.append("-----------------\nFehler/Nicht importierbar\n-----------------\n");
         errors.forEach((error) -> details.append(error).append("\n"));
         m.finish();
 
         if ( updatedGtin + newPrices + updatedPrices + updatedContractorPartNo == 0 ) return Reply.failure(summary, details.toString());
         else return Reply.success(null, summary, details.toString());
     }
+
 }

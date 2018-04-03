@@ -36,7 +36,8 @@ public class RedTapeActionFactory implements ActionFactory {
     @Override
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
-                new MetaAction("Kunden und Aufträge", new OpenSearchAction()),
+                // TODO: If noone cries till 01.06.2018 delete the hole universal search thing.
+                //                new MetaAction("Kunden und Aufträge", new OpenSearchAction()),
                 new MetaAction("Kunden und Aufträge", new RedTapeAction(), true),
                 new MetaAction("Kunden und Aufträge", new DossiersByStatusAction()),
                 new MetaAction("Kunden und Aufträge", new ShowUnitViewAction()),
