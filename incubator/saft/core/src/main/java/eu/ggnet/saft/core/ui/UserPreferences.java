@@ -18,6 +18,8 @@ package eu.ggnet.saft.core.ui;
 
 import java.awt.Component;
 
+import javafx.stage.Window;
+
 /**
  * Service for UserPreferences.
  * <p/>
@@ -34,38 +36,56 @@ public interface UserPreferences {
 
     /**
      * Loads the location of a component from the user preferences.
-     * <p/>
-     * @param c the component.
+     *
+     * @param key
+     * @param c   the component.
      */
     void loadLocation(Class<?> key, Component c);
 
     /**
      * Sets the reset mode.
      * In this mode, a load location will not change the component, but clear the node in the preferences tree.
-     * <p/>
+     *
      * @param reset true for reset mode.
      */
     void setReset(boolean reset);
 
     /**
      * Stores the location of a component in the user preferences using the class as reference.
-     * <p/>
-     * @param c the component.
+     *
+     * @param key
+     * @param c   the component.
      */
     void storeLocation(Class<?> key, Component c);
 
     /**
      * Loads the className of the LAF from the Preferences Store.
-     * <p/>
+     *
      * @return the className
      */
     String loadLaf();
 
     /**
      * Stores the LAF className in the Preferences Store
-     * <p/>
+     *
      * @param className the className to store.
      */
     void storeLaf(String className);
+
+    /**
+     * Loads and sets the location and size on the component if existing in the store.
+     *
+     * @param key the key
+     * @param c   the window
+     */
+    void loadLocation(Class<?> key, Window c);
+
+    /**
+     * Stores the location of a component in the user preferences using the class as reference.
+     *
+     * @param key the key
+     * @param c   the component.
+     */
+    void storeLocation(Class<?> key, Window c);
 
 }

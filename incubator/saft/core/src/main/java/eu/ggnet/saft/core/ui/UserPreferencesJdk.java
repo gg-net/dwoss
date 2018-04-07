@@ -23,6 +23,8 @@ import java.util.prefs.Preferences;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
+import javafx.stage.Window;
+
 import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +103,7 @@ public class UserPreferencesJdk implements UserPreferences {
     /**
      * Stores the location of a component in the user preferences using the class as reference.
      * <p/>
-     * @param key the key to assoisiate.
+     * @param key the key
      * @param c   the component.
      */
     @Override
@@ -120,7 +122,33 @@ public class UserPreferencesJdk implements UserPreferences {
         }
     }
 
-    // 2071-12-11 - Changed behavior. For now on the id is ignored.
+    /**
+     * Stores the location of a component in the user preferences using the class as reference.
+     * <p/>
+     * @param key the key
+     * @param c   the component.
+     */
+    public void storeLocation(Class<?> key, Window c) {
+        if ( key == null || c == null ) return;
+        Preferences p = Preferences.userNodeForPackage(key).node(key.getSimpleName());
+        p.putDouble(WINDOW_X, c.getX());
+        p.putDouble(WINDOW_Y, c.getY());
+        p.putDouble(WINDOW_HEIGHT, c.getHeight());
+        p.putDouble(WINDOW_WIDTH, c.getWidth());
+        try {
+            p.flush();
+            L.debug("Stored: {}", p);
+        } catch (BackingStoreException ex) {
+            L.error("Cound not store Preferences", ex);
+        }
+    }
+
+    /**
+     * Loads and sets the location and size on the component if existing in the store.
+     *
+     * @param key the key
+     * @param c   the window
+     */
     @Override
     public void loadLocation(Class<?> key, Component c) {
         if ( key == null || c == null ) return;
@@ -133,6 +161,32 @@ public class UserPreferencesJdk implements UserPreferences {
             } else {
                 c.setLocation(p.getInt(WINDOW_X, 100), p.getInt(WINDOW_Y, 100));
                 c.setSize(p.getInt(WINDOW_WIDTH, 200), p.getInt(WINDOW_HEIGHT, 200));
+                L.debug("Loaded: {}", p);
+            }
+        } catch (BackingStoreException ex) {
+            L.error("Cound not load Preferences", ex);
+        }
+    }
+
+    /**
+     * Loads and sets the location and size on the component if existing in the store.
+     *
+     * @param key the key
+     * @param c   the window
+     */
+    public void loadLocation(Class<?> key, Window c) {
+        if ( key == null || c == null ) return;
+        try {
+            if ( !Preferences.userNodeForPackage(key).nodeExists(key.getSimpleName()) ) return;
+            Preferences p = Preferences.userNodeForPackage(key).node(key.getSimpleName());
+            if ( reset ) {
+                p.clear();
+                L.info("Reset on load {} reseted", p);
+            } else {
+                c.setX(p.getDouble(WINDOW_X, 100));
+                c.setY(p.getDouble(WINDOW_Y, 100));
+                c.setWidth(p.getDouble(WINDOW_WIDTH, 200));
+                c.setHeight(p.getDouble(WINDOW_HEIGHT, 200));
                 L.debug("Loaded: {}", p);
             }
         } catch (BackingStoreException ex) {

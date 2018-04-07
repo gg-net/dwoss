@@ -277,4 +277,13 @@ public class UiParameter {
         return this;
     }
 
+    /**
+     * Returns true if the StoreLocation annotation was set.
+     *
+     * @return true if the StoreLocation annotation was set.
+     */
+    public boolean isStoreLocation() {
+        return (getRefernceClass().getAnnotation(StoreLocation.class) != null);
+    }
+
 }

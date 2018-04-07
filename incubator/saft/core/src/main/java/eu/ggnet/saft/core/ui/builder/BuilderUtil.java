@@ -147,11 +147,11 @@ public final class BuilderUtil {
      * @return the window instance.
      * @throws IOException If icons could not be loaded.
      */
-    static <T extends Window> T setWindowProperties(T window, Class<?> iconReferenzClass, Window relativeLocationAnker, Class<?> storeLocationClass, String windowKey) throws IOException { // IO Exeception based on loadIcons
+    static <T extends Window> T setWindowProperties(UiParameter in, T window, Class<?> iconReferenzClass, Window relativeLocationAnker, Class<?> storeLocationClass, String windowKey) throws IOException { // IO Exeception based on loadIcons
         window.setIconImages(loadAwtImages(iconReferenzClass));
         window.pack();
         window.setLocationRelativeTo(relativeLocationAnker);
-        if ( isStoreLocation(storeLocationClass) ) Dl.local().lookup(UserPreferences.class).loadLocation(storeLocationClass, window);
+        if ( in.isStoreLocation() ) Dl.local().lookup(UserPreferences.class).loadLocation(storeLocationClass, window);
         SwingCore.ACTIVE_WINDOWS.put(windowKey, new WeakReference<>(window));
         // Removes on close.
         window.addWindowListener(new WindowAdapter() {
@@ -160,7 +160,7 @@ public final class BuilderUtil {
                 // Clean us up.
                 SwingCore.ACTIVE_WINDOWS.remove(windowKey);
                 // Store location.
-                if ( isStoreLocation(storeLocationClass) ) Dl.local().lookup(UserPreferences.class).storeLocation(storeLocationClass, window);
+                if ( in.isStoreLocation() ) Dl.local().lookup(UserPreferences.class).storeLocation(storeLocationClass, window);
             }
         });
         return window;
@@ -345,6 +345,14 @@ public final class BuilderUtil {
 
     }
 
+    private static void registerAndSetStoreLocation(Class<?> key, javafx.stage.Stage window) {
+        Dl.local().optional(UserPreferences.class).ifPresent(u -> u.loadLocation(key, window));
+        window.addEventHandler(javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+            Dl.local().optional(UserPreferences.class).ifPresent(u -> u.storeLocation(key, window));
+        });
+
+    }
+
     static UiParameter constructJavaFx(UiParameter in) {
         L.warn("constructJavaFx is not yet complete, but should start to work");
 
@@ -356,6 +364,7 @@ public final class BuilderUtil {
         stage.setTitle(in.toTitle());
         stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass()));
         registerActiveWindows(in.toKey(), stage);
+        if ( in.isStoreLocation() ) registerAndSetStoreLocation(in.getRefernceClass(), stage);
 
 //            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
 // Das fehlt noch
@@ -375,7 +384,7 @@ public final class BuilderUtil {
         dialog.setTitle(in.toTitle());
 //        stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass())); Not in dialog avialable.
         if ( in.isOnce() ) throw new IllegalArgumentException("Dialog with once mode is not supported yet");
-//        registerActiveWindows(in.toKey(), dialog);
+        if ( in.isStoreLocation() ) throw new IllegalArgumentException("Dialog with store location mode is not supported yet");
 
 //            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
 // Das fehlt noch
@@ -391,7 +400,7 @@ public final class BuilderUtil {
             final Window window = in.isFramed()
                     ? BuilderUtil.newJFrame(in.toTitle(), component)
                     : BuilderUtil.newJDailog(in.getUiParent().swingOrMain(), in.toTitle(), component, in.toSwingModality());
-            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
+            BuilderUtil.setWindowProperties(in, window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
             in.getClosedListenerImplemetation().ifPresent(elem -> window.addWindowListener(new WindowAdapter() {
 
                 @Override
