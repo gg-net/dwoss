@@ -220,7 +220,7 @@ public class UiCore {
                 L.debug("Closing with {}", e);
                 if ( !shuttingDown.compareAndSet(false, true) ) return; // enure no loops.
                 ON_SHUTDOWN.forEach(Runnable::run);
-                // TODO: extra Window closeign ... see swing.
+                FxCore.ACTIVE_STAGES.values().forEach(w -> Optional.ofNullable(w.get()).ifPresent(s -> s.hide()));
                 EXECUTOR_SERVICE.shutdownNow();
                 new ArrayList<>(StageHelper.getStages()).forEach((Stage s) -> { // new List as close, changes the list.
                     if ( s != primaryStage ) s.close(); // Close all free stages.

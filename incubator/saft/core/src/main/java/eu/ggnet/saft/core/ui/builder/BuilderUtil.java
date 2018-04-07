@@ -45,8 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ui.SwingCore;
-import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
 
 import static eu.ggnet.saft.core.ui.FxSaft.loadView;
@@ -91,7 +90,7 @@ public final class BuilderUtil {
                     .map(e -> head + e)
                     .flatMap(h -> SIZE_SUFFIXES.stream().map(e -> h + e))
                     .flatMap(h -> FILES.stream().map(e -> h + e))
-                    .collect(Collectors.toCollection(() -> new TreeSet<String>()));
+                    .collect(Collectors.toCollection(() -> new TreeSet<>()));
         }
 
     }
@@ -236,15 +235,28 @@ public final class BuilderUtil {
     }
 
     static UiParameter breakIfOnceAndActive(UiParameter in) {
-        // TODO: Implement the JavaFx way.
         // Look into existing Instances, if in once mode and push up to the front if exist.
+        if ( !in.isOnce() ) return in;
         String key = in.toKey();
-        if ( in.isOnce() && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
+        if ( UiCore.isFx() && FxCore.ACTIVE_STAGES.containsKey(key) ) {
+            Stage stage = FxCore.ACTIVE_STAGES.get(key).get();
+            if ( stage == null || !stage.isShowing() ) FxCore.ACTIVE_STAGES.remove(key);
+            else {
+                FxSaft.run(() -> {
+                    stage.setIconified(false);
+                    stage.requestFocus();
+                });
+                throw new UiWorkflowBreak(Type.ONCE);
+            }
+        }
+        if ( UiCore.isSwing() && SwingCore.ACTIVE_WINDOWS.containsKey(key) ) {
             Window window = SwingCore.ACTIVE_WINDOWS.get(key).get();
             if ( window == null || !window.isVisible() ) SwingCore.ACTIVE_WINDOWS.remove(key);
             else {
-                if ( window instanceof JFrame ) ((JFrame)window).setExtendedState(JFrame.NORMAL);
-                window.toFront();
+                SwingSaft.run(() -> {
+                    if ( window instanceof JFrame ) ((JFrame)window).setExtendedState(JFrame.NORMAL);
+                    window.toFront();
+                });
                 throw new UiWorkflowBreak(Type.ONCE);
             }
         }
@@ -325,6 +337,14 @@ public final class BuilderUtil {
         }
     }
 
+    private static void registerActiveWindows(String key, javafx.stage.Stage window) {
+        FxCore.ACTIVE_STAGES.put(key, new WeakReference<>(window));
+        window.addEventHandler(javafx.stage.WindowEvent.WINDOW_CLOSE_REQUEST, e -> {
+            FxCore.ACTIVE_STAGES.remove(key);
+        });
+
+    }
+
     static UiParameter constructJavaFx(UiParameter in) {
         L.warn("constructJavaFx is not yet complete, but should start to work");
 
@@ -335,6 +355,7 @@ public final class BuilderUtil {
         if ( in.getModality() != null ) stage.initModality(in.getModality());
         stage.setTitle(in.toTitle());
         stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass()));
+        registerActiveWindows(in.toKey(), stage);
 
 //            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
 // Das fehlt noch
@@ -353,6 +374,8 @@ public final class BuilderUtil {
         if ( in.getModality() != null ) dialog.initModality(in.getModality());
         dialog.setTitle(in.toTitle());
 //        stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass())); Not in dialog avialable.
+        if ( in.isOnce() ) throw new IllegalArgumentException("Dialog with once mode is not supported yet");
+//        registerActiveWindows(in.toKey(), dialog);
 
 //            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
 // Das fehlt noch
