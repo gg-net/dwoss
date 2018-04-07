@@ -180,6 +180,7 @@ public class UiCore {
                 T node = builder.call();
                 JFrame p = new JFrame();
                 p.setTitle(TitleUtil.title(node.getClass()));
+                p.setName(TitleUtil.title(node.getClass()));
                 p.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 p.getContentPane().add(builder.call());
                 p.pack();
@@ -198,7 +199,7 @@ public class UiCore {
      * <p>
      * This also assumes two things:
      * <ul>
-     * <li>The JavaFX Platfrom is already running (as a Stage already exists), most likely created through default lifecycle of javaFx</li>
+     * <li>The JavaFX Platform is already running (as a Stage already exists), most likely created through default lifecycle of javaFx</li>
      * <li>This Stage will always be open or the final to be closed, so implicitExit is ok</li>
      * </ul>
      *
@@ -254,7 +255,7 @@ public class UiCore {
     }
 
     public static boolean isRunning() {
-        return mainFrame != null || FxCore.mainStage() != null;
+        return mainFrame != null || mainStage != null;
     }
 
     public static boolean isFx() {

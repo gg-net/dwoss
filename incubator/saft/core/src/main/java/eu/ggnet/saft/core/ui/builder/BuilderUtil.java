@@ -44,7 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.saft.*;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak.Type;
 
@@ -110,6 +111,7 @@ public final class BuilderUtil {
      */
     static JFrame newJFrame(String title, JComponent component) {
         JFrame jframe = new JFrame();
+        jframe.setName(title);
         jframe.setTitle(title);
         jframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jframe.getContentPane().add(component);
@@ -131,6 +133,7 @@ public final class BuilderUtil {
         dialog.setModalityType(modalityType);
         // Parse the Title somehow usefull.
         dialog.setTitle(title);
+        dialog.setName(title);
         dialog.getContentPane().add(component);
         return dialog;
     }
@@ -424,10 +427,6 @@ public final class BuilderUtil {
             return result;
         }
 
-    }
-
-    private static boolean isStoreLocation(Class<?> key) {
-        return (key.getAnnotation(StoreLocation.class) != null);
     }
 
     private static java.util.List<java.awt.Image> loadAwtImages(Class<?> reference) throws IOException {
