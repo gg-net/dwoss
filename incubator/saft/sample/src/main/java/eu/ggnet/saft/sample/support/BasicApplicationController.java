@@ -1,7 +1,6 @@
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.api.ui.Frame;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.api.ui.*;
 
 /**
  * FXML Controller class
@@ -9,6 +8,7 @@ import eu.ggnet.saft.api.ui.FxController;
  * @author oliver.guenther
  */
 @Frame
+@StoreLocation
 public class BasicApplicationController implements FxController {
 
 }

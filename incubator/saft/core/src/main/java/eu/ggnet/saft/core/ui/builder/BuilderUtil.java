@@ -354,10 +354,7 @@ public final class BuilderUtil {
     }
 
     static UiParameter constructJavaFx(UiParameter in) {
-        L.warn("constructJavaFx is not yet complete, but should start to work");
-
         Pane pane = in.getPane();
-
         Stage stage = new Stage();
         if ( !in.isFramed() ) stage.initOwner(in.getUiParent().fxOrMain());
         if ( in.getModality() != null ) stage.initModality(in.getModality());
@@ -365,9 +362,6 @@ public final class BuilderUtil {
         stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass()));
         registerActiveWindows(in.toKey(), stage);
         if ( in.isStoreLocation() ) registerAndSetStoreLocation(in.getRefernceClass(), stage);
-
-//            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
-// Das fehlt noch
         in.getClosedListenerImplemetation().ifPresent(elem -> stage.setOnCloseRequest(e -> elem.closed()));
         stage.setScene(new Scene(pane));
         stage.showAndWait();
@@ -375,19 +369,13 @@ public final class BuilderUtil {
     }
 
     static UiParameter constructDialog(UiParameter in) {
-        L.warn("constructJavaFx is not yet complete, but should start to work");
-
         Dialog<?> dialog = in.getDialog();
-
         if ( !in.isFramed() ) dialog.initOwner(in.getUiParent().fxOrMain());
         if ( in.getModality() != null ) dialog.initModality(in.getModality());
         dialog.setTitle(in.toTitle());
 //        stage.getIcons().addAll(loadJavaFxImages(in.getRefernceClass())); Not in dialog avialable.
         if ( in.isOnce() ) throw new IllegalArgumentException("Dialog with once mode is not supported yet");
         if ( in.isStoreLocation() ) throw new IllegalArgumentException("Dialog with store location mode is not supported yet");
-
-//            BuilderUtil.setWindowProperties(window, in.getRefernceClass(), in.getUiParent().swingOrMain(), in.getRefernceClass(), in.toKey());
-// Das fehlt noch
         in.getClosedListenerImplemetation().ifPresent(elem -> dialog.setOnCloseRequest(e -> elem.closed()));
         dialog.showAndWait();
         return in;

@@ -16,14 +16,17 @@
  */
 package eu.ggnet.saft.sample;
 
+import java.lang.ref.WeakReference;
 import java.util.*;
 
 import javafx.scene.control.Alert;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.IdSupplier;
 import eu.ggnet.saft.api.ui.StoreLocation;
+import eu.ggnet.saft.core.ui.FxCore;
 import eu.ggnet.saft.sample.support.*;
 
 import lombok.Value;
@@ -129,6 +132,9 @@ public abstract class ShowCaseUniversal {
                         item("Once", () -> Ui.build().fx().show(() -> new PaneAsFrame())),
                         item("Once With Self Closer", () -> Ui.build().fx().show(() -> new PaneAsFrameWithSelfCloser())),
                         item("Once Fxml", () -> Ui.build().fxml().show(BasicApplicationController.class))
+                ),
+                menu("Extras",
+                        item("List JavaFx Icons", () -> listAllIcons(FxCore.ACTIVE_STAGES.values()))
                 )
         );
     }
@@ -139,6 +145,14 @@ public abstract class ShowCaseUniversal {
 
     private Sitem item(String key, Runnable value) {
         return new Sitem(key, value);
+    }
+
+    private void listAllIcons(Collection<WeakReference<Stage>> stages) {
+        stages.stream()
+                .map(WeakReference::get)
+                .filter(s -> s != null)
+                .flatMap((Stage t) -> t.getIcons().stream().map(i -> t.toString() + "|" + i.toString()))
+                .forEach(System.out::println);
     }
 
 }
