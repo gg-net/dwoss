@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
  */
 public class SwingSaft {
 
-
     public static <T, R extends JPanel> R construct(Class<R> panelClazz, T parameter) throws Exception {
         return dispatch(() -> {
             R panel = panelClazz.getConstructor().newInstance();
@@ -48,13 +47,9 @@ public class SwingSaft {
         return task.get();
     }
 
-    public static void execute(Runnable runnable) {
+    public static void run(Runnable runnable) {
         if ( EventQueue.isDispatchThread() ) runnable.run();
-        else try {
-            EventQueue.invokeAndWait(runnable);
-        } catch (InterruptedException | InvocationTargetException ex) {
-            throw new RuntimeException(ex.getClass().getSimpleName() + " in execute:" + ex.getLocalizedMessage(), ex);
-        }
+        else EventQueue.invokeLater(runnable);
     }
 
 }

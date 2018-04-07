@@ -59,7 +59,7 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
                         .show(WARNING);
             });
         } else {
-            SwingSaft.execute(() -> {
+            SwingSaft.run(() -> {
                 DetailDialog.show(SwingCore.mainFrame(), "Systemfehler", deepestMessage,
                         getUserInfo() + '\n' + toMultilineStacktraceMessages(b), getUserInfo() + '\n' + toStackStrace(b));
             });

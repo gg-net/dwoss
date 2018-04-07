@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -53,9 +52,7 @@ public class UiCore {
         }
     });
 
-    private static final Map<Scene, JFXPanel> SWING_PARENT_HELPER = new WeakHashMap<>();
-
-    private final static BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
+    private static final BooleanProperty BACKGROUND_ACTIVITY = new SimpleBooleanProperty();
 
     // We need the raw type here. Otherwise we cannot get different typs of cosumers in and out.
     @SuppressWarnings("unchecked")
@@ -113,7 +110,6 @@ public class UiCore {
      *
      * @return the Executor of the Ui.
      */
-    // TODO: Change back later to ensure noone stops it from the outside.
     public static Executor getExecutor() {
         return EXECUTOR_SERVICE;
     }

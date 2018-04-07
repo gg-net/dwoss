@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.ui.builder.StaticParentMapperJavaFx;
 
 import lombok.NonNull;
 
@@ -126,6 +127,21 @@ public abstract class UiParent {
 
     }
 
+    private static class UiParentJavaFxModeSwingElement extends UiParentJavaFxMode {
+
+        private final Component swingElement;
+
+        public UiParentJavaFxModeSwingElement(@NonNull Component swingElement) {
+            this.swingElement = swingElement;
+        }
+
+        @Override
+        public final Stage fx() throws IllegalStateException {
+            return StaticParentMapperJavaFx.find(swingElement);
+        }
+
+    }
+
     private static class UiParentJavaFxModeDefault extends UiParentJavaFxMode {
 
         @Override
@@ -152,7 +168,7 @@ public abstract class UiParent {
      */
     public static UiParent of(@NonNull Component swingParent) {
         if ( UiCore.isSwing() ) return new UiParentSwingModeSwingElement(swingParent);
-        if ( UiCore.isFx() ) throw new IllegalArgumentException("Not yet implemented");
+        if ( UiCore.isFx() ) return new UiParentJavaFxModeSwingElement(swingParent);
         throw new IllegalArgumentException("UiCore is neither in FX nore in Swing mode. Is the Core running ?");
     }
 

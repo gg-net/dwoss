@@ -16,8 +16,7 @@
  */
 package eu.ggnet.saft.sample;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,11 +32,21 @@ import javafx.stage.Stage;
 
 import eu.ggnet.saft.core.ui.SwingSaft;
 
+import lombok.Value;
+
 /**
  *
  * @author oliver.guenther
  */
 public class JavaFxSwingNodeExample extends Application {
+
+    @Value
+    public static class C {
+
+        private final JButton button;
+
+        private final JPanel panel;
+    }
 
     final Map<Component, SwingNode> JAVAFX_PARENT_HELPER = new HashMap<>();
 
@@ -48,7 +57,7 @@ public class JavaFxSwingNodeExample extends Application {
         bp.setTop(new Label("Oben"));
         SwingNode snq = new SwingNode();
 
-        JButton b11 = SwingSaft.dispatch(() -> {
+        C c = SwingSaft.dispatch(() -> {
 
             JPanel p1 = new JPanel(new BorderLayout());
             JButton b1 = new JButton("Der Siwng Knopf");
@@ -57,10 +66,12 @@ public class JavaFxSwingNodeExample extends Application {
             snq.setContent(p1);
             JAVAFX_PARENT_HELPER.put(p1, snq);
 
-            return b1;
+            System.out.println("in:" + p1.getPreferredSize());
+
+            return new C(b1, p1);
         });
-//        Dimension preferredSize = p11.getPreferredSize();
-//        System.out.println(preferredSize);
+        Dimension preferredSize = c.panel.getPreferredSize();
+        System.out.println(preferredSize);
 
 
         /*
@@ -71,15 +82,15 @@ public class JavaFxSwingNodeExample extends Application {
          */
         BorderPane wrap = new BorderPane(snq);
         wrap.setBottom(new Label("Blaaaaa"));
-//        wrap.setPrefHeight(preferredSize.getHeight());  // Size to JavaFx
-//        wrap.setPrefWidth(preferredSize.getWidth());
+        wrap.setPrefHeight(preferredSize.getHeight());  // Size to JavaFx
+        wrap.setPrefWidth(preferredSize.getWidth());
         bp.setCenter(wrap);
 
         primaryStage.setScene(new Scene(bp));
         primaryStage.sizeToScene();
         primaryStage.show();
 
-        System.out.println(find(b11));
+        System.out.println(find(c.button));
     }
 
     public static void main(String[] args) {

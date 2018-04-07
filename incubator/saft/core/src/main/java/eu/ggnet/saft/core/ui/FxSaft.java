@@ -90,6 +90,16 @@ public class FxSaft {
         }
     }
 
+    /**
+     * Run on the application thread, but looking into if we are on it already.
+     *
+     * @param r
+     */
+    public static void run(Runnable r) {
+        if ( Platform.isFxApplicationThread() ) r.run();
+        else Platform.runLater(r);
+    }
+
     public static Window windowAncestor(Node c) {
         if ( c == null ) return null;
         return c.getScene().getWindow();

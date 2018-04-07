@@ -25,6 +25,8 @@ import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
+import javafx.application.Platform;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,13 +135,24 @@ public class SwingBuilder {
                 .once(preBuilder.once).modality(preBuilder.modality).uiParent(preBuilder.uiParent).build();
 
         // Produce the ui instance
-        return CompletableFuture
+        CompletableFuture<UiParameter> uniChain = CompletableFuture
                 .runAsync(() -> L.debug("Starting new Ui Element creation"), UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
                 .thenApplyAsync(v -> BuilderUtil.produceJPanel(jpanelProducer, parm), EventQueue::invokeLater)
                 .thenApplyAsync((UiParameter p) -> p.withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
                 .thenApply(BuilderUtil::breakIfOnceAndActive)
-                .thenApply(BuilderUtil::consumePreResult)
-                .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater);
+                .thenApply(BuilderUtil::consumePreResult);
+
+        if ( UiCore.isSwing() ) {
+            return uniChain
+                    .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
+        } else if ( UiCore.isFx() ) {
+            return uniChain
+                    .thenApplyAsync(BuilderUtil::createSwingNode, Platform::runLater)
+                    .thenApplyAsync(BuilderUtil::wrapJPanel, EventQueue::invokeLater)
+                    .thenApplyAsync(BuilderUtil::constructJavaFx, Platform::runLater);
+        } else {
+            throw new IllegalStateException("UiCore is neither Fx nor Swing");
+        }
     }
 
 }

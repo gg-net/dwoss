@@ -43,7 +43,7 @@ public class ConstraintViolationConsumer implements Consumer<ConstraintViolation
     @Override
     public void accept(ConstraintViolationException ex) {
         L.info("ConstraintViolationException {}", ConstraintViolationFormater.toSingleLine(new HashSet(ex.getConstraintViolations())));
-        SwingSaft.execute(() -> {
+        SwingSaft.run(() -> {
             DetailDialog.show(Arrays.stream(Window.getWindows()).filter(Window::isActive).findFirst().orElse(null),
                     "Validationsfehler", "Fehler bei der Validation", ConstraintViolationFormater.toMultiLine(ex.getConstraintViolations(), true), toStackStrace(ex));
         });

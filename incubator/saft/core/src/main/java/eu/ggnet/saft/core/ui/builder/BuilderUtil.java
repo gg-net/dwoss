@@ -17,8 +17,7 @@
 package eu.ggnet.saft.core.ui.builder;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -30,6 +29,7 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 
 import javafx.embed.swing.JFXPanel;
+import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -253,6 +253,45 @@ public final class BuilderUtil {
 
     static UiParameter consumePreResult(UiParameter in) {
         return in.optionalConsumePreResult();
+    }
+
+    /**
+     * Call from Platform: creates a SwingNode in a BorderPane and sets the pane on in
+     *
+     * @param in the uiparameter
+     * @return the modified uiparameter
+     */
+    static UiParameter createSwingNode(UiParameter in) {
+        SwingNode sn = new SwingNode();
+        BorderPane p = new BorderPane(sn);
+        return in.withPane(p);
+    }
+
+    /**
+     * Call from EventQueue: Wraps the expected uiparameter.jpanel in the expected pane with a swingnode as children.
+     * Also updates the global parent mapping and the prefered size of the pane
+     *
+     * @param in the uiparamter
+     * @return the uiparamter
+     */
+    static UiParameter wrapJPanel(UiParameter in) {
+        Objects.requireNonNull(in.getPane(), "Pane in UiParameter is null");
+        Objects.requireNonNull(in.getJPanel(), "JPanel in UiParameter is null");
+        if ( in.getPane().getChildren().isEmpty() ) throw new IllegalStateException("Supplied Pane has no children, but a SwingNode is expected");
+        SwingNode sn = in.getPane().getChildren().stream()
+                .filter(n -> n instanceof SwingNode)
+                .map(n -> (SwingNode)n)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("No Node of the supplied Pane is of type SwingNode"));
+        sn.setContent(in.getJPanel());
+        StaticParentMapperJavaFx.map(in.getJPanel(), sn);
+
+        Dimension preferredSize = in.getJPanel().getPreferredSize();
+        L.debug("Setting Swing Size to JavaFx {}", preferredSize);
+        in.getPane().setPrefHeight(preferredSize.getHeight());
+        in.getPane().setPrefWidth(preferredSize.getWidth());
+
+        return in;
     }
 
     // Call only from Swing EventQueue

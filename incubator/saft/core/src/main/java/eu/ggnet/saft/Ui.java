@@ -13,8 +13,7 @@ import javafx.scene.Parent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.ui.Failure;
-import eu.ggnet.saft.core.ui.UiParent;
+import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.core.ui.builder.*;
 
 /*
@@ -153,20 +152,20 @@ public class Ui {
      */
     public static void closeWindowOf(Component c) {
         UiParent.of(c).ifPresent(
-                p -> {
+                p -> SwingSaft.run(() -> {
                     p.setVisible(false);
                     p.dispose();
-                },
-                fx -> fx.close());
+                }),
+                fx -> FxSaft.run(() -> fx.close()));
     }
 
     public static void closeWindowOf(Node n) {
         UiParent.of(n).ifPresent(
-                p -> {
+                p -> SwingSaft.run(() -> {
                     p.setVisible(false);
                     p.dispose();
-                },
-                fx -> fx.close());
+                }),
+                fx -> FxSaft.run(() -> fx.close()));
     }
 
     /**
