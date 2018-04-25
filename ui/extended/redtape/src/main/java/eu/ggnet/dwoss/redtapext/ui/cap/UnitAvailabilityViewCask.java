@@ -25,6 +25,7 @@ import javax.swing.border.EtchedBorder;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.rules.Css;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.dwoss.util.HtmlPane;
@@ -173,7 +174,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
         UnitShard us = resultList.getSelectedValue();
         if ( us == null || us.getAvailable() == null ) return;
         Ui.exec(() -> {
-            Ui.build().id(us.getRefurbishedId()).fx().show(() -> Dl.remote().lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Dl.local().lookup(Guardian.class).getUsername()), () -> new HtmlPane());
+            Ui.build().id(us.getRefurbishedId()).fx().show(() -> Css.toHtml5WithStyle(Dl.remote().lookup(UnitOverseer.class).toDetailedHtml(us.getRefurbishedId(), Dl.local().lookup(Guardian.class).getUsername())), () -> new HtmlPane());
         });
     }//GEN-LAST:event_resultListMouseClicked
 
