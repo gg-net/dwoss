@@ -24,12 +24,17 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-api</artifactId>
+            <artifactId>saft-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>saft-api</artifactId>
+            <artifactId>dwoss-ee-api-search</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

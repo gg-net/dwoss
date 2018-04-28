@@ -26,7 +26,7 @@ In the core the application has a simple layer model.
 		- Only one data source per project.
 	2. Extended
 		- Projects that use more than one persistence source
-3. No module name may stretch over a layer. (For now, redtape ignores that rule, but this is wrong. [DWOSS-137](https://jira.cybertron.global/browse/DWOSS-137])
+3. No module name may stretch over a layer.
 
 There are also some more rules to consider, which we were not yet able to represent.
 See the developed Graph in
@@ -45,21 +45,21 @@ See the developed Graph in
 **Package tree**: eu.ggnet.dwoss."project".("layer")
 
  - If a project stretches over multiple layers, the layer must be in the package tree.
- -- Most project violate this rule right now [DWOSS-133](https://jira.cybertron.global/browse/DWOSS-137])
- -- But everything new must honor it at least.
+    - Most project violate this rule right now [DWOSS-133](https://jira.cybertron.global/browse/DWOSS-137]). But everything new must honor it at least.
  - The validation of overlapping class names is happening in the assembly projects,
    so it's recommended that the developer watches out for this.
 
 Examples:
+
  - progress (only in one layer)
- -- dwoss-ee-core-progress : eu.ggnet.dwoss.progress.(ee)
+    - dwoss-ee-core-progress : eu.ggnet.dwoss.progress.(ee)
  - redtape (everythere)
- -- dwoss-ee-persistence-redtape : eu.ggnet.dwoss.redtape.ee
- -- dwoss-ee-extended-redtape    : eu.ggnet.dwoss.redtapext.ee
- -- dwoss-web-extended-redtape    : eu.ggnet.dwoss.redtapext.web
- -- dwoss-web-persistence-redtape    : eu.ggnet.dwoss.redtape.web
- -- dwoss-ui-persistence-redtape : eu.ggnet.dwoss.redtape.ui
- -- dwoss-ui-extended-redtape    : eu.ggnet.dwoss.redtapext.ui
+    - dwoss-ee-persistence-redtape : eu.ggnet.dwoss.redtape.ee
+    - dwoss-ee-extended-redtape    : eu.ggnet.dwoss.redtapext.ee
+    - dwoss-web-extended-redtape    : eu.ggnet.dwoss.redtapext.web
+    - dwoss-web-persistence-redtape    : eu.ggnet.dwoss.redtape.web
+    - dwoss-ui-persistence-redtape : eu.ggnet.dwoss.redtape.ui
+    - dwoss-ui-extended-redtape    : eu.ggnet.dwoss.redtapext.ui
 
 #### Typical Packages, Classes and Methods with their Nature ####
 

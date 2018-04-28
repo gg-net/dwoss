@@ -28,11 +28,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>saft-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -40,6 +35,11 @@
             <groupId>xom</groupId>
             <artifactId>xom</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

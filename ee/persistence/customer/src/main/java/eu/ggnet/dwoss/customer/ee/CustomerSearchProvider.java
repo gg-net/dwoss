@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.SearchProvider;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -1,5 +1,9 @@
 package itest;
 
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+
 import java.util.ArrayList;
 import java.util.List;
 

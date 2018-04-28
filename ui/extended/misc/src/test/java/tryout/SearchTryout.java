@@ -16,6 +16,10 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+
 import java.util.*;
 
 import javax.swing.JLabel;

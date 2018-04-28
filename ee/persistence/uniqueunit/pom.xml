@@ -33,5 +33,15 @@
             <artifactId>lucidcalc</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-search</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-uniqueunit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

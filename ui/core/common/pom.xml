@@ -31,6 +31,16 @@
             <artifactId>saft-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-rights</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-stock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

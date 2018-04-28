@@ -79,3 +79,9 @@ hs_err_pid*
 /ee/core/misc/target/
 /assembly/server/
 /ee/core/search/target/
+/ee/api/spec/target/
+/ee/api/uniqueunit/target/
+/ee/api/stock/target/
+/ee/api/rights/target/
+/ee/api/common/target/
+/ee/api/search/target/

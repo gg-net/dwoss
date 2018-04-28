@@ -86,5 +86,10 @@
             <scope>test</scope>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-rights</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

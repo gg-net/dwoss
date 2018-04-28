@@ -28,6 +28,11 @@
             <artifactId>dwoss-ee-core-progress</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-stock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

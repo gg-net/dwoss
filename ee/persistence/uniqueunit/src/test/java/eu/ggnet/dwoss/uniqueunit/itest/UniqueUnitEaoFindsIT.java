@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.uniqueunit.itest;
 
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+import eu.ggnet.dwoss.search.api.SearchProvider;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+
 import java.util.*;
 
 import javax.enterprise.inject.Instance;

@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.search.web.stub;
 
+import eu.ggnet.dwoss.search.api.SearchProvider;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+
 import java.util.*;
 
 import javax.annotation.ManagedBean;

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.search.ee;
 
+import eu.ggnet.dwoss.search.api.SearchRequest;
+import eu.ggnet.dwoss.search.api.ShortSearchResult;
+import eu.ggnet.dwoss.search.api.GlobalKey;
+
 import java.util.List;
 
 import javax.ejb.Remote;
