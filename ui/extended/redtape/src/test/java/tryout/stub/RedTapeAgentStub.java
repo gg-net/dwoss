@@ -1,5 +1,7 @@
 package tryout.stub;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
@@ -10,15 +12,14 @@ import java.util.*;
 
 import javax.persistence.LockModeType;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.rules.*;
 
-import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
-import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
-import static eu.ggnet.dwoss.rules.TaxType.REVERSE_CHARGE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.common.api.values.PositionType.SERVICE;
+import static eu.ggnet.dwoss.common.api.values.TaxType.REVERSE_CHARGE;
 
 /**
  *

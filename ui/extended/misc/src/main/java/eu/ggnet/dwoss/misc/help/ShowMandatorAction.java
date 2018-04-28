@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

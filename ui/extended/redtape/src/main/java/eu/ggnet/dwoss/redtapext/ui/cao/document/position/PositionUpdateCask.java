@@ -35,8 +35,8 @@ import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -46,7 +46,7 @@ import eu.ggnet.saft.core.swing.VetoableOnOk;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  *

@@ -21,8 +21,8 @@ import java.util.*;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.ee.RevenueReportSum;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.Step;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.util.FileJacket;
 
 /**

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.unit.chain.partno;
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 
-import static eu.ggnet.dwoss.rules.TradeName.LENOVO;
+import static eu.ggnet.dwoss.common.api.values.TradeName.LENOVO;
 
 /**
  *

@@ -22,7 +22,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 /**

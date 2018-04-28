@@ -23,8 +23,8 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 import eu.ggnet.saft.api.Reply;

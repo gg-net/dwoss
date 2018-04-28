@@ -25,7 +25,7 @@ import java.util.*;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee.op;
 
+import eu.ggnet.dwoss.common.ee.Step;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.util.Map.Entry;
@@ -30,14 +34,13 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.RevenueReportSum;
 import eu.ggnet.dwoss.report.ee.eao.*;
 import eu.ggnet.dwoss.report.ee.eao.Revenue.Key;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
-import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT_ANNEX;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT_ANNEX;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;

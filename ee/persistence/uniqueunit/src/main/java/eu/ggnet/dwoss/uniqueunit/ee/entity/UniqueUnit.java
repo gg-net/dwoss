@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.Warranty;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.INoteModel;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
@@ -28,7 +31,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.*;

@@ -19,6 +19,7 @@
         <module>uniqueunit</module>
         <module>redtape</module>
         <module>customer</module>
+        <module>mandator</module>
     </modules>
 
 </project>

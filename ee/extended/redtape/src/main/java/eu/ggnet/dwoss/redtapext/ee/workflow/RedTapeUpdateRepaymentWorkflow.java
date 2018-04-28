@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
@@ -28,11 +34,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;

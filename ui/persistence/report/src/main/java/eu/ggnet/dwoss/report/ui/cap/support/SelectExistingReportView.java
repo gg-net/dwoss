@@ -36,7 +36,7 @@ import javafx.scene.layout.*;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;

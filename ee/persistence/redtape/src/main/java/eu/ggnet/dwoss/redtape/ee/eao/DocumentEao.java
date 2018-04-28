@@ -24,7 +24,7 @@ import javax.persistence.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
@@ -32,8 +32,8 @@ import com.mysema.query.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.QDocument.document;
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.CREDIT_MEMO;
 
 /**
  *

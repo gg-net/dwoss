@@ -24,7 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Version;
 
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

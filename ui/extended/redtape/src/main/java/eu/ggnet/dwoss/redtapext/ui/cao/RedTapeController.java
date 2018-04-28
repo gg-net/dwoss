@@ -51,7 +51,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.ui.UiParent;

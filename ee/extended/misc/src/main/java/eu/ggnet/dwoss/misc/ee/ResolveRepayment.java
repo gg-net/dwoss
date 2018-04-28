@@ -22,7 +22,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import lombok.EqualsAndHashCode;

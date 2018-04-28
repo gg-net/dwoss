@@ -32,10 +32,10 @@ import javafx.stage.Stage;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ee.entity.Report;
-import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.rules.TradeName.ALSO;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
 
 /**
  *

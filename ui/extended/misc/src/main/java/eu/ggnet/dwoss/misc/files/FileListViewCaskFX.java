@@ -25,7 +25,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.cap.MainComponent;
 

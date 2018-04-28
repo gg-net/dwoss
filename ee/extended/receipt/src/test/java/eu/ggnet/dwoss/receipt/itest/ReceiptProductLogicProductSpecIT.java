@@ -27,9 +27,9 @@ import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
-import static eu.ggnet.dwoss.rules.ProductGroup.NOTEBOOK;
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
-import static eu.ggnet.dwoss.rules.TradeName.PACKARD_BELL;
+import static eu.ggnet.dwoss.common.api.values.ProductGroup.NOTEBOOK;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
+import static eu.ggnet.dwoss.common.api.values.TradeName.PACKARD_BELL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 

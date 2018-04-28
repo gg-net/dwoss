@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static org.junit.Assert.assertFalse;

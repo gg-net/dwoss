@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.spec.ee.entity;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 
 

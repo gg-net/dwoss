@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Dl;

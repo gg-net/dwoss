@@ -27,8 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
 import eu.ggnet.dwoss.receipt.unit.UnitModel.Survey;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.Warranty;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;

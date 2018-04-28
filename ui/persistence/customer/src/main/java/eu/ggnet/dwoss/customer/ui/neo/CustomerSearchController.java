@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

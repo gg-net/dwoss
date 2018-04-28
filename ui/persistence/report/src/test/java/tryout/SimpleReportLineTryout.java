@@ -1,5 +1,9 @@
 package tryout;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.util.*;
 
 import javax.persistence.LockModeType;
@@ -13,7 +17,6 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
 import eu.ggnet.dwoss.report.ui.RawReportView;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
 

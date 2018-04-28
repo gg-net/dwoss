@@ -1,5 +1,12 @@
 package eu.ggnet.dwoss.receipt.unit;
 
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
@@ -16,12 +23,11 @@ import javax.persistence.LockModeType;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.mandator.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -31,8 +37,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
-import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
 
 /**
  * Tryout Test for Unit View.

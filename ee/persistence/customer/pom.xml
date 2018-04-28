@@ -47,5 +47,10 @@
             <artifactId>dwoss-ee-api-customer</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-mandator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

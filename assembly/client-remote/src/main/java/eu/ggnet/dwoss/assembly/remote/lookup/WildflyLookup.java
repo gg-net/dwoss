@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.IsStateful;
-import eu.ggnet.dwoss.discover.Discovery;
+import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 
@@ -111,15 +111,6 @@ public class WildflyLookup implements RemoteLookup {
                 .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
         if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
 
-//        namesAndLookup = new HashMap<>();
-//        for (String name : names) {
-//            if ( !name.contains("!") ) continue;
-//            String key = name.split("!")[1];
-//            // INFO: There is no solution for ?statefull yet.
-//            String value = "ejb:/" + APP + "//" + name;
-//            L.debug("Storing lookup key={}, value={}", key, value);
-//            namesAndLookup.put(key, value);
-//        }
         L.debug("RemoteLookup initilaized");
         initialized = true;
     }

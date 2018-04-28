@@ -16,23 +16,31 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+
 import javax.ejb.Singleton;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.MapBuilder;
 
-import static eu.ggnet.dwoss.rules.DocumentType.CAPITAL_ASSET;
-import static eu.ggnet.dwoss.rules.DocumentType.RETURNS;
-import static eu.ggnet.dwoss.rules.PositionType.*;
-import static eu.ggnet.dwoss.rules.TaxType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.TaxType.*;
 
 /**
  *

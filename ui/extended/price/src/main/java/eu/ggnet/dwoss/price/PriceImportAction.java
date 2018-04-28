@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

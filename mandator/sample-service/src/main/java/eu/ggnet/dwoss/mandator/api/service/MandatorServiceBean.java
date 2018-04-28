@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import javax.ejb.Stateless;
 

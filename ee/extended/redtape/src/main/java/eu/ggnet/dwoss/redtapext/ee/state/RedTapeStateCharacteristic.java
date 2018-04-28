@@ -25,7 +25,7 @@ import java.util.Set;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 

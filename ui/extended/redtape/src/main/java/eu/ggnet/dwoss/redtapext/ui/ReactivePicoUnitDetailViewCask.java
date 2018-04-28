@@ -26,7 +26,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.rules.Css;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;

@@ -32,7 +32,6 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;

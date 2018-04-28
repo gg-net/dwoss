@@ -21,7 +21,7 @@ import java.util.*;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 

@@ -20,7 +20,6 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchController;
 import eu.ggnet.dwoss.customer.ui.old.CustomerCreateWithSearchView;
 import eu.ggnet.dwoss.mandator.Mandators;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.AuthenticationException;

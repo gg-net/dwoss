@@ -21,7 +21,7 @@ import java.util.Objects;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 import eu.ggnet.dwoss.receipt.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.Dl;
 
 /**

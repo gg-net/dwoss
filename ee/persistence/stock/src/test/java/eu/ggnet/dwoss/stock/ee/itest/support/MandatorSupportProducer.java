@@ -16,12 +16,16 @@
  */
 package eu.ggnet.dwoss.stock.ee.itest.support;
 
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+
 import java.util.HashMap;
 
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
  *

@@ -20,8 +20,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

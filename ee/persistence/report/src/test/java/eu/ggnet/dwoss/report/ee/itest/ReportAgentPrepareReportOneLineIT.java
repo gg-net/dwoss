@@ -17,9 +17,9 @@ import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
-import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 

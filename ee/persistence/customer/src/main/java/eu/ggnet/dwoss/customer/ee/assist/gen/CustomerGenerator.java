@@ -35,7 +35,6 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;

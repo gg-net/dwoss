@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtape.ee.eao;
 import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;

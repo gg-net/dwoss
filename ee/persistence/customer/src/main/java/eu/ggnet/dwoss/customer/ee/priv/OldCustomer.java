@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 

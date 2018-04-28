@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.web;
 
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,11 +30,11 @@ import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.Getter;
 

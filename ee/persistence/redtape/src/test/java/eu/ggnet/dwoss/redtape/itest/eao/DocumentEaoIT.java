@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.util.Utils;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.NONE;
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

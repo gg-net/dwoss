@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
+import eu.ggnet.dwoss.common.ee.Step;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
@@ -40,7 +44,7 @@ import com.mysema.query.jpa.impl.JPAQuery;
 import static eu.ggnet.dwoss.report.ee.entity.QReportLine.reportLine;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.report.ee.entity.partial.QSimpleReportLine.simpleReportLine;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  * Entity Access Object for ReportLine.

@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 

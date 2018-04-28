@@ -35,8 +35,8 @@ import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConf
 import eu.ggnet.dwoss.redtape.ee.eao.AddressEao;
 import eu.ggnet.dwoss.redtape.ee.emo.RedTapeCounterEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.emo.EquilibrationResult;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -27,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
@@ -35,8 +38,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
-import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
-import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
+import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 import static javax.persistence.CascadeType.*;
 
 /**

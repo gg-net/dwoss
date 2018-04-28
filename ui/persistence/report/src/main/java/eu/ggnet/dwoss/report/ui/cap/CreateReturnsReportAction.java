@@ -26,7 +26,7 @@ import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
-import static eu.ggnet.dwoss.rules.DocumentType.RETURNS;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
 
 /**
  * Opens the Returns report view to select lines to be exported.

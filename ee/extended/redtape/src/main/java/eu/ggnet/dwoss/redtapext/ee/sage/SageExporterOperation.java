@@ -28,7 +28,7 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.log.AutoLogger;
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
 import eu.ggnet.dwoss.util.FileJacket;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
 /**
  * Operation for the Export to GsOffice of RedTapeimport eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;

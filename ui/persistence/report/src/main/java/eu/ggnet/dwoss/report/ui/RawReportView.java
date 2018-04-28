@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ui;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.util.*;
 
 import javafx.application.Platform;
@@ -42,7 +46,6 @@ import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

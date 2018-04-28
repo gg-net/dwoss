@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.product;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Ration;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution;

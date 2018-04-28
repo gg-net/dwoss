@@ -15,10 +15,10 @@ import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
-import static eu.ggnet.dwoss.rules.TradeName.ONESELF;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
 
 @RunWith(Arquillian.class)
 public class PersistenceIT extends ArquillianProjectArchive {

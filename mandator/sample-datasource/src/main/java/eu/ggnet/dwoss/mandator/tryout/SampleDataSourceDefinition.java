@@ -20,10 +20,7 @@ import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
 import javax.faces.bean.ManagedBean;
 
-import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_PREFIX;
-import static eu.ggnet.dwoss.configuration.SystemConfig.DSNAME_SUFFIX_MANAGED;
-import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSDRIVER;
-import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.DSURL_PROPERTIES;
+import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.*;
 
 /**
  * In memory data sources for the sample tryout.
@@ -103,5 +100,17 @@ public class SampleDataSourceDefinition {
     public final static String DSDRIVER = "org.h2.jdbcx.JdbcDataSource";
 
     public final static String DSURL_PROPERTIES = ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
+
+    /**
+     * Default suffix for the managed datasource.
+     * After the switch to tomee 7 oder even wildfly, someone might have a look into this. The tomee 1.7 needs allways both datasources defined.
+     */
+    public final static String DSNAME_SUFFIX_MANAGED = "DataSource";
+
+    /**
+     * Default prefix for all datasources.
+     * A global prefix change might be needed on a container change. Saw that on first experiments with wildfly.
+     */
+    public final static String DSNAME_PREFIX = "java:comp/env/";
 
 }

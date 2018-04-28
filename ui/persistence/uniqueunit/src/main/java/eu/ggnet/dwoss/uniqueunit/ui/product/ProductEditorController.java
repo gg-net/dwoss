@@ -5,6 +5,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.net.URL;
@@ -27,7 +29,6 @@ import javafx.util.converter.NumberStringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.ProductDto;

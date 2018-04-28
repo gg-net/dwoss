@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.report.ee;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -28,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.log.AutoLogger;
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil.PrepareReportPartition;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
@@ -37,7 +40,6 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
@@ -45,7 +47,7 @@ import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.ee.assist.ReportUtil.*;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  *

@@ -16,12 +16,13 @@
  */
 package eu.ggnet.dwoss.redtape.itest.eao;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
-import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.NONE;
-import static eu.ggnet.dwoss.rules.DocumentType.ORDER;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.ORDER;
 
 /**
  * Helper and shortcut.

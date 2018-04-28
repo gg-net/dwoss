@@ -20,12 +20,12 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.redtape.ee.api.PositionService;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.rules.TaxType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;
 
-import static eu.ggnet.dwoss.rules.PositionType.SERVICE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.SERVICE;
 
 
 /**

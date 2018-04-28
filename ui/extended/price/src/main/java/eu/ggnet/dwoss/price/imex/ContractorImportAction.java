@@ -22,7 +22,7 @@ import java.io.File;
 import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.common.DetailDialog;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.*;

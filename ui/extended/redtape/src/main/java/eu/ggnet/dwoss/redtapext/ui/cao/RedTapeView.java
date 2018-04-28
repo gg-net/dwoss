@@ -57,7 +57,7 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.*;
 
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 
 /**
  * The main UI for using RedTape components.

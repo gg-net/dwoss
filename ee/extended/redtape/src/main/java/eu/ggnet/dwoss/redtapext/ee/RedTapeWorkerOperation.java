@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
@@ -41,7 +42,6 @@ import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateMachine;
 import eu.ggnet.dwoss.redtapext.ee.workflow.*;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
@@ -54,7 +54,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
 /**
  * This class handles every operation between RedTape, UniqueUnit and Stock.

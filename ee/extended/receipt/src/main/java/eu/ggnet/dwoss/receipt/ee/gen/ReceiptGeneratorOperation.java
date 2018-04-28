@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ee.gen;
 
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -38,7 +40,6 @@ import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
@@ -51,7 +52,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.op.ProductOperation;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 
-import static eu.ggnet.dwoss.rules.ProductGroup.COMMENTARY;
+import static eu.ggnet.dwoss.common.api.values.ProductGroup.COMMENTARY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 

@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
+import eu.ggnet.dwoss.common.ee.Step;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.text.ParseException;
 import java.util.Map.Entry;
 import java.util.*;
@@ -21,17 +26,16 @@ import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import com.mysema.query.jpa.impl.JPADeleteClause;
 
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
-import static eu.ggnet.dwoss.rules.Step.DAY;
-import static eu.ggnet.dwoss.rules.TradeName.*;
+import static eu.ggnet.dwoss.common.ee.Step.DAY;
+import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
 import static org.junit.Assert.assertEquals;

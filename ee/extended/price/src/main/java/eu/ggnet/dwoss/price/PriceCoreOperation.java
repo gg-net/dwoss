@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.price.engine.PriceEngine;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.rules.Warranty;
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

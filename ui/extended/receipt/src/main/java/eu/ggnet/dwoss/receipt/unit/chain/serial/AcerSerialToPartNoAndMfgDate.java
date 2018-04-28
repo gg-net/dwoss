@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.unit.chain.serial;
 
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 
-import eu.ggnet.dwoss.rules.AcerRules;
+import eu.ggnet.dwoss.common.api.values.AcerRules;
 
 /**
  * Trims the supplied string.

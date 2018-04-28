@@ -1,13 +1,13 @@
 package eu.ggnet.dwoss.report.ee.test;
 
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import static eu.ggnet.dwoss.rules.TradeName.HP;
+import static eu.ggnet.dwoss.common.api.values.TradeName.HP;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -17,8 +17,8 @@ import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 import static org.hamcrest.CoreMatchers.hasItem;
 
 /**

@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 
 import org.jdesktop.beansbinding.Converter;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
 import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.api.ui.ResultProducer;

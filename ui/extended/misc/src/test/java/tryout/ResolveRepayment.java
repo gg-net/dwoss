@@ -21,12 +21,12 @@ import javax.swing.JLabel;
 import javafx.scene.control.ChoiceDialog;
 
 import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
 
 /**
  *

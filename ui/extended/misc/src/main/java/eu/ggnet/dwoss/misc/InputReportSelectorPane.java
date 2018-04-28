@@ -24,7 +24,7 @@ import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.dwoss.rules.Step;
+import eu.ggnet.dwoss.common.ee.Step;
 
 /**
  * Shows a selector pane for the Revenue Report.

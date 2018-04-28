@@ -1,5 +1,14 @@
 package tryout;
 
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;
@@ -13,7 +22,6 @@ import javax.swing.*;
 import eu.ggnet.dwoss.common.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
@@ -22,7 +30,6 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AuthenticationException;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -32,8 +39,8 @@ import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.SEND_ORDER;
-import static eu.ggnet.dwoss.rules.PositionType.*;
-import static eu.ggnet.dwoss.rules.TaxType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.TaxType.*;
 
 /**
  *

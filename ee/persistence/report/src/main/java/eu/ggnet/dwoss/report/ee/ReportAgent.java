@@ -33,8 +33,8 @@ import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
@@ -45,7 +45,7 @@ import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.ee.assist.ReportUtil.*;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
-import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 
 /**
  *

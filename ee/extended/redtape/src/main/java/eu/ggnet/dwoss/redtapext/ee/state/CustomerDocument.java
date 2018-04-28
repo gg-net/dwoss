@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.*;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.Data;
 

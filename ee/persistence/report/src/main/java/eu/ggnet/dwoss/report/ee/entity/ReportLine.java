@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.io.Serializable;
@@ -31,15 +35,14 @@ import javafx.beans.value.ObservableValue;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static eu.ggnet.dwoss.rules.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  * This is a Line of a report. It could be represent any type of Position.

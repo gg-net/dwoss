@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.spec.ee.SpecExporter;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.AccessableAction;

@@ -87,3 +87,7 @@ hs_err_pid*
 /ee/api/search/target/
 /ee/api/redtape/target/
 /ee/api/customer/target/
+/ee/api/mandator/target/
+/ee/core/mandator/target/
+/ee/core/discovery/target/
+/ee/api/target/

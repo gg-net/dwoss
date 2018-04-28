@@ -23,7 +23,7 @@ import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang.StringUtils;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

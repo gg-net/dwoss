@@ -41,6 +41,11 @@
             <artifactId>dwoss-ee-api-stock</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-core-mandator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

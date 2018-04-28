@@ -20,8 +20,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.*;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;

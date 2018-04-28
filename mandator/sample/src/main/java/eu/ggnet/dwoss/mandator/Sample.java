@@ -16,6 +16,15 @@
  */
 package eu.ggnet.dwoss.mandator;
 
+import eu.ggnet.dwoss.mandator.api.value.partial.SmtpConfiguration;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.partial.Company;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.api.value.partial.UrlLocation;
+import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIntermix;
+import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;
@@ -29,13 +38,10 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.commons.io.FileUtils;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
-import eu.ggnet.dwoss.mandator.api.value.partial.*;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.ImageFinder;
 
-import static eu.ggnet.dwoss.rules.TradeName.*;
+import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 
 /**
  *

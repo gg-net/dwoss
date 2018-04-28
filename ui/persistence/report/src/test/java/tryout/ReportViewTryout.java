@@ -9,7 +9,7 @@ import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 

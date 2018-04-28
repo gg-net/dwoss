@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.report.ee.tryout;
 
+import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +38,6 @@ import javafx.stage.Stage;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.rules.*;
 
 
 /**

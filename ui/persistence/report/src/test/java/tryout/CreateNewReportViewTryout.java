@@ -23,7 +23,7 @@ import javax.swing.JLabel;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
 

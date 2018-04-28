@@ -22,7 +22,7 @@ import java.util.*;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 

@@ -24,7 +24,6 @@ import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.rules.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

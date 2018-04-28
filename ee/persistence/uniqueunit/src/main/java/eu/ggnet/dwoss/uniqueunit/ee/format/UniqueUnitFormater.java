@@ -20,8 +20,8 @@ import java.text.*;
 import java.util.Map.Entry;
 import java.util.*;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
-import eu.ggnet.dwoss.rules.Warranty;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;

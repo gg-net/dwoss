@@ -1,5 +1,13 @@
 package eu.ggnet.dwoss.receipt.shipment;
 
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+
 import java.util.EnumSet;
 
 import javafx.application.Platform;
@@ -8,8 +16,7 @@ import javafx.embed.swing.JFXPanel;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.mandator.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.Dl;
 

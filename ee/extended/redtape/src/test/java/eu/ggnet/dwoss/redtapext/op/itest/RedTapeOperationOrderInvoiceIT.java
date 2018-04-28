@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import java.text.SimpleDateFormat;
@@ -23,7 +25,6 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;

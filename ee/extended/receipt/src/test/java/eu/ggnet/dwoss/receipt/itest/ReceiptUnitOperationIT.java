@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -25,7 +29,6 @@ import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
@@ -36,7 +39,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 
-import static eu.ggnet.dwoss.rules.ReceiptOperation.*;
+import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.*;
 import static org.junit.Assert.*;
 
 /**

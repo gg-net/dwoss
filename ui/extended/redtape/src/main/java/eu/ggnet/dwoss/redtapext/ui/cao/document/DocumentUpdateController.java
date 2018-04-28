@@ -32,16 +32,16 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
 
-import static eu.ggnet.dwoss.rules.PositionType.PRODUCT_BATCH;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 
 /**
  *

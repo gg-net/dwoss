@@ -20,7 +20,7 @@ import java.util.Date;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 
 /**

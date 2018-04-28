@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.report.ee.entity.partial;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import java.io.Serializable;
 import java.util.Date;

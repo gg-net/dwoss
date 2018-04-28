@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

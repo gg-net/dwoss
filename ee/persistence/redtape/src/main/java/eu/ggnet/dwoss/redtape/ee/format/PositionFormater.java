@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
 /**
  * Formatter for the Position.

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType;
@@ -51,7 +54,6 @@ import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.emo.StockLocationDiscoverer;

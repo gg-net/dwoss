@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.Tuple2;
 
 /**

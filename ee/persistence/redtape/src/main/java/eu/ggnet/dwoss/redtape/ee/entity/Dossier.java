@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 
 import java.io.Serializable;
@@ -28,14 +30,13 @@ import javax.validation.constraints.Min;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
 /**
  * The Dossier.

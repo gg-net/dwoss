@@ -35,8 +35,8 @@ import javax.swing.JOptionPane;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 /**
  * Abstract View to help with pre cloes

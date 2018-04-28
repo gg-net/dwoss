@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.receipt.product.StockDialog;
 import eu.ggnet.dwoss.receipt.unit.*;
-import eu.ggnet.dwoss.rules.ReceiptOperation;
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;

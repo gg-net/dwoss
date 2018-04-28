@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import lombok.Getter;
 

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee.itest.support;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+
 import java.util.Date;
 
 import javax.ejb.Stateless;
@@ -25,7 +29,6 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.rules.*;
 
 import static java.time.LocalDate.of;
 import static java.time.ZoneId.systemDefault;

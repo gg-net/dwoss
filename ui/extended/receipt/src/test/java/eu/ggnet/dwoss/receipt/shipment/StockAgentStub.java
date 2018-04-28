@@ -10,7 +10,7 @@ import java.util.*;
 
 import javax.persistence.LockModeType;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 
 // TODO: Rename and move to subs

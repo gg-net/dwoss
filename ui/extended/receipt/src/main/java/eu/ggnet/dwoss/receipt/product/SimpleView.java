@@ -34,8 +34,8 @@ import javax.swing.JOptionPane;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.util.*;

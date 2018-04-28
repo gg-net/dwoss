@@ -23,7 +23,7 @@ import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.cap.RemoteLookup;
 import eu.ggnet.saft.core.swing.OkCancelWrap;
 
-import static eu.ggnet.dwoss.rules.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
 /**
  *

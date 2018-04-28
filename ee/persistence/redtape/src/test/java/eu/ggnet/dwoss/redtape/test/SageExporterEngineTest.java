@@ -30,12 +30,12 @@ import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.rules.TaxType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
 
-import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.rules.PositionType.SHIPPING_COST;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.TaxType.REVERSE_CHARGE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.PositionType.SHIPPING_COST;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.TaxType.REVERSE_CHARGE;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 

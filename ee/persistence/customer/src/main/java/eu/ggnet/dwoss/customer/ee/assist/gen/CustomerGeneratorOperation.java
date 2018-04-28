@@ -16,6 +16,17 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
+import eu.ggnet.dwoss.mandator.api.value.CustomersBuilder;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
@@ -34,10 +45,8 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.gen.GeneratedAddress;
 import eu.ggnet.dwoss.util.gen.NameGenerator;
 

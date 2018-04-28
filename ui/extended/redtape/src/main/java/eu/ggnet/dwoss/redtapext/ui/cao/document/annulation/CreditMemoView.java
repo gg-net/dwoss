@@ -24,14 +24,14 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.IPreClose;
 import eu.ggnet.saft.Dl;
 
-import static eu.ggnet.dwoss.rules.PositionType.COMMENT;
+import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
 
 /**
  *

@@ -29,7 +29,7 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;

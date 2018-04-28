@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
-import eu.ggnet.dwoss.rules.TaxType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

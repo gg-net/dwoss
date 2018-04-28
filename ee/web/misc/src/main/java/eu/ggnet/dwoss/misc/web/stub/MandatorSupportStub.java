@@ -16,19 +16,24 @@
  */
 package eu.ggnet.dwoss.misc.web.stub;
 
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
-import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.util.MapBuilder;
 
-import static eu.ggnet.dwoss.rules.PositionType.*;
-import static eu.ggnet.dwoss.rules.ReceiptOperation.*;
-import static eu.ggnet.dwoss.rules.TaxType.*;
-import static eu.ggnet.dwoss.rules.TradeName.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.*;
+import static eu.ggnet.dwoss.common.api.values.TaxType.*;
+import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 
 /**
  *

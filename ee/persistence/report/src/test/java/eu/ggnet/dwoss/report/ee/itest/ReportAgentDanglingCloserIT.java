@@ -21,9 +21,9 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.TradeName.LENOVO;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.TradeName.LENOVO;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 

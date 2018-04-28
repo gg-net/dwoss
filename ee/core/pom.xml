@@ -18,6 +18,8 @@
         <module>common</module>
         <module>progress</module>
         <module>search</module>
+        <module>mandator</module>
+        <module>discovery</module>
     </modules>
 
 </project>

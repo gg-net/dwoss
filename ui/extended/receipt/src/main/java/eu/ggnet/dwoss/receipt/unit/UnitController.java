@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.receipt.unit.UnitModel.MetaValue;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.unit.chain.ChainLink.Result;
 import eu.ggnet.dwoss.receipt.unit.chain.Chains;
-import eu.ggnet.dwoss.rules.ReceiptOperation;
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -47,7 +47,7 @@ import eu.ggnet.saft.Ui;
 import lombok.Getter;
 import lombok.Setter;
 
-import static eu.ggnet.dwoss.rules.ReceiptOperation.IN_SALE;
+import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.IN_SALE;
 import static javax.swing.JOptionPane.*;
 
 public class UnitController {

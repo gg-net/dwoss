@@ -22,7 +22,7 @@ import java.util.List;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.price.imex.*;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.core.cap.ActionFactory;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;

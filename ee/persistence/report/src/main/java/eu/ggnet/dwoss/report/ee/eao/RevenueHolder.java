@@ -16,11 +16,11 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.util.Date;
-
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

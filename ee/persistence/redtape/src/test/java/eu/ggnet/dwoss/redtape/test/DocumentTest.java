@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
@@ -9,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
-
-import eu.ggnet.dwoss.rules.*;
 
 import static org.junit.Assert.*;
 

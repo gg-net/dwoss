@@ -6,13 +6,13 @@ import javax.validation.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.DefaultUi;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.Returns;
 import eu.ggnet.dwoss.redtape.ee.entity.PositionModifier;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
 import static org.junit.Assert.assertFalse;

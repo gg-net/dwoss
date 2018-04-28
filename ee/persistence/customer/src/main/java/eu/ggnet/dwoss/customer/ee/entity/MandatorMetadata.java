@@ -30,7 +30,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 

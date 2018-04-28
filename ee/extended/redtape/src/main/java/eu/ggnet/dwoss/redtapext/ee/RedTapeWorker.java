@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;

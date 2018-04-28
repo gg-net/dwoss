@@ -16,12 +16,19 @@
  */
 package eu.ggnet.dwoss.customer.itest.support;
 
+import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
+import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
+import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
+
 import java.util.HashMap;
 
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
  * Default datasource definition and empty mandator support informations for tests

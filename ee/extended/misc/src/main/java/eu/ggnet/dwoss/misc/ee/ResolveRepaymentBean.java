@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -44,15 +47,14 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.rules.DocumentType.CREDIT_MEMO;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 import static java.time.ZoneId.systemDefault;
 
 /**

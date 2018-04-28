@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
+import eu.ggnet.dwoss.common.api.values.Warranty;
+import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration;
+import eu.ggnet.dwoss.mandator.api.service.ListingConfigurationService;
+import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
+import eu.ggnet.dwoss.mandator.api.service.ListingConfiguration;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -45,14 +52,12 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
-import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;

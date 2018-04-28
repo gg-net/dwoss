@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import static eu.ggnet.dwoss.rules.TradeName.ALSO;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 

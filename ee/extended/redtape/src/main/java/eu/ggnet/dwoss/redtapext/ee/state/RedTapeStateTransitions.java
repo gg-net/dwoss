@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.statemachine.State.Type;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 

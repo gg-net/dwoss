@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.itest.support.*;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;

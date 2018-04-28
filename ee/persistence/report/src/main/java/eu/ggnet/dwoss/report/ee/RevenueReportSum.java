@@ -19,13 +19,13 @@ package eu.ggnet.dwoss.report.ee;
 import java.io.Serializable;
 import java.util.Date;
 
-import eu.ggnet.dwoss.rules.DocumentType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.CUSTOMER;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 

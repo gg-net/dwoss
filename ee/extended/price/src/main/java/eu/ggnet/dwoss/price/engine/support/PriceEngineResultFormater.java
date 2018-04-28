@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.price.engine.support;
 
-import eu.ggnet.dwoss.configuration.GlobalConfig;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.price.engine.PriceEngineResult;
 
 public class PriceEngineResultFormater {

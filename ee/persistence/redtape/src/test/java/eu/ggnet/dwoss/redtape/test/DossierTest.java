@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Reminder;
@@ -10,8 +12,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.junit.Test;
-
-import eu.ggnet.dwoss.rules.*;
 
 import static org.junit.Assert.*;
 

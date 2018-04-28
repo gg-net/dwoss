@@ -16,6 +16,8 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
@@ -33,7 +35,6 @@ import eu.ggnet.dwoss.mandator.Sample;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
-import eu.ggnet.dwoss.rules.*;
 
 /**
  *

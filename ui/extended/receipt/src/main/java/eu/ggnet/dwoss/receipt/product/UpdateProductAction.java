@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.common.ReplyUtil;
+import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.receipt.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.saft.*;

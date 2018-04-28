@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.AddressType;
@@ -43,10 +44,9 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
-import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.common.api.values.CustomerFlag.*;
-import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
 
 /**
  * Workflow to create a Dossier with one document of the selected Type.

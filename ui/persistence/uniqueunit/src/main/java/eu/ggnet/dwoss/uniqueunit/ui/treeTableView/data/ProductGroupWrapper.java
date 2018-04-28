@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data;
 
 import javafx.scene.control.TreeItem;
 
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import lombok.Getter;
 import lombok.Setter;

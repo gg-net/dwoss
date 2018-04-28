@@ -95,7 +95,7 @@
     <field name="tax" class="java.lang.Double">
         <fieldDescription><![CDATA[tax]]></fieldDescription>
     </field>
-    <field name="type" class="eu.ggnet.dwoss.rules.PositionType">
+    <field name="type" class="eu.ggnet.dwoss.common.api.values.PositionType">
         <fieldDescription><![CDATA[type]]></fieldDescription>
     </field>
     <field name="uniqueUnitId" class="java.lang.Integer">

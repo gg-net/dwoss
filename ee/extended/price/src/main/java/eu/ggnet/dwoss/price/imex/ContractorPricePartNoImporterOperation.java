@@ -35,9 +35,9 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.rules.AcerRules;
-import eu.ggnet.dwoss.rules.TradeName;
-import eu.ggnet.dwoss.rules.partno.PartNoSupport;
+import eu.ggnet.dwoss.common.api.values.AcerRules;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.partno.PartNoSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -51,7 +51,7 @@ import eu.ggnet.saft.api.Reply;
 
 import lombok.Value;
 
-import static eu.ggnet.dwoss.rules.TradeName.OTTO;
+import static eu.ggnet.dwoss.common.api.values.TradeName.OTTO;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 

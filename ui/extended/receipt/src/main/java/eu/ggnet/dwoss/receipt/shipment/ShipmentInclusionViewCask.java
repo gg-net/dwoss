@@ -22,7 +22,7 @@ import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.receipt.UiUnitSupport;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.saft.Dl;

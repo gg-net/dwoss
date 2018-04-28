@@ -16,8 +16,8 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
 import static eu.ggnet.dwoss.common.api.values.PaymentMethod.ADVANCE_PAYMENT;
 import static eu.ggnet.dwoss.common.api.values.ShippingCondition.DEFAULT;

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.misc.ee.itest;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -45,16 +48,15 @@ import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.dwoss.rules.DocumentType.*;
-import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -36,8 +36,8 @@ import javax.enterprise.inject.Alternative;
 import javax.persistence.LockModeType;
 
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
-import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.SpecPu;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
@@ -46,9 +46,9 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.rules.ProductGroup.*;
-import static eu.ggnet.dwoss.rules.TradeName.ACER;
-import static eu.ggnet.dwoss.rules.TradeName.PACKARD_BELL;
+import static eu.ggnet.dwoss.common.api.values.ProductGroup.*;
+import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
+import static eu.ggnet.dwoss.common.api.values.TradeName.PACKARD_BELL;
 
 /**
  * Stubclass for offline usage and testing.

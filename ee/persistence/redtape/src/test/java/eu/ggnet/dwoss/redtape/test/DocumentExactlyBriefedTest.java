@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
@@ -9,9 +11,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import org.junit.*;
 
-import eu.ggnet.dwoss.rules.*;
-
-import static eu.ggnet.dwoss.rules.TaxType.UNTAXED;
+import static eu.ggnet.dwoss.common.api.values.TaxType.UNTAXED;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

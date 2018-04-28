@@ -21,7 +21,7 @@ import java.awt.BorderLayout;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.rules.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 
 import eu.ggnet.dwoss.spec.ee.entity.Monitor;
 import eu.ggnet.dwoss.util.IPreClose;

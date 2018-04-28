@@ -29,7 +29,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.rules.*;
 
 import static eu.ggnet.dwoss.customer.test.CustomerTestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;

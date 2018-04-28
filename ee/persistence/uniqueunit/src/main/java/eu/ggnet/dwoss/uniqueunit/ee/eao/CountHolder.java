@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.eao;
 
 import java.util.Date;
 
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.redtape.ee.entity;
 
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.rules.PositionType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 
 /**
  * A builder for {@link Position} entities.

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.io.Serializable;
@@ -26,7 +28,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 

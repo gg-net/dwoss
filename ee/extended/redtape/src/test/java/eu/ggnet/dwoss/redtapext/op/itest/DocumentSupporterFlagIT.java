@@ -1,5 +1,6 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
@@ -18,7 +19,6 @@ import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
-import eu.ggnet.dwoss.rules.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

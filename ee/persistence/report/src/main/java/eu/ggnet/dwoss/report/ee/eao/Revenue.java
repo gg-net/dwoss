@@ -16,12 +16,12 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.util.*;
 import java.util.Map.Entry;
-
-import eu.ggnet.dwoss.rules.*;
 
 import lombok.*;
 

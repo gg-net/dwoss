@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ee.assist;
 
-import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.TradeName;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import lombok.Value;
 
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
-import static eu.ggnet.dwoss.rules.DocumentType.*;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
 /**
  *
