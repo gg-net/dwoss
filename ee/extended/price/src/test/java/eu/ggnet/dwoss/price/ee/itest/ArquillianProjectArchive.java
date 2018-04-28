@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.itest;
+package eu.ggnet.dwoss.price.ee.itest;
 
 import java.io.File;
 
@@ -28,8 +28,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.price.Exporter;
-import eu.ggnet.dwoss.price.test.ImportPriceManagementLogicTest;
+import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.price.ee.test.ImportPriceManagementLogicTest;
 
 import static org.jboss.shrinkwrap.api.Filters.exclude;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;

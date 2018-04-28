@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.engine;
+package eu.ggnet.dwoss.price.ee.engine;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -24,13 +24,13 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import java.io.Serializable;
 import java.util.*;
 
-import eu.ggnet.dwoss.price.engine.support.TraceCollector;
+import eu.ggnet.dwoss.price.ee.engine.support.TraceCollector;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
 import lombok.Data;
 
-import static eu.ggnet.dwoss.price.api.EngineTracer.Status.*;
+import static eu.ggnet.dwoss.price.ee.EngineTracer.Status.*;
 
 /**
  * ValueObject for Import and Export of PriceEngine and the Database

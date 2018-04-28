@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;

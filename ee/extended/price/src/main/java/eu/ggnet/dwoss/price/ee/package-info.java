@@ -18,4 +18,4 @@
 /**
  * Price Operations.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ee;

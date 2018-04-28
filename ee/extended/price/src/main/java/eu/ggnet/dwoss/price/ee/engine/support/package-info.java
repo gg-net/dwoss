@@ -18,4 +18,4 @@
 /**
  * Supporting classes for the Price Engine.
  */
-package eu.ggnet.dwoss.price.engine.support;
+package eu.ggnet.dwoss.price.ee.engine.support;

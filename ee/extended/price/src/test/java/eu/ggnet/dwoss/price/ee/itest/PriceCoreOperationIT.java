@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.price.itest;
+package eu.ggnet.dwoss.price.ee.itest;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory;
@@ -14,8 +14,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.price.PriceCoreOperation;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
+import eu.ggnet.dwoss.price.ee.PriceCoreOperation;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;

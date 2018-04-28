@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.api;
+package eu.ggnet.dwoss.price.ee;
 
 import java.io.Serializable;
 import java.util.*;
 
-import static eu.ggnet.dwoss.price.api.EngineTracer.Status.ERROR;
+import static eu.ggnet.dwoss.price.ee.EngineTracer.Status.ERROR;
 
 /**
  * This is simple support class to allow a form of partial logging.

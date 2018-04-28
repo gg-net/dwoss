@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ee;
 
 import java.awt.Color;
 import java.io.File;
@@ -27,8 +27,8 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.price.engine.PriceEngine;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngine;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
@@ -50,7 +50,7 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import static eu.ggnet.dwoss.price.engine.PriceEngineResult.*;
+import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;

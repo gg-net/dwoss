@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ee;
 
 import java.io.File;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
-
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.Reply;

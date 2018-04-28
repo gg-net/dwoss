@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.imex;
+package eu.ggnet.dwoss.price.ee.imex;
 
 import java.util.Date;
 import java.util.List;

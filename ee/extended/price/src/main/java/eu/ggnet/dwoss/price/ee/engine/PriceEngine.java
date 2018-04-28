@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.engine;
+package eu.ggnet.dwoss.price.ee.engine;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -29,14 +29,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
-import eu.ggnet.dwoss.price.api.EngineTracer;
-import eu.ggnet.dwoss.price.api.Estimator;
-import eu.ggnet.dwoss.price.api.Estimator.Result;
-import eu.ggnet.dwoss.price.engine.support.TraceCollector;
+import eu.ggnet.dwoss.price.ee.EngineTracer;
+import eu.ggnet.dwoss.price.ee.Estimator;
+import eu.ggnet.dwoss.price.ee.Estimator.Result;
+import eu.ggnet.dwoss.price.ee.engine.support.TraceCollector;
 import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 
-import static eu.ggnet.dwoss.price.engine.PriceEngineResult.Change.SET;
+import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.SET;
 
 /**
  * This is the PriceEngine 2 of GG-Net.

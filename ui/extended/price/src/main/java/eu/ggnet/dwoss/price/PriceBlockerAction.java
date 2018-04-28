@@ -16,13 +16,16 @@
  */
 package eu.ggnet.dwoss.price;
 
+import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.price.ee.Importer;
+
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult.Change;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;

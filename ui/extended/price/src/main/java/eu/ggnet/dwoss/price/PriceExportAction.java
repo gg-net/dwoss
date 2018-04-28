@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.price;
 
+import eu.ggnet.dwoss.price.ee.Exporter;
+
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.saft.Dl;

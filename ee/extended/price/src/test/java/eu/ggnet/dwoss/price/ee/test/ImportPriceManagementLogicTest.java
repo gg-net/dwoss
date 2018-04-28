@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.price.test;
+package eu.ggnet.dwoss.price.ee.test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.price.ImporterOperation;
-import eu.ggnet.dwoss.price.PriceCoreOperation;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
+import eu.ggnet.dwoss.price.ee.ImporterOperation;
+import eu.ggnet.dwoss.price.ee.PriceCoreOperation;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.ProgressProducerForTests;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;

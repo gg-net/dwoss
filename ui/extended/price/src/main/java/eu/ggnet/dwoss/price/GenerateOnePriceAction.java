@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.price;
 
+import eu.ggnet.dwoss.price.ee.Exporter;
+
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
@@ -23,7 +25,7 @@ import javafx.scene.control.TextInputDialog;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
-import eu.ggnet.dwoss.price.engine.support.PriceEngineResultFormater;
+import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;

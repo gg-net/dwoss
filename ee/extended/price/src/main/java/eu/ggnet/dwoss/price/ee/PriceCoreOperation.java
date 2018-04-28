@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ee;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -32,8 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.price.engine.PriceEngine;
-import eu.ggnet.dwoss.price.engine.PriceEngineResult;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngine;
+import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
@@ -49,7 +49,7 @@ import eu.ggnet.saft.api.progress.IMonitor;
 
 import lombok.Data;
 
-import static eu.ggnet.dwoss.price.engine.PriceEngineResult.Change.*;
+import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 
 /**
