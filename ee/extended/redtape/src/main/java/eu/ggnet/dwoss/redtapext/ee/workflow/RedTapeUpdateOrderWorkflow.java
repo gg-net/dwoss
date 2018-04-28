@@ -26,7 +26,7 @@ import javax.persistence.LockModeType;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 
 /**
  * Workflow for updating a Document of Type Order.

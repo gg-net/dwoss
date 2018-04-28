@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ee.priv;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;

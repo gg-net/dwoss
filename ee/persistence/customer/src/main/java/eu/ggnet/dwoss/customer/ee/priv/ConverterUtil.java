@@ -24,14 +24,14 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.rules.CustomerFlag;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
-import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
-import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
  * Utility Class to convert a (sopo)OldCustomer to New and visa verse.

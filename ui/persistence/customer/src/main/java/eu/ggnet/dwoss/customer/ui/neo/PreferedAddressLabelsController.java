@@ -32,14 +32,14 @@ import javafx.scene.web.WebView;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController.InvoiceAddressLabelWithNullableShippingAddressLabel;
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.FxController;
 import eu.ggnet.saft.api.ui.ResultProducer;
 
 import lombok.Getter;
 
-import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
  *

@@ -27,7 +27,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.rules.ProductGroup;
 import eu.ggnet.dwoss.rules.TradeName;

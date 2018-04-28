@@ -1,8 +1,13 @@
 package tryout.old;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 
 import java.util.*;
 

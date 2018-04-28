@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.opi;
+package eu.ggnet.dwoss.customer.api;
 
 import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 /**
  *

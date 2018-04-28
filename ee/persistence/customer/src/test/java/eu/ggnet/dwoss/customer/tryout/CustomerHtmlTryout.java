@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.tryout;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 

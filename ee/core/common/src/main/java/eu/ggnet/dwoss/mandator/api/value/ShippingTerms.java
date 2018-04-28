@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.mandator.api.value;
 import java.io.Serializable;
 import java.util.*;
 
-import eu.ggnet.dwoss.rules.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 
 import lombok.Value;
 

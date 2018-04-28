@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -27,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;

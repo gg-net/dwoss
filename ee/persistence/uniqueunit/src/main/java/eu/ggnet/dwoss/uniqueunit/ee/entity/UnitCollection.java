@@ -22,7 +22,7 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 

@@ -24,8 +24,8 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.event.SalesChannelChange;
-import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 

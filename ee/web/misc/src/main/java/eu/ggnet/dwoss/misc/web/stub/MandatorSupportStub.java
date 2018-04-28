@@ -22,7 +22,7 @@ import javax.enterprise.inject.Produces;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.util.MapBuilder;
 
 import static eu.ggnet.dwoss.rules.PositionType.*;

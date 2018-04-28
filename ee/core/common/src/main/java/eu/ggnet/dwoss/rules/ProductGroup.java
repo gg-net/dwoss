@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.rules;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 /**
  * All constant ProductGroups.

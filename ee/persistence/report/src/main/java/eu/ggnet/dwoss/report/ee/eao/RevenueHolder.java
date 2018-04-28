@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.Date;
 
 import eu.ggnet.dwoss.rules.*;

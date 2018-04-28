@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rules;
+package eu.ggnet.dwoss.uniqueunit.api.event;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.io.Serializable;
+
+import lombok.Value;
 
 /**
- * Represents a sales channel
+ * History Event designated for a UniqueUnit.
+ *
+ * @author oliver.guenther
  */
-@Getter
-@RequiredArgsConstructor
-public enum SalesChannel {
+@Value
+public class UnitHistory implements Serializable {
 
-    UNKNOWN("Unbekannt"),
-    RETAILER("Händlerkanal"),
-    CUSTOMER("Endkundenkanal");
+    private final int uniqueUnitId;
 
-    private final String name;
+    private final String comment;
+
+    private final String arranger;
 
 }

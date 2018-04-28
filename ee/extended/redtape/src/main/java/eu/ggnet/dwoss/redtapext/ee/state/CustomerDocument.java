@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+
 import java.io.Serializable;
 import java.util.*;
 

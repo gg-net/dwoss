@@ -25,7 +25,7 @@ import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.configuration.GlobalConfig;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import lombok.Getter;
 import lombok.Setter;

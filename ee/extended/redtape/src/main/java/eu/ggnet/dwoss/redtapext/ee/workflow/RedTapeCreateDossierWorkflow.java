@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -31,7 +34,7 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -42,7 +45,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.rules.*;
 
-import static eu.ggnet.dwoss.rules.CustomerFlag.*;
+import static eu.ggnet.dwoss.common.api.values.CustomerFlag.*;
 import static eu.ggnet.dwoss.rules.DocumentType.BLOCK;
 
 /**

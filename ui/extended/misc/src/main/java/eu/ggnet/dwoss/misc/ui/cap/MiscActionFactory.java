@@ -36,7 +36,7 @@ import eu.ggnet.dwoss.misc.help.ShowMandatorAction;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.search.ui.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;

@@ -26,7 +26,7 @@ import javax.swing.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;

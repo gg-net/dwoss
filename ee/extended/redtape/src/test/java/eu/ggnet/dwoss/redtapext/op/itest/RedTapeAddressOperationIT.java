@@ -8,12 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.rules.PositionType;
 
 import static org.junit.Assert.assertEquals;

@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.CFormat.FontStyle;
 import eu.ggnet.lucidcalc.*;

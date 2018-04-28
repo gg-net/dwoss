@@ -5,6 +5,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.*;

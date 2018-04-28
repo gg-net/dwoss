@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.opi;
+package eu.ggnet.dwoss.customer.api;
 
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 
 /**
  *

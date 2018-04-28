@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.test;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;

@@ -21,7 +21,7 @@ import java.util.*;
 import javafx.beans.property.*;
 import javafx.collections.*;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 

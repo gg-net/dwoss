@@ -3,7 +3,7 @@ package tryout.stub;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;

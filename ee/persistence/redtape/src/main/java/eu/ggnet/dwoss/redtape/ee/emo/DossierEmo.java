@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 
 /**
  * Entity Manipulation Object for Dossier.

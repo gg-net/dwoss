@@ -25,7 +25,7 @@ import javax.validation.constraints.*;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import lombok.*;
 

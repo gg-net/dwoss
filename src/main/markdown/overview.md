@@ -17,16 +17,21 @@ Architecture
 In the core the application has a simple layer model.
 
 1. Library
-2. EE (for the Server), UI (for the Client) -> layer
+2. API 
+    - Only plain java projects. No Enitys or EJBs. Supplies Interfaces,Annotations and Values 
+      for data exchange between projects.
+    - Projects may depend on other API projects. Make sure no cycles happen.
+3. EE (for the Server), UI (for the Client) -> layer
 	1. Core -> sublayer
 		- Non Persistence Projects, APIs.
-                - This layer is a little bit grubby. Some project depend on other projects in this layer. This may be cleaned up in the future.
+                - This layer is a little bit grubby. Some project depend on other projects in 
+                  this layer. This may be cleaned up in the future.
 	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
 		- Only one data source per project.
 	2. Extended
 		- Projects that use more than one persistence source
-3. No module name may stretch over a layer.
+4. No module name may stretch over a layer.
 
 There are also some more rules to consider, which we were not yet able to represent.
 See the developed Graph in

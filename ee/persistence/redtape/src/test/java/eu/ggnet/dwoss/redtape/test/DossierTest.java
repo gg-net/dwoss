@@ -1,5 +1,6 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Reminder;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;

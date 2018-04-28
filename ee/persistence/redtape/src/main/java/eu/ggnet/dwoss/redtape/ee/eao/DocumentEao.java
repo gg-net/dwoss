@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;

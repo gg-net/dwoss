@@ -1,5 +1,6 @@
 package tryout.stub;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;

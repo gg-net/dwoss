@@ -16,6 +16,7 @@
  */
 package tryout;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;

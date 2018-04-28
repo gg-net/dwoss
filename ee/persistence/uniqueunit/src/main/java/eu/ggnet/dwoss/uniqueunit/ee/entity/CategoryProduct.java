@@ -22,14 +22,14 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
 

@@ -21,15 +21,15 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.customer.opi.AddressService;
+import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.rules.AddressType;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 
-import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 
 /**
  * Really necessary?

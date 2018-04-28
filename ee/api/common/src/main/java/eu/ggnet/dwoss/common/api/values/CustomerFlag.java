@@ -14,22 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rules;
+package eu.ggnet.dwoss.common.api.values;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
- * A type for differentiate between addresses.
- * <p>
+ * Flags set on the Customer, but used on multiple ocations.
+ *
  * @author pascal.perau
  */
 @Getter
-@RequiredArgsConstructor
-public enum AddressType {
-
-    INVOICE("Rechnungsadresse"), SHIPPING("Lieferadresse");
+@AllArgsConstructor
+public enum CustomerFlag implements INoteModel {
+    /**
+     * Has a special workflow assigned.
+     */
+    SYSTEM_CUSTOMER("Systemdatensatz"),
+    CONFIRMED_CASH_ON_DELIVERY("Nachnahme bestätigt"),
+    CONFIRMS_DOSSIER("Kunde bestätigt Aufträge"),
+    CS_UPDATE_CANDIDATE("Kandidat für CS Update"),
+    CS_UPDATE_CANDIDATE_NEXT("Kandidat für nächstes CS Update"),
+    ITC_CUSTOMER("Systemhauskunde"),
+    PRIO_A_CUSTOMER("Prio A Kunde");
 
     private final String name;
+
+    @Override
+    public String getNote() {
+        return name;
+    }
 
 }

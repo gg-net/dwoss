@@ -14,37 +14,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rules;
+package eu.ggnet.dwoss.redtape.api.event;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+
+import lombok.Value;
 
 /**
- * Flags set on the Customer, but used on multiple ocations.
- *
+ * Adress change event.
+ * <p>
  * @author pascal.perau
  */
-@Getter
-@AllArgsConstructor
-public enum CustomerFlag implements INoteModel {
+@Value
+public class AddressChange implements Serializable {
+
     /**
-     * Has a special workflow assigned.
+     * Identifier of the customer.
      */
-    SYSTEM_CUSTOMER("Systemdatensatz"),
-    CONFIRMED_CASH_ON_DELIVERY("Nachnahme bestätigt"),
-    CONFIRMS_DOSSIER("Kunde bestätigt Aufträge"),
-    CS_UPDATE_CANDIDATE("Kandidat für CS Update"),
-    CS_UPDATE_CANDIDATE_NEXT("Kandidat für nächstes CS Update"),
-    ITC_CUSTOMER("Systemhauskunde"),
-    PRIO_A_CUSTOMER("Prio A Kunde");
+    private final long customerId;
 
-    private final String name;
+    /**
+     * The arranger of the change.
+     */
+    private final String arranger;
 
-    @Override
-    public String getNote() {
-        return name;
-    }
+    /**
+     * Type of the address.
+     */
+    private final AddressType type;
 
+    /**
+     * The old address.
+     */
+    private final String oldAdress;
+
+    /**
+     * The new address.
+     */
+    private final String newAdress;
 }

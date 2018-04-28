@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.misc.web;
 
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 
 import lombok.Data;

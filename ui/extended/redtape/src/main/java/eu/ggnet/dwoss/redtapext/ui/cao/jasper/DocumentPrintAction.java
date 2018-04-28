@@ -25,8 +25,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;

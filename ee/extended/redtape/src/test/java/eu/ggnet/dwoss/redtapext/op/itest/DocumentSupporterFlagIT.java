@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;

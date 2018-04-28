@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -33,7 +40,7 @@ import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
-import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 
 /**
  *

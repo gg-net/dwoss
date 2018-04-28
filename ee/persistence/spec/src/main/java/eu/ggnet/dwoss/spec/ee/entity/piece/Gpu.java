@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Series.*;
 
@@ -88,7 +88,7 @@ public class Gpu implements Serializable {
     }
 
     @XmlType(name = "GpuSeries")
-    public enum Series implements eu.ggnet.dwoss.util.INoteModel {
+    public enum Series implements eu.ggnet.dwoss.common.api.INoteModel {
 
         GEFORCE_100("GeForce 100 Series"),
         GEFORCE_200("GeForce 200 Series"),

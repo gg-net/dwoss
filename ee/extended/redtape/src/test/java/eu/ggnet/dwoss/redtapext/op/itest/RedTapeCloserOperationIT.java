@@ -18,7 +18,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.*;

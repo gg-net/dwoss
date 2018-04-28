@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.misc.saleschannel;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.util.table.IColumnGetSetAction;
 import eu.ggnet.dwoss.util.table.SimpleTableModel;
 import eu.ggnet.dwoss.util.table.Column;

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;

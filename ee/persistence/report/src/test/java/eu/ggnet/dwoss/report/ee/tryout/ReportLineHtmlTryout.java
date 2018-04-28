@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ee.tryout;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.Date;

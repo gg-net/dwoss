@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.stock.ee.model;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.io.Serializable;
 

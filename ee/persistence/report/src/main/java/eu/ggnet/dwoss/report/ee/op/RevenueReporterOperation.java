@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.report.ee.op;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.Map.Entry;
 import java.util.*;
 

@@ -27,8 +27,8 @@ import eu.ggnet.statemachine.State.Type;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 import static java.util.EnumSet.*;
 

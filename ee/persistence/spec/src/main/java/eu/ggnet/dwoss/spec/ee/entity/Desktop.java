@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.*;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
 import static javax.persistence.CascadeType.*;

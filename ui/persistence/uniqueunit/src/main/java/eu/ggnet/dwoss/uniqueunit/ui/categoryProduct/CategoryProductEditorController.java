@@ -23,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;

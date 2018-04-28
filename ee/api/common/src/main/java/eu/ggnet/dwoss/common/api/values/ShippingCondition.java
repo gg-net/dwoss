@@ -14,44 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.event;
+package eu.ggnet.dwoss.common.api.values;
 
-import java.io.Serializable;
-
-import eu.ggnet.dwoss.rules.AddressType;
-
-import lombok.Value;
+import lombok.*;
 
 /**
- * Adress change event.
- * <p>
- * @author pascal.perau
+ * These are the ShippingCondition in a Enum.
+ * <p/>
+ * @author bastian.venz
  */
-@Value
-public class AddressChange implements Serializable{
+@AllArgsConstructor
+@Getter
+public enum ShippingCondition {
 
-    /**
-     * Identifier of the customer.
-     */
-    private final long customerId;
+    DEFAULT, DEALER_ONE, DEALER_TWO;
 
-    /**
-     * The arranger of the change.
-     */
-    private final String arranger;
-
-    /**
-     * Type of the address.
-     */
-    private final AddressType type;
-
-    /**
-     * The old address.
-     */
-    private final String oldAdress;
-
-    /**
-     * The new address.
-     */
-    private final String newAdress;
 }

@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.*;
 
 import eu.ggnet.dwoss.rules.*;

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;

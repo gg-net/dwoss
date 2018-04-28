@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.op;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 /**

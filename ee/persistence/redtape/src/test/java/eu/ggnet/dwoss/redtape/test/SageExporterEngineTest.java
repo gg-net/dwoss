@@ -23,13 +23,13 @@ import java.util.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.rules.TaxType;
 
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;

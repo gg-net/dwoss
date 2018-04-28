@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.opi;
+package eu.ggnet.dwoss.customer.api;
 
 import java.io.Serializable;
 import java.util.Set;
 
-import eu.ggnet.dwoss.rules.*;
+import eu.ggnet.dwoss.common.api.values.*;
 
-import lombok.*;
+import lombok.Value;
 
 /**
  * Wrapper class for purchase information from a customer.

@@ -35,7 +35,7 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;

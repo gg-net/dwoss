@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 /**
  * The extension of information for {@link ProductSpec}s.

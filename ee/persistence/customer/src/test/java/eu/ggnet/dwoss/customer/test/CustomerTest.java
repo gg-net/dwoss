@@ -8,8 +8,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.rules.AddressType;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 import static eu.ggnet.dwoss.customer.test.CustomerTest.makeValidConsumer;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -6,7 +6,7 @@
 package eu.ggnet.dwoss.uniqueunit.ee.entity.dto;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 

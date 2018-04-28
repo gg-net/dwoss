@@ -23,7 +23,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.*;
 
-import static eu.ggnet.dwoss.rules.PaymentMethod.DIRECT_DEBIT;
+import static eu.ggnet.dwoss.common.api.values.PaymentMethod.DIRECT_DEBIT;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;

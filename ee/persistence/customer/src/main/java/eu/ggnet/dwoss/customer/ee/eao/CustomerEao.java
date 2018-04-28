@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.mysema.query.jpa.impl.JPAQuery;

@@ -22,7 +22,7 @@ import java.util.List;
 import javax.ejb.Remote;
 import javax.enterprise.event.Observes;
 
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;

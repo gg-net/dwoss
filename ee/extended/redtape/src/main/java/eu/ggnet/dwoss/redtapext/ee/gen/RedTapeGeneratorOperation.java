@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.progress.MonitorFactory;
@@ -47,7 +47,7 @@ import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.dwoss.rules.CustomerFlag.SYSTEM_CUSTOMER;
+import static eu.ggnet.dwoss.common.api.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static java.util.stream.Collectors.toList;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;

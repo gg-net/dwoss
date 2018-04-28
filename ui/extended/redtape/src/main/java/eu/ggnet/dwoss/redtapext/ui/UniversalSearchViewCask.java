@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
+
 import java.awt.Dialog;
 import java.net.URL;
 import java.util.ArrayList;

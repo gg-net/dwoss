@@ -15,6 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * Public Event Values.
+ * UniqueUnit Public Event Values, that can be fired.
  */
-package eu.ggnet.dwoss.event;
+package eu.ggnet.dwoss.uniqueunit.api.event;

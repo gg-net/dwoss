@@ -1,5 +1,10 @@
 package tryout;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.Arrays;
 
 import javax.swing.JLabel;
@@ -7,7 +12,7 @@ import javax.swing.JLabel;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;

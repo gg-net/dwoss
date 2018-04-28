@@ -19,8 +19,8 @@ import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.rules.PositionType;
 
-import static eu.ggnet.dwoss.rules.PaymentMethod.ADVANCE_PAYMENT;
-import static eu.ggnet.dwoss.rules.ShippingCondition.DEFAULT;
+import static eu.ggnet.dwoss.common.api.values.PaymentMethod.ADVANCE_PAYMENT;
+import static eu.ggnet.dwoss.common.api.values.ShippingCondition.DEFAULT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.mandator;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;

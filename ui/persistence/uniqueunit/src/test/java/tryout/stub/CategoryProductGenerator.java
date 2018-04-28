@@ -7,7 +7,7 @@ package tryout.stub;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 

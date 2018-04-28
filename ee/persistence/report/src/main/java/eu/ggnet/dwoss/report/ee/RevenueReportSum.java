@@ -20,14 +20,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import lombok.*;
 
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.rules.SalesChannel.CUSTOMER;
-import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.CUSTOMER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 
 /**
  *

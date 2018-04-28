@@ -25,9 +25,9 @@ import eu.ggnet.dwoss.rules.Warranty;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
-import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 import static java.util.Locale.GERMANY;
 
 /**

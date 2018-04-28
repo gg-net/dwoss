@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.event;
+package eu.ggnet.dwoss.common.api.values;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
-
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * Informs about a SalesChannelChange
- * <p>
- * @author oliver.guenther
+ * Represents a sales channel
  */
-@Value
-public class SalesChannelChange {
+@Getter
+@RequiredArgsConstructor
+public enum SalesChannel {
 
-    private final int uniqueUnitId;
+    UNKNOWN("Unbekannt"),
+    RETAILER("Händlerkanal"),
+    CUSTOMER("Endkundenkanal");
 
-    private final SalesChannel newChannel;
+    private final String name;
 
 }

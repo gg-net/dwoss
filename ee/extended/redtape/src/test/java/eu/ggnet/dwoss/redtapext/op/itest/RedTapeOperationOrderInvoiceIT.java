@@ -1,5 +1,7 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 

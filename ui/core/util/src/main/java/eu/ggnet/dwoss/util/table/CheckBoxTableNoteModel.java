@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 import eu.ggnet.dwoss.util.table.*;
 
 /**

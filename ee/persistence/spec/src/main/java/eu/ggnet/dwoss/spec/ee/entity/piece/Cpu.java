@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
 
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Cpu.Series.*;
 
@@ -81,7 +81,7 @@ public class Cpu implements Serializable {
      * The Series of the CPU.
      */
     @XmlType(name = "CpuSeries")
-    public static enum Series implements eu.ggnet.dwoss.util.INoteModel {
+    public static enum Series implements eu.ggnet.dwoss.common.api.INoteModel {
 
         ATOM("Atom"),
         CELERON("Celeron"),

@@ -29,7 +29,7 @@ import com.mysema.query.jpa.impl.JPADeleteClause;
 import static eu.ggnet.dwoss.rules.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.rules.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.rules.PositionType.UNIT;
-import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.rules.Step.DAY;
 import static eu.ggnet.dwoss.rules.TradeName.*;
 import static org.apache.commons.lang3.time.DateUtils.addDays;

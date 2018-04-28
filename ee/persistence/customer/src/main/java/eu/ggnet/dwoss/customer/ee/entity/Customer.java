@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,8 +41,8 @@ import eu.ggnet.dwoss.util.persistence.EagerAble;
 import lombok.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
-import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
-import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 import static javax.persistence.CascadeType.ALL;
 
 /**

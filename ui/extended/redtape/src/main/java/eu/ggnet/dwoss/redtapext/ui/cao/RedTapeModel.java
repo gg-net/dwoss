@@ -21,8 +21,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.Set;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 import eu.ggnet.dwoss.util.Tuple2;

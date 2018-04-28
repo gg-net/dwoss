@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.*;
 

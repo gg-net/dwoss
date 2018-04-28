@@ -23,12 +23,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 
 /**
  * Represents a physical stock.

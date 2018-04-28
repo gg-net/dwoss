@@ -31,7 +31,7 @@ import javax.swing.border.SoftBevelBorder;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -50,7 +50,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.*;

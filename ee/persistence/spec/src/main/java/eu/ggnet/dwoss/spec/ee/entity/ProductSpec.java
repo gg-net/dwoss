@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;

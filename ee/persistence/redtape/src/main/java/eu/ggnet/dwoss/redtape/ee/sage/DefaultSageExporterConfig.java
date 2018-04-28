@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import lombok.AllArgsConstructor;

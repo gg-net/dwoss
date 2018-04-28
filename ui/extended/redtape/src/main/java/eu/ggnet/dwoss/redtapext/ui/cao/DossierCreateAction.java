@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.rules.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;

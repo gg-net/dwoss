@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ui.old;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.awt.Component;
 import java.util.*;
 
@@ -23,7 +29,7 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.event.AddressChange;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.rules.*;
@@ -38,8 +44,8 @@ import eu.ggnet.saft.core.auth.JComponentEnabler;
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
-import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
-import static eu.ggnet.dwoss.rules.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
  *

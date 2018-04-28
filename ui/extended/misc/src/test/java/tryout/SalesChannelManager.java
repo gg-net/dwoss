@@ -20,13 +20,13 @@ import org.junit.Test;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelManagerDialog;
 import eu.ggnet.dwoss.misc.saleschannel.SalesChannelTableModel;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.saft.Dl;
 
-import static eu.ggnet.dwoss.rules.SalesChannel.CUSTOMER;
-import static eu.ggnet.dwoss.rules.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.CUSTOMER;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 
 /**
  *

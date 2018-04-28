@@ -46,7 +46,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.dwoss.rules.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 
 /**
  * Allows Scraping of Units.

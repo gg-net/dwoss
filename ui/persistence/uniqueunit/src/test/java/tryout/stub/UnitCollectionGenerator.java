@@ -16,6 +16,8 @@
  */
 package tryout.stub;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.util.*;
 
 import eu.ggnet.dwoss.rules.*;

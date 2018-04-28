@@ -8,7 +8,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.entity.dto;
 import java.io.Serializable;
 import java.util.*;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 

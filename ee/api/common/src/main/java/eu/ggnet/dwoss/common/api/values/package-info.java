@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 GG-Net GmbH
+ * Copyright (C) 2018 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * The formaly intended public customer api, but its broken.
- * An Api must have no dependencies other than another api. For now, here are many dependencies, that are not positioned right.
- * So first, we have to clear the customer of old customer. Than we can look into that package for future api usage.
+ * Constant values for all project.
  */
-package eu.ggnet.dwoss.customer.opi;
+package eu.ggnet.dwoss.common.api.values;

@@ -48,7 +48,7 @@ import org.slf4j.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.saft.api.Reply;

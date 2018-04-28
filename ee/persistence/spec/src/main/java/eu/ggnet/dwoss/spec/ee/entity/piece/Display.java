@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
 import eu.ggnet.dwoss.rules.ProductGroup;
-import eu.ggnet.dwoss.util.INoteModel;
+import eu.ggnet.dwoss.common.api.INoteModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

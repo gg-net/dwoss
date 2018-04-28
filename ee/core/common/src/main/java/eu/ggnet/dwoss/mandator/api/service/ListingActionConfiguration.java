@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import java.io.Serializable;
 
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import lombok.*;
 

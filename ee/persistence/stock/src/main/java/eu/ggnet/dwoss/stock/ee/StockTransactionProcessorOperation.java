@@ -29,12 +29,12 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.event.SalesChannelChange;
-import eu.ggnet.dwoss.event.UnitHistory;
+import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.rules.SalesChannel;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;

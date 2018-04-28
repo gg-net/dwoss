@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtape.ee.sage;
 
 import java.io.Serializable;
 
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 /**

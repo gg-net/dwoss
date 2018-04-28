@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.AddressType;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,7 +41,7 @@ import eu.ggnet.dwoss.rules.*;
 import eu.ggnet.dwoss.util.gen.GeneratedAddress;
 import eu.ggnet.dwoss.util.gen.NameGenerator;
 
-import static eu.ggnet.dwoss.rules.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**

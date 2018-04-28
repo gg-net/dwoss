@@ -17,6 +17,8 @@
         <module>spec</module>
         <module>stock</module>
         <module>uniqueunit</module>
+        <module>redtape</module>
+        <module>customer</module>
     </modules>
 
 </project>

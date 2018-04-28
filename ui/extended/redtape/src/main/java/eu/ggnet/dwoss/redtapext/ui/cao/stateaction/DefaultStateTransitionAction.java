@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.dwoss.rules.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.rules.PositionType;
 import eu.ggnet.dwoss.util.CloseType;
 import eu.ggnet.dwoss.util.OkCancelDialog;

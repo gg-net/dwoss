@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ee.gen;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;

@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
-import eu.ggnet.dwoss.customer.opi.CustomerMetaData;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
-import eu.ggnet.dwoss.customer.opi.UiCustomer;
+import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.rules.Css;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 /**
  * CustomerService implementation for {@link OldCustomer}.

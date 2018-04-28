@@ -25,8 +25,8 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristic.Change;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateCharacteristic.Permutation;
 
 import eu.ggnet.dwoss.rules.DocumentType;
-import eu.ggnet.dwoss.rules.PaymentMethod;
-import eu.ggnet.dwoss.rules.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 import eu.ggnet.statemachine.State;
 

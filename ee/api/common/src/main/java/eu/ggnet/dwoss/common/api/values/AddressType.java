@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,19 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rules;
+package eu.ggnet.dwoss.common.api.values;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
- * These are the ShippingCondition in a Enum.
- * <p/>
- * @author bastian.venz
+ * A type for differentiate between addresses.
+ * <p>
+ * @author pascal.perau
  */
-@AllArgsConstructor
 @Getter
-public enum ShippingCondition {
+@RequiredArgsConstructor
+public enum AddressType {
 
-    DEFAULT, DEALER_ONE, DEALER_TWO;
+    INVOICE("Rechnungsadresse"), SHIPPING("Lieferadresse");
+
+    private final String name;
 
 }

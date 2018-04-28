@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;

@@ -1,5 +1,9 @@
 package tryout;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.PaymentCondition;
+
 import java.awt.Font;
 import java.util.Arrays;
 
@@ -7,7 +11,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.common.AbstractGuardian;
-import eu.ggnet.dwoss.customer.opi.CustomerService;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;

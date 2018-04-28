@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;

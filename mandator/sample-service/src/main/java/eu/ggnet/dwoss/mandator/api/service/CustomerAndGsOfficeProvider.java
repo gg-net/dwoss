@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
-import eu.ggnet.dwoss.rules.ShippingCondition;
+import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.rules.TradeName;
 import eu.ggnet.dwoss.util.MapBuilder;
 
