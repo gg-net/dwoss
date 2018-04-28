@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,28 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.api.service;
+package eu.ggnet.dwoss.mandator.sample.service;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.ejb.Stateless;
 
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.redtape.ee.api.UnitPositionHook;
 
 /**
- * Sample Service Implementation.
+ * Sample implementation of the position service.
+ * This service class will allow elaboration of positions based on a variety of parameters.
+ * <p>
+ * @author pascal.perau
  */
 @Stateless
-public class MandatorServiceBean implements MandatorService {
+public class SampleHookServiceBean implements UnitPositionHook {
 
     @Override
-    public boolean isAllowedRefurbishId(TradeName contractor, String refurbishId) {
-        return true;
-
-    }
-
-    @Override
-    public int getLocationStockId(ClientLocation location) {
-        return 0;
+    public Result<List<Position>> elaborateUnitPosition(eu.ggnet.dwoss.redtape.ee.entity.Position p, long documentId) throws UserInfoException {
+        return new Result<>(Arrays.asList(p));
     }
 
 }

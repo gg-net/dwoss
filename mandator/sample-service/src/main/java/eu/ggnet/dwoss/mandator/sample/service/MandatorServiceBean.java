@@ -14,21 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.api.service;
+package eu.ggnet.dwoss.mandator.sample.service;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
+import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 
-import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
+import javax.ejb.Stateless;
+
 
 /**
- *
- * @author Bastian Venz <bastian.venz at gg-net.de>
+ * Sample Service Implementation.
  */
-public class MarginCalculatorBean implements MarginCalculator {
+@Stateless
+public class MandatorServiceBean implements MandatorService {
 
     @Override
-    public void recalc(ViewReportResult report) {
-        // we dont need to recalc
+    public boolean isAllowedRefurbishId(TradeName contractor, String refurbishId) {
+        return true;
+
+    }
+
+    @Override
+    public int getLocationStockId(ClientLocation location) {
+        return 0;
     }
 
 }

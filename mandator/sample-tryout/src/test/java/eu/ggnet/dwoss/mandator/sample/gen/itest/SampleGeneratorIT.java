@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.tryout.itest;
+package eu.ggnet.dwoss.mandator.sample.gen.itest;
 
 import java.io.File;
 
@@ -32,8 +32,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
-import eu.ggnet.dwoss.mandator.tryout.SampleGeneratorOperation;
+import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.mandator.sample.gen.SampleGeneratorOperation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;

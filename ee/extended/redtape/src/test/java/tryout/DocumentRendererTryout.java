@@ -31,7 +31,7 @@ import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.swing.JRViewer;
 
-import eu.ggnet.dwoss.mandator.Sample;
+import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;

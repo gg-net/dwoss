@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.tryout;
+package eu.ggnet.dwoss.mandator.sample.datasource;
 
 import javax.annotation.sql.DataSourceDefinition;
 import javax.annotation.sql.DataSourceDefinitions;
 import javax.faces.bean.ManagedBean;
 
-import static eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition.*;
+import static eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition.*;
 
 /**
  * In memory data sources for the sample tryout.

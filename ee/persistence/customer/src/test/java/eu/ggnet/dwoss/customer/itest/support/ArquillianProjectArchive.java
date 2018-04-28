@@ -30,7 +30,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
 import eu.ggnet.dwoss.customer.itest.PersistenceIT;
 import eu.ggnet.dwoss.customer.test.CustomerTest;
-import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
 

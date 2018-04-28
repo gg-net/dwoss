@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
 import eu.ggnet.dwoss.stock.ee.itest.PersistenceIT;
 import eu.ggnet.dwoss.stock.ee.test.ValidationTest;
 

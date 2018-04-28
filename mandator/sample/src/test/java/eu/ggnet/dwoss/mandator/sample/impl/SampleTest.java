@@ -1,5 +1,7 @@
-package eu.ggnet.dwoss.mandator;
+package eu.ggnet.dwoss.mandator.sample.impl;
 
+
+import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 
 import org.junit.Test;
 

@@ -28,7 +28,7 @@ import org.jboss.shrinkwrap.resolver.api.Coordinate;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 
-import eu.ggnet.dwoss.mandator.tryout.SampleDataSourceDefinition;
+import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
 
 import static java.lang.Package.getPackage;
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;

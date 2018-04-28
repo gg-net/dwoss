@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator;
+package eu.ggnet.dwoss.mandator.sample.impl;
 
 import eu.ggnet.dwoss.mandator.api.value.partial.SmtpConfiguration;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;

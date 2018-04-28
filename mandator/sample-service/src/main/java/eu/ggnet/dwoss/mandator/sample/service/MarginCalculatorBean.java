@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.util.persistence;
+package eu.ggnet.dwoss.mandator.sample.service;
 
-import java.sql.Types;
+import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
 
-import org.hibernate.dialect.MySQL5InnoDBDialect;
+import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 
 /**
- * This is a Workaround for https://hibernate.onjira.com/browse/HHH-6935 .
  *
- * @author oliver.guenther
+ * @author Bastian Venz <bastian.venz at gg-net.de>
  */
-public class MysqlHibernate3Dialect extends MySQL5InnoDBDialect {
+public class MarginCalculatorBean implements MarginCalculator {
 
-    public MysqlHibernate3Dialect() {
-        super();
-        registerColumnType(Types.BOOLEAN, "bit(1)");
+    @Override
+    public void recalc(ViewReportResult report) {
+        // we dont need to recalc
     }
+
 }
