@@ -35,11 +35,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.Selector;

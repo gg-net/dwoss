@@ -1,30 +1,21 @@
 package eu.ggnet.dwoss.receipt.unit;
 
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.mandator.api.value.*;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.receipt.product.DesktopBundleView;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  *

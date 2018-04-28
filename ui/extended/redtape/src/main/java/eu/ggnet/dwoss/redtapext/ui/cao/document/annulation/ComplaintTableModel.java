@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.util.List;
 
+import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
-import eu.ggnet.dwoss.util.table.*;
 
 /**
  *

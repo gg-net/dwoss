@@ -6,7 +6,7 @@ import javax.swing.UIManager;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.ee.StockAgent;

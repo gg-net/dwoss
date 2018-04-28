@@ -18,7 +18,7 @@ package tryout;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;
 

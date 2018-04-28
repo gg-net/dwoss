@@ -23,12 +23,12 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.dwoss.common.ui.ComboBoxController;
+import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.ui.UserPreferences;
 

@@ -30,10 +30,14 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
@@ -50,21 +54,18 @@ import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.ui.UiParent;
+import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Getter;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
-
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.

@@ -21,13 +21,13 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.VetoableOnOk;

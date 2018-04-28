@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,10 @@ package eu.ggnet.dwoss.receipt.product;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Ration;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.ComboBoxController;
-import eu.ggnet.dwoss.util.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  *

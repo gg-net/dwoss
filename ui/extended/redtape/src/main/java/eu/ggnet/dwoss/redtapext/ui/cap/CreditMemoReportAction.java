@@ -20,8 +20,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
-import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 

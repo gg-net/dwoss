@@ -24,8 +24,9 @@ import java.util.*;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;
@@ -34,7 +35,6 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 
 /**

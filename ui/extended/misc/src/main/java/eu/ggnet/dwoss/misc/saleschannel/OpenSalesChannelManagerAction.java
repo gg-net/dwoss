@@ -26,8 +26,8 @@ import javax.swing.SwingWorker;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;

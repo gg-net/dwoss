@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.receipt.product;
 
 import java.awt.Window;
 
+import eu.ggnet.dwoss.common.ui.IView;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.util.IView;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  *

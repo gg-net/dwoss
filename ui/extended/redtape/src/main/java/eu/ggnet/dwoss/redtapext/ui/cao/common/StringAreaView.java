@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,26 +16,27 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IPreClose;
+import eu.ggnet.dwoss.common.ui.CloseType;
+import eu.ggnet.dwoss.common.ui.IPreClose;
 
 /**
  * A simple JPanel containing a Textarea.
+ *
  * @author pascal.perau
  */
-public class StringAreaView extends javax.swing.JPanel implements IPreClose{
-    
+public class StringAreaView extends javax.swing.JPanel implements IPreClose {
+
     String theString = "";
-    
+
     /** Creates new form StringAreaView */
     public StringAreaView(String preset) {
         initComponents();
-        if(preset != null){
+        if ( preset != null ) {
             stringArea.setText(preset);
         }
     }
-    
-    public String getText(){
+
+    public String getText() {
         return theString;
     }
 
@@ -75,8 +76,8 @@ public class StringAreaView extends javax.swing.JPanel implements IPreClose{
 
     @Override
     public boolean pre(CloseType type) {
-        if(type == CloseType.CANCEL) return true;
-        else{
+        if ( type == CloseType.CANCEL ) return true;
+        else {
             theString = stringArea.getText();
             return true;
         }

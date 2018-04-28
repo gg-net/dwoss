@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,11 +19,10 @@ package eu.ggnet.dwoss.redtapext.ui.dbs;
 import java.util.ArrayList;
 import java.util.Date;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
-
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
+import eu.ggnet.dwoss.common.ui.table.PojoColumn;
+import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
+import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 
 /**
  * @author bastian.venz

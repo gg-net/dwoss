@@ -25,13 +25,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-util</artifactId>
+            <artifactId>saft-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>saft-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
         </dependency>
     </dependencies>
 </project>

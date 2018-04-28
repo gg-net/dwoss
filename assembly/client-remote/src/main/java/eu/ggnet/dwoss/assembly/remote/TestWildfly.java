@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
 
 /**
  *

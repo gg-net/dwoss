@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,13 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.saleschannel;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.util.table.IColumnGetSetAction;
-import eu.ggnet.dwoss.util.table.SimpleTableModel;
-import eu.ggnet.dwoss.util.table.Column;
-
 import java.util.*;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 

@@ -24,15 +24,15 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ui.CloseType;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;

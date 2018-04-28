@@ -22,12 +22,12 @@ import java.util.regex.PatternSyntaxException;
 
 import javax.swing.SwingUtilities;
 
+import eu.ggnet.dwoss.common.ui.CloseType;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.receipt.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.table.*;
 import eu.ggnet.saft.Dl;
 
 /**

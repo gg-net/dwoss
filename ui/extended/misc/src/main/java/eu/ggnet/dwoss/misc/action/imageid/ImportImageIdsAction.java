@@ -22,9 +22,9 @@ import java.util.Optional;
 
 import javafx.scene.control.Alert;
 
+import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;

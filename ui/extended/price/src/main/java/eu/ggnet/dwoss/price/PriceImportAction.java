@@ -16,14 +16,14 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.dwoss.price.ee.Importer;
-
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.common.ui.TikaUtil;
+import eu.ggnet.dwoss.price.ee.Importer;
+import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;

@@ -21,8 +21,8 @@ import java.text.DecimalFormat;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  * A UI to update {@link SalesProduct} entities.

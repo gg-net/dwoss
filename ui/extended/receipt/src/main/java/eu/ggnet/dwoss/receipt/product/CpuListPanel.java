@@ -18,9 +18,9 @@ package eu.ggnet.dwoss.receipt.product;
 
 import java.awt.Window;
 
+import eu.ggnet.dwoss.common.ui.IView;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.util.IView;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 /**
  *

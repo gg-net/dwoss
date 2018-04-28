@@ -23,16 +23,16 @@ import javax.swing.JOptionPane;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.dwoss.common.ui.CloseType;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.core.ui.SwingCore;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *

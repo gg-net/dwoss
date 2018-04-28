@@ -42,6 +42,8 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.common.ui.TupleHtmlRenderer;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
@@ -52,7 +54,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.Tuple2;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.ui.*;
 import eu.ggnet.saft.core.ops.*;

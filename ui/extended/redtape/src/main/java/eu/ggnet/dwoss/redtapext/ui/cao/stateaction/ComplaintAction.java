@@ -22,6 +22,10 @@ import java.util.*;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ui.CloseType;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
@@ -30,13 +34,8 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.ComplaintView;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.auth.Guardian;
-
 
 /**
  *
@@ -90,7 +89,7 @@ public class ComplaintAction extends AbstractAction {
             }
             doc.setType(DocumentType.COMPLAINT);
             doc.setDirective(Directive.WAIT_FOR_COMPLAINT_COMPLETION);
-            Document d =Dl.remote().lookup(RedTapeWorker.class).update(doc, null, Dl.local().lookup(Guardian.class).getUsername());
+            Document d = Dl.remote().lookup(RedTapeWorker.class).update(doc, null, Dl.local().lookup(Guardian.class).getUsername());
             controller.reloadSelectionOnStateChange(d.getDossier());
         }
     }

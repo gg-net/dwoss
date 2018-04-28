@@ -28,6 +28,10 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.ui.HtmlDialog;
+import eu.ggnet.dwoss.common.ui.table.PojoFilter;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
@@ -35,10 +39,6 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.util.table.PojoFilter;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 

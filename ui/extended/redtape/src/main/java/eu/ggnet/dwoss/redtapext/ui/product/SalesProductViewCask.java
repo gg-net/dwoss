@@ -24,13 +24,15 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import eu.ggnet.dwoss.common.ui.HtmlDialog;
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.common.ui.table.PojoColumn;
+import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.ui.ResultProducer;

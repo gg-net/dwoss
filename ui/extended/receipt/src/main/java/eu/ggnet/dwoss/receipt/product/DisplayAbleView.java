@@ -21,13 +21,12 @@ import java.awt.Window;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
-
+import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.receipt.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.DisplayAbleDesktop;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.util.OkCancelDialog;
 
 public class DisplayAbleView extends AbstractView<DisplayAbleDesktop> {
 

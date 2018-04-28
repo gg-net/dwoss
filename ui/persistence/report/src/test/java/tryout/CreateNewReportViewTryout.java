@@ -20,7 +20,7 @@ import java.util.EnumSet;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.common.api.values.TradeName;

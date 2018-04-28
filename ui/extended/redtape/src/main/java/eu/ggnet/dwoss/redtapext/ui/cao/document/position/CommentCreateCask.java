@@ -21,9 +21,9 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
  *

@@ -15,7 +15,7 @@ import javafx.embed.swing.JFXPanel;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.mandator.Mandators;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.Dl;

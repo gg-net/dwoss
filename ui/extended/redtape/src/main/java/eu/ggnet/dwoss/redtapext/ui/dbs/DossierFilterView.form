@@ -494,7 +494,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="invertFilterBox" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="conditionPanel" pref="443" max="32767" attributes="0"/>
+                          <Component id="conditionPanel" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                   </Group>

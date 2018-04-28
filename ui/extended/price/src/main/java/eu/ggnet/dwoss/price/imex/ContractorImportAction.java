@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.price.imex;
 
-import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
-
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.DetailDialog;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.DetailDialog;
+import eu.ggnet.dwoss.common.ui.TikaUtil;
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.TikaUtil;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
@@ -71,7 +70,7 @@ public class ContractorImportAction extends AccessableAction {
                                             -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
                                 })
                                 .ifPresent(re -> DetailDialog.show(UiCore.getMainFrame(), re.hasSucceded() ? "Import erfolgreich" : "Import fehlerhaft",
-                        "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen", re.getSummary(), re.getDetailDescription()));
+                                "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen", re.getSummary(), re.getDetailDescription()));
                     });
         });
     }

@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.sage.SageExporter;
-import eu.ggnet.dwoss.util.DateRangeChooserView;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
@@ -38,7 +38,7 @@ public class SageExportAction extends AccessableAction {
         super(EXPORT_DOCUMENTS_FOR_SAGE_IN_XML);
     }
 
- @Override
+    @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {

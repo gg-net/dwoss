@@ -27,13 +27,13 @@ import javax.swing.RowFilter.Entry;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
+import eu.ggnet.dwoss.common.ui.HtmlDialog;
+import eu.ggnet.dwoss.common.ui.table.TableColumnChooserPopup;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.util.table.TableColumnChooserPopup;
 import eu.ggnet.saft.Dl;
 
 import lombok.Getter;

@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>lucidcalc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-common</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -38,12 +43,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-stock</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-mandator</artifactId>
+            <artifactId>dwoss-ui-spi-mandator</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

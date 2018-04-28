@@ -24,8 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.util.table.*;
 
 import lombok.ToString;
 
@@ -37,17 +37,21 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
     private class ShipmentFilter implements PojoFilter<Shipment> {
 
         private boolean isShipmentId;
+
         private boolean isOwner;
+
         private boolean isStatus;
 
         private String regexShipment = "";
+
         private TradeName owner = null;
+
         private Shipment.Status status = null;
 
         @Override
         public boolean filter(Shipment t) {
             boolean s = !isShipmentId || Pattern.matches(regexShipment, t.getShipmentId());
-            boolean o = !isOwner || t.getContractor()== owner;
+            boolean o = !isOwner || t.getContractor() == owner;
             boolean st = !isStatus || t.getStatus() == status;
             return s && o && st;
         }
@@ -58,22 +62,22 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
 
     public ShipmentModel(final List<Shipment> lines) {
         super(lines,
-                new PojoColumn<Shipment>("ShipmentNamen", false, 5, String.class,"shipmentId"),
-                new PojoColumn<Shipment>("Besitzer", false, 5, TradeName.class,"contractor"),
-                new PojoColumn<Shipment>("Letzter Status", false, 10, Shipment.Status.class,"status"),
-                new PojoColumn<Shipment>("Datum", false, 20, Date.class,"date"));
+                new PojoColumn<Shipment>("ShipmentNamen", false, 5, String.class, "shipmentId"),
+                new PojoColumn<Shipment>("Besitzer", false, 5, TradeName.class, "contractor"),
+                new PojoColumn<Shipment>("Letzter Status", false, 10, Shipment.Status.class, "status"),
+                new PojoColumn<Shipment>("Datum", false, 20, Date.class, "date"));
         filter = new ShipmentFilter();
         setFilter(filter);
     }
 
     public void filterShipmentId(String s, boolean enable) {
-        filter.regexShipment = "(?i).*"+s+".*";
+        filter.regexShipment = "(?i).*" + s + ".*";
         filter.isShipmentId = enable;
         L.debug("Filter changed. {}", filter);
         fireTableDataChanged();
     }
 
-    public void filterStatus(Shipment.Status status ,boolean enable) {
+    public void filterStatus(Shipment.Status status, boolean enable) {
         filter.status = status;
         filter.isStatus = enable;
         L.debug("Filter changed. {}", filter);

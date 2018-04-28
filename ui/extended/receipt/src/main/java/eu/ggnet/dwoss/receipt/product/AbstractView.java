@@ -16,18 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import eu.ggnet.dwoss.spec.ee.entity.Tablet;
-import eu.ggnet.dwoss.spec.ee.entity.Notebook;
-import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
-import eu.ggnet.dwoss.spec.ee.entity.AllInOne;
-import eu.ggnet.dwoss.spec.ee.entity.Monitor;
-import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.ee.entity.Desktop;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.IView;
-import eu.ggnet.dwoss.util.IPreClose;
-
 import java.awt.Window;
 import java.util.Set;
 
@@ -37,6 +25,8 @@ import javax.validation.Validation;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.spec.ee.entity.*;
 
 /**
  * Abstract View to help with pre cloes

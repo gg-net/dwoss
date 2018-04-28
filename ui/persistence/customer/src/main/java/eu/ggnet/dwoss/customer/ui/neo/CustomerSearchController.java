@@ -33,14 +33,14 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -203,7 +203,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
     /**
      * Build a ContextMenu for ListView of the search results for a better navigation
-     * 
+     *
      * @return ContextMenu the filled ContextMenu
      */
     private ContextMenu buildContextMenu() {
@@ -222,7 +222,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.getId())), () -> new HtmlPane());
             });
         });
-        
+
         viewCompleteCustomer.setOnAction((ActionEvent event) -> {
             //open toHtml(String salesRow, String comment)
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
@@ -231,7 +231,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Ui.build(statusHbox).title("Kunden Ansicht").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsHtml(selectedCustomer.getId())), () -> new HtmlPane());
             });
         });
-        
+
         editCustomer.setOnAction((ActionEvent event) -> {
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();

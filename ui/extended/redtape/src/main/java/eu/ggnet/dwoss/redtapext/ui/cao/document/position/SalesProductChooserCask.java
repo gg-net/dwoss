@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,15 +23,12 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.common.ui.table.PojoColumn;
+import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.util.CloseType;
-import eu.ggnet.dwoss.util.HtmlDialog;
-import eu.ggnet.dwoss.util.IPreClose;
-import eu.ggnet.dwoss.util.OkCancelDialog;
-import eu.ggnet.dwoss.util.table.PojoColumn;
-import eu.ggnet.dwoss.util.table.PojoTableModel;
 
-import static eu.ggnet.dwoss.util.CloseType.*;
+import static eu.ggnet.dwoss.common.ui.CloseType.OK;
 
 /**
  *
@@ -116,7 +113,7 @@ public class SalesProductChooserCask extends javax.swing.JPanel implements IPreC
         for (SalesProduct p : products) {
             if ( p.getPartNo().equals(s) ) product = p;
         }
-        if ( evt.getClickCount()>1) {
+        if ( evt.getClickCount() > 1 ) {
             HtmlDialog dialog = new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS);
             dialog.setText(product.toHtml());
             dialog.setVisible(true);

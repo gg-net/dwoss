@@ -20,9 +20,9 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
+import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Settlement;
-import eu.ggnet.dwoss.util.*;
 
 /**
  * A UI to set the {@link Document#settlements} to a {@link Document}.

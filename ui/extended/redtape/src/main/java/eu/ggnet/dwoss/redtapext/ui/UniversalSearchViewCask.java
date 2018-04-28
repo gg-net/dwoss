@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
-
 import java.awt.Dialog;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,10 +25,12 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.Tuple2;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 

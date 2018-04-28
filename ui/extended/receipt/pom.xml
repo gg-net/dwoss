@@ -30,9 +30,8 @@
             <artifactId>jcalendar</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-util</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.jdesktop</groupId>
+            <artifactId>beansbinding</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -48,6 +47,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ui-spi-stock</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

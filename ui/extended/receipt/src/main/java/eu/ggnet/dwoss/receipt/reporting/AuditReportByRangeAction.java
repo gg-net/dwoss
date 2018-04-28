@@ -16,13 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt.reporting;
 
-import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.util.DateRangeChooserView;
+import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
+import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 

@@ -16,24 +16,19 @@
  */
 package eu.ggnet.dwoss.customer.ui.old;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.awt.Component;
 import java.util.*;
 
 import javax.swing.*;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.common.ui.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
-import eu.ggnet.dwoss.mandator.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.util.*;
-import eu.ggnet.dwoss.util.table.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
@@ -42,9 +37,9 @@ import eu.ggnet.saft.core.auth.JComponentEnabler;
 
 import lombok.Getter;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.*;
 
 /**
  *

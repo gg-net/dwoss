@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.receipt.shipment;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.ComboBoxController;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.util.ComboBoxController;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.UiCore;
 import eu.ggnet.saft.core.ui.UserPreferences;

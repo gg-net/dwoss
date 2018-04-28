@@ -23,6 +23,7 @@
         <module>core</module>
         <module>persistence</module>
         <module>extended</module>
+        <module>spi</module>
     </modules>
 
 </project>

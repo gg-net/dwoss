@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.product;
 
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.entity.INamed;
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -33,18 +27,18 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ui.*;
+import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
+import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.util.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 
 import lombok.Getter;
-
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 

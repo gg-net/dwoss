@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.common.AbstractGuardian;
+import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;

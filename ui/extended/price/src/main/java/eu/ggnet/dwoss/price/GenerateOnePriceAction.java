@@ -16,18 +16,17 @@
  */
 package eu.ggnet.dwoss.price;
 
-import eu.ggnet.dwoss.price.ee.Exporter;
-
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
-import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
 import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.util.HtmlPane;
+import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
@@ -60,8 +59,8 @@ public class GenerateOnePriceAction extends AccessableAction {
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
                     .ifPresent(p -> Ui.build().modality(WINDOW_MODAL).title("SopoNr")
-                            .fx()
-                            .show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(p)), () -> new HtmlPane()));
+                    .fx()
+                    .show(() -> Css.toHtml5WithStyle(PriceEngineResultFormater.toSimpleHtml(p)), () -> new HtmlPane()));
         });
     }
 }

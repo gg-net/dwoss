@@ -24,19 +24,17 @@ import javax.swing.border.EtchedBorder;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.util.HtmlPane;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
 import eu.ggnet.saft.core.cap.MainComponent;
 import eu.ggnet.saft.core.ops.SelectionEnhancer;
 import eu.ggnet.saft.core.ops.Selector;
-
-import eu.ggnet.dwoss.stock.upi.StockUpi;
-
 
 /**
  * View that is used to quickly check availability.
@@ -180,7 +178,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         String refurbishedId = searchCommand.getText().trim();
-        UnitShard us =Dl.remote().lookup(UnitOverseer.class).find(refurbishedId);
+        UnitShard us = Dl.remote().lookup(UnitOverseer.class).find(refurbishedId);
         model.add(0, us);
         searchCommand.setText("");
     }//GEN-LAST:event_searchActionPerformed

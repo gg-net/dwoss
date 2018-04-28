@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
+import eu.ggnet.dwoss.common.ui.exception.DwFinalExceptionConsumer;
+import eu.ggnet.dwoss.common.ui.exception.UnhandledExceptionCatcher;
+import eu.ggnet.dwoss.common.ui.exception.ConstraintViolationConsumer;
+import eu.ggnet.dwoss.common.ui.exception.UserInfoExceptionConsumer;
+
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -30,7 +35,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
-import eu.ggnet.dwoss.common.exception.*;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.UserInfoException;
