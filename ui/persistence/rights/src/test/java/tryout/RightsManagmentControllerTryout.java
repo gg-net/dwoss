@@ -4,7 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
-import eu.ggnet.dwoss.rights.action.RightsManagmentAction;
+import eu.ggnet.dwoss.rights.ui.cap.RightsManagmentAction;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.UiCore;
 

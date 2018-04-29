@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,31 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights.action;
+package eu.ggnet.dwoss.rights.ui;
 
-import java.awt.event.ActionEvent;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
-import eu.ggnet.dwoss.rights.RightsManagmentController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
-
-import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 /**
  *
  * @author Bastian Venz
  */
-public class RightsManagmentAction extends AccessableAction {
+public class RightsListCell extends ListCell<AtomicRight> {
 
-    public RightsManagmentAction() {
-        super(CREATE_UPDATE_RIGHTS);
+    public static class Factory implements Callback<ListView<AtomicRight>, ListCell<AtomicRight>> {
+
+        @Override
+        public ListCell<AtomicRight> call(ListView<AtomicRight> p) {
+            return new RightsListCell();
+        }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> {
-            Ui.build().fxml().show(RightsManagmentController.class);
-        });
+    protected void updateItem(AtomicRight item, boolean empty) {
+        super.updateItem(item, empty);
+        if ( empty || item == null ) {
+            setText("");
+        } else {
+            setText(item.getName());
+        }
     }
-
 }

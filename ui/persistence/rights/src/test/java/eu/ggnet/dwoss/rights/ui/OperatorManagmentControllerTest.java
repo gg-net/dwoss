@@ -1,6 +1,4 @@
-package eu.ggnet.dwoss.rights;
-
-import eu.ggnet.dwoss.rights.OperatorManagmentController;
+package eu.ggnet.dwoss.rights.ui;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;

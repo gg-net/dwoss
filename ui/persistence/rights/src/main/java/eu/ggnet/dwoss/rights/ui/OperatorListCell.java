@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights;
+package eu.ggnet.dwoss.rights.ui;
 
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 

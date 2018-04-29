@@ -1,6 +1,4 @@
-package eu.ggnet.dwoss.rights;
-
-import eu.ggnet.dwoss.rights.ee.RightsAgent;
+package eu.ggnet.dwoss.rights.ui;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
@@ -10,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.saft.Dl;
 
 import tryout.stub.RightsAgentStub;

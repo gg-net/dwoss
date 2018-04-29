@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.rights;
+package eu.ggnet.dwoss.rights.ui;
 
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;

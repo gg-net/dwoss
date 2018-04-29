@@ -14,30 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.rights;
+package eu.ggnet.dwoss.rights.ui;
 
-import java.util.Arrays;
-import java.util.List;
+import eu.ggnet.dwoss.rights.ee.entity.Persona;
 
-import org.openide.util.lookup.ServiceProvider;
-
-import eu.ggnet.saft.core.cap.ActionFactory;
-import eu.ggnet.saft.core.cap.ActionFactory.MetaAction;
-import eu.ggnet.dwoss.rights.action.RightsManagmentAction;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 /**
  *
  * @author Bastian Venz
  */
-@ServiceProvider(service = ActionFactory.class)
-public class RightsActionFactory implements ActionFactory {
+public class PersonaListCell extends ListCell<Persona> {
 
-    private static final String MENU_NAME = "Rechte";
+    public static class Factory implements Callback<ListView<Persona>, ListCell<Persona>> {
+
+        @Override
+        public ListCell<Persona> call(ListView<Persona> p) {
+            return new PersonaListCell();
+        }
+    }
 
     @Override
-    public List<MetaAction> createMetaActions() {
-        return Arrays.asList(
-                new MetaAction(MENU_NAME, new RightsManagmentAction())
-        );
+    protected void updateItem(Persona item, boolean empty) {
+        super.updateItem(item, empty);
+        textProperty().unbind();
+        setText("");
+        if ( !empty || item != null ) textProperty().bind(item.nameProperty());
     }
 }
