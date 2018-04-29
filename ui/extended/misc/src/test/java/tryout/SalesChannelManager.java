@@ -18,8 +18,8 @@ import javax.swing.*;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandlerOperation.LastCharsRefurbishIdSorter;
-import eu.ggnet.dwoss.misc.saleschannel.SalesChannelManagerDialog;
-import eu.ggnet.dwoss.misc.saleschannel.SalesChannelTableModel;
+import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerDialog;
+import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelTableModel;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;

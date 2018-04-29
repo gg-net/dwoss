@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.misc.ui.ResolveRepaymentController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="85.0" prefWidth="85.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="45.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="NEVER" />
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" vgrow="NEVER" />
+    </rowConstraints>
+    <children>
+        <TableView fx:id="reportLineTable" GridPane.columnSpan="3" />
+        <Button fx:id="resolveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleResolveButtonAction" prefHeight="25.0" prefWidth="84.0" text="Auflösen" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+        <TextField fx:id="sopoField" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="Sopo Nr." GridPane.rowIndex="1" />
+        <Label text="Kommentar:" GridPane.rowIndex="2" />
+        <TextArea fx:id="commentField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="615.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2147483647" />
+    </children>
+</GridPane>

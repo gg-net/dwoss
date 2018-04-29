@@ -20,7 +20,7 @@ import javax.swing.JLabel;
 
 import javafx.scene.control.ChoiceDialog;
 
-import eu.ggnet.dwoss.misc.repayment.ResolveRepaymentController;
+import eu.ggnet.dwoss.misc.ui.ResolveRepaymentController;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.UiCore;

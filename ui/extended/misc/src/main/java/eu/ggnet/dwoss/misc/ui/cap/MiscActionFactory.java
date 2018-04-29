@@ -25,19 +25,9 @@ import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
-import eu.ggnet.dwoss.misc.action.*;
-import eu.ggnet.dwoss.misc.action.imageid.ExportImageIdsAction;
-import eu.ggnet.dwoss.misc.action.imageid.ImportImageIdsAction;
-import eu.ggnet.dwoss.misc.action.listings.AllSalesListingAction;
-import eu.ggnet.dwoss.misc.action.listings.SalesListingCreateAction;
-import eu.ggnet.dwoss.misc.action.movement.MovementAction;
-import eu.ggnet.dwoss.misc.help.AboutAction;
-import eu.ggnet.dwoss.misc.help.ShowMandatorAction;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
-import eu.ggnet.dwoss.misc.saleschannel.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.search.ui.OpenSearchAction;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.Dl;
@@ -95,7 +85,6 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Geschäftsführung", "Abschluss Reporte", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));
         actions.add(new MetaAction("Hilfe", new ShowMandatorAction()));
-        actions.add(new MetaAction("Kunden und Aufträge", new OpenSearchAction()));
 
         return actions;
     }
