@@ -14,18 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock;
+package eu.ggnet.dwoss.stock.ui.cap;
 
-import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
+import eu.ggnet.dwoss.stock.ui.cap.OpenStockTransactionManager;
+import eu.ggnet.dwoss.stock.ui.cap.OpenCommissioningManager;
 
 import java.util.Arrays;
 import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.stock.action.*;
-import eu.ggnet.dwoss.stock.transactions.ConsumerFactoryOfStockTransactions;
-import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
 import eu.ggnet.saft.core.cap.ActionFactory;
 import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
 

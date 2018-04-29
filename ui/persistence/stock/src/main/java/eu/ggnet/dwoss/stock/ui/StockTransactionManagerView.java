@@ -14,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock;
-
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
+package eu.ggnet.dwoss.stock.ui;
 
 import java.awt.Component;
 import java.awt.Window;
@@ -30,7 +26,8 @@ import javax.swing.*;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.stock.transactions.RemoveUnitFromTransactionAction;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.cap.RemoveUnitFromTransactionAction;
 import eu.ggnet.saft.core.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;
@@ -287,13 +284,4 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
     private javax.swing.JLabel typeLabel;
     // End of variables declaration//GEN-END:variables
 
-    public static void main(String args[]) throws Exception {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-        StockTransactionManagerView view = new StockTransactionManagerView(null);
-        StockTransactionManagerModel model = new StockTransactionManagerModel();
-        view.setModel(model);
-        view.setVisible(true);
-        System.exit(0);
-    }
 }

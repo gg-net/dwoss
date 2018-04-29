@@ -14,33 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.transactions;
-
-import javafx.scene.control.*;
-import javafx.util.Callback;
-
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-
 /**
- *
- * @author oliver.guenther
+ * Contains dependent actions.
  */
-public class StockListCell extends ListCell<Stock> {
-
-    public static class Factory implements Callback<ListView<Stock>, ListCell<Stock>> {
-
-        @Override
-        public ListCell<Stock> call(ListView<Stock> listView) {
-            return new StockListCell();
-        }
-    }
-
-    @Override
-    protected void updateItem(Stock item, boolean empty) {
-        super.updateItem(item, empty);
-        if ( item != null ) {
-            setText(item.getName());
-        }
-    }
-
-}
+package eu.ggnet.dwoss.stock.ui.transactions;

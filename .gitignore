@@ -95,3 +95,4 @@ hs_err_pid*
 /ui/spi/stock/target/
 /ui/spi/customer/target/
 /ui/core/search/target/
+/ui/spi/target/

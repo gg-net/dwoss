@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.transactions;
+package eu.ggnet.dwoss.stock.ui.transactions;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

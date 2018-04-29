@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.transactions;
+package eu.ggnet.dwoss.stock.ui.cap;
 
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -26,6 +26,9 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
+import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionModel;
+import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionView;
+import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;

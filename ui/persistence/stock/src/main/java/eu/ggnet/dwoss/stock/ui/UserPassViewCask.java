@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock;
+package eu.ggnet.dwoss.stock.ui;
 
 public class UserPassViewCask extends javax.swing.JDialog {
 
@@ -24,11 +24,8 @@ public class UserPassViewCask extends javax.swing.JDialog {
         super(parent);
         setModalityType(ModalityType.APPLICATION_MODAL);
         initComponents();
-        if (parent != null) setLocationRelativeTo(parent);
+        if ( parent != null ) setLocationRelativeTo(parent);
     }
-
-
-
 
     /** Creates new form UserPassViewCask */
     public UserPassViewCask(java.awt.Frame parent, boolean modal) {
@@ -159,13 +156,6 @@ public class UserPassViewCask extends javax.swing.JDialog {
         passwordField.requestFocusInWindow();
     }//GEN-LAST:event_usernameTextFieldActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        UserPassViewCask dialog = new UserPassViewCask(new javax.swing.JFrame(), true);
-        dialog.setVisible(true);
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton okButton;

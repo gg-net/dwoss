@@ -24,17 +24,14 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 
 import java.awt.Dimension;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.junit.Test;
-
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.transactions.CreateSimpleAction;
+import eu.ggnet.dwoss.stock.ui.cap.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.auth.Guardian;
@@ -48,15 +45,12 @@ import static org.mockito.Mockito.mock;
  */
 public class CreateSimpleActionTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
-
+    public static void main(String[] args) {
         JPanel p = new JPanel();
         JButton b = new JButton("Press to close");
         b.setPreferredSize(new Dimension(200, 50));
-        CountDownLatch l = new CountDownLatch(1);
         b.addActionListener(e -> {
-            l.countDown();
+            Ui.closeWindowOf(b);
         });
 
         p.add(new JButton(new CreateSimpleAction()));
@@ -204,7 +198,6 @@ public class CreateSimpleActionTryout {
         Dl.local().add(Guardian.class, guardianMock);
 
         UiCore.startSwing(() -> p);
-        l.await();
     }
 
 }

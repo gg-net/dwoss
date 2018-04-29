@@ -16,24 +16,16 @@
  */
 package tryout;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import javax.persistence.LockModeType;
 import javax.swing.JButton;
 
-import org.junit.Test;
-
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.transactions.CreateSelectionController;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
 import eu.ggnet.saft.*;
 
 /**
@@ -42,13 +34,11 @@ import eu.ggnet.saft.*;
  */
 public class CreateSelectionTryout {
 
-    @Test
-    public void tryout() throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         JButton b = new JButton("Press to close");
         b.setPreferredSize(new Dimension(200, 50));
-        CountDownLatch l = new CountDownLatch(1);
         b.addActionListener(e -> {
-            l.countDown();
+            Ui.closeWindowOf(b);
         });
 
         Dl.remote().add(StockAgent.class, new StockAgent() {
@@ -151,8 +141,6 @@ public class CreateSelectionTryout {
         Ui.exec(() -> {
             Ui.build().fxml().eval(CreateSelectionController.class).opt().ifPresent(System.out::println);
         });
-
-        l.await();
     }
 
 }

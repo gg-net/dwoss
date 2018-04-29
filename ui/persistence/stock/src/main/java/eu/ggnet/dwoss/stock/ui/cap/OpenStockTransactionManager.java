@@ -14,13 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.action;
+package eu.ggnet.dwoss.stock.ui.cap;
+
+import eu.ggnet.dwoss.stock.ui.StockTransactionManagerController;
+import eu.ggnet.dwoss.stock.ui.StockTransactionManagerView;
+import eu.ggnet.dwoss.stock.ui.StockTransactionManagerModel;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.stock.*;
 import eu.ggnet.saft.UiCore;
 
 /**
