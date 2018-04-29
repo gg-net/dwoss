@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.dbs;
 
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
@@ -29,7 +33,6 @@ import eu.ggnet.dwoss.common.ui.ComboBoxController;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
-import eu.ggnet.saft.*;
 import eu.ggnet.saft.core.ui.UserPreferences;
 
 /**

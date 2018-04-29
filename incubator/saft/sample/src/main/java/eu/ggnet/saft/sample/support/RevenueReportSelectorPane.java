@@ -16,9 +16,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * Shows a selector pane for the Revenue Report.

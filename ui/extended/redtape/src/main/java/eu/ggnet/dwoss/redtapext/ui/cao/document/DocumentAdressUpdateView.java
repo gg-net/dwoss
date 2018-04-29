@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

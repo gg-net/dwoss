@@ -96,3 +96,7 @@ hs_err_pid*
 /ui/spi/customer/target/
 /ui/core/search/target/
 /ui/spi/target/
+/assembly/client/target/
+/incubator/saft/experimental/target/
+/incubator/saft/test-javafx/target/
+/incubator/saft/test-swing/target/

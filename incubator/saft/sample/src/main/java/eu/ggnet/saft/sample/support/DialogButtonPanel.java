@@ -16,7 +16,7 @@
  */
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Getter;
 

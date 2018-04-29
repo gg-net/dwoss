@@ -1,8 +1,8 @@
 package eu.ggnet.dwoss.common.ui;
 
 import eu.ggnet.dwoss.common.ui.AbstractGuardian;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import eu.ggnet.dwoss.rights.api.Operator;
 

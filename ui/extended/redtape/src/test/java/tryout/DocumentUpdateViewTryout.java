@@ -1,5 +1,8 @@
 package tryout;
 
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -30,10 +33,9 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;

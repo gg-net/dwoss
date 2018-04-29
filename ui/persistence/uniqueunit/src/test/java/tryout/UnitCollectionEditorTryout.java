@@ -21,8 +21,8 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionEditorController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import tryout.stub.UnitCollectionGenerator;
 

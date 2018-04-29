@@ -24,9 +24,9 @@ import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.misc.ui.ResolveRepaymentController;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
 

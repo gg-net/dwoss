@@ -25,13 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.DetailDialog;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
 
-import static eu.ggnet.saft.core.exception.ExceptionUtil.*;
+import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;
 import static eu.ggnet.saft.core.ui.AlertType.WARNING;
 
 /**

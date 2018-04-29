@@ -50,11 +50,11 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 import lombok.Getter;
 

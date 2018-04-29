@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  * Support Class for creation or edit of Products.

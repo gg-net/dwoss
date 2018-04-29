@@ -37,7 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import lombok.Getter;
 

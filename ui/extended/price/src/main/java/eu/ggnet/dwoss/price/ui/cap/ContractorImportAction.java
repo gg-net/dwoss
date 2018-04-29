@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 
@@ -26,10 +30,9 @@ import eu.ggnet.dwoss.common.ui.DetailDialog;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
 import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

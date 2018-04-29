@@ -21,8 +21,8 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 import lombok.Getter;
 

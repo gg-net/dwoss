@@ -16,14 +16,17 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.spec.ee.SpecExporter;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
 

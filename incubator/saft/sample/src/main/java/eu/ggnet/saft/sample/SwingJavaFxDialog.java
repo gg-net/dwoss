@@ -4,8 +4,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.sample.support.MainPanel;
 
 import static javafx.scene.control.ButtonType.CANCEL;

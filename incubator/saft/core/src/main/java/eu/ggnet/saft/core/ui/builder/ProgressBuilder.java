@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import javafx.concurrent.Worker;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 import lombok.Getter;
 import lombok.Setter;

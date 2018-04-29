@@ -27,7 +27,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import static javafx.geometry.Pos.CENTER_RIGHT;
 

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+
 import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.Map.Entry;
@@ -33,9 +37,8 @@ import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelTableModel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
 

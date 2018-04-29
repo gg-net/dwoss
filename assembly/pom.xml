@@ -121,7 +121,7 @@
     <modules>
 
         <module>server</module>
-        <module>client-remote</module>
+        <module>client</module>
     </modules>
 
 </project>

@@ -23,7 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

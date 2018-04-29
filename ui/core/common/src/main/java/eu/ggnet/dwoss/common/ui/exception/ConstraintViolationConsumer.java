@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.common.ui.DetailDialog;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
-import static eu.ggnet.saft.core.exception.ExceptionUtil.toStackStrace;
+import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.toStackStrace;
 
 /**
  *

@@ -27,8 +27,8 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

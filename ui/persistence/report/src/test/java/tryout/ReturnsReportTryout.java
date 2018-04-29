@@ -24,8 +24,8 @@ import javax.swing.JLabel;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

@@ -5,11 +5,14 @@
  */
 package tryout.stub;
 
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.UserChangeListener;
+import eu.ggnet.saft.experimental.auth.Guardian;
+
 import java.util.Set;
 
-import eu.ggnet.saft.api.auth.Accessable;
-import eu.ggnet.saft.api.auth.Authorisation;
-import eu.ggnet.saft.core.auth.*;
+import eu.ggnet.saft.experimental.auth.Accessable;
+import eu.ggnet.saft.api.Authorisation;
 
 /**
  *

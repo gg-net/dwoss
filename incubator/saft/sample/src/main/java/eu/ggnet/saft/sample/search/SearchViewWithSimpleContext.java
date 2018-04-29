@@ -21,8 +21,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.core.ops.FxOps;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.experimental.FxOps;
 
 /**
  *

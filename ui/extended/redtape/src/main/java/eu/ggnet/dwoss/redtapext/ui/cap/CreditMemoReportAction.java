@@ -22,8 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * Action to create the CreditMemo Report.

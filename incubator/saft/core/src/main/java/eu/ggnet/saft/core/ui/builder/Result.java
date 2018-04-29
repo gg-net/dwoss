@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.NonNull;
 

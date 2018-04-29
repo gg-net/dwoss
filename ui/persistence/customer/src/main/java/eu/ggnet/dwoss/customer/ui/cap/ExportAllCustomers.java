@@ -19,9 +19,9 @@ package eu.ggnet.dwoss.customer.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.customer.ee.CustomerExporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_ALL_CUSTOMERS;
 

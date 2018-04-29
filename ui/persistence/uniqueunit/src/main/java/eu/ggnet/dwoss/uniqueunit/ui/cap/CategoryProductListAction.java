@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.uniqueunit.ui.categoryProduct.CategoryProductListController;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

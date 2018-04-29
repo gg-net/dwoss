@@ -26,9 +26,9 @@ import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.FxSaft;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;

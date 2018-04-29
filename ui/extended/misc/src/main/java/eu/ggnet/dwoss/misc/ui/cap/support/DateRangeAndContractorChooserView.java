@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap.support;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.ResultProducer;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -28,8 +32,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Value;
 

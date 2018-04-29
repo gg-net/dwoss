@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.PositionViewAction;
-import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.experimental.ops.ActionFactory;
 
 /**
  *

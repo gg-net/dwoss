@@ -24,7 +24,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  *

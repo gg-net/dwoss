@@ -39,9 +39,9 @@ import javafx.util.StringConverter;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *

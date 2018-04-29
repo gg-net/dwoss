@@ -34,8 +34,8 @@ import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 
 import lombok.Getter;

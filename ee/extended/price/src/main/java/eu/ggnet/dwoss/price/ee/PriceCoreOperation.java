@@ -45,7 +45,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.dwoss.progress.IMonitor;
 
 import lombok.Data;
 

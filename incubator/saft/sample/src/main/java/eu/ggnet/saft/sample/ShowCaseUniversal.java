@@ -23,9 +23,9 @@ import javafx.scene.control.Alert;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.IdSupplier;
-import eu.ggnet.saft.api.ui.StoreLocation;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.api.IdSupplier;
+import eu.ggnet.saft.core.ui.StoreLocation;
 import eu.ggnet.saft.core.ui.FxCore;
 import eu.ggnet.saft.sample.support.*;
 

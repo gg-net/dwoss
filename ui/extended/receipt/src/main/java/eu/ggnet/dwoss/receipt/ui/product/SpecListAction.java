@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

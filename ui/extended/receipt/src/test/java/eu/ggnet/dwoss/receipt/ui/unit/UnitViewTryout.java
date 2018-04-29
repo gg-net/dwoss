@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;

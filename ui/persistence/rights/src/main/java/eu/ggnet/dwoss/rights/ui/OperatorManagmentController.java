@@ -34,7 +34,7 @@ import javafx.util.StringConverter;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

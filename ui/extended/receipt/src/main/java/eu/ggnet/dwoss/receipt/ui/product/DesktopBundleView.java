@@ -37,8 +37,8 @@ import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Getter;
 

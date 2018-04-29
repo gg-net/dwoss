@@ -29,8 +29,8 @@ import javafx.scene.control.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.builder.UiParameter.Type;
 

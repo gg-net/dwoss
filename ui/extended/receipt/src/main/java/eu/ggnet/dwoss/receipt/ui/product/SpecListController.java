@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /*
  * To change this template, choose Tools | Templates

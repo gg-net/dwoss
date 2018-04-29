@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.common.ui.exception;
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 public class UnhandledExceptionCatcher extends EventQueue {
 

@@ -26,7 +26,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.builder.StaticParentMapperJavaFx;
 
 import lombok.NonNull;

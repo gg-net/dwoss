@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.progress;
 
-import eu.ggnet.saft.api.progress.IMonitor;
 
 import java.awt.EventQueue;
 import java.awt.Window;

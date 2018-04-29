@@ -45,7 +45,7 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.*;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.CategoryProductGenerator;
 import eu.ggnet.dwoss.uniqueunit.ui.treeTableView.data.gen.ProductGenerator;
-import eu.ggnet.saft.api.ui.FxController;
+import eu.ggnet.saft.core.ui.FxController;
 
 /**
  * FXML Controller class

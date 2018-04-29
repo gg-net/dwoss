@@ -21,10 +21,10 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.common.ui.HtmlPane;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.auth.Authorisation;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 /**
  * An Action, that opens a HtmlDialog to show all active Rights.

@@ -16,12 +16,15 @@
  */
 package tryout;
 
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Dl;
+
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.cap.RemoteLookup;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 

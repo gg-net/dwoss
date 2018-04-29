@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.ProductGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductEditorController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 public class ProductEditorTryout extends Application {
 

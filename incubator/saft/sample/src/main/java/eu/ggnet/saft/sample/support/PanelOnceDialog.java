@@ -1,6 +1,6 @@
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.api.ui.Once;
+import eu.ggnet.saft.core.ui.Once;
 
 /**
  *

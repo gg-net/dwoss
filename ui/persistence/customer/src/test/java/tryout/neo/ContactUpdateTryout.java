@@ -22,8 +22,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

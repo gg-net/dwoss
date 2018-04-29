@@ -5,9 +5,9 @@
  */
 package eu.ggnet.saft.sample.support;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.Frame;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.Frame;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**

@@ -24,9 +24,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
-import eu.ggnet.saft.api.ui.ClosedListener;
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Ops;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.experimental.Ops;
 
 /**
  *

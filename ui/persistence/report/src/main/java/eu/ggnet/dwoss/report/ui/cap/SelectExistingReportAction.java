@@ -23,9 +23,9 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.cap.support.SelectExistingReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_STORED_REPORTS;
 

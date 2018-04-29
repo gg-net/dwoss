@@ -1,13 +1,16 @@
 package eu.ggnet.saft.sample.support;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.FxController;
+
 import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * FXML Controller class

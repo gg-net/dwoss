@@ -30,8 +30,8 @@ import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

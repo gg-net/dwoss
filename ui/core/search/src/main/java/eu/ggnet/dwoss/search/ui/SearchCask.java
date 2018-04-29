@@ -16,6 +16,14 @@
  */
 package eu.ggnet.dwoss.search.ui;
 
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.experimental.Ops;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -39,9 +47,7 @@ import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ops.Selector;
+import eu.ggnet.saft.experimental.ops.Selector;
 import eu.ggnet.saft.core.ui.FxSaft;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;

@@ -16,6 +16,10 @@
  */
 package tryout.neo;
 
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Dl;
+
 import java.util.Locale;
 import java.util.Optional;
 
@@ -29,7 +33,6 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
 
 import tryout.stub.CustomerAgentStub;

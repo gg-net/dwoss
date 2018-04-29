@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelTableModel;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.CUSTOMER;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;

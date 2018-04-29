@@ -27,8 +27,8 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

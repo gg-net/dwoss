@@ -3,9 +3,9 @@ package eu.ggnet.saft.sample;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.Ops;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.sample.search.*;
 import eu.ggnet.saft.sample.support.MainPanelAddButtons;
 

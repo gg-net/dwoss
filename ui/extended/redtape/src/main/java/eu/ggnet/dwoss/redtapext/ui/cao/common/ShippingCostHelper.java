@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  * A helper class that provides methods to modify shipping costs.

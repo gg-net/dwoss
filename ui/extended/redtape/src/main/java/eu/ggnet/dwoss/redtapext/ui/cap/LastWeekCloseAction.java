@@ -23,10 +23,10 @@ import javafx.scene.control.Alert;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXECUTE_MANUAL_CLOSING;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

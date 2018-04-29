@@ -34,11 +34,11 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 /**
  *

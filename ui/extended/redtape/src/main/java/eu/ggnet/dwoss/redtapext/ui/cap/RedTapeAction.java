@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import static javax.swing.Action.SMALL_ICON;
 

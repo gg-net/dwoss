@@ -22,8 +22,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

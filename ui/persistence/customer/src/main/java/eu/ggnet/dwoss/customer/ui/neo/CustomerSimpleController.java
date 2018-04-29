@@ -16,6 +16,10 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.FxController;
+
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,8 +43,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import lombok.AllArgsConstructor;

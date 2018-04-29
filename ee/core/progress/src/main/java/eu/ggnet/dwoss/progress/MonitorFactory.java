@@ -26,7 +26,6 @@ import javax.ejb.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.api.progress.HiddenMonitor;
 
 /**
  * A Factory for ProgressMonitors to be used in a EJB environment.

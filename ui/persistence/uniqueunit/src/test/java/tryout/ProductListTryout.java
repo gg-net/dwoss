@@ -1,5 +1,9 @@
 package tryout;
 
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -10,9 +14,8 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import tryout.stub.UniqueUnitAgentStub;
 

@@ -22,12 +22,12 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ROLL_IN_OF_PREPARED_TRANSACTIONS;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.PREPARED;

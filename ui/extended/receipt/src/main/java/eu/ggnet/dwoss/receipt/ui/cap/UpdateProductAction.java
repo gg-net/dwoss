@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap;
 
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
@@ -23,9 +27,8 @@ import javafx.scene.control.TextInputDialog;
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.saft.*;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
 

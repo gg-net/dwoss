@@ -20,9 +20,9 @@ import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.reporting.DebitorsReporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_DEBITOR_REPORT;
 

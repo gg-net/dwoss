@@ -21,9 +21,9 @@ import java.awt.event.ActionEvent;
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;

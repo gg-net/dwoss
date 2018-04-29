@@ -13,7 +13,9 @@
     <modules>
         <module>api</module>
         <module>core</module>
-        <module>runtime</module>
         <module>sample</module>
+        <module>experimental</module>
+        <module>test-javafx</module>
+        <module>test-swing</module>
     </modules>
 </project>

@@ -21,9 +21,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  *

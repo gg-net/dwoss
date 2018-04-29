@@ -39,8 +39,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * @author bastian.venz

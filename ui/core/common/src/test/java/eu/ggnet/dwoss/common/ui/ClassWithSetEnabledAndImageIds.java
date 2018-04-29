@@ -1,6 +1,6 @@
 package eu.ggnet.dwoss.common.ui;
 
-import eu.ggnet.saft.api.auth.Accessable;
+import eu.ggnet.saft.experimental.auth.Accessable;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 

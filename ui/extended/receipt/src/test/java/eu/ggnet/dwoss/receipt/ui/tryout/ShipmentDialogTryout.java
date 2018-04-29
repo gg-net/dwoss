@@ -15,10 +15,10 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.stock.upi.impl.StockUpiImpl;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.cap.RemoteLookup;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 
 /**
  *

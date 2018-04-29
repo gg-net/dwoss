@@ -23,9 +23,9 @@ import javax.swing.JOptionPane;
 import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT;
 

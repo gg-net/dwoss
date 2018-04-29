@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.swing.AbstractListModel;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 

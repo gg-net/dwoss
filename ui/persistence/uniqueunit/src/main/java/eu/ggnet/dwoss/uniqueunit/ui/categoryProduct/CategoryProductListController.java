@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ClosedListener;
+
 import java.net.URL;
 import java.util.*;
 
@@ -24,10 +28,9 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.FxSaft;
 
 /**

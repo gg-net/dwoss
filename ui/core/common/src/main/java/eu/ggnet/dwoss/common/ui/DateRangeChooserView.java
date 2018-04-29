@@ -26,9 +26,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.Once;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 import lombok.Value;
 

@@ -2,8 +2,8 @@ package eu.ggnet.saft.sample;
 
 import java.awt.EventQueue;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.sample.support.DocumentAdressUpdateViewOkCanceler;
 import eu.ggnet.saft.sample.support.MainPanel;
 

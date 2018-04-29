@@ -29,8 +29,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
 
 /**

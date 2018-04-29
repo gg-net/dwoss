@@ -35,9 +35,9 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_CREDITMEMO;
 

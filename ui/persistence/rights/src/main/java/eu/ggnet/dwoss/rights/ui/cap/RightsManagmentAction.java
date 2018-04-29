@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.rights.ui.cap;
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.dwoss.rights.ui.RightsManagmentController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_UPDATE_RIGHTS;
 

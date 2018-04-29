@@ -26,9 +26,9 @@ import javafx.scene.layout.FlowPane;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.Once;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 import static javafx.geometry.Pos.CENTER_RIGHT;
 

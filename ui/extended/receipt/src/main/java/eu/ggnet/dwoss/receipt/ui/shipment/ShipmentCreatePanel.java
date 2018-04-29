@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

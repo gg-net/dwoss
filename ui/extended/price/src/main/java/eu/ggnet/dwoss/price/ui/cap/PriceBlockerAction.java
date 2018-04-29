@@ -27,12 +27,12 @@ import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 

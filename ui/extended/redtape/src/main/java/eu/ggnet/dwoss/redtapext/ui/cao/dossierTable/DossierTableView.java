@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

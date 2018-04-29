@@ -12,7 +12,7 @@ import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
 import eu.ggnet.dwoss.progress.ProgressProducerForTests;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.dwoss.progress.IMonitor;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;

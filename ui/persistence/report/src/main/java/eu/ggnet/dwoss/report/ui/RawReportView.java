@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ui;
 
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.Title;
+
 import java.util.*;
 
 import javafx.application.Platform;
@@ -44,9 +48,8 @@ import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import static javafx.geometry.Pos.CENTER_LEFT;
 import static javafx.scene.control.SelectionMode.MULTIPLE;

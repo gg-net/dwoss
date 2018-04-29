@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.ConnectionConfig;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
 
-import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.dwoss.progress.IMonitor;
 
 import eu.ggnet.dwoss.progress.SubMonitor;
 

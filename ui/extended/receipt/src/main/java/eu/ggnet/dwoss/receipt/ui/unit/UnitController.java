@@ -41,8 +41,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Getter;
 import lombok.Setter;

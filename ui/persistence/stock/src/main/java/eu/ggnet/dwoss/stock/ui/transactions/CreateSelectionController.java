@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.stock.ui.transactions;
 
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.FxController;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -23,9 +27,8 @@ import javafx.scene.layout.GridPane;
 
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * FXML Controller class

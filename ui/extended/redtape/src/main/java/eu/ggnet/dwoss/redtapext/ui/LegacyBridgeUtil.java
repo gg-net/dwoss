@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtapext.ui;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

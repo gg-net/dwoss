@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.api;
 
 import java.io.Serializable;
 
-import eu.ggnet.saft.api.ui.IdSupplier;
+import eu.ggnet.saft.api.IdSupplier;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;

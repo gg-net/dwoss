@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.experimental.ops.ActionFactory;
 import eu.ggnet.dwoss.receipt.ui.product.SpecListAction;
 
 /**

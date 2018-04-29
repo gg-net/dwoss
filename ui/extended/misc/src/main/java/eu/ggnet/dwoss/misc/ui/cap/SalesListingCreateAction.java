@@ -23,8 +23,8 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.misc.ee.listings.SalesListingProducer;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

@@ -1,5 +1,8 @@
 package tryout;
 
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;
@@ -28,10 +31,9 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.AuthenticationException;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.cap.RemoteLookup;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import tryout.stub.*;
 

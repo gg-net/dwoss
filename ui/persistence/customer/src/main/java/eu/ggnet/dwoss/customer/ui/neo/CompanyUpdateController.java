@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.FxController;
+
 import java.net.URL;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -39,8 +43,7 @@ import javafx.util.converter.IntegerStringConverter;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.stage.Modality.WINDOW_MODAL;

@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.uniqueunit.ui.categoryProduct;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map.Entry;
@@ -29,8 +33,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductListController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**

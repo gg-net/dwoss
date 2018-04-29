@@ -2,7 +2,7 @@ package eu.ggnet.saft.sample;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 import static eu.ggnet.saft.core.ui.AlertType.*;
 

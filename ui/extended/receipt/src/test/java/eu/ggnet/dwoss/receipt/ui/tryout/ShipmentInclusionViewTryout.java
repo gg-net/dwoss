@@ -29,8 +29,8 @@ import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.cap.RemoteLookup;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 
 /**
  *

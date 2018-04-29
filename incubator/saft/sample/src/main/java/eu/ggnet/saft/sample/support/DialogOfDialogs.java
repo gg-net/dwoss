@@ -24,7 +24,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.progress;
 
-import eu.ggnet.saft.api.progress.IMonitor;
 
 import javax.enterprise.inject.Alternative;
 

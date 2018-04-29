@@ -28,9 +28,9 @@ import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 /**
  * View to create new sales report based on mandator contractors.

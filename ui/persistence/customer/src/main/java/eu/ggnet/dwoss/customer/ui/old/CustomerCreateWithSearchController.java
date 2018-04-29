@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  * Controller for the create of a Customer.

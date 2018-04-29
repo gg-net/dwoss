@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 import javafx.application.Platform;
 import javafx.stage.FileChooser;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.SwingCore;
 
 import lombok.Setter;

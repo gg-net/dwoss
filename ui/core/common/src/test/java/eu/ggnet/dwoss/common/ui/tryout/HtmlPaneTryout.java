@@ -23,8 +23,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import eu.ggnet.dwoss.common.ui.HtmlPane;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

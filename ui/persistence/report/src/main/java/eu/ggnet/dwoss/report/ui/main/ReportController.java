@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.report.ui.main;
 
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.StoreLocation;
+import eu.ggnet.saft.api.IdSupplier;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -45,9 +51,8 @@ import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.api.ReportExporter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Getter;
 import lombok.Value;

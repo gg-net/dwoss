@@ -1,5 +1,9 @@
 package tryout;
 
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+
 import java.util.EnumSet;
 
 import javax.swing.JLabel;
@@ -8,7 +12,6 @@ import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.report.ui.cap.support.RevenueReportSelectionView;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.saft.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

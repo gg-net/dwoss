@@ -1,9 +1,11 @@
 package eu.ggnet.saft.sample.support;
 
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.StoreLocation;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-
-import eu.ggnet.saft.api.ui.*;
 
 import static javafx.scene.text.Font.font;
 

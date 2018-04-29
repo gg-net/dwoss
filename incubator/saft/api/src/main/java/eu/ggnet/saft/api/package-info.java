@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,5 +17,6 @@
  */
 /**
  * The Simple Application Framework Toolkit Api.
+ * The Api interfaces and annotations are extracted, as they might be used in a server environment, to be used in dto's or else.
  */
 package eu.ggnet.saft.api;

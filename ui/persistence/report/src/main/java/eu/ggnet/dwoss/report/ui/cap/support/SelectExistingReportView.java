@@ -37,10 +37,10 @@ import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
 
 import lombok.Value;
 

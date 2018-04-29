@@ -29,9 +29,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**

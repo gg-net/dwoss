@@ -30,8 +30,8 @@ import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.cap.ActionFactory;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.experimental.ops.ActionFactory;
 
 /**
  *

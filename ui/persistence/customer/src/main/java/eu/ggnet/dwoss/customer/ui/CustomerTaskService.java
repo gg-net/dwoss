@@ -17,7 +17,7 @@ import javafx.concurrent.Task;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import lombok.Getter;
 import lombok.Setter;

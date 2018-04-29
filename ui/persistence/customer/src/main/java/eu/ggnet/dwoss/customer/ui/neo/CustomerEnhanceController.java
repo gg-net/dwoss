@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.FxController;
+
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -44,8 +48,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

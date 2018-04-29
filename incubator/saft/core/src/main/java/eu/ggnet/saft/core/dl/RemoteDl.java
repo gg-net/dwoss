@@ -21,8 +21,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.core.cap.RemoteLookup;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

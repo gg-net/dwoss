@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap.support;
 
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.dwoss.receipt.ui.cap.support.AddCommentCask.Comment;
 
 import lombok.AllArgsConstructor;

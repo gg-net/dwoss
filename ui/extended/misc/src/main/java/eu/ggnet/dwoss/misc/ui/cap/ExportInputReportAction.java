@@ -23,9 +23,9 @@ import javafx.application.Platform;
 import eu.ggnet.dwoss.common.ui.OkCancelStage;
 import eu.ggnet.dwoss.misc.ui.cap.support.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
 

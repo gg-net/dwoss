@@ -24,7 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.ui.Title;
 
 import static javafx.scene.control.ButtonType.CANCEL;
 import static javafx.scene.control.ButtonType.OK;

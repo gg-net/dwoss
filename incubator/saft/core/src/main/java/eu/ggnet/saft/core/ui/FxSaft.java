@@ -13,7 +13,6 @@ import javafx.stage.Window;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.api.ui.FxController;
 
 /**
  *

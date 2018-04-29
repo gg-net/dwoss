@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui;
 
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+
 import java.awt.Dialog;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,8 +35,7 @@ import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.UniversalSearcher;
 import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 public class UniversalSearchViewCask extends javax.swing.JFrame {
 

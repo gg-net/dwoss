@@ -18,9 +18,9 @@ package eu.ggnet.saft.sample.search;
 
 import java.util.*;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.ops.DescriptiveConsumer;
-import eu.ggnet.saft.core.ops.DescriptiveConsumerFactory;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.ops.DescriptiveConsumer;
+import eu.ggnet.saft.experimental.ops.DescriptiveConsumerFactory;
 
 /**
  *

@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.UiParent;
 

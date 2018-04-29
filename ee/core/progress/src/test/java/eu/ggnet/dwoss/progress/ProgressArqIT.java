@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.progress.runtime.RuntimeEx;
 import eu.ggnet.dwoss.progress.runtime.RuntimeExImpl;
 import eu.ggnet.dwoss.progress.support.MonitorFactorySupportBean;
-import eu.ggnet.saft.api.progress.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

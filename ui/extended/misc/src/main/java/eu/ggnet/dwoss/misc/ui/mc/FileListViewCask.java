@@ -27,9 +27,9 @@ import javax.swing.*;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
-import eu.ggnet.saft.core.cap.MainComponent;
+import eu.ggnet.dwoss.common.ui.MainComponent;
 
 /**
  *

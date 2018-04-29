@@ -7,7 +7,7 @@ package eu.ggnet.saft.sample.support;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.StoreLocation;
+import eu.ggnet.saft.core.ui.StoreLocation;
 
 /**
  *

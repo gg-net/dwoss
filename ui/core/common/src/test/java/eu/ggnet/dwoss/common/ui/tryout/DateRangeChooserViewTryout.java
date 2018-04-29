@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.common.ui.tryout;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

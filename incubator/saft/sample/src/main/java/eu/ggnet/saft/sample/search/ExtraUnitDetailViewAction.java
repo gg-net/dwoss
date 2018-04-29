@@ -18,8 +18,8 @@ package eu.ggnet.saft.sample.search;
 
 import java.util.function.Consumer;
 
-import eu.ggnet.saft.api.ui.Title;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

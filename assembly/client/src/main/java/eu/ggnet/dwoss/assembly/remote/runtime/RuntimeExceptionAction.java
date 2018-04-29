@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package eu.ggnet.dwoss.assembly.remote.runtime;
+
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
+import eu.ggnet.dwoss.progress.runtime.RuntimeEx;
+import eu.ggnet.saft.core.Dl;
+
+/**
+ *
+ * @author pascal.perau
+ */
+public class RuntimeExceptionAction extends AbstractAction {
+
+    public RuntimeExceptionAction() {
+        super("Cause a Runtime Exption on the Server");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Dl.remote().lookup(RuntimeEx.class).causeRuntimeException();
+    }
+}

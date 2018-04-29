@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
-import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.dwoss.progress.IMonitor;
 
 @Stateless
 public class StockTransactionEmo {

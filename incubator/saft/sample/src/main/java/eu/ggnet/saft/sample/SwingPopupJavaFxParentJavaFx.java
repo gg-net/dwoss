@@ -7,9 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.sample.support.MainPanel;
 import eu.ggnet.saft.sample.support.RevenueReportSelectorPane;
 

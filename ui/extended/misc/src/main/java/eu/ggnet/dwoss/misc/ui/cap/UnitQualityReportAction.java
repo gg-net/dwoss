@@ -22,8 +22,8 @@ import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.ui.cap.support.DateRangeAndContractorChooserView;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

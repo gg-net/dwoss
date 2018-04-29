@@ -30,8 +30,8 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

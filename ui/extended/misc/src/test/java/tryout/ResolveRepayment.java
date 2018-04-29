@@ -22,8 +22,8 @@ import javafx.scene.control.ChoiceDialog;
 
 import eu.ggnet.dwoss.misc.ui.ResolveRepaymentController;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.RESOLVE_REPAYMENT;
 import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;

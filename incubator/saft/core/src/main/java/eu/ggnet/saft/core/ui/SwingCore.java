@@ -17,7 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  * Core which is used if Saft is in Swing mode.

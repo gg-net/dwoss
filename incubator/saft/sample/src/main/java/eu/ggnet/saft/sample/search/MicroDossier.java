@@ -16,7 +16,7 @@
  */
 package eu.ggnet.saft.sample.search;
 
-import eu.ggnet.saft.api.ui.IdSupplier;
+import eu.ggnet.saft.api.IdSupplier;
 
 import lombok.ToString;
 

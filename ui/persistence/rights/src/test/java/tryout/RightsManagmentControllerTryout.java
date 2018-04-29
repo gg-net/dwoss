@@ -5,8 +5,8 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ui.cap.RightsManagmentAction;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
 
 import tryout.stub.RightsAgentStub;
 

@@ -5,8 +5,8 @@ import java.util.function.Consumer;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.api.ui.IdSupplier;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.api.IdSupplier;
+import eu.ggnet.saft.core.ui.Title;
 
 import static javafx.scene.text.Font.font;
 

@@ -16,6 +16,9 @@
  */
 package tryout;
 
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -33,8 +36,7 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ui.cap.CreateSimpleAction;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;

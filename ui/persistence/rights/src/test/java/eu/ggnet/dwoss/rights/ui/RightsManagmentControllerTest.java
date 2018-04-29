@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import tryout.stub.RightsAgentStub;
 

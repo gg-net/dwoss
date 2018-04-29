@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

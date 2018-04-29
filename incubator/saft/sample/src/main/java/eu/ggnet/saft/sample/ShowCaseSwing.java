@@ -18,7 +18,7 @@ package eu.ggnet.saft.sample;
 
 import javax.swing.*;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.sample.support.MainPanelAddButtons;
 
 /**

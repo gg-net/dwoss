@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  * Implementation of the Mandators with Cache.

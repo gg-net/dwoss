@@ -34,9 +34,9 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.ProductDto;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductFx.AdditionalPartNo;
 import eu.ggnet.dwoss.uniqueunit.ui.product.ProductFx.Prices;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.ResultProducer;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**

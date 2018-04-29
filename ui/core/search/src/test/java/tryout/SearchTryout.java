@@ -16,6 +16,10 @@
  */
 package tryout;
 
+import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.Dl;
+
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -27,7 +31,6 @@ import eu.ggnet.dwoss.search.api.GlobalKey.Component;
 import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.search.ui.SearchCask;
-import eu.ggnet.saft.*;
 
 /**
  *

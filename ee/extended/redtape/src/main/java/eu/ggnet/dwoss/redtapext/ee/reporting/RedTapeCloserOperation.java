@@ -69,7 +69,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.api.progress.IMonitor;
+import eu.ggnet.dwoss.progress.IMonitor;
 import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;

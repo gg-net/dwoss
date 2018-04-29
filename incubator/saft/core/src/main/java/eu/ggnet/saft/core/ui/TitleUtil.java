@@ -1,7 +1,5 @@
 package eu.ggnet.saft.core.ui;
 
-import eu.ggnet.saft.api.ui.Title;
-
 /**
  * Title util class.
  *

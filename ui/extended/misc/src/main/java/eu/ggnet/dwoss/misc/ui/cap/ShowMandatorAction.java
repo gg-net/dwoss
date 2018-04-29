@@ -23,8 +23,8 @@ import javax.swing.AbstractAction;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.ee.PersistenceValidator;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 public class DatabaseValidationAction extends AbstractAction {
 

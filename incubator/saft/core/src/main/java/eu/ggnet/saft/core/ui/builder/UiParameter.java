@@ -16,6 +16,13 @@
  */
 package eu.ggnet.saft.core.ui.builder;
 
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.StoreLocation;
+import eu.ggnet.saft.api.IdSupplier;
+
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.Objects;
@@ -30,8 +37,7 @@ import javafx.stage.Modality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.UiCore;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.TitleUtil;
 import eu.ggnet.saft.core.ui.UiParent;
 

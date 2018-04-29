@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.jasper;
 
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.StoreLocation;
+
 import java.awt.Cursor;
 import java.awt.HeadlessException;
 import java.awt.event.*;
@@ -31,9 +35,8 @@ import net.sf.jasperreports.view.JRViewer;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * This Class is to view a Jasper Report with a modified {@link JRViewerToolbar}.

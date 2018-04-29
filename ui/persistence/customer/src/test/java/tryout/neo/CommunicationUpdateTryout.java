@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 
 /*

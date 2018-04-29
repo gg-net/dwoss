@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Odd;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 /**
  *

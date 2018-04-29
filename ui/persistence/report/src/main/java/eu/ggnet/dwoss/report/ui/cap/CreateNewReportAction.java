@@ -24,11 +24,11 @@ import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.cap.support.CreateNewReportView;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
 import eu.ggnet.dwoss.report.ui.main.ReportController.In;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
 

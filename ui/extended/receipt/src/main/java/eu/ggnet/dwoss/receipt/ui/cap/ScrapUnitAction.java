@@ -26,11 +26,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_UNIQUE_UNIT_TO_SCRAP_UNIT;

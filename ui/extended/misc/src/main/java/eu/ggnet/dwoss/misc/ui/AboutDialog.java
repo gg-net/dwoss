@@ -26,8 +26,8 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
 import eu.ggnet.dwoss.stock.api.StockApi;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 
 /**
  * Dialog for about and changelog.

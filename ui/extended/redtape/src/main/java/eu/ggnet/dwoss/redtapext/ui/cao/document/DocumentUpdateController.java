@@ -37,10 +37,10 @@ import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.swing.OkCancelWrap;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;

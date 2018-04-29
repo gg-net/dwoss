@@ -25,7 +25,7 @@ import java.util.List;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 // TODO: Ok,Canel Button richtig einbinden.
 // Return Values

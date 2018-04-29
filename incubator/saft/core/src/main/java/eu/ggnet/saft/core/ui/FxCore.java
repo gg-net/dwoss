@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javafx.embed.swing.SwingNode;
 import javafx.stage.Stage;
 
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

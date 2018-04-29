@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.saft.Dl;
+import eu.ggnet.saft.core.Dl;
 
 import lombok.Getter;
 

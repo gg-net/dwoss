@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.report.ui.returns;
 
 import eu.ggnet.dwoss.common.ui.HtmlPane;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

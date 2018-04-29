@@ -7,7 +7,7 @@ package eu.ggnet.saft.sample.support;
 
 import javax.swing.JProgressBar;
 
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  *

@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.progress;
 
-import eu.ggnet.saft.api.progress.HiddenMonitor;
-import eu.ggnet.saft.api.progress.ProgressObserver;
 
 import java.util.SortedSet;
 
@@ -25,7 +23,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import eu.ggnet.saft.api.progress.*;
 
 /**
  * Delegator for the oberervalbe part of the {@link MonitorFactory}.

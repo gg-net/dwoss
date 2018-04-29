@@ -4,9 +4,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.Frame;
-import eu.ggnet.saft.api.ui.Once;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.Frame;
+import eu.ggnet.saft.core.ui.Once;
 
 import static javafx.scene.text.Font.font;
 

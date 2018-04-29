@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.saft.Ui;
+import eu.ggnet.saft.core.Ui;
 
 /**
  *

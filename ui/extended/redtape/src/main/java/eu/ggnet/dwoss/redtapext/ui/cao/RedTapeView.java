@@ -16,6 +16,17 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.Once;
+import eu.ggnet.saft.core.ui.ClosedListener;
+import eu.ggnet.saft.core.ui.StoreLocation;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
+import eu.ggnet.saft.experimental.ops.Selector;
+import eu.ggnet.saft.experimental.Ops;
+import eu.ggnet.saft.experimental.FxOps;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -55,9 +66,6 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.api.ui.*;
-import eu.ggnet.saft.core.ops.*;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 
@@ -66,7 +74,7 @@ import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
  * <p/>
  * @author pascal.perau
  */
-@eu.ggnet.saft.api.ui.Frame
+@eu.ggnet.saft.core.ui.Frame
 @Title("Kunden und Aufträge")
 @StoreLocation
 @Once

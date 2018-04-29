@@ -21,15 +21,15 @@ import java.awt.event.*;
 import java.util.Set;
 import java.util.logging.Level;
 
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.auth.AuthenticationException;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
 import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.UiCore;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
 
 /**
  *

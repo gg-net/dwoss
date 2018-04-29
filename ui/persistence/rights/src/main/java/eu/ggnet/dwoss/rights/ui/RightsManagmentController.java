@@ -41,10 +41,10 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.FxController;
-import eu.ggnet.saft.api.ui.Title;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.Title;
 
 /**
  * This is the FXML Controller Class for the RightsManagmentView in which {@link Operator}'s get {@link AtomicRight}'s and {@link Persona}.

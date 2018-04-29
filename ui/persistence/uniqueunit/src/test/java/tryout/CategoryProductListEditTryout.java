@@ -1,13 +1,16 @@
 package tryout;
 
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.UiCore;
+
 import java.awt.Dimension;
 
 import javax.swing.*;
 
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ui.categoryProduct.CategoryProductListController;
-import eu.ggnet.saft.*;
-import eu.ggnet.saft.core.auth.Guardian;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import tryout.stub.GuardianStub;
 import tryout.stub.UniqueUnitAgentStub;

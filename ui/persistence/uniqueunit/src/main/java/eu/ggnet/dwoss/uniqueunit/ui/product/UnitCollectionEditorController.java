@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.FxController;
+import eu.ggnet.saft.core.ui.ResultProducer;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -37,8 +41,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.uniqueunit.ui.product.UnitCollectionFx.Price;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.*;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
 /**

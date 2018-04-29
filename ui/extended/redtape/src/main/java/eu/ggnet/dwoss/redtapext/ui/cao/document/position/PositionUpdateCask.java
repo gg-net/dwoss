@@ -38,11 +38,11 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.TwoDigits;
-import eu.ggnet.saft.Dl;
-import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.api.ui.ResultProducer;
-import eu.ggnet.saft.core.auth.Guardian;
-import eu.ggnet.saft.core.swing.VetoableOnOk;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
