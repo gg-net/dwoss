@@ -193,11 +193,12 @@
                     <artifactId>dw-ui-persistence-repair</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
-                <dependency>
+                <!-- Will be removed in the future -->
+                <!--                <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-pro-sopo</artifactId>
                     <version>${dw.version}</version>
-                </dependency>
+                </dependency>-->
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-pro-price</artifactId>
