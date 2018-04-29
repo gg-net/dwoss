@@ -14,32 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.price.ee.Importer;
 
 import java.awt.event.ActionEvent;
 
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.core.auth.AccessableAction;
+import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_PRICEMANAGMENT;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
 
 /**
- * Export the price management xls.
+ * Executing the price management generator and stores the generated values.
  *
  * @author pascal.perau
  */
-public class PriceExportAction extends AccessableAction {
+public class PriceExportImportAction extends AccessableAction {
 
-    public PriceExportAction() {
-        super(EXPORT_PRICEMANAGMENT);
+    public PriceExportImportAction() {
+        super(EXPORT_AND_IMPORT_PRICEMANAGMENT);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> Ui.osOpen(Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXls().toTemporaryFile())));
+        Ui.exec(() -> Ui.progress().call(() -> {
+            Dl.remote().lookup(Importer.class).direct(Dl.local().lookup(Guardian.class).getUsername());
+            return null;
+        }));
     }
-
 }

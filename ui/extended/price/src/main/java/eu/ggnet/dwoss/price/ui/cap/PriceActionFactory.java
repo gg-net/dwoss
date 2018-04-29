@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ui.cap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,6 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.price.imex.*;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.core.cap.ActionFactory;
 

@@ -14,49 +14,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ui.cap;
 
 import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
-import eu.ggnet.dwoss.price.ee.Importer;
+import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
 
-import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICEMANGMENT;
+import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.OK;
 
 /**
- *
+ * Action to create an XLS Report of possible sales, initiated by an XLS File containing only partNo.
+ * <p/>
  * @author pascal.perau
  */
-public class PriceImportAction extends AccessableAction {
+public class PriceByInputFileAction extends AccessableAction {
 
-    public PriceImportAction() {
-        super(IMPORT_PRICEMANGMENT);
+    public PriceByInputFileAction() {
+        super(IMPORT_PRICE_BY_XLS);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.fileChooser().open().opt()
-                    .ifPresent(f -> {
-                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "PriceManagment: " + f.getPath() + " importieren ?"))
+            Ui.fileChooser()
+                    .open().opt().ifPresent(r -> {
+                        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Xls Datei " + r.getPath() + " als Eingabequelle verwenden ? (erste Zeile = Überschrift, erste Spalte enthält Artikelnummern) Preise erzeugen nach Referencedaten"))
                                 .opt()
                                 .filter(b -> b == OK)
-                                .map(b -> TikaUtil.isExcel(f))
+                                .map(b -> TikaUtil.isExcel(r))
                                 .filter(Ui.failure()::handle)
                                 .map(Reply::getPayload)
-                                .map(ff -> ReplyUtil.wrap(() -> Dl.remote().lookup(Importer.class).fromXls(new FileJacket("in", ".xls", ff), Dl.local().lookup(Guardian.class).getUsername())))
-                                .filter(Ui.failure()::handle);
+                                .map(f -> Ui.progress().call(() -> Dl.remote().lookup(Exporter.class).toXlsByXls(new FileJacket("in", ".xls", f))))
+                                .ifPresent(c -> Ui.osOpen(c.toTemporaryFile()));
                     });
         });
     }

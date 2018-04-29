@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ui;
 
 import java.text.DecimalFormat;
 
@@ -24,7 +24,7 @@ import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.dwoss.price.PriceBlockerViewCask.Prices;
+import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask.Prices;
 import eu.ggnet.saft.api.ui.ResultProducer;
 import eu.ggnet.saft.core.swing.*;
 

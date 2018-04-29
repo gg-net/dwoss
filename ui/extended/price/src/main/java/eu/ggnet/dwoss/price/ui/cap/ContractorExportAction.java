@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price.imex;
+package eu.ggnet.dwoss.price.ui.cap;
 
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
 
@@ -30,20 +30,25 @@ import eu.ggnet.saft.Ui;
  *
  * @author oliver.guenther
  */
-public class ManufacturerExportAction extends AbstractAction {
+public class ContractorExportAction extends AbstractAction {
 
     private final TradeName contractor;
 
-    public ManufacturerExportAction(TradeName manufacturer) {
-        super("Export fehlende " + manufacturer.getName() + " Daten (Hersteller)");
-        this.contractor = manufacturer;
+    private final boolean missing;
+
+    public ContractorExportAction(TradeName contractor, boolean missing) {
+        super("Export " + (missing ? "fehlende " : "alle ") + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")");
+        this.contractor = contractor;
+        this.missing = missing;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
-                    .call(() -> Dl.remote().lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
+            Ui.osOpen(Ui.progress().title("Export " + (missing ? "Fehlende" : "Alle") + " Daten")
+                    .call(() -> (missing
+                                 ? Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorMissingXls(contractor)
+                                 : Dl.remote().lookup(ContractorPricePartNoExporter.class).toContractorXls(contractor)).toTemporaryFile()));
         });
     }
 }

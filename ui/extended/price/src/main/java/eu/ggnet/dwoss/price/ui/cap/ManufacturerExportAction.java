@@ -14,35 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.price;
+package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.dwoss.price.ee.Importer;
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.Dl;
 import eu.ggnet.saft.Ui;
-import eu.ggnet.saft.core.auth.AccessableAction;
-import eu.ggnet.saft.core.auth.Guardian;
-
-import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_AND_IMPORT_PRICEMANAGMENT;
 
 /**
- * Executing the price management generator and stores the generated values.
  *
- * @author pascal.perau
+ * @author oliver.guenther
  */
-public class PriceExportImportAction extends AccessableAction {
+public class ManufacturerExportAction extends AbstractAction {
 
-    public PriceExportImportAction() {
-        super(EXPORT_AND_IMPORT_PRICEMANAGMENT);
+    private final TradeName contractor;
+
+    public ManufacturerExportAction(TradeName manufacturer) {
+        super("Export fehlende " + manufacturer.getName() + " Daten (Hersteller)");
+        this.contractor = manufacturer;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(() -> Ui.progress().call(() -> {
-            Dl.remote().lookup(Importer.class).direct(Dl.local().lookup(Guardian.class).getUsername());
-            return null;
-        }));
+        Ui.exec(() -> {
+            Ui.osOpen(Ui.progress().title("Export Fehlende Daten")
+                    .call(() -> Dl.remote().lookup(ContractorPricePartNoExporter.class).toManufacturerMissingXls(contractor).toTemporaryFile()));
+        });
     }
 }
