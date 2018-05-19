@@ -122,20 +122,4 @@ public class PositionFormater {
         return res;
     }
 
-    public static void main(String[] args) {
-        Position p = new Position();
-        p.setType(PositionType.UNIT);
-        p.setName("Acer Aspire Stein (AA.BBBBB.CCC) SopoNr:12345 SN:AAAABBBBAVAFDADFDASFD");
-        p.setPrice(10);
-        System.out.println(PositionFormater.toHtmlShort(p, "250px"));
-
-        p = new Position();
-        p.setType(PositionType.PRODUCT_BATCH);
-        p.setName("Acer Aspire Stein (AA.BBBBB.CCC)");
-        p.setAmount(1.25);
-        p.setDescription("Eine Tolle Beschreibung");
-        p.setPrice(10);
-        System.out.println(PositionFormater.toHtmlShort(p, "250px"));
-
-    }
 }

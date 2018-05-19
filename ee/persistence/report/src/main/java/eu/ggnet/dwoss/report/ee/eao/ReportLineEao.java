@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.report.ee.entity.QReportLine.reportLine;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
@@ -172,15 +172,15 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return a collection with {@link PositionType#UNIT} or {@link PositionType#UNIT_ANNEX} with the same uniqueUnitId and dossierId.
      */
     public List<ReportLine> findUnitsAlike(long uniqueUnitId, long dossierId) {
-        return new JPAQuery(em).from(reportLine)
+        return new JPAQuery<ReportLine>(em).from(reportLine)
                 .where(reportLine.positionType.in(Arrays.asList(UNIT, UNIT_ANNEX)), reportLine.uniqueUnitId.eq(uniqueUnitId), reportLine.dossierId.eq(dossierId)
-                ).list(reportLine);
+                ).fetch();
     }
 
     public List<ReportLine> findReportedUnitsbyRefurbishId(Collection<String> refurbishId) {
-        return new JPAQuery(em).from(reportLine)
+        return new JPAQuery<ReportLine>(em).from(reportLine)
                 .where(reportLine.positionType.in(Arrays.asList(UNIT, UNIT_ANNEX)), reportLine.refurbishId.in(refurbishId), reportLine.reports.isNotEmpty())
-                .list(reportLine);
+                .fetch();
     }
 
     /**
@@ -194,11 +194,11 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
 //                .where(reportLine.positionType.eq(PRODUCT_BATCH),
 //                        reportLine.singleReferences.containsKey(WARRANTY),
 //                        reportLine.reports.isEmpty()).list(reportLine);
-        return new JPAQuery(em)
+        return new JPAQuery<ReportLine>(em)
                 .from(reportLine)
                 .where(reportLine.positionType.eq(PRODUCT_BATCH),
                         reportLine.reports.isEmpty())
-                .list(reportLine)
+                .fetch()
                 .stream()
                 .filter(l -> l.getReference(WARRANTY) != null)
                 .collect(Collectors.toList());
@@ -213,8 +213,8 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return the matching report lines.
      */
     public List<ReportLine> findbyDocumentTypeFromTill(DocumentType type, Date from, Date till) {
-        return new JPAQuery(em).from(reportLine).where(reportLine.documentType.eq(type),
-                reportLine.reportingDate.between(from, till)).list(reportLine);
+        return new JPAQuery<ReportLine>(em).from(reportLine).where(reportLine.documentType.eq(type),
+                reportLine.reportingDate.between(from, till)).fetch();
     }
 
     /**
@@ -236,11 +236,11 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return all lines, which have no contractorPartNo and are oft the type of the supplied contractor.
      */
     public List<ReportLine> findMissingContractorPartNo(TradeName contractor) {
-        return new JPAQuery(em).from(reportLine)
+        return new JPAQuery<ReportLine>(em).from(reportLine)
                 .where(reportLine.positionType.eq(UNIT)
                         .and(reportLine.contractorPartNo.isNull())
                         .and(reportLine.contractor.eq(contractor)))
-                .list(reportLine);
+                .fetch();
     }
 
     /**
@@ -250,10 +250,10 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return all lines, which have no gtin.
      */
     public List<ReportLine> findMissingGtin(String partNo) {
-        return new JPAQuery(em).from(reportLine)
+        return new JPAQuery<ReportLine>(em).from(reportLine)
                 .where(reportLine.partNo.eq(partNo)
                         .and(reportLine.gtin.eq(0l)))
-                .list(reportLine);
+                .fetch();
     }
 
     /**
@@ -368,8 +368,8 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return return a found ReportLine.
      */
     public List<SimpleReportLine> findReportLinesByIdentifiers(String key) {
-        return new JPAQuery(em).from(simpleReportLine)
-                .where(simpleReportLine.refurbishId.eq(key).or(simpleReportLine.serial.eq(key))).list(simpleReportLine);
+        return new JPAQuery<SimpleReportLine>(em).from(simpleReportLine)
+                .where(simpleReportLine.refurbishId.eq(key).or(simpleReportLine.serial.eq(key))).fetch();
     }
 
     private NavigableMap<Date, Revenue> prepare(Date start, Date end, Step step) {

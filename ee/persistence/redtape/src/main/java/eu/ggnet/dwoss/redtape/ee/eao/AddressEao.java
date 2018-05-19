@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.QAddress;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 /**
  *
@@ -51,7 +51,7 @@ public class AddressEao extends AbstractEao<Address> {
      */
     public Address findByDescription(String addressString) {
         QAddress a = QAddress.address;
-        return new JPAQuery(em).from(a).where(a.description.eq(addressString)).singleResult(a);
+        return new JPAQuery<Address>(em).from(a).where(a.description.eq(addressString)).fetchFirst();
     }
 
 }

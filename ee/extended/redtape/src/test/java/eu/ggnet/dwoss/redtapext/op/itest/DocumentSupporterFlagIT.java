@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
@@ -20,6 +22,7 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -31,6 +34,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
 
+    private final static Logger L = LoggerFactory.getLogger(DocumentSupporterFlagIT.class);
+    
     @EJB
     private RedTapeWorker redTapeWorker;
 
@@ -110,7 +115,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
         assertOnlyBriefed(doc);
 
         doc = documentSupporter.briefed(doc, arranger).getActiveDocuments().get(0);
-        assertFalse(PaymentMethod.CASH_ON_DELIVERY == doc.getDossier().getPaymentMethod());
+        assertThat(doc.getDossier().getPaymentMethod()).as("dossier.paymentMethod").isNotEqualTo(PaymentMethod.CASH_ON_DELIVERY);        
         doc.getDossier().setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
         doc = redTapeWorker.update(doc, null, arranger);
         assertOnlyBriefed(doc);

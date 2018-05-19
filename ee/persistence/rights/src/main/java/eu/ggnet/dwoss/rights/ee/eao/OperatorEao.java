@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.rights.ee.entity.QOperator.operator;
 
@@ -54,7 +54,7 @@ public class OperatorEao extends AbstractEao<Operator> {
     }
 
     public Operator findByUsername(String username) {
-        return new JPAQuery(em).from(operator).where(operator.username.eq(username)).singleResult(operator);
+        return new JPAQuery<Operator>(em).from(operator).where(operator.username.eq(username)).fetchOne();
     }
 
 }

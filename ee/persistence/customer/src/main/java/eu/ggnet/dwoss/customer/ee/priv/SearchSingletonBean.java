@@ -55,7 +55,7 @@ public class SearchSingletonBean implements SearchSingleton {
     @Getter
     private boolean active = false;
 
-    @Schedule(hour = "2")
+    @Schedule(hour = "2",persistent = false)
     @Override
     public void reindexSearch() {
         active = true;

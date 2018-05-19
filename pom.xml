@@ -379,7 +379,7 @@
                             </goals>
                             <configuration>
                                 <outputDirectory>target/generated-sources/querydsl</outputDirectory>
-                                <processor>com.mysema.query.apt.jpa.JPAAnnotationProcessor</processor>
+                                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
                             </configuration>
                         </execution>
                     </executions>
@@ -390,7 +390,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.0</version>
+                <version>0.8.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -661,14 +661,20 @@
             </dependency>
             <!-- Runtime EE - Persistence Dependencies (provided usage) -->
             <dependency>
-                <groupId>com.mysema.querydsl</groupId>
+                <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-apt</artifactId>
-                <version>3.7.4</version>
+                <version>4.2.1</version>
             </dependency>
             <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4  -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
                 <version>5.5.4.Final</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate.javax.persistence</groupId>
+                        <artifactId>hibernate-jpa-2.1-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency> <!-- Creating a extra MySQl Dialect in Util -->
                 <groupId>org.hibernate</groupId>
@@ -683,9 +689,20 @@
             </dependency>
             <!-- Runtime EE - Persistence Dependencies -->
             <dependency>
-                <groupId>com.mysema.querydsl</groupId>
+                <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
-                <version>3.7.4</version>
+                <version>4.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-hibernate-search</artifactId>
+                <version>4.2.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hibernate.javax.persistence</groupId>
+                        <artifactId>hibernate-jpa-2.0-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <!-- Runtime EE - Extended Dependencise -->
             <dependency>

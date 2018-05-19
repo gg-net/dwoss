@@ -31,12 +31,11 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.QProduct.product;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.QUniqueUnitHistory.uniqueUnitHistory;
@@ -254,10 +253,10 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
      * @return the {@link UniqueUnit} assoiated with a refurbished id that occured in any {@link UniqueUnitHistory}.
      */
     public UniqueUnit findByRefurbishedIdInHistory(String refurbishedId) {
-        UniqueUnitHistory result = new JPAQuery(em).from(uniqueUnitHistory).where(
+        UniqueUnitHistory result = new JPAQuery<UniqueUnitHistory>(em).from(uniqueUnitHistory).where(
                 uniqueUnitHistory.comment.like("Changed Identifier(type=REFURBISHED_ID) from '" + refurbishedId + "' to%")
                         .or(uniqueUnitHistory.comment.like("Unit changed refurbishedId=" + refurbishedId + " to%")
-                                .or(uniqueUnitHistory.comment.eq("REFURBISHED_ID set to " + refurbishedId)))).singleResult(uniqueUnitHistory);
+                                .or(uniqueUnitHistory.comment.eq("REFURBISHED_ID set to " + refurbishedId)))).fetchFirst();
         return (result == null ? null : result.getUniqueUnit());
     }
 
@@ -267,7 +266,7 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
      * @return a collection of manufactures, which are used by any product, like product.tradeName.getManufacturer.
      */
     public NavigableSet<TradeName> findUsedManufactuers() {
-        return new JPAQuery(em).from(product).groupBy(product.tradeName).list(product.tradeName)
+        return new JPAQuery<TradeName>(em).from(product).groupBy(product.tradeName).fetch()
                 .stream().map(TradeName::getManufacturer).collect(Collectors.toCollection(() -> new TreeSet<>()));
     }
 

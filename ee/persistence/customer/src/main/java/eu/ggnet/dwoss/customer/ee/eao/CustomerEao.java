@@ -35,8 +35,8 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import lombok.Value;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -127,7 +127,7 @@ public class CustomerEao extends AbstractEao<Customer> {
      */
     public List<Customer> find(String companyName, String firstName, String lastName, String email, boolean appendWildcard) {
         WildCardHelper W = new WildCardHelper(appendWildcard);
-        JPAQuery query = new JPAQuery(em).from(customer);
+        JPAQuery<Customer> query = new JPAQuery<Customer>(em).from(customer);
         if ( !isBlank(companyName) ) {
             query.join(customer.companies, company).on(company.name.lower().like(W.trim(companyName)));
         }
@@ -149,7 +149,7 @@ public class CustomerEao extends AbstractEao<Customer> {
                     .on(communication.type.eq(EMAIL).and(communication.identifier.lower().like(W.trim(email))));
         }
         L.debug("calling query");
-        List<Customer> list = query.list(customer);
+        List<Customer> list = query.fetch();
         L.debug("Query successful wiht {}", list);
         return list;
     }
@@ -216,7 +216,7 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return a list of all System customer Ids.
      */
     public List<Long> findAllSystemCustomerIds() {
-        return new JPAQuery(em).from(customer).where(customer.flags.contains(CustomerFlag.SYSTEM_CUSTOMER)).list(customer.id);
+        return new JPAQuery<Long>(em).from(customer).where(customer.flags.contains(CustomerFlag.SYSTEM_CUSTOMER)).fetch();
     }
 
     private FullTextQuery buildSearchQuery(String search) {

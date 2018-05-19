@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.QProduct.product;
 
@@ -63,7 +63,7 @@ public class ProductEao extends AbstractEao<Product> {
      * @return Product by partNo, may be null.
      */
     public Product findByPartNo(String partNo) {
-        return new JPAQuery(em).from(product).where(product.partNo.eq(partNo)).singleResult(product);
+        return new JPAQuery<Product>(em).from(product).where(product.partNo.eq(partNo)).fetchFirst();
     }
 
     /**
@@ -73,12 +73,12 @@ public class ProductEao extends AbstractEao<Product> {
      * @return product by gtin, may be null.
      */
     public Product findByGtin(long gtin) {
-        return new JPAQuery(em).from(product).where(product.gtin.eq(gtin)).singleResult(product);
+        return new JPAQuery<Product>(em).from(product).where(product.gtin.eq(gtin)).fetchFirst();
     }
 
     public List<Product> findByPartNos(Collection<String> partNos) {
         if ( partNos == null || partNos.isEmpty() ) return new ArrayList<>();
-        return new JPAQuery(em).from(product).where(product.partNo.in(partNos)).list(product);
+        return new JPAQuery<Product>(em).from(product).where(product.partNo.in(partNos)).fetch();
     }
 
     /**
@@ -89,7 +89,7 @@ public class ProductEao extends AbstractEao<Product> {
      */
     public List<Product> findByTradeNames(Collection<TradeName> tradenames) {
         if ( tradenames == null || tradenames.isEmpty() ) return new ArrayList<>();
-        return new JPAQuery(em).from(product).where(product.tradeName.in(tradenames)).list(product);
+        return new JPAQuery<Product>(em).from(product).where(product.tradeName.in(tradenames)).fetch();
     }
 
     /**

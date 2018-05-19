@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.spec.ee.entity.QProductSeries.productSeries;
 
@@ -70,6 +70,6 @@ public class ProductSeriesEao extends AbstractEao<ProductSeries> {
     }
 
     public ProductSeries find(String name) {
-        return new JPAQuery(em).from(productSeries).where(productSeries.name.eq(name)).singleResult(productSeries);
+        return new JPAQuery<ProductSeries>(em).from(productSeries).where(productSeries.name.eq(name)).fetchFirst();
     }
 }

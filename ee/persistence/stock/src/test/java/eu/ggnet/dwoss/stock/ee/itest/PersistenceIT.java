@@ -17,8 +17,8 @@ import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.Utils;
 
-import com.mysema.query.SearchResults;
-import com.mysema.query.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -122,8 +122,6 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
     @Test
     public void testPersistence() throws Exception {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(() -> em);
-
         utx.begin();
         em.joinTransaction();
         Stock s1 = new Stock(1);
@@ -158,7 +156,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        List<Stock> sus = queryFactory.query().from(QStock.stock).list(QStock.stock);
+        List<Stock> sus = new JPAQuery<Stock>(em).from(QStock.stock).fetch();
 
         assertTrue(sus.size() == 2);
         Stock st1 = sus.get(0);
@@ -232,9 +230,10 @@ public class PersistenceIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        SearchResults<StockTransaction> tResult = queryFactory.from(QStockTransaction.stockTransaction).listResults(QStockTransaction.stockTransaction);
-        assertThat(tResult.getTotal()).isEqualTo(1);
-        StockTransaction t2 = tResult.getResults().get(0);
+        JPAQuery<StockTransaction> query = new JPAQuery<StockTransaction>(em).from(QStockTransaction.stockTransaction);
+        
+        assertThat(query.fetchCount()).isEqualTo(1);
+        StockTransaction t2 = query.fetchFirst();
 
         boolean b1 = false;
         boolean b2 = false;

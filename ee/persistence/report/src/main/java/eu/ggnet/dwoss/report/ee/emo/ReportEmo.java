@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.report.ee.entity.QReport.report;
 
@@ -52,8 +52,8 @@ public class ReportEmo {
      * @return the founded or the new created Report.
      */
     public Report request(String name, TradeName contractor, Date starting, Date end) {
-        Report singleResult = new JPAQuery(reportEm).from(report).where(report.name.equalsIgnoreCase(name).and(
-                report.startingDate.eq(starting).and(report.endingDate.eq(end).and(report.type.eq(contractor))))).singleResult(report);
+        Report singleResult = new JPAQuery<Report>(reportEm).from(report).where(report.name.equalsIgnoreCase(name).and(
+                report.startingDate.eq(starting).and(report.endingDate.eq(end).and(report.type.eq(contractor))))).fetchFirst();
         if ( singleResult != null ) return singleResult;
         Report report = new Report(name, contractor, starting, end);
         reportEm.persist(report);

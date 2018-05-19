@@ -77,12 +77,14 @@ public class DocumentEaoIT extends ArquillianProjectArchive {
         Document doc = RedTapeHelper.makeOrderDossier(PaymentMethod.DIRECT_DEBIT, address);
         long customerId = doc.getDossier().getCustomerId();
         RedTapeHelper.addUnitServiceAndComment(doc);
-        em.persist(doc.getDossier());
+        em.persist(doc);
         doc = RedTapeHelper.transitionTo(doc, INVOICE);
         doc.setActive(true);
+        em.persist(doc);
         doc = RedTapeHelper.transitionTo(doc, ANNULATION_INVOICE);
         doc.setActive(true);
         doc.setDirective(BALANCE_REPAYMENT);
+        em.persist(doc);
 
         utx.commit();
         utx.begin();

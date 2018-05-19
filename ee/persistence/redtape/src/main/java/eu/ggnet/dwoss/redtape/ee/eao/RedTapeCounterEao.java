@@ -22,18 +22,18 @@ import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
-import com.mysema.query.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.QRedTapeCounter.redTapeCounter;
 
 /**
  * This is the EAO for the {@link RedTapeCounter}.
- * <p/>
+ * <p>
  * @author bastian.venz
  */
 public class RedTapeCounterEao extends AbstractEao<RedTapeCounter> {
 
-    private EntityManager em;
+    private final EntityManager em;
 
     public RedTapeCounterEao(EntityManager em) {
         super(RedTapeCounter.class);
@@ -46,10 +46,9 @@ public class RedTapeCounterEao extends AbstractEao<RedTapeCounter> {
     }
 
     public RedTapeCounter findByCompositeKey(DocumentType type, String prefixString) {
-        //      "SELECT i FROM RedTapeCounter AS i WHERE i.type = ?1 AND i.prefix = ?2"
-        return new JPAQuery(em)
+        return new JPAQuery<RedTapeCounter>(em)
                 .from(redTapeCounter)
                 .where(redTapeCounter.type.eq(type).and(redTapeCounter.prefix.eq(prefixString)))
-                .singleResult(redTapeCounter);
+                .fetchOne();
     }
 }

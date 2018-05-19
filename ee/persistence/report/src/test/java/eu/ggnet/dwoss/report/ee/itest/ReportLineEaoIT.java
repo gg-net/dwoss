@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.DateFormats;
 
-import com.mysema.query.jpa.impl.JPADeleteClause;
+import com.querydsl.jpa.impl.JPADeleteClause;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
