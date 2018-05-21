@@ -266,7 +266,7 @@ public class Customer implements Serializable, EagerAble {
             sc.setStreet(contacts.get(0).getAddresses().get(0).getStreet());
             sc.setZipCode(contacts.get(0).getAddresses().get(0).getZipCode());
             sc.setCity(contacts.get(0).getAddresses().get(0).getCity());
-            sc.setIsoCountry(contacts.get(0).getAddresses().get(0).getIsoCountry());
+            sc.setCountry(contacts.get(0).getAddresses().get(0).getCountry());
             sc.setMobilePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
             sc.setLandlinePhone(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));
             sc.setEmail(contacts.get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).map(Communication::getIdentifier).findFirst().orElse(null));
@@ -290,12 +290,12 @@ public class Customer implements Serializable, EagerAble {
                 sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
                 sc.setZipCode(companies.get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
                 sc.setCity(companies.get(0).getContacts().get(0).getAddresses().get(0).getCity());
-                sc.setIsoCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry());
+                sc.setCountry(companies.get(0).getContacts().get(0).getAddresses().get(0).getCountry());
             } else {
                 sc.setStreet(companies.get(0).getAddresses().get(0).getStreet());
                 sc.setZipCode(companies.get(0).getAddresses().get(0).getZipCode());
                 sc.setCity(companies.get(0).getAddresses().get(0).getCity());
-                sc.setIsoCountry(companies.get(0).getAddresses().get(0).getIsoCountry());
+                sc.setCountry(companies.get(0).getAddresses().get(0).getCountry());
             }
 
             //fist check the Contact for the needed Communications than use the Communications on the Company

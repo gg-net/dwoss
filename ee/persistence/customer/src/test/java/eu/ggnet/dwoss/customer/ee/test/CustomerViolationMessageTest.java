@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.test;
+package eu.ggnet.dwoss.customer.ee.test;
 
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 
-import static eu.ggnet.dwoss.customer.test.CustomerTestUtil.*;
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -83,7 +83,7 @@ public class CustomerViolationMessageTest {
 
         businessCustomer = makeValidBusinessCustomer();
         Address invalidAddress = new Address();
-        invalidAddress.setIsoCountry(Locale.GERMANY);
+        invalidAddress.setCountry(Country.GERMANY);
         invalidAddress.setCity("city");
         invalidAddress.setStreet("street");
         invalidAddress.setZipCode("");
@@ -143,7 +143,7 @@ public class CustomerViolationMessageTest {
 
         consumerCustomer = makeValidConsumerCustomer();
         Address invalidAddress = new Address();
-        invalidAddress.setIsoCountry(Locale.GERMANY);
+        invalidAddress.setCountry(Country.GERMANY);
         invalidAddress.setCity("city");
         invalidAddress.setStreet("street");
         invalidAddress.setZipCode("");

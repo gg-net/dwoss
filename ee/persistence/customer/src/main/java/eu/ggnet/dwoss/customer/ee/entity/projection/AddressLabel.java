@@ -62,6 +62,12 @@ public class AddressLabel implements Serializable {
     @Setter
     private AddressType type;
 
+    public AddressLabel(Contact contact, Address address, AddressType type) {
+        this.contact = contact;
+        this.address = address;
+        this.type = type;
+    }
+    
     public AddressLabel(Company company, Contact contact, Address address, AddressType type) {
         this.company = company;
         this.contact = contact;

@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

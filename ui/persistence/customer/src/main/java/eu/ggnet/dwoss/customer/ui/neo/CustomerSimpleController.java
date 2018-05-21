@@ -31,11 +31,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
@@ -112,9 +114,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private TextField cityTextField;
 
     @FXML
-    private TextField countryTextField;
-
-    @FXML
     private TextField landLineTextField;
 
     @FXML
@@ -123,15 +122,18 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private TextField emailTextField;
 
-    private TextField companyNameTextField = new TextField();
+    private final TextField companyNameTextField = new TextField();
 
-    private TextField ustIdTextField = new TextField();
+    private final TextField ustIdTextField = new TextField();
 
     @FXML
     private Button saveAndCloseButton;
 
     @FXML
     private Button saveAndEnhanceUIButton;
+    
+    @FXML
+    private ComboBox<Country> countryComboBox;
 
     @FXML
     private void saveAndCloseButtonHandling() {
@@ -220,7 +222,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         streetTextField.setText("");
         zipcodeTextField.setText("");
         cityTextField.setText("");
-        countryTextField.setText("");
+                        
+        countryComboBox.getItems().addAll(Country.values());
+        countryComboBox.setButtonCell(new CountryListCell());
+        countryComboBox.setCellFactory((p) -> new CountryListCell());
+        countryComboBox.getSelectionModel().selectFirst();
 
         //button behavior
         //enable the save and "saveAndEnhanceUI" button only on filled TextFields
@@ -239,10 +245,6 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                         Bindings.createBooleanBinding(()
                                 -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
                         )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> countryTextField.getText().trim().isEmpty(), countryTextField.textProperty()
-                        )
                 )
         );
 
@@ -257,13 +259,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                         Bindings.createBooleanBinding(()
                                 -> zipcodeTextField.getText().trim().isEmpty(), zipcodeTextField.textProperty()
                         )
-                ).or(
+                ).or(                    
                         Bindings.createBooleanBinding(()
                                 -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
-                        )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> countryTextField.getText().trim().isEmpty(), countryTextField.textProperty()
                         )
                 )
         );
@@ -322,7 +320,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         streetTextField.setText(simpleCustomer.getStreet());
         zipcodeTextField.setText(simpleCustomer.getZipCode());
         cityTextField.setText(simpleCustomer.getCity());
-        countryTextField.setText(new Locale("", simpleCustomer.getIsoCountry()).getDisplayName());
+        countryComboBox.getSelectionModel().select(simpleCustomer.getCountry());
 
         landLineTextField.setText(simpleCustomer.getLandlinePhone());
         mobileTextField.setText(simpleCustomer.getMobilePhone());
@@ -350,7 +348,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setStreet(streetTextField.getText());
         sc.setZipCode(zipcodeTextField.getText());
         sc.setCity(cityTextField.getText());
-        sc.setIsoCountry(countryTextField.getText());
+        sc.setCountry(countryComboBox.getValue());
         if ( StringUtils.isNotBlank(mobileTextField.getText()) ) {
 
             Communication communication = new Communication(Type.MOBILE, mobileTextField.getText());

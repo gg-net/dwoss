@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

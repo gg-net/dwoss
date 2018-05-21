@@ -29,6 +29,8 @@ import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Country.AUSTRIA;
+
 /**
  * Address data.
  * <p>
@@ -76,21 +78,23 @@ public class Address implements Serializable {
      * The 'ISO 3166 2' country code.
      * As default DE is used.
      */
+    @Setter
     @NotNull
     @Size(min = 2, max = 2)
     @Field
     private String isoCountry = "DE";
 
-    public void setIsoCountry(Locale country) {
-        if ( country == null ) {
-            throw new NullPointerException("Null not allowed");
-        } else {
-            this.isoCountry = country.getCountry();
-        }
-    }
-
     public Address(AddressType preferedType) {
         this.preferedType = preferedType;
+    }
+
+    public void setCountry(Country country) {
+        if ( country == null ) return;
+        setIsoCountry(country.getIsoCode());
+    }
+
+    public Country getCountry() {
+        return Country.ofIsoCode(isoCountry);
     }
 
     public String toHtml() {

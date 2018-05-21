@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.itest.support;
+package eu.ggnet.dwoss.customer.ee.itest.support;
 
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;

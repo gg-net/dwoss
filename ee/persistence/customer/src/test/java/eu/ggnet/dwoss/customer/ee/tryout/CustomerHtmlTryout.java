@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.tryout;
+package eu.ggnet.dwoss.customer.ee.tryout;
 
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;

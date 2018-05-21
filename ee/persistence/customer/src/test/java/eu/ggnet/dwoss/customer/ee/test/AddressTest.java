@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.test;
+package eu.ggnet.dwoss.customer.ee.test;
 
 import java.util.Locale;
 
@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Country.GERMANY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -43,7 +44,7 @@ public class AddressTest {
         address.setStreet("street");
         address.setCity("city");
         address.setZipCode("12345");
-        address.setIsoCountry(Locale.GERMANY);
+        address.setCountry(GERMANY);
         assertThat(address.getViolationMessage()).as("Address with valid values").isNull();
     }
 
@@ -51,7 +52,7 @@ public class AddressTest {
     public void testGetViolationMessagesNonValid() {
         address.setCity("city");
         address.setZipCode("12345");
-        address.setIsoCountry(Locale.GERMANY);
+        address.setCountry(GERMANY);
         assertThat(address.getViolationMessage()).as("Address without street").isNotBlank();
     }
 
@@ -59,7 +60,7 @@ public class AddressTest {
     public void testGetViolationMessagesNonValid2() {
         address.setStreet("street");
         address.setZipCode("12345");
-        address.setIsoCountry(Locale.GERMANY);
+        address.setCountry(GERMANY);
         assertThat(address.getViolationMessage()).as("Address without city").isNotBlank();
     }
 
@@ -67,7 +68,7 @@ public class AddressTest {
     public void testGetViolationMessagesNonValid3() {
         address.setStreet("street");
         address.setCity("city");
-        address.setIsoCountry(Locale.GERMANY);
+        address.setCountry(GERMANY);
         assertThat(address.getViolationMessage()).as("Address without zipcode").isNotBlank();
     }
 
@@ -76,7 +77,7 @@ public class AddressTest {
         address.setStreet("street");
         address.setCity("city");
         address.setZipCode("12345");
-        address.setIsoCountry(Locale.GERMAN);
+        address.setCountry(GERMANY);
         assertThat(address.getViolationMessage()).as("Address without Iso Country").isNotBlank();
     }
 

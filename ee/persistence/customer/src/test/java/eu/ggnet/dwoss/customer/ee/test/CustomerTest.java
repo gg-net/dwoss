@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.test;
+package eu.ggnet.dwoss.customer.ee.test;
 
 import java.util.Locale;
 
@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
-import static eu.ggnet.dwoss.customer.test.CustomerTest.makeValidConsumer;
+import static eu.ggnet.dwoss.customer.ee.test.CustomerTest.makeValidConsumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -49,7 +49,7 @@ public class CustomerTest {
     public static Address makeValidAddress() {
         Address validAddress = new Address();
         validAddress.setCity("Munich");
-        validAddress.setIsoCountry(Locale.GERMANY);
+        validAddress.setCountry(Country.GERMANY);
         validAddress.setStreet("Straße");
         validAddress.setZipCode("123456");
 

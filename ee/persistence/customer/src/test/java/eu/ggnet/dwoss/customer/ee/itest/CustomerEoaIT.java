@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -12,7 +12,7 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
 import static org.junit.Assert.assertEquals;

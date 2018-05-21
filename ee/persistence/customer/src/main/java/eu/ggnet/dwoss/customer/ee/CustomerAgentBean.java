@@ -17,6 +17,9 @@
 package eu.ggnet.dwoss.customer.ee;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
@@ -41,6 +44,7 @@ import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
  *
@@ -84,61 +88,90 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return customerEao.countFind(search);
     }
 
+    private <T> T request(List<T> in, Supplier<T> producer) {
+        if ( in.isEmpty() ) {
+            T t = producer.get();
+            in.add(t);
+            return t;
+        }
+        return in.get(0);
+    }
+
+    private void update(List<Communication> communications, Communication.Type type, String identifier) {
+        if ( StringUtils.isBlank(identifier) ) {
+            Optional<Communication> optEmail = communications.stream().filter(co -> co.getType() == type).findFirst();
+            optEmail.ifPresent(email -> {
+                communications.remove(email);
+                em.remove(email);
+            });
+        } else {
+            Optional<Communication> optEmail = communications.stream().filter(co -> co.getType() == type).findFirst();
+            optEmail.ifPresent(email -> {
+                email.setIdentifier(identifier);
+            });
+            if ( !optEmail.isPresent() ) {
+                Communication email = new Communication();
+                communications.add(email);
+                email.setType(type);
+                email.setIdentifier(identifier);
+            }
+        }
+    }
+
     @Override
     public Reply<Customer> store(SimpleCustomer simpleCustomer) {
-        L.warn("Simulating Store : " + simpleCustomer.toString());
-
-        //convert the SimpleCustomer to a Customer
+        boolean exists = (simpleCustomer.getId() > 0);
         boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
 
-        Customer c = new Customer();
+        Customer customer;
+        if ( exists ) {
+            customer = em.find(Customer.class, simpleCustomer.getId());
+            Objects.requireNonNull(customer, "No Customer with id " + simpleCustomer.getId() + ", error");
+        } else {
+            customer = new Customer();
+        }
 
-        Contact cont = new Contact();
+        Company comp = null;
+        Address a;
+        Contact cont;
+        AddressLabel al;
+        if ( bussines ) {
+            comp = request(customer.getCompanies(), () -> new Company());
+            comp.setName(simpleCustomer.getCompanyName());
+            comp.setTaxId(simpleCustomer.getTaxId());
+            a = request(comp.getAddresses(), () -> new Address(AddressType.INVOICE));
+            cont = request(comp.getContacts(), () -> new Contact());
+            cont.getAddresses().add(a);
+        } else {
+            cont = request(customer.getContacts(), () -> new Contact());
+            a = request(cont.getAddresses(), () -> new Address(AddressType.INVOICE));
+        }
+        al = new AddressLabel(comp, cont, a, AddressType.INVOICE);
+        customer.getAddressLabels().clear();
+        customer.getAddressLabels().add(al);
+
         cont.setFirstName(simpleCustomer.getFirstName());
         cont.setLastName(simpleCustomer.getLastName());
         cont.setSex(simpleCustomer.getSex());
         cont.setTitle(simpleCustomer.getTitle());
 
         //Contact with only one Address
-        Address a = new Address();
         a.setCity(simpleCustomer.getCity());
-        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
+        a.setCountry(simpleCustomer.getCountry());
         a.setStreet(simpleCustomer.getStreet());
         a.setZipCode(simpleCustomer.getZipCode());
-        cont.getAddresses().add(a);
 
-        //one Communication form eatch type email, phone, mobile allowed
-        if ( !StringUtils.isBlank(simpleCustomer.getEmail()) )
-            cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
-        if ( !StringUtils.isBlank(simpleCustomer.getLandlinePhone()) )
-            cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));
-        if ( !StringUtils.isBlank(simpleCustomer.getMobilePhone()) )
-            cont.getCommunications().add(new Communication(Type.MOBILE, simpleCustomer.getMobilePhone()));
+        update(cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail());
+        update(cont.getCommunications(), Type.PHONE, simpleCustomer.getLandlinePhone());
+        update(cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
 
+        L.info("Trying Customer {} with coms: {} ", simpleCustomer.getLastName(), cont.getCommunications());
 
-        AddressLabel al;
-        if ( bussines ) {
-            Company comp = new Company();
-            comp.setName(simpleCustomer.getCompanyName());
-            comp.setTaxId(simpleCustomer.getTaxId());
+        customer.setSource(simpleCustomer.getSource());
+        if ( !customer.isValid() ) return Reply.failure(customer.getViolationMessage());
 
-            //The Address of the Company Contact has to match the Company Address
-            comp.getAddresses().add(a);
-            comp.getContacts().add(cont);
-            //build AddressLabel
-            al = new AddressLabel(comp, comp.getContacts().get(0), a, AddressType.INVOICE);
-
-            c.getCompanies().add(comp);
-
-        } else {
-            c.getContacts().add(cont);
-            al = new AddressLabel(null, cont, a, AddressType.INVOICE);
-        }
-        c.getAddressLabels().add(al);
-        c.setSource(simpleCustomer.getSource());
-
-        if ( !c.isValid() ) return Reply.failure(c.getViolationMessage());
-        return Reply.success(c);
+        if ( !exists ) em.persist(customer);
+        return Reply.success(customer);
     }
 
     @Override

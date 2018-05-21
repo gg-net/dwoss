@@ -231,7 +231,7 @@ public class CustomerAgentStub implements CustomerAgent {
         //Contact with only one Address
         Address a = new Address();
         a.setCity(simpleCustomer.getCity());
-        a.setIsoCountry(new Locale(simpleCustomer.getIsoCountry().toLowerCase(), simpleCustomer.getIsoCountry().toUpperCase()));
+        a.setCountry(Country.GERMANY);
         a.setStreet(simpleCustomer.getStreet());
         a.setZipCode(simpleCustomer.getZipCode());
         cont.getAddresses().add(a);

@@ -252,7 +252,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                     if ( !result.get().continueEnhance ) return;
                     Ui.build(statusHbox).fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
                             .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
-                } else if ( customer.isBusiness() ) {
+                } else {
                     L.info("Edit (Complex) Customer {}", customer.getId());
                     Ui.build(statusHbox).fxml().eval(() -> customer, CustomerEnhanceController.class)
                             .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));

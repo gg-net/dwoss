@@ -17,8 +17,10 @@
 package eu.ggnet.dwoss.customer.ee.entity.dto;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
+import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 
 import lombok.Data;
@@ -47,7 +49,7 @@ public class SimpleCustomer implements Serializable {
 
     private String city;
 
-    private String isoCountry;
+    private Country country;
 
     private String mobilePhone;
 

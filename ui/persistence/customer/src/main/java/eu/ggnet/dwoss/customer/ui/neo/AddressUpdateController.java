@@ -32,6 +32,7 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
+import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
@@ -47,7 +48,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
     private Address address;
 
     @FXML
-    private ChoiceBox<Locale> countrybox;
+    private ComboBox<Country> countryComboBox;
 
     @FXML
     private TextField zipcode;
@@ -97,23 +98,9 @@ public class AddressUpdateController implements Initializable, FxController, Con
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<Locale> countries = new ArrayList<>();
-        countries.add(new Locale("de", "DE"));
-        countries.add(new Locale("ch", "CH"));
-        countries.add(new Locale("at", "AT"));
-        countrybox.setConverter(new StringConverter<Locale>() {
-            @Override
-            public Locale fromString(String string) {
-                throw new UnsupportedOperationException("Invalid operation for Convert a String into a Locale.");
-            }
-
-            @Override
-            public String toString(Locale myClassinstance) {
-                return myClassinstance.getDisplayCountry();
-            }
-        }
-        );
-        countrybox.getItems().addAll(countries);
+        countryComboBox.getItems().addAll(Country.values());
+        countryComboBox.setButtonCell(new CountryListCell());
+        countryComboBox.setCellFactory((p) -> new CountryListCell());
 
         //get overwriten in accept()
         zipcode.setText("");
@@ -162,9 +149,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
      *
      * @param a is the Address
      */
-    private void setAddress(Address a) {
-        Locale tempLocale = new Locale(a.getIsoCountry().toLowerCase(), a.getIsoCountry().toUpperCase());
-        countrybox.getSelectionModel().select(tempLocale);
+    private void setAddress(Address a) {        
+        countryComboBox.getSelectionModel().select(a.getCountry());
         if ( a.getCity() != null ) {
             city.setText(a.getCity());
         }
@@ -185,7 +171,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         a.setStreet(street.getText());
         a.setZipCode(zipcode.getText());
         a.setCity(city.getText());
-        a.setIsoCountry(countrybox.getSelectionModel().getSelectedItem());
+        a.setCountry(countryComboBox.getValue());
 
         return a;
     }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.priv.SearchSingleton;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

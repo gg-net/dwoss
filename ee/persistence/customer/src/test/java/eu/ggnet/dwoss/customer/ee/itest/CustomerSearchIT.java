@@ -1,4 +1,4 @@
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import eu.ggnet.dwoss.common.api.values.PaymentCondition;
 import eu.ggnet.dwoss.common.api.values.ShippingCondition;
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;

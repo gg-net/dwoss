@@ -56,7 +56,7 @@ public class CustomerSimpleTryout {
         customer.getFlags().clear();
         customer.getMandatorMetadata().clear();
 
-        address.setIsoCountry(Locale.GERMANY);
+        address.setCountry(Country.GERMANY);
 
         contact.getAddresses().clear();
         contact.getCommunications().clear();
@@ -85,7 +85,7 @@ public class CustomerSimpleTryout {
 
             Ui.exec(() -> {
                 Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class).opt();
-                if ( !result.isPresent() ) return;
+                if ( !result.isPresent() ) return;                
                 Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
                 if ( !Ui.failure().handle(reply) ) return;
                 if ( !result.get().continueEnhance ) return;

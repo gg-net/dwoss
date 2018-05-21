@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.itest;
+package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.Locale;
 
@@ -33,9 +33,12 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
-import eu.ggnet.dwoss.customer.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.saft.api.Reply;
 
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidCompany;
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidContact;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -54,24 +57,6 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @Inject
     UserTransaction utx;
-
-    public static Company makeValidCompany() {
-        Company validcompany = new Company();
-        validcompany.setName("Firma ABC");
-        validcompany.setTaxId("textid123456789");
-        validcompany.getAddresses().add(makeValidAddress());
-
-        assertThat(validcompany.getViolationMessage()).as("valid Company").isNull();
-        return validcompany;
-    }
-
-    public static Contact makeValidContact() {
-        Contact validContact = new Contact(Sex.MALE, true, "Dr", "Max", "Mustermann");
-        validContact.getAddresses().add(makeValidAddress());
-
-        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
-        return validContact;
-    }
 
     public static Communication makeValidCommunication() {
         Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
@@ -97,7 +82,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     public static Address makeValidAddress() {
         Address validAddress = new Address();
         validAddress.setCity("Munich");
-        validAddress.setIsoCountry(Locale.GERMANY);
+        validAddress.setCountry(Country.GERMANY);
         validAddress.setStreet("Straße");
         validAddress.setZipCode("123456");
 
@@ -141,9 +126,11 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     public static Customer makeValidConsumer() {
         Customer customer = new Customer();
-        Contact makeValidContact = makeValidContact();
-        makeValidContact.getCommunications().add(makeValidCommunication());
-        customer.getContacts().add(makeValidContact);
+        Contact contact = makeValidContact();
+        contact.getCommunications().add(new Communication(Type.EMAIL, "Max.mustermann@mustermail.de"));
+        contact.getCommunications().add(new Communication(Type.MOBILE, "0172123422"));
+        contact.getCommunications().add(new Communication(Type.PHONE, "0408818070"));
+        customer.getContacts().add(contact);
         customer.getAddressLabels().add(makeValidAddressLabel());
 
         assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
@@ -167,12 +154,16 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
         assertThat(c1.isSimple()).as("Customer can be transform to a simple customer").isTrue();
 
-        Customer consumerpayload = customerAgent.store(c1.toSimple().get()).getPayload();
+        Reply<Customer> result = customerAgent.store(c1.toSimple().get());
+
+        assertThat(result.hasSucceded()).as("Reply is " + result.getSummary()).isTrue();
+
+        Customer consumerpayload = result.getPayload();
 
         assertThat(consumerpayload.isValid()).as("the payload is a valid customer").isTrue();
         assertThat(consumerpayload.isConsumer()).as("Consumer Customer").isTrue();
         assertThat(consumerpayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
-        assertThat(consumerpayload).as("check that store the same customer").isEqualTo(c1);
+        
     }
 
     @Test
@@ -180,14 +171,16 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         Customer c2 = makeValidBusinessCustomer();
 
         assertThat(c2.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        Customer businesspayload = customerAgent.store(c2.toSimple().get()).getPayload();
+        Reply<Customer> result = customerAgent.store(c2.toSimple().get());
+
+        assertThat(result.hasSucceded()).as("Reply is " + result.getSummary()).isTrue();
+        Customer businesspayload = result.getPayload();
 
         assertThat(businesspayload.isValid()).as("the payload is a valid customer").isTrue();
         assertThat(businesspayload.isBusiness()).as("Business Customer").isTrue();
         assertThat(businesspayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
-        assertThat(businesspayload).as("check that store the same customer").isEqualTo(c2);
+        
     }
-
 
     @Test
     public void testFindCustomerAsMandatorHtml() {
@@ -196,7 +189,6 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(findCustomerAsMandatorHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
-
     @Test
     public void testFindCustomerAsHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
@@ -204,4 +196,4 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
- }
+}
