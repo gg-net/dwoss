@@ -52,7 +52,6 @@ public class PriceBlockerAction extends AccessableAction {
 
             Optional<String> sopoOptional = Ui.build().dialog().eval(
                     () -> {
-
                         TextInputDialog dialog = new TextInputDialog();
                         dialog.setTitle("SopoNr Eingabe");
                         dialog.setHeaderText("SopoNr:");
@@ -65,12 +64,12 @@ public class PriceBlockerAction extends AccessableAction {
                     .filter(Ui.failure()::handle)
                     .map(Reply::getPayload)
                     .ifPresent(priceEngineResult -> {
-                        PriceBlockerViewCask pbp = new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice());
-
-                        Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(pbp)).opt().ifPresent(reply -> {
-
-                            priceEngineResult.setCustomerPrice(pbp.getCustomerPrice());
-                            priceEngineResult.setRetailerPrice(pbp.getRetailerPrice());
+                        Ui.build().swing().eval(() -> OkCancelWrap.vetoResult(new PriceBlockerViewCask(sopoOptional.get(), priceEngineResult.getProductDescription(), priceEngineResult.getCustomerPrice(), priceEngineResult.getRetailerPrice()))).opt()
+                                .filter(Ui.failure()::handle)
+                                .map(Reply::getPayload)
+                                .ifPresent(payload -> {
+                            priceEngineResult.setCustomerPrice(payload.getCustomerPrice());
+                            priceEngineResult.setRetailerPrice(payload.getRetailerPrice());
                             priceEngineResult.setUnitPriceFixed(Change.SET);
                             Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
 
