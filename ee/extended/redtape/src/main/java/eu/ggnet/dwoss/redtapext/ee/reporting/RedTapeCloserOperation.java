@@ -149,7 +149,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * See {@link #closeing(java.lang.String, boolean) } for details.
      * <p>
      */
-    @Schedule(hour = "22") // This kicks in exaclty once a day
+    @Schedule(hour = "22",persistent = false) // This kicks in exaclty once a day
     @Override
     public void executeAutomatic() {
         closeing("scheduler (automatic)", false);
