@@ -159,7 +159,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     }
 
     @Override
-
     public void accept(Customer inputCustomer) {
 
         this.customer = inputCustomer;

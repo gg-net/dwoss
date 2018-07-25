@@ -84,6 +84,15 @@ public class Address implements Serializable {
     @Field
     private String isoCountry = "DE";
 
+    /**
+     * Tryout constructor, do not use in productive.
+     * 
+     * @param id 
+     */
+    public Address(long id) {
+        this.id = id;
+    }
+
     public Address(AddressType preferedType) {
         this.preferedType = preferedType;
     }

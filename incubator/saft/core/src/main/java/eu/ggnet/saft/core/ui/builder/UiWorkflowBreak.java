@@ -19,7 +19,7 @@ package eu.ggnet.saft.core.ui.builder;
 import lombok.*;
 
 /**
- * Used to indicate, that a .
+ * Used to indicate, that a Workflowbeak should happen, should never been ignored in the CompletableFuture.handle() as its expected behavior.
  *
  * @author oliver.guenther
  */

@@ -143,15 +143,21 @@ public class CustomerGenerator {
      * @return a generated {@link Contact}.
      */
     public Contact makeContact() {
-        Contact c = new Contact();
+        return makeContact(new Contact(), makeAddress(), makeCommunication());
+    }
+
+    public Contact makeContactWithId(long contactId, long addressId, long communicationId) {
+        return makeContact(new Contact(contactId), makeAddressWithId(addressId), makeCommunicationWithId(communicationId));
+    }
+
+    private Contact makeContact(Contact c, Address address, Communication communication) {
         Name n = GEN.makeName();
         c.setFirstName(n.getFirst());
         c.setLastName(n.getLast());
         c.setSex(n.getGender().ordinal() == 1 ? FEMALE : MALE);
         c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        c.getCommunications().add(makeCommunication());
-        c.getAddresses().add(makeAddress());
-
+        c.getCommunications().add(communication);
+        c.getAddresses().add(address);
         return c;
     }
 
@@ -176,12 +182,19 @@ public class CustomerGenerator {
      * @return a generated {@link Contact}.
      */
     public Address makeAddress() {
-        GeneratedAddress a = GEN.makeAddress();
-        Address address = new Address();
+        return makeAddress(new Address());
+    }
+
+    public Address makeAddressWithId(long id) {
+        return makeAddress(new Address(id));
+    }
+
+    private Address makeAddress(Address address) {
+        GeneratedAddress genereratedAddress = GEN.makeAddress();
         if ( R.nextBoolean() ) address.setPreferedType(new RandomEnum<>(AddressType.class).random());
-        address.setCity(a.getTown());
-        address.setStreet(a.getStreet());
-        address.setZipCode(a.getPostalCode());
+        address.setCity(genereratedAddress.getTown());
+        address.setStreet(genereratedAddress.getStreet());
+        address.setZipCode(genereratedAddress.getPostalCode());
         return address;
     }
 
@@ -216,7 +229,14 @@ public class CustomerGenerator {
      * @return a generated {@link Communication}.
      */
     public Communication makeCommunication() {
-        Communication c = new Communication();
+        return makeCommunication(new Communication());
+    }
+
+    public Communication makeCommunicationWithId(long id) {
+        return makeCommunication(new Communication(id));
+    }
+
+    private Communication makeCommunication(Communication c) {
         c.setType(new RandomEnum<>(Communication.Type.class).random());
         c.setIdentifier(RandomStringUtils.randomAlphanumeric(5));
         if ( c.getType().equals(Type.PHONE) || c.getType().equals(Type.FAX) || c.getType().equals(Type.MOBILE) ) {

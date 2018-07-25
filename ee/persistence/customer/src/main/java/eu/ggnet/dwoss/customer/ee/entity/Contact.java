@@ -126,6 +126,16 @@ public class Contact implements Serializable {
     public Contact() {
     }
 
+    /**
+     * Constructor for tryouts, do not use in productive.
+     * 
+     * @param id the db id.
+     */
+    public Contact(long id) {
+        this.id = id;
+    }
+    
+    
     @Builder
     public Contact(Sex sex, boolean prefered, String title, String firstName, String lastName) {
         this.sex = sex;

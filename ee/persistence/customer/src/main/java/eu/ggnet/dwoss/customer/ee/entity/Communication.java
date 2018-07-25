@@ -99,6 +99,15 @@ public class Communication implements Serializable {
     @Setter
     private boolean prefered;
 
+    /**
+     * Tryout constructor, do not use in productive.
+     * 
+     * @param id 
+     */
+    public Communication(long id) {
+        this.id = id;
+    }
+
     public Communication(Type type, boolean prefered) {
         this.type = type;
         this.prefered = prefered;

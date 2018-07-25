@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
@@ -69,6 +70,8 @@ public class CustomerEnhanceTryout {
             }
 
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
+
+            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);
             });
@@ -80,10 +83,10 @@ public class CustomerEnhanceTryout {
             Customer customer = gen.makeCustomer();
             customer.getCompanies().clear();
 
-            customer.getContacts().add(gen.makeContact());
-            customer.getContacts().add(gen.makeContact());
-            customer.getContacts().add(gen.makeContact());
-            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(gen.makeContactWithId(1,11,21));
+            customer.getContacts().add(gen.makeContactWithId(2,12,22));
+            customer.getContacts().add(gen.makeContactWithId(3,13,23));
+            customer.getContacts().add(gen.makeContactWithId(4,14,24));
 
             customer.setSource(Source.ONEADO);
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
@@ -97,6 +100,7 @@ public class CustomerEnhanceTryout {
 
                 return;
             }
+            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);
             });

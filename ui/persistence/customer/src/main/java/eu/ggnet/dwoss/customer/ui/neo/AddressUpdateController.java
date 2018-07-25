@@ -82,7 +82,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
         //only get valid object out
         if ( address.getViolationMessage() != null ) {
             Ui.exec(() -> {
-                Ui.build().alert().message("Adresse ist inkompatibel: " + address.getViolationMessage()).show(AlertType.WARNING);
+                Ui.build().alert().message("Adresse ist invalid: " + address.getViolationMessage()).show(AlertType.WARNING);
             });
             return;
         }
@@ -138,9 +138,6 @@ public class AddressUpdateController implements Initializable, FxController, Con
 
     @Override
     public Address getResult() {
-        if ( address == null ) {
-            return null;
-        }
         return address;
     }
 

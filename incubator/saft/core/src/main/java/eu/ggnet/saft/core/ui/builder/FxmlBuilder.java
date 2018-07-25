@@ -154,16 +154,17 @@ public class FxmlBuilder {
                 .thenApplyAsync((v) -> parm.withRootClass(fxmlControllerClass).withPreResult(Optional.ofNullable(preProducer).map(pp -> Ui.progress().call(pp)).orElse(null)), UiCore.getExecutor())
                 .thenApply(BuilderUtil::breakIfOnceAndActive)
                 .thenApplyAsync(BuilderUtil::produceFxml, Platform::runLater)
-                .thenApplyAsync(BuilderUtil::consumePreResult, UiCore.getExecutor());
+                .thenApply(BuilderUtil::consumePreResult);
 
         if ( UiCore.isSwing() ) {
             return uniChain
+                    .thenApplyAsync(in -> in, UiCore.getExecutor()) // Make sure we are not switching from Swing to JavaFx directly, which fails.
                     .thenApplyAsync(BuilderUtil::createJFXPanel, EventQueue::invokeLater)
                     .thenApplyAsync(BuilderUtil::wrapPane, Platform::runLater) // Swing Specific
                     .thenApplyAsync(BuilderUtil::constructSwing, EventQueue::invokeLater); // Swing Specific
         } else if ( UiCore.isFx() ) {
             return uniChain
-                    .thenApplyAsync(BuilderUtil::constructJavaFx, Platform::runLater);
+                    .thenApply(BuilderUtil::constructJavaFx); // Allready on JavaFX Theard.
         } else {
             throw new IllegalStateException("UiCore is neither Fx nor Swing");
         }

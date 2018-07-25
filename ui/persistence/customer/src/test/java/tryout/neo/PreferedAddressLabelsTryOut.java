@@ -53,9 +53,7 @@ public class PreferedAddressLabelsTryOut {
 
                 return;
             }
-            Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
-            });
+            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().handle(Ui.handler());
         });
 
         JButton endKundenButton = new JButton("Lade Endkunde");
@@ -66,14 +64,13 @@ public class PreferedAddressLabelsTryOut {
             customer.getContacts().add(gen.makeContact());
 
             if ( !customer.isValid() ) {
-                 Ui.exec(() -> {
+                Ui.exec(() -> {
                     Ui.build().alert("customer is invalid" + customer.getViolationMessage());
                 });
                 return;
             }
-            Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class);
-            });
+            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().handle(Ui.handler());
+
         });
 
         JPanel p = new JPanel();

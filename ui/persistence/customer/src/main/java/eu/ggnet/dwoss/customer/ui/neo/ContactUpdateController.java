@@ -135,28 +135,30 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void handleEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
-            Ui.exec(() -> {
-                Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class)
-                        .opt()
-                        .filter(a -> a != null)
-                        .ifPresent(a -> Platform.runLater(() -> addressList.set(addressListView.getSelectionModel().getSelectedIndex(), a)));
-            });
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class)
+                    .cf()
+                    .thenApply(add -> CustomerConnectorFascade.updateAddressOnContact(contact.getId(), add))
+                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                    .handle(Ui.handler());
         }
     }
 
     @FXML
     private void handleAddAddressButton() {
-        Address addresse = new Address();
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class)
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> addressList.add(a)));
-        });
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> new Address(), AddressUpdateController.class)
+                    .cf()
+                    .thenApply(add -> CustomerConnectorFascade.createAddressOnContact(contact.getId(), add))
+                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                    .handle(Ui.handler());
     }
 
     @FXML
     private void handleDelAddressButton() {
+        if ( addressListView.getSelectionModel().getSelectedItem() == null ) return;
+        // Hier machen wir morgen weiter.
+        // Yes/no alert ob wirklich löschen.
+        
+        
         int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
         if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
             addressList.remove(selectedIndex);
@@ -341,7 +343,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
             setContact(cont);
         } else {
             Ui.exec(() -> {
-                Ui.build().alert().message("Kontakt ist inkompatibel").show(AlertType.WARNING);
+                Ui.build().alert().message("Kontakt ist null").show(AlertType.ERROR);
             });
         }
     }
