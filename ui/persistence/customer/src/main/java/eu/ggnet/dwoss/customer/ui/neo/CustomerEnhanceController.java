@@ -46,7 +46,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.saft.core.Ui;
 
@@ -79,7 +78,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private TextArea commentTextArea;
 
     @FXML
-    private VBox flagVBox = new VBox();
+    private ListView<CustomerFlagWithSelect> flagListView;
 
     @FXML
     private HBox showHBox = new HBox();
@@ -102,6 +101,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     // Used in non business customer
     private ListView<Contact> contactListView;
 
+    private ObservableList<CustomerFlagWithSelect> customerFlagsWithSelect;
+
     private ListView<AdditionalCustomerID> additionalCustomerIdsListView = new ListView<>();
 
     private ObservableList<Company> companyList = FXCollections.observableArrayList();
@@ -109,8 +110,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
     private ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
-
-    private ObservableSet<CustomerFlag> flagsSet = FXCollections.observableSet();
 
     private ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
 
@@ -171,6 +170,27 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     public void initialize(URL url, ResourceBundle rb) {
         //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
 
+        customerFlagsWithSelect = FXCollections.observableArrayList();
+
+        //for each CustomerFlag create a CustomerFlagWithSelect. If the customer contains the flag it is selected.
+        for (CustomerFlag flag : CustomerFlag.values()) {
+            customerFlagsWithSelect.add(new CustomerFlagWithSelect(flag));
+        }
+
+        flagListView.setItems(customerFlagsWithSelect);
+
+        flagListView.setCellFactory(CheckBoxListCell.forListView(CustomerFlagWithSelect::selectedProperty, new StringConverter<CustomerFlagWithSelect>() {
+            @Override
+            public String toString(CustomerFlagWithSelect object) {
+                return object.getFlag().getName();
+            }
+
+            @Override
+            public CustomerFlagWithSelect fromString(String string) {
+                return null;
+            }
+        }));
+
         sourceChoiceBox.getItems().addAll(Source.values());
         sourceChoiceBox.setConverter(new StringConverter<Source>() {
             @Override
@@ -224,7 +244,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         customerIdLabel.setText("" + customer.getId());
         keyAccounterTextField.setText(customer.getKeyAccounter());
 
-        flagsSet.addAll(customer.getFlags());
+        customerFlagsWithSelect.forEach((cfws) -> {
+            if ( customer.getFlags().contains(cfws.getFlag()) ) cfws.setSelected(true);
+            else cfws.setSelected(false);
+        });
 
         sourceChoiceBox.getSelectionModel().select(customer.getSource());
 
@@ -247,8 +270,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         commentTextArea.setText(customer.getComment());
 
         //build the Flags Box
-        buildFlagBox();
-
         //build the external System Id´s box
         buildExternalSystemIdBox();
 
@@ -261,8 +282,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         // consider updating all fields on event, not at the end.
 
         customer.setKeyAccounter(keyAccounterTextField.getText());
-        customer.getFlags().clear();
-        flagsSet.forEach(f -> customer.getFlags().add(f));
 
         customer.setSource(sourceChoiceBox.getSelectionModel().getSelectedItem());
 
@@ -270,13 +289,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         customer.getMandatorMetadata().clear();
         mandatorMetadata.forEach(m -> customer.getMandatorMetadata().add(m));
 
-        //tansfer the List of Flags back to Set (remove duplicates)
-        HashSet<CustomerFlag> tempSet = new HashSet<>(outputFlagslist);
-        outputFlagslist.clear();
-        outputFlagslist.addAll(tempSet);
-        outputFlagslist.forEach((flag) -> {
-            customer.getFlags().add(flag);
-        });
+        customer.getFlags().clear();
+        customer.getFlags().addAll(customerFlagsWithSelect.stream().filter(c -> c.isSelected()).map(c -> c.getFlag()).collect(Collectors.toSet()));
 
         //transfer List back to a Map
         ObservableList<AdditionalCustomerID> items = additionalCustomerIdsListView.getItems();
@@ -286,56 +300,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         customer.setComment(commentTextArea.getText());
 
         return customer;
-    }
-
-    /**
-     * Build up a ListView with CheckBoxes for the Set of CunstomerFlags
-     */
-    private void buildFlagBox() {
-        //transform a Set to a ObservableList of CustomerFlag
-        List<CustomerFlag> templist = new ArrayList<>();
-        flagsSet.forEach(f -> templist.add(f));
-        ObservableList<CustomerFlag> allFlagsFromTheCustomer = FXCollections.observableArrayList(templist);
-
-        //fill with all posibile flags
-        ObservableList<CustomerFlag> observableArrayListOfAllFlags = FXCollections.observableArrayList(CustomerFlag.values());
-
-        ObservableList<CustomerFlagWithSelect> listForTheView = FXCollections.observableArrayList();
-
-        //fill the CustomerFlagWithSelect List
-        observableArrayListOfAllFlags.stream().map((ovall) -> {
-            CustomerFlagWithSelect cfs = new CustomerFlagWithSelect(ovall);
-            if ( allFlagsFromTheCustomer.contains(ovall) ) {
-                cfs.setSelected(true);
-            }
-            return cfs;
-        }).forEachOrdered((cfs) -> {
-            listForTheView.add(cfs);
-        });
-
-        listForTheView.forEach(flag -> flag.selectedProperty().addListener((observable, wasSelected, isSelected) -> {
-            if ( isSelected ) {
-                outputFlagslist.add(flag.getFlag());
-            }
-        }));
-
-        ListView<CustomerFlagWithSelect> checklist = new ListView<>();
-        checklist.setItems(listForTheView);
-        checklist.setMinWidth(150.0);
-        checklist.setCellFactory(CheckBoxListCell.forListView(CustomerFlagWithSelect::selectedProperty, new StringConverter<CustomerFlagWithSelect>() {
-            @Override
-            public String toString(CustomerFlagWithSelect object) {
-                return object.getFlag().getName();
-            }
-
-            @Override
-            public CustomerFlagWithSelect fromString(String string) {
-                return null;
-            }
-        }));
-
-        Label flagLable = new Label("Flags: ");
-        flagVBox.getChildren().addAll(flagLable, checklist);
     }
 
     private void buildExternalSystemIdBox() {

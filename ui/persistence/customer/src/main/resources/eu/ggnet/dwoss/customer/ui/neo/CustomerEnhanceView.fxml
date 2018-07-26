@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="750.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="750.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
     <center>
         <VBox spacing="3.0" BorderPane.alignment="CENTER">
             <children>
@@ -47,8 +48,12 @@
                 <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
                 <HBox minHeight="150.0" spacing="3.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <VBox fx:id="flagVBox" minHeight="50.0" minWidth="150.0" spacing="3.0" />
-                        <Region maxHeight="1.7976931348623157E308" maxWidth="500.0" minWidth="15.0" HBox.hgrow="ALWAYS" />
+                        <VBox minHeight="50.0" minWidth="150.0" spacing="3.0">
+                     <children>
+                        <Label text="Flags:" />
+                        <ListView fx:id="flagListView" prefHeight="200.0" prefWidth="200.0" />
+                     </children></VBox>
+                        <Region maxHeight="1.7976931348623157E308" maxWidth="70.0" minWidth="70.0" HBox.hgrow="ALWAYS" />
                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="5.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Button fx:id="mandatorMetaDataButton" maxWidth="200.0" mnemonicParsing="false" onAction="#clickMandatorMetaDataButton" text="Mandator Spezial Info" VBox.vgrow="ALWAYS" />
