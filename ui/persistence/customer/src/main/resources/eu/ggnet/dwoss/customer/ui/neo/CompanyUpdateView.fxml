@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="650.0" minWidth="500.0" prefHeight="680.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="650.0" minWidth="500.0" prefHeight="680.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController">
  <center>
       <VBox spacing="2.0" BorderPane.alignment="CENTER">
          <children>
@@ -51,9 +51,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditAddressButton" text="Ändern" />
-                        <Button fx:id="addAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAddAddressButton" text="Hinzufügen" />
-                        <Button fx:id="delAddressButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelAddressButton" text="Löschen" />
+                        <Button fx:id="editAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEditAddressButton" text="Ändern" />
+                        <Button fx:id="addAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAddAddressButton" text="Hinzufügen" />
+                        <Button fx:id="delAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDelAddressButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>
@@ -70,9 +70,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditComButton" text="Ändern" />
-                        <Button fx:id="addComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAddComButton" text="Hinzufügen" />
-                        <Button fx:id="delComButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelComButton" text="Löschen" />
+                        <Button fx:id="editComButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEditComButton" text="Ändern" />
+                        <Button fx:id="addComButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAddComButton" text="Hinzufügen" />
+                        <Button fx:id="delComButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDelComButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>
@@ -88,9 +88,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button fx:id="editContactButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleEditContactButton" text="Ändern" />
-                        <Button fx:id="addContactButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleAddContactButton" text="Hinzufügen" />
-                        <Button fx:id="delContactButton" minWidth="80.0" mnemonicParsing="false" onAction="#handleDelContactButton" text="Löschen" />
+                        <Button fx:id="editContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleEditContactButton" text="Ändern" />
+                        <Button fx:id="addContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAddContactButton" text="Hinzufügen" />
+                        <Button fx:id="delContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDelContactButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>

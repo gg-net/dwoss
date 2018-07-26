@@ -99,4 +99,25 @@ public class CustomerConnectorFascade {
         return contact;        
     }
     
+    public static Customer createContactOnCustomer(long customerid, Contact contact) {
+        customer.getContacts().add(contact);
+        System.out.println("create contact = " + contact);
+        return customer;
+    }
+    
+    public static Customer updateContactOnCustomer(long customerId, Contact contact) {
+        // magic
+        System.out.println("update contact = " + contact);
+        return customer;        
+    }
+    
+    public static Customer deleteContactOnCustomer(long custmoerId, Contact contact) {
+        for (Iterator<Contact> iterator = customer.getContacts().iterator(); iterator.hasNext();) {
+            Contact next = iterator.next();
+            if (next == contact) iterator.remove();
+        }
+        System.out.println("delete customer");
+        return customer;
+    }
+    
 }

@@ -81,10 +81,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private ListView<CustomerFlagWithSelect> flagListView;
 
     @FXML
-    private HBox showHBox = new HBox();
-
-    @FXML
-    private VBox additionalCustomerIdsVBox;
+    private HBox showHBox;
 
     @FXML
     private Label contactOrCompanyLabel;
@@ -103,17 +100,25 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private ObservableList<CustomerFlagWithSelect> customerFlagsWithSelect;
 
-    private ListView<AdditionalCustomerID> additionalCustomerIdsListView = new ListView<>();
+    @FXML
+    private ListView<AdditionalCustomerId> additionalCustomerIdsListView;
+
+    @FXML
+    private Button addAdditionalCustomerIdButton;
+
+    @FXML
+    private Button editdditionalCustomerIdButton;
+
+    @FXML
+    private Button deletedditionalCustomerIdButton;
+
+    private ObservableList<AdditionalCustomerId> additionalCustomerIds;
 
     private ObservableList<Company> companyList = FXCollections.observableArrayList();
 
     private ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
     private ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
-
-    private ObservableList<CustomerFlag> outputFlagslist = FXCollections.observableArrayList();
-
-    private ObservableMap<ExternalSystem, String> additionalCustomerIds = FXCollections.observableHashMap();
 
     private boolean isBusinessCustomer = false;
 
@@ -203,6 +208,72 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 throw new UnsupportedOperationException("fromString is not supported"); //
             }
         });
+
+        additionalCustomerIds = FXCollections.observableArrayList();
+        additionalCustomerIdsListView.setItems(additionalCustomerIds);
+        additionalCustomerIdsListView.setCellFactory((ListView<AdditionalCustomerId> p) -> {
+            ListCell<AdditionalCustomerId> cell = new ListCell<AdditionalCustomerId>() {
+                @Override
+                protected void updateItem(AdditionalCustomerId item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) {
+                        setGraphic(null);
+                        setText("");
+                    } else {
+                        HBox flagbox = new HBox();
+                        Label flagLabel = new Label(item.type.name() + ":");
+                        flagLabel.setPrefWidth(65.0);
+                        flagLabel.setStyle("-fx-font-weight: bold");
+
+                        Label customerIdLabel = new Label();
+                        customerIdLabel.textProperty().bind(item.valueProperty());
+
+                        flagbox.getChildren().addAll(flagLabel, customerIdLabel);
+                        flagbox.setSpacing(2.0);
+
+                        setText(null);
+                        setGraphic(flagbox);
+
+                    }
+                }
+            };
+            return cell;
+        });
+
+        addAdditionalCustomerIdButton.setOnAction(new AdditionalCustomerIDsDialogHandler());
+        // TODO: try bindings
+        additionalCustomerIdsListView.getItems().addListener((javafx.beans.Observable observable) -> {
+            addAdditionalCustomerIdButton.setDisable(additionalCustomerIdsListView.getItems().stream()
+                    .map(additionalCustomerID -> additionalCustomerID.type)
+                    .collect(Collectors.toList())
+                    .containsAll(Arrays.asList(ExternalSystem.values())));
+        });
+
+        deletedditionalCustomerIdButton.setOnAction((event) -> {
+            Ui.build(deletedditionalCustomerIdButton).dialog().eval(() -> {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Externe Kundennummer löschen");
+                alert.setHeaderText("Bestätigen der Löschung einer Kundennummer");
+                alert.setContentText("Wollen sie die Kundennummer wirklich löschen?");
+                return alert;
+            })
+                    .cf()
+                    .thenAcceptAsync(b -> {
+                        if ( b == ButtonType.OK ) additionalCustomerIds.remove(additionalCustomerIdsListView.getSelectionModel().getSelectedItem());
+                    }, Platform::runLater)
+                    .handle(Ui.handler());
+        });
+
+        editdditionalCustomerIdButton.setOnAction(new AdditionalCustomerIDsDialogHandler(additionalCustomerIdsListView.getSelectionModel()));
+        // TODO: try bindigns
+        editdditionalCustomerIdButton.setDisable(true);
+        deletedditionalCustomerIdButton.setDisable(true);
+
+        additionalCustomerIdsListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            editdditionalCustomerIdButton.setDisable(newValue.intValue() < 0);
+            deletedditionalCustomerIdButton.setDisable(newValue.intValue() < 0);
+        });
+
     }
 
     /**
@@ -254,24 +325,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         // Possibly not right here
         mandatorMetadata.addAll(customer.getMandatorMetadata());
 
-        additionalCustomerIds.putAll(customer.getAdditionalCustomerIds());
-
         //transfer the map into a List
-        if ( additionalCustomerIds == null ) {
-            FXCollections.emptyObservableList();
-        } else {
-            ObservableList<AdditionalCustomerID> observableArrayList = FXCollections.observableArrayList(
-                    additionalCustomerIds.entrySet().stream()
-                            .map(e -> new AdditionalCustomerID(e.getKey(), e.getValue()))
-                            .collect(Collectors.toList()));
-            additionalCustomerIdsListView.setItems(observableArrayList);
-        }
+        additionalCustomerIds.clear();
+        additionalCustomerIds.addAll(
+                customer.getAdditionalCustomerIds().entrySet().stream()
+                        .map(e -> new AdditionalCustomerId(e.getKey(), e.getValue()))
+                        .collect(Collectors.toList()));
 
         commentTextArea.setText(customer.getComment());
-
-        //build the Flags Box
-        //build the external System Id´s box
-        buildExternalSystemIdBox();
 
         //build the showbox
         buildShowBox();
@@ -293,87 +354,12 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         customer.getFlags().addAll(customerFlagsWithSelect.stream().filter(c -> c.isSelected()).map(c -> c.getFlag()).collect(Collectors.toSet()));
 
         //transfer List back to a Map
-        ObservableList<AdditionalCustomerID> items = additionalCustomerIdsListView.getItems();
         customer.getAdditionalCustomerIds().clear();
-        customer.getAdditionalCustomerIds().putAll(items.stream().collect(Collectors.toMap(AdditionalCustomerID::getType, AdditionalCustomerID::getValue)));
+        customer.getAdditionalCustomerIds().putAll(additionalCustomerIds.stream().collect(Collectors.toMap(AdditionalCustomerId::getType, AdditionalCustomerId::getValue)));
 
         customer.setComment(commentTextArea.getText());
 
         return customer;
-    }
-
-    private void buildExternalSystemIdBox() {
-        additionalCustomerIdsListView.setCellFactory((ListView<AdditionalCustomerID> p) -> {
-            ListCell<AdditionalCustomerID> cell = new ListCell<AdditionalCustomerID>() {
-                @Override
-                protected void updateItem(AdditionalCustomerID item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if ( item == null || empty ) {
-                        setGraphic(null);
-                        setText("");
-                    } else {
-                        HBox flagbox = new HBox();
-                        Label flagLabel = new Label(item.type.name() + ":");
-                        flagLabel.setPrefWidth(65.0);
-                        flagLabel.setStyle("-fx-font-weight: bold");
-
-                        Label customerIdLabel = new Label();
-                        customerIdLabel.setText(item.getValue());
-
-                        flagbox.getChildren().addAll(flagLabel, customerIdLabel);
-                        flagbox.setSpacing(2.0);
-
-                        setText(null);
-                        setGraphic(flagbox);
-
-                    }
-                }
-            };
-            return cell;
-        });
-        Label ExternalSystemIDsLabel = new Label("Zusätzliche Kundennummern: ");
-
-        //create a dialog to add AdditionalCustomerId instances to the additionalCustomerIDsListView
-        Button addButton = new Button("Hinzufügen");
-        addButton.setMinWidth(80.0);
-        addButton.setOnAction(new AdditionalCustomerIDsDialogHandler());
-
-        Button deleteButton = new Button("Löschen");
-        deleteButton.setMinWidth(80.0);
-        deleteButton.setOnAction((event) -> {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Externe Kundennummer löschen");
-            alert.setHeaderText("Bestätigen der Löschung einer Kundennummer");
-            alert.setContentText("Wollen sie die Kundennummer wirklich löschen?");
-
-            Optional<ButtonType> result = alert.showAndWait(); // TODO: JACOB
-            if ( result.get() == ButtonType.OK ) {
-                additionalCustomerIdsListView.getItems().remove(additionalCustomerIdsListView.getSelectionModel().getSelectedItem());
-            }
-        });
-        Button editButton = new Button("Bearbeiten");
-        editButton.setOnAction(new AdditionalCustomerIDsDialogHandler(additionalCustomerIdsListView.getSelectionModel()));
-
-        // disable the add button if every type of ExternalSystem enum is already contained in the listView
-        additionalCustomerIdsListView.getItems().addListener((javafx.beans.Observable observable) -> {
-            addButton.setDisable(additionalCustomerIdsListView.getItems().stream()
-                    .map(additionalCustomerID -> additionalCustomerID.type)
-                    .collect(Collectors.toList())
-                    .containsAll(Arrays.asList(ExternalSystem.values())));
-        });
-        editButton.setDisable(true);
-        deleteButton.setDisable(true);
-        additionalCustomerIdsListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-            editButton.setDisable(newValue.intValue() < 0);
-            deleteButton.setDisable(newValue.intValue() < 0);
-        });
-
-        HBox buttonsHBox = new HBox();
-        buttonsHBox.getChildren().addAll(addButton, editButton, deleteButton);
-        buttonsHBox.setSpacing(3.0);
-        additionalCustomerIdsVBox.getChildren().addAll(ExternalSystemIDsLabel, buttonsHBox, additionalCustomerIdsListView);
-        additionalCustomerIdsVBox.setMinWidth(120.0);
-
     }
 
     /**
@@ -471,28 +457,45 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
             editButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem != null ) {
-                    editContact(selectedItem);
-                }
+                if ( selectedItem == null ) return;
+                Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(() -> selectedItem, ContactUpdateController.class)
+                        .cf()
+                        .thenApply(c -> CustomerConnectorFascade.updateContactOnCustomer(customer.getId(), c))
+                        .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                        .handle(Ui.handler());
             });
-            addButton
-                    .setOnAction((ActionEvent e) -> {
-
-                        Ui.exec(() -> {
-                            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(ContactUpdateController.class
-                            )
-                                    .opt()
-                                    .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
-                        });
-
-                    });
+            addButton.setOnAction((ActionEvent e) -> {
+                Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(ContactAddController.class)
+                        .cf()
+                        .thenApply(c -> CustomerConnectorFascade.createContactOnCustomer(customer.getId(), c))
+                        .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                        .handle(Ui.handler());
+            });
             delButton.setOnAction((ActionEvent e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem != null ) {
-                    contactList.remove(selectedItem);
-                }
+                if ( selectedItem == null ) return;
+
+// TODO: Disallow deletion of contacts in an addresslabel.
+                Ui.build(commentTextArea).dialog().eval(() -> {
+                    Dialog<Contact> dialog = new Dialog<>();
+                    dialog.setTitle("Löschen bestätigen");
+                    dialog.setHeaderText("Möchten sie diese Kontakt wirklich löschen ?");
+                    dialog.setContentText(contactListView.getSelectionModel().getSelectedItem().toString());
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                    dialog.setResultConverter((bt) -> {
+                        if ( bt == ButtonType.YES ) return contactListView.getSelectionModel().getSelectedItem();
+                        return null;
+                    });
+                    return dialog;
+                })
+                        .cf()
+                        .thenApply(add -> CustomerConnectorFascade.deleteContactOnCustomer(customer.getId(), add))
+                        .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                        .handle(Ui.handler());
             });
-            delButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+
+            // diable if it is the last contact.
+            delButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(1));
         }
 
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);
@@ -504,29 +507,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             showHBox.getChildren().addAll(companyListView, buttonVBox);
         } else {
             showHBox.getChildren().addAll(contactListView, buttonVBox);
-
         }
-    }
-
-    private void editContact(Contact contact) {
-        Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class
-            )
-                    .opt()
-                    .ifPresent(a -> Platform.runLater(() -> contactList.set(contactListView.getSelectionModel().getSelectedIndex(), a)));
-        });
-
-    }
-
-    private void addContact(Contact contact) {
-        Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> contact, ContactUpdateController.class
-            )
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> contactList.add(a)));
-        });
-
     }
 
     private void editCompany(Company company) {
@@ -550,17 +531,34 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         });
     }
 
-    @Data
-    @AllArgsConstructor
-    class AdditionalCustomerID {
+    class AdditionalCustomerId {
 
+        @Getter
+        @Setter
         private ExternalSystem type;
 
-        private String value;
+        private StringProperty valueProperty = new SimpleStringProperty(this, "value");
 
+        public AdditionalCustomerId(ExternalSystem type, String value) {
+            this.type = type;
+            this.valueProperty.set(value);
+        }
+
+        public final String getValue() {
+            return valueProperty.get();
+        }
+
+        public final void setValue(String value) {
+            valueProperty.set(value);
+        }
+
+        public StringProperty valueProperty() {
+            return valueProperty;
+        }
+        
         @Override
         public String toString() {
-            return "System: " + type + " Kundennummer: " + value;
+            return "System: " + type + " Kundennummer: " + valueProperty.get();
         }
 
     }
@@ -595,19 +593,19 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private class AdditionalCustomerIDsDialogHandler implements EventHandler<ActionEvent> {
 
-        private MultipleSelectionModel<AdditionalCustomerID> selectionModel;
+        private MultipleSelectionModel<AdditionalCustomerId> selectionModel;
 
         public AdditionalCustomerIDsDialogHandler() {
         }
 
-        public AdditionalCustomerIDsDialogHandler(MultipleSelectionModel<AdditionalCustomerID> selectionModel) {
+        public AdditionalCustomerIDsDialogHandler(MultipleSelectionModel<AdditionalCustomerId> selectionModel) {
             this.selectionModel = selectionModel;
         }
 
         @Override
         public void handle(ActionEvent event) {
 
-            Dialog<AdditionalCustomerID> dialog = new Dialog<>();
+            Dialog<AdditionalCustomerId> dialog = new Dialog<>();
             if ( selectionModel == null )
                 dialog.setTitle("Zusätzliche Kundennummer hinzufügen.");
             else
@@ -656,31 +654,21 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             dialog.getDialogPane().setContent(grid);
             dialog.setResultConverter(dialogButton -> {
                 if ( dialogButton == addButtonType ) {
-                    return new AdditionalCustomerID((ExternalSystem)externalSystemChoiceBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
+                    return new AdditionalCustomerId((ExternalSystem)externalSystemChoiceBox.getSelectionModel().selectedItemProperty().get(), customerId.getText());
                 }
                 return null;
             });
-            Ui.exec(() -> {
 
-                Optional<AdditionalCustomerID> result = Ui.build(additionalCustomerIdsListView).modality(WINDOW_MODAL).dialog().eval(() -> dialog).opt();
-
-                if ( selectionModel == null )
-                    result.ifPresent(additionalId -> {
-                        Platform.runLater(()
-                                -> {
-                            additionalCustomerIdsListView.getItems().add(additionalId);
-                            additionalCustomerIdsListView.refresh();
-                        });
-                    });
-                else
-                    result.ifPresent(additionalId -> {
-                        Platform.runLater(()
-                                -> {
-                            selectionModel.getSelectedItem().setValue(additionalId.getValue());
-                            additionalCustomerIdsListView.refresh();
-                        });
-                    });
-            });
+            Ui.build(additionalCustomerIdsListView).modality(WINDOW_MODAL).dialog().eval(() -> dialog)
+                    .cf()
+                    .thenAcceptAsync(aid -> {
+                        if ( selectionModel == null ) {
+                            additionalCustomerIds.add(aid);
+                        } else {
+                            selectionModel.getSelectedItem().setValue(aid.getValue());
+                        }
+                    }, Platform::runLater)
+                    .handle(Ui.handler());
 
         }
 

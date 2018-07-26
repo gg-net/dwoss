@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="750.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="750.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
     <center>
         <VBox spacing="3.0" BorderPane.alignment="CENTER">
             <children>
@@ -46,28 +46,31 @@
                     </children>
                 </HBox>
                 <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
-                <HBox minHeight="150.0" spacing="3.0" VBox.vgrow="ALWAYS">
+                <HBox maxWidth="1.7976931348623157E308" spacing="3.0" VBox.vgrow="ALWAYS">
                     <children>
-                        <VBox minHeight="50.0" minWidth="150.0" spacing="3.0">
+                        <VBox maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
                         <Label text="Flags:" />
-                        <ListView fx:id="flagListView" prefHeight="200.0" prefWidth="200.0" />
+                        <ListView fx:id="flagListView" minHeight="200.0" minWidth="200.0" />
                      </children></VBox>
-                        <Region maxHeight="1.7976931348623157E308" maxWidth="70.0" minWidth="70.0" HBox.hgrow="ALWAYS" />
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                        <VBox maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="5.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Button fx:id="mandatorMetaDataButton" maxWidth="200.0" mnemonicParsing="false" onAction="#clickMandatorMetaDataButton" text="Mandator Spezial Info" VBox.vgrow="ALWAYS" />
-                                <HBox maxWidth="1.7976931348623157E308" spacing="3.0" VBox.vgrow="ALWAYS">
+                                <HBox spacing="3.0" VBox.vgrow="SOMETIMES">
                                     <children>
                                         <Label text="Quellen:" />
-                                        <ChoiceBox fx:id="sourceChoiceBox" maxWidth="200.0" HBox.hgrow="ALWAYS" />
+                                        <ChoiceBox fx:id="sourceChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
-                                <VBox fx:id="additionalCustomerIdsVBox" maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
-                                    <VBox.margin>
-                                        <Insets />
-                                    </VBox.margin>
-                                </VBox>
+                        <Label text="Zusätzliche Kundennummern" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="addAdditionalCustomerIdButton" mnemonicParsing="false" text="Hinzufügen" />
+                              <Button fx:id="editdditionalCustomerIdButton" mnemonicParsing="false" text="Bearbeiten" />
+                              <Button fx:id="deletedditionalCustomerIdButton" mnemonicParsing="false" text="Löschen" />
+                           </children>
+                        </HBox>
+                        <ListView fx:id="additionalCustomerIdsListView" prefHeight="200.0" prefWidth="200.0" />
                             </children>
                             <padding>
                                 <Insets left="10.0" top="10.0" />

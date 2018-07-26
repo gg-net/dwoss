@@ -65,9 +65,9 @@
                         <VBox minWidth="50.0" spacing="3.0">
                             <children>
                                 <Region minHeight="20.0" />
-                                <Button fx:id="editAddressButton" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
-                                <Button minWidth="80.0" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
-                                <Button fx:id="deleteAddressButton" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
+                                <Button fx:id="editAddressButton" maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
+                                <Button maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
+                                <Button fx:id="deleteAddressButton" maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
                             </children>
                         </VBox>
                     </children>
@@ -83,9 +83,9 @@
                         <VBox minHeight="50.0" spacing="3.0">
                             <children>
                                 <Region minHeight="20.0" />
-                                <Button fx:id="editCommunicationButton" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
-                                <Button minWidth="80.0" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
-                                <Button fx:id="deleteCommunicationButton" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
+                                <Button fx:id="editCommunicationButton" maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
+                                <Button maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
+                                <Button fx:id="deleteCommunicationButton" maxWidth="1.7976931348623157E308" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
                             </children>
                         </VBox>
                     </children>
