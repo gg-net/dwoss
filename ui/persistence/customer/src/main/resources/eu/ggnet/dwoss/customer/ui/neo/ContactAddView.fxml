@@ -4,22 +4,19 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="486.0" prefWidth="513.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="129.0" prefWidth="513.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.ContactAddController">
     <center>
         <VBox spacing="3.0" BorderPane.alignment="CENTER">
             <children>
                 <VBox minHeight="75.0" minWidth="400.0" spacing="2.0">
                     <children>
-                        <Label text="Kontakt Editor">
+                        <Label text="Kontakt Hinzufügen">
                             <font>
                                 <Font name="System Bold" size="16.0" />
                             </font>
@@ -54,42 +51,6 @@
                         </HBox>
                     </children>
                 </VBox>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="3.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="400.0" spacing="3.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="Adresse" />
-                                <ListView fx:id="addressListView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                            </children>
-                        </VBox>
-                        <VBox minWidth="50.0" spacing="3.0">
-                            <children>
-                                <Region minHeight="20.0" />
-                                <Button fx:id="editAddressButton" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
-                                <Button minWidth="80.0" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
-                                <Button fx:id="deleteAddressButton" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
-                <HBox minHeight="150.0" minWidth="400.0" spacing="3.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
-                            <children>
-                                <Label text="Kommunikationswege" />
-                                <TableView fx:id="communicationTableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
-                            </children>
-                        </VBox>
-                        <VBox minHeight="50.0" spacing="3.0">
-                            <children>
-                                <Region minHeight="20.0" />
-                                <Button fx:id="editCommunicationButton" minWidth="80.0" mnemonicParsing="false" text="Ändern" />
-                                <Button minWidth="80.0" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
-                                <Button fx:id="deleteCommunicationButton" minWidth="80.0" mnemonicParsing="false" text="Löschen" />
-                            </children>
-                        </VBox>
-                    </children>
-                </HBox>
             </children>
         </VBox>
     </center>

@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -35,6 +36,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
+
+import lombok.NonNull;
 
 /**
  * Controller class for the editor view of a Address. Allows the user to
@@ -46,6 +49,8 @@ import eu.ggnet.saft.core.ui.AlertType;
 public class AddressUpdateController implements Initializable, FxController, Consumer<Address>, ResultProducer<Address> {
 
     private Address address;
+
+    private boolean isCanceled = true;
 
     @FXML
     private ComboBox<Country> countryComboBox;
@@ -66,27 +71,8 @@ public class AddressUpdateController implements Initializable, FxController, Con
     /**
      * Close the Editor window and discard all changes.
      */
-    private void handleCloseButtonAction(ActionEvent event) {
-        address = null;
-        Ui.closeWindowOf(zipcode);
-    }
-
-    @FXML
-    /**
-     * Close the Editor window and save all changes.
-     * <p>
-     */
-    private void handleSaveButtonAction(ActionEvent event) {
-        address = getAddress();
-
-        //only get valid object out
-        if ( address.getViolationMessage() != null ) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Adresse ist invalid: " + address.getViolationMessage()).show(AlertType.WARNING);
-            });
-            return;
-        }
-
+    private void clickCancelButton(ActionEvent event) {
+        isCanceled = true;
         Ui.closeWindowOf(zipcode);
     }
 
@@ -123,54 +109,52 @@ public class AddressUpdateController implements Initializable, FxController, Con
                 )
         );
 
+        saveButton.setOnAction((e) -> {
+            updateAddress();
+            //only get valid object out
+            if ( address.getViolationMessage() != null ) {
+                    Ui.build().alert().message("Adresse ist invalid: " + address.getViolationMessage()).show(AlertType.WARNING);
+                return;
+            }
+            isCanceled = false;
+            Ui.closeWindowOf(zipcode);
+        });
+
     }
 
     @Override
-    public void accept(Address a) {
-        if ( a != null ) {
-            setAddress(a);
-        } else {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Addresse ist inkompatibel").show(AlertType.WARNING);
-            });
-        }
+    public void accept(@NonNull Address address) {
+        setAddress(address);
     }
 
     @Override
     public Address getResult() {
+        if (isCanceled) return null;
         return address;
     }
 
     /**
      * Set the Address for the Edit
      *
-     * @param a is the Address
+     * @param address is the Address
      */
-    private void setAddress(Address a) {        
-        countryComboBox.getSelectionModel().select(a.getCountry());
-        if ( a.getCity() != null ) {
-            city.setText(a.getCity());
-        }
-        if ( a.getZipCode() != null ) {
-            zipcode.setText(a.getZipCode());
-        }
-        if ( a.getStreet() != null ) {
-            street.setText(a.getStreet());
-        }
-
+    private void setAddress(Address address) {
+        this.address = address;
+        countryComboBox.getSelectionModel().select(address.getCountry());
+        if (address.getCity() != null) city.setText(address.getCity());
+        if (address.getZipCode() != null) zipcode.setText(address.getZipCode());
+        if (address.getStreet() != null) street.setText(address.getStreet());
     }
 
     /**
-     * Get the Address back
+     * Get the Address back. consider changes on event.
      */
-    private Address getAddress() {
-        Address a = new Address();
-        a.setStreet(street.getText());
-        a.setZipCode(zipcode.getText());
-        a.setCity(city.getText());
-        a.setCountry(countryComboBox.getValue());
-
-        return a;
+    private void updateAddress() {
+        if ( address == null ) address = new Address(); // If we are on a new instance.        
+        address.setStreet(street.getText());
+        address.setZipCode(zipcode.getText());
+        address.setCity(city.getText());
+        address.setCountry(countryComboBox.getValue());
     }
 
 }

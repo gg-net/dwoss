@@ -34,6 +34,8 @@ import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.AlertType;
 
+import lombok.NonNull;
+
 /**
  * Controller class for the editor view of a Communication. Allows the user to
  * change all values of the Communication.
@@ -43,7 +45,7 @@ import eu.ggnet.saft.core.ui.AlertType;
 public class CommunicationUpdateController implements Initializable, FxController, Consumer<Communication>, ResultProducer<Communication> {
 
     @FXML
-    private ChoiceBox<Type> commtypbox;
+    private ChoiceBox<Type> communicationTypeBox;
 
     @FXML
     private TextField identifer;
@@ -56,12 +58,14 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     @FXML
     private Button saveButton;
 
+    private boolean isCanceled = true;
+
     @FXML
     /**
      * Close the Editor window and discard all changes.
      */
     private void handleCloseButtonAction() {
-        communication = null;
+        isCanceled = true;
         Ui.closeWindowOf(identifer);
     }
 
@@ -72,10 +76,11 @@ public class CommunicationUpdateController implements Initializable, FxControlle
      */
     private void handleSaveButtonAction() {
         warning.setVisible(false);
+        updateCommunication();
 
         if ( !StringUtils.isBlank(identifer.getText()) ) {
             //check the email pattern, display Warning (!)
-            if ( commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
+            if ( communicationTypeBox.getSelectionModel().getSelectedItem().equals(Communication.Type.EMAIL)
                     && !identifer.getText().matches(Communication.EMAIL_PATTERN) ) {
 
                 warning.setVisible(true);
@@ -83,9 +88,9 @@ public class CommunicationUpdateController implements Initializable, FxControlle
                 return;
             }
             //check the phone pattern, display Warning (!)
-            if ( (commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
-                  || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
-                  || commtypbox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
+            if ( (communicationTypeBox.getSelectionModel().getSelectedItem().equals(Communication.Type.MOBILE)
+                  || communicationTypeBox.getSelectionModel().getSelectedItem().equals(Communication.Type.PHONE)
+                  || communicationTypeBox.getSelectionModel().getSelectedItem().equals(Communication.Type.FAX))
                     && !identifer.getText().matches(Communication.PHONE_PATTERN) ) {
                 warning.setVisible(true);
                 warning.setText("Bitte nur Zahlen eingeben.");
@@ -94,22 +99,19 @@ public class CommunicationUpdateController implements Initializable, FxControlle
 
         }
 
-        communication = getCommunication();
-
         //only get valid object out
         if ( communication.getViolationMessage() != null ) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessage()).show(AlertType.WARNING);
-            });
+            Ui.build(communicationTypeBox).alert().message("Kommunikationsweg ist inkompatibel: " + communication.getViolationMessage()).show(AlertType.WARNING);
             return;
         }
-
+        isCanceled = false;
         Ui.closeWindowOf(identifer);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        commtypbox.getItems().addAll(Communication.Type.values());
+        communicationTypeBox.getItems().addAll(Communication.Type.values());
+        communicationTypeBox.getSelectionModel().selectFirst();
 
         //get overwriten in accept()
         identifer.setText("");
@@ -123,53 +125,26 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     }
 
     @Override
-    public void accept(Communication c) {
-        if ( c != null ) {
-            setCommunication(c);
-        } else {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kommunikationsweg ist inkompatibel");
-            });
-        }
-
-    }
-
-    @Override
     public Communication getResult() {
-        if ( communication == null ) {
-            return null;
-        }
+        if ( isCanceled ) return null;
         return communication;
     }
 
-    /**
-     * Set the Communication for the Edit
-     *
-     * @param a is the Communication
-     */
-    private void setCommunication(Communication com) {
-        if ( com.getType() != null ) {
-            commtypbox.getSelectionModel().select(com.getType());
-            commtypbox.setDisable(true);
-        } else {
-            commtypbox.getSelectionModel().selectFirst();
-        }
-
-        if ( com.getIdentifier() != null ) {
-            identifer.setText(com.getIdentifier());
-        }
-
+    @Override
+    public void accept(@NonNull Communication communication) {
+        this.communication = communication;
+        communicationTypeBox.getSelectionModel().select(communication.getType());
+        communicationTypeBox.setDisable(true);
+        if ( communication.getIdentifier() != null ) identifer.setText(communication.getIdentifier());
     }
 
     /**
      * Get the Communication back
      */
-    private Communication getCommunication() {
-        Communication c = new Communication();
-        c.setType(commtypbox.getSelectionModel().getSelectedItem());
-        c.setIdentifier(identifer.getText());
-
-        return c;
+    private void updateCommunication() {
+        if ( communication == null ) communication = new Communication();
+        communication.setType(communicationTypeBox.getSelectionModel().getSelectedItem());
+        communication.setIdentifier(identifer.getText());
     }
 
 }

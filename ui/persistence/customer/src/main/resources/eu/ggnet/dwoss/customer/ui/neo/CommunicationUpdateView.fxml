@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController">
+<BorderPane minHeight="120.0" minWidth="300.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController">
     <top>
         <Label text="Kommunikation" BorderPane.alignment="CENTER">
             <font>
@@ -29,7 +29,7 @@
                 </VBox>
                 <VBox spacing="3.0" HBox.hgrow="ALWAYS">
                     <children>
-                        <ChoiceBox fx:id="commtypbox" maxWidth="1.7976931348623157E308" minWidth="150.0" />
+                        <ChoiceBox fx:id="communicationTypeBox" maxWidth="1.7976931348623157E308" minWidth="150.0" />
                         <TextField fx:id="identifer" maxWidth="1.7976931348623157E308" minWidth="150.0" />                      
                         <Label fx:id="warning" text="!" textFill="RED" visible="false">
                             <font>

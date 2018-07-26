@@ -14,8 +14,8 @@
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="5.0">
             <children>
-                <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
-                <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="Abrechen" />
+                <Button fx:id="saveButton" mnemonicParsing="false" text="Speichern" />
+                <Button mnemonicParsing="false" onAction="#clickCancelButton" text="Abbrechen" />
             </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

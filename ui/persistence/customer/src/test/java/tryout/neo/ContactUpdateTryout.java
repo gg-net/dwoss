@@ -21,7 +21,9 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
@@ -33,15 +35,16 @@ public class ContactUpdateTryout {
 
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
-        Contact contact = gen.makeContact();
-        contact.setTitle("Dr.");
-        contact.getAddresses().add(gen.makeAddress());
-        contact.getAddresses().add(gen.makeAddress());
-        contact.getAddresses().add(gen.makeAddress());
+        Customer customer = gen.makeCustomer();
+        customer.getCompanies().clear();
 
-        contact.getCommunications().add(gen.makeCommunication());
-        contact.getCommunications().add(gen.makeCommunication());
-        contact.getCommunications().add(gen.makeCommunication());
+        Contact contact = gen.makeContactWithId(1, 11, 21);
+        customer.getContacts().add(contact);
+        contact.setTitle("Dr.");
+        contact.getAddresses().add(gen.makeAddressWithId(12));
+        contact.getCommunications().add(gen.makeCommunicationWithId(22));
+
+        CustomerConnectorFascade.setCustomer(customer);
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

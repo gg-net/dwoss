@@ -33,7 +33,7 @@ public class AddressUpdateTryout {
 
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
-        Address address = gen.makeAddress();
+        Address address = gen.makeAddressWithId(666);
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

@@ -3,6 +3,7 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ui.neo.CommunicationUpdateController;
@@ -33,7 +34,8 @@ import eu.ggnet.saft.core.UiCore;
 public class CommunicationUpdateTryout {
 
     public static void main(String[] args) {
-        Communication comm = new Communication(Type.MOBILE, "040123456789");
+        CustomerGenerator gen = new CustomerGenerator();
+        Communication comm = gen.makeCommunicationWithId(1111);         
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -54,7 +56,7 @@ public class CommunicationUpdateTryout {
 
         addButton.addActionListener(ev -> {
             Ui.exec(() -> {
-                Ui.build().fxml().eval(() -> new Communication(), CommunicationUpdateController.class).opt().ifPresent(System.out::println);
+                Ui.build().fxml().eval(CommunicationUpdateController.class).opt().ifPresent(System.out::println);
             });
         });
 

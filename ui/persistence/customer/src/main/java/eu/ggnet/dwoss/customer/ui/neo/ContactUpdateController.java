@@ -45,6 +45,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
+import lombok.NonNull;
+
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -91,113 +93,21 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private ToggleGroup prefGroup = new ToggleGroup();
 
     @FXML
-    private Button delAddressButton;
+    private Button editAddressButton;
 
     @FXML
-    private Button delComButton;
+    private Button deleteAddressButton;
 
     @FXML
-    private Button saveAndCloseButton;
+    private Button editCommunicationButton;
+
+    @FXML
+    private Button deleteCommunicationButton;
 
     @FXML
     private Button saveButton;
 
-    @FXML
-    private void saveButtonHandling() {
-        contact = getContact();
-        //only get valid object out
-        if ( contact.getViolationMessage() != null ) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
-            });
-        }
-    }
-
-    @FXML
-    private void saveAndCloseButtonHandling() {
-        contact = getContact();
-        if ( contact.getViolationMessage() != null ) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kontakt ist inkompatibel: " + contact.getViolationMessage()).show(AlertType.WARNING);
-            });
-            return;
-        }
-        Ui.closeWindowOf(lastNameTextField);
-    }
-
-    @FXML
-    private void cancelButtonHandling() {
-        contact = null;
-        Ui.closeWindowOf(lastNameTextField);
-    }
-
-    @FXML
-    private void handleEditAddressButton() {
-        Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class)
-                    .cf()
-                    .thenApply(add -> CustomerConnectorFascade.updateAddressOnContact(contact.getId(), add))
-                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
-                    .handle(Ui.handler());
-        }
-    }
-
-    @FXML
-    private void handleAddAddressButton() {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> new Address(), AddressUpdateController.class)
-                    .cf()
-                    .thenApply(add -> CustomerConnectorFascade.createAddressOnContact(contact.getId(), add))
-                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
-                    .handle(Ui.handler());
-    }
-
-    @FXML
-    private void handleDelAddressButton() {
-        if ( addressListView.getSelectionModel().getSelectedItem() == null ) return;
-        // Hier machen wir morgen weiter.
-        // Yes/no alert ob wirklich löschen.
-        
-        
-        int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
-        if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
-            addressList.remove(selectedIndex);
-            addressListView.refresh();
-        }
-    }
-
-    @FXML
-    private void handleEditComButton() {
-        Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            Ui.exec(() -> {
-                Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class)
-                        .opt()
-                        .filter(a -> a != null)
-                        .ifPresent(a -> Platform.runLater(() -> communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a)));
-            });
-        }
-    }
-
-    @FXML
-    private void handleAddComButton() {
-        Communication communication = new Communication();
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class)
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> communicationsList.add(a)));
-        });
-    }
-
-    @FXML
-    private void handleDelComButton() {
-        int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
-        if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
-            communicationsList.remove(selectedIndex);
-            communicationTableView.refresh();
-        }
-    }
+    private boolean isCanceled = true;
 
     /**
      * Initializes the controller class.
@@ -206,26 +116,90 @@ public class ContactUpdateController implements Initializable, FxController, Con
      * @param rb
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb
-    ) {
+    public void initialize(URL url, ResourceBundle rb) {
+
+        editAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull());
+        editAddressButton.setOnAction(e -> {
+            Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
+            if ( selectedItem == null ) return;
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class)
+                    .cf()
+                    .thenApply(add -> CustomerConnectorFascade.updateAddressOnContact(contact.getId(), add))
+                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                    .handle(Ui.handler());
+        });
+
         //button behavior
-        delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
-        delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        deleteAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull());
+        deleteAddressButton.setOnAction(e -> {
+            if ( addressListView.getSelectionModel().getSelectedItem() == null ) return;
+
+            Ui.build(addressListView).dialog().eval(() -> {
+                Dialog<Address> dialog = new Dialog<>();
+                dialog.setTitle("Löschen bestätigen");
+                dialog.setHeaderText("Möchten sie die Addresse wirklich löschen ?");
+                dialog.setContentText(addressListView.getSelectionModel().getSelectedItem().toHtml());
+                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                dialog.setResultConverter((bt) -> {
+                    if ( bt == ButtonType.YES ) return addressListView.getSelectionModel().getSelectedItem();
+                    return null;
+                });
+                return dialog;
+            })
+                    .cf()
+                    .thenApply(add -> CustomerConnectorFascade.deleteAddressOnContact(contact.getId(), add))
+                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                    .handle(Ui.handler());
+        });
+
+        editCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull());
+        editCommunicationButton.setOnAction(e -> {
+            Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
+            if ( selectedItem == null ) return;
+            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class)
+                    .cf()
+                    .thenApply(comm -> CustomerConnectorFascade.updateCommunicationOnContact(contact.getId(), comm))
+                    .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                    .handle(Ui.handler());
+        });
+
+        deleteCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull());
+        deleteCommunicationButton.setOnAction(e -> {
+            if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
+
+            Ui.build(addressListView).dialog().eval(() -> {
+                Dialog<Communication> dialog = new Dialog<>();
+                dialog.setTitle("Löschen bestätigen");
+                dialog.setHeaderText("Möchten sie diese Kommunikation wirklich löschen ?");
+                dialog.setContentText(communicationTableView.getSelectionModel().getSelectedItem().toString());
+                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                dialog.setResultConverter((bt) -> {
+                    if ( bt == ButtonType.YES ) return communicationTableView.getSelectionModel().getSelectedItem();
+                    return null;
+                });
+                return dialog;
+            })
+                    .cf()
+                    .thenApply(add -> CustomerConnectorFascade.deleteCommunicationOnContact(contact.getId(), add))
+                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                    .handle(Ui.handler());
+        });
 
         //get overwriten in accept()
         lastNameTextField.setText("");
 
         //enable the save and "saveAndClose" button only on filled TextFields
-        saveButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
-        );
-        saveAndCloseButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                )
-        );
+        saveButton.disableProperty().bind(lastNameTextField.textProperty().isEmpty());
+
+        saveButton.setOnAction((e) -> {
+            updateContact();
+            if ( contact.getViolationMessage() != null ) {
+                Ui.build().alert().message("Kontakt ist invalid: " + contact.getViolationMessage()).show(AlertType.ERROR);
+            } else {
+                isCanceled = false;
+                Ui.closeWindowOf(lastNameTextField);
+            }
+        });
 
         //fill the UI with default values
         genderBox.setConverter(new StringConverter<Sex>() {
@@ -337,22 +311,39 @@ public class ContactUpdateController implements Initializable, FxController, Con
         communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
     }
 
+    @FXML
+    private void clickCancelButton() {
+        isCanceled = true;
+        Ui.closeWindowOf(lastNameTextField);
+    }
+
+    @FXML
+    private void clickAddAddressButton() {
+        Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> new Address(), AddressUpdateController.class)
+                .cf()
+                .thenApply(add -> CustomerConnectorFascade.createAddressOnContact(contact.getId(), add))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    @FXML
+    private void clickAddCommunicationButton() {
+        Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(CommunicationUpdateController.class)
+                .cf()
+                .thenApply(communication -> CustomerConnectorFascade.createCommunicationOnContact(contact.getId(), communication))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    // For now i define, that a contact must be set, may change in the future
     @Override
-    public void accept(Contact cont) {
-        if ( cont != null ) {
-            setContact(cont);
-        } else {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Kontakt ist null").show(AlertType.ERROR);
-            });
-        }
+    public void accept(@NonNull Contact cont) {
+        setContact(cont);
     }
 
     @Override
     public Contact getResult() {
-        if ( contact == null ) {
-            return null;
-        }
+        if ( isCanceled ) return null;
         return contact;
     }
 
@@ -361,38 +352,28 @@ public class ContactUpdateController implements Initializable, FxController, Con
      *
      * @param comp the Contact
      */
-    private void setContact(Contact cont) {
-        titleTextField.setText(cont.getTitle());
-        firstNameTextField.setText(cont.getFirstName());
-        if ( cont.getLastName() != null ) {
-            lastNameTextField.setText(cont.getLastName());
-        }
+    private void setContact(Contact contact) {
+        this.contact = contact;
+        titleTextField.setText(contact.getTitle());
+        firstNameTextField.setText(contact.getFirstName());
+        lastNameTextField.setText(contact.getLastName());
 
-        if ( cont.getSex() != null ) {
-            genderBox.getSelectionModel().select(cont.getSex());
-        } else {
-            genderBox.getSelectionModel().selectFirst();
-        }
+        genderBox.getSelectionModel().select(contact.getSex());
 
-        addressList.addAll(cont.getAddresses());
-        communicationsList.addAll(cont.getCommunications());
-
+        addressList.clear();
+        addressList.addAll(contact.getAddresses());
+        communicationsList.clear();
+        communicationsList.addAll(contact.getCommunications());
     }
 
     /**
-     * Get the Contact back
+     * update the contact before, consider doing this on element change.
      */
-    private Contact getContact() {
-        Contact c = new Contact();
-        c.setTitle(titleTextField.getText());
-        c.setFirstName(firstNameTextField.getText());
-        c.setLastName(lastNameTextField.getText());
-        c.setSex(genderBox.getSelectionModel().getSelectedItem());
-
-        c.getAddresses().addAll(addressList);
-        c.getCommunications().addAll(communicationsList);
-
-        return c;
+    private void updateContact() {
+        contact.setTitle(titleTextField.getText());
+        contact.setFirstName(firstNameTextField.getText());
+        contact.setLastName(lastNameTextField.getText());
+        contact.setSex(genderBox.getSelectionModel().getSelectedItem());
     }
 
 }

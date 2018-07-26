@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -48,18 +47,14 @@ public class CustomerConnectorFascade {
     }
     
     public static Contact updateAddressOnContact(long contactId, Address address) {
-        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if (!found.isPresent()) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
+        Contact contact = findById(contactId);
         // Update just happeing like magic :-)
         System.out.println("updateAddress = " + address);        
-        return found.get();
+        return contact;
     }
     
     public static Contact deleteAddressOnContact(long contactId, Address address) {
-        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if (!found.isPresent()) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
-        // Update just happeing like magic :-)
-        Contact contact = found.get();
+        Contact contact = findById(contactId);
         for (Iterator<Address> iterator = contact.getAddresses().iterator(); iterator.hasNext();) {
             Address selectedAddress = iterator.next();
             if (selectedAddress.getId() == address.getId()) iterator.remove();            
@@ -69,12 +64,39 @@ public class CustomerConnectorFascade {
     }
     
     public static Contact createAddressOnContact(long contactId, Address address) {
-        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if (!found.isPresent()) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
-        Contact contact = found.get();
+        Contact contact = findById(contactId);
         contact.getAddresses().add(address);
         System.out.println("create address = " + address);
         return contact;
+    }
+    
+    private static Contact findById(long contactId) {
+        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
+        if (!found.isPresent()) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
+        return found.get();        
+    }
+ 
+    public static Contact updateCommunicationOnContact(long contactId, Communication communication) {
+        Contact contact = findById(contactId);
+        // Update just happeing like magic :-)
+        System.out.println("update communication = " + communication);        
+        return contact;
+    }
+    
+    public static Contact deleteCommunicationOnContact(long contactId, Communication communication) {
+        Contact contact = findById(contactId);
+        for (Iterator<Communication> iterator = contact.getCommunications().iterator(); iterator.hasNext();) {
+            Communication selectedCommunication = iterator.next();
+            if (selectedCommunication.getId() == communication.getId()) iterator.remove();            
+        }
+        System.out.println("delete communication = " + communication);
+        return contact;
+    }
+    public static Contact createCommunicationOnContact(long contactId, Communication communication) {
+        Contact contact = findById(contactId);
+        contact.getCommunications().add(communication);
+        System.out.println("create communication = " + communication);
+        return contact;        
     }
     
 }
