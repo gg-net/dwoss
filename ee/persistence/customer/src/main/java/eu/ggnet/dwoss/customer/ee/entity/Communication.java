@@ -101,8 +101,8 @@ public class Communication implements Serializable {
 
     /**
      * Tryout constructor, do not use in productive.
-     * 
-     * @param id 
+     *
+     * @param id
      */
     public Communication(long id) {
         this.id = id;
@@ -143,6 +143,11 @@ public class Communication implements Serializable {
                 .map(pattern -> identifier.matches(pattern))
                 .map(b -> (b ? null : "Identifier " + identifier + " vom Type: " + type + " passt nicht auf pattern " + type.getValidPattern().get()))
                 .orElse(null);
+    }
+
+    public String toSingleLineString() {
+        String toSingleLine = type.name() + " " + identifier;
+        return toSingleLine;
     }
 
 }

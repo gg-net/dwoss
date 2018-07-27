@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ee.entity;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -28,8 +27,6 @@ import org.hibernate.search.annotations.*;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import lombok.*;
-
-import static eu.ggnet.dwoss.customer.ee.entity.Country.AUSTRIA;
 
 /**
  * Address data.
@@ -86,8 +83,8 @@ public class Address implements Serializable {
 
     /**
      * Tryout constructor, do not use in productive.
-     * 
-     * @param id 
+     *
+     * @param id
      */
     public Address(long id) {
         this.id = id;
@@ -131,6 +128,12 @@ public class Address implements Serializable {
         if ( StringUtils.isBlank(zipCode) ) return "ZipCode is blank";
         if ( StringUtils.isBlank(isoCountry) ) return "Country is blank";
         return null;
+    }
+
+    public String toSingleLineString() {
+        StringBuilder sb = new StringBuilder();
+        return sb.append(street).append(" ").append(zipCode)
+                .append(" ").append(city).toString();
     }
 
 }

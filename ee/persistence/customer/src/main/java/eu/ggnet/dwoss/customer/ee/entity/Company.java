@@ -226,4 +226,31 @@ public class Company implements Serializable {
         return null;
     }
 
+    public String toMultiLineString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+
+        if ( !contacts.isEmpty() ) {
+            sb.append("\n").append("Kontakte:");
+            contacts.forEach((contact) -> {
+                sb.append("\n").append(contact.toFullName());
+            });
+        }
+
+        if ( !addresses.isEmpty() ) {
+            sb.append("\n").append("Adressen:");
+            addresses.forEach((addresse) -> {
+                sb.append("\n").append(addresse.toSingleLineString());
+            });
+        }
+
+        if ( !communications.isEmpty() ) {
+            sb.append("\n").append("Kommunikationswege:");
+            for (Communication communication : communications) {
+                sb.append("\n").append(communication.toSingleLineString());
+            }
+        }
+
+        return sb.toString();
+    }
 }
