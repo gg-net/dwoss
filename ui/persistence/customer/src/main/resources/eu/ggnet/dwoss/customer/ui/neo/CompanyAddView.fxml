@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="162.0" minWidth="500.0" prefHeight="162.0" prefWidth="510.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CompanyAddController">
+   <bottom>
+      <HBox alignment="BOTTOM_RIGHT" fillHeight="false" minHeight="30.0" spacing="5.0" BorderPane.alignment="BOTTOM_RIGHT">
+         <children>
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#clickSaveButton" text="Speichern" wrapText="true" />
+            <Button minWidth="75.0" mnemonicParsing="false" onAction="#clickCancelButton" text="Abbrechen" />
+         </children>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <center>
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="120.0" minWidth="200.0" prefHeight="444.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="7.0">
+               <children>
+                  <Region minHeight="25.0" minWidth="100.0" />
+                  <Label text="Name:" />
+                  <Label text="Konto:" />
+                  <Label text="FiBu Konto:" />
+               </children>
+            </VBox>
+            <VBox maxHeight="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label text="Firmen Editor">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="companyNameTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="ledgerTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+                  <TextField fx:id="taxIdTextField" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="400.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>

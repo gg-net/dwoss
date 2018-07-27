@@ -16,13 +16,14 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import eu.ggnet.saft.core.ui.Title;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.FxController;
 
-import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,8 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
+
+import lombok.NonNull;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -75,70 +78,56 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private TableView<Communication> communicationTableView;
 
-    private Company company;
-
-    private TableColumn<Communication, Type> typeColumn = new TableColumn("Type");
-
-    private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
-
-    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
-
-    private ObservableList<Contact> contactsList = FXCollections.observableArrayList();
-
-    private ObservableList<Address> addressList = FXCollections.observableArrayList();
-
-    private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
-
-    private ToggleGroup prefGroup = new ToggleGroup();
-
     @FXML
     private Button delAddressButton;
 
     @FXML
-    private Button delComButton;
+    private Button delCommunicationButton;
 
     @FXML
     private Button delContactButton;
 
     @FXML
-    private Button saveAndCloseButton;
-
-    @FXML
     private Button saveButton;
 
+    private Company company;
+
+    private TableColumn<Communication, Type> typeColumn;
+
+    private TableColumn<Communication, String> idColumn;
+
+    private TableColumn<Communication, Boolean> prefColumn;
+
+    private ObservableList<Contact> contactsList;
+
+    private ObservableList<Address> addressList;
+
+    private ObservableList<Communication> communicationsList;
+
+    private ToggleGroup prefGroup;
+
+    private boolean isCanceled = true;
+
     @FXML
-    private void saveAndCloseButtonHandling() {
-        company = getCompany();
+    private void clickSaveButton() {
         //only get valid object out
         if ( company.getViolationMessage() != null ) {
             Ui.exec(() -> {
-                Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessage()).show(AlertType.WARNING);
+                Ui.build().alert().message("Firma ist null: " + company.getViolationMessage()).show(AlertType.ERROR);
             });
-            return;
+            Ui.closeWindowOf(taxIdTextField);
+            isCanceled = false;
         }
+    }
+
+    @FXML
+    private void clickCancelButton() {
+        isCanceled = true;
         Ui.closeWindowOf(taxIdTextField);
     }
 
     @FXML
-    private void saveButtonHandling() {
-        company = getCompany();
-        //only get valid object out
-        if ( company.getViolationMessage() != null ) {
-            Ui.exec(() -> {
-                Ui.build().alert().message("Firma ist inkompatibel: " + company.getViolationMessage()).show(AlertType.WARNING);
-            });
-            return;
-        }
-    }
-
-    @FXML
-    private void cancelButtonHandling() {
-        company = null;
-        Ui.closeWindowOf(taxIdTextField);
-    }
-
-    @FXML
-    private void handleEditAddressButton() {
+    private void clickEditAddressButton() {
         Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
         if ( selectedItem != null ) {
             Ui.exec(() -> {
@@ -151,7 +140,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddAddressButton() {
+    private void clickAddAddressButton() {
         Address addresse = new Address();
         Ui.exec(() -> {
             Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> addresse, AddressUpdateController.class)
@@ -162,7 +151,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleDelAddressButton() {
+    private void clickDelAddressButton() {
         int selectedIndex = addressListView.getSelectionModel().getSelectedIndex();
         if ( addressListView.getSelectionModel().getSelectedItems() != null ) {
             addressList.remove(selectedIndex);
@@ -171,44 +160,56 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleEditComButton() {
+    private void clickEditCommunicationButton() {
         Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
-        if ( selectedItem != null ) {
-            Ui.exec(() -> {
-                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class)
-                        .opt()
-                        .filter(a -> a != null)
-                        .ifPresent(a -> Platform.runLater(() -> communicationsList.set(communicationTableView.getSelectionModel().getSelectedIndex(), a)));
+        if ( selectedItem == null ) return;
+        Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, CommunicationUpdateController.class)
+                .cf()
+                .thenApply(comm -> CustomerConnectorFascade.updateCommunicationOnCompany(company.getId(), comm))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    @FXML
+    private void clickAddCommunicationButton() {
+        System.out.println(company.getId());
+        Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(CommunicationUpdateController.class)
+                .cf()
+                .thenApply(communication -> CustomerConnectorFascade.createCommunicationOnCompany(company.getId(), communication))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    @FXML
+    private void clickDelCommunicationButton() {
+        if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
+
+        Ui.build(addressListView).dialog().eval(() -> {
+            Dialog<Communication> dialog = new Dialog<>();
+            dialog.setTitle("Löschen bestätigen");
+            dialog.setHeaderText("Möchten sie diese Kommunikation wirklich löschen ?");
+            dialog.setContentText(communicationTableView.getSelectionModel().getSelectedItem().toString());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+            dialog.setResultConverter((bt) -> {
+                if ( bt == ButtonType.YES ) return communicationTableView.getSelectionModel().getSelectedItem();
+                return null;
             });
-        }
+            return dialog;
+        })
+                .cf()
+                .thenApply(add -> CustomerConnectorFascade.deleteCommunicationOnCompany(company.getId(), add))
+                .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                .handle(Ui.handler());
     }
 
     @FXML
-    private void handleAddComButton() {
-        Communication communication = new Communication();
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> communication, CommunicationUpdateController.class)
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> communicationsList.add(a)));
-        });
-    }
-
-    @FXML
-    private void handleDelComButton() {
-        int selectedIndex = communicationTableView.getSelectionModel().getSelectedIndex();
-        if ( communicationTableView.getSelectionModel().getSelectedItems() != null ) {
-            communicationsList.remove(selectedIndex);
-            communicationTableView.refresh();
-        }
-    }
-
-    @FXML
-    private void handleEditContactButton() {
+    private void clickEditContactButton() {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
+
         if ( selectedItem != null ) {
             Ui.exec(() -> {
-                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, ContactUpdateController.class)
+                Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, ContactUpdateController.class
+                )
                         .opt()
                         .filter(a -> a != null)
                         .ifPresent(a -> Platform.runLater(() -> contactsList.set(contactListView.getSelectionModel().getSelectedIndex(), a)));
@@ -218,18 +219,20 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @FXML
-    private void handleAddContactButton() {
+    private void clickAddContactButton() {
         Contact contact = new Contact();
-        Ui.exec(() -> {
-            Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class)
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> contactsList.add(a)));
-        });
+        Ui
+                .exec(() -> {
+                    Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> contact, ContactUpdateController.class
+                    )
+                            .opt()
+                            .filter(a -> a != null)
+                            .ifPresent(a -> Platform.runLater(() -> contactsList.add(a)));
+                });
     }
 
     @FXML
-    private void handleDelContactButton() {
+    private void clickDelContactButton() {
         int selectedIndex = contactListView.getSelectionModel().getSelectedIndex();
         if ( contactListView.getSelectionModel().getSelectedItems() != null ) {
             contactsList.remove(selectedIndex);
@@ -248,8 +251,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     public void initialize(URL url, ResourceBundle rb) {
 
         //button behavior
+        addressList = FXCollections.observableArrayList();
         delAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedIndexProperty().lessThan(0));
-        delComButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
+        delCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedIndexProperty().lessThan(0));
         delContactButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(0));
 
         //get overwriten in accept()
@@ -258,14 +262,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
         //enable the save and "saveAndClose" button only on filled TextFields
         saveButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
-                ).or(
-                        addressListView.getSelectionModel().selectedIndexProperty().lessThan(0)
-                )
-        );
-
-        saveAndCloseButton.disableProperty().bind(
                 Bindings.createBooleanBinding(()
                         -> companyNameTextField.getText().trim().isEmpty(), companyNameTextField.textProperty()
                 ).or(
@@ -308,6 +304,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
         //adding a CellFactory for every Colum
+        typeColumn = new TableColumn("Type");
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
             return new TableCell<Communication, Type>() {
@@ -323,6 +320,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 }
             };
         });
+        idColumn = new TableColumn("Identifier");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("identifier"));
         idColumn.setCellFactory(column -> {
             return new TableCell<Communication, String>() {
@@ -338,6 +336,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 }
             };
         });
+        prefColumn = new TableColumn("prefered");
         prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
         prefColumn.setCellFactory(column -> {
             return new TableCell<Communication, Boolean>() {
@@ -348,6 +347,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                         setText(null);
                         setGraphic(null);
                     } else {
+                        prefGroup = new ToggleGroup();
                         HBox checkHBox = new HBox();
                         RadioButton prefRadioButton = new RadioButton();
                         prefRadioButton.setSelected(item);
@@ -403,19 +403,13 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @Override
-    public void accept(Company comp) {
-        if ( comp != null ) {
-            setCompany(comp);
-        } else {
-            Ui.build().alert().message("Firma ist inkompatibel").show(AlertType.WARNING);
-        }
+    public void accept(@NonNull Company company) {
+        setCompany(company);
     }
 
     @Override
     public Company getResult() {
-        if ( company == null ) {
-            return null;
-        }
+        if ( isCanceled ) return null;
         return company;
     }
 
@@ -425,10 +419,12 @@ public class CompanyUpdateController implements Initializable, FxController, Con
      * @param comp the Company
      */
     private void setCompany(Company comp) {
+        contactsList = FXCollections.observableArrayList();
         contactsList.addAll(comp.getContacts());
         if ( comp.getAddresses() != null ) {
             addressList.addAll(comp.getAddresses());
         }
+        communicationsList = FXCollections.observableArrayList();
         communicationsList.addAll(comp.getCommunications());
 
         //fill the listViews

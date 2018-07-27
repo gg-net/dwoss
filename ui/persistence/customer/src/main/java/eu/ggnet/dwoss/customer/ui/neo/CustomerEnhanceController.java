@@ -409,15 +409,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
             });
             addButton.setOnAction((ActionEvent e) -> {
-                Company c = new Company();
-                c.setName("");
-                Address a = new Address();
-                a.setCity("");
-                a.setStreet("");
-                a.setZipCode("");
-                c.getAddresses().add(a);
-
-                addCompany(c);
+                Ui.exec(() -> {
+                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(CompanyAddController.class
+                    )
+                            .opt()
+                            .filter(a -> a != null)
+                            .ifPresent(a -> Platform.runLater(() -> companyList.add(a)));
+                });
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
@@ -521,16 +519,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     }
 
-    private void addCompany(Company company) {
-        Ui.exec(() -> {
-            Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(() -> company, CompanyUpdateController.class
-            )
-                    .opt()
-                    .filter(a -> a != null)
-                    .ifPresent(a -> Platform.runLater(() -> companyList.add(a)));
-        });
-    }
-
     class AdditionalCustomerId {
 
         @Getter
@@ -555,7 +543,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         public StringProperty valueProperty() {
             return valueProperty;
         }
-        
+
         @Override
         public String toString() {
             return "System: " + type + " Kundennummer: " + valueProperty.get();

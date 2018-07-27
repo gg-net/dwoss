@@ -26,98 +26,131 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 /**
  * Contains all opperations for modification of customer objects in the database.
  * Fasaced of all operations, not really any logic.
- * 
+ *
  * @author oliver.guenther
  */
 public class CustomerConnectorFascade {
-    
+
     private static Customer customer;
-    
+
     /* REMOVE Me LATER */
     public static void setCustomer(Customer c) {
         CustomerConnectorFascade.customer = c;
     }
-    
+
     public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
         customer.getAddressLabels().clear();
         customer.getAddressLabels().add(invoiceLabel);
-        if (shippingLabel.isPresent()) customer.getAddressLabels().add(shippingLabel.get());
+        if ( shippingLabel.isPresent() ) customer.getAddressLabels().add(shippingLabel.get());
         System.out.println("updateAddressLabels customerId = " + customerId + " invoice = " + invoiceLabel + ", shipping = " + shippingLabel);
         return customer;
     }
-    
+
     public static Contact updateAddressOnContact(long contactId, Address address) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         // Update just happeing like magic :-)
-        System.out.println("updateAddress = " + address);        
+        System.out.println("updateAddress = " + address);
         return contact;
     }
-    
+
     public static Contact deleteAddressOnContact(long contactId, Address address) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         for (Iterator<Address> iterator = contact.getAddresses().iterator(); iterator.hasNext();) {
             Address selectedAddress = iterator.next();
-            if (selectedAddress.getId() == address.getId()) iterator.remove();            
+            if ( selectedAddress.getId() == address.getId() ) iterator.remove();
         }
         System.out.println("delete address = " + address);
         return contact;
     }
-    
+
     public static Contact createAddressOnContact(long contactId, Address address) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         contact.getAddresses().add(address);
         System.out.println("create address = " + address);
         return contact;
     }
-    
-    private static Contact findById(long contactId) {
+
+    private static Contact findContactById(long contactId) {
         Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if (!found.isPresent()) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
-        return found.get();        
+        if ( !found.isPresent() ) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
+        return found.get();
     }
- 
+
+    private static Company findCompanyById(long companyId) {
+        Optional<Company> found = customer.getCompanies().stream().filter(c -> c.getId() == companyId).findAny();
+        if ( !found.isPresent() ) throw new RuntimeException("companyId = " + companyId + " not found in customer " + customer);
+        return found.get();
+    }
+
     public static Contact updateCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         // Update just happeing like magic :-)
-        System.out.println("update communication = " + communication);        
+        System.out.println("update communication = " + communication);
         return contact;
     }
-    
+
     public static Contact deleteCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         for (Iterator<Communication> iterator = contact.getCommunications().iterator(); iterator.hasNext();) {
             Communication selectedCommunication = iterator.next();
-            if (selectedCommunication.getId() == communication.getId()) iterator.remove();            
+            if ( selectedCommunication.getId() == communication.getId() ) iterator.remove();
         }
         System.out.println("delete communication = " + communication);
         return contact;
     }
+
     public static Contact createCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findById(contactId);
+        Contact contact = findContactById(contactId);
         contact.getCommunications().add(communication);
         System.out.println("create communication = " + communication);
-        return contact;        
+        return contact;
     }
-    
+
     public static Customer createContactOnCustomer(long customerid, Contact contact) {
         customer.getContacts().add(contact);
         System.out.println("create contact = " + contact);
         return customer;
     }
-    
+
     public static Customer updateContactOnCustomer(long customerId, Contact contact) {
         // magic
         System.out.println("update contact = " + contact);
-        return customer;        
+        return customer;
     }
-    
+
     public static Customer deleteContactOnCustomer(long custmoerId, Contact contact) {
         for (Iterator<Contact> iterator = customer.getContacts().iterator(); iterator.hasNext();) {
             Contact next = iterator.next();
-            if (next == contact) iterator.remove();
+            if ( next == contact ) iterator.remove();
         }
         System.out.println("delete customer");
         return customer;
     }
-    
+
+    public static Company createCommunicationOnCompany(long companyId, Communication communication) {
+        Company company = findCompanyById(companyId);
+        company.getCommunications().add(communication);
+        System.out.println("create communication = " + communication);
+        return company;
+    }
+
+    public static Company updateCommunicationOnCompany(long companyId, Communication communication) {
+        Company company = findCompanyById(companyId);
+        // Update just happeing like magic :-)
+        return company;
+    }
+
+    public static Company deleteCommunicationOnCompany(long companyId, Communication communication) {
+        Company company = findCompanyById(companyId);
+        for (Iterator<Communication> iterator = company.getCommunications().iterator(); iterator.hasNext();) {
+            Communication selectedCommunication = iterator.next();
+            if ( selectedCommunication.getId() == communication.getId() ) iterator.remove();
+        }
+        System.out.println("delete communication = " + communication);
+        return company;
+    }
+
+    public static Customer reload(long customerId) {
+        return customer;
+    }
 }

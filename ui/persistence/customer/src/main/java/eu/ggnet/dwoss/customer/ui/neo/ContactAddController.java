@@ -21,33 +21,17 @@ import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.FxController;
 
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
-
-import lombok.NonNull;
-
-import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
  * Controller class for the editor view of a Contact. Allows the user to
@@ -59,7 +43,6 @@ import static javafx.stage.Modality.WINDOW_MODAL;
  */
 @Title("Kontakt eintragen")
 public class ContactAddController implements Initializable, FxController, ResultProducer<Contact> {
-
 
     @FXML
     private TextField firstNameTextField;
@@ -77,7 +60,7 @@ public class ContactAddController implements Initializable, FxController, Result
     private Button saveButton;
 
     private boolean isCanceled = true;
-    
+
     private Contact contact;
 
     /**
@@ -127,7 +110,6 @@ public class ContactAddController implements Initializable, FxController, Result
         Ui.closeWindowOf(lastNameTextField);
     }
 
-
     @Override
     public Contact getResult() {
         if ( isCanceled ) return null;
@@ -138,7 +120,7 @@ public class ContactAddController implements Initializable, FxController, Result
      * update the contact before, consider doing this on element change.
      */
     private void updateContact() {
-        if (contact == null) contact = new Contact();
+        if ( contact == null ) contact = new Contact();
         contact.setTitle(titleTextField.getText());
         contact.setFirstName(firstNameTextField.getText());
         contact.setLastName(lastNameTextField.getText());

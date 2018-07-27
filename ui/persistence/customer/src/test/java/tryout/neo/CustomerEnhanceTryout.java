@@ -50,10 +50,10 @@ public class CustomerEnhanceTryout {
             Customer customer = gen.makeCustomer();
             customer.getContacts().clear();
 
-            customer.getCompanies().add(gen.makeCompany());
-            customer.getCompanies().add(gen.makeCompany());
-            customer.getCompanies().add(gen.makeCompany());
-            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(gen.makeCompanyWithId(220l));
+            customer.getCompanies().add(gen.makeCompanyWithId(221l));
+            customer.getCompanies().add(gen.makeCompanyWithId(222l));
+            customer.getCompanies().add(gen.makeCompanyWithId(223l));
 
             customer.setSource(Source.ONEADO);
             customer.setKeyAccounter("Herr Meier");
@@ -83,10 +83,10 @@ public class CustomerEnhanceTryout {
             Customer customer = gen.makeCustomer();
             customer.getCompanies().clear();
 
-            customer.getContacts().add(gen.makeContactWithId(1,11,21));
-            customer.getContacts().add(gen.makeContactWithId(2,12,22));
-            customer.getContacts().add(gen.makeContactWithId(3,13,23));
-            customer.getContacts().add(gen.makeContactWithId(4,14,24));
+            customer.getContacts().add(gen.makeContactWithId(1, 11, 21));
+            customer.getContacts().add(gen.makeContactWithId(2, 12, 22));
+            customer.getContacts().add(gen.makeContactWithId(3, 13, 23));
+            customer.getContacts().add(gen.makeContactWithId(4, 14, 24));
 
             customer.setSource(Source.ONEADO);
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);
