@@ -214,9 +214,9 @@ public class Company implements Serializable {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
+    // TODO: Validate, that the contact may only contain addresses of the company.
     public String getViolationMessage() {
         if ( StringUtils.isBlank(name) ) return "Name is blank";
-        if ( addresses.isEmpty() ) return "No Address";
         if ( addresses.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "One Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )

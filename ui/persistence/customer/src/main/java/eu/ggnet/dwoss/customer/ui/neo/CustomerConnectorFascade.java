@@ -65,6 +65,7 @@ public class CustomerConnectorFascade {
     }
 
     public static Contact createAddressOnContact(long contactId, Address address) {
+        // INFO: DB must fail if contact is part of a bussines customer.
         Contact contact = findContactById(contactId);
         contact.getAddresses().add(address);
         System.out.println("create address = " + address);
@@ -124,10 +125,31 @@ public class CustomerConnectorFascade {
             Contact next = iterator.next();
             if ( next == contact ) iterator.remove();
         }
-        System.out.println("delete customer");
+        System.out.println("delete contact");
         return customer;
     }
 
+    public static Customer createCompanyOnCustomer(long customerid, Company company) {
+        customer.getCompanies().add(company);
+        System.out.println("create company = " + company);
+        return customer;
+    }
+
+    public static Customer updateCompanyOnCustomer(long customerId, Company company) {
+        // magic
+        System.out.println("update company = " + company);
+        return customer;
+    }
+
+    public static Customer deleteCompanyOnCustomer(long custmoerId,  Company company) {
+        for (Iterator<Company> iterator = customer.getCompanies().iterator(); iterator.hasNext();) {
+            Company next = iterator.next();
+            if ( next == company ) iterator.remove();
+        }
+        System.out.println("delete company");
+        return customer;
+    }
+    
     public static Company createCommunicationOnCompany(long companyId, Communication communication) {
         Company company = findCompanyById(companyId);
         company.getCommunications().add(communication);
@@ -151,8 +173,12 @@ public class CustomerConnectorFascade {
         return company;
     }
 
-    public static Customer reload(long customerId) {
+    public static Customer reload(Customer customer) {
         return customer;
+    }
+    
+    public static Company reload(Company company) {
+        return company;
     }
 
     public static Company updateAddressOnCompany(long companyId, Address address) {

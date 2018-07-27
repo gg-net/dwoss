@@ -120,6 +120,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
     private IntegerProperty contactListSizeProperty = new SimpleIntegerProperty(this, "contactListSize");
+
+        private IntegerProperty companyListSizeProperty = new SimpleIntegerProperty(this, "companyListSize");
     
     private ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
@@ -178,11 +180,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     public void initialize(URL url, ResourceBundle rb) {
         // Creating some conditionals
         contactList.addListener((javafx.beans.Observable observable) -> contactListSizeProperty.set(contactList.size()));
-        
-        
-        
-        //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
+        companyList.addListener((javafx.beans.Observable observable) -> companyListSizeProperty.set(companyList.size()));
 
+        //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
         customerFlagsWithSelect = FXCollections.observableArrayList();
 
         //for each CustomerFlag create a CustomerFlagWithSelect. If the customer contains the flag it is selected.
@@ -411,27 +411,54 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
             editButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem != null ) {
-                    editCompany(selectedItem);
-                }
-
+                if ( selectedItem == null ) return;
+                Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(() -> selectedItem, CompanyUpdateController.class)
+                        .cf()
+                        .thenAccept(c -> CustomerConnectorFascade.updateCompanyOnCustomer(customer.getId(), c))
+                        .handle(Ui.handler())
+                        .thenApply(x -> CustomerConnectorFascade.reload(customer)) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
+                        .thenAcceptAsync(c -> accept(c), Platform::runLater);
             });
+              editButton.disableProperty().bind(companyListView.getSelectionModel().selectedItemProperty().isNull());
+            
             addButton.setOnAction((ActionEvent e) -> {
-                Ui.exec(() -> {
-                    Ui.build(commentTextArea).modality(WINDOW_MODAL).parent(customerNameLabel).fxml().eval(CompanyAddController.class
-                    )
-                            .opt()
-                            .filter(a -> a != null)
-                            .ifPresent(a -> Platform.runLater(() -> companyList.add(a)));
-                });
+                  Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(CompanyAddController.class)
+                        .cf()
+                        .thenApply(c -> CustomerConnectorFascade.createCompanyOnCustomer(customer.getId(), c))
+                        .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                        .handle(Ui.handler());
             });
             delButton.setOnAction((ActionEvent e) -> {
                 Company selectedItem = companyListView.getSelectionModel().getSelectedItem();
-                if ( selectedItem != null ) {
-                    companyList.remove(selectedItem);
-                }
+               if ( selectedItem == null ) return;
+                
+                
+                    Ui.build(commentTextArea).dialog().eval(() -> {
+                    Dialog<Company> dialog = new Dialog<>();
+                    dialog.setTitle("Löschen bestätigen");
+                    dialog.setHeaderText("Möchten sie diese Kontakt wirklich löschen ?");
+                    dialog.setContentText(companyListView.getSelectionModel().getSelectedItem().toString());
+                    dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
+                    dialog.setResultConverter((bt) -> {
+                        if ( bt == ButtonType.YES ) return companyListView.getSelectionModel().getSelectedItem();
+                        return null;
+                    });
+                    return dialog;
+                })
+                        .cf()
+                        .thenApply(add -> CustomerConnectorFascade.deleteCompanyOnCustomer(customer.getId(), add))
+                        .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
+                        .handle(Ui.handler());
             });
-            delButton.disableProperty().bind(companyListView.getSelectionModel().selectedIndexProperty().lessThan(0));
+            
+            BooleanProperty isInAddressLabel = new SimpleBooleanProperty(this, "isInAddressLabel");
+
+            companyListView.getSelectionModel().selectedItemProperty().addListener((javafx.beans.Observable observable) -> {
+                isInAddressLabel.set(customer.getAddressLabels().stream().anyMatch(al -> Objects.equals(companyListView.getSelectionModel().getSelectedItem(), al.getCompany())));
+            });
+
+           delButton.disableProperty().bind(companyListView.getSelectionModel().selectedItemProperty().isNull().or(companyListSizeProperty.lessThan(2)).or(isInAddressLabel));             
+            
         } else {
             contactListView = new ListView<>();
             contactListView.setItems(contactList);
@@ -468,11 +495,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         .cf()
                         .thenAccept(c -> CustomerConnectorFascade.updateContactOnCustomer(customer.getId(), c))
                         .handle(Ui.handler())
-                        .thenApply(x -> CustomerConnectorFascade.reload(customer.getId())) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
-                        .thenAcceptAsync(c -> accept(c),Platform::runLater);
+                        .thenApply(x -> CustomerConnectorFascade.reload(customer)) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
+                        .thenAcceptAsync(c -> accept(c), Platform::runLater);
             });
             editButton.disableProperty().bind(contactListView.getSelectionModel().selectedItemProperty().isNull());
-            
+
             addButton.setOnAction((e) -> {
                 Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(ContactAddController.class)
                         .cf()
@@ -482,8 +509,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             });
 
             // TODO: Disallow deletion of contacts in an addresslabel.
-            
-
             delButton.setOnAction((e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem == null ) return;
@@ -507,18 +532,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             });
 
             BooleanProperty isInAddressLabel = new SimpleBooleanProperty(this, "isInAddressLabel");
-            
+
             contactListView.getSelectionModel().selectedItemProperty().addListener((javafx.beans.Observable observable) -> {
-                isInAddressLabel.set(customer.getAddressLabels().stream().anyMatch(al -> Objects.equals(contactListView.getSelectionModel().getSelectedItem(),al.getContact())));
+                isInAddressLabel.set(customer.getAddressLabels().stream().anyMatch(al -> Objects.equals(contactListView.getSelectionModel().getSelectedItem(), al.getContact())));
             });
-            
-            isInAddressLabel.addListener(new InvalidationListener() {
-                @Override
-                public void invalidated(javafx.beans.Observable observable) {
-                    
-                }
-            });
-            
+
             // diable if, not selected, last contact or contact in addreslabel.
             delButton.disableProperty().bind(contactListView.getSelectionModel().selectedItemProperty().isNull().or(contactListSizeProperty.lessThan(2)).or(isInAddressLabel));
         }

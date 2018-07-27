@@ -154,7 +154,7 @@ public class CustomerTest {
 
         Customer makeValidBusinessCustomer = makeValidBusinessCustomer();
 
-        assertThat(makeValidBusinessCustomer.isBusiness()).as("Customer is a Bussines Customer").isTrue();
+        assertThat(makeValidBusinessCustomer.isBusiness()).as("Customer should be a bussines customer").isTrue();
         assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is vaild").isTrue();
 
         makeValidBusinessCustomer.getCompanies().clear();
@@ -182,15 +182,6 @@ public class CustomerTest {
         makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
         makeValidBusinessCustomer.getAddressLabels().add(makeValidAddressLabel());
         assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, because there are more than two AddressLables").isFalse();
-
-        makeValidBusinessCustomer = makeValidBusinessCustomer();
-        makeValidBusinessCustomer.getCompanies().clear();
-        makeValidCompany = makeValidCompany();
-        makeValidCompany.getAddresses().clear();
-        assertThat(makeValidCompany.getViolationMessage()).as("company not valid").isNotNull();
-
-        makeValidBusinessCustomer.getCompanies().add(makeValidCompany);
-        assertThat(makeValidBusinessCustomer.isValid()).as("Bussnis Customer is not vaild, the Compnay has no an Address").isFalse();
 
         makeValidBusinessCustomer = makeValidBusinessCustomer();
         makeValidBusinessCustomer.getCompanies().clear();
