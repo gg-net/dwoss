@@ -113,6 +113,15 @@ public class Company implements Serializable {
     public Company() {
     }
 
+    /**
+     * Constructor for tryouts, do not use in productive.
+     *
+     * @param id the db id.
+     */
+    public Company(long id) {
+        this.id = id;
+    }
+
     @Builder
     public Company(String name, int ledger, boolean prefered, String taxId) {
         this.name = name;
