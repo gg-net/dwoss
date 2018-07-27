@@ -107,19 +107,33 @@ public class CustomerGenerator {
      * <p>
      * @return a generated {@link Company}.
      */
-    public Company makeCompany() {
-        Company c = new Company();
+    private Company makeCompany(Company c) {
         c.setLedger(R.nextInt(1000) + 1);
         c.setName(GEN.makeCompanyName());
-        c.getAddresses().add(makeAddress());
-        c.getCommunications().add(makeCommunication());
+        c.getAddresses().add(makeAddressWithId(10l));
+        c.getAddresses().add(makeAddressWithId(11l));
+        c.getCommunications().add(makeCommunicationWithId(20l));
+        c.getCommunications().add(makeCommunicationWithId(21l));
         if ( c.getAddresses().isEmpty() || c.getCommunications().isEmpty() ) {
-            Contact contact = makeContact();
+            Contact contact = makeContactWithId(30l, 10l, 20l);
+            Contact contact2 = makeContactWithId(31l, 11l, 21l);
             contact.getAddresses().clear();
+            contact2.getAddresses().clear();
             contact.getAddresses().add(c.getAddresses().get(0));
+            contact2.getAddresses().add(c.getAddresses().get(1));
             c.getContacts().add(contact);
+            c.getContacts().add(contact2);
         }
         return c;
+    }
+
+    public Company makeCompany() {
+        return makeCompany(new Company());
+    }
+
+    public Company makeCompanyWithId(long companyId) {
+        return makeCompany(new Company(companyId));
+
     }
 
     /**

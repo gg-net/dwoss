@@ -172,7 +172,6 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     @FXML
     private void clickAddCommunicationButton() {
-        System.out.println(company.getId());
         Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(CommunicationUpdateController.class)
                 .cf()
                 .thenApply(communication -> CustomerConnectorFascade.createCommunicationOnCompany(company.getId(), communication))
@@ -183,6 +182,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     @FXML
     private void clickDelCommunicationButton() {
         if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
+
+        System.out.println("Company: " + company);
 
         Ui.build(addressListView).dialog().eval(() -> {
             Dialog<Communication> dialog = new Dialog<>();
