@@ -458,9 +458,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 if ( selectedItem == null ) return;
                 Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(() -> selectedItem, ContactUpdateController.class)
                         .cf()
-                        .thenApply(c -> CustomerConnectorFascade.updateContactOnCustomer(customer.getId(), c))
-                        .thenAcceptAsync(c -> accept(c), Platform::runLater)
-                        .handle(Ui.handler());
+                        .thenAccept(c -> CustomerConnectorFascade.updateContactOnCustomer(customer.getId(), c))
+                        .handle(Ui.handler())
+                        .thenApply(x -> CustomerConnectorFascade.reload(customer.getId())) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
+                        .thenAcceptAsync(c -> accept(c),Platform::runLater);
             });
             addButton.setOnAction((ActionEvent e) -> {
                 Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(ContactAddController.class)
