@@ -23,8 +23,8 @@ import javax.swing.JPanel;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Company;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyAddController;
-import eu.ggnet.dwoss.customer.ui.neo.CompanyUpdateController;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ui.neo.*;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 
@@ -37,15 +37,19 @@ public class CompanyUpdateTryOut {
     //CustomerComapnyController
     public static void main(String[] args) {
         CustomerGenerator gen = new CustomerGenerator();
+        Customer customer = gen.makeCustomer();
+        customer.getContacts().clear();
         Company company = gen.makeCompanyWithId(120l);
         company.setTaxId("Steuernummer");
         company.getCommunications().get(new Random().nextInt(company.getCommunications().size() - 1)).setPrefered(true);
+        customer.getCompanies().add(company);
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton editButton = new JButton("edit");
         editButton.addActionListener(ev -> {
+            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> company, CompanyUpdateController.class).opt().ifPresent(System.out::println);
             });
