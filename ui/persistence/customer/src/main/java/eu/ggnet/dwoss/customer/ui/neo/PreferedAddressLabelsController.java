@@ -17,9 +17,10 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -86,7 +87,11 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
 
     private InvoiceAddressLabelWithNullableShippingAddressLabel resultAdressLabel;
 
-    private Customer customer;
+    private AddressLabel invoiceLabel;
+
+    private AddressLabel shippingLabel;
+
+    private boolean isCanceled = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -159,99 +164,93 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     }
 
     @Override
-    public void accept(Customer inputCustomer) {
-
-        this.customer = inputCustomer;
+    public void accept(Customer customer) {
 
         invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
-        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressContactListView.getItems().addAll(company.getContacts()));
-        invoiceAddressCompanyListView.getItems().forEach(company -> invoiceAddressAddressListView.getItems().addAll(company.getAddresses()));
-        invoiceAddressContactListView.getItems().addAll(customer.getContacts());
-        invoiceAddressContactListView.getItems().forEach(contact -> invoiceAddressAddressListView.getItems().addAll(contact.getAddresses()));
-
         shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
-        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressContactListView.getItems().addAll(company.getContacts()));
-        shippingAddressCompanyListView.getItems().forEach(company -> shippingAddressAddressListView.getItems().addAll(company.getAddresses()));
-        shippingAddressContactListView.getItems().addAll(customer.getContacts());
-        shippingAddressContactListView.getItems().forEach(contact -> shippingAddressAddressListView.getItems().addAll(contact.getAddresses()));
 
-        if ( customer.getAddressLabels()
+        List<Contact> allContacts = Stream.concat(
+                customer.getContacts().stream(),
+                customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream()))
+                .collect(Collectors.toList());
+
+        invoiceAddressContactListView.getItems().addAll(allContacts);
+        shippingAddressContactListView.getItems().addAll(allContacts);
+
+        List<Address> allAddresses = Stream.concat(
+                allContacts.stream().flatMap((com) -> com.getAddresses().stream()),
+                customer.getCompanies().stream().flatMap((com) -> com.getAddresses().stream())).collect(Collectors.toList());
+
+        invoiceAddressAddressListView.getItems().addAll(allAddresses);
+        shippingAddressAddressListView.getItems().addAll(allAddresses);
+
+        invoiceLabel = customer.getAddressLabels()
                 .stream()
                 .filter(addressLabel -> addressLabel.getType() == AddressType.INVOICE)
-                .findFirst()
-                .isPresent() ) {
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("No AddressLabel found, broken custmoer: " + customer));
 
-            AddressLabel invoiceLabel = customer.getAddressLabels()
-                    .stream()
-                    .filter(addressLabel -> addressLabel.getType() == AddressType.INVOICE)
-                    .findFirst()
-                    .get();
-            invoiceAddressWebView.getEngine().loadContent(invoiceLabel.toHtml());
-            if ( invoiceLabel.getCompany() != null )
-                invoiceAddressCompanyListView.getSelectionModel().select(invoiceLabel.getCompany());
-            if ( invoiceLabel.getContact() != null )
-                invoiceAddressContactListView.getSelectionModel().select(invoiceLabel.getContact());
+        invoiceAddressWebView.getEngine().loadContent(invoiceLabel.toHtml());
+        if ( invoiceLabel.getCompany() != null )
+            invoiceAddressCompanyListView.getSelectionModel().select(invoiceLabel.getCompany());
+        if ( invoiceLabel.getContact() != null )
+            invoiceAddressContactListView.getSelectionModel().select(invoiceLabel.getContact());
 
-            invoiceAddressAddressListView.getSelectionModel().select(invoiceLabel.getAddress());
-        }
+        invoiceAddressAddressListView.getSelectionModel().select(invoiceLabel.getAddress());
 
-        if ( customer.getAddressLabels()
+        customer.getAddressLabels()
                 .stream()
                 .filter(addressLabel -> addressLabel.getType() == AddressType.SHIPPING)
                 .findFirst()
-                .isPresent() ) {
+                .ifPresent(l -> {
+                    shippingLabel = l;
 
-            AddressLabel shippingLabel
-                    = customer.getAddressLabels()
-                            .stream()
-                            .filter(addressLabel -> addressLabel.getType() == AddressType.SHIPPING)
-                            .findFirst()
-                            .get();
+                    shippingAddressWebView.getEngine().loadContent(shippingLabel.toHtml());
 
-            shippingAddressWebView.getEngine().loadContent(shippingLabel.toHtml());
+                    if ( shippingLabel.getCompany() != null )
+                        shippingAddressCompanyListView.getSelectionModel().select(shippingLabel.getCompany());
+                    if ( shippingLabel.getContact() != null )
+                        shippingAddressContactListView.getSelectionModel().select(shippingLabel.getContact());
 
-            if ( shippingLabel.getCompany() != null )
-                shippingAddressCompanyListView.getSelectionModel().select(shippingLabel.getCompany());
-            if ( shippingLabel.getContact() != null )
-                shippingAddressContactListView.getSelectionModel().select(shippingLabel.getContact());
+                    shippingAddressAddressListView.getSelectionModel().select(shippingLabel.getAddress());
 
-            shippingAddressAddressListView.getSelectionModel().select(shippingLabel.getAddress());
-        }
+                });
     }
 
     @Override
     public InvoiceAddressLabelWithNullableShippingAddressLabel getResult() {
-
-        return this.resultAdressLabel;
-
+        if ( isCanceled ) return null;
+        return resultAdressLabel;
     }
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
 
-        Company invoiceLabelCompany = invoiceAddressCompanyListView.getSelectionModel().getSelectedItem();
-        Contact invoiceLabelContact = invoiceAddressContactListView.getSelectionModel().getSelectedItem();
-        Address invoiceLabelAddress = invoiceAddressAddressListView.getSelectionModel().getSelectedItem();
+        invoiceLabel.setCompany(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem());
+        invoiceLabel.setContact(invoiceAddressContactListView.getSelectionModel().getSelectedItem());
+        invoiceLabel.setAddress(invoiceAddressAddressListView.getSelectionModel().getSelectedItem());
 
-        AddressLabel invoiceLabel = new AddressLabel(invoiceLabelCompany, invoiceLabelContact, invoiceLabelAddress, AddressType.INVOICE);
+        Address sAddress = shippingAddressAddressListView.getSelectionModel().getSelectedItem();
+        Company sCompany = shippingAddressCompanyListView.getSelectionModel().getSelectedItem();
+        Contact sContact = shippingAddressContactListView.getSelectionModel().getSelectedItem();
 
-        Address shippingAddress = shippingAddressAddressListView.getSelectionModel().getSelectedItem();
-        Company shippingLabelCompany = shippingAddressCompanyListView.getSelectionModel().getSelectedItem();
-        Contact shippingLabelContact = shippingAddressContactListView.getSelectionModel().getSelectedItem();
-
-        AddressLabel shippingLabel;
-        if ( shippingAddress == null || (shippingLabelCompany == null && shippingLabelContact == null) )
+        if ( sAddress == null || (sCompany == null && sContact == null) ) { // shipping label removed
             shippingLabel = null;
+        } else if ( shippingLabel == null ) { // create new
+            shippingLabel = new AddressLabel(sCompany, sContact, sAddress, SHIPPING);
+        } else { // Update existing
+            shippingLabel.setCompany(sCompany);
+            shippingLabel.setContact(sContact);
+            shippingLabel.setAddress(sAddress);
+        }
 
-        else
-            shippingLabel = new AddressLabel(shippingLabelCompany, invoiceLabelContact, shippingAddress, SHIPPING);
-
+        isCanceled = false;
         this.resultAdressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
         Ui.closeWindowOf(saveButton);
     }
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
+        isCanceled = true;
         Ui.closeWindowOf(saveButton);
     }
 

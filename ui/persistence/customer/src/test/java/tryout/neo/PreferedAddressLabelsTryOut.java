@@ -53,7 +53,7 @@ public class PreferedAddressLabelsTryOut {
 
                 return;
             }
-            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().handle(Ui.handler());
+            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().thenAccept(System.out::println).handle(Ui.handler());
         });
 
         JButton endKundenButton = new JButton("Lade Endkunde");
@@ -69,7 +69,7 @@ public class PreferedAddressLabelsTryOut {
                 });
                 return;
             }
-            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().handle(Ui.handler());
+            Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().thenAccept(System.out::println).handle(Ui.handler());
 
         });
 

@@ -81,6 +81,7 @@ public class CustomerEnhanceTryout {
 
         endKundenButton.addActionListener(ev -> {
             Customer customer = gen.makeCustomer();
+            customer.getContacts().clear();
             customer.getCompanies().clear();
 
             customer.getContacts().add(gen.makeContactWithId(1, 11, 21));

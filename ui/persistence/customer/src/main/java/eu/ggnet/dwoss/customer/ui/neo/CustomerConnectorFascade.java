@@ -38,7 +38,8 @@ public class CustomerConnectorFascade {
         CustomerConnectorFascade.customer = c;
     }
 
-    public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
+    public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {        
+        // Info, the server will have to do more.
         customer.getAddressLabels().clear();
         customer.getAddressLabels().add(invoiceLabel);
         if ( shippingLabel.isPresent() ) customer.getAddressLabels().add(shippingLabel.get());

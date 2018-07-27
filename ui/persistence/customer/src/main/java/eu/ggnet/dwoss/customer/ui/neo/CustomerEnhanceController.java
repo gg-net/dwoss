@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.*;
 import javafx.collections.*;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -118,6 +119,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     private ObservableList<Contact> contactList = FXCollections.observableArrayList();
 
+    private IntegerProperty contactListSizeProperty = new SimpleIntegerProperty(this, "contactListSize");
+    
     private ObservableList<MandatorMetadata> mandatorMetadata = FXCollections.observableArrayList();
 
     private boolean isBusinessCustomer = false;
@@ -140,7 +143,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void clickSelectPreferedAddressLabelsButton(ActionEvent event) {
-        Ui.build(commentTextArea).fxml().eval(() -> getCustomer(), PreferedAddressLabelsController.class)
+        Ui.build(commentTextArea).fxml().eval(() -> customer, PreferedAddressLabelsController.class)
                 .cf()
                 .thenApply(ui -> CustomerConnectorFascade.updateAddressLabels(customer.getId(), ui.getInvoiceLabel(), ui.getShippingLabel()))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
@@ -173,6 +176,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Creating some conditionals
+        contactList.addListener((javafx.beans.Observable observable) -> contactListSizeProperty.set(contactList.size()));
+        
+        
+        
         //TODO add button behavior see the RULES on getViolationMessage() in Customer, enable only on vaild customer
 
         customerFlagsWithSelect = FXCollections.observableArrayList();
@@ -453,7 +461,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             contactListView.setMinWidth(450.0);
             HBox.setHgrow(contactListView, Priority.ALWAYS);
 
-            editButton.setOnAction((ActionEvent e) -> {
+            editButton.setOnAction((e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem == null ) return;
                 Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(() -> selectedItem, ContactUpdateController.class)
@@ -463,18 +471,23 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         .thenApply(x -> CustomerConnectorFascade.reload(customer.getId())) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
                         .thenAcceptAsync(c -> accept(c),Platform::runLater);
             });
-            addButton.setOnAction((ActionEvent e) -> {
+            editButton.disableProperty().bind(contactListView.getSelectionModel().selectedItemProperty().isNull());
+            
+            addButton.setOnAction((e) -> {
                 Ui.build(commentTextArea).modality(WINDOW_MODAL).fxml().eval(ContactAddController.class)
                         .cf()
                         .thenApply(c -> CustomerConnectorFascade.createContactOnCustomer(customer.getId(), c))
                         .thenAcceptAsync(c -> accept(c), Platform::runLater)
                         .handle(Ui.handler());
             });
-            delButton.setOnAction((ActionEvent e) -> {
+
+            // TODO: Disallow deletion of contacts in an addresslabel.
+            
+
+            delButton.setOnAction((e) -> {
                 Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
                 if ( selectedItem == null ) return;
 
-// TODO: Disallow deletion of contacts in an addresslabel.
                 Ui.build(commentTextArea).dialog().eval(() -> {
                     Dialog<Contact> dialog = new Dialog<>();
                     dialog.setTitle("Löschen bestätigen");
@@ -493,8 +506,21 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         .handle(Ui.handler());
             });
 
-            // diable if it is the last contact.
-            delButton.disableProperty().bind(contactListView.getSelectionModel().selectedIndexProperty().lessThan(1));
+            BooleanProperty isInAddressLabel = new SimpleBooleanProperty(this, "isInAddressLabel");
+            
+            contactListView.getSelectionModel().selectedItemProperty().addListener((javafx.beans.Observable observable) -> {
+                isInAddressLabel.set(customer.getAddressLabels().stream().anyMatch(al -> Objects.equals(contactListView.getSelectionModel().getSelectedItem(),al.getContact())));
+            });
+            
+            isInAddressLabel.addListener(new InvalidationListener() {
+                @Override
+                public void invalidated(javafx.beans.Observable observable) {
+                    
+                }
+            });
+            
+            // diable if, not selected, last contact or contact in addreslabel.
+            delButton.disableProperty().bind(contactListView.getSelectionModel().selectedItemProperty().isNull().or(contactListSizeProperty.lessThan(2)).or(isInAddressLabel));
         }
 
         buttonVBox.getChildren().addAll(editButton, addButton, delButton);

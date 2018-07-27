@@ -54,7 +54,7 @@ public class MandatorMetaDataTryOut {
         CustomerGenerator gen = new CustomerGenerator();
         MandatorMetadata mData = gen.makeMandatorMetadata();
         Ui.exec(() -> {
-            Ui.build().fxml().eval(() -> mData, MandatorMetaDataController.class);
+            Ui.build().title("Mandant Demo").fxml().eval(() -> mData, MandatorMetaDataController.class);
         });
     }
 }
