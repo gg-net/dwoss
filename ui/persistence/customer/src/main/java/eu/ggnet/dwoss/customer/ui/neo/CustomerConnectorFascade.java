@@ -154,4 +154,51 @@ public class CustomerConnectorFascade {
     public static Customer reload(long customerId) {
         return customer;
     }
+
+    public static Company updateAddressOnCompany(long companyId, Address address) {
+        Company company = findCompanyById(companyId);
+        // Update just happeing like magic :-)
+        System.out.println("updateAddress = " + address);
+        return company;
+    }
+
+    public static Company deleteAddressOnCompany(long companyId, Address address) {
+        Company company = findCompanyById(companyId);
+        for (Iterator<Address> iterator = company.getAddresses().iterator(); iterator.hasNext();) {
+            Address selectedAddress = iterator.next();
+            if ( selectedAddress.getId() == address.getId() ) iterator.remove();
+        }
+        System.out.println("delete address = " + address);
+        return company;
+    }
+
+    public static Company createAddressOnCompany(long companyId, Address address) {
+        Company company = findCompanyById(companyId);
+        company.getAddresses().add(address);
+        System.out.println("create address = " + address);
+        return company;
+    }
+
+    public static Company createContactOnCompany(long companyId, Contact contact) {
+        Company company = findCompanyById(companyId);
+        company.getContacts().add(contact);
+        System.out.println("create contact = " + contact);
+        return company;
+    }
+
+    public static Company updateContactOnCompany(long companyId, Contact contact) {
+        Company company = findCompanyById(companyId);
+        System.out.println("update contact = " + contact);
+        return company;
+    }
+
+    public static Company deleteContactOnCompany(long companyId, Contact contact) {
+        Company company = findCompanyById(companyId);
+        for (Iterator<Contact> iterator = company.getContacts().iterator(); iterator.hasNext();) {
+            Contact next = iterator.next();
+            if ( next == contact ) iterator.remove();
+        }
+        System.out.println("delete customer");
+        return company;
+    }
 }

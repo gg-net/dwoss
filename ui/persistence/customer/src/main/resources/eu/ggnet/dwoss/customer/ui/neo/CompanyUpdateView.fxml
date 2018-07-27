@@ -51,9 +51,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditAddressButton" text="Ändern" />
+                        <Button fx:id="editAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditAddressButton" text="Ändern" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddAddressButton" text="Hinzufügen" />
-                        <Button fx:id="delAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDelAddressButton" text="Löschen" />
+                        <Button fx:id="deleteAddressButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteAddressButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>
@@ -70,9 +70,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditCommunicationButton" text="Ändern" />
+                        <Button fx:id="editCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditCommunicationButton" text="Ändern" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddCommunicationButton" text="Hinzufügen" />
-                        <Button fx:id="delCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDelCommunicationButton" text="Löschen" />
+                        <Button fx:id="deleteCommunicationButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteCommunicationButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>
@@ -88,9 +88,9 @@
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="3.0">
                      <children>
                         <Region minHeight="15.0" minWidth="100.0" />
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditContactButton" text="Ändern" />
+                        <Button fx:id="editContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickEditContactButton" text="Ändern" />
                         <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickAddContactButton" text="Hinzufügen" />
-                        <Button fx:id="delContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDelContactButton" text="Löschen" />
+                        <Button fx:id="deleteContactButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDeleteContactButton" text="Löschen" />
                      </children>
                   </VBox>
                </children>
