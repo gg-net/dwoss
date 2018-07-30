@@ -135,6 +135,13 @@ public class MandatorMetadata implements Serializable {
         allowedSalesChannels.add(s);
     }
 
+    public MandatorMetadata(String mandatorMatchcode) {
+        this.mandatorMatchcode = mandatorMatchcode;
+    }
+
+    public MandatorMetadata() {
+    }
+    
     /**
      * Returns true if at least on element is set.
      * <p>

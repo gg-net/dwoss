@@ -28,8 +28,11 @@ import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.dl.RemoteLookup;
+
+import tryout.stub.MandatorsStub;
 
 /**
  *
@@ -39,6 +42,20 @@ public class CustomerEnhanceTryout {
 
     public static void main(String[] args) {
 
+        
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
+        Dl.remote().add(Mandators.class, new MandatorsStub());
+        
         CustomerGenerator gen = new CustomerGenerator();
 
         JButton close = new JButton("Schliessen");

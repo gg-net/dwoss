@@ -44,6 +44,8 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
+import lombok.NonNull;
+
 /**
  *
  * @author jacob.weinhold
@@ -190,7 +192,6 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
-
         mandatorMetaData.setShippingCondition(shippingConditionComboBox.getValue());
         mandatorMetaData.setPaymentCondition(paymentConditionComboBox.getValue());
         mandatorMetaData.setPaymentMethod(paymentMethodComboBox.getValue());
@@ -212,7 +213,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     }
 
     @Override
-    public void accept(final MandatorMetadata consumable) {
+    public void accept(@NonNull MandatorMetadata consumable) {
         this.mandatorMetaData = consumable;
 
         this.paymentConditionComboBox.getSelectionModel().select(mandatorMetaData.getPaymentCondition());

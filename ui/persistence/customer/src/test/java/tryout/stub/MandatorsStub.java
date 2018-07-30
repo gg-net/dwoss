@@ -30,7 +30,10 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public Mandator loadMandator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+          return Mandator.builder()
+                .matchCode("SAMPLE")
+                .bugMail("error@localhost")
+                .build();
     }
 
     @Override

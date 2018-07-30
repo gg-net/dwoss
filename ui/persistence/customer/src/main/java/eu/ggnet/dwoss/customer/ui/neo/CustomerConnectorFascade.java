@@ -227,4 +227,9 @@ public class CustomerConnectorFascade {
         System.out.println("delete customer");
         return company;
     }
+    
+    public static Customer createOrUpdateMandatorMetadata(long customerId, MandatorMetadata mandatorMetadata) {
+        System.out.println("createOrUpdateMandatorMetadata" + mandatorMetadata);
+        return customer;
+    }
 }
