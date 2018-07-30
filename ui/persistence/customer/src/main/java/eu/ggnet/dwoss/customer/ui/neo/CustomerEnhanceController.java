@@ -40,10 +40,9 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -399,12 +398,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                             setGraphic(null);
                             setText("");
                         } else {
-                            Text text = new Text();
-                            text.setText(item.getName());
-                            text.setStyle("-fx-font-weight:bold;");
-
-                            TextFlow textFlow = new TextFlow(text);
-                            setGraphic(textFlow);
                             setText(item.toMultiLineString());
                         }
                     }
@@ -476,13 +469,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                             setGraphic(null);
                             setText("");
                         } else {
-                            Text text = new Text();
-                            text.setText(item.toFullName());
-                            text.setStyle("-fx-font-weight:bold;");
-
-                            TextFlow textFlow = new TextFlow(text);
-                            setGraphic(textFlow);
-                            setText(item.toMultiLineString());
+                            String anrede = "";
+                            if ( item.getSex() == Sex.FEMALE ) {
+                                anrede = "Frau ";
+                            }
+                            if ( item.getSex() == Sex.MALE ) {
+                                anrede = "Herr ";
+                            }
+                            setText(anrede + item.toMultiLineString());
                         }
                     }
                 };

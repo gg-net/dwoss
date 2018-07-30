@@ -223,22 +223,21 @@ public class Contact implements Serializable {
     }
 
     /**
-     * Multi line String representation of the addresses and communications
+     * Multi line String representation of the contact with addresses and communications
      *
      * @return a multi line string
      */
     public String toMultiLineString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(toFullName());
 
         if ( !addresses.isEmpty() ) {
-            sb.append("Adressen:");
             addresses.forEach((addresse) -> {
                 sb.append("\n \t").append(addresse.toSingleLineString());
             });
         }
 
         if ( !communications.isEmpty() ) {
-            sb.append("\n").append("Kommunikationswege:");
             for (Communication communication : communications) {
                 sb.append("\n \t").append(communication.toSingleLineString());
             }
