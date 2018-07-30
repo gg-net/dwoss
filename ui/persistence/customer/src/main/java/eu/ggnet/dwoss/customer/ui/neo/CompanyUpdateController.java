@@ -227,7 +227,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
                 .handle(Ui.handler())
                 .thenApply(x -> CustomerConnectorFascade.reload(company)) // Allways reload, no mater what. Changes may have happend even if cancel is pressed
-                .thenAcceptAsync(c -> accept(c),Platform::runLater);
+                .thenAcceptAsync(c -> accept(c), Platform::runLater);
     }
 
     @FXML

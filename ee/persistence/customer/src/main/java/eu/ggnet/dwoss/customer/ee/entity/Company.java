@@ -233,26 +233,25 @@ public class Company implements Serializable {
      */
     public String toMultiLineString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name);
 
         if ( !contacts.isEmpty() ) {
-            sb.append("\n \t").append("Kontakte:");
+            sb.append("Kontakte:");
             contacts.forEach((contact) -> {
-                sb.append("\n \t \t").append(contact.toFullName());
+                sb.append("\n \t").append(contact.toFullName());
             });
         }
 
         if ( !addresses.isEmpty() ) {
-            sb.append("\n \t").append("Adressen:");
+            sb.append("\n").append("Adressen:");
             addresses.forEach((addresse) -> {
-                sb.append("\n \t \t").append(addresse.toSingleLineString());
+                sb.append("\n \t").append(addresse.toSingleLineString());
             });
         }
 
         if ( !communications.isEmpty() ) {
-            sb.append("\n \t").append("Kommunikationswege:");
+            sb.append("\n").append("Kommunikationswege:");
             for (Communication communication : communications) {
-                sb.append("\n \t \t").append(communication.toSingleLineString());
+                sb.append("\n \t").append(communication.toSingleLineString());
             }
         }
 
