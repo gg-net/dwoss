@@ -16,28 +16,20 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
-import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.Dl;
 
 import java.awt.event.ActionEvent;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
-
-import javax.swing.SwingWorker;
+import java.util.concurrent.*;
 
 import org.openide.util.Lookup;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
-import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerDialog;
-import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelTableModel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.misc.ui.saleschannel.*;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
@@ -55,58 +47,21 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SwingWorker<List<SalesChannelLine>, Object>() {
-            @Override
-            protected List<SalesChannelLine> doInBackground() throws Exception {
-                return Dl.remote().lookup(SalesChannelHandler.class).findAvailableUnits();
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    final SalesChannelManagerDialog dialog = new SalesChannelManagerDialog(UiCore.getMainFrame());
-                    Map<SalesChannel, List<Stock>> collect = Dl.remote().lookup(StockAgent.class).findAll(Stock.class).stream().collect(Collectors.groupingBy(Stock::getPrimaryChannel));
-                    Map<SalesChannel, Stock> stockToChannel = new HashMap<>();
-                    // TODO: Make this better.
-                    for (Entry<SalesChannel, List<Stock>> entry : collect.entrySet()) {
-                        SalesChannel salesChannel = entry.getKey();
-                        List<Stock> list = entry.getValue();
-                        stockToChannel.put(salesChannel, list.get(0));
+        Ui.build().swing().eval(
+                () -> new SalesChannelManagerData(Dl.remote().lookup(SalesChannelHandler.class).findAvailableUnits(), Dl.remote().lookup(StockAgent.class).findAll(Stock.class)),
+                () -> new SalesChannelManagerView())
+                .cf()
+                .thenApply(lines -> {
+                    try {
+                        return Dl.remote().lookup(SalesChannelHandler.class)
+                                .update(lines, Dl.local().lookup(Guardian.class).getUsername(), "Erzeugt duch Verkaufskanalmanager");
+                    } catch (UserInfoException ex) {
+                        throw new CompletionException(ex);
                     }
-
-                    dialog.setModel(new SalesChannelTableModel(get(), stockToChannel));
-                    dialog.setLocationRelativeTo(UiCore.getMainFrame());
-                    dialog.setVisible(true);
-                    if ( !dialog.isOk() ) return;
-                    new SwingWorker<Boolean, Object>() {
-                        @Override
-                        protected Boolean doInBackground() throws Exception {
-                            return Dl.remote().lookup(SalesChannelHandler.class)
-                                    .update(dialog
-                                            .getModel()
-                                            .getDataModel()
-                                            .stream()
-                                            .filter(l -> l.hasChanged() || l.getDestination() != null)
-                                            .collect(Collectors.toList()), Lookup.getDefault().lookup(Guardian.class).getUsername(),
-                                            "Erzeugt duch Verkaufskanalmanager");
-                        }
-
-                        @Override
-                        protected void done() {
-                            try {
-                                String msg = (get() ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt");
-                                Ui.exec(() -> {
-                                    Ui.build().alert().message(msg);
-                                });
-                            } catch (InterruptedException | ExecutionException ex) {
-                                Ui.handle(ex);
-                            }
-                        }
-                    }.execute();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Ui.handle(ex);
-                }
-            }
-        }.execute();
+                })
+                .thenAccept(change -> {
+                    Ui.build().alert().message((change ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt")).show();
+                })
+                .handle(Ui.handler());
     }
 }
