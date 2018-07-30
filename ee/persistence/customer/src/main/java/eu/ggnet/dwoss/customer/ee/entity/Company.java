@@ -226,28 +226,33 @@ public class Company implements Serializable {
         return null;
     }
 
+    /**
+     * Multi line string representation of the company, the contacts, the addresses and communications.
+     *
+     * @return a multi line string
+     */
     public String toMultiLineString() {
         StringBuilder sb = new StringBuilder();
         sb.append(name);
 
         if ( !contacts.isEmpty() ) {
-            sb.append("\n").append("Kontakte:");
+            sb.append("\n \t").append("Kontakte:");
             contacts.forEach((contact) -> {
-                sb.append("\n").append(contact.toFullName());
+                sb.append("\n \t \t").append(contact.toFullName());
             });
         }
 
         if ( !addresses.isEmpty() ) {
-            sb.append("\n").append("Adressen:");
+            sb.append("\n \t").append("Adressen:");
             addresses.forEach((addresse) -> {
-                sb.append("\n").append(addresse.toSingleLineString());
+                sb.append("\n \t \t").append(addresse.toSingleLineString());
             });
         }
 
         if ( !communications.isEmpty() ) {
-            sb.append("\n").append("Kommunikationswege:");
+            sb.append("\n \t").append("Kommunikationswege:");
             for (Communication communication : communications) {
-                sb.append("\n").append(communication.toSingleLineString());
+                sb.append("\n \t \t").append(communication.toSingleLineString());
             }
         }
 

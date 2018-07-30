@@ -128,14 +128,13 @@ public class Contact implements Serializable {
 
     /**
      * Constructor for tryouts, do not use in productive.
-     * 
+     *
      * @param id the db id.
      */
     public Contact(long id) {
         this.id = id;
     }
-    
-    
+
     @Builder
     public Contact(Sex sex, boolean prefered, String title, String firstName, String lastName) {
         this.sex = sex;
@@ -221,6 +220,31 @@ public class Contact implements Serializable {
         if ( communications.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Communications: " + communications.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         return null;
+    }
+
+    /**
+     * Multi line String representation of the contact with addresses and communications
+     *
+     * @return a multi line string
+     */
+    public String toMultiLineString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(toFullName());
+
+        if ( !addresses.isEmpty() ) {
+            sb.append("\n \t").append("Adressen:");
+            addresses.forEach((addresse) -> {
+                sb.append("\n \t \t").append(addresse.toSingleLineString());
+            });
+        }
+
+        if ( !communications.isEmpty() ) {
+            sb.append("\n \t").append("Kommunikationswege:");
+            for (Communication communication : communications) {
+                sb.append("\n \t \t").append(communication.toSingleLineString());
+            }
+        }
+        return sb.toString();
     }
 
 }
