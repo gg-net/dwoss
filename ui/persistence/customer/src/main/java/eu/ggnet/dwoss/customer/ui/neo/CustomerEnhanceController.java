@@ -477,7 +477,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                             if ( item.getSex() == Sex.MALE ) {
                                 anrede = "Herr ";
                             }
-                            setText(anrede + item.toFullName());
+                            setText(anrede + item.toMultiLineString());
                         }
                     }
                 };
