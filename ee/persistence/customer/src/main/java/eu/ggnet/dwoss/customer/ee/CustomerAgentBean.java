@@ -17,9 +17,7 @@
 package eu.ggnet.dwoss.customer.ee;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.function.Supplier;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
@@ -41,10 +39,13 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
+import lombok.NonNull;
+
 
 /**
  *
@@ -182,6 +183,20 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     @Override
     public String findCustomerAsHtml(long id) {
         return Optional.ofNullable(customerEao.findById(id)).map(Customer::toHtml).orElse("Kein Kunde mit id " + id + " vorhanden");
+    }
+
+    @AutoLogger
+    @Override
+    public void create(@NonNull Root root, @NonNull Object raw) {
+        Object rootElement = em.find(root.getClazz(), root.getId());
+        if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().add((Address)raw);
+        else if ( raw instanceof AddressLabel ) ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
+        else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().add((Company)raw);
+        else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().add((Contact)raw);
+        else if ( raw instanceof MandatorMetadata ) ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
+        else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
+        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+        em.persist(raw);
     }
 
 }

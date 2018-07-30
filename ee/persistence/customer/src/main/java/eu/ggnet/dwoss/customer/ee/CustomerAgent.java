@@ -16,6 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -27,12 +28,25 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
+import lombok.Value;
+
 /**
  *
  * @author jens.papenhagen
  */
 @Remote
 public interface CustomerAgent extends RemoteAgent {
+
+    /**
+     * Idicates a root element for create or delete.
+     */
+    @Value
+    public static class Root implements Serializable {
+
+        private final Class<?> clazz;
+
+        private final long id;
+    }
 
     /**
      * Returns a list of customers, based on the search parameter, reduced by the fields.
@@ -86,4 +100,16 @@ public interface CustomerAgent extends RemoteAgent {
      * @return a html representation of the customer.
      */
     String findCustomerAsHtml(long id);
+    
+    /**
+     * Create a new entity on the root element.
+     * 
+     * @param root
+     * @param t 
+     */
+    void create(Root root, Object t); 
+
+//        void update(Object t); // OK
+    
+ //   void delete(Root root, Object t); // OK
 }

@@ -27,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.customer.ee.entity.stash.AddressStash;
+import eu.ggnet.dwoss.customer.ee.entity.stash.CommunicationStash;
 
 import lombok.*;
 
@@ -47,7 +49,7 @@ import static javax.persistence.CascadeType.ALL;
 @ToString(exclude = {"addresses", "communications"})
 @EqualsAndHashCode(of = {"id"})
 @Indexed
-public class Contact implements Serializable {
+public class Contact implements Serializable, AddressStash, CommunicationStash {
 
     @RequiredArgsConstructor
     public enum Sex {

@@ -20,8 +20,11 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.saft.core.Dl;
 
 /**
  * Contains all opperations for modification of customer objects in the database.
@@ -65,23 +68,16 @@ public class CustomerConnectorFascade {
     }
 
     public static Contact createAddressOnContact(long contactId, Address address) {
+     //   CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+      //  agent.create(new Root(Contact.class, contactId), address);
+       // return agent.findByIdEager(Contact.class,contactId);
+        
         // INFO: DB must fail if contact is part of a bussines customer.
+        
         Contact contact = findContactById(contactId);
         contact.getAddresses().add(address);
         System.out.println("create address = " + address);
         return contact;
-    }
-
-    private static Contact findContactById(long contactId) {
-        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if ( !found.isPresent() ) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
-        return found.get();
-    }
-
-    private static Company findCompanyById(long companyId) {
-        Optional<Company> found = customer.getCompanies().stream().filter(c -> c.getId() == companyId).findAny();
-        if ( !found.isPresent() ) throw new RuntimeException("companyId = " + companyId + " not found in customer " + customer);
-        return found.get();
     }
 
     public static Contact updateCommunicationOnContact(long contactId, Communication communication) {
@@ -232,4 +228,17 @@ public class CustomerConnectorFascade {
         System.out.println("createOrUpdateMandatorMetadata" + mandatorMetadata);
         return customer;
     }
+
+    private static Contact findContactById(long contactId) {
+        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
+        if ( !found.isPresent() ) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
+        return found.get();
+    }
+
+    private static Company findCompanyById(long companyId) {
+        Optional<Company> found = customer.getCompanies().stream().filter(c -> c.getId() == companyId).findAny();
+        if ( !found.isPresent() ) throw new RuntimeException("companyId = " + companyId + " not found in customer " + customer);
+        return found.get();
+    }
+
 }

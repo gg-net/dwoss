@@ -208,7 +208,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
-        isCanceled = false;
+        isCanceled = true;
         Ui.closeWindowOf(defaultSalesChannelsListView);
     }
 

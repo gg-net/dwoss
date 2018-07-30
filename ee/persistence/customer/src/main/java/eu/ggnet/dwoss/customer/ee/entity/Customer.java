@@ -34,6 +34,7 @@ import org.hibernate.search.annotations.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.stash.ContactStash;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
@@ -61,7 +62,7 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @Indexed
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
-public class Customer implements Serializable, EagerAble {
+public class Customer implements Serializable, EagerAble, ContactStash {
 
     /**
      * Fields for detailed Search.

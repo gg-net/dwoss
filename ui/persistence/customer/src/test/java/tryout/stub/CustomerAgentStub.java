@@ -282,4 +282,9 @@ public class CustomerAgentStub implements CustomerAgent {
         return "Showing a Customer as Html";
     }
 
+    @Override
+    public void create(Root root, Object t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }
