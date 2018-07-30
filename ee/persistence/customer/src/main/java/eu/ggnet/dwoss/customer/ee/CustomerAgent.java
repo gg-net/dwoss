@@ -100,16 +100,27 @@ public interface CustomerAgent extends RemoteAgent {
      * @return a html representation of the customer.
      */
     String findCustomerAsHtml(long id);
-    
+
     /**
      * Create a new entity on the root element.
-     * 
+     *
      * @param root
-     * @param t 
+     * @param t
      */
-    void create(Root root, Object t); 
+    void create(Root root, Object t);
 
-//        void update(Object t); // OK
-    
- //   void delete(Root root, Object t); // OK
+    /**
+     * Update an enitiy
+     *
+     * @param t
+     */
+    void update(Object t);
+
+    /**
+     * Delete an entity on the root element
+     *
+     * @param root
+     * @param t
+     */
+    void delete(Root root, Object t);
 }

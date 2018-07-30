@@ -284,7 +284,17 @@ public class CustomerAgentStub implements CustomerAgent {
 
     @Override
     public void create(Root root, Object t) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        L.info("create {} form {}", t, root);
+    }
+
+    @Override
+    public void update(Object t) {
+        L.info("update " + t);
+    }
+
+    @Override
+    public void delete(Root root, Object t) {
+        L.info("delete {} form {}", t, root);
     }
 
 }

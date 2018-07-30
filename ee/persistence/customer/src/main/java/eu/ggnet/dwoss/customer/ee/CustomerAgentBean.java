@@ -46,8 +46,8 @@ import eu.ggnet.saft.api.Reply;
 
 import lombok.NonNull;
 
-
 /**
+ * implementaion of the CustomerAgent
  *
  * @author jens.papenhagen
  */
@@ -197,6 +197,25 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
         else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
         em.persist(raw);
+    }
+
+    @AutoLogger
+    @Override
+    public void delete(@NonNull Root root, @NonNull Object raw) {
+        Object rootElement = em.find(root.getClazz(), root.getId());
+        if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().remove((Address)raw);
+        else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().remove((Company)raw);
+        else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().remove((Contact)raw);
+        else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
+        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+
+        em.merge(rootElement);
+    }
+
+    @AutoLogger
+    @Override
+    public void update(Object t) {
+        em.merge(t);
     }
 
 }
