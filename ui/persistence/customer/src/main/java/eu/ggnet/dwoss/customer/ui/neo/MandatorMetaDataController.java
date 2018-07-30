@@ -24,24 +24,27 @@ import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import javafx.beans.InvalidationListener;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
+
+import lombok.NonNull;
 
 /**
  *
@@ -49,11 +52,57 @@ import eu.ggnet.saft.core.ui.ResultProducer;
  */
 public class MandatorMetaDataController implements Initializable, FxController, Consumer<MandatorMetadata>, ResultProducer<MandatorMetadata> {
 
-    @FXML
-    private Button saveButton;
+    public static class SelectableSalesChannel {
 
-    @FXML
-    private Button cancelButton;
+        private final ReadOnlyObjectWrapper<SalesChannel> salesChannelProperty = new ReadOnlyObjectWrapper<>(this, "salesChannel");
+
+        private final BooleanProperty selected = new SimpleBooleanProperty(this, "selected", false);
+
+        public SelectableSalesChannel(SalesChannel s) {
+            salesChannelProperty.set(s);
+        }
+
+        public final SalesChannel getSalesChannel() {
+            return salesChannelProperty.get();
+        }
+
+        public ReadOnlyObjectProperty<SalesChannel> salesChannelProperty() {
+            return salesChannelProperty.getReadOnlyProperty();
+        }
+
+        public final boolean isSelected() {
+            return selected.get();
+        }
+
+        public final void setSelected(boolean value) {
+            selected.set(value);
+        }
+
+        public BooleanProperty selectedProperty() {
+            return selected;
+        }
+
+    }
+
+    private static class ToWayOnlyConverter<T> extends StringConverter<T> {
+
+        private final Function<T, String> toFunction;
+
+        public ToWayOnlyConverter(Function<T, String> toFunction) {
+            this.toFunction = toFunction;
+        }
+
+        @Override
+        public String toString(T object) {
+            return toFunction.apply(object);
+        }
+
+        @Override
+        public T fromString(String string) {
+            throw new UnsupportedOperationException("From not implemented");
+        }
+
+    }
 
     @FXML
     private ComboBox<ShippingCondition> shippingConditionComboBox;
@@ -65,7 +114,10 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     private ComboBox<PaymentMethod> paymentMethodComboBox;
 
     @FXML
-    private VBox allowedSalesChannelsVBox;
+    private ListView<SelectableSalesChannel> defaultSalesChannelsListView;
+
+    @FXML
+    private ListView<SelectableSalesChannel> allowedSalesChannelsListView;
 
     @FXML
     private TextField defaultshippingConditionTextField;
@@ -76,85 +128,43 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     @FXML
     private TextField defaultpaymentMethodTextField;
 
-    @FXML
-    private VBox defaultAllowedSalesChannelsVBox;
-
-    private ObservableList<CheckBox> allowedSalesChannelCheckBoxList = FXCollections.observableArrayList();
-
-    private ObservableList<CheckBox> defaultAllowedSalesChannelCheckBoxList = FXCollections.observableArrayList();
-
     private MandatorMetadata mandatorMetaData;
 
-    private DefaultCustomerSalesdata defaultCustomerSalesdata;
+    private boolean isCanceled = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        CustomerGenerator gen = new CustomerGenerator();
-        MandatorMetadata m = gen.makeMandatorMetadata();
-        defaultCustomerSalesdata = new DefaultCustomerSalesdata(m.getShippingCondition(), m.getPaymentCondition(), m.getPaymentMethod(), m.getAllowedSalesChannels(), new ArrayList(m.getAllowedSalesChannels()));
-        this.setDefaultValues(defaultCustomerSalesdata);
+        EnumSet<SalesChannel> visibleSalseChannels = EnumSet.complementOf(EnumSet.of(SalesChannel.UNKNOWN));
 
-        saveButton.setDisable(true);
+        defaultSalesChannelsListView.setItems(visibleSalseChannels.stream()
+                .map(s -> new SelectableSalesChannel(s))
+                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
+        defaultSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new ToWayOnlyConverter<>(s -> s.getSalesChannel().getName())));
+
+        allowedSalesChannelsListView.setItems(visibleSalseChannels.stream()
+                .map(s -> new SelectableSalesChannel(s))
+                .collect(Collectors.toCollection(() -> FXCollections.observableArrayList())));
+        allowedSalesChannelsListView.setCellFactory(CheckBoxListCell.forListView(SelectableSalesChannel::selectedProperty, new ToWayOnlyConverter<>(s -> s.getSalesChannel().getName())));
 
         shippingConditionComboBox.getItems().setAll(ShippingCondition.values());
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
         paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
-        shippingConditionComboBox.setConverter(new StringConverter<ShippingCondition>() {
-            @Override
-            public ShippingCondition fromString(String string) {
-                throw new UnsupportedOperationException("fromString is not supported");
+//         shippingConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.toString()));
+        paymentConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
+        paymentMethodComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
 
-            }
-
+        paymentConditionComboBox.setCellFactory((ListView<PaymentCondition> l) -> new ListCell<PaymentCondition>() {
+            
             @Override
-            public String toString(ShippingCondition myClassinstance) {
-                return myClassinstance.toString();
-            }
-        });
-
-        paymentConditionComboBox.setConverter(new StringConverter<PaymentCondition>() {
-            @Override
-            public PaymentCondition fromString(String string) {
-                throw new UnsupportedOperationException("fromString is not supported");
-            }
-
-            @Override
-            public String toString(PaymentCondition myClassinstance) {
-                return myClassinstance.getNote();
-            }
-        });
-        paymentMethodComboBox.setConverter(new StringConverter<PaymentMethod>() {
-            @Override
-            public PaymentMethod fromString(String string) {
-                throw new UnsupportedOperationException("fromString is not supported");
-            }
-
-            @Override
-            public String toString(PaymentMethod myClassinstance) {
-                return myClassinstance.getNote();
-            }
-        });
-        paymentConditionComboBox.setCellFactory(new Callback<ListView<PaymentCondition>, ListCell<PaymentCondition>>() {
-            @Override
-            public ListCell<PaymentCondition> call(ListView<PaymentCondition> l) {
-                return new ListCell<PaymentCondition>() {
-                    @Override
-                    public String toString() {
-                        return this.toString();
-                    }
-
-                    @Override
-                    protected void updateItem(PaymentCondition item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if ( item == null || empty ) {
-                            setGraphic(null);
-                        } else {
-                            setText(item.getNote());
-                        }
-                    }
-                };
+            protected void updateItem(PaymentCondition item, boolean empty) {
+                super.updateItem(item, empty);
+                if ( item == null || empty ) {
+                    setGraphic(null);
+                } else {
+                    setText(item.getNote());
+                }
             }
         });
 
@@ -170,105 +180,55 @@ public class MandatorMetaDataController implements Initializable, FxController, 
             }
         });
 
-        InvalidationListener saveButtonDisablingListener = new InvalidationListener() {
-
-            @Override
-            public void invalidated(javafx.beans.Observable observable) {
-
-                if ( shippingConditionComboBox.getSelectionModel().isEmpty() && paymentConditionComboBox.getSelectionModel().isEmpty()
-                        && paymentMethodComboBox.getSelectionModel().isEmpty()
-                        && allowedSalesChannelCheckBoxList.stream().noneMatch(CheckBox::isSelected) )
-                    saveButton.setDisable(true);
-
-                else
-                    saveButton.setDisable(false);
-
-            }
-
-        };
-
-        shippingConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-        paymentConditionComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-        paymentMethodComboBox.getSelectionModel().selectedItemProperty().addListener(saveButtonDisablingListener);
-        allowedSalesChannelCheckBoxList.forEach(e -> e.selectedProperty().addListener(saveButtonDisablingListener));
-
+        DefaultCustomerSalesdata defaults = Dl.local().lookup(CachedMandators.class).loadSalesdata();        
+        defaultshippingConditionTextField.setText(defaults.getShippingCondition().name());
+        defaultpaymentConditionTextField.setText(defaults.getPaymentCondition().getNote());
+        defaultpaymentMethodTextField.setText(defaults.getPaymentMethod().getNote());
+        defaultSalesChannelsListView.getItems().forEach(i -> {
+           if (defaults.getAllowedSalesChannels().contains(i.getSalesChannel())) i.setSelected(true);
+        });
+                
     }
 
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
-
-        mandatorMetaData.clearSalesChannels();
         mandatorMetaData.setShippingCondition(shippingConditionComboBox.getValue());
         mandatorMetaData.setPaymentCondition(paymentConditionComboBox.getValue());
         mandatorMetaData.setPaymentMethod(paymentMethodComboBox.getValue());
 
-        allowedSalesChannelCheckBoxList.stream()
-                .filter((checkBox) -> (checkBox.isSelected()))
-                .map(checkBox -> {
-                    return Arrays.stream(SalesChannel.values())
-                            .filter(salesChannel -> salesChannel.getName().equals(checkBox.getText()))
-                            .findFirst()
-                            .get();
-                })
-                .forEach(salesChannel -> mandatorMetaData.add(salesChannel));
-        Ui.closeWindowOf(saveButton);
+        mandatorMetaData.getAllowedSalesChannels().clear();
+        mandatorMetaData.getAllowedSalesChannels().addAll(defaultSalesChannelsListView.getItems()
+                .stream()
+                .filter(s -> s.isSelected())
+                .map(s -> s.getSalesChannel())
+                .collect(Collectors.toList()));
+        isCanceled = false;
+        Ui.closeWindowOf(defaultSalesChannelsListView);
     }
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
-        mandatorMetaData = null;
-        Ui.closeWindowOf(saveButton);
+        isCanceled = false;
+        Ui.closeWindowOf(defaultSalesChannelsListView);
     }
 
     @Override
-    public void accept(final MandatorMetadata consumable) {
+    public void accept(@NonNull MandatorMetadata consumable) {
         this.mandatorMetaData = consumable;
 
         this.paymentConditionComboBox.getSelectionModel().select(mandatorMetaData.getPaymentCondition());
         this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());
         this.shippingConditionComboBox.getSelectionModel().select(mandatorMetaData.getShippingCondition());
 
-        mandatorMetaData.getAllowedSalesChannels().forEach(salesChannel -> {
-            this.allowedSalesChannelCheckBoxList.forEach(checkBox -> {
-                if ( checkBox.getText().equals(salesChannel.getName()) )
-                    checkBox.setSelected(true);
-
-            });
-        });
-
+        allowedSalesChannelsListView.getItems().stream()
+                .filter(s -> mandatorMetaData.getAllowedSalesChannels().contains(s.getSalesChannel()))
+                .forEach(s -> s.setSelected(true));
+        
     }
 
     @Override
     public MandatorMetadata getResult() {
-        return this.mandatorMetaData;
+        if (isCanceled) return null;
+        return mandatorMetaData;
     }
-
-    private void setSalesChannelBoxesUp() {
-        Arrays.stream(SalesChannel.values())
-                .filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
-                .map(salesChannel -> new CheckBox(salesChannel.getName()))
-                .forEach(checkBox -> allowedSalesChannelCheckBoxList.add(checkBox));
-
-        defaultCustomerSalesdata.getAllowedSalesChannels().stream()
-                .filter(salesChannel -> salesChannel != SalesChannel.UNKNOWN)
-                .map(salesChannel -> new CheckBox(salesChannel.getName()))
-                .forEach(checkBox -> {
-                    checkBox.setSelected(true);
-                    checkBox.setDisable(true);
-                    defaultAllowedSalesChannelCheckBoxList.add(checkBox);
-                });
-
-        allowedSalesChannelsVBox.getChildren().setAll(allowedSalesChannelCheckBoxList);
-        defaultAllowedSalesChannelsVBox.getChildren().setAll(defaultAllowedSalesChannelCheckBoxList);
-    }
-
-    private void setDefaultValues(DefaultCustomerSalesdata defaultCustomerSalesdata) {
-        this.defaultCustomerSalesdata = defaultCustomerSalesdata;
-        setSalesChannelBoxesUp();
-
-        defaultshippingConditionTextField.setText(defaultCustomerSalesdata.getShippingCondition().name());
-        defaultpaymentConditionTextField.setText(defaultCustomerSalesdata.getPaymentCondition().getNote());
-        defaultpaymentMethodTextField.setText(defaultCustomerSalesdata.getPaymentMethod().getNote());
-    }
-
 }

@@ -6,8 +6,11 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.dl.RemoteLookup;
+
+import tryout.stub.MandatorsStub;
 
 /*
  * Copyright (C) 2018 GG-Net GmbH
@@ -33,13 +36,31 @@ public class MandatorMetaDataTryOut {
 
     public static void main(String[] args) {
 
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
+
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
+        Dl.remote().add(Mandators.class, new MandatorsStub());
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton run = new JButton("OpenUi");
         run.addActionListener(ev -> {
 
-            randomTryOut();
+            CustomerGenerator gen = new CustomerGenerator();
+            MandatorMetadata mData = gen.makeMandatorMetadata();
+            System.out.println("Edit: " + mData);
+            
+
+            Ui.build().title("Mandant Demo").fxml().eval(() -> mData, MandatorMetaDataController.class).cf().thenAccept(System.out::println).handle(Ui.handler());
 
         });
 
@@ -50,11 +71,4 @@ public class MandatorMetaDataTryOut {
         UiCore.startSwing(() -> p);
     }
 
-    private static void randomTryOut() {
-        CustomerGenerator gen = new CustomerGenerator();
-        MandatorMetadata mData = gen.makeMandatorMetadata();
-        Ui.exec(() -> {
-            Ui.build().title("Mandant Demo").fxml().eval(() -> mData, MandatorMetaDataController.class);
-        });
-    }
 }

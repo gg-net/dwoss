@@ -4,21 +4,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="493.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="329.0" prefWidth="575.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController">
     <center>
-      <GridPane>
+      <GridPane hgap="5.0" vgap="5.0">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="158.0" minWidth="10.0" prefWidth="150.0" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="135.0" minWidth="10.0" prefWidth="132.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="178.0" minWidth="10.0" prefWidth="178.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="ALWAYS" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -30,25 +30,31 @@
          <children>
             <Label text="Mandanten Standard" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                           <Label text="Versandkonditionen:  " GridPane.rowIndex="1" />
-                          <ComboBox fx:id="shippingConditionComboBox" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                          <ComboBox fx:id="shippingConditionComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="defaultshippingConditionTextField" editable="false" promptText="DEFAULT" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                           <Label text="Zahlungskonditionen: " GridPane.rowIndex="2" />
-                          <ComboBox fx:id="paymentConditionComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <ComboBox fx:id="paymentConditionComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="defaultpaymentConditionTextField" editable="false" promptText="Händler" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                           <Label text="Zahlungsmodalität :" GridPane.rowIndex="3" />
-                          <ComboBox fx:id="paymentMethodComboBox" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          <ComboBox fx:id="paymentMethodComboBox" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="defaultpaymentMethodTextField" editable="false" promptText="Vorkasse" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Label prefHeight="29.0" prefWidth="139.0" text="Erlaubte Verkaufskanäle:" GridPane.rowIndex="4" />
-                      <VBox fx:id="defaultAllowedSalesChannelsVBox" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
-                        <VBox fx:id="allowedSalesChannelsVBox" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+                        <Label text="Erlaubte Verkaufskanäle:" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+            <ListView fx:id="allowedSalesChannelsListView" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+            <ListView fx:id="defaultSalesChannelsListView" disable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
          </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
       </GridPane>
     </center>
    <bottom>
-      <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="356.0" BorderPane.alignment="CENTER">
+      <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
-                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
+                <Button mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -58,11 +64,4 @@
          </padding>
       </FlowPane>
    </bottom>
-   <top>
-      <FlowPane alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" BorderPane.alignment="CENTER">
-         <children>
-                    <Label alignment="CENTER_RIGHT" text="Standard" />
-         </children>
-      </FlowPane>
-   </top>
 </BorderPane>

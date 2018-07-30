@@ -48,6 +48,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import lombok.*;
@@ -160,18 +162,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      */
     @FXML
     private void clickMandatorMetaDataButton(ActionEvent event) {
-
         Ui.exec(() -> {
-            Ui.build(commentTextArea).fxml().eval(() -> getCustomer().getMandatorMetadata().get(0), MandatorMetaDataController.class
-            )
-                    .opt()
-                    .ifPresent(newMandatorMetaData -> {
-                        MandatorMetadata oldMandatorMetadata = getCustomer().getMandatorMetadata().get(0);
-                        oldMandatorMetadata.setMandatorMatchcode(newMandatorMetaData.getMandatorMatchcode());
-                        oldMandatorMetadata.setPaymentCondition(newMandatorMetaData.getPaymentCondition());
-                        oldMandatorMetadata.setPaymentMethod(newMandatorMetaData.getPaymentMethod());
-                        oldMandatorMetadata.setShippingCondition(newMandatorMetaData.getShippingCondition());
-                    });
+                final String matchCode = Dl.local().lookup(CachedMandators.class).loadMandator().getMatchCode();            
+        Ui.build(commentTextArea).title("Mandantenmetadaten für " + matchCode).fxml().eval(() -> {
+            return customer.getMandatorMetadata().stream().filter(m -> Objects.equals(matchCode, m.getMandatorMatchcode())).findFirst().orElse(new MandatorMetadata(matchCode));
+        }, MandatorMetaDataController.class)
+                .cf()
+                .thenApply(m -> CustomerConnectorFascade.createOrUpdateMandatorMetadata(customer.getId(), m))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
         });
 
     }
