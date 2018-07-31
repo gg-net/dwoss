@@ -82,8 +82,8 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         address.setCity("city");
         address.setZipCode("12345");
 
+        //create the address in the contact and check if it got added
         agent.create(new Root(Contact.class, 1l), address);
-
         Contact found = agent.findByIdEager(Contact.class, 1l);
         assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the contact").isEqualTo(1);
 
@@ -92,6 +92,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         communication.setType(Type.SKYPE);
         communication.setIdentifier("identifier");
 
+        //create the communication on the contact and check if it got added
         agent.create(new Root(Contact.class, 1l), communication);
         found = agent.findByIdEager(Contact.class, 1l);
         assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the contact").isEqualTo(1);
@@ -115,9 +116,9 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         contact.setFirstName("firstName");
         contact.setLastName("lastName");
 
+        //create the contact on the customer and check if it got added
         Customer found = agent.findByIdEager(Customer.class, 1l);
         assertThat(found.getContacts().size()).as("The customer should habe no contacts").isEqualTo(0);
-
         agent.create(new Root(Customer.class, 1l), contact);
         found = agent.findByIdEager(Customer.class, 1l);
         assertThat(found.getContacts().size()).as("Not the correct amount of contact on the Customer").isEqualTo(1);
@@ -126,6 +127,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         Company company = new Company();
         company.setName("company");
 
+        //create the company on the customer and check if it got added
         assertThat(found.getCompanies().size()).as("The customer should have no companies").isEqualTo(0);
         agent.create(new Root(Customer.class, 1l), company);
         found = agent.findByIdEager(Customer.class, 1l);
@@ -134,6 +136,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         //mandatorMetadata that gets cerated on the customer
         MandatorMetadata mm = new MandatorMetadata("matchcode");
 
+        //create the MandatorMetadata in the customer and check if it got added
         assertThat(found.getMandatorMetadata().size()).as("The customer should have no mandatorMetadata").isEqualTo(0);
         agent.create(new Root(Customer.class, 1l), mm);
         found = agent.findByIdEager(Customer.class, 1l);
@@ -157,6 +160,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         communication.setType(Type.SKYPE);
         communication.setIdentifier("identifier");
 
+        //create the communication on the company and check if it got added
         Company found = agent.findByIdEager(Company.class, 1l);
         assertThat(found.getCommunications().size()).as("The customer should have no communications").isEqualTo(0);
         agent.create(new Root(Company.class, 1l), communication);
@@ -169,6 +173,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         address.setCity("city");
         address.setZipCode("12345");
 
+        //create the address in the company and check if it got added
         found = agent.findByIdEager(Company.class, 1l);
         assertThat(found.getAddresses().size()).as("The customer should have no addresses").isEqualTo(0);
         agent.create(new Root(Company.class, 1l), address);
@@ -180,6 +185,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         contact.setFirstName("firstName");
         contact.setLastName("lastName");
 
+        //create the contact in the comapny and check if it got added
         assertThat(found.getContacts().size()).as("The customer should have no contacts").isEqualTo(0);
         agent.create(new Root(Company.class, 1l), contact);
         found = agent.findByIdEager(Company.class, 1l);
