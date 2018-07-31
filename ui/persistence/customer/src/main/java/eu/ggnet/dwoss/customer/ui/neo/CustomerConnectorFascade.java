@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -41,7 +40,7 @@ public class CustomerConnectorFascade {
         CustomerConnectorFascade.customer = c;
     }
 
-    public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {        
+    public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
         // Info, the server will have to do more.
         customer.getAddressLabels().clear();
         customer.getAddressLabels().add(invoiceLabel);
@@ -51,182 +50,144 @@ public class CustomerConnectorFascade {
     }
 
     public static Contact updateAddressOnContact(long contactId, Address address) {
-        Contact contact = findContactById(contactId);
-        // Update just happeing like magic :-)
-        System.out.println("updateAddress = " + address);
-        return contact;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(address);
+        return agent.findByIdEager(Contact.class, contactId);
     }
 
     public static Contact deleteAddressOnContact(long contactId, Address address) {
-        Contact contact = findContactById(contactId);
-        for (Iterator<Address> iterator = contact.getAddresses().iterator(); iterator.hasNext();) {
-            Address selectedAddress = iterator.next();
-            if ( selectedAddress.getId() == address.getId() ) iterator.remove();
-        }
-        System.out.println("delete address = " + address);
-        return contact;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Contact.class, contactId), address);
+        return agent.findByIdEager(Contact.class, contactId);
     }
 
     public static Contact createAddressOnContact(long contactId, Address address) {
-     //   CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-      //  agent.create(new Root(Contact.class, contactId), address);
-       // return agent.findByIdEager(Contact.class,contactId);
-        
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Contact.class, contactId), address);
+        return agent.findByIdEager(Contact.class, contactId);
         // INFO: DB must fail if contact is part of a bussines customer.
-        
-        Contact contact = findContactById(contactId);
-        contact.getAddresses().add(address);
-        System.out.println("create address = " + address);
-        return contact;
     }
 
     public static Contact updateCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findContactById(contactId);
-        // Update just happeing like magic :-)
-        System.out.println("update communication = " + communication);
-        return contact;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(communication);
+        return agent.findByIdEager(Contact.class, contactId);
     }
 
     public static Contact deleteCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findContactById(contactId);
-        for (Iterator<Communication> iterator = contact.getCommunications().iterator(); iterator.hasNext();) {
-            Communication selectedCommunication = iterator.next();
-            if ( selectedCommunication.getId() == communication.getId() ) iterator.remove();
-        }
-        System.out.println("delete communication = " + communication);
-        return contact;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Contact.class, contactId), communication);
+        return agent.findByIdEager(Contact.class, contactId);
     }
 
     public static Contact createCommunicationOnContact(long contactId, Communication communication) {
-        Contact contact = findContactById(contactId);
-        contact.getCommunications().add(communication);
-        System.out.println("create communication = " + communication);
-        return contact;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Contact.class, contactId), communication);
+        return agent.findByIdEager(Contact.class, contactId);
     }
 
     public static Customer createContactOnCustomer(long customerid, Contact contact) {
-        customer.getContacts().add(contact);
-        System.out.println("create contact = " + contact);
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Customer.class, customerid), contact);
+        return agent.findByIdEager(Customer.class, customerid);
     }
 
     public static Customer updateContactOnCustomer(long customerId, Contact contact) {
-        // magic
-        System.out.println("update contact = " + contact);
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(contact);
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
-    public static Customer deleteContactOnCustomer(long custmoerId, Contact contact) {
-        for (Iterator<Contact> iterator = customer.getContacts().iterator(); iterator.hasNext();) {
-            Contact next = iterator.next();
-            if ( next == contact ) iterator.remove();
-        }
-        System.out.println("delete contact");
-        return customer;
+    public static Customer deleteContactOnCustomer(long customerId, Contact contact) {
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Customer.class, customerId), contact);
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
-    public static Customer createCompanyOnCustomer(long customerid, Company company) {
-        customer.getCompanies().add(company);
-        System.out.println("create company = " + company);
-        return customer;
+    public static Customer createCompanyOnCustomer(long customerId, Company company) {
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Customer.class, customerId), company);
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
     public static Customer updateCompanyOnCustomer(long customerId, Company company) {
-        // magic
-        System.out.println("update company = " + company);
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(company);
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
-    public static Customer deleteCompanyOnCustomer(long custmoerId,  Company company) {
-        for (Iterator<Company> iterator = customer.getCompanies().iterator(); iterator.hasNext();) {
-            Company next = iterator.next();
-            if ( next == company ) iterator.remove();
-        }
-        System.out.println("delete company");
-        return customer;
+    public static Customer deleteCompanyOnCustomer(long customerId, Company company) {
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Customer.class, customerId), company);
+        return agent.findByIdEager(Customer.class, customerId);
     }
-    
+
     public static Company createCommunicationOnCompany(long companyId, Communication communication) {
-        Company company = findCompanyById(companyId);
-        company.getCommunications().add(communication);
-        System.out.println("create communication = " + communication);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Company.class, companyId), communication);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company updateCommunicationOnCompany(long companyId, Communication communication) {
-        Company company = findCompanyById(companyId);
-        // Update just happeing like magic :-)
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(communication);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company deleteCommunicationOnCompany(long companyId, Communication communication) {
-        Company company = findCompanyById(companyId);
-        for (Iterator<Communication> iterator = company.getCommunications().iterator(); iterator.hasNext();) {
-            Communication selectedCommunication = iterator.next();
-            if ( selectedCommunication.getId() == communication.getId() ) iterator.remove();
-        }
-        System.out.println("delete communication = " + communication);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Company.class, companyId), communication);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Customer reload(Customer customer) {
         return customer;
     }
-    
+
     public static Company reload(Company company) {
         return company;
     }
 
     public static Company updateAddressOnCompany(long companyId, Address address) {
-        Company company = findCompanyById(companyId);
-        // Update just happeing like magic :-)
-        System.out.println("updateAddress = " + address);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(address);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company deleteAddressOnCompany(long companyId, Address address) {
-        Company company = findCompanyById(companyId);
-        for (Iterator<Address> iterator = company.getAddresses().iterator(); iterator.hasNext();) {
-            Address selectedAddress = iterator.next();
-            if ( selectedAddress.getId() == address.getId() ) iterator.remove();
-        }
-        System.out.println("delete address = " + address);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Company.class, companyId), address);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company createAddressOnCompany(long companyId, Address address) {
-        Company company = findCompanyById(companyId);
-        company.getAddresses().add(address);
-        System.out.println("create address = " + address);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Company.class, companyId), address);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company createContactOnCompany(long companyId, Contact contact) {
-        Company company = findCompanyById(companyId);
-        company.getContacts().add(contact);
-        System.out.println("create contact = " + contact);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Company.class, companyId), contact);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company updateContactOnCompany(long companyId, Contact contact) {
-        Company company = findCompanyById(companyId);
-        System.out.println("update contact = " + contact);
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.update(contact);
+        return agent.findByIdEager(Company.class, companyId);
     }
 
     public static Company deleteContactOnCompany(long companyId, Contact contact) {
-        Company company = findCompanyById(companyId);
-        for (Iterator<Contact> iterator = company.getContacts().iterator(); iterator.hasNext();) {
-            Contact next = iterator.next();
-            if ( next == contact ) iterator.remove();
-        }
-        System.out.println("delete customer");
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.delete(new Root(Company.class, companyId), contact);
+        return agent.findByIdEager(Company.class, companyId);
     }
-    
+
     public static Customer createOrUpdateMandatorMetadata(long customerId, MandatorMetadata mandatorMetadata) {
-        System.out.println("createOrUpdateMandatorMetadata" + mandatorMetadata);
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        agent.create(new Root(Customer.class, customerId), mandatorMetadata);
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
     private static Contact findContactById(long contactId) {
