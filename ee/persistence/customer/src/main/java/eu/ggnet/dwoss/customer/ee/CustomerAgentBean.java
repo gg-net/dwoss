@@ -214,11 +214,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @AutoLogger
     @Override
-    public void update(@NonNull Object t) {
-        if ( t instanceof Customer && ((Customer)t).getId() > 0 ) em.merge(t);
-        else if ( t instanceof Company && ((Company)t).getId() > 0 ) em.merge(t);
-        else if ( t instanceof Contact && ((Contact)t).getId() > 0 ) em.merge(t);
-        else throw new IllegalArgumentException("Object is not supported. Object: " + t);
+    public void update(Object t) {
+        em.merge(t);
     }
 
 }

@@ -90,14 +90,14 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the contact").isEqualTo(1);
         Address foundAddress = found.getAddresses().get(0);
         foundAddress.setStreet("newStreet");
-        agent.update(found);
+        agent.update(foundAddress);
         found = agent.findByIdEager(Contact.class, 1l);
         assertThat(found.getAddresses().get(0).getStreet()).as("Update didn't work on address for contact").isEqualTo("newStreet");
 
         assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the contact").isEqualTo(1);
         Communication foundCommunication = found.getCommunications().get(0);
         foundCommunication.setIdentifier("newIdentifier");
-        agent.update(found);
+        agent.update(foundCommunication);
         found = agent.findByIdEager(Contact.class, 1l);
         assertThat(found.getCommunications().get(0).getIdentifier()).as("Update didn't work on communication for contact").isEqualTo("newIdentifier");
 
@@ -132,7 +132,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getContacts().size()).as("Not the correct amount of contacts on the customer").isEqualTo(1);
         Contact foundContact = found.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
-        agent.update(found);
+        agent.update(foundContact);
         found = agent.findByIdEager(Customer.class, 1l);
         assertThat(found.getContacts().get(0).getFirstName()).as("Update didn't work on address for customer").isEqualTo("newFirstName");
 
@@ -140,7 +140,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getCompanies().size()).as("Not the correct amount of companies on the customer").isEqualTo(1);
         Company foundCompany = found.getCompanies().get(0);
         foundCompany.setName("newCompany");
-        agent.update(found);
+        agent.update(foundCompany);
         found = agent.findByIdEager(Customer.class, 1l);
         assertThat(found.getCompanies().get(0).getName()).as("Update didn't work on company for customer").isEqualTo("newCompany");
 
@@ -148,7 +148,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getMandatorMetadata().size()).as("Not the correct amount of mandatorMetadata on the customer").isEqualTo(1);
         MandatorMetadata foundMandatorMetadata = found.getMandatorMetadata().get(0);
         foundMandatorMetadata.setMandatorMatchcode("newMatchcode");
-        agent.update(found);
+        agent.update(foundMandatorMetadata);
         found = agent.findByIdEager(Customer.class, 1l);
         assertThat(found.getMandatorMetadata().get(0).getMandatorMatchcode()).as("Update didn't work on mandatorMetadata for customer").isEqualTo("newMatchcode");
 
@@ -187,7 +187,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the company").isEqualTo(1);
         Address foundAddress = found.getAddresses().get(0);
         foundAddress.setStreet("newStreet");
-        agent.update(found);
+        agent.update(foundAddress);
         found = agent.findByIdEager(Company.class, 1l);
         assertThat(found.getAddresses().get(0).getStreet()).as("Update didn't work on address for company").isEqualTo("newStreet");
 
@@ -195,7 +195,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
         Communication foundCommunication = found.getCommunications().get(0);
         foundCommunication.setIdentifier("newIdentifier");
-        agent.update(found);
+        agent.update(foundCommunication);
         found = agent.findByIdEager(Company.class, 1l);
         assertThat(found.getCommunications().get(0).getIdentifier()).as("Update didn't work on communication for company").isEqualTo("newIdentifier");
 
@@ -203,7 +203,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         assertThat(found.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);
         Contact foundContact = found.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
-        agent.update(found);
+        agent.update(foundContact);
         found = agent.findByIdEager(Company.class, 1l);
         assertThat(found.getContacts().get(0).getFirstName()).as("Update didn't work on contact for company").isEqualTo("newFirstName");
 
