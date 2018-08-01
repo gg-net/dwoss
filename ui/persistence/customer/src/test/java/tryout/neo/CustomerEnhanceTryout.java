@@ -27,11 +27,13 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
+import tryout.stub.CustomerAgentStub;
 import tryout.stub.MandatorsStub;
 
 /**
@@ -42,7 +44,6 @@ public class CustomerEnhanceTryout {
 
     public static void main(String[] args) {
 
-        
         Dl.local().add(RemoteLookup.class, new RemoteLookup() {
             @Override
             public <T> boolean contains(Class<T> clazz) {
@@ -55,7 +56,7 @@ public class CustomerEnhanceTryout {
             }
         });
         Dl.remote().add(Mandators.class, new MandatorsStub());
-        
+
         CustomerGenerator gen = new CustomerGenerator();
 
         JButton close = new JButton("Schliessen");
@@ -88,6 +89,7 @@ public class CustomerEnhanceTryout {
 
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
 
+            Dl.remote().add(CustomerAgent.class, new CustomerAgentStub(customer));
             CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);
@@ -118,6 +120,7 @@ public class CustomerEnhanceTryout {
 
                 return;
             }
+            Dl.remote().add(CustomerAgent.class, new CustomerAgentStub(customer));
             CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);

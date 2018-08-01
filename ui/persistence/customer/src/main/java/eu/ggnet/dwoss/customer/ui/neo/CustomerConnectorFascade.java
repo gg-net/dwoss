@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
@@ -141,11 +140,13 @@ public class CustomerConnectorFascade {
     }
 
     public static Customer reload(Customer customer) {
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        return agent.findByIdEager(Customer.class, customer.getId());
     }
 
     public static Company reload(Company company) {
-        return company;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        return agent.findByIdEager(Company.class, company.getId());
     }
 
     public static Company updateAddressOnCompany(long companyId, Address address) {
@@ -189,17 +190,4 @@ public class CustomerConnectorFascade {
         agent.create(new Root(Customer.class, customerId), mandatorMetadata);
         return agent.findByIdEager(Customer.class, customerId);
     }
-
-    private static Contact findContactById(long contactId) {
-        Optional<Contact> found = Stream.concat(customer.getContacts().stream(), customer.getCompanies().stream().flatMap((com) -> com.getContacts().stream())).filter(c -> c.getId() == contactId).findAny();
-        if ( !found.isPresent() ) throw new RuntimeException("contactid = " + contactId + " not found in customer " + customer);
-        return found.get();
-    }
-
-    private static Company findCompanyById(long companyId) {
-        Optional<Company> found = customer.getCompanies().stream().filter(c -> c.getId() == companyId).findAny();
-        if ( !found.isPresent() ) throw new RuntimeException("companyId = " + companyId + " not found in customer " + customer);
-        return found.get();
-    }
-
 }
