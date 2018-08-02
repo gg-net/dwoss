@@ -43,7 +43,7 @@ import eu.ggnet.saft.api.Reply;
  */
 public class CustomerAgentStub implements CustomerAgent {
 
-    private final int AMOUNT = 200;
+    private final int AMOUNT = 25;
 
     private final int SLOW = 40;
 
@@ -122,24 +122,23 @@ public class CustomerAgentStub implements CustomerAgent {
             if ( customer != null ) return (T)customer;
             else return (T)CGEN.makeCustomer();
         }
-        if ( entityClass.equals(Company.class) ) {
-            Optional<Company> findFirst = customer.getCompanies().stream().filter(c -> Objects.equals((Long)c.getId(), (Long)id)).findFirst();
-            if ( findFirst.isPresent() ) return (T)findFirst.get();
+        if ( entityClass.equals(Company.class) && customer != null ) {
+            Optional<Company> company = customer.getCompanies().stream().filter(c -> Objects.equals((Long)c.getId(), (Long)id)).findFirst();
+            if ( company.isPresent() ) return (T)company.get();
             else return null;
         }
-        if ( entityClass.equals(Contact.class) ) {
-            Optional<Contact> findFirst = customer.getContacts().stream().filter(c -> Objects.equals((Long)c.getId(), (Long)id)).findFirst();
-            if ( findFirst.isPresent() ) return (T)findFirst.get();
+        if ( entityClass.equals(Contact.class) && customer != null ) {
+            Optional<Contact> contact = customer.getContacts().stream().filter(c -> Objects.equals((Long)c.getId(), (Long)id)).findFirst();
+            if ( contact.isPresent() ) return (T)contact.get();
             else return null;
         }
         return null;
-
     }
 
     @Override
     public List<PicoCustomer> search(String search, Set<SearchField> customerFields) {
         List<PicoCustomer> list = new ArrayList<>();
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < AMOUNT; i++) {
             list.add(CGEN.makeCustomer().toPico());
         }
 
@@ -312,14 +311,14 @@ public class CustomerAgentStub implements CustomerAgent {
 
         if ( root.getClazz() == Customer.class ) rootElement = customer;
         else if ( root.getClazz() == Company.class ) {
-            Optional<Company> findFirst = customer.getCompanies().stream().filter(c -> c.getId() == root.getId()).findFirst();
-            if ( findFirst.isPresent() ) rootElement = findFirst.get();
-            else throw new IllegalArgumentException(raw + " is not on the customer " + customer);
+            Optional<Company> company = customer.getCompanies().stream().filter(c -> c.getId() == root.getId()).findFirst();
+            if ( company.isPresent() ) rootElement = company.get();
+            else throw new IllegalArgumentException("Company is not on the customer " + customer);
         } else if ( root.getClazz() == Contact.class ) {
-            Optional<Contact> findFirst = customer.getContacts().stream().filter(c -> c.getId() == root.getId()).findFirst();
-            if ( findFirst.isPresent() ) rootElement = findFirst.get();
-            else throw new IllegalArgumentException(raw + " is not on the customer " + customer);
-        } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+            Optional<Contact> contact = customer.getContacts().stream().filter(c -> c.getId() == root.getId()).findFirst();
+            if ( contact.isPresent() ) rootElement = contact.get();
+            else throw new IllegalArgumentException("Contact is not on the customer " + customer);
+        } else throw new IllegalArgumentException("Root instance is not supported. Root: " + root);
 
         if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().add((Address)raw);
         else if ( raw instanceof AddressLabel ) ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
@@ -327,13 +326,14 @@ public class CustomerAgentStub implements CustomerAgent {
         else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().add((Contact)raw);
         else if ( raw instanceof MandatorMetadata ) ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
-        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+        else throw new IllegalArgumentException("Raw instance is not supported Raw: " + raw);
 
     }
 
     @Override
     public void update(Object t) {
-        //Black Magic
+        L.info("update Objekt: " + t);
+        //Black Magic (Only one customer object is handled)
     }
 
     @Override
@@ -345,18 +345,18 @@ public class CustomerAgentStub implements CustomerAgent {
         else if ( root.getClazz() == Company.class ) {
             Optional<Company> findAny = customer.getCompanies().stream().filter(c -> (Long)c.getId() == root.getId()).findAny();
             if ( findAny.isPresent() ) rootElement = findAny.get();
-            else throw new IllegalArgumentException("Could not find company " + (Company)rootElement + " to delete from customer " + customer);
+            else throw new IllegalArgumentException("Could not find company to delete from customer " + customer);
         } else if ( root.getClazz() == Contact.class ) {
             Optional<Contact> findAny = customer.getContacts().stream().filter(c -> (Long)c.getId() == root.getId()).findAny();
             if ( findAny.isPresent() ) rootElement = findAny.get();
-            else throw new IllegalArgumentException("Could not find contact " + (Contact)rootElement + " to delete from customer " + customer);
-        } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+            else throw new IllegalArgumentException("Could not find contact to delete from customer " + customer);
+        } else throw new IllegalArgumentException("Root instance is not supported. Root: " + root);
 
         if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().remove((Address)raw);
         else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().remove((Company)raw);
         else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().remove((Contact)raw);
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
-        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+        else throw new IllegalArgumentException("Raw instance is not supported. Raw: " + raw);
     }
 
 }

@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ee.itest;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -63,6 +64,9 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Test create for all supported entities on a contact.
+     */
     public void testCreateOnContact() throws Exception {
 
         utx.begin();
@@ -100,6 +104,58 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Try the create mehtod with a not existing root. Expecting IllegalArgumentException.
+     */
+    public void testCreateOnContactNegative() {
+
+        Address address = new Address();
+        address.setStreet("street");
+        address.setCity("city");
+        address.setZipCode("12345");
+
+        try {
+            agent.create(new Root(Contact.class, 1l), address);
+        } catch (EJBException e) {
+            assertThat(e.getCausedByException() instanceof IllegalArgumentException)
+                    .as("Trying to catch IllegalArgumentException of creating an address on a not existing Contact failed")
+                    .isTrue();
+        }
+    }
+
+    /**
+     * Try the create mehtod with an unsupported raw. Expecting IllegalArgumentException.
+     */
+    public void testCreateWithUnsupportedRaw() throws Exception {
+
+        utx.begin();
+        em.joinTransaction();
+
+        //create a contact
+        Contact contact = new Contact();
+        contact.setFirstName("firstName");
+        contact.setLastName("lastName");
+        em.persist(contact);
+
+        utx.commit();
+
+        String unsupportedRaw = "stringInstance";
+
+        try {
+            agent.create(new Root(Contact.class, 1l), unsupportedRaw);
+        } catch (EJBException e) {
+            assertThat(e.getCausedByException() instanceof IllegalArgumentException)
+                    .as("Trying to catch IllegalArgumentException of creating a unsupportedRaw on a existing Contact failed")
+                    .isTrue();
+
+        }
+
+    }
+
+    @Test
+    /**
+     * Test create for all supported entities on a customer.
+     */
     public void testCreateOnCustomer() throws Exception {
 
         utx.begin();
@@ -145,6 +201,9 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Test create for all supported entities on a company.
+     */
     public void testCreateOnCompany() throws Exception {
 
         utx.begin();

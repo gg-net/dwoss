@@ -187,26 +187,58 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @AutoLogger
     @Override
+    /**
+     * Create a raw object on given root. If the root element is not supported or not found by this method an IllegalArgumentException gets thrown.
+     * If the raw object is not supported by this method an IllegalArguemntException gets thrown.
+     * Both root and raw are not allowed to be null.
+     */
     public void create(@NonNull Root root, @NonNull Object raw) {
         Object rootElement = em.find(root.getClazz(), root.getId());
-        if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().add((Address)raw);
-        else if ( raw instanceof AddressLabel ) ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
-        else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().add((Company)raw);
-        else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().add((Contact)raw);
-        else if ( raw instanceof MandatorMetadata ) ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
-        else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
+        if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
+        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((AddressStash)rootElement).getAddresses().add((Address)raw);
+
+        else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class )
+            ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
+
+        else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
+            ((Customer)rootElement).getCompanies().add((Company)raw);
+
+        else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((ContactStash)rootElement).getContacts().add((Contact)raw);
+
+        else if ( raw instanceof MandatorMetadata && rootElement.getClass() == Customer.class )
+            ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
+
+        else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
+
         else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
         em.persist(raw);
     }
 
     @AutoLogger
     @Override
+    /**
+     * Delete a raw object from given root. If the root element is not supported or not found by this method an IllegalArgumentException gets thrown.
+     * If the raw object is not supported by this method an IllegalArguemntException gets thrown.
+     * Both root and raw are not allowed to be null.
+     */
     public void delete(@NonNull Root root, @NonNull Object raw) {
         Object rootElement = em.find(root.getClazz(), root.getId());
-        if ( raw instanceof Address ) ((AddressStash)rootElement).getAddresses().remove((Address)raw);
-        else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().remove((Company)raw);
-        else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().remove((Contact)raw);
-        else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
+        if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
+        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((AddressStash)rootElement).getAddresses().remove((Address)raw);
+
+        else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
+            ((Customer)rootElement).getCompanies().remove((Company)raw);
+
+        else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((ContactStash)rootElement).getContacts().remove((Contact)raw);
+
+        else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) )
+            ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
+
         else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
 
         em.merge(rootElement);
@@ -214,7 +246,10 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @AutoLogger
     @Override
-    public void update(Object t) {
+    /**
+     * Update object t. t is not allowed to be null.
+     */
+    public void update(@NonNull Object t) {
         em.merge(t);
     }
 

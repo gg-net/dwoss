@@ -61,6 +61,9 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Test update for all supported entities on a contact.
+     */
     public void testUpdateOnContact() throws Exception {
 
         utx.begin();
@@ -104,6 +107,9 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Test update for all supported entities on a customer.
+     */
     public void testUpdateOnCustomer() throws Exception {
 
         utx.begin();
@@ -155,6 +161,9 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
     }
 
     @Test
+    /**
+     * Test update for all supported entities on a company.
+     */
     public void testUpdateOnCompany() throws Exception {
 
         utx.begin();
