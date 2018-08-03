@@ -162,14 +162,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @FXML
     private void clickMandatorMetaDataButton(ActionEvent event) {
         Ui.exec(() -> {
-                final String matchCode = Dl.local().lookup(CachedMandators.class).loadMandator().getMatchCode();            
-        Ui.build(commentTextArea).title("Mandantenmetadaten für " + matchCode).fxml().eval(() -> {
-            return customer.getMandatorMetadata().stream().filter(m -> Objects.equals(matchCode, m.getMandatorMatchcode())).findFirst().orElse(new MandatorMetadata(matchCode));
-        }, MandatorMetaDataController.class)
-                .cf()
-                .thenApply(m -> CustomerConnectorFascade.createOrUpdateMandatorMetadata(customer.getId(), m))
-                .thenAcceptAsync(c -> accept(c), Platform::runLater)
-                .handle(Ui.handler());
+            final String matchCode = Dl.local().lookup(CachedMandators.class).loadMandator().getMatchCode();
+            Ui.build(commentTextArea).title("Mandantenmetadaten für " + matchCode).fxml().eval(() -> {
+                return customer.getMandatorMetadata().stream().filter(m -> Objects.equals(matchCode, m.getMandatorMatchcode())).findFirst().orElse(new MandatorMetadata(matchCode));
+            }, MandatorMetaDataController.class)
+                    .cf()
+                    .thenApply(m -> CustomerConnectorFascade.createOrUpdateMandatorMetadata(customer.getId(), m))
+                    .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                    .handle(Ui.handler());
         });
 
     }

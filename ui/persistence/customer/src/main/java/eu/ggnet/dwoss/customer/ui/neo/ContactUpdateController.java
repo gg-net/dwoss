@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

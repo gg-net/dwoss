@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ee.entity.projection;
 import java.io.Serializable;
 import java.util.Optional;
 
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -27,21 +28,26 @@ import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * A combination of address, optional company and contact.
  *
  * @author oliver.guenther
  */
-// Class to be changed. For now it is a projection. will be an entity.
+//@Entity
+//@ToString(exclude = {"company", "contact", "address"})
+//@EqualsAndHashCode(of = {"id"})
+//@NoArgsConstructor
 public class AddressLabel implements Serializable {
 
+    @Id
     @Getter
+    @GeneratedValue
     private long id;
 
     @Getter
+    @Version
     private short optLock;
 
     @Getter
@@ -67,7 +73,7 @@ public class AddressLabel implements Serializable {
         this.address = address;
         this.type = type;
     }
-    
+
     public AddressLabel(Company company, Contact contact, Address address, AddressType type) {
         this.company = company;
         this.contact = contact;

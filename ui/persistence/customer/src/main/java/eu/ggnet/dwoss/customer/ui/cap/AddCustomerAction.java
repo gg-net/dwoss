@@ -56,6 +56,7 @@ public class AddCustomerAction extends AbstractAction {
             Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
                     .opt().ifPresent(c -> Ui.build().alert("Would store + " + c));
         });
+
     }
 
 }

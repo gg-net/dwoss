@@ -40,12 +40,24 @@ public class CustomerConnectorFascade {
     }
 
     public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
-        // Info, the server will have to do more.
-        customer.getAddressLabels().clear();
-        customer.getAddressLabels().add(invoiceLabel);
-        if ( shippingLabel.isPresent() ) customer.getAddressLabels().add(shippingLabel.get());
-        System.out.println("updateAddressLabels customerId = " + customerId + " invoice = " + invoiceLabel + ", shipping = " + shippingLabel);
-        return customer;
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+
+        //
+        if ( invoiceLabel.getId() < 1l ) {
+            agent.create(new Root(Customer.class, customerId), invoiceLabel);
+        } else {
+            agent.update(invoiceLabel);
+        }
+        agent.update(invoiceLabel);
+        if ( shippingLabel.isPresent() ) {
+            if ( shippingLabel.get().getId() < 1l ) {
+                agent.create(new Root(Customer.class, customerId), shippingLabel.get());
+            } else {
+                agent.update(shippingLabel.get());
+            }
+        }
+
+        return agent.findByIdEager(Customer.class, customerId);
     }
 
     public static Contact updateAddressOnContact(long contactId, Address address) {

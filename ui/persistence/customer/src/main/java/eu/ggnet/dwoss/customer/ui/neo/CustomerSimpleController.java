@@ -21,17 +21,14 @@ import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.FxController;
 
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -49,8 +46,6 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
 import lombok.AllArgsConstructor;
-
-import static javafx.scene.control.ButtonType.OK;
 
 /**
  * Controller class for the editor view of a SimpleCustomer. Allows the user to
@@ -131,7 +126,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private Button saveAndEnhanceUIButton;
-    
+
     @FXML
     private ComboBox<Country> countryComboBox;
 
@@ -142,9 +137,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             result = new CustomerContinue(getSimpleCustomer(), false);
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
-            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, e.getMessage(), OK);
-            alert.show();
-
+            Ui.build(saveAndCloseButton).alert(e.getMessage());
         }
 
     }
@@ -157,8 +150,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             result = new CustomerContinue(getSimpleCustomer(), true);
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
-            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, e.getMessage(), OK);
-            alert.show();
+            Ui.build(saveAndCloseButton).alert(e.getMessage());
         }
     }
 
@@ -222,7 +214,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         streetTextField.setText("");
         zipcodeTextField.setText("");
         cityTextField.setText("");
-                        
+
         countryComboBox.getItems().addAll(Country.values());
         countryComboBox.setButtonCell(new CountryListCell());
         countryComboBox.setCellFactory((p) -> new CountryListCell());
@@ -231,40 +223,23 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         //button behavior
         //enable the save and "saveAndEnhanceUI" button only on filled TextFields
         saveAndCloseButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
-                        )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> zipcodeTextField.getText().trim().isEmpty(), zipcodeTextField.textProperty()
-                        )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
-                        )
-                )
-        );
+                cityTextField.textProperty().isEmpty()
+                        .or(lastNameTextField.textProperty().isEmpty())
+                        .or(streetTextField.textProperty().isEmpty())
+                        .or(zipcodeTextField.textProperty().isEmpty())
+                        .or((landLineTextField.textProperty().isEmpty()
+                             .and(mobileTextField.textProperty().isEmpty())
+                             .and(emailTextField.textProperty().isEmpty()))
+                        ));
 
-        saveAndEnhanceUIButton.disableProperty().bind(
-                Bindings.createBooleanBinding(()
-                        -> lastNameTextField.getText().trim().isEmpty(), lastNameTextField.textProperty()
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> streetTextField.getText().trim().isEmpty(), streetTextField.textProperty()
-                        )
-                ).or(
-                        Bindings.createBooleanBinding(()
-                                -> zipcodeTextField.getText().trim().isEmpty(), zipcodeTextField.textProperty()
-                        )
-                ).or(                    
-                        Bindings.createBooleanBinding(()
-                                -> cityTextField.getText().trim().isEmpty(), cityTextField.textProperty()
-                        )
-                )
-        );
+        saveAndEnhanceUIButton.disableProperty().bind(cityTextField.textProperty().isEmpty()
+                .or(lastNameTextField.textProperty().isEmpty())
+                .or(streetTextField.textProperty().isEmpty())
+                .or(zipcodeTextField.textProperty().isEmpty())
+                .or((landLineTextField.textProperty().isEmpty()
+                     .and(mobileTextField.textProperty().isEmpty())
+                     .and(emailTextField.textProperty().isEmpty()))
+                ));
 
         // force the zipcode field to be numeric only, becuase the ledger get saved as an int
         zipcodeTextField.textFormatterProperty().set(
