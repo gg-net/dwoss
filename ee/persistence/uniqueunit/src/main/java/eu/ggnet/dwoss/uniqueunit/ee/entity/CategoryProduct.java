@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
+
 import java.io.Serializable;
 import java.util.*;
 

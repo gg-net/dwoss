@@ -31,7 +31,7 @@ import javafx.scene.control.*;
 import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController.InvoiceAddressLabelWithNullableShippingAddressLabel;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.saft.core.Ui;

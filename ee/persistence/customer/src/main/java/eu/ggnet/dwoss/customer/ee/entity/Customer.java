@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
@@ -28,6 +27,7 @@ import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.ContactStash;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
 
 import lombok.*;
 
@@ -44,6 +45,7 @@ import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * The datamodel of a purchaser from the view of GG-Net.
@@ -156,9 +158,8 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     /**
      * maximum of size2, consisting of
      */
-    @Getter
-    @Transient // Will be in the entity model later
-    private List<AddressLabel> addressLabels = new ArrayList<>();
+    @OneToMany(orphanRemoval = true, cascade = ALL, fetch = EAGER, mappedBy = "customer")
+    List<AddressLabel> addressLabels = new ArrayList<>();
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -174,46 +175,45 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     }
 
     /**
-     * Returns an addresslabel with prefered elements for invoice never null.
-     * This method returns never null, but all elements may be null.
-     * The following rules are applied;
-     * <ul>
-     * <li>Company: prefered</li>
-     * <li>Contact: prefered</li>
-     * <li>Adreess: preferedInvoice</li>
-     * </ul>
-     * TODO: The following scenarios are not considered for now, Contacts and Addresses assosiated with the company only. Multiple prefereds. e.t.c.
+     * Returns a bidirectional wrapper List, mapping changes to the UniqueUnit.
+     *
+     * @return a bidirectional wrapper List
+     */
+    public List<AddressLabel> getAddressLabels() {
+        return new AbstractBidirectionalListWrapper<AddressLabel>(addressLabels) {
+            @Override
+            protected void update(AddressLabel e, boolean add) {
+                if ( add ) e.setCustomer(Customer.this);
+                else e.setCustomer(null);
+            }
+        };
+    }
+
+    /**
+     * Returns the first addresslabel of type invoice.
+     * This method shoud returns never null, and allways a valid addresslabel.
      *
      * @return an addresslabel with prefered elements for invoice.
      */
     public AddressLabel toPreferedInvoiceAddress() {
-        return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
-                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
-                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(INVOICE)).orElse(null),
-                INVOICE);
+        return addressLabels.stream()
+                .filter(al -> al.getType() == INVOICE)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Customer has no addresslabel of type invoice. Invalid !. " + this));
     }
 
     /**
      * Returns an addresslabel with prefered elements for shipping never null.
      * If there is no sippingAddress explicitly set, the invoicelabel is returned.
-     * This method returns never null, but all elements may be null.
-     * The following rules are applied;
-     * <ul>
-     * <li>Company: prefered</li>
-     * <li>Contact: prefered</li>
-     * <li>Adreess: preferedShipping</li>
-     * </ul>
      *
      * @return an addresslabel with prefered elements for shipping.
      */
+    // TODO: Consider returning null in case of no shipping address.
     public AddressLabel toPreferedShippingAddress() {
-        AddressType type = contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
-        return new AddressLabel(
-                companies.stream().filter(Company::isPrefered).findFirst().orElse(null),
-                contacts.stream().filter(Contact::isPrefered).findFirst().orElse(null),
-                contacts.stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(type)).orElse(null),
-                type);
+        return addressLabels.stream()
+                .filter(al -> al.getType() == SHIPPING)
+                .findFirst()
+                .orElse(toPreferedInvoiceAddress());
     }
 
     /**
@@ -471,6 +471,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
     public String getViolationMessage() {
         if ( contacts.isEmpty() && companies.isEmpty() ) return "Neither Contact nor Company are set.";
         if ( !contacts.isEmpty() && !companies.isEmpty() ) return "Contact and Company is set. Not allowed, only one of each.";
@@ -616,9 +617,4 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         });
     }
 
-    // TODO: Remove after switch to new uis.
-    @PostLoad
-    private void postLoad() {
-        addressLabels.add(toPreferedInvoiceAddress());
-    }
 }

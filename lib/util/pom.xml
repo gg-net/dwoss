@@ -10,19 +10,7 @@
 
     <artifactId>dwoss-lib-util</artifactId>
     <name>DwOss • Library • Util</name>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!-- We need 1.7 for possible mobile usage -->
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
     <dependencies>
         <dependency>
             <groupId>${javaee.groupId}</groupId>

@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -81,7 +81,6 @@ public class CustomerGenerator {
         Customer c = new Customer();
         int r = R.nextInt(5) + 1;
         boolean prefered = false;
-        c.getAddressLabels().add(makeInVoiceAddressLabel());
         for (int i = 0; i < r; i++) {
             Contact con = makeContact();
             if ( !prefered ) {
@@ -93,6 +92,7 @@ public class CustomerGenerator {
         if ( !prefered ) {
             c.getContacts().iterator().next().setPrefered(true);
         }
+        c.getAddressLabels().add(new AddressLabel(c.getContacts().get(0), c.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
         c.getMandatorMetadata().add(makeMandatorMetadata());
         if ( R.nextBoolean() ) {
             c.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);

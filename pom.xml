@@ -156,6 +156,7 @@
         <customer-pu.classes>
           <![CDATA[
                 <class>eu.ggnet.dwoss.customer.ee.entity.Address</class>
+                <class>eu.ggnet.dwoss.customer.ee.entity.AddressLabel</class>
                 <class>eu.ggnet.dwoss.customer.ee.entity.Communication</class>
                 <class>eu.ggnet.dwoss.customer.ee.entity.Company</class>
                 <class>eu.ggnet.dwoss.customer.ee.entity.Contact</class>

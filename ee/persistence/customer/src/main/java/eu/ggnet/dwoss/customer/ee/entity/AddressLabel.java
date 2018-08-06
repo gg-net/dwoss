@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ee.entity.projection;
+package eu.ggnet.dwoss.customer.ee.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.persistence.*;
@@ -25,47 +26,50 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 
 import lombok.*;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.EAGER;
 
 /**
  * A combination of address, optional company and contact.
  *
  * @author oliver.guenther
  */
-//@Entity
-//@ToString(exclude = {"company", "contact", "address"})
-//@EqualsAndHashCode(of = {"id"})
-//@NoArgsConstructor
+@Entity
+@EqualsAndHashCode(of = {"id"})
+@NoArgsConstructor
+@Getter
 public class AddressLabel implements Serializable {
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
-    @Getter
     @Version
     private short optLock;
 
-    @Getter
+    @ManyToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
+    private Customer customer;
+
     @Setter
+    @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Company company;
 
-    @Getter
     @Setter
+    @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Contact contact;
 
-    @Getter
     @Setter
     @NotNull
     @Valid
+    @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Address address;
 
-    @Getter
     @Setter
+    @Enumerated
     private AddressType type;
 
     public AddressLabel(Contact contact, Address address, AddressType type) {
@@ -79,6 +83,19 @@ public class AddressLabel implements Serializable {
         this.contact = contact;
         this.address = address;
         this.type = type;
+    }
+
+    /**
+     * Sets the {@link Customer} in consideration of equalancy and bidirectional
+     * behaviour.
+     * <p>
+     * @param customer
+     */
+    public void setCustomer(Customer customer) {
+        if ( Objects.equals(customer, this.customer) ) return;
+        if ( this.customer != null ) this.customer.addressLabels.remove(this);
+        if ( customer != null ) customer.addressLabels.add(this);
+        this.customer = customer;
     }
 
     /**
@@ -145,4 +162,12 @@ public class AddressLabel implements Serializable {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" + "id=" + id + ", optLock=" + optLock 
+                + ", company="+ Optional.ofNullable(company).map(c ->  "(id=" + c.getId() + ") " + c.getName()).orElse("null") 
+                + ", contact=" + Optional.ofNullable(contact).map(c -> "(id=" + c.getId() + ") " + c.toFullName()).orElse("null") 
+                + ", address=" + address + ", type=" + type + '}';
+    }
+    
 }

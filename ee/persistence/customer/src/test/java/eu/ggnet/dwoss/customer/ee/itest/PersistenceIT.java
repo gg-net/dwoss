@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,6 +82,12 @@ public class PersistenceIT extends ArquillianProjectArchive {
         for (MandatorMetadata man : c.getMandatorMetadata()) {
             L.info(man.toString());
         }
+
+        L.info("===== AddressLabels");
+        for (AddressLabel al : c.getAddressLabels()) {
+            L.info(al.toString());
+        }
+        
         utx.commit();
     }
 

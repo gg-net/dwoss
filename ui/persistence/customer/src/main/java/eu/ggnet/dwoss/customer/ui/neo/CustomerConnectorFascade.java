@@ -21,7 +21,7 @@ import java.util.Optional;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.saft.core.Dl;
 
 /**

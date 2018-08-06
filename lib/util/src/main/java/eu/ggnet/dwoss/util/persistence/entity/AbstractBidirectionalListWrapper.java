@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.uniqueunit.ee.entity;
+package eu.ggnet.dwoss.util.persistence.entity;
 
 import java.util.*;
 
@@ -165,6 +165,11 @@ public abstract class AbstractBidirectionalListWrapper<T> implements List<T> {
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
         return Collections.unmodifiableList(elems).subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractBidirectionalListWrapper{" + "elems=" + elems + '}';
     }
 
 }

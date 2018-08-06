@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.dwoss.customer.ee.entity.projection.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -148,6 +148,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             a = request(cont.getAddresses(), () -> new Address(AddressType.INVOICE));
         }
         al = new AddressLabel(comp, cont, a, AddressType.INVOICE);
+        // TODO: Remove old, reuse old ?
         customer.getAddressLabels().clear();
         customer.getAddressLabels().add(al);
 
