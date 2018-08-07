@@ -29,6 +29,7 @@ import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
 
@@ -48,7 +49,7 @@ import static javax.persistence.CascadeType.ALL;
 @ToString(exclude = {"addresses", "communications", "contacts"})
 @EqualsAndHashCode(of = {"id"})
 @Indexed
-public class Company implements Serializable,AddressStash,ContactStash,CommunicationStash {
+public class Company implements Serializable, AddressStash, ContactStash, CommunicationStash, EagerAble {
 
     @Id
     @Getter
@@ -255,5 +256,15 @@ public class Company implements Serializable,AddressStash,ContactStash,Communica
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public void fetchEager() {
+        contacts.forEach(c -> {
+            c.getAddresses().size();
+            c.getCommunications().size();
+        });
+        communications.size();
+        addresses.size();
     }
 }

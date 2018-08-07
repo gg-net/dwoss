@@ -122,7 +122,9 @@ public class NameGenerator {
 
     public String makeCompanyName() {
         StringBuilder sb = new StringBuilder();
-        sb.append(namesLast.get(R.nextInt(namesLast.size()))).append(" ").append(businessEntities.get(R.nextInt(businessEntities.size())));
+        sb.append(namesLast.get(R.nextInt(namesLast.size())))
+                .append(" ")
+                .append(businessEntities.get(R.nextInt(businessEntities.size())));
         return sb.toString();
     }
 

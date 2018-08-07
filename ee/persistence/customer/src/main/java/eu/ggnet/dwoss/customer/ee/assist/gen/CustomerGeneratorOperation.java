@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.progress.MonitorFactory;
@@ -74,7 +76,7 @@ public class CustomerGeneratorOperation {
 
     @Inject
     @Customers
-    private EntityManager cem;
+    private EntityManager em;
 
     @Inject
     private MonitorFactory monitorFactory;
@@ -103,7 +105,7 @@ public class CustomerGeneratorOperation {
         for (int i = 0; i < max; i++) {
             Customer c = new Customer();
             c.setComment("Generatered Customer Number: " + i);
-            cem.persist(c);
+            em.persist(c);
             if ( systemCustomerName.containsKey(c.getId()) ) {
                 c.getCompanies().add(Company.builder().name(systemCustomerName.get(c.getId())).prefered(true).build());
                 c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -121,7 +123,7 @@ public class CustomerGeneratorOperation {
                 c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
                 c.getCompanies().add(Company.builder().name(operation + " - " + contractor).prefered(true).build());
                 c.getContacts().add(Contact.builder().firstName(operation.getNote()).lastName(contractor.getName()).prefered(true).build());
-                cem.persist(c);
+                em.persist(c);
                 receiptCustomersBuilder.put(contractor, operation, c.getId());
             }
         }
@@ -137,7 +139,7 @@ public class CustomerGeneratorOperation {
             c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             c.getCompanies().add(Company.builder().name("Repayment - " + contractor).prefered(true).build());
             c.getContacts().add(Contact.builder().firstName("Repayment").lastName(contractor.getName()).prefered(true).build());
-            cem.persist(c);
+            em.persist(c);
             repaymentCustomersBuilder.put(contractor, c.getId());
         }
         return repaymentCustomersBuilder.toRepayment();
@@ -153,7 +155,7 @@ public class CustomerGeneratorOperation {
             c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             c.getCompanies().add(Company.builder().name("Scrap - " + contractor).prefered(true).build());
             c.getContacts().add(Contact.builder().firstName("Scrap").lastName(contractor.getName()).prefered(true).build());
-            cem.persist(c);
+            em.persist(c);
             scrapCustomersBuilder.put(contractor, c.getId());
         }
         return scrapCustomersBuilder.toScrap();
@@ -168,7 +170,7 @@ public class CustomerGeneratorOperation {
             c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             c.getCompanies().add(Company.builder().name("Delete - " + contractor).prefered(true).build());
             c.getContacts().add(Contact.builder().firstName("Delete").lastName(contractor.getName()).prefered(true).build());
-            cem.persist(c);
+            em.persist(c);
             deleteCustomersBuilder.put(contractor, c.getId());
         }
         return deleteCustomersBuilder.toDelete();
@@ -183,7 +185,7 @@ public class CustomerGeneratorOperation {
             c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             c.getCompanies().add(Company.builder().name(type.getName()).prefered(true).build());
             c.getContacts().add(Contact.builder().firstName("Special").lastName(type.getName()).prefered(true).build());
-            cem.persist(c);
+            em.persist(c);
             specialCustomers.put(c.getId(), type);
         }
         return new SpecialSystemCustomers(specialCustomers);
@@ -206,20 +208,21 @@ public class CustomerGeneratorOperation {
         m.start();
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            Customer c = CGEN.makeOldCustomer(mandator.getMatchCode(), defaults);
-            if ( c.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) )
-                L.error("Generated Customer with flag SystemCustomer, which defentifly should not be. {}", c);
-            cem.persist(c);
-            ids.add(c.getId());
+            // Customer c = CGEN.makeOldCustomer(mandator.getMatchCode(), defaults);
+            Customer customer = CGEN.makeCustomer();
+            if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) )
+                L.error("Generated Customer with flag SystemCustomer, which defentifly should not be. {}", customer);
+            em.persist(customer);
+            ids.add(customer.getId());
         }
-        cem.flush(); // Solves some batching issues.
-        cem.clear();
+        em.flush(); // Solves some batching issues.
+        em.clear();
         m.finish();
         return ids;
     }
 
-    public void scrambleAddress(long customerId, AddressType type) {
-        Customer c = cem.find(Customer.class, customerId);
+     public void scrambleAddress(long customerId, AddressType type) {
+        Customer c = em.find(Customer.class, customerId);
         OldCustomer sc = ConverterUtil.convert(c, mandator.getMatchCode(), defaults);
         GeneratedAddress newAddress = GEN.makeAddress();
         if ( type == INVOICE ) {

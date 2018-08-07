@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ee.entity;
 
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.io.Serializable;
@@ -354,7 +353,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      *
      * @return true for a Vaild Customer
      */
-    public boolean isValid() {
+    public boolean isValid() {      
         return getViolationMessage() == null;
     }
 
@@ -615,6 +614,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             c.getAddresses().size();
             c.getCommunications().size();
         });
+        addressLabels.size();
     }
 
 }

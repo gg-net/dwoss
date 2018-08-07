@@ -78,7 +78,7 @@ public class CustomerGenerator {
      * @return a generated {@link Customer}.
      */
     public Customer makeCustomer() {
-        Customer c = new Customer();
+        Customer customer = new Customer();
         int r = R.nextInt(5) + 1;
         boolean prefered = false;
         for (int i = 0; i < r; i++) {
@@ -87,44 +87,41 @@ public class CustomerGenerator {
                 prefered = R.nextBoolean();
                 con.setPrefered(prefered);
             }
-            c.getContacts().add(con);
+            customer.getContacts().add(con);
         }
         if ( !prefered ) {
-            c.getContacts().iterator().next().setPrefered(true);
+            customer.getContacts().iterator().next().setPrefered(true);
         }
-        c.getAddressLabels().add(new AddressLabel(c.getContacts().get(0), c.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
-        c.getMandatorMetadata().add(makeMandatorMetadata());
+
+        customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
+        customer.getMandatorMetadata().add(makeMandatorMetadata());
         if ( R.nextBoolean() ) {
-            c.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
+            customer.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
-        c.setComment("Das ist ein Kommentar zum Kunden");
-        return c;
+        customer.setComment("Das ist ein Kommentar zum Kunden");
+        return customer;
     }
 
+    
     /**
      * Generates a {@link Company}.
      * {@link Company#prefered} is never set.
      * <p>
      * @return a generated {@link Company}.
      */
-    private Company makeCompany(Company c) {
-        c.setLedger(R.nextInt(1000) + 1);
-        c.setName(GEN.makeCompanyName());
-        c.getAddresses().add(makeAddressWithId(10l));
-        c.getAddresses().add(makeAddressWithId(11l));
-        c.getCommunications().add(makeCommunicationWithId(20l));
-        c.getCommunications().add(makeCommunicationWithId(21l));
-        if ( c.getAddresses().isEmpty() || c.getCommunications().isEmpty() ) {
-            Contact contact = makeContactWithId(30l, 10l, 20l);
-            Contact contact2 = makeContactWithId(31l, 11l, 21l);
-            contact.getAddresses().clear();
-            contact2.getAddresses().clear();
-            contact.getAddresses().add(c.getAddresses().get(0));
-            contact2.getAddresses().add(c.getAddresses().get(1));
-            c.getContacts().add(contact);
-            c.getContacts().add(contact2);
-        }
-        return c;
+    private Company makeCompany(Company company) {
+        company.setLedger(R.nextInt(1000) + 1);
+        company.setName(GEN.makeCompanyName());
+        Contact contact = makeContactWithId(30l, 10l, 20l);
+        contact.getAddresses().clear();
+        contact.getCommunications().clear();
+        
+        company.getContacts().add(contact);
+
+        company.getAddresses().add(makeAddress());
+        company.getCommunications().add(makeCommunication());
+
+        return company;
     }
 
     public Company makeCompany() {

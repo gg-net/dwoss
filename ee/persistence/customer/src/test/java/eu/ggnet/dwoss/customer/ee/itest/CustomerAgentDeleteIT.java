@@ -26,12 +26,14 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
@@ -54,6 +56,11 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
     @Inject
     UserTransaction utx;
 
+    @Inject
+    private CustomerGenerator GEN;
+
+    private final static Logger L = LoggerFactory.getLogger(CustomerAgentDeleteIT.class);
+
     @Before
     public void teardown() throws Exception {
         utx.begin();
@@ -71,21 +78,8 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        //create a contact with an address and a communication
-        Address address = new Address();
-        address.setStreet("street");
-        address.setCity("city");
-        address.setZipCode("12345");
-
-        Communication communication = new Communication();
-        communication.setType(Type.SKYPE);
-        communication.setIdentifier("identifier");
-
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
-        contact.getAddresses().add(address);
-        contact.getCommunications().add(communication);
+        //create a contact 
+        Contact contact = GEN.makeContact();
         em.persist(contact);
 
         utx.commit();
@@ -117,41 +111,27 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        //create a customer with a contact, a company and one mandatorMetadata
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
+        //create a customer with a contact and one mandatorMetadata
+        Contact contact = GEN.makeContact();
 
-        Company company = new Company();
-        company.setName("company");
+        MandatorMetadata mm = GEN.makeMandatorMetadata();
 
-        MandatorMetadata mm = new MandatorMetadata("matchcode");
-
-        Customer c = new Customer();
-        c.getContacts().add(contact);
-        c.getCompanies().add(company);
-        c.getMandatorMetadata().add(mm);
-        em.persist(c);
+        Customer customer = GEN.makeCustomer();
+        customer.getContacts().add(contact);
+        customer.getMandatorMetadata().add(mm);
+        em.persist(customer);
 
         utx.commit();
 
-        //delete each contact,company and mandatorMetadata and check if it got deleted correctly
-        Customer customer = agent.findByIdEager(Customer.class, 1l);
-        assertThat(customer.getContacts().size()).as("Not the correct amount of contacts on the customer").isEqualTo(1);
-        Contact foundContact = customer.getContacts().get(0);
+        //delete each contact and mandatorMetadata and check if it got deleted correctly
+        Customer foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getContacts().size()).as("Not the correct amount of contacts on the customer").isGreaterThan(1);
+        Contact foundContact = foundCustomer.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
+
         agent.delete(new Root(Customer.class, 1l), foundContact);
-        customer = agent.findByIdEager(Customer.class, 1l);
-        assertThat(customer.getContacts().isEmpty()).as("Delete didn't work on address for customer").isTrue();
-
-        customer = agent.findByIdEager(Customer.class, 1l);
-        assertThat(customer.getCompanies().size()).as("Not the correct amount of companies on the customer").isEqualTo(1);
-        Company foundCompany = customer.getCompanies().get(0);
-        foundCompany.setName("newCompany");
-        agent.delete(new Root(Customer.class, 1l), foundCompany);
-        customer = agent.findByIdEager(Customer.class, 1l);
-        assertThat(customer.getCompanies().isEmpty()).as("Delete didn't work on company for customer").isTrue();
-
+        foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getContacts().size()).as("Delete didn't work on address for customer").isLessThanOrEqualTo(5);
     }
 
     @Test
@@ -159,56 +139,44 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
      * Test delete for all supported entities on a company.
      */
     public void testDeleteOnCompany() throws Exception {
-
         utx.begin();
         em.joinTransaction();
+        Customer customer = GEN.makeCustomer();
+        customer.getContacts().clear();
 
-        // create a company with an address a communication and a contact
-        Address address = new Address();
-        address.setStreet("street");
-        address.setCity("city");
-        address.setZipCode("12345");
+        Company company = GEN.makeCompany();
+        em.merge(company);
+        Company findByIdEager = agent.findByIdEager(Company.class, 1l);
+        customer.getCompanies().add(findByIdEager);
 
-        Communication communication = new Communication();
-        communication.setType(Type.SKYPE);
-        communication.setIdentifier("identifier");
+        em.merge(customer);
+        utx.commit();
 
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
-
-        //create a company
-        Company c = new Company();
-        c.setName("company");
-        c.getAddresses().add(address);
-        c.getCommunications().add(communication);
-        c.getContacts().add(contact);
-        em.persist(c);
 
         //delete each address, communication and contact and check if it got deleted correctly
-        Company company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getAddresses().size()).as("Not the correct amount of addresses on the company").isEqualTo(1);
-        Address foundAddress = company.getAddresses().get(0);
+        Company foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getAddresses().size()).as("Not the correct amount of addresses on the company").isEqualTo(1);
+        Address foundAddress = foundCompany.getAddresses().get(0);
         foundAddress.setStreet("newStreet");
         agent.delete(new Root(Company.class, 1l), foundAddress);
-        company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getAddresses().isEmpty()).as("Delete didn't work on address for company").isTrue();
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getAddresses().isEmpty()).as("Delete didn't work on address for company").isTrue();
 
-        company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
-        Communication foundCommunication = company.getCommunications().get(0);
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
+        Communication foundCommunication = foundCompany.getCommunications().get(0);
         foundCommunication.setIdentifier("newIdentifier");
         agent.delete(new Root(Company.class, 1l), foundCommunication);
-        company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getCommunications().isEmpty()).as("Delete didn't work on communication for company").isTrue();
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getCommunications().isEmpty()).as("Delete didn't work on communication for company").isTrue();
 
-        company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);
-        Contact foundContact = company.getContacts().get(0);
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);
+        Contact foundContact = foundCompany.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
         agent.delete(new Root(Company.class, 1l), foundContact);
-        company = agent.findByIdEager(Company.class, 1l);
-        assertThat(company.getContacts().isEmpty()).as("Delete didn't work on contact for company").isTrue();
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getContacts().isEmpty()).as("Delete didn't work on contact for company").isTrue();
 
     }
 

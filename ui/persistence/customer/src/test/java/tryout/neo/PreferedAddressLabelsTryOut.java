@@ -33,7 +33,7 @@ public class PreferedAddressLabelsTryOut {
 
     public static void main(String[] args) {
 
-        CustomerGenerator gen = new CustomerGenerator();
+        CustomerGenerator GEN = new CustomerGenerator();
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
@@ -41,10 +41,10 @@ public class PreferedAddressLabelsTryOut {
         JButton firmenKundenButton = new JButton("Lade FirmenKunde");
         firmenKundenButton.addActionListener(ev -> {
 
-            Customer customer = gen.makeCustomer();
+            Customer customer = GEN.makeCustomer();
             customer.getContacts().clear();
-            customer.getCompanies().add(gen.makeCompany());
-            customer.getCompanies().add(gen.makeCompany());
+            customer.getCompanies().add(GEN.makeCompany());
+            customer.getCompanies().add(GEN.makeCompany());
 
             if ( !customer.isValid() ) {
                 Ui.exec(() -> {
@@ -58,10 +58,10 @@ public class PreferedAddressLabelsTryOut {
 
         JButton endKundenButton = new JButton("Lade Endkunde");
         endKundenButton.addActionListener(ev -> {
-            Customer customer = gen.makeCustomer();
+            Customer customer = GEN.makeCustomer();
             customer.getCompanies().clear();
-            customer.getContacts().add(gen.makeContact());
-            customer.getContacts().add(gen.makeContact());
+            customer.getContacts().add(GEN.makeContact());
+            customer.getContacts().add(GEN.makeContact());
 
             if ( !customer.isValid() ) {
                 Ui.exec(() -> {

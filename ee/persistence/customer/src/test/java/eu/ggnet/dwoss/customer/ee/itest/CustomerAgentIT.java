@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import java.util.Locale;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidCompany;
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidContact;
@@ -57,6 +56,10 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @Inject
     UserTransaction utx;
+    
+    @Inject
+    private CustomerGenerator GEN;
+
 
     public static Communication makeValidCommunication() {
         Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
@@ -124,63 +127,11 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         return customer;
     }
 
-    public static Customer makeValidConsumer() {
-        Customer customer = new Customer();
-        Contact contact = makeValidContact();
-        contact.getCommunications().add(new Communication(Type.EMAIL, "Max.mustermann@mustermail.de"));
-        contact.getCommunications().add(new Communication(Type.MOBILE, "0172123422"));
-        contact.getCommunications().add(new Communication(Type.PHONE, "0408818070"));
-        customer.getContacts().add(contact);
-        customer.getAddressLabels().add(makeValidAddressLabel());
-
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
-        assertThat(customer.getSimpleViolationMessage()).as("customer does not violate any rule").isNull();
-        assertThat(customer.isValid()).isTrue(); // optional
-
-        assertThat(customer.isConsumer()).isTrue();
-
-        return customer;
+    public Customer makeValidConsumer() {
+        return GEN.makeCustomer();
     }
 
-    /**
-     * store i will test the store methode
-     * Customer is not valid in moment
-     * <p>
-     * @throws java.lang.Exception
-     */
-    @Test
-    public void testStoreForConsumerCustomer() throws Exception {
-        Customer c1 = makeValidConsumer();
-
-        assertThat(c1.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-
-        Reply<Customer> result = customerAgent.store(c1.toSimple().get());
-
-        assertThat(result.hasSucceded()).as("Reply is " + result.getSummary()).isTrue();
-
-        Customer consumerpayload = result.getPayload();
-
-        assertThat(consumerpayload.isValid()).as("the payload is a valid customer").isTrue();
-        assertThat(consumerpayload.isConsumer()).as("Consumer Customer").isTrue();
-        assertThat(consumerpayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
-        
-    }
-
-    @Test
-    public void testStoreForBussnisCustomer() {
-        Customer c2 = makeValidBusinessCustomer();
-
-        assertThat(c2.isSimple()).as("Customer can be transform to a simple customer").isTrue();
-        Reply<Customer> result = customerAgent.store(c2.toSimple().get());
-
-        assertThat(result.hasSucceded()).as("Reply is " + result.getSummary()).isTrue();
-        Customer businesspayload = result.getPayload();
-
-        assertThat(businesspayload.isValid()).as("the payload is a valid customer").isTrue();
-        assertThat(businesspayload.isBusiness()).as("Business Customer").isTrue();
-        assertThat(businesspayload.isSimple()).as("the payload can be transform to a simple customer").isTrue();
-        
-    }
+   
 
     @Test
     public void testFindCustomerAsMandatorHtml() {

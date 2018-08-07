@@ -22,16 +22,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CustomerGeneratorIT extends ArquillianProjectArchive {
 
     @Inject
-    private CustomerGeneratorOperation gen;
+    private CustomerGeneratorOperation genOp;
 
     @Inject
     private CustomerEao customerEao;
 
     @Test
     public void make200Customers() {
-        final int AMOUNT = 100;
+        final int AMOUNT = 200;
 
-        List<Long> ids = gen.makeCustomers(AMOUNT);
+        List<Long> ids = genOp.makeCustomers(AMOUNT);
         assertThat(ids).as("Generated Ids").isNotNull().isNotEmpty().hasSize(AMOUNT);
 
         assertThat(customerEao.count()).isEqualTo(AMOUNT);

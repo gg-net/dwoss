@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
@@ -52,6 +53,9 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
     @Inject
     UserTransaction utx;
 
+    @Inject
+    private CustomerGenerator GEN;
+
     @Before
     public void teardown() throws Exception {
         utx.begin();
@@ -70,20 +74,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact with an address and a communication
-        Address address = new Address();
-        address.setStreet("street");
-        address.setCity("city");
-        address.setZipCode("12345");
-
-        Communication communication = new Communication();
-        communication.setType(Type.SKYPE);
-        communication.setIdentifier("identifier");
-
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
-        contact.getAddresses().add(address);
-        contact.getCommunications().add(communication);
+        Contact contact = GEN.makeContact();
         em.persist(contact);
 
         utx.commit();
@@ -115,48 +106,38 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        //create a customer with a contact, a company and one mandatorMetadata
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
+        //create a customer with a contact and one mandatorMetadata
+        Contact contact = GEN.makeContact();
 
-        Company company = new Company();
-        company.setName("company");
+        MandatorMetadata mm = GEN.makeMandatorMetadata();
 
-        MandatorMetadata mm = new MandatorMetadata("matchcode");
-
-        Customer c = new Customer();
+        Customer c = GEN.makeCustomer();
+        c.getContacts().clear();
         c.getContacts().add(contact);
-        c.getCompanies().add(company);
+
+        c.getMandatorMetadata().clear();
         c.getMandatorMetadata().add(mm);
+
         em.persist(c);
 
         utx.commit();
 
-        //update each contact,company and mandatorMetadata and check if it got updated correctly
-        Customer found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getContacts().size()).as("Not the correct amount of contacts on the customer").isEqualTo(1);
-        Contact foundContact = found.getContacts().get(0);
+        //update each contact and mandatorMetadata and check if it got updated correctly
+        Customer foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getContacts().size()).as("Not the correct amount of contacts on the customer").isEqualTo(1);
+        Contact foundContact = foundCustomer.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
         agent.update(foundContact);
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getContacts().get(0).getFirstName()).as("Update didn't work on address for customer").isEqualTo("newFirstName");
+        foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getContacts().get(0).getFirstName()).as("Update didn't work on address for customer").isEqualTo("newFirstName");
 
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getCompanies().size()).as("Not the correct amount of companies on the customer").isEqualTo(1);
-        Company foundCompany = found.getCompanies().get(0);
-        foundCompany.setName("newCompany");
-        agent.update(foundCompany);
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getCompanies().get(0).getName()).as("Update didn't work on company for customer").isEqualTo("newCompany");
-
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getMandatorMetadata().size()).as("Not the correct amount of mandatorMetadata on the customer").isEqualTo(1);
-        MandatorMetadata foundMandatorMetadata = found.getMandatorMetadata().get(0);
+        foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getMandatorMetadata().size()).as("Not the correct amount of mandatorMetadata on the customer").isEqualTo(1);
+        MandatorMetadata foundMandatorMetadata = foundCustomer.getMandatorMetadata().get(0);
         foundMandatorMetadata.setMandatorMatchcode("newMatchcode");
         agent.update(foundMandatorMetadata);
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getMandatorMetadata().get(0).getMandatorMatchcode()).as("Update didn't work on mandatorMetadata for customer").isEqualTo("newMatchcode");
+        foundCustomer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(foundCustomer.getMandatorMetadata().get(0).getMandatorMatchcode()).as("Update didn't work on mandatorMetadata for customer").isEqualTo("newMatchcode");
 
     }
 
@@ -168,53 +149,41 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
 
         utx.begin();
         em.joinTransaction();
+        Customer customer = GEN.makeCustomer();
+        customer.getContacts().clear();
 
-        // create a company with an address a communication and a contact
-        Address address = new Address();
-        address.setStreet("street");
-        address.setCity("city");
-        address.setZipCode("12345");
+        Company company = GEN.makeCompany();
+        em.merge(company);
+        Company findByIdEager = agent.findByIdEager(Company.class, 1l);
+        customer.getCompanies().add(findByIdEager);
 
-        Communication communication = new Communication();
-        communication.setType(Type.SKYPE);
-        communication.setIdentifier("identifier");
-
-        Contact contact = new Contact();
-        contact.setFirstName("firstName");
-        contact.setLastName("lastName");
-
-        //create a company
-        Company c = new Company();
-        c.setName("company");
-        c.getAddresses().add(address);
-        c.getCommunications().add(communication);
-        c.getContacts().add(contact);
-        em.persist(c);
+        em.merge(customer);
+        utx.commit();
 
         //update each address, communication and contact and check if it got updated correctly
-        Company found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the company").isEqualTo(1);
-        Address foundAddress = found.getAddresses().get(0);
+        Company foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getAddresses().size()).as("Not the correct amount of addresses on the company").isEqualTo(1);
+        Address foundAddress = foundCompany.getAddresses().get(0);
         foundAddress.setStreet("newStreet");
         agent.update(foundAddress);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getAddresses().get(0).getStreet()).as("Update didn't work on address for company").isEqualTo("newStreet");
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getAddresses().get(0).getStreet()).as("Update didn't work on address for company").isEqualTo("newStreet");
 
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
-        Communication foundCommunication = found.getCommunications().get(0);
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
+        Communication foundCommunication = foundCompany.getCommunications().get(0);
         foundCommunication.setIdentifier("newIdentifier");
         agent.update(foundCommunication);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getCommunications().get(0).getIdentifier()).as("Update didn't work on communication for company").isEqualTo("newIdentifier");
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getCommunications().get(0).getIdentifier()).as("Update didn't work on communication for company").isEqualTo("newIdentifier");
 
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);
-        Contact foundContact = found.getContacts().get(0);
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);
+        Contact foundContact = foundCompany.getContacts().get(0);
         foundContact.setFirstName("newFirstName");
         agent.update(foundContact);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getContacts().get(0).getFirstName()).as("Update didn't work on contact for company").isEqualTo("newFirstName");
+        foundCompany = agent.findByIdEager(Company.class, 1l);
+        assertThat(foundCompany.getContacts().get(0).getFirstName()).as("Update didn't work on contact for company").isEqualTo("newFirstName");
 
     }
 
