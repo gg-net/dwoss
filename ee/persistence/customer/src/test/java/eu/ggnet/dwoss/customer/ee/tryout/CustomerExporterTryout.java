@@ -33,7 +33,7 @@ public class CustomerExporterTryout {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         CustomerGenerator gen = new CustomerGenerator();
-        FileJacket fj = CustomerExporterOperation.toXls(IntStream.range(0, 40).mapToObj(i -> gen.makeOldCustomer()).collect(Collectors.toList()));
+        FileJacket fj = CustomerExporterOperation.toXls(IntStream.range(0, 40).mapToObj(i -> gen.makeCustomer()).collect(Collectors.toList()));
 
         Desktop.getDesktop().open(fj.toTemporaryFile());
         Thread.sleep(6000);

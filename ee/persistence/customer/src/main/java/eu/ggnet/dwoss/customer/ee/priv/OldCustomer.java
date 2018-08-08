@@ -40,6 +40,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @ToString
+@Deprecated
 public class OldCustomer implements Serializable {
 
     private static final String NO_WHITESPACE_AT_START_OR_END = "^[^\\s].*[^\\s]$";

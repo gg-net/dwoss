@@ -31,7 +31,6 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;

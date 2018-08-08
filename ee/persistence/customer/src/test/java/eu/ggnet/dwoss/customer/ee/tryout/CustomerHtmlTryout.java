@@ -34,8 +34,6 @@ import javafx.stage.Stage;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
 /**
@@ -51,7 +49,6 @@ public class CustomerHtmlTryout extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         CustomerGenerator gen = new CustomerGenerator();
-        Customer c1 = gen.makeOldCustomer();
 
         Customer c2 = gen.makeCustomer();
 
@@ -61,18 +58,12 @@ public class CustomerHtmlTryout extends Application {
                 .shippingCondition(ShippingCondition.DEALER_ONE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
 
-        String MATCHCODE = c1.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
-
-        OldCustomer c0 = ConverterUtil.convert(c1, MATCHCODE, defaults);
+        String MATCHCODE = c2.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
 
         WebView view = new WebView();
         view.getEngine().loadContent(Css.toHtml5WithStyle(
-                "<h1>OldCustomer.toHtml()</h1>"
-                + c0.toHtmlHighDetailed()
-                + "<hr /><h1>makeOldCustmer : Customer.toHtml(MATCHCODE,defaults)</h1>"
-                + c1.toHtml(MATCHCODE, defaults)
-                + "<hr /><h1>makeOldCustmer : Customer.toHtml()</h1>"
-                + c1.toHtml()
+                "<hr /><h1>makeCustmer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                + c2.toHtml(MATCHCODE, defaults)
                 + "<hr /><h1>makeCustmer : Customer.toHtml()</h1>"
                 + c2.toHtml()));
         primaryStage.setScene(new Scene(new BorderPane(view)));

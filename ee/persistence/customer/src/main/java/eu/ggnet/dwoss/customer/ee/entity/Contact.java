@@ -250,7 +250,6 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
 
     @Override
     public void fetchEager() {
-        System.out.println("Fetch Eager !!!!!!!!1111111elf");
         getAddresses().forEach(a -> a.getId());
         getCommunications().size();
     }

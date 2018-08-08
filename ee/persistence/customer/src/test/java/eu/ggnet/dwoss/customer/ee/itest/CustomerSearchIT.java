@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,7 +30,6 @@ import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.search.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -61,6 +61,7 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
     private SearchProvider searchProvider;
 
     @Test
+    @Ignore
     public void testLucenceSearch() throws Exception {
         OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
         OldCustomer c2 = new OldCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen", "Dünne Gasse 2", "22222", "Wolfsstaaad");

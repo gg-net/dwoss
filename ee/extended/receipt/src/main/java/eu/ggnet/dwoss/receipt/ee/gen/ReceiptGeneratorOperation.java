@@ -209,11 +209,21 @@ public class ReceiptGeneratorOperation {
         Stock stock = findOrMakeStock();
         TradeName contractor = new ArrayList<>(contractors.all()).get(R.nextInt(contractors.all().size()));
         Shipment shipment = new Shipment("TEST-SHIPMENT-" + R.nextInt(10), contractor, TradeName.ACER, Shipment.Status.OPENED);
+        L.info("Shipment {}", shipment.toString());
         stockEm.persist(shipment);
+
         StockTransaction transaction = stockTransactionEmo.requestRollInPrepared(stock.getId(), "SampleGenerator", "Rollin via makeUniqueUnit");
+        L.info("StockTransaction {}", transaction.toString());
+
         ProductSpec productSpec = makeProductSpec();
+        L.info("ProductSpec {}", productSpec.toString());
+
         Product product = uniqueUnitAgent.findById(Product.class, productSpec.getProductId());
+        L.info("Product {}", product.toString());
+
         UniqueUnit unit = unitGenerator.makeUniqueUnit(contractor, product);
+        L.info("UniqueUnit {}", unit.toString());
+
         unitProcessor.receipt(unit, product, shipment, transaction, ReceiptOperation.SALEABLE, "SampleGenerator", "Generator");
         stockTransactionProcessor.rollIn(Arrays.asList(transaction), "JUnit");
         return uniqueUnitAgent.findUnitByIdentifierEager(REFURBISHED_ID, unit.getRefurbishId());

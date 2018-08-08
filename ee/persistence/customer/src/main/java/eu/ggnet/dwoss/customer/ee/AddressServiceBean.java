@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import java.util.Optional;
+
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
@@ -23,13 +25,12 @@ import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.AddressType;
-
-import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 
 /**
  * Really necessary?
@@ -52,17 +53,30 @@ public class AddressServiceBean implements AddressService {
     @Inject
     private Event<AddressChange> adressChangeEvent;
 
-    @Override
-    public String defaultAddressLabel(long customerId, AddressType type) {
-        if ( type == INVOICE )
-            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toInvoiceAddress();
-        else
-            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toShippingAddress();
-    }
-
+//    @Override
+//    public String defaultAddressLabel(long customerId, AddressType type) {
+//        if ( type == INVOICE )
+//            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toInvoiceAddress();
+//        else
+//            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toShippingAddress();
+//    }
     @Override
     public void notifyAddressChange(AddressChange changeEvent) {
         adressChangeEvent.fire(changeEvent);
+    }
+
+    //TODO Olli fragen ob okay
+    @Override
+    public String defaultAddressLabel(long customerId, AddressType type) {
+        Customer customer = customerEao.findById(customerId);
+        Optional<AddressLabel> findAddressLable = customer.getAddressLabels()
+                .stream()
+                .filter(a -> a.getType() == type).findFirst();
+        if ( findAddressLable.isPresent() ) {
+            return findAddressLable.get().toLabel();
+        }
+
+        return null;
     }
 
 }

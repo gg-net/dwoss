@@ -353,7 +353,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      *
      * @return true for a Vaild Customer
      */
-    public boolean isValid() {      
+    public boolean isValid() {
         return getViolationMessage() == null;
     }
 
@@ -601,12 +601,13 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     @Override
     public void fetchEager() {
         getMandatorMetadata().size();
+        companies.size();
         companies.forEach(c -> {
             c.getCommunications().size();
             c.getAddresses().size();
             c.getContacts().size();
             c.getContacts().forEach(con -> {
-                con.getAddresses().size();
+                con.getAddresses().forEach(a -> a.getId());
                 con.getCommunications().size();
             });
         });

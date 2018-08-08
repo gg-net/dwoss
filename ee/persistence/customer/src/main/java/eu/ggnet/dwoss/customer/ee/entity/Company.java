@@ -260,8 +260,9 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
 
     @Override
     public void fetchEager() {
+        contacts.size();
         contacts.forEach(c -> {
-            c.getAddresses().size();
+            c.getAddresses().forEach(a -> a.getId());
             c.getCommunications().size();
         });
         communications.size();

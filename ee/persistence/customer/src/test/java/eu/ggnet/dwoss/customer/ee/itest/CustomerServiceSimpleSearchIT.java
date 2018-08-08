@@ -13,6 +13,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
     @Inject
     private CustomerEao eao;
 
+    @Ignore
     @Test
     public void testFind() {
         OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");

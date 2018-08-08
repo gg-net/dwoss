@@ -25,7 +25,7 @@ public class CustomerServiceStub implements CustomerService {
 
     public CustomerServiceStub() {
         CustomerGenerator gen = new CustomerGenerator();
-        c = gen.makeOldCustomer();
+        c = gen.makeCustomer();
     }
 
     @Override

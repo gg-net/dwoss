@@ -102,7 +102,6 @@ public class CustomerGenerator {
         return customer;
     }
 
-    
     /**
      * Generates a {@link Company}.
      * {@link Company#prefered} is never set.
@@ -112,10 +111,10 @@ public class CustomerGenerator {
     private Company makeCompany(Company company) {
         company.setLedger(R.nextInt(1000) + 1);
         company.setName(GEN.makeCompanyName());
-        Contact contact = makeContactWithId(30l, 10l, 20l);
+        Contact contact = makeContact();
         contact.getAddresses().clear();
         contact.getCommunications().clear();
-        
+
         company.getContacts().add(contact);
 
         company.getAddresses().add(makeAddress());
@@ -161,15 +160,15 @@ public class CustomerGenerator {
         return makeContact(new Contact(contactId), makeAddressWithId(addressId), makeCommunicationWithId(communicationId));
     }
 
-    private Contact makeContact(Contact c, Address address, Communication communication) {
-        Name n = GEN.makeName();
-        c.setFirstName(n.getFirst());
-        c.setLastName(n.getLast());
-        c.setSex(n.getGender().ordinal() == 1 ? FEMALE : MALE);
-        c.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        c.getCommunications().add(communication);
-        c.getAddresses().add(address);
-        return c;
+    private Contact makeContact(Contact contact, Address address, Communication communication) {
+        Name name = GEN.makeName();
+        contact.setFirstName(name.getFirst());
+        contact.setLastName(name.getLast());
+        contact.setSex(name.getGender().ordinal() == 1 ? FEMALE : MALE);
+        contact.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
+        contact.getCommunications().add(communication);
+        contact.getAddresses().add(address);
+        return contact;
     }
 
     /**
@@ -275,12 +274,14 @@ public class CustomerGenerator {
         return m;
     }
 
-    public Customer makeOldCustomer() {
+    @Deprecated
+    private Customer makeOldCustomer() {
         DefaultCustomerSalesdata salesdata = new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.ADVANCE_PAYMENT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L));
         return makeOldCustomer("GEN", salesdata);
     }
 
-    public Customer makeOldCustomer(String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
+    @Deprecated
+    private Customer makeOldCustomer(String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
         Name name = GEN.makeName();
         GeneratedAddress address = GEN.makeAddress();
         OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
@@ -310,14 +311,14 @@ public class CustomerGenerator {
         old.setHandynummer("+49 555 12344321");
         if ( R.nextInt(10) < 3 ) old.setFaxnummer("+49 88 123456789");
 
-        Customer c = new Customer();
-        ConverterUtil.mergeFromOld(old, c, mandatorMatchCode, defaults);
+        Customer customer = new Customer();
+        ConverterUtil.mergeFromOld(old, customer, mandatorMatchCode, defaults);
 
         MandatorMetadata makeMandatorMetadata = makeMandatorMetadata();
         makeMandatorMetadata.setMandatorMatchcode(mandatorMatchCode);
-        c.getMandatorMetadata().add(makeMandatorMetadata);
+        customer.getMandatorMetadata().add(makeMandatorMetadata);
 
-        return c;
+        return customer;
     }
 
 }

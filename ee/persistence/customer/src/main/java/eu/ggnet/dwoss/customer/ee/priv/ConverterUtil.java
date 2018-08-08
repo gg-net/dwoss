@@ -47,7 +47,9 @@ public class ConverterUtil {
      * @param mandatorMatchCode the mandator matchcode
      * @param defaults          the defaults
      * @return the converted old customer
+     * @deprecated use only customer any more.
      */
+    @Deprecated
     public static OldCustomer convert(Customer c, String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
         OldCustomer old = new OldCustomer();
         old.setId((int)c.getId());
