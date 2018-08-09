@@ -16,8 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ee.priv;
 
-import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -43,65 +42,87 @@ public class ConverterUtil {
     /**
      * Converts a customer to old customer.
      * <p>
-     * @param c                 the customer
+     * @param customer          the customer
      * @param mandatorMatchCode the mandator matchcode
      * @param defaults          the defaults
      * @return the converted old customer
      * @deprecated use only customer any more.
      */
+    
+    //TODO Olli fragen ob okay
     @Deprecated
-    public static OldCustomer convert(Customer c, String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
+    public static OldCustomer convert(Customer customer, String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
         OldCustomer old = new OldCustomer();
-        old.setId((int)c.getId());
-        old.setAnmerkung(c.getComment());
-        for (CustomerFlag flag : c.getFlags()) {
+        old.setId((int)customer.getId());
+        old.setAnmerkung(customer.getComment());
+        for (CustomerFlag flag : customer.getFlags()) {
             old.addFlag(flag);
         }
-        old.getAdditionalCustomerIds().putAll(c.getAdditionalCustomerIds());
-        old.setKeyAccounter(c.getKeyAccounter());
-        old.setSource(c.getSource());
-        if ( !c.getCompanies().isEmpty() ) {
-            Company company = c.getCompanies().get(0);
+        old.getAdditionalCustomerIds().putAll(customer.getAdditionalCustomerIds());
+        old.setKeyAccounter(customer.getKeyAccounter());
+        old.setSource(customer.getSource());
+        if ( customer.isBusiness() ) {
+            Company company = customer.getCompanies().get(0);
             old.setFirma(company.getName());
             old.setLedger(company.getLedger());
             old.setTaxId(company.getTaxId());
         }
-        if ( !c.getContacts().isEmpty() ) {
-            Contact contact = c.getContacts().get(0);
-            old.setVorname(contact.getFirstName());
-            old.setNachname(contact.getLastName());
-            if ( contact.getSex() != null )
-                switch (contact.getSex()) {
-                    case MALE:
-                        old.setTitel("Herr");
-                        break;
-                    case FEMALE:
-                        old.setTitel("Frau");
-                        break;
-                }
-            for (Communication com : contact.getCommunications()) {
-                set(old, com.getType(), com.getIdentifier());
-            }
-            for (Address address : contact.getAddresses()) {
-                switch (address.getPreferedType()) {
-                    case INVOICE:
-                        old.setREAdresse(address.getStreet());
-                        old.setREOrt(address.getCity());
-                        old.setREPlz(address.getZipCode());
-                        break;
-                    case SHIPPING:
-                        old.setLIAdresse(address.getStreet());
-                        old.setLIOrt(address.getCity());
-                        old.setLIPlz(address.getZipCode());
-                        break;
-                }
-            }
+        Contact contact = null;
+        if ( customer.isConsumer() ) {
+            contact = customer.getContacts().get(0);
+        } else {
+            contact = customer.getCompanies().get(0).getContacts().get(0);
         }
-        MandatorMetadata.MergedView metadata = new MandatorMetadata.MergedView(c.getMandatorMetadata(mandatorMatchCode), defaults);
+        old.setVorname(contact.getFirstName());
+        old.setNachname(contact.getLastName());
+        if ( contact.getSex() != null )
+            switch (contact.getSex()) {
+                case MALE:
+                    old.setTitel("Herr");
+                    break;
+                case FEMALE:
+                    old.setTitel("Frau");
+                    break;
+            }
+        for (Communication com : contact.getCommunications()) {
+            set(old, com.getType(), com.getIdentifier());
+        }
+
+        Address addressByInvoiceAddressLabel = null;
+
+        Optional<AddressLabel> findInvoiceAddressLable = customer.getAddressLabels()
+                .stream()
+                .filter(a -> a.getType() == INVOICE)
+                .findFirst();
+        if ( findInvoiceAddressLable.isPresent() ) {
+            addressByInvoiceAddressLabel = findInvoiceAddressLable.get().getAddress();
+            old.setREAdresse(addressByInvoiceAddressLabel.getStreet());
+            old.setREOrt(addressByInvoiceAddressLabel.getCity());
+            old.setREPlz(addressByInvoiceAddressLabel.getZipCode());
+        }
+
+        Optional<AddressLabel> findShippingAddressLable = customer.getAddressLabels()
+                .stream()
+                .filter(a -> a.getType() == SHIPPING)
+                .findFirst();
+        if ( findShippingAddressLable.isPresent() ) {
+            Address addressByShippingAddressLabel = findShippingAddressLable.get().getAddress();
+            old.setLIAdresse(addressByShippingAddressLabel.getStreet());
+            old.setLIOrt(addressByShippingAddressLabel.getCity());
+            old.setLIPlz(addressByShippingAddressLabel.getZipCode());
+        } else {
+            old.setLIAdresse(addressByInvoiceAddressLabel.getStreet());
+            old.setLIOrt(addressByInvoiceAddressLabel.getCity());
+            old.setLIPlz(addressByInvoiceAddressLabel.getZipCode());
+
+        }
+
+        MandatorMetadata.MergedView metadata = new MandatorMetadata.MergedView(customer.getMandatorMetadata(mandatorMatchCode), defaults);
         old.setAllowedSalesChannels(new HashSet<>(metadata.getAllowedSalesChannels()));
         old.setPaymentCondition(metadata.getPaymentCondition());
         old.setPaymentMethod(metadata.getPaymentMethod());
         old.setShippingCondition(metadata.getShippingCondition());
+
         return old;
     }
 

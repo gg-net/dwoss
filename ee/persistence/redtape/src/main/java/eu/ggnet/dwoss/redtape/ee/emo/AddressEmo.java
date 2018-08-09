@@ -41,9 +41,11 @@ public class AddressEmo {
      */
     public Address request(String searchAddress) {
         AddressEao addressEao = new AddressEao(em);
-
-        Address address = addressEao.findByDescription(searchAddress);
-
+        
+        Address address = null;
+        if (searchAddress != null)  {
+            address = addressEao.findByDescription(searchAddress);
+        }
         //persist address if nothing is found
         if ( address == null ) {
             address = new Address(searchAddress);

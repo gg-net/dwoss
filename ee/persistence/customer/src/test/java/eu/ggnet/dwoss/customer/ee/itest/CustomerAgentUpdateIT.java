@@ -145,18 +145,16 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
      * Test update for all supported entities on a company.
      */
     public void testUpdateOnCompany() throws Exception {
-
         utx.begin();
         em.joinTransaction();
         Customer customer = GEN.makeCustomer();
         customer.getContacts().clear();
 
         Company company = GEN.makeCompany();
-        em.merge(company);
-        Company findByIdEager = agent.findByIdEager(Company.class, 1l);
-        customer.getCompanies().add(findByIdEager);
+        em.persist(company);
+        customer.getCompanies().add(company);
 
-        em.merge(customer);
+        em.persist(customer);
         utx.commit();
 
         //update each address, communication and contact and check if it got updated correctly

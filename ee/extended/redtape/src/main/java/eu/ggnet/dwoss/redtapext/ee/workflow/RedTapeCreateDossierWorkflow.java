@@ -125,15 +125,17 @@ public class RedTapeCreateDossierWorkflow {
      * @return the Dossier.
      */
     Dossier createDossier(long customerId, boolean dispatch, DocumentType type, PaymentMethod paymentMethod, Directive directive, String arranger) {
+        L.info("Start createDossier");
         if ( specialSystemCustomers.get(customerId).map(x -> x != type).orElse(false) ) {
             throw new IllegalStateException(type + " is not allowed for Customer " + customerId);
         }
-
+        L.info("for Dossier use: PaymentMethode {} and dispatch {} and customerId {}", paymentMethod, dispatch, customerId);
         Dossier dos = new Dossier();
         dos.setPaymentMethod(paymentMethod);
         dos.setDispatch(dispatch);
         dos.setCustomerId(customerId);
 
+        L.info("for Document use: type {} and Directive {}", type, directive);
         Document doc = new Document();
         doc.setType(type);
         doc.setActive(true);
@@ -141,8 +143,13 @@ public class RedTapeCreateDossierWorkflow {
         doc.setHistory(new DocumentHistory(arranger, "Automatische Erstellung eines leeren Dokuments"));
 
         AddressEmo adEmo = new AddressEmo(redTapeEm);
-        doc.setInvoiceAddress(adEmo.request(addressService.defaultAddressLabel(customerId, AddressType.INVOICE)));
-        doc.setShippingAddress(adEmo.request(addressService.defaultAddressLabel(customerId, AddressType.SHIPPING)));
+        String defaultInvoiceAddressLabel = addressService.defaultAddressLabel(customerId, AddressType.INVOICE);
+        String defaultShippingAddressLabel = addressService.defaultAddressLabel(customerId, AddressType.SHIPPING);
+        L.info("defaultInvoiceAddressLabel " + defaultInvoiceAddressLabel);
+        L.info("defaultShippingAddressLabel " + defaultShippingAddressLabel);
+
+        doc.setInvoiceAddress(adEmo.request(defaultInvoiceAddressLabel));
+        doc.setShippingAddress(adEmo.request(defaultShippingAddressLabel));
         dos.add(doc);
 
         redTapeEm.persist(dos);
@@ -162,15 +169,18 @@ public class RedTapeCreateDossierWorkflow {
      * @return the Dossier.
      */
     public Dossier execute(long customerId, boolean dispatch, String arranger) {
+        L.info("Start execute Dossier in RedTapeCreateDossierWorkflow with customer id {} is dispatch {} and the arrager {}", customerId, dispatch, arranger);
         DocumentType type = DocumentType.ORDER;
         CustomerMetaData customer = customerService.asCustomerMetaData(customerId);
-        L.debug("Found Customer: {}", customer);
+        L.info("Found Customer: {}", customer);
         if ( customer.getFlags().contains(SYSTEM_CUSTOMER) ) {
             type = specialSystemCustomers.get(customerId).orElse(BLOCK);
-            L.debug("CustomerId {} is SystemCustomer, using DocumentType: {}, source {}", customerId, type, specialSystemCustomers);
+            L.info("CustomerId {} is SystemCustomer, using DocumentType: {}, source {}", customerId, type, specialSystemCustomers);
         }
         PaymentMethod paymentMethod = selectPaymentMethod(dispatch, customer);
+        L.info("PaymentMethod {} in execute Dossier in RedTapeCreateDossierWorkflow with dispatch {} and customer {} ", paymentMethod, dispatch, customer);
         Directive directive = primeDirective(type, paymentMethod, customer.getFlags(), dispatch);
+        L.info("Directive {} in execute Dossier in RedTapeCreateDossierWorkflow ", directive);
         return createDossier(customerId, dispatch, type, paymentMethod, directive, arranger);
     }
 }

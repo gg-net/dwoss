@@ -38,6 +38,10 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
+
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
  * CustomerService implementation for {@link OldCustomer}.
@@ -65,13 +69,13 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public UiCustomer asUiCustomer(long customerId) {
-        return asUiCustomer(convert(customerEao.findById(customerId)));
+        return asUiCustomer(customerEao.findById(customerId));
     }
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
         return customerEao.find(search).stream().map((customer) -> {
-            return asUiCustomer(convert(customer));
+            return asUiCustomer(customer);
         }).collect(Collectors.toList());
     }
 
@@ -80,14 +84,14 @@ public class CustomerServiceBean implements CustomerService {
         L.debug("asUiCustomers called with company={},firstName={},lastName={},email={},wildcard={}", company, firstName, lastName, email, appendWildcard);
         List<UiCustomer> customers = new ArrayList<>();
         for (Customer customer : customerEao.find(company, firstName, lastName, email, appendWildcard)) {
-            customers.add(asUiCustomer(convert(customer)));
+            customers.add(asUiCustomer(customer));
         }
         return customers;
     }
 
     @Override
     public CustomerMetaData asCustomerMetaData(long customerId) {
-        return asCustomerMetaData(convert(customerEao.findById(customerId)));
+        return asCustomerMetaData(customerEao.findById(customerId));
     }
 
     @Override
@@ -108,37 +112,95 @@ public class CustomerServiceBean implements CustomerService {
     public List<CustomerMetaData> allAsCustomerMetaData() {
         List<CustomerMetaData> customers = new ArrayList<>();
         for (Customer customer : customerEao.findAll()) {
-            customers.add(asCustomerMetaData(convert(customer)));
+            customers.add(asCustomerMetaData(customer));
         }
 
         return customers;
     }
 
-    private OldCustomer convert(Customer c) {
-        return ConverterUtil.convert(c, mandator.getMatchCode(), salesData);
+    private UiCustomer asUiCustomer(Customer customer) {
+
+        if ( customer.isBusiness() ) {
+
+            String email = "";
+            Optional<Communication> findEMAIL = customer.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).findFirst();
+            if ( findEMAIL.isPresent() ) {
+                email = findEMAIL.get().getIdentifier();
+            }
+            return new UiCustomer(
+                    customer.getId(),
+                    customer.getCompanies().get(0).getContacts().get(0).getTitle() != null ? customer.getCompanies().get(0).getContacts().get(0).getTitle() + " " : "",
+                    customer.getCompanies().get(0).getContacts().get(0).getFirstName(),
+                    customer.getCompanies().get(0).getContacts().get(0).getLastName(),
+                    customer.getCompanies().get(0).getName(),
+                    customer.toString(),
+                    email,
+                    customer.getCompanies().get(0).getLedger());
+
+        } else {
+            String email = "";
+            Optional<Communication> findEMAIL = customer.getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).findFirst();
+            if ( findEMAIL.isPresent() ) {
+                email = findEMAIL.get().getIdentifier();
+            }
+            return new UiCustomer(
+                    customer.getId(),
+                    customer.getContacts().get(0).getTitle() != null ? customer.getContacts().get(0).getTitle() + " " : "",
+                    customer.getContacts().get(0).getFirstName(),
+                    customer.getContacts().get(0).getLastName(),
+                    "",
+                    customer.toString(),
+                    email,
+                    0);
+        }
+
+        //TODO Olli fragen ob okay        
+//        return new UiCustomer(
+//                old.getId(),
+//                old.getTitel() != null ? old.getTitel() + " " : "",
+//                old.getVorname(),
+//                old.getNachname(),
+//                old.getFirma(),
+//                old.toHtmlSimple(),
+//                old.getEmail(),
+//                old.getLedger());
     }
 
-    private UiCustomer asUiCustomer(OldCustomer old) {
-        return new UiCustomer(
-                old.getId(),
-                old.getTitel() != null ? old.getTitel() + " " : "",
-                old.getVorname(),
-                old.getNachname(),
-                old.getFirma(),
-                old.toHtmlSimple(),
-                old.getEmail(),
-                old.getLedger());
-    }
+    private CustomerMetaData asCustomerMetaData(Customer customer) {
+        String email = "";
+        if ( customer.isBusiness() ) {
+            email = customer.getCompanies().get(0)
+                    .getCommunications().stream()
+                    .filter(c -> c.getType() == EMAIL)
+                    .map(Communication::getIdentifier)
+                    .findFirst()
+                    .orElse("no email");
+        } else {
+            email = customer.getContacts().get(0)
+                    .getCommunications().stream()
+                    .filter(c -> c.getType() == EMAIL)
+                    .map(Communication::getIdentifier)
+                    .findFirst().orElse("no email");
+        }
 
-    private CustomerMetaData asCustomerMetaData(OldCustomer old) {
         return new CustomerMetaData(
-                old.getId(),
-                old.getEmail(),
-                old.getPaymentCondition(),
-                old.getPaymentMethod(),
-                old.getShippingCondition(),
-                old.getFlags(),
-                old.getAllowedSalesChannels());
+                customer.getId(),
+                email,
+                customer.getMandatorMetadata().get(0).getPaymentCondition(),
+                customer.getMandatorMetadata().get(0).getPaymentMethod(),
+                customer.getMandatorMetadata().get(0).getShippingCondition(),
+                customer.getFlags(),
+                customer.getMandatorMetadata().get(0).getAllowedSalesChannels()
+        );
+        //TODO Olli fragen ob okay
+//        return new CustomerMetaData(
+//                old.getId(),
+//                old.getEmail(),
+//                old.getPaymentCondition(),
+//                old.getPaymentMethod(),
+//                old.getShippingCondition(),
+//                old.getFlags(),
+//                old.getAllowedSalesChannels());
     }
 
     @Override

@@ -21,11 +21,11 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
  */
 public class CustomerServiceStub implements CustomerService {
 
-    private eu.ggnet.dwoss.customer.ee.entity.Customer c;
+    private eu.ggnet.dwoss.customer.ee.entity.Customer customer;
 
     public CustomerServiceStub() {
         CustomerGenerator gen = new CustomerGenerator();
-        c = gen.makeCustomer();
+        customer = gen.makeCustomer();
     }
 
     @Override
@@ -50,7 +50,9 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public String asHtmlHighDetailed(long id) {
-        return ConverterUtil.convert(c, "BLA", new DefaultCustomerSalesdata(ShippingCondition.DEALER_ONE, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L))).toHtmlHighDetailed();
+        //TODO Olli fragen ob okay
+//return ConverterUtil.convert(customer, "BLA", new DefaultCustomerSalesdata(ShippingCondition.DEALER_ONE, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L))).toHtmlHighDetailed();
+        return customer.toHtml();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public String asNewHtmlHighDetailed(long id) {
-        return c.toHtml();
+        return customer.toHtml();
     }
 
 }

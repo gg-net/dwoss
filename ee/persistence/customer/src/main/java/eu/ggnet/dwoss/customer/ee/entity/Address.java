@@ -136,4 +136,8 @@ public class Address implements Serializable {
                 .append(" ").append(city).toString();
     }
 
+    public void get(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

@@ -71,12 +71,16 @@ public class AddressServiceBean implements AddressService {
         Customer customer = customerEao.findById(customerId);
         Optional<AddressLabel> findAddressLable = customer.getAddressLabels()
                 .stream()
-                .filter(a -> a.getType() == type).findFirst();
+                .filter(a -> a.getType() == type)
+                .findFirst();
         if ( findAddressLable.isPresent() ) {
             return findAddressLable.get().toLabel();
         }
 
-        return null;
+        return customer.getAddressLabels()
+                .stream()
+                .findAny().get()
+                .toLabel();
     }
 
 }

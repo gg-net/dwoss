@@ -101,7 +101,7 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
         assertThat(su1).describedAs("StockUnit of generated UniqueUnit").isNotNull();
         assertThat(su1.getStock()).describedAs("Stock of StockUnit of generated UniqueUnit").isNotNull();
         int stockIdOfUU1 = su1.getStock().getId();
-
+        System.out.println("customerId in testCreditMemoReportOperation " + customerId);
         Dossier dos = redTapeWorker.create(customerId, true, "Me");
         Document doc = dos.getActiveDocuments(DocumentType.ORDER).get(0);
         assertThat(doc).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos.toMultiLine()).isNotNull();

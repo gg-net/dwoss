@@ -145,13 +145,11 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         customer.getContacts().clear();
 
         Company company = GEN.makeCompany();
-        em.merge(company);
-        Company findByIdEager = agent.findByIdEager(Company.class, 1l);
-        customer.getCompanies().add(findByIdEager);
+        em.persist(company);
+        customer.getCompanies().add(company);
 
-        em.merge(customer);
+        em.persist(customer);
         utx.commit();
-
 
         //delete each address, communication and contact and check if it got deleted correctly
         Company foundCompany = agent.findByIdEager(Company.class, 1l);

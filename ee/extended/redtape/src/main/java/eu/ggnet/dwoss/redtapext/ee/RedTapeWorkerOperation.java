@@ -135,8 +135,11 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      */
     @Override
     public Dossier create(long customerId, boolean dispatch, String arranger) {
+        L.info("Start create Dossier in RedTapeWorkerOperation with customer id {} is dispatch {} and the arrager {}",customerId, dispatch, arranger);
         Dossier createdDos = createDossierWorkflow.execute(customerId, dispatch, arranger);
+        L.info(createdDos.toString());
         redTapeEm.detach(createdDos);
+        
         return createdDos;
     }
 
@@ -177,6 +180,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     @Override
     public Addresses requestAdressesByCustomer(long customerId) {
         AddressEmo addressEmo = new AddressEmo(redTapeEm);
+        
         Address invoice = addressEmo.request(addressService.defaultAddressLabel(customerId, AddressType.INVOICE));
         Address shipping = addressEmo.request(addressService.defaultAddressLabel(customerId, AddressType.SHIPPING));
         return new Addresses(invoice, shipping);

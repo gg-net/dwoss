@@ -208,6 +208,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
 
     private void changeInvoiceAddress(Document doc) {
         cgo.scrambleAddress(customerId, AddressType.INVOICE);
+
         Addresses addresses = redTapeWorker.requestAdressesByCustomer(customerId);
         doc.setInvoiceAddress(addresses.getInvoice());
     }

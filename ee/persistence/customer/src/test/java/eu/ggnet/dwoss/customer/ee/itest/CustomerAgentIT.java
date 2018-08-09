@@ -18,26 +18,14 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 
 import javax.ejb.EJB;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
-import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 
-import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidCompany;
-import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidContact;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -49,89 +37,6 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @EJB
     private CustomerAgent customerAgent;
-
-    @Inject
-    @Customers
-    private EntityManager em;
-
-    @Inject
-    UserTransaction utx;
-    
-    @Inject
-    private CustomerGenerator GEN;
-
-
-    public static Communication makeValidCommunication() {
-        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
-
-        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
-        return validCommunication;
-    }
-
-    public static Communication makeValidCommunicationMobile() {
-        Communication validCommunication = new Communication(Type.MOBILE, "0174 123456789");
-
-        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
-        return validCommunication;
-    }
-
-    public static Communication makeValidCommunicationLandline() {
-        Communication validCommunication = new Communication(Type.PHONE, "040 123456789");
-
-        assertThat(validCommunication.getViolationMessage()).as("valid Communication").isNull();
-        return validCommunication;
-    }
-
-    public static Address makeValidAddress() {
-        Address validAddress = new Address();
-        validAddress.setCity("Munich");
-        validAddress.setCountry(Country.GERMANY);
-        validAddress.setStreet("Straße");
-        validAddress.setZipCode("123456");
-
-        assertThat(validAddress.getViolationMessage()).as("valid Address").isNull();
-        return validAddress;
-    }
-
-    public static AddressLabel makeValidAddressLabel() {
-        AddressLabel validAddressLabel = new AddressLabel(makeValidCompany(), makeValidContact(), makeValidAddress(), AddressType.INVOICE);
-
-        assertThat(validAddressLabel.getViolationMessage()).as("valid validAddressLabel").isNull();
-        return validAddressLabel;
-    }
-
-    public static Customer makeValidBusinessCustomer() {
-        Address address = makeValidAddress();
-        assertThat(address.getViolationMessage()).as("address does not violate any rule").isNull();
-
-        Company company = new Company("Musterfirma", 0, true, "1203223");
-        company.getAddresses().add(address);
-        assertThat(company.getViolationMessage()).as("company does not violate any rule").isNull();
-
-        Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
-        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
-        validContact.getCommunications().add(validCommunication);
-        validContact.getAddresses().add(makeValidAddress());
-        assertThat(validContact.getViolationMessage()).as("valid Contact").isNull();
-        company.getContacts().add(validContact);
-
-        Customer customer = new Customer();
-        customer.getCompanies().add(company);
-        customer.getAddressLabels().add(makeValidAddressLabel());
-
-        assertThat(customer.getViolationMessage()).overridingErrorMessage("Customer is not valid because :", customer.getViolationMessage()).as("customer does not violate any rule").isNull();
-        assertThat(customer.isSimple()).overridingErrorMessage("Customer is not simple, because: " + customer.getSimpleViolationMessage()).isTrue();
-        assertThat(customer.isBusiness()).as("customer is a business customer").isTrue();
-        assertThat(customer.isValid()).as("customer is a simple valid business customer").isTrue();
-
-        return customer;
-    }
-
-    public Customer makeValidConsumer() {
-        return GEN.makeCustomer();
-    }
-
-   
 
     @Test
     public void testFindCustomerAsMandatorHtml() {
