@@ -49,6 +49,7 @@ public class RedTapeAddressOperationIT extends ArquillianProjectArchive {
         assertEquals(doc.getInvoiceAddress(), redTapeWorker.requestAdressesByCustomer(customerId).getInvoice());
 
         //change adress and assert the changes
+        //TODO CONVERTERUTIL AAAAAHHHHHH
         cgo.scrambleAddress(customerId, AddressType.INVOICE);
         assertFalse(doc.getInvoiceAddress().equals(redTapeWorker.requestAdressesByCustomer(customerId).getInvoice()));
 

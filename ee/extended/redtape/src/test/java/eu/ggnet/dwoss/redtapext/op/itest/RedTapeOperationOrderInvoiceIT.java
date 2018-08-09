@@ -171,8 +171,9 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
         assertEquals("Ammount of Posistions", 7, doc1.getPositions().size());
 
         //address setting test
-        assertFalse(doc1.getInvoiceAddress().equals(doc1.getShippingAddress()));
-
+        //invoice address and shipping address of a document can be the same
+        //if the customer got no shipping address the invoice address gets taken
+//        assertFalse(doc1.getInvoiceAddress().equals(doc1.getShippingAddress()));
         //Test update with document changes
         Position p8 = Position.builder().amount(1).type(PositionType.SERVICE).price(50.).tax(1.).name("Position 8").description("Position from update2").build();
         doc1.append(p8);
@@ -370,7 +371,6 @@ public class RedTapeOperationOrderInvoiceIT extends ArquillianProjectArchive {
 
         Document doc2 = dos2.getActiveDocuments(DocumentType.ORDER).get(0);
         assertThat(doc2).overridingErrorMessage("Expected active document Order, got null. Dossier: " + dos2.toMultiLine()).isNotNull();
-
 
         doc2.add(Document.Condition.CONFIRMED);
         doc2.add(Document.Condition.PAID);
