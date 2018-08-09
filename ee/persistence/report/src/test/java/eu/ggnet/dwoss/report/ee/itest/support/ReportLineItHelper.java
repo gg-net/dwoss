@@ -57,7 +57,7 @@ public class ReportLineItHelper {
         return r;
     }
 
-    public final static Date date(int year, int month, int day) {
+    public static Date date(int year, int month, int day) {
         return Date.from(of(year, month, day).atStartOfDay(systemDefault()).toInstant());
     }
 
