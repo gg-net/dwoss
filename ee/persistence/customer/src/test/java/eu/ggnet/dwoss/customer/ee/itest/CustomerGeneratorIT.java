@@ -11,11 +11,11 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 import eu.ggnet.dwoss.mandator.api.value.*;
@@ -94,5 +94,16 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
     public void testMakeSpecialCustomers() {
         SpecialSystemCustomers makeSpecialCustomers = genOp.makeSpecialCustomers(types);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
+    }
+    
+    @Test
+    public void testScrambleAddress(){
+        genOp.makeCustomers(25);
+        Customer customerFormTheDb = eao.findById(1l);
+        assertThat(customerFormTheDb.isValid()).as("not a valid Customer").isTrue();        
+        
+        genOp.scrambleAddress(1, AddressType.INVOICE);
+        Customer customerFormTheDbAfterScrambleAddress = eao.findById(1l);
+        assertThat(customerFormTheDbAfterScrambleAddress.isValid()).as("not a valid Customer").isTrue(); 
     }
 }

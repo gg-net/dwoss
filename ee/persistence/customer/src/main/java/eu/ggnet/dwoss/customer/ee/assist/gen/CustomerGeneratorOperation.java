@@ -42,14 +42,10 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.util.gen.GeneratedAddress;
 import eu.ggnet.dwoss.util.gen.NameGenerator;
 
-import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
 /**
@@ -290,18 +286,40 @@ public class CustomerGeneratorOperation {
     @Deprecated
     public void scrambleAddress(long customerId, AddressType type) {
         Customer customer = em.find(Customer.class, customerId);
-        OldCustomer sc = ConverterUtil.convert(customer, mandator.getMatchCode(), defaults);
-        GeneratedAddress newAddress = GEN.makeAddress();
-        if ( type == INVOICE ) {
-            sc.setREAdresse(newAddress.getStreet());
-            sc.setREOrt(newAddress.getTown());
-            sc.setREPlz(newAddress.getPostalCode());
-        } else {
-            sc.setLIAdresse(newAddress.getStreet());
-            sc.setLIOrt(newAddress.getTown());
-            sc.setLIPlz(newAddress.getPostalCode());
+        Address newGeneratedAddress = CGEN.makeAddress();
+        Optional<AddressLabel> findAddressLabel = customer.getAddressLabels().stream()
+                .filter(a -> a.getType() == type)
+                .findFirst();
+        if(findAddressLabel.isPresent()){
+            findAddressLabel.get().setAddress(newGeneratedAddress);            
+        }else{
+            //Generate a AddressLabel with this type if not exist.
+            AddressLabel al = null;
+            Contact contact = null;
+            if(customer.isBusiness()){
+                contact = customer.getCompanies().get(0).getContacts().get(0);
+            }else{
+                contact = customer.getContacts().get(0);
+            }
+            
+           al =  new AddressLabel(contact, newGeneratedAddress, type);
+           customer.getAddressLabels().add(al);
         }
-        ConverterUtil.mergeFromOld(sc, customer, mandator.getMatchCode(), defaults);
+         em.persist(customer);
+        
+//        Customer customer = em.find(Customer.class, customerId);
+//        OldCustomer sc = ConverterUtil.convert(customer, mandator.getMatchCode(), defaults);
+//        GeneratedAddress newAddress = GEN.makeAddress();
+//        if ( type == INVOICE ) {
+//            sc.setREAdresse(newAddress.getStreet());
+//            sc.setREOrt(newAddress.getTown());
+//            sc.setREPlz(newAddress.getPostalCode());
+//        } else {
+//            sc.setLIAdresse(newAddress.getStreet());
+//            sc.setLIOrt(newAddress.getTown());
+//            sc.setLIPlz(newAddress.getPostalCode());
+//        }
+//        ConverterUtil.mergeFromOld(sc, customer, mandator.getMatchCode(), defaults);
     }
 
 }
