@@ -199,10 +199,14 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
 
-        else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class )
+        //TODO: Address detached Entity while creating
+        else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class ) {
+            long id = ((AddressLabel)raw).getAddress().getId();
+            Address addressFromDb = findByIdEager(Address.class, id);
+            ((AddressLabel)raw).setAddress(addressFromDb);
             ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
 
-        else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
+        } else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
             ((Customer)rootElement).getCompanies().add((Company)raw);
 
         else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) )

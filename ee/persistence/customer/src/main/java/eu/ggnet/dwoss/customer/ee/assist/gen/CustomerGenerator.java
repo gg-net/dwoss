@@ -228,8 +228,16 @@ public class CustomerGenerator {
      * @return a generated {@link AddressLabel}.
      */
     public AddressLabel makeInVoiceAddressLabel() {
-        AddressLabel a = new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.INVOICE);
-        return a;
+        return new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.INVOICE);
+    }
+
+    /**
+     * Generates a non persisted shipping {@link AddressLabel}.
+     * <p>
+     * @return a generated {@link AddressLabel}.
+     */
+    public AddressLabel makeShippingAddressLabel() {
+        return new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.SHIPPING);
     }
 
     /**

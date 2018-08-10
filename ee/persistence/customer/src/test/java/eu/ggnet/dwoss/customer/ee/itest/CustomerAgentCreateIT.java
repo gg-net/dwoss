@@ -76,7 +76,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        //create a contact 
+        //create a contact
         Contact contact = GEN.makeContact();
         em.persist(contact);
 
@@ -126,7 +126,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        //create a contact 
+        //create a contact
         Contact contact = GEN.makeContact();
         em.persist(contact);
 
@@ -195,11 +195,11 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         communication.setIdentifier("identifier");
 
         //create the communication on the company and check if it got added
-        Company found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getCommunications().size()).as("The customer should have no communications").isLessThanOrEqualTo(5);
+        Company companyFromDb = agent.findByIdEager(Company.class, 1l);
+        assertThat(companyFromDb.getCommunications().size()).as("The customer should have no communications").isLessThanOrEqualTo(5);
         agent.create(new Root(Company.class, 1l), communication);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getCommunications().size()).as("Not the correct amount of communications on the Customer").isGreaterThan(1);
+        companyFromDb = agent.findByIdEager(Company.class, 1l);
+        assertThat(companyFromDb.getCommunications().size()).as("Not the correct amount of communications on the Customer").isGreaterThan(1);
 
         //address that gets cerated on the company
         Address address = new Address();
@@ -208,11 +208,11 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         address.setZipCode("12345");
 
         //create the address in the company and check if it got added
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getAddresses().size()).as("The customer should have no addresses").isGreaterThanOrEqualTo(1);
+        companyFromDb = agent.findByIdEager(Company.class, 1l);
+        assertThat(companyFromDb.getAddresses().size()).as("The customer should have no addresses").isGreaterThanOrEqualTo(1);
         agent.create(new Root(Company.class, 1l), address);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getAddresses().size()).as("Not the correct amount of addresses on the Customer").isGreaterThanOrEqualTo(1);
+        companyFromDb = agent.findByIdEager(Company.class, 1l);
+        assertThat(companyFromDb.getAddresses().size()).as("Not the correct amount of addresses on the Customer").isGreaterThanOrEqualTo(1);
 
         //contact that gets created in the company
         Contact contact = new Contact();
@@ -220,10 +220,34 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         contact.setLastName("lastName");
 
         //create the contact in the comapny and check if it got added
-        assertThat(found.getContacts().size()).as("The customer should have no contacts").isGreaterThanOrEqualTo(0);
+        assertThat(companyFromDb.getContacts().size()).as("The customer should have no contacts").isGreaterThanOrEqualTo(0);
         agent.create(new Root(Company.class, 1l), contact);
-        found = agent.findByIdEager(Company.class, 1l);
-        assertThat(found.getContacts().size()).as("Not the correct amount of contacts on the Customer").isGreaterThanOrEqualTo(1);
+        companyFromDb = agent.findByIdEager(Company.class, 1l);
+        assertThat(companyFromDb.getContacts().size()).as("Not the correct amount of contacts on the Customer").isGreaterThanOrEqualTo(1);
+
+    }
+
+    @Test
+    public void testCreateOnAddressLabel() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+        Customer customer = GEN.makeCustomer();
+        Address address = GEN.makeAddress();
+        customer.getContacts().get(0).getAddresses().add(address);
+        em.persist(customer);
+        utx.commit();
+
+        Customer customerFromTheDb = agent.findByIdEager(Customer.class, 1l);
+
+        Address addressesFromtheCustomerOutOfTheDb = customerFromTheDb.getContacts().get(1).getAddresses().get(0);
+
+        AddressLabel makeShippingAddressLabel = GEN.makeShippingAddressLabel();
+        makeShippingAddressLabel.setAddress(addressesFromtheCustomerOutOfTheDb);
+
+        agent.create(new Root(Customer.class, 1l), makeShippingAddressLabel);
+
+        Customer customerFormDb = agent.findByIdEager(Customer.class, 1l);
+        assertThat(customerFormDb.getAddressLabels().size()).as("Shipping AddressLable is missing").isEqualTo(2);
 
     }
 
