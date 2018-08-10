@@ -290,23 +290,23 @@ public class CustomerGeneratorOperation {
         Optional<AddressLabel> findAddressLabel = customer.getAddressLabels().stream()
                 .filter(a -> a.getType() == type)
                 .findFirst();
-        if(findAddressLabel.isPresent()){
-            findAddressLabel.get().setAddress(newGeneratedAddress);            
-        }else{
+        if ( findAddressLabel.isPresent() ) {
+            findAddressLabel.get().setAddress(newGeneratedAddress);
+        } else {
             //Generate a AddressLabel with this type if not exist.
             AddressLabel al = null;
             Contact contact = null;
-            if(customer.isBusiness()){
+            if ( customer.isBusiness() ) {
                 contact = customer.getCompanies().get(0).getContacts().get(0);
-            }else{
+            } else {
                 contact = customer.getContacts().get(0);
             }
-            
-           al =  new AddressLabel(contact, newGeneratedAddress, type);
-           customer.getAddressLabels().add(al);
+
+            al = new AddressLabel(contact, newGeneratedAddress, type);
+            customer.getAddressLabels().add(al);
         }
-         em.persist(customer);
-        
+        em.merge(customer);
+
 //        Customer customer = em.find(Customer.class, customerId);
 //        OldCustomer sc = ConverterUtil.convert(customer, mandator.getMatchCode(), defaults);
 //        GeneratedAddress newAddress = GEN.makeAddress();

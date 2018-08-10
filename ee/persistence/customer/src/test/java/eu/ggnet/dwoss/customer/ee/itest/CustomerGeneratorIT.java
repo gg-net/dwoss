@@ -2,6 +2,7 @@ package eu.ggnet.dwoss.customer.ee.itest;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -12,13 +13,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
-import eu.ggnet.dwoss.mandator.api.value.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,6 +42,9 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
 
     @Inject
     private CustomerEao eao;
+
+    @EJB
+    private CustomerAgent agent;
 
     @After
     public void teardown() throws Exception {
@@ -67,43 +71,43 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
     @Test
     public void testMakeReceiptCustomers() {
         //ReceiptCustomers are Customer where ReceiptOperation are backed By Customer
-        ReceiptCustomers makeReceiptCustomers = genOp.makeReceiptCustomers(contractors);
+        genOp.makeReceiptCustomers(contractors);
 
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(6);
     }
 
     @Test
     public void testMakeRepaymentCustomers() {
-        RepaymentCustomers makeRepaymentCustomers = genOp.makeRepaymentCustomers(contractors);
+        genOp.makeRepaymentCustomers(contractors);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeScrapCustomers() {
-        ScrapCustomers makeScrapCustomers = genOp.makeScrapCustomers(contractors);
+        genOp.makeScrapCustomers(contractors);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeDeleteCustomers() {
-        DeleteCustomers makeDeleteCustomers = genOp.makeDeleteCustomers(contractors);
+        genOp.makeDeleteCustomers(contractors);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeSpecialCustomers() {
-        SpecialSystemCustomers makeSpecialCustomers = genOp.makeSpecialCustomers(types);
+        genOp.makeSpecialCustomers(types);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
-    
+
     @Test
-    public void testScrambleAddress(){
+    public void testScrambleAddress() {
         genOp.makeCustomers(25);
-        Customer customerFormTheDb = eao.findById(1l);
-        assertThat(customerFormTheDb.isValid()).as("not a valid Customer").isTrue();        
-        
+        Customer customerFormTheDb = agent.findByIdEager(Customer.class, 1l);
+        assertThat(customerFormTheDb.isValid()).as("not a valid Customer").isTrue();
+
         genOp.scrambleAddress(1, AddressType.INVOICE);
-        Customer customerFormTheDbAfterScrambleAddress = eao.findById(1l);
-        assertThat(customerFormTheDbAfterScrambleAddress.isValid()).as("not a valid Customer").isTrue(); 
+        Customer customerFormTheDbAfterScrambleAddress = agent.findByIdEager(Customer.class, 1l);
+        assertThat(customerFormTheDbAfterScrambleAddress.isValid()).as("not a valid Customer").isTrue();
     }
 }

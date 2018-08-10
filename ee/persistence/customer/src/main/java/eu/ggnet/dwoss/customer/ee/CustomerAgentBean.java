@@ -186,7 +186,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return Optional.ofNullable(customerEao.findById(id)).map(Customer::toHtml).orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
-    @AutoLogger
+//    @AutoLogger
     @Override
     /**
      * Create a raw object on given root. If the root element is not supported or not found by this method an IllegalArgumentException gets thrown.
@@ -194,7 +194,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * Both root and raw are not allowed to be null.
      */
     public void create(@NonNull Root root, @NonNull Object raw) {
-        Object rootElement = em.find(root.getClazz(), root.getId());
+        Object rootElement = findByIdEager(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
@@ -226,7 +226,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * Both root and raw are not allowed to be null.
      */
     public void delete(@NonNull Root root, @NonNull Object raw) {
-        Object rootElement = em.find(root.getClazz(), root.getId());
+        Object rootElement = findByIdEager(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
             ((AddressStash)rootElement).getAddresses().remove((Address)raw);

@@ -42,13 +42,11 @@ public class CustomerConnectorFascade {
     public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
 
-        //
         if ( invoiceLabel.getId() < 1l ) {
             agent.create(new Root(Customer.class, customerId), invoiceLabel);
         } else {
             agent.update(invoiceLabel);
         }
-        agent.update(invoiceLabel);
         if ( shippingLabel.isPresent() ) {
             if ( shippingLabel.get().getId() < 1l ) {
                 agent.create(new Root(Customer.class, customerId), shippingLabel.get());
