@@ -194,18 +194,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * Both root and raw are not allowed to be null.
      */
     public void create(@NonNull Root root, @NonNull Object raw) {
-        Object rootElement = findByIdEager(root.getClazz(), root.getId());
+        Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
 
         //TODO: Address detached Entity while creating
         else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class ) {
-            long id = ((AddressLabel)raw).getAddress().getId();
-            Address addressFromDb = findByIdEager(Address.class, id);
-            ((AddressLabel)raw).setAddress(addressFromDb);
-            ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
-
+            AddressLabel al = (AddressLabel)raw;
+            Customer c = (Customer)rootElement;
+            Address add = findById(Address.class, al.getAddress().getId());
+            Company comp = al.getCompany() == null ? null : findById(Company.class, al.getCompany().getId());
+            Contact cont = al.getContact() == null ? null : findById(Contact.class, al.getContact().getId());
+            al.setCompany(comp);
+            al.setContact(cont);
+            al.setAddress(add);
+            al.setCustomer(c);
         } else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
             ((Customer)rootElement).getCompanies().add((Company)raw);
 
