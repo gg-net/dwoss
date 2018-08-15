@@ -51,8 +51,6 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
 
     @Test
     public void testPersistence() throws Exception {
-        CustomerEao eao = new CustomerEao(em);
-
         utx.begin();
         em.joinTransaction();
 

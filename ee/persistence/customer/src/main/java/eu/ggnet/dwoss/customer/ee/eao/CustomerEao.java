@@ -144,10 +144,9 @@ public class CustomerEao extends AbstractEao<Customer> {
             }
             if ( !isBlank(lastName) ) {
                 BooleanExpression second = contact.lastName.lower().like(W.trim(lastName));
-                if ( on != null ){
+                if ( on != null ) {
                     on = on.and(second);
-                }
-                else{
+                } else {
                     on = second;
                 }
             }
@@ -273,12 +272,18 @@ public class CustomerEao extends AbstractEao<Customer> {
             switch (sf) {
                 case FIRSTNAME:
                     searchFieldStringSet.addAll(SEARCH_FIRSTNAME);
+                    break;
                 case LASTNAME:
                     searchFieldStringSet.addAll(SEARCH_LASTNAME);
+                    break;
                 case COMPANY:
                     searchFieldStringSet.addAll(SEARCH_COMPANY);
+                    break;
                 case ADDRESS:
                     searchFieldStringSet.addAll(SEARCH_ADDRESS);
+                    break;
+                default:
+                    break;
             }
         }
         return searchFieldStringSet;
