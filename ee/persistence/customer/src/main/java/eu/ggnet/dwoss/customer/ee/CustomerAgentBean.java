@@ -76,17 +76,21 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Override
     public List<PicoCustomer> search(String search, Set<SearchField> customerFields) {
-        return customerEao.find(search).stream().map(Customer::toPico).collect(Collectors.toList());
+        return customerEao.find(search, customerFields).stream()
+                .map(Customer::toPico)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<PicoCustomer> search(String search, Set<SearchField> customerFields, int start, int limit) {
-        return customerEao.find(search, start, limit).stream().map(Customer::toPico).collect(Collectors.toList());
+        return customerEao.find(search, customerFields, start, limit).stream()
+                .map(Customer::toPico)
+                .collect(Collectors.toList());
     }
 
     @Override
     public int countSearch(String search, Set<SearchField> customerFields) {
-        return customerEao.countFind(search);
+        return customerEao.countFind(search, customerFields);
     }
 
     private <T> T request(List<T> in, Supplier<T> producer) {
@@ -100,13 +104,17 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     private void update(List<Communication> communications, Communication.Type type, String identifier) {
         if ( StringUtils.isBlank(identifier) ) {
-            Optional<Communication> optEmail = communications.stream().filter(co -> co.getType() == type).findFirst();
+            Optional<Communication> optEmail = communications.stream()
+                    .filter(co -> co.getType() == type)
+                    .findFirst();
             optEmail.ifPresent(email -> {
                 communications.remove(email);
                 em.remove(email);
             });
         } else {
-            Optional<Communication> optEmail = communications.stream().filter(co -> co.getType() == type).findFirst();
+            Optional<Communication> optEmail = communications.stream()
+                    .filter(co -> co.getType() == type)
+                    .findFirst();
             optEmail.ifPresent(email -> {
                 email.setIdentifier(identifier);
             });
@@ -178,15 +186,19 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Override
     public String findCustomerAsMandatorHtml(long id) {
-        return Optional.ofNullable(customerEao.findById(id)).map(c -> c.toHtml(mandator.getMatchCode(), salesdata)).orElse("Kein Kunde mit id " + id + " vorhanden");
+        return Optional.ofNullable(customerEao.findById(id))
+                .map(c -> c.toHtml(mandator.getMatchCode(), salesdata))
+                .orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
     @Override
     public String findCustomerAsHtml(long id) {
-        return Optional.ofNullable(customerEao.findById(id)).map(Customer::toHtml).orElse("Kein Kunde mit id " + id + " vorhanden");
+        return Optional.ofNullable(customerEao.findById(id))
+                .map(Customer::toHtml)
+                .orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
-//    @AutoLogger
+    @AutoLogger
     @Override
     /**
      * Create a raw object on given root. If the root element is not supported or not found by this method an IllegalArgumentException gets thrown.

@@ -666,10 +666,10 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>4.2.1</version>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4  -->
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4 , w12 = 5.5.8.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
-                <version>5.5.4.Final</version>
+                <version>5.5.8.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>

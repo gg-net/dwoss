@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
+import java.util.HashSet;
+
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.api.GlobalKey;
 import eu.ggnet.dwoss.search.api.SearchRequest;
@@ -28,7 +30,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.search.api.*;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
 
@@ -45,14 +46,16 @@ public class CustomerSearchProvider implements SearchProvider {
 
     @Override
     public int estimateMaxResults(SearchRequest request) {
-        return customerEao.countFind(request.getSearch());
+        return customerEao.countFind(request.getSearch(), new HashSet<>());
     }
 
     @Override
     public List<ShortSearchResult> search(SearchRequest request, int start, int limit) {
-        return customerEao.find(request.getSearch(), start, limit).stream().map((customer) -> {
-            return new ShortSearchResult(new GlobalKey(CUSTOMER, customer.getId()), customer.toName());
-        }).collect(Collectors.toList());
+        return customerEao.find(request.getSearch(), new HashSet<>(), start, limit).stream()
+                .map((customer) -> {
+                    return new ShortSearchResult(new GlobalKey(CUSTOMER, customer.getId()), customer.toName());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

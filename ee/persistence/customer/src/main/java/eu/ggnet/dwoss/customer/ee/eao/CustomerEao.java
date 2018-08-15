@@ -33,6 +33,7 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -70,29 +71,31 @@ public class CustomerEao extends AbstractEao<Customer> {
 
     private final static Logger L = LoggerFactory.getLogger(CustomerEao.class);
 
-    private static final Set<String> SEARCH_FIELDS = new HashSet<>();
+    private static final Set<String> SEARCH_FIRSTNAME = new HashSet<>();
 
-    static {;
-        SEARCH_FIELDS.add("comment");
-        SEARCH_FIELDS.add("companies.name");
-        SEARCH_FIELDS.add("companies.contacts.title");
-        SEARCH_FIELDS.add("companies.contacts.firstName");
-        SEARCH_FIELDS.add("companies.contacts.lastName");
-        SEARCH_FIELDS.add("companies.contacts.addresses.street");
-        SEARCH_FIELDS.add("companies.contacts.addresses.city");
-        SEARCH_FIELDS.add("companies.contacts.addresses.zipCode");
-        SEARCH_FIELDS.add("companies.contacts.communications.identifier");
-        SEARCH_FIELDS.add("companies.addresses.street");
-        SEARCH_FIELDS.add("companies.addresses.city");
-        SEARCH_FIELDS.add("companies.addresses.zipCode");
-        SEARCH_FIELDS.add("companies.communications.identifier");
-        SEARCH_FIELDS.add("contacts.title");
-        SEARCH_FIELDS.add("contacts.firstName");
-        SEARCH_FIELDS.add("contacts.lastName");
-        SEARCH_FIELDS.add("contacts.addresses.street");
-        SEARCH_FIELDS.add("contacts.addresses.city");
-        SEARCH_FIELDS.add("contacts.addresses.zipCode");
-        SEARCH_FIELDS.add("contacts.communications.identifier");
+    private static final Set<String> SEARCH_LASTNAME = new HashSet<>();
+
+    private static final Set<String> SEARCH_COMPANY = new HashSet<>();
+
+    private static final Set<String> SEARCH_ADDRESS = new HashSet<>();
+
+    static {
+
+        SEARCH_FIRSTNAME.add("companies.contacts.firstName");
+        SEARCH_FIRSTNAME.add("contacts.firstName");
+
+        SEARCH_LASTNAME.add("companies.contacts.lastName");
+        SEARCH_LASTNAME.add("contacts.lastName");
+
+        SEARCH_COMPANY.add("companies.name");
+
+        SEARCH_ADDRESS.add("companies.addresses.street");
+        SEARCH_ADDRESS.add("companies.addresses.city");
+        SEARCH_ADDRESS.add("companies.addresses.zipCode");
+
+        SEARCH_ADDRESS.add("contacts.addresses.street");
+        SEARCH_ADDRESS.add("contacts.addresses.city");
+        SEARCH_ADDRESS.add("contacts.addresses.zipCode");
     }
 
     @Inject
@@ -129,7 +132,9 @@ public class CustomerEao extends AbstractEao<Customer> {
         WildCardHelper W = new WildCardHelper(appendWildcard);
         JPAQuery<Customer> query = new JPAQuery<Customer>(em).from(customer);
         if ( !isBlank(companyName) ) {
-            query.join(customer.companies, company).on(company.name.lower().like(W.trim(companyName)));
+            query.join(customer.companies, company)
+                    .on(company.name.lower()
+                            .like(W.trim(companyName)));
         }
         if ( !isBlank(firstName) || !isBlank(lastName) ) {
             query.join(customer.contacts, contact).on();
@@ -139,14 +144,20 @@ public class CustomerEao extends AbstractEao<Customer> {
             }
             if ( !isBlank(lastName) ) {
                 BooleanExpression second = contact.lastName.lower().like(W.trim(lastName));
-                if ( on != null ) on = on.and(second);
-                else on = second;
+                if ( on != null ){
+                    on = on.and(second);
+                }
+                else{
+                    on = second;
+                }
             }
             query.on(on);
         }
         if ( !isBlank(email) ) {
-            query.join(customer.contacts, contact).join(contact.communications, communication)
-                    .on(communication.type.eq(EMAIL).and(communication.identifier.lower().like(W.trim(email))));
+            query.join(customer.contacts, contact)
+                    .join(contact.communications, communication)
+                    .on(communication.type.eq(EMAIL)
+                            .and(communication.identifier.lower().like(W.trim(email))));
         }
         L.debug("calling query");
         List<Customer> list = query.fetch();
@@ -159,15 +170,25 @@ public class CustomerEao extends AbstractEao<Customer> {
      * First it searchs for the CustomerId via sql. Second an index search using the fields company, firsname, lastname is executed.
      * The combiened result is returned.
      * <p/>
-     * @param search the search parameter
+     * @param search      the search parameter
+     * @param searchField pre filter
      * @return the result of the search
      */
-    public List<Customer> find(String search) {
-        if ( StringUtils.isBlank(search) ) return new ArrayList<>();
+    public List<Customer> find(String search, Set<SearchField> searchField) {
+        if ( StringUtils.isBlank(search) ) {
+            return new ArrayList<>();
+        }
+        //fill the searchField
+        if ( searchField == null || searchField.isEmpty() ) {
+            searchField = new HashSet<>(Arrays.asList(SearchField.values()));
+        }
         search = search.trim();
         List<Customer> result = new ArrayList<>();
+
         findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
-        result.addAll(buildSearchQuery(search).getResultList());
+
+        result.addAll(buildSearchQuery(search, searchField).getResultList());
+
         return result;
     }
 
@@ -175,7 +196,9 @@ public class CustomerEao extends AbstractEao<Customer> {
         try {
             Long kid = Long.valueOf(search);
             Customer find = em.find(Customer.class, kid);
-            if ( find != null ) result.add(find);
+            if ( find != null ) {
+                result.add(find);
+            }
         } catch (NumberFormatException numberFormatException) {
             // If not a number, ignore.
         }
@@ -185,29 +208,46 @@ public class CustomerEao extends AbstractEao<Customer> {
      * See {@link CustomerEao#find(java.lang.String) } but with limits for partial result retrieval.
      * Hint: The first result may contain one element extra.
      *
-     * @param start  the starting result
-     * @param limit  the ending result
-     * @param search the search parameter
+     * @param start       the starting result
+     * @param searchField pre filter
+     * @param limit       the ending result
+     * @param search      the search parameter
      * @return the result of the search
      */
-    public List<Customer> find(String search, int start, int limit) {
-        if ( StringUtils.isBlank(search) ) return new ArrayList<>();
+    public List<Customer> find(String search, Set<SearchField> searchField, int start, int limit) {
+        if ( StringUtils.isBlank(search) ) {
+            return new ArrayList<>();
+        }
+        //fill the searchField
+        if ( searchField == null || searchField.isEmpty() ) {
+            searchField = new HashSet<>(Arrays.asList(SearchField.values()));
+        }
+
         search = search.trim();
         // Ensure, that the first result is the customer, if the search is a matching customer id.
         List<Customer> result = new ArrayList<>();
-        if ( start == 0 ) findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
-        result.addAll(buildSearchQuery(search).setFirstResult(start).setMaxResults(limit).getResultList());
+        if ( start == 0 ) {
+            findCustomerIfSearchIsId(search).ifPresent(e -> result.add(e));
+        }
+        List resultList = buildSearchQuery(search, searchField)
+                .setFirstResult(start)
+                .setMaxResults(limit)
+                .getResultList();
+
+        result.addAll(resultList);
+
         return result;
     }
 
     /**
      * Count the result of the search.
      *
-     * @param search the search.
+     * @param search      the search.
+     * @param searchField pre filter
      * @return the estimated amount for the search
      */
-    public int countFind(String search) {
-        return buildSearchQuery(search).getResultSize();
+    public int countFind(String search, Set<SearchField> searchField) {
+        return buildSearchQuery(search, searchField).getResultSize();
     }
 
     /**
@@ -216,30 +256,78 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return a list of all System customer Ids.
      */
     public List<Long> findAllSystemCustomerIds() {
-        return new JPAQuery<Long>(em).from(customer).where(customer.flags.contains(CustomerFlag.SYSTEM_CUSTOMER)).fetch();
+        return new JPAQuery<Long>(em).from(customer)
+                .where(customer.flags.contains(CustomerFlag.SYSTEM_CUSTOMER))
+                .fetch();
     }
 
-    private FullTextQuery buildSearchQuery(String search) {
+    private Set<String> getSearchFieldStringSet(Set<SearchField> searchField) {
+        Set<String> searchFieldStringSet = new HashSet<>();
+
+        if ( searchField == null ) {
+            return searchFieldStringSet;
+        }
+
+        for (SearchField sf : searchField) {
+            L.info("Searchfildname: {}", sf.name());
+            switch (sf) {
+                case FIRSTNAME:
+                    searchFieldStringSet.addAll(SEARCH_FIRSTNAME);
+                case LASTNAME:
+                    searchFieldStringSet.addAll(SEARCH_LASTNAME);
+                case COMPANY:
+                    searchFieldStringSet.addAll(SEARCH_COMPANY);
+                case ADDRESS:
+                    searchFieldStringSet.addAll(SEARCH_ADDRESS);
+            }
+        }
+        return searchFieldStringSet;
+    }
+
+    private FullTextQuery buildSearchQuery(String search, Set<SearchField> searchField) {
         FullTextEntityManager ftem = Search.getFullTextEntityManager(em);
         QueryBuilder qb = ftem.getSearchFactory().buildQueryBuilder().forEntity(Customer.class).get();
         Query query;
+        Set<String> searchFieldStringSet = getSearchFieldStringSet(searchField);
+
         if ( StringUtils.containsWhitespace(search) ) {
             // Multiple Words
             TermContext keyword = qb.keyword();
             TermMatchingContext onField = null;
-            for (String string : SEARCH_FIELDS) {
-                if ( onField == null ) onField = keyword.onField(string);
-                else onField = onField.andField(string);
+
+            if ( !searchFieldStringSet.isEmpty() ) {
+                for (String string : searchFieldStringSet) {
+                    if ( onField == null ) {
+                        onField = keyword.onField(string);
+                    } else {
+                        onField = onField.andField(string);
+                    }
+                }
             }
+
+            if ( onField == null ) {
+                onField = keyword.onField("customer.id");
+            }
+
             query = onField.matching(search.toLowerCase()).createQuery();
         } else {
             // One Word, wildcards are possibel
             WildcardContext keyword = qb.keyword().wildcard();
             TermMatchingContext onField = null;
-            for (String string : SEARCH_FIELDS) {
-                if ( onField == null ) onField = keyword.onField(string);
-                else onField = onField.andField(string);
+            if ( !searchFieldStringSet.isEmpty() ) {
+                for (String string : searchFieldStringSet) {
+                    if ( onField == null ) {
+                        onField = keyword.onField(string);
+                    } else {
+                        onField = onField.andField(string);
+                    }
+                }
             }
+
+            if ( onField == null ) {
+                onField = keyword.onField("");
+            }
+
             query = onField.matching(search.toLowerCase()).createQuery();
         }
         return ftem.createFullTextQuery(query, Customer.class);

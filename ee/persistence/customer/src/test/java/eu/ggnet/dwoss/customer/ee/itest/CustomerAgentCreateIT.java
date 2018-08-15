@@ -121,6 +121,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     /**
      * Try the create mehtod with an unsupported raw. Expecting IllegalArgumentException.
      */
+    @Test
     public void testCreateWithUnsupportedRaw() throws Exception {
 
         utx.begin();
@@ -227,28 +228,5 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
 
     }
 
-    @Test
-    public void testCreateOnAddressLabel() throws Exception {
-        utx.begin();
-        em.joinTransaction();
-        Customer customer = GEN.makeCustomer();
-        Address address = GEN.makeAddress();
-        customer.getContacts().get(0).getAddresses().add(address);
-        em.persist(customer);
-        utx.commit();
-
-        Customer customerFromTheDb = agent.findByIdEager(Customer.class, 1l);
-
-        Address addressesFromtheCustomerOutOfTheDb = customerFromTheDb.getContacts().get(1).getAddresses().get(0);
-
-        AddressLabel makeShippingAddressLabel = GEN.makeShippingAddressLabel();
-        makeShippingAddressLabel.setAddress(addressesFromtheCustomerOutOfTheDb);
-
-        agent.create(new Root(Customer.class, 1l), makeShippingAddressLabel);
-
-        Customer customerFormDb = agent.findByIdEager(Customer.class, 1l);
-        assertThat(customerFormDb.getAddressLabels().size()).as("Shipping AddressLable is missing").isEqualTo(2);
-
-    }
 
 }

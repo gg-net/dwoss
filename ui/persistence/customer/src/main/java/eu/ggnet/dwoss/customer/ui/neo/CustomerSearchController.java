@@ -137,7 +137,9 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         searchButton.setOnAction((ActionEvent event) -> search());
         searchField.setOnKeyPressed((ke) -> {
-            if ( ke.getCode() == KeyCode.ENTER ) {
+            if ( ke.getCode() == KeyCode.ENTER 
+                    && !searchField.getText().trim().isEmpty() 
+                    && (searchField.getText().trim().length() >= 3) ) {
                 search();
             }
         });

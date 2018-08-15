@@ -39,6 +39,7 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -74,7 +75,7 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        return customerEao.find(search).stream().map((customer) -> {
+        return customerEao.find(search, null ).stream().map((customer) -> {
             return asUiCustomer(customer);
         }).collect(Collectors.toList());
     }
