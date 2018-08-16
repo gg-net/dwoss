@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.upi;
 
+import java.util.function.Consumer;
+
 import eu.ggnet.saft.core.ui.UiParent;
 
 /**
@@ -31,7 +33,7 @@ public interface CustomerUpi {
      * @param parent optional parent
      * @return id of a new, persisted customer or zero if canceled
      */
-    long createCustomer(UiParent parent);
+    void createCustomer(UiParent parent, Consumer<Long> csmr);
 
     /**
      * Method for Customer modification.

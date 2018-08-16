@@ -108,7 +108,8 @@ public class RedTapeTryout {
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
         CustomerUpi ccos = mock(CustomerUpi.class);
-        when(ccos.createCustomer(any())).thenReturn(0L);
+        //FIXME
+//        when(ccos.createCustomer(any())).thenReturn(0L);
         when(ccos.updateCustomer(any(), anyLong())).thenReturn(true);
         Dl.local().add(CustomerUpi.class, ccos);
 

@@ -308,17 +308,32 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
-        if ( customerId == 0 ) {
-            Ui.exec(() -> {
-                Ui.build().alert("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
-            });
-            return;
-        }
-        model.setPurchaseCustomer(customerId);
-        //reset search to avoid wrong customer selections
-        model.setSearch(String.valueOf(customerId));
-        view.searchResultList.setSelectedIndex(0);
+//        long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
+        Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view), (custId) -> {
+
+            if ( custId == 0 ) {
+                Ui.exec(() -> {
+                    Ui.build().alert("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+                });
+                return;
+            }
+            model.setPurchaseCustomer(custId);
+            //reset search to avoid wrong customer selections
+            model.setSearch(String.valueOf(custId));
+            view.searchResultList.setSelectedIndex(0);
+        });
+
+//
+//        if ( customerId == 0 ) {
+//            Ui.exec(() -> {
+//                Ui.build().alert("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
+//            });
+//            return;
+//        }
+//        model.setPurchaseCustomer(customerId);
+//        //reset search to avoid wrong customer selections
+//        model.setSearch(String.valueOf(customerId));
+//        view.searchResultList.setSelectedIndex(0);
     }
 
     /**

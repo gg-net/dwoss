@@ -48,8 +48,7 @@ import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.ui.AlertType;
-import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import static java.lang.Double.MAX_VALUE;
 import static javafx.concurrent.Worker.State.READY;
@@ -137,8 +136,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
 
         searchButton.setOnAction((ActionEvent event) -> search());
         searchField.setOnKeyPressed((ke) -> {
-            if ( ke.getCode() == KeyCode.ENTER 
-                    && !searchField.getText().trim().isEmpty() 
+            if ( ke.getCode() == KeyCode.ENTER
+                    && !searchField.getText().trim().isEmpty()
                     && (searchField.getText().trim().length() >= 3) ) {
                 search();
             }
