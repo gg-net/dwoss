@@ -184,11 +184,11 @@ public class CustomerServiceBean implements CustomerService {
         return new CustomerMetaData(
                 customer.getId(),
                 email,
-                customer.getMandatorMetadata().get(0).getPaymentCondition(),
-                customer.getMandatorMetadata().get(0).getPaymentMethod(),
-                customer.getMandatorMetadata().get(0).getShippingCondition(),
+                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getPaymentCondition() : null,
+                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getPaymentMethod() : null,
+                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getShippingCondition() : null,
                 customer.getFlags(),
-                customer.getMandatorMetadata().get(0).getAllowedSalesChannels()
+                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getAllowedSalesChannels() : null
         );
         //TODO Olli fragen ob okay
 //        return new CustomerMetaData(

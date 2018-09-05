@@ -33,7 +33,9 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.*;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.saft.api.Reply;
@@ -51,95 +53,35 @@ public class OldCustomerUpi implements CustomerUpi {
 
     private static final Logger L = LoggerFactory.getLogger(OldCustomerUpi.class);
 
-//    @Override
-//    public long createCustomer(UiParent parent) {
-//
-//        CustomerCreateWithSearchView view = new CustomerCreateWithSearchView();
-//        CustomerCreateWithSearchController controller = new CustomerCreateWithSearchController();
-//        view.setController(controller);
-//        controller.setView(view);
-//        OkCancelDialog<CustomerCreateWithSearchView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::swingOrMain).orElse(null)).orElse(SwingCore.mainFrame()),
-//                Dialog.ModalityType.DOCUMENT_MODAL, "Neuen Kunden anlegen", view);
-//        dialog.setVisible(true);
-//        if ( dialog.isOk() ) {
-//            return Dl.remote().lookup(OldCustomerAgent.class).store(view.getCustomer()).getId();
-//        }
-//        return 0;
-//    }
     @Override
     public void createCustomer(UiParent parent, Consumer<Long> csmr) {
 
-//        Ui.exec(() -> {
-//            Optional<CustomerContinue> result = Ui.build().fxml().eval(CustomerSimpleController.class).opt();
-//            if ( !result.isPresent() ) return;
-//            Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-//            if ( !Ui.failure().handle(reply) ) return;
-//            if ( !result.get().continueEnhance ) return;
-//            Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
-//                    .opt().ifPresent(c -> Ui.build().alert("Would store + " + c));
-//        });
-        Ui.build().fxml().eval(CustomerSimpleController.class).cf()
-                .thenApply((cc) -> {
-                    L.info("start customer simpleController");
-                    if ( cc == null ) return null;
+        Ui.exec(() -> {
+            Optional<CustomerContinue> result = Ui.build().fxml().eval(CustomerSimpleController.class).opt();
+            if ( !result.isPresent() ) {
+                csmr.accept(0l);
+                return;
+            }
+            final Customer customer;
+            Reply<Customer> reply;
+            if ( result.get().customer == null || result.get().customer.getId() < 0 ) {
+                reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                if ( !Ui.failure().handle(reply) ) {
+                    csmr.accept(0l);
+                    return;
+                }
+                customer = reply.getPayload();
+            } else {
+                customer = result.get().customer;
+            }
 
-                    L.info("try finding customer");
-                    //store cutsomer
-                    Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(cc.simpleCustomer);
-                    //handle errors
-                    L.info("found customer {}", reply.getPayload());
-                    if ( !Ui.failure().handle(reply) ) return null;
-                    //return stored customer
-                    cc.simpleCustomer = reply.getPayload().toSimple().get();
-
-                    L.info("return customer from simple {}", cc);
-                    return cc;
-                })
-                .thenApply((cc) -> {
-                    if ( cc == null ) return null;
-
-                    Long id = null;
-
-                    L.info("Customer from customerSimpleController {}", cc);
-                    L.info("continueEnhance: {}", cc.continueEnhance);
-
-                    if ( cc.continueEnhance ) {
-                        L.info("continue enhance");
-                        Customer customer = Dl.remote().lookup(CustomerAgent.class).findById(Customer.class, cc.simpleCustomer.getId());
-                        L.info("found customer {}", customer);
-                        if ( customer == null ) {
-                            L.info("customer is null");
-                            return null;
-                        } else {
-                            Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class)
-                                    .cf().thenApply((c) -> {
-//                                        if ( c == null ) return null;
-
-                                        L.info("Customer enhance controller update customer");
-
-                                        //store cutsomer
-                                        Dl.remote().lookup(CustomerAgent.class).update(customer);
-                                        //handle errors
-//                                        if ( !Ui.failure().handle(reply) ) return null;
-
-//                                        c = reply.getPayload();
-                                        return cc.simpleCustomer.getId();
-                                    });
-                        }
-
-                    } else {
-                        L.info("Return customer CustomerSimpleController");
-                        id = cc.simpleCustomer.getId();
-                    }
-
-                    //when enhanced, open enhanced view
-                    //store again
-                    //not enhanced
-                    //return customer id
-                    L.info("last statement return null");
-                    return id;
-                })
-                .thenAccept(csmr);
+            if ( !result.get().continueEnhance ) {
+                csmr.accept(customer.getId());
+                return;
+            }
+            Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class)
+                    .opt().ifPresent(c -> csmr.accept(customer.getId()));
+        });
 
     }
 
