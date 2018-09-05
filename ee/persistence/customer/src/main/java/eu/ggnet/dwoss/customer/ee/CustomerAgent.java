@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
@@ -68,6 +69,18 @@ public interface CustomerAgent extends RemoteAgent {
      */
     List<PicoCustomer> search(String search, Set<Customer.SearchField> customerFields, int start, int limit);
 
+    /**
+     * More detailed search.
+     * 
+     * @param company the company field
+     * @param firstName the firstname
+     * @param lastName the lastname
+     * @param email a email
+     * @param appendWildcard append a wildcard to all strings
+     * @return a list of customers found by the search
+     */
+    List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard);
+    
     /**
      * Count the result of the search.
      *

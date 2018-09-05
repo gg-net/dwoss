@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="580.0" minWidth="450.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController">
+<BorderPane fx:id="mainPane" minHeight="580.0" minWidth="450.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController">
    <center>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -103,6 +103,9 @@
             <Label text="Anmerkung:" />
             <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" promptText="Anmerkung" VBox.vgrow="ALWAYS" />
          </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
       </VBox>
    </center>
    <bottom>

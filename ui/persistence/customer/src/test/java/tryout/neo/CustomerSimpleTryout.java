@@ -122,11 +122,12 @@ public class CustomerSimpleTryout {
             });
         });
 
-        JButton nullCustomer = new JButton(" Create SimpleCustomer");
+        JButton nullCustomer = new JButton("Create SimpleCustomer");
         nullCustomer.addActionListener(ev -> {
             Ui.exec(() -> {
                 Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(CustomerSimpleController.class).opt();
                 if ( !result.isPresent() ) return;
+                // TODO: Need to think about the correct handling. (As the Ui now also selects elemets for future use.
                 Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
                 if ( !Ui.failure().handle(reply) ) return;
                 if ( !result.get().continueEnhance ) return;

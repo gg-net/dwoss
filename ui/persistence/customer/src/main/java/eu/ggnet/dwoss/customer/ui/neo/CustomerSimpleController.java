@@ -21,19 +21,27 @@ import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.FxController;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -42,6 +50,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.AlertType;
 
@@ -53,13 +62,18 @@ import lombok.AllArgsConstructor;
  *
  * @author jens.papenhagen
  */
-@Title("Kunden Editieren")
+@Title("Kunden Anlegen und Bearbeiten")
 public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<CustomerContinue> {
 
+    // TODO: It's a bad resultobject, but for now it works
     @AllArgsConstructor
     public static class CustomerContinue {
 
+        // Used in the normal case
         public SimpleCustomer simpleCustomer;
+
+        // Used in the search click enhanced customer case.
+        public Customer customer;
 
         public boolean continueEnhance;
 
@@ -68,6 +82,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private CustomerContinue result = null;
 
     private boolean bussines = false;
+
+    private final InvalidationListener searchListener = (Observable observable) -> CustomerSimpleController.this.updateSearch();
+
+    @FXML
+    private BorderPane mainPane;
 
     @FXML
     private HBox companyHBox;
@@ -130,11 +149,13 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @FXML
     private ComboBox<Country> countryComboBox;
 
+    private ObservableList<Customer> quickSearchList;
+
     @FXML
     private void saveAndCloseButtonHandling() {
         try {
             SimpleCustomer simpleCustomer = getSimpleCustomer();
-            result = new CustomerContinue(getSimpleCustomer(), false);
+            result = new CustomerContinue(getSimpleCustomer(), null, false);
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
             Ui.build(saveAndCloseButton).alert(e.getMessage());
@@ -147,7 +168,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
         try {
             SimpleCustomer simpleCustomer = getSimpleCustomer();
-            result = new CustomerContinue(getSimpleCustomer(), true);
+            result = new CustomerContinue(getSimpleCustomer(), null, true);
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
             Ui.build(saveAndCloseButton).alert(e.getMessage());
@@ -209,11 +230,46 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sourceChoiseBox.getItems().addAll(Source.values());
         sourceChoiseBox.getSelectionModel().selectFirst();
 
+        quickSearchList = FXCollections.observableArrayList();
+        ListView<Customer> listView = new ListView<>(quickSearchList);
+        listView.setCellFactory(l -> {
+            return new ListCell<Customer>() {
+                @Override
+                protected void updateItem(Customer item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if ( item == null || empty ) setText("");
+                    else if ( item.isSimple() ) setText(item.toName());
+                    else {
+                        setText("#Complex# - " + item.toName());
+                        setTooltip(new Tooltip("Complex Customer, Doppelclick öffnet neues Fenster"));
+                    }
+                }
+            };
+        });
+
+        listView.setOnMouseClicked((MouseEvent event) -> {
+            if ( event.getClickCount() == 2 ) {
+                Customer current = listView.getSelectionModel()
+                        .getSelectedItem();
+                if ( current.isSimple() ) accept(current);
+                else {
+                    result = new CustomerContinue(null, current, true);
+                    Ui.closeWindowOf(kid);
+                }
+            }
+        });
+
+        mainPane.setRight(listView);
+
         //get overwriten in accept()
         lastNameTextField.setText("");
         streetTextField.setText("");
         zipcodeTextField.setText("");
         cityTextField.setText("");
+        lastNameTextField.textProperty().addListener(searchListener);
+        firstNameTextField.textProperty().addListener(searchListener);
+        emailTextField.textProperty().addListener(searchListener);
+        companyNameTextField.textProperty().addListener(searchListener);
 
         countryComboBox.getItems().addAll(Country.values());
         countryComboBox.setButtonCell(new CountryListCell());
@@ -270,6 +326,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
+        disableSearch();
+
         //the button and the header
         if ( bussines ) {
             headerLabel.setText("Geschäftskunde");
@@ -366,6 +424,25 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     @Override
     public CustomerContinue getResult() {
         return result;
+    }
+
+    private void updateSearch() {
+        // TODO: Look into the old code and change the implementation to something that uses a backgroundthread.
+        List<Customer> result = Dl.remote().lookup(CustomerAgent.class)
+                .search(companyNameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), true);
+        quickSearchList.clear();
+        quickSearchList.addAll(result);
+    }
+
+    /**
+     * Disables any search.
+     */
+    private void disableSearch() {
+        mainPane.setRight(null); // remove the search panel.
+        firstNameTextField.textProperty().removeListener(searchListener);
+        lastNameTextField.textProperty().removeListener(searchListener);
+        emailTextField.textProperty().removeListener(searchListener);
+        companyNameTextField.textProperty().removeListener(searchListener);
     }
 
 }

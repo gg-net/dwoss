@@ -32,15 +32,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
-import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 

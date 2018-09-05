@@ -113,13 +113,11 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 @Override
                 protected void updateItem(PicoCustomer item, boolean empty) {
                     super.updateItem(item, empty);
-//                    Platform.runLater(() -> { // WTF i need this, i don't know, but otherwise
                     if ( item == null || empty ) {
                         setText("");
                     } else {
                         setText(item.getShortDescription());
                     }
-                    //                  });
                 }
             };
         });

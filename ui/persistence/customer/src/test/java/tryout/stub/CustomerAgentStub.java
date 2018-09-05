@@ -37,6 +37,8 @@ import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.saft.api.Reply;
 
+import static org.apache.commons.lang3.StringUtils.*;
+
 /**
  *
  * @author jens.papenhagen
@@ -357,6 +359,19 @@ public class CustomerAgentStub implements CustomerAgent {
         else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().remove((Contact)raw);
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
         else throw new IllegalArgumentException("Raw instance is not supported. Raw: " + raw);
+    }
+
+    @Override
+    public List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard) {
+        L.info("search(company={},firstName={}, lastName={}, email={}, appendWildcard={}",company,firstName,lastName,email,appendWildcard);
+        // TODO: Make me work like a real search. For now, if anything is not null 1 will return the 5 first elemnts
+        
+        List<Customer> result = new ArrayList<>();
+        if (isEmpty(company) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(email)) return result;
+        for (int i = 0; i < 5; i++) {
+            result.add(CUSTOMERS.get(i));
+        }
+        return result;        
     }
 
 }

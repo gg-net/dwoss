@@ -40,6 +40,7 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
@@ -272,6 +273,13 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      */
     public void update(@NonNull Object t) {
         em.merge(t);
+    }
+
+    @Override
+    public List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard) {
+        List<Customer> results = customerEao.find(company, firstName, lastName, email, appendWildcard);
+        results.forEach(Customer::fetchEager);
+        return results;
     }
 
 }
