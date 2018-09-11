@@ -3,16 +3,8 @@ package eu.ggnet.saft.core.ui;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
-import javafx.stage.Window;
-
-import org.slf4j.LoggerFactory;
-
 
 /**
  *
@@ -20,7 +12,17 @@ import org.slf4j.LoggerFactory;
  */
 public class FxSaft {
 
-    public static <R extends FxController> URL loadView(Class<R> controllerClazz) {
+    // Internal Api
+    /**
+     * Returns a url of the FXML file based on the controllerClazz.
+     *
+     * @param <R>             the type of the contorller class
+     * @param controllerClazz the controller class
+     * @return a url of the FXML file, ready to be used in the FXMLLoader.
+     * @throws IllegalArgumentException if the controller class does conform to the nameing convetion, it must end with Controller or Presenter
+     * @throws NullPointerException     if no resource can be found, hence there is no file in the same package trewe with the ending View.fxml
+     */
+    public static <R extends FxController> URL loadView(Class<R> controllerClazz) throws IllegalArgumentException, NullPointerException {
         String head = null;
         if ( controllerClazz.getSimpleName().endsWith("Controller") ) {
             head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Controller".length());
@@ -28,41 +30,13 @@ public class FxSaft {
             head = controllerClazz.getSimpleName().substring(0, controllerClazz.getSimpleName().length() - "Presenter".length());
         }
         if ( head == null ) throw new IllegalArgumentException(controllerClazz + " does not end with Controller or Presenter");
-        return controllerClazz.getResource(head + "View.fxml");
+        return Objects.requireNonNull(controllerClazz.getResource(head + "View.fxml"), "No View for " + controllerClazz);
     }
 
-    public static <T, R extends FxController> FXMLLoader constructFxml(Class<R> controllerClazz, T parameter) throws Exception {
-        return FxSaft.dispatch(() -> { // We need to dispatch it, as the webview must be constructed on the fx thread
-            FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(loadView(controllerClazz), "No View for " + controllerClazz));
-            loader.load();
-            R controller = Objects.requireNonNull(loader.getController(), "No controller based on " + controllerClazz + ". Controller set in Fxml ?");
-            if ( parameter != null && controller instanceof Consumer ) {
-                try {
-                    ((Consumer<T>)controller).accept(parameter);
-                } catch (ClassCastException e) {
-                    LoggerFactory.getLogger(FxSaft.class).warn(controller.getClass() + " implements Consumer, but not of type " + parameter.getClass());
-                }
-            }
-            return loader;
-        });
-    }
-
-    public static <T, R extends Pane> R construct(Class<R> paneClass, T parameter) throws Exception {
-        return FxSaft.dispatch(() -> { // We need to dispatch it, as the webview must be constructed on the fx thread
-            R pane = paneClass.getConstructor().newInstance();
-            if ( parameter != null && pane instanceof Consumer ) {
-                try {
-                    ((Consumer<T>)pane).accept(parameter);
-                } catch (ClassCastException e) {
-                    LoggerFactory.getLogger(FxSaft.class).warn(pane.getClass() + " implements Consumer, but not of type " + parameter.getClass());
-                }
-            }
-            return pane;
-        });
-    }
-
+    // TODO: Move to UiUtil.
     /**
-     * Dispatches the Callable to the Platform Ui Thread.
+     * Dispatches the Callable to the Platform Ui Thread. If this method is called on the javafx ui thread, the supplied callable is called,
+     * otherwise the exection on Platform.runLater ist synchrnized via a latch.
      *
      * @param <T>      Return type of callable
      * @param callable the callable to dispatch
@@ -89,19 +63,15 @@ public class FxSaft {
         }
     }
 
+    // Internal api
     /**
      * Run on the application thread, but looking into if we are on it already.
      *
-     * @param r
+     * @param r a runnable.
      */
     public static void run(Runnable r) {
         if ( Platform.isFxApplicationThread() ) r.run();
         else Platform.runLater(r);
-    }
-
-    public static Window windowAncestor(Node c) {
-        if ( c == null ) return null;
-        return c.getScene().getWindow();
     }
 
 }
