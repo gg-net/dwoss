@@ -29,9 +29,9 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -47,13 +47,23 @@ public class AddCustomerAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent event) {
+
         Ui.exec(() -> {
             Optional<CustomerContinue> result = Ui.build().fxml().eval(CustomerSimpleController.class).opt();
             if ( !result.isPresent() ) return;
-            Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-            if ( !Ui.failure().handle(reply) ) return;
+
+            final Customer customer;
+            Reply<Customer> reply;
+            if ( result.get().customer == null || result.get().customer.getId() < 0 ) {
+                reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
+                if ( !Ui.failure().handle(reply) ) return;
+                customer = reply.getPayload();
+            } else {
+                customer = result.get().customer;
+            }
+
             if ( !result.get().continueEnhance ) return;
-            Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
+            Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class)
                     .opt().ifPresent(c -> Ui.build().alert("Would store + " + c));
         });
 
