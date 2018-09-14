@@ -25,19 +25,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
-import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.saft.api.Reply;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  *
@@ -363,15 +362,48 @@ public class CustomerAgentStub implements CustomerAgent {
 
     @Override
     public List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard) {
-        L.info("search(company={},firstName={}, lastName={}, email={}, appendWildcard={}",company,firstName,lastName,email,appendWildcard);
+        L.info("search(company={},firstName={}, lastName={}, email={}, appendWildcard={}", company, firstName, lastName, email, appendWildcard);
         // TODO: Make me work like a real search. For now, if anything is not null 1 will return the 5 first elemnts
-        
+
         List<Customer> result = new ArrayList<>();
-        if (isEmpty(company) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(email)) return result;
+        if ( isEmpty(company) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) ) return result;
+
         for (int i = 0; i < 5; i++) {
             result.add(CUSTOMERS.get(i));
+
+            //first idea for this yet not been able to test
+//        for (Customer customer : CUSTOMERS) {
+//            //filter the company name
+//            Optional<Company> companyMatch = customer.getCompanies().stream().filter(cu -> cu.getName().startsWith(company)).findAny();
+//
+//            //filter firstName, LastName, email of Contact from the customer
+//            Optional<Contact> companyContactMatch = customer.getCompanies()
+//                    .stream()
+//                    .map(c -> c.getContacts())
+//                    .flatMap(Collection::stream)
+//                    .filter(contact -> contact.getFirstName().startsWith(firstName)
+//                    || contact.getLastName().startsWith(lastName)
+//                    || (contact.getCommunications()
+//                        .stream()
+//                        .filter(communications -> communications.getType().equals(email)
+//                        && communications.getIdentifier().startsWith(email))).findAny().isPresent())
+//                    .findAny();
+//
+//            //filter firstName, LastName, email of Contact from the Customer
+//            Optional<Contact> customerContactMatch = customer.getContacts().stream()
+//                    .filter(contact -> contact.getFirstName().startsWith(firstName)
+//                    || contact.getLastName().startsWith(lastName)
+//                    || (contact.getCommunications()
+//                        .stream()
+//                        .filter(communications -> communications.getType().equals(email)
+//                        && communications.getIdentifier().startsWith(email))).findAny().isPresent())
+//                    .findAny();
+//
+//            if ( companyMatch.isPresent() || companyContactMatch.isPresent() || customerContactMatch.isPresent() ) {
+//                L.info(email);
+//                result.add(customer);
         }
-        return result;        
+        return result;
     }
 
 }

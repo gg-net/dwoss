@@ -16,32 +16,22 @@
  */
 package eu.ggnet.dwoss.customer.ui.old;
 
-import java.awt.Dialog;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import javax.swing.JOptionPane;
 
 import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.UiParent;
 
 /**
@@ -87,23 +77,35 @@ public class OldCustomerUpi implements CustomerUpi {
 
     @Override
     public boolean updateCustomer(UiParent parent, long customerId) {
-        OldCustomer customer = Dl.remote().lookup(OldCustomerAgent.class).findById(customerId);
-        CustomerEditView ec = new CustomerEditView();
-        ec.setCustomer(customer);
-        // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
-        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::swingOrMain).orElse(null)).orElse(SwingCore.mainFrame()), Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
-        dialog.setVisible(true);
 
-        boolean changed = false;
-        if ( dialog.getCloseType() == CloseType.OK ) {
-            Dl.remote().lookup(OldCustomerAgent.class).store(ec.getCustomer());
-            for (AddressChange addressChange : ec.getChangedAdresses()) {
-                if ( JOptionPane.showOptionDialog(dialog, "Adresse wurde geändert, soll diese Änderung an allen Dokumenten des Kunden übernommen werden?", "Adressänderung", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.YES_OPTION ) {
-                    Dl.remote().lookup(AddressService.class).notifyAddressChange(addressChange);
-                }
-                changed = true;
-            }
-        }
-        return changed;
+        Customer customer = Dl.remote().lookup(CustomerAgent.class).findByIdEager(Customer.class, customerId);
+
+        if ( customer == null ) return false;
+
+        Ui.exec(() -> {
+            Optional<Customer> result = Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt();
+            if ( !result.isPresent() ) return false;
+            return true;
+
+        });
+
+//        OldCustomer customer = Dl.remote().lookup(OldCustomerAgent.class).findById(customerId);
+//        CustomerEditView ec = new CustomerEditView();
+//        ec.setCustomer(customer);
+//        // HINT: This was RedTapeView as parrent. If users complain about the location of create customer, add it to Workspace or else.
+//        OkCancelDialog<CustomerEditView> dialog = new OkCancelDialog<>(SwingCore.windowAncestor(Optional.ofNullable(parent).map(UiParent::swingOrMain).orElse(null)).orElse(SwingCore.mainFrame()), Dialog.ModalityType.DOCUMENT_MODAL, "Kunden editieren", ec);
+//        dialog.setVisible(true);
+//
+//        boolean changed = false;
+//        if ( dialog.getCloseType() == CloseType.OK ) {
+//            Dl.remote().lookup(OldCustomerAgent.class).store(ec.getCustomer());
+//            for (AddressChange addressChange : ec.getChangedAdresses()) {
+//                if ( JOptionPane.showOptionDialog(dialog, "Adresse wurde geändert, soll diese Änderung an allen Dokumenten des Kunden übernommen werden?", "Adressänderung", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.YES_OPTION ) {
+//                    Dl.remote().lookup(AddressService.class).notifyAddressChange(addressChange);
+//                }
+//                changed = true;
+//            }
+//        }
+        return false;
     }
 }
