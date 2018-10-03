@@ -44,10 +44,8 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ui.CustomerTaskService;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.ui.*;
 
 import static java.lang.Double.MAX_VALUE;
@@ -241,20 +239,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
                 if ( !customer.isValid() ) {
                     Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
-                } else if ( customer.isSimple() ) {
-                    L.info("Edit Simple Customer {}", customer.getId());
-                    Optional<CustomerContinue> result = Ui.build(resultListView).fxml()
-                            .eval(() -> customer, CustomerSimpleController.class).opt();
-                    if ( !result.isPresent() ) return;
-                    Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                    if ( !Ui.failure().handle(reply) ) return;
-                    if ( !result.get().continueEnhance ) return;
-                    Ui.build(statusHbox).fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class)
-                            .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
                 } else {
-                    L.info("Edit (Complex) Customer {}", customer.getId());
-                    Ui.build(statusHbox).fxml().eval(() -> customer, CustomerEnhanceController.class)
-                            .opt().ifPresent(c -> Ui.build(statusHbox).alert("Would store + " + c));
+                    CustomerConnectorFascade.edit(customer, UiParent.of(resultListView));
                 }
             });
         });

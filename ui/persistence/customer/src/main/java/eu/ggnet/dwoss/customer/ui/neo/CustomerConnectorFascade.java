@@ -17,12 +17,20 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.UiParent;
+
+import lombok.NonNull;
 
 /**
  * Contains all opperations for modification of customer objects in the database.
@@ -200,4 +208,65 @@ public class CustomerConnectorFascade {
         agent.create(new Root(Customer.class, customerId), mandatorMetadata);
         return agent.findByIdEager(Customer.class, customerId);
     }
+
+    /**
+     * Open the Uis for editing an existing customer, simple or enhance.
+     *
+     * @param c the customer, must not be null
+     * @param p a parent for the ui
+     */
+    public static void edit(@NonNull Customer c, UiParent p) {
+        if ( c.isSimple() ) {
+            Ui.build().parent(p).fxml().eval(() -> c, CustomerSimpleController.class).cf()
+                    .thenApply(CustomerConnectorFascade::optionalStore)
+                    .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                    .handle(Ui.handler());
+        } else {
+            CompletableFuture.completedFuture(CustomerCommand.enhance(c))
+                    .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                    .handle(Ui.handler());
+        }
+    }
+
+    /**
+     * Opens the Uis to create a new customer.
+     *
+     * @param p a parent for the ui
+     */
+    public static void create(UiParent p) {
+        Ui.build().parent(p).fxml().eval(CustomerSimpleController.class).cf()
+                .thenApply(CustomerConnectorFascade::optionalStore)
+                .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                .handle(Ui.handler());
+    }
+
+    /**
+     * Opens the Uis to select and optionaly edit or create a new customer.
+     *
+     * @param p           a parent for the ui
+     * @param selectedcid a consumer for the id of the customer, which becomes selected at the end.
+     */
+    public static void selectOrEdit(UiParent p, Consumer<Long> selectedcid) {
+        Ui.build().parent(p).fxml().eval(CustomerSimpleController.class).cf()
+                .thenApply(CustomerConnectorFascade::optionalStore)
+                .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                .thenAccept(c -> selectedcid.accept(c.getId()))
+                .handle(Ui.handler());
+    }
+
+    private static CustomerCommand optionalStore(CustomerCommand cc) {
+        if ( !cc.simpleStore ) return cc;
+        Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(cc.simpleCustomer);
+        if ( !Ui.failure().handle(reply) ) return null; // TODO: Switch to Exception
+        return cc.enhance
+                ? CustomerCommand.enhance(reply.getPayload())
+                : CustomerCommand.select(reply.getPayload());
+    }
+
+    private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent p, CustomerCommand cc) {
+        if ( !cc.enhance ) return CompletableFuture.completedFuture(cc.customer);
+        return Ui.build().parent(p).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
+                .thenApply(c -> Dl.remote().lookup(CustomerAgent.class).update(c));
+    }
+
 }

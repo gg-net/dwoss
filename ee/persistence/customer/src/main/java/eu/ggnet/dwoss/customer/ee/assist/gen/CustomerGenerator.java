@@ -99,6 +99,60 @@ public class CustomerGenerator {
             customer.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
         customer.setComment("Das ist ein Kommentar zum Kunden");
+        if ( !customer.isValid() ) throw new RuntimeException("Generated a invalid customer, repair generator: " + customer.getViolationMessage());
+        return customer;
+    }
+
+    /**
+     * Generates a random cusomter, which is a consumer and simple.
+     *
+     * @return a random simple customer.
+     */
+    public Customer makeSimpleConsumerCustomer() {
+        Customer customer = new Customer();
+        int r = R.nextInt(5) + 1;
+
+        Contact con = makeContact(new Contact(), makeAddress(), new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
+        con.getCommunications().add(new Communication(Type.EMAIL, con.getLastName().toLowerCase() + "@demo.int"));
+        customer.getContacts().add(con);
+
+        customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
+        customer.setComment("Das ist ein Kommentar zum Kunden");
+        if ( !customer.isValid() )
+            throw new RuntimeException("makeSimpleConsumerCustomer(): Generated a invalid customer, repair generator: " + customer.getViolationMessage() + "|" + customer);
+        if ( !customer.isConsumer() ) throw new RuntimeException("makeSimpleConsumerCustomer(): generated a bussines customer, repair generator: " + customer);
+        if ( !customer.isSimple() )
+            throw new RuntimeException("makeSimpleConsumerCustomer(): generated a complex customer, repair generator: " + customer.getSimpleViolationMessage() + "|" + customer);
+        return customer;
+    }
+
+    /**
+     * Generates a random customer, which is bussines and simple.
+     *
+     * @return a random simple bussines.
+     */
+    public Customer makeSimpleBussinesCustomer() {
+        Customer customer = new Customer();
+        int r = R.nextInt(5) + 1;
+
+        Contact contact = makeContact(new Contact(), null, new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
+        contact.getCommunications().add(new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int"));
+
+        Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), true, "DE " + RandomStringUtils.randomNumeric(8));
+        company.getContacts().add(contact);
+        Address address = makeAddress();
+        company.getAddresses().add(address);
+        contact.getAddresses().add(address);
+
+        customer.getCompanies().add(company);       
+
+        customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
+        customer.setComment("Das ist ein Kommentar zum Kunden");
+        if ( !customer.isValid() )
+            throw new RuntimeException("makeSimpleBussinesCustomer(): Generated a invalid customer, repair generator: " + customer.getViolationMessage() + "|" + customer);
+        if ( !customer.isBusiness() ) throw new RuntimeException("makeSimpleBussinesCustomer(): generated a consumer customer, repair generator: " + customer);
+        if ( !customer.isSimple() )
+            throw new RuntimeException("makeSimpleBussinesCustomer(): generated a complex customer, repair generator: " + customer.getSimpleViolationMessage() + "|" + customer);
         return customer;
     }
 
@@ -166,8 +220,8 @@ public class CustomerGenerator {
         contact.setLastName(name.getLast());
         contact.setSex(name.getGender().ordinal() == 1 ? FEMALE : MALE);
         contact.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        contact.getCommunications().add(communication);
-        contact.getAddresses().add(address);
+        if ( communication != null ) contact.getCommunications().add(communication);
+        if ( address != null ) contact.getAddresses().add(address);
         return contact;
     }
 

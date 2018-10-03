@@ -206,7 +206,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * If the raw object is not supported by this method an IllegalArguemntException gets thrown.
      * Both root and raw are not allowed to be null.
      */
-    public void create(@NonNull Root root, @NonNull Object raw) {
+    public <T> T create(@NonNull Root root, @NonNull T raw) {
         Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
@@ -237,6 +237,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
         else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
         em.persist(raw);
+        return raw;
     }
 
     @AutoLogger
@@ -271,8 +272,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     /**
      * Update object t. t is not allowed to be null.
      */
-    public void update(@NonNull Object t) {
-        em.merge(t);
+    public <T> T update(@NonNull T t) {
+        return em.merge(t);
     }
 
     @Override

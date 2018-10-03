@@ -117,17 +117,21 @@ public interface CustomerAgent extends RemoteAgent {
     /**
      * Create a new entity on the root element.
      *
+     * @param <T> 
      * @param root
      * @param t
+     * @return the stored object
      */
-    void create(Root root, Object t);
+     <T> T create(Root root, T t);
 
     /**
      * Update an enitiy
      *
+     * @param <T> 
      * @param t
+     * @return the stored object
      */
-    void update(Object t);
+    <T> T update(T t);
 
     /**
      * Delete an entity on the root element

@@ -16,12 +16,10 @@
  */
 package tryout.neo;
 
+
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Dl;
-
-import java.util.Locale;
-import java.util.Optional;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -30,10 +28,8 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.saft.api.Reply;
+import eu.ggnet.dwoss.customer.ui.neo.*;
+import eu.ggnet.saft.core.ui.UiParent;
 
 import tryout.stub.CustomerAgentStub;
 
@@ -73,6 +69,8 @@ public class CustomerSimpleTryout {
         //stub for the new Costumer modell with generator needed
         Dl.remote().add(CustomerAgent.class, new CustomerAgentStub());
 
+        JPanel p = new JPanel();
+
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
@@ -83,15 +81,7 @@ public class CustomerSimpleTryout {
             System.out.println("IS simple: " + consumerCustomer.getSimpleViolationMessage());
             System.out.println("Consumer Customer: " + consumerCustomer.isConsumer());
 
-            Ui.exec(() -> {
-                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> consumerCustomer, CustomerSimpleController.class).opt();
-                if ( !result.isPresent() ) return;                
-                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                if ( !Ui.failure().handle(reply) ) return;
-                if ( !result.get().continueEnhance ) return;
-                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
-                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
-            });
+            CustomerConnectorFascade.edit(consumerCustomer, UiParent.of(p));
         });
 
         JButton bussinesCustomer = new JButton("Bussines Customer");
@@ -110,34 +100,14 @@ public class CustomerSimpleTryout {
 
             System.out.println("IS simple: " + bussnisCustomer.getSimpleViolationMessage());
             System.out.println("Bussines Customer: " + bussnisCustomer.isBusiness());
-
-            Ui.exec(() -> {
-                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(() -> bussnisCustomer, CustomerSimpleController.class).opt();
-                if ( !result.isPresent() ) return;
-                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                if ( !Ui.failure().handle(reply) ) return;
-                if ( !result.get().continueEnhance ) return;
-                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
-                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
-            });
+            CustomerConnectorFascade.edit(bussnisCustomer, UiParent.of(p));
         });
 
         JButton nullCustomer = new JButton("Create SimpleCustomer");
         nullCustomer.addActionListener(ev -> {
-            Ui.exec(() -> {
-                Optional<CustomerContinue> result = Ui.build().parent(consumerCustomerButton).fxml().eval(CustomerSimpleController.class).opt();
-                if ( !result.isPresent() ) return;
-                // TODO: Need to think about the correct handling. (As the Ui now also selects elemets for future use.
-                Reply<Customer> reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                if ( !Ui.failure().handle(reply) ) return;
-                if ( !result.get().continueEnhance ) return;
-                Ui.build().fxml().eval(() -> reply.getPayload(), CustomerEnhanceController.class).opt()
-                        .ifPresent(c -> Ui.build().alert("Would store + " + c));
-            });
+            CustomerConnectorFascade.selectOrEdit(UiParent.of(p),l -> System.out.println("Stored Id: " + l));
         });
-        
-        
-        JPanel p = new JPanel();
+
         p.add(consumerCustomerButton);
         p.add(bussinesCustomer);
         p.add(nullCustomer);
@@ -145,5 +115,7 @@ public class CustomerSimpleTryout {
 
         UiCore.startSwing(() -> p);
     }
+
+
 
 }
