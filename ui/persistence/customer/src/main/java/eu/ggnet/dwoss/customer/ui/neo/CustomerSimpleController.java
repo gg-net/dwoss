@@ -234,15 +234,43 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             };
         });
 
+        //build context menu
+        ContextMenu menu = new ContextMenu();
+        MenuItem editItem = new MenuItem("Bearbeiten");
+        editItem.setOnAction((event) -> {
+            
+            Customer current = listView.getSelectionModel()
+                    .getSelectedItem();
+            
+            if ( current.isSimple() ) accept(current);
+            else {
+                result = CustomerCommand.enhance(current);
+                Ui.closeWindowOf(kid);
+            }
+        });
+        MenuItem selectItem = new MenuItem("Auswählen");
+        selectItem.setOnAction((event) -> {
+
+            result = CustomerCommand.select(
+                    listView.getSelectionModel().getSelectedItem()
+            );
+
+            Ui.closeWindowOf(kid);
+        });
+        menu.getItems().addAll(editItem, selectItem);
+
+        //show context menu on right click
+        listView.setOnContextMenuRequested((event) -> {
+            menu.show(listView, event.getScreenX(), event.getScreenY());
+        });
+
         listView.setOnMouseClicked((MouseEvent event) -> {
             if ( event.getClickCount() == 2 ) {
-                Customer current = listView.getSelectionModel()
-                        .getSelectedItem();
-                if ( current.isSimple() ) accept(current);
-                else {
-                    result = CustomerCommand.select(current);
-                    Ui.closeWindowOf(kid);
-                }
+
+                result = CustomerCommand.select(
+                        listView.getSelectionModel().getSelectedItem()
+                );
+                Ui.closeWindowOf(kid);
             }
         });
 
