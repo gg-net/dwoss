@@ -8,79 +8,112 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="750.0" prefWidth="615.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane minHeight="550.0" minWidth="450.0" stylesheets="@CustomerEnhanceView.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
     <center>
         <VBox spacing="3.0" BorderPane.alignment="CENTER">
             <children>
-                <HBox alignment="TOP_RIGHT">
+                <HBox alignment="CENTER_LEFT" styleClass="headLine" VBox.vgrow="NEVER">
                     <children>
-                        <Label fx:id="customerTypeLabel" text="fulltext">
+                        <Label fx:id="customerTypeLabel" maxWidth="1.7976931348623157E308" styleClass="headLine" text="fulltext" HBox.hgrow="ALWAYS">
                             <font>
                                 <Font name="System Bold" size="16.0" />
                             </font>
                         </Label>
-                        <Region maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                        <Button minHeight="35.0" mnemonicParsing="false" onAction="#clickSelectPreferedAddressLabelsButton" text="Standard Adressen auswählen" wrapText="true" />
                     </children>
                 </HBox>
-                <HBox spacing="3.0">
-                    <children>
-                        <Label text="Kunden Nummer" />
-                        <Label fx:id="customerIdLabel" text="Label" />
-                        <Region minWidth="20.0" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="nameOrCompanyLabel" text="Firma:" />
-                        <Label fx:id="customerNameLabel" text="firmennname" />
-                    </children>
-                </HBox>
-                <HBox prefWidth="200.0" spacing="3.0">
-                    <children>
-                        <Label fx:id="contactOrCompanyLabel" text="Kontakte:" />
-                        <Region minWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Ansprechpartner:" />
-                        <TextField fx:id="keyAccounterTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-                    </children>
-                </HBox>
-                <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
-                <HBox maxWidth="1.7976931348623157E308" spacing="3.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <VBox maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="150.0" spacing="3.0" HBox.hgrow="ALWAYS">
+            <GridPane hgap="3.0" maxWidth="1.7976931348623157E308" prefWidth="595.0" vgap="3.0" VBox.vgrow="NEVER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="250.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="346.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+                <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+                <RowConstraints fillHeight="false" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+              </rowConstraints>
+               <children>
+                  <HBox spacing="3.0">
                      <children>
-                        <Label text="Flags:" />
-                        <ListView fx:id="flagListView" minHeight="200.0" minWidth="200.0" />
-                     </children></VBox>
-                        <VBox maxWidth="1.7976931348623157E308" minHeight="125.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                              <Label styleClass="identifierLabel" text="Kunden Nummer:" />
+                              <Label fx:id="customerIdLabel" maxWidth="1.7976931348623157E308" styleClass="valueLabel" text="Label" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                      <HBox spacing="3.0" GridPane.columnIndex="1">
+                          <children>
+                              <Label fx:id="nameOrCompanyLabel" prefWidth="125.0" styleClass="identifierLabel" text="Firma:" />
+                              <Label fx:id="customerNameLabel" maxWidth="1.7976931348623157E308" styleClass="valueLabel" text="firmennname" HBox.hgrow="ALWAYS" />
+                          </children>
+                      </HBox>
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                              <Label prefWidth="125.0" styleClass="identifierLabel" text="Ansprechpartner:" />
+                              <TextField fx:id="keyAccounterTextField" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                        <Label fx:id="contactOrCompanyLabel" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="75.0" styleClass="identifierLabel" text="Kontakte:" GridPane.rowIndex="2" />
+                        <Button mnemonicParsing="false" onAction="#clickSelectPreferedAddressLabelsButton" text="Standard Adressen auswählen" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="125.0" />
+                     </GridPane.margin></Button>
+               </children>
+            </GridPane>
+                <HBox fx:id="showHBox" minHeight="150.0" minWidth="450.0" VBox.vgrow="ALWAYS" />
+                <HBox maxWidth="1.7976931348623157E308" spacing="10.0">
+                    <children>
+                        <VBox maxWidth="1.7976931348623157E308" spacing="3.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="identifierLabel" text="Flags:" />
+                        <ListView fx:id="flagListView" maxHeight="1.7976931348623157E308" minHeight="200.0" minWidth="200.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+                        <VBox maxWidth="1.7976931348623157E308" spacing="5.0" HBox.hgrow="ALWAYS">
                             <children>
-                                <Button fx:id="mandatorMetaDataButton" mnemonicParsing="false" onAction="#clickMandatorMetaDataButton" text="Metadaten ( Versand, Zahlungskonditionen, ... )" VBox.vgrow="ALWAYS" />
-                                <HBox spacing="3.0" VBox.vgrow="SOMETIMES">
+                        <HBox prefWidth="345.0" spacing="3.0">
+                           <children>
+                              <Label minWidth="90.0" prefHeight="20.0" prefWidth="90.0" styleClass="identifierLabel" text="Konditionen:" />
+                                      <Button fx:id="mandatorMetaDataButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickMandatorMetaDataButton" text="Metadaten ( Versand, Zahlungskonditionen, ... )" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                                <HBox spacing="3.0">
                                     <children>
-                                        <Label text="Quellen:" />
+                                        <Label minWidth="90.0" prefHeight="17.0" prefWidth="90.0" styleClass="identifierLabel" text="Quellen:" />
                                         <ChoiceBox fx:id="sourceChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                                     </children>
                                 </HBox>
-                        <Label text="Zusätzliche Kundennummern" />
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                        <Label styleClass="identifierLabel" text="Zusätzliche Kundennummern" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Button fx:id="addAdditionalCustomerIdButton" mnemonicParsing="false" text="Hinzufügen" />
-                              <Button fx:id="editdditionalCustomerIdButton" mnemonicParsing="false" text="Bearbeiten" />
-                              <Button fx:id="deletedditionalCustomerIdButton" mnemonicParsing="false" text="Löschen" />
+                              <ListView fx:id="additionalCustomerIdsListView" prefHeight="100.0" prefWidth="159.0" HBox.hgrow="ALWAYS" />
+                              <VBox spacing="3.0">
+                                 <children>
+                                    <Button fx:id="addAdditionalCustomerIdButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="crudButton" text="Hinzufügen" />
+                                    <Button fx:id="editdditionalCustomerIdButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="crudButton" text="Bearbeiten" />
+                                    <Button fx:id="deletedditionalCustomerIdButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="crudButton" text="Löschen" />
+                                 </children>
+                              </VBox>
                            </children>
                         </HBox>
-                        <ListView fx:id="additionalCustomerIdsListView" />
                             </children>
-                            <padding>
-                                <Insets left="10.0" top="10.0" />
-                            </padding>
                         </VBox>
                     </children>
                 </HBox>
-                <Label text="Kommentar:" />
-                <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" VBox.vgrow="ALWAYS" />
+            <VBox>
+               <children>
+                      <Label styleClass="identifierLabel" text="Kommentar:" />
+                      <TextArea fx:id="commentTextArea" minHeight="150.0" minWidth="200.0" />
+               </children>
+            </VBox>
             </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
         </VBox>
     </center>
     <bottom>

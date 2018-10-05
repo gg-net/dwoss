@@ -1,0 +1,18 @@
+/* 
+    Created on : 05.10.2018, 16:05:45
+    Author     : pascal.perau
+*/
+.headLine{
+    -fx-font-weight: bold; 
+    -fx-font-size: 1.5em;
+}
+.identifierLabel{
+    -fx-font-weight: bold; 
+    -fx-font-size: 1.15em;
+}
+.valueLabel{
+    -fx-font-size: 1.15em;
+}
+.crudButton{
+    -fx-font-weight: bold;
+}

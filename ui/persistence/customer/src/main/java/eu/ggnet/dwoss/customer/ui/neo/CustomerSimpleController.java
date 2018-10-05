@@ -337,11 +337,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             return;
         }
         bussines = c.isBusiness();
+        disableSearch();
         setSimpleCustomer(c.toSimple().get());
     }
 
-    public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
-        disableSearch();
+    private void setSimpleCustomer(SimpleCustomer simpleCustomer) {
 
         //the button and the header
         if ( bussines ) {

@@ -35,7 +35,7 @@ public class AddCustomerAction extends AbstractAction {
     private final static Logger L = LoggerFactory.getLogger(AddCustomerAction.class);
 
     public AddCustomerAction() {
-        super("Neuen Kunden anlegern");
+        super("Neuen Kunden anlegen");
     }
 
     @Override
