@@ -72,5 +72,15 @@ public class UiCustomer implements Serializable {
         sb.append(lastName != null ? lastName : "");
         return sb.toString();
     }
-
+    
+    public String toIdNameCompanyHtml(){        
+        StringBuilder sb = new StringBuilder();
+        sb.append("<b>").append(id).append("</b> ");
+        sb.append(company != null ? "<i>Unternehmen</i><br />" : "<i>Endkunde</i><br />");
+        sb.append(company != null ? company + "<br />" : "");
+        sb.append(title != null ? title + " " : "");
+        sb.append(firstName != null ? firstName + " " : "");
+        sb.append(lastName != null ? lastName : "");
+        return sb.toString();
+    }
 }
