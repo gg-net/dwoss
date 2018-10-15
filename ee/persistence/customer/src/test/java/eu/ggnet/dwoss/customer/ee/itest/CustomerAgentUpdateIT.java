@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
+import java.util.List;
+
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import javax.ejb.EJB;
@@ -26,7 +28,10 @@ import javax.transaction.UserTransaction;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
@@ -41,6 +46,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(Arquillian.class)
 public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
+
+    private final static Logger L = LoggerFactory.getLogger(CustomerAgentUpdateIT.class);
 
     @EJB
     private CustomerAgent agent;
@@ -63,7 +70,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    @Test
+//    @Test
     /**
      * Test update for all supported entities on a contact.
      */
@@ -96,7 +103,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
 
     }
 
-    @Test
+//    @Test
     /**
      * Test update for all supported entities on a customer.
      */
@@ -140,7 +147,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
 
     }
 
-    @Test
+//    @Test
     /**
      * Test update for all supported entities on a company.
      */
@@ -182,6 +189,43 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         foundCompany = agent.findByIdEager(Company.class, 1l);
         assertThat(foundCompany.getContacts().get(0).getFirstName()).as("Update didn't work on contact for company").isEqualTo("newFirstName");
 
+    }
+
+    @Test
+    /**
+     * Wierd UI situation, if we add more that one flage, the addessalabeles get duplicated.
+     */
+    public void multipleFlagesCreateMultipeAddresslabels() throws Exception {
+        L.info("Test: multipleFlagesCreateMultipeAddresslabels()");
+
+        L.info("create customer");
+        utx.begin();
+        em.joinTransaction();
+        Customer c = GEN.makeSimpleConsumerCustomer();
+        em.persist(c);
+        utx.commit();
+
+        List<Customer> all = agent.findAllEager(Customer.class);
+        assertThat(all).hasSize(1);
+
+        long id = all.get(0).getId();
+        c = all.get(0);
+        L.info("Add first flag to customer");
+
+        c.getFlags().add(CustomerFlag.ITC_CUSTOMER);
+        agent.update(c);
+
+        c = agent.findByIdEager(Customer.class, id);
+        assertThat(c.getFlags()).hasSize(1);
+        assertThat(c.getAddressLabels()).hasSize(1);
+        L.info("Add second flag to customer");
+
+        c.getFlags().add(CustomerFlag.CONFIRMS_DOSSIER);
+        agent.update(c);
+        c = agent.findByIdEager(Customer.class, id);
+        assertThat(c.getFlags()).hasSize(2);
+        assertThat(c.getAddressLabels()).hasSize(1);
+        L.info("Finished: multipleFlagesCreateMultipeAddresslabels()");
     }
 
 }

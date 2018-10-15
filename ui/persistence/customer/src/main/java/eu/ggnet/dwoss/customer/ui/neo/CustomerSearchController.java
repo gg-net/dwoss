@@ -237,6 +237,8 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
                 Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
+                System.out.println("Edit customer triggered: AdressLabel=" + customer.getAddressLabels().size());
+                customer.getAddressLabels().forEach(c -> System.out.println("Label:" + c));
                 if ( !customer.isValid() ) {
                     Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
                 } else {

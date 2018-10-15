@@ -42,6 +42,7 @@ import static javax.persistence.FetchType.EAGER;
 @EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 @Getter
+@SuppressWarnings({"PersistenceUnitPresent"})
 public class AddressLabel implements Serializable {
 
     @Id

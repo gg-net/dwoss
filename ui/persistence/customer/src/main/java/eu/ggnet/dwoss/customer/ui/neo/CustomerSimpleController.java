@@ -140,6 +140,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private Timer timer = new Timer();
 
     private final ExecutorService ES = Executors.newSingleThreadExecutor();
+    
+    private long customerId = 0;
 
     @FXML
     private void saveAndCloseButtonHandling() {
@@ -339,6 +341,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         bussines = c.isBusiness();
         disableSearch();
         setSimpleCustomer(c.toSimple().get());
+        customerId = c.getId();
     }
 
     private void setSimpleCustomer(SimpleCustomer simpleCustomer) {
@@ -389,7 +392,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private SimpleCustomer getSimpleCustomer() throws IllegalStateException {
         SimpleCustomer sc = new SimpleCustomer();
-
+        sc.setId(customerId);
         sc.setTitle(titleTextField.getText());
         sc.setFirstName(firstNameTextField.getText());
         sc.setLastName(lastNameTextField.getText());
