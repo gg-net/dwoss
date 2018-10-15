@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 import javax.naming.*;
 
+import org.jboss.ejb.client.*;
+import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,10 +78,22 @@ public class WildflyLookup implements RemoteLookup {
     private synchronized void init() {
         if ( initialized ) return;
 
+        Properties p = new Properties();
+        p.put("endpoint.name", "client-endpoint");
+        p.put("remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED", "false");
+        p.put("remote.connections", "one");
+        p.put("remote.connection.one.port", Integer.toString(CONFIG.getPort()));
+        p.put("remote.connection.one.host", CONFIG.getHost());
+        p.put("remote.connection.one.username", CONFIG.getUsername());
+        p.put("remote.connection.one.password", CONFIG.getPassword());
+
+        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
+        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
+        EJBClientContext.setSelector(selector);
+
         final String APP = CONFIG.getApp();
         Object instance = null;
         String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
-        
         try {
             instance = context().lookup(discoveryName);
         } catch (NamingException ex) {
@@ -109,19 +123,11 @@ public class WildflyLookup implements RemoteLookup {
     private Context context() {
         // TODO: Experiment, with new and reused context.
         if ( _context != null ) return _context;
-
-        final Properties p = new Properties();
-        p.put("endpoint.name", "client-endpoint");
-        p.put("remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED", "false");
-        p.put("remote.connections", "one");
-        p.put("remote.connection.one.port", Integer.toString(CONFIG.getPort()));
-        p.put("remote.connection.one.host", CONFIG.getHost());
-        p.put("remote.connection.one.username", CONFIG.getUsername());
-        p.put("remote.connection.one.password", CONFIG.getPassword());
-        p.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+        final Properties properties = new Properties();
+        properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
 
         try {
-            _context = new InitialContext(p);
+            _context = new InitialContext(properties);
             L.debug("New Context for " + this.getClass().getName() + " created");
             return _context;
         } catch (NamingException ex) {
