@@ -65,10 +65,12 @@ import static javax.persistence.FetchType.EAGER;
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
 public class Customer implements Serializable, EagerAble, ContactStash {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Fields for detailed Search.
      */
-    public static enum SearchField {
+    public enum SearchField {
         ID,
         FIRSTNAME,
         LASTNAME,
@@ -78,7 +80,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
     @AllArgsConstructor
     @Getter
-    public static enum Source {
+    public enum Source {
         EXISTING("Bestandskunde"),
         JH_CAM_TOOL("CAM Tool T&S"),
         SOPO_STORE("Sonderposten Store"),
@@ -88,7 +90,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         private final String name;
     }
 
-    public static enum ExternalSystem {
+    public enum ExternalSystem {
         SAGE, LEXWARE
     }
 
@@ -618,4 +620,13 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         addressLabels.size();
     }
 
+    @PostLoad
+    public final void postLoad() {
+        for (Iterator<AddressLabel> iterator = addressLabels.iterator(); iterator.hasNext();) {
+            AddressLabel next = iterator.next();
+            List<AddressLabel> without = new ArrayList<>(addressLabels);
+            without.remove(next);
+            if ( without.contains(next) ) iterator.remove();
+        }
+    }
 }
