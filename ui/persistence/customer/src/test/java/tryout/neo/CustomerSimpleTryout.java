@@ -20,7 +20,6 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.Dl;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.swing.JButton;
