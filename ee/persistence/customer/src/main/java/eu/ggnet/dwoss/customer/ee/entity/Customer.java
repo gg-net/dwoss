@@ -298,7 +298,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
                 sc.setCountry(companies.get(0).getAddresses().get(0).getCountry());
             }
 
-            //fist check the Contact for the needed Communications than use the Communications on the Company
+            //first check the Contact for the needed Communications than use the Communications on the Company
             if ( !companies.get(0).getContacts().get(0).getCommunications().isEmpty() ) {
                 sc.setMobilePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().orElse(null));
                 sc.setLandlinePhone(companies.get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == PHONE).map(Communication::getIdentifier).findFirst().orElse(null));

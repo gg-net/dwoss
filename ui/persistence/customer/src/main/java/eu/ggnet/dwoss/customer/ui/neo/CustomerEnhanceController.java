@@ -339,7 +339,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         .collect(Collectors.toList()));
 
         commentTextArea.setText(customer.getComment());
-
+        
+        //TODO: build the whole box anew? meybe just reset components instead...
+        //TODO: called in accept, thats unfortunate
         //build the showbox
         buildShowBox();
     }

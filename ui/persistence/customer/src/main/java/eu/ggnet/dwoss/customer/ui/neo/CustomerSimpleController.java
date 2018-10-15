@@ -21,16 +21,17 @@ import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.FxController;
 
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -49,12 +50,11 @@ import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.core.ui.*;
 
-import lombok.AllArgsConstructor;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Controller class for the editor view of a SimpleCustomer. Allows the user to
@@ -63,23 +63,9 @@ import lombok.AllArgsConstructor;
  * @author jens.papenhagen
  */
 @Title("Kunden Anlegen und Bearbeiten")
-public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<CustomerContinue> {
+public class CustomerSimpleController implements Initializable, FxController, Consumer<Customer>, ResultProducer<CustomerCommand>, ClosedListener {
 
-    // TODO: It's a bad resultobject, but for now it works
-    @AllArgsConstructor
-    public static class CustomerContinue {
-
-        // Used in the normal case
-        public SimpleCustomer simpleCustomer;
-
-        // Used in the search click enhanced customer case.
-        public Customer customer;
-
-        public boolean continueEnhance;
-
-    }
-
-    private CustomerContinue result = null;
+    private CustomerCommand result = null;
 
     private boolean bussines = false;
 
@@ -151,11 +137,14 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private ObservableList<Customer> quickSearchList;
 
+    private Timer timer = new Timer();
+
+    private final ExecutorService ES = Executors.newSingleThreadExecutor();
+
     @FXML
     private void saveAndCloseButtonHandling() {
         try {
-            SimpleCustomer simpleCustomer = getSimpleCustomer();
-            result = new CustomerContinue(getSimpleCustomer(), null, false);
+            result = CustomerCommand.store(getSimpleCustomer());
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
             Ui.build(saveAndCloseButton).alert(e.getMessage());
@@ -165,10 +154,8 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     @FXML
     private void saveAndEnhanceUIButtonHandling() {
-
         try {
-            SimpleCustomer simpleCustomer = getSimpleCustomer();
-            result = new CustomerContinue(getSimpleCustomer(), null, true);
+            result = CustomerCommand.storeAndEnhance(getSimpleCustomer());
             Ui.closeWindowOf(kid);
         } catch (IllegalStateException e) {
             Ui.build(saveAndCloseButton).alert(e.getMessage());
@@ -247,15 +234,43 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             };
         });
 
+        //build context menu
+        ContextMenu menu = new ContextMenu();
+        MenuItem editItem = new MenuItem("Bearbeiten");
+        editItem.setOnAction((event) -> {
+            
+            Customer current = listView.getSelectionModel()
+                    .getSelectedItem();
+            
+            if ( current.isSimple() ) accept(current);
+            else {
+                result = CustomerCommand.enhance(current);
+                Ui.closeWindowOf(kid);
+            }
+        });
+        MenuItem selectItem = new MenuItem("Auswählen");
+        selectItem.setOnAction((event) -> {
+
+            result = CustomerCommand.select(
+                    listView.getSelectionModel().getSelectedItem()
+            );
+
+            Ui.closeWindowOf(kid);
+        });
+        menu.getItems().addAll(editItem, selectItem);
+
+        //show context menu on right click
+        listView.setOnContextMenuRequested((event) -> {
+            menu.show(listView, event.getScreenX(), event.getScreenY());
+        });
+
         listView.setOnMouseClicked((MouseEvent event) -> {
             if ( event.getClickCount() == 2 ) {
-                Customer current = listView.getSelectionModel()
-                        .getSelectedItem();
-                if ( current.isSimple() ) accept(current);
-                else {
-                    result = new CustomerContinue(null, current, true);
-                    Ui.closeWindowOf(kid);
-                }
+
+                result = CustomerCommand.select(
+                        listView.getSelectionModel().getSelectedItem()
+                );
+                Ui.closeWindowOf(kid);
             }
         });
 
@@ -322,11 +337,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
             return;
         }
         bussines = c.isBusiness();
+        disableSearch();
         setSimpleCustomer(c.toSimple().get());
     }
 
-    public void setSimpleCustomer(SimpleCustomer simpleCustomer) {
-        disableSearch();
+    private void setSimpleCustomer(SimpleCustomer simpleCustomer) {
 
         //the button and the header
         if ( bussines ) {
@@ -422,27 +437,51 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     }
 
     @Override
-    public CustomerContinue getResult() {
+    public CustomerCommand getResult() {
         return result;
     }
 
+    /**
+     * Can be called to inform of a change on parameters.
+     */
     private void updateSearch() {
-        // TODO: Look into the old code and change the implementation to something that uses a backgroundthread.
-        List<Customer> result = Dl.remote().lookup(CustomerAgent.class)
-                .search(companyNameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), true);
-        quickSearchList.clear();
-        quickSearchList.addAll(result);
+        timer.cancel();
+        // special case, we don't wont intelligent search if everything becomes empty
+        if ( isEmpty(companyNameTextField.getText()) && isEmpty(firstNameTextField.getText()) && isEmpty(lastNameTextField.getText()) && isEmpty(emailTextField.getText()) )
+            return;
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // This ensures correct output of search results.
+                ES.submit(() -> {
+                    List<Customer> result1 = Dl.remote().lookup(CustomerAgent.class)
+                            .search(companyNameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), true);
+                    Platform.runLater(() -> {
+                        quickSearchList.clear();
+                        quickSearchList.addAll(result1);
+                    });
+                });
+            }
+        }, 1000);
     }
 
     /**
      * Disables any search.
      */
     private void disableSearch() {
+        timer.cancel();
         mainPane.setRight(null); // remove the search panel.
         firstNameTextField.textProperty().removeListener(searchListener);
         lastNameTextField.textProperty().removeListener(searchListener);
         emailTextField.textProperty().removeListener(searchListener);
         companyNameTextField.textProperty().removeListener(searchListener);
+    }
+
+    @Override
+    public void closed() {
+        timer.cancel();
+        ES.shutdown();
     }
 
 }

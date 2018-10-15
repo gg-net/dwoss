@@ -80,7 +80,7 @@ public class UniversalSearcherOperation implements UniversalSearcher {
         List<UiCustomer> customers = customerService.asUiCustomers(search);
         List<Tuple2<Long, String>> result = new ArrayList<>(customers.size());
         for (UiCustomer customer : customers) {
-            result.add(new Tuple2((long)customer.getId(), customer.getSimpleHtml()));
+            result.add(new Tuple2((long)customer.getId(), customer.toIdNameCompanyHtml()));
         }
         return result;
     }

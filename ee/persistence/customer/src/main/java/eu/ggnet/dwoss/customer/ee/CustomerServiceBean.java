@@ -146,7 +146,7 @@ public class CustomerServiceBean implements CustomerService {
                     customer.getContacts().get(0).getTitle() != null ? customer.getContacts().get(0).getTitle() + " " : "",
                     customer.getContacts().get(0).getFirstName(),
                     customer.getContacts().get(0).getLastName(),
-                    "",
+                    null,
                     customer.toString(),
                     email,
                     0);

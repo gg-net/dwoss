@@ -21,7 +21,7 @@ import java.util.*;
 import javax.validation.constraints.*;
 
 import lombok.Value;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  * Parameter Class for {@link StockTransactionEmo#prepare(eu.ggnet.dwoss.stock.emo.Transfer, eu.ggnet.saft.api.progress.IMonitor) }.

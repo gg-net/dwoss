@@ -72,6 +72,7 @@ public class NameGenerator {
                 List<String> data = sources.get(resource);
                 for (StringTokenizer st = new StringTokenizer(all, "\n"); st.hasMoreTokens();) {
                     String s = st.nextToken();
+                    s = s.replace("\r", ""); // safty net, if names file gets corrupted.
                     data.add(s);
                 }
             } catch (IOException e) {

@@ -23,7 +23,7 @@ import java.io.Serializable;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
 import lombok.*;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  *

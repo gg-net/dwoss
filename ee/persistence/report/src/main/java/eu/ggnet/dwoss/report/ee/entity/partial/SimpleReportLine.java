@@ -34,7 +34,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import lombok.*;
-import lombok.experimental.Builder;
+import lombok.Builder;
 
 /**
  *

@@ -17,21 +17,14 @@
 package eu.ggnet.dwoss.customer.ui.cap;
 
 import java.awt.event.ActionEvent;
-import java.util.Optional;
 
 import javax.swing.AbstractAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerSimpleController.CustomerContinue;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.dwoss.customer.ui.neo.*;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
@@ -42,31 +35,12 @@ public class AddCustomerAction extends AbstractAction {
     private final static Logger L = LoggerFactory.getLogger(AddCustomerAction.class);
 
     public AddCustomerAction() {
-        super("Neuen Kunden anlegern");
+        super("Neuen Kunden anlegen");
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-
-        Ui.exec(() -> {
-            Optional<CustomerContinue> result = Ui.build().fxml().eval(CustomerSimpleController.class).opt();
-            if ( !result.isPresent() ) return;
-
-            final Customer customer;
-            Reply<Customer> reply;
-            if ( result.get().customer == null || result.get().customer.getId() < 0 ) {
-                reply = Dl.remote().lookup(CustomerAgent.class).store(result.get().simpleCustomer);
-                if ( !Ui.failure().handle(reply) ) return;
-                customer = reply.getPayload();
-            } else {
-                customer = result.get().customer;
-            }
-
-            if ( !result.get().continueEnhance ) return;
-            Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class)
-                    .opt().ifPresent(c -> Ui.build().alert("Would store + " + c));
-        });
-
+        CustomerConnectorFascade.create(UiParent.defaults());
     }
 
 }

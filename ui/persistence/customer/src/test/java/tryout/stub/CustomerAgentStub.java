@@ -17,7 +17,9 @@
 package tryout.stub;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.LockModeType;
 
@@ -46,7 +48,7 @@ public class CustomerAgentStub implements CustomerAgent {
 
     private final int AMOUNT = 25;
 
-    private final int SLOW = 40;
+    private final int SLOW = 40; 
 
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
 
@@ -69,6 +71,12 @@ public class CustomerAgentStub implements CustomerAgent {
             Customer customer = CGEN.makeCustomer();
             customer.getMandatorMetadata().add(CGEN.makeMandatorMetadata());
             CUSTOMERS.add(customer);
+        }
+        for (int i = 0; i < 20; i++) {
+            CUSTOMERS.add(CGEN.makeSimpleConsumerCustomer());
+        }
+        for (int i = 0; i < 20; i++) {
+            CUSTOMERS.add(CGEN.makeSimpleBussinesCustomer());
         }
     }
 
@@ -306,7 +314,7 @@ public class CustomerAgentStub implements CustomerAgent {
     }
 
     @Override
-    public void create(Root root, Object raw) {
+    public <T> T create(Root root, T raw) {
         L.info("create {} form {}", raw, root);
         Object rootElement = null;
 
@@ -328,13 +336,14 @@ public class CustomerAgentStub implements CustomerAgent {
         else if ( raw instanceof MandatorMetadata ) ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
         else throw new IllegalArgumentException("Raw instance is not supported Raw: " + raw);
-
+        return raw;
     }
 
     @Override
-    public void update(Object t) {
+    public <T> T update(T t) {
         L.info("update Objekt: " + t);
         //Black Magic (Only one customer object is handled)
+        return t;
     }
 
     @Override
@@ -363,46 +372,39 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard) {
         L.info("search(company={},firstName={}, lastName={}, email={}, appendWildcard={}", company, firstName, lastName, email, appendWildcard);
-        // TODO: Make me work like a real search. For now, if anything is not null 1 will return the 5 first elemnts
 
         List<Customer> result = new ArrayList<>();
         if ( isEmpty(company) && isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) ) return result;
 
-        for (int i = 0; i < 5; i++) {
-            result.add(CUSTOMERS.get(i));
+        result.addAll(CUSTOMERS);
 
-            //first idea for this yet not been able to test
-//        for (Customer customer : CUSTOMERS) {
-//            //filter the company name
-//            Optional<Company> companyMatch = customer.getCompanies().stream().filter(cu -> cu.getName().startsWith(company)).findAny();
-//
-//            //filter firstName, LastName, email of Contact from the customer
-//            Optional<Contact> companyContactMatch = customer.getCompanies()
-//                    .stream()
-//                    .map(c -> c.getContacts())
-//                    .flatMap(Collection::stream)
-//                    .filter(contact -> contact.getFirstName().startsWith(firstName)
-//                    || contact.getLastName().startsWith(lastName)
-//                    || (contact.getCommunications()
-//                        .stream()
-//                        .filter(communications -> communications.getType().equals(email)
-//                        && communications.getIdentifier().startsWith(email))).findAny().isPresent())
-//                    .findAny();
-//
-//            //filter firstName, LastName, email of Contact from the Customer
-//            Optional<Contact> customerContactMatch = customer.getContacts().stream()
-//                    .filter(contact -> contact.getFirstName().startsWith(firstName)
-//                    || contact.getLastName().startsWith(lastName)
-//                    || (contact.getCommunications()
-//                        .stream()
-//                        .filter(communications -> communications.getType().equals(email)
-//                        && communications.getIdentifier().startsWith(email))).findAny().isPresent())
-//                    .findAny();
-//
-//            if ( companyMatch.isPresent() || companyContactMatch.isPresent() || customerContactMatch.isPresent() ) {
-//                L.info(email);
-//                result.add(customer);
+        if ( !isEmpty(company) ) {
+            for (Iterator<Customer> i = result.iterator(); i.hasNext();) {
+                Customer c = i.next();
+                if ( !c.isBusiness() ) i.remove();
+                else if ( c.getCompanies().stream().noneMatch(comp -> comp.getName().toLowerCase().contains(company.toLowerCase())) ) i.remove();
+            }
         }
+
+        if ( !isEmpty(firstName) ) {
+            for (Iterator<Customer> i = result.iterator(); i.hasNext();) {
+                Customer c = i.next();
+                if ( Stream.concat(c.getContacts().stream().map(con -> con.getFirstName()),
+                        c.getCompanies().stream().flatMap((Company comp) -> comp.getContacts().stream().map(con -> con.getFirstName())))
+                        .noneMatch(n -> n.toLowerCase().contains(firstName.toLowerCase())) ) i.remove();
+            }
+        }
+
+        if ( !isEmpty(lastName) ) {
+            for (Iterator<Customer> i = result.iterator(); i.hasNext();) {
+                Customer c = i.next();
+                if ( Stream.concat(c.getContacts().stream().map(con -> con.getLastName()),
+                        c.getCompanies().stream().flatMap((Company comp) -> comp.getContacts().stream().map(con -> con.getLastName())))
+                        .noneMatch(n -> n.toLowerCase().contains(lastName.toLowerCase())) ) i.remove();
+            }
+        }
+
+        // TODO: implement email
         return result;
     }
 
