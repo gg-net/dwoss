@@ -195,8 +195,9 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * This method shoud returns never null, and allways a valid addresslabel.
      *
      * @return an addresslabel with prefered elements for invoice.
+     * @throws IllegalStateException if the customer is invalid an has no addresslabel set.
      */
-    public AddressLabel toPreferedInvoiceAddress() {
+    public AddressLabel toPreferedInvoiceAddress() throws IllegalStateException {
         return addressLabels.stream()
                 .filter(al -> al.getType() == INVOICE)
                 .findFirst()
@@ -204,17 +205,15 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     }
 
     /**
-     * Returns an addresslabel with prefered elements for shipping never null.
-     * If there is no sippingAddress explicitly set, the invoicelabel is returned.
+     * Returns an addresslabel with prefered elements for shipping or null if none is set.
      *
      * @return an addresslabel with prefered elements for shipping.
      */
-    // TODO: Consider returning null in case of no shipping address.
     public AddressLabel toPreferedShippingAddress() {
         return addressLabels.stream()
                 .filter(al -> al.getType() == SHIPPING)
                 .findFirst()
-                .orElse(toPreferedInvoiceAddress());
+                .orElse(null);
     }
 
     /**
@@ -226,26 +225,17 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * @return a human readable representation
      */
     public String toName() {
-        String contactName = null;
-        String companyName = null;
-        if ( !companies.isEmpty() ) {
-            for (Company company : companies) {
-                if ( companyName == null ) companyName = company.getName();
-                if ( company.isPrefered() ) companyName = company.getName();
-            }
+        if ( isBusiness() ) {
+            Company p = companies.stream().filter(c -> c.isPrefered()).findFirst().orElse(companies.get(0));
+            return p.getName() + p.getContacts().stream().filter(c -> c.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
+                    .orElse(p.getContacts().stream().map(c -> " - " + c.toFullName()).findFirst()
+                            .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).filter(cu -> cu.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
+                                    .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).map(c -> " - " + c.toFullName()).findFirst()
+                                            .orElse(""))));
         }
-        if ( !contacts.isEmpty() ) {
-            for (Contact contact : contacts) {
-                if ( contactName == null ) contactName = contact.toFullName();
-                if ( contact.isPrefered() ) contactName = contact.toFullName();
-            }
-        }
-        if ( contactName == null && companyName == null ) return "Customer without company and contact" + id;
-        StringBuilder sb = new StringBuilder();
-        if ( companyName != null ) sb.append(companyName);
-        if ( companyName != null && contactName != null ) sb.append(" - ");
-        if ( contactName != null ) sb.append(contactName);
-        return sb.toString();
+
+        return contacts.stream().filter(c -> c.isPrefered()).map(c -> c.toFullName()).findFirst()
+                .orElse(contacts.get(0).toFullName());
     }
 
     /**
@@ -554,15 +544,19 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
         StringBuilder sb = new StringBuilder();
         sb.append("<table width=\"100%\"><tr>");
-        sb.append("<td colspan=2 ><b>Kid: ").append(id).append("&nbsp;-&nbsp;").append(toName()).append("</b></td>");
+        sb.append("<td colspan=2 ><b>Kid: ").append(id).append("&nbsp;-&nbsp;").append(toName()).append(" (");
+        sb.append(isBusiness() ? "Geschäftskunde" : "Endkunde");
+        sb.append(isSimple() ? "" : ", <i>komplex</i>");
+        sb.append(")</b></td>");
+
         sb.append("</tr><tr>");
 
         sb.append("<td valign=top>");
-        if ( toPreferedShippingAddress().getType() == INVOICE ) sb.append("<b>Bevorzugte Rechnungs- und Lieferadresse</b><br />");
-        else sb.append("<b>Bevorzugte Rechnungsadresse</b><br />");
+        if ( toPreferedShippingAddress() == null ) sb.append("<b>Rechnungs- und Lieferadresse</b><br />");
+        else sb.append("<b>Rechnungsadresse</b><br />");
         sb.append(toPreferedInvoiceAddress().toHtml());
-        if ( toPreferedShippingAddress().getType() == SHIPPING ) {
-            sb.append("<br /><b>Bevorzugte Lieferadresse</b><br />");
+        if ( toPreferedShippingAddress() != null && toPreferedShippingAddress().getType() == SHIPPING ) {
+            sb.append("<br /><b>Lieferadresse</b><br />");
             sb.append(toPreferedShippingAddress().toHtml());
         }
         sb.append("</td>");

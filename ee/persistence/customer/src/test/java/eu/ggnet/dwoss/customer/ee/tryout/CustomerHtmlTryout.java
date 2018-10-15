@@ -51,7 +51,7 @@ public class CustomerHtmlTryout extends Application {
         CustomerGenerator gen = new CustomerGenerator();
 
         Customer c2 = gen.makeCustomer();
-
+        
         DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
                 .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                 .paymentCondition(PaymentCondition.CUSTOMER)

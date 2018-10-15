@@ -51,6 +51,8 @@ public class Address implements Serializable {
     /**
      * Is this a address to be used for a specific type by default, null indicates no preference.
      */
+    // Kann weg
+    @Deprecated
     @Setter
     @Enumerated
     private AddressType preferedType;
@@ -104,9 +106,8 @@ public class Address implements Serializable {
     }
 
     public String toHtml() {
-        return (preferedType == null ? "" : "<i>Bevorzugte: " + preferedType.getName() + "<br />"
-                + street + "<br />"
-                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city + (preferedType == null ? "" : "</i>"));
+        return street + "<br />"
+                + isoCountry + "&nbsp;" + zipCode + "&nbsp;" + city;
     }
 
     /**
