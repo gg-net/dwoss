@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,7 +35,7 @@ public class CustomerGeneratorTest {
     @Test
     public void makeSimpleConsumerCustomers() {
         for (int i = 0; i < 500; i++) {
-            Customer c = GEN.makeSimpleConsumerCustomer();
+            Customer c = StaticCustomerMaker.makeValidSimpleConsumer();
             assertThat(c.isSimple()).as("SimpleViolations:" + c.getSimpleViolationMessage()).isTrue();
             assertThat(c.isConsumer()).isTrue();            
         }
@@ -44,7 +45,7 @@ public class CustomerGeneratorTest {
     @Test
     public void makeSimpleBussinesCustomers() {
         for (int i = 0; i < 500; i++) {
-            Customer c = GEN.makeSimpleBussinesCustomer();
+            Customer c = StaticCustomerMaker.makeValidSimpleBusiness();
             assertThat(c.isSimple()).as("SimpleViolations:" + c.getSimpleViolationMessage()).isTrue();
             assertThat(c.isBusiness()).isTrue();            
         }

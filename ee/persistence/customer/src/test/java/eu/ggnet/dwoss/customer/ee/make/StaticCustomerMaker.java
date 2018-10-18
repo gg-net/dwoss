@@ -64,7 +64,7 @@ public class StaticCustomerMaker {
     /**
      *
      * @return Valid Contact as in Contact.getViolationMessage()
-     *         with one Address and no Communication.
+     *         with no Address.
      */
     public static Contact makeValidCompanyContact() {
         Contact validContact = makeValidContact();
@@ -131,12 +131,10 @@ public class StaticCustomerMaker {
     public static Customer makeValidSimpleBusiness() {
         Address address = makeValidAddress();
         assertThat(address.getViolationMessage()).as("Address does not violate any rule").isNull();
-        Company company = new Company("Musterfirma", 0, true, "1203223");
-        company.getAddresses().add(address);
+        Company company = makeValidCompany();
         assertThat(company.getViolationMessage()).as("Company does not violate any rule").isNull();
         Contact validContact = makeValidCompanyContact();
-        Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
-        validContact.getCommunications().add(validCommunication);
+        validContact.getCommunications().add(makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de"));
         assertThat(validContact.getViolationMessage()).as("Contact is valid").isNull();
         company.getContacts().add(validContact);
         Customer customer = new Customer();
@@ -159,10 +157,9 @@ public class StaticCustomerMaker {
         customer.getCompanies().get(0).getContacts().add(makeValidCompanyContact());
         customer.getCompanies().get(0).getCommunications().add(makeValidCommunication(Communication.Type.EMAIL, "testMail@test.net"));
         customer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.EMAIL, "testMail@test.net"));
-        customer.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());
         customer.getCompanies().get(0).getAddresses().add(makeValidAddress());
         customer.getAddressLabels().add(makeValidInvoiceAddressLabel());
-        customer.getAddressLabels().add(new AddressLabel(customer.getCompanies().get(0), customer.getCompanies().get(0).getContacts().get(0), customer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0), AddressType.SHIPPING));
+        customer.getAddressLabels().add(makeValidShippingAddressLabel());
         customer.getFlags().add(CustomerFlag.CS_UPDATE_CANDIDATE);
         assertThat(customer.getViolationMessage()).as("BusinessCustomer does not violate any rule").isNull();
         assertThat(customer.isValid()).as("BusinessCustomer is a simple valid business customer").isTrue();
@@ -173,6 +170,11 @@ public class StaticCustomerMaker {
         return customer;
     }
 
+    
+    /**
+     *
+     * @return Valid ConsumerCustomer with two AddressLabels, a valid Contact with one valid Communication and a CustomerFlag
+     */
     public static Customer makeValidConsumerCustomer() {
         Customer customer = new Customer();
         customer.getContacts().add(makeValidContact());

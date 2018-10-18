@@ -386,7 +386,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * @return null if instance is valid, else a string representing the invalidation.
      */
     public String getSimpleViolationMessage() {
-
         if ( !isValid() ) return getViolationMessage();
         if ( !flags.isEmpty() ) return "CustomerFlag must be empty";
         if ( !StringUtils.isBlank(keyAccounter) ) return "Keyaccounter is set";
@@ -426,8 +425,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
                 return "SimpleBusinessCustomer's Contact can not have an address assigned";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).count() > 1 )
                 return "The Company has more than one Contact";
-            if ( !companies.get(0).getAddresses().get(0).equals(companies.get(0).getContacts().get(0).getAddresses().get(0)) )
-                return "The Address of the Company mismatches the Address of the Contact from the Company";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).count() > 3 )
                 return "The Company of the Business Customer has more than 3 Communications";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).count() >= 1 )

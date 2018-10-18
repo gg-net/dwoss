@@ -70,7 +70,7 @@ public class CustomerSimpleTest {
         validBusinessCustomer.getCompanies().get(0).getCommunications().clear();
         assertThat(validBusinessCustomer.isSimple()).as("still simplecustomer").isTrue();
 
-        Contact makeValidContact = makeValidContact();
+        Contact makeValidContact = makeValidCompanyContact();
         makeValidContact.getCommunications().clear();
         makeValidContact.getCommunications().add(makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de"));
         makeValidContact.getCommunications().add(makeValidCommunication(Type.MOBILE, "0174 123456789"));
@@ -91,35 +91,8 @@ public class CustomerSimpleTest {
 
         assertThat(simpleBusinessCustomer.getSex()).as("sex").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getSex());
 
-        //did Companys have a Address this Address have to match the Address on Contact
-        if ( !validBusinessCustomer.getCompanies().get(0).getAddresses().isEmpty() ) {
-            assertThat(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getStreet())
-                    .as("address of contact have to be the same as on Address Street")
-                    .isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getStreet());
-
-            assertThat(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCity())
-                    .as("address of contact have to be the same as on Address City")
-                    .isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getCity());
-
-            assertThat(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getZipCode())
-                    .as("address of contact have to be the same as on Address zipcode")
-                    .isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getZipCode());
-
-            assertThat(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getIsoCountry())
-                    .as("address of contact have to be the same as on Address iso country")
-                    .isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getIsoCountry());
-
-            assertThat(simpleBusinessCustomer.getStreet()).as("street").isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getStreet());
-            assertThat(simpleBusinessCustomer.getZipCode()).as("zipcode").isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getZipCode());
-            assertThat(simpleBusinessCustomer.getCity()).as("city").isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getCity());
-            assertThat(simpleBusinessCustomer.getCountry()).as("country").isEqualTo(validBusinessCustomer.getCompanies().get(0).getAddresses().get(0).getCountry());
-        } else {
-            assertThat(simpleBusinessCustomer.getStreet()).as("street").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getStreet());
-            assertThat(simpleBusinessCustomer.getZipCode()).as("zipcode").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getZipCode());
-            assertThat(simpleBusinessCustomer.getCity()).as("city").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCity());
-            assertThat(simpleBusinessCustomer.getCountry()).as("country").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getAddresses().get(0).getCountry());
-        }
-
+        //address tests no longer needed as company contcts can not have any adresses due to getViolationMessage
+        
         assertThat(simpleBusinessCustomer.getMobilePhone()).as("mobilePhone")
                 .isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
         assertThat(simpleBusinessCustomer.getLandlinePhone()).as("landlinePhone")
@@ -133,6 +106,7 @@ public class CustomerSimpleTest {
         assertThat(simpleBusinessCustomer.getCompanyName()).as("companyName").isEqualTo(validBusinessCustomer.getCompanies().get(0).getName());
         assertThat(simpleBusinessCustomer.getTaxId()).as("taxId").isEqualTo(validBusinessCustomer.getCompanies().get(0).getTaxId());
 
+        assertThat(validBusinessCustomer.isSimple()).as("still simplecustomer").isTrue();
     }
 
 }

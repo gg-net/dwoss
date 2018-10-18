@@ -48,7 +48,7 @@ public class CustomerViolationMessageTest {
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getContacts().add(makeValidContact());
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with a Contact is invalid").isNotNull();
-
+        
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getAddressLabels().clear();
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without AddressLabels is invalid").isNotNull();
