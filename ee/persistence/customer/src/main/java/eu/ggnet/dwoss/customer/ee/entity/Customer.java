@@ -194,10 +194,10 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * Returns the first addresslabel of type invoice.
      * This method shoud returns never null, and allways a valid addresslabel.
      *
-     * @return an addresslabel with prefered elements for invoice.
+     * @return the first addresslabel of type invoice.
      * @throws IllegalStateException if the customer is invalid an has no addresslabel set.
      */
-    public AddressLabel toPreferedInvoiceAddress() throws IllegalStateException {
+    public AddressLabel toInvoiceAddress() throws IllegalStateException {
         return addressLabels.stream()
                 .filter(al -> al.getType() == INVOICE)
                 .findFirst()
@@ -205,11 +205,11 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     }
 
     /**
-     * Returns an addresslabel with prefered elements for shipping or null if none is set.
+     * Returns an addresslabel with elements for shipping or null if none is set.
      *
-     * @return an addresslabel with prefered elements for shipping.
+     * @return an addresslabel with elements for shipping.
      */
-    public AddressLabel toPreferedShippingAddress() {
+    public AddressLabel toShippingAddress() {
         return addressLabels.stream()
                 .filter(al -> al.getType() == SHIPPING)
                 .findFirst()
@@ -218,24 +218,31 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
     /**
      * Generates a human readable representation of the customers name.
-     * Works as follows:
-     * If there is a company get the prefered otherwise the first.
-     * If there is no company get the prefered contact otherwise the first.
-     *
-     * @return a human readable representation
+     * This funktion will build a string that contains the company name (optional) and the contacts full name.
+     * 
+     * @return a human readable representation of the customer
      */
     public String toName() {
-        if ( isBusiness() ) {
-            Company p = companies.stream().filter(c -> c.isPrefered()).findFirst().orElse(companies.get(0));
-            return p.getName() + p.getContacts().stream().filter(c -> c.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
-                    .orElse(p.getContacts().stream().map(c -> " - " + c.toFullName()).findFirst()
-                            .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).filter(cu -> cu.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
-                                    .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).map(c -> " - " + c.toFullName()).findFirst()
-                                            .orElse(""))));
-        }
+        
+        AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().get();
+        
+        //start with possible company name
+        String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
+        sb += invoiceLabel.getContact().toFullName();
+        return sb;
+        
+        //TODO: not used anymore, remove after validation - PP
+//        if ( isBusiness() ) {
+//            Company p = companies.stream().filter(c -> c.isPrefered()).findFirst().orElse(companies.get(0));
+//            return p.getName() + p.getContacts().stream().filter(c -> c.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
+//                    .orElse(p.getContacts().stream().map(c -> " - " + c.toFullName()).findFirst()
+//                            .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).filter(cu -> cu.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
+//                                    .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).map(c -> " - " + c.toFullName()).findFirst()
+//                                            .orElse(""))));
+//        }
 
-        return contacts.stream().filter(c -> c.isPrefered()).map(c -> c.toFullName()).findFirst()
-                .orElse(contacts.get(0).toFullName());
+//        return contacts.stream().filter(c -> c.isPrefered()).map(c -> c.toFullName()).findFirst()
+//                .orElse(contacts.get(0).toFullName());
     }
 
     /**
@@ -415,8 +422,8 @@ public class Customer implements Serializable, EagerAble, ContactStash {
                 return "SimpleBusinessCustomer has more than one Company";
             if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() != 1 )
                 return "SimpleBusinessCustomer's Company has not exactly one address";
-            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getAddresses().stream()).count() != 1 )
-                return "SimpleBusinessCustomer's Contact has not exactly one address";
+            if ( companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getAddresses().stream()).count() > 0 )
+                return "SimpleBusinessCustomer's Contact can not have an address assigned";
             if ( companies.stream().flatMap(c -> c.getContacts().stream()).count() > 1 )
                 return "The Company has more than one Contact";
             if ( !companies.get(0).getAddresses().get(0).equals(companies.get(0).getContacts().get(0).getAddresses().get(0)) )
@@ -552,12 +559,12 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         sb.append("</tr><tr>");
 
         sb.append("<td valign=top>");
-        if ( toPreferedShippingAddress() == null ) sb.append("<b>Rechnungs- und Lieferadresse</b><br />");
+        if ( toShippingAddress() == null ) sb.append("<b>Rechnungs- und Lieferadresse</b><br />");
         else sb.append("<b>Rechnungsadresse</b><br />");
-        sb.append(toPreferedInvoiceAddress().toHtml());
-        if ( toPreferedShippingAddress() != null && toPreferedShippingAddress().getType() == SHIPPING ) {
+        sb.append(toInvoiceAddress().toHtml());
+        if ( toShippingAddress() != null && toShippingAddress().getType() == SHIPPING ) {
             sb.append("<br /><b>Lieferadresse</b><br />");
-            sb.append(toPreferedShippingAddress().toHtml());
+            sb.append(toShippingAddress().toHtml());
         }
         sb.append("</td>");
 

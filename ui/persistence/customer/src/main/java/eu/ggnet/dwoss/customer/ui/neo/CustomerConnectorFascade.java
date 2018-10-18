@@ -205,7 +205,9 @@ public class CustomerConnectorFascade {
 
     public static Customer createOrUpdateMandatorMetadata(long customerId, MandatorMetadata mandatorMetadata) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        agent.create(new Root(Customer.class, customerId), mandatorMetadata);
+        if(mandatorMetadata.getId() == 0)agent.create(new Root(Customer.class, customerId), mandatorMetadata);
+        else agent.update(mandatorMetadata);
+        
         return agent.findByIdEager(Customer.class, customerId);
     }
 

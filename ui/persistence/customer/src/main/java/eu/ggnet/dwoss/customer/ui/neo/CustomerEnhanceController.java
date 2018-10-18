@@ -284,8 +284,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             if ( !newValue ) this.customer.setKeyAccounter(keyAccounterTextField.getText());
         });
 
-        sourceChoiceBox.selectionModelProperty().addListener((observable, oldValue, newValue) -> {
-            this.customer.setSource(sourceChoiceBox.getValue());
+        sourceChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            this.customer.setSource(newValue);
         });
 
         additionalCustomerIds.addListener((Change<? extends AdditionalCustomerId> c) -> {
@@ -355,14 +355,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     public void accept(@NonNull Customer customer) {
         if ( !customer.isValid() ) throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
         isBusinessCustomer = customer.isBusiness();
-        
         setCustomer(customer);
-        System.out.println("Accept triggered: Adresslabels=" + customer.getAddressLabels().size());
     }
 
     @Override
     public Customer getResult() {
-        System.out.println("getResult triggered: Adresslabels=" + customer.getAddressLabels().size());
         if ( isCanceled ) return null;
         return customer;
     }
@@ -394,14 +391,13 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 } else {
                     customer.getFlags().remove(cfws.flag.get());
                 }
-                System.out.println("After adding/removing flag: Adresslabels=" + customer.getAddressLabels().size());
             });
 
             if ( customer.getFlags().contains(cfws.getFlag()) ) cfws.setSelected(true);
             else cfws.setSelected(false);
         });
 
-        sourceChoiceBox.getSelectionModel().select(customer.getSource());
+        sourceChoiceBox.valueProperty().setValue(customer.getSource());
 
         // Possibly not right here
         mandatorMetadata.addAll(customer.getMandatorMetadata());
@@ -429,11 +425,16 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         //build up the Buttons
         VBox buttonVBox = new VBox();
         Button editButton = new Button("Ändern");
-        Button addButton = new Button("Hinzufügen");
-        Button delButton = new Button("Löschen");
         editButton.setMinWidth(80.0);
+        editButton.getStyleClass().add("crudButton");
+
+        Button addButton = new Button("Hinzufügen");
         addButton.setMinWidth(80.0);
+        addButton.getStyleClass().add("crudButton");
+
+        Button delButton = new Button("Löschen");
         delButton.setMinWidth(80.0);
+        delButton.getStyleClass().add("crudButton");
 
         //set the right actions for the buttons
         if ( isBusinessCustomer ) {

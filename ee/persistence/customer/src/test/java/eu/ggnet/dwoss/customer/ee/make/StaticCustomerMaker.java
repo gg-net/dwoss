@@ -60,6 +60,17 @@ public class StaticCustomerMaker {
         assertThat(validContact.getViolationMessage()).as("Valid Contact does not violate any Rule").isNull();
         return validContact;
     }
+    
+    /**
+     *
+     * @return Valid Contact as in Contact.getViolationMessage()
+     *         with one Address and no Communication.
+     */
+    public static Contact makeValidCompanyContact() {
+        Contact validContact = makeValidContact();
+        validContact.getAddresses().clear();
+        return validContact;
+    }
 
     /**
      *
@@ -123,10 +134,9 @@ public class StaticCustomerMaker {
         Company company = new Company("Musterfirma", 0, true, "1203223");
         company.getAddresses().add(address);
         assertThat(company.getViolationMessage()).as("Company does not violate any rule").isNull();
-        Contact validContact = new Contact(Sex.FEMALE, true, "", "Testkunde", "Testkunde");
+        Contact validContact = makeValidCompanyContact();
         Communication validCommunication = new Communication(Type.EMAIL, "Max.mustermann@mustermail.de");
         validContact.getCommunications().add(validCommunication);
-        validContact.getAddresses().add(makeValidAddress());
         assertThat(validContact.getViolationMessage()).as("Contact is valid").isNull();
         company.getContacts().add(validContact);
         Customer customer = new Customer();
@@ -146,7 +156,7 @@ public class StaticCustomerMaker {
     public static Customer makeValidBusinessCustomer() {
         Customer customer = new Customer();
         customer.getCompanies().add(makeValidCompany());
-        customer.getCompanies().get(0).getContacts().add(makeValidContact());
+        customer.getCompanies().get(0).getContacts().add(makeValidCompanyContact());
         customer.getCompanies().get(0).getCommunications().add(makeValidCommunication(Communication.Type.EMAIL, "testMail@test.net"));
         customer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.EMAIL, "testMail@test.net"));
         customer.getCompanies().get(0).getContacts().get(0).getAddresses().add(makeValidAddress());

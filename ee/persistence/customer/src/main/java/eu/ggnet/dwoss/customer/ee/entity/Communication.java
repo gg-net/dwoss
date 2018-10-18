@@ -97,6 +97,7 @@ public class Communication implements Serializable {
      * Is this a prefered way of communication.
      */
     @Setter
+    @Deprecated
     private boolean prefered;
 
     /**

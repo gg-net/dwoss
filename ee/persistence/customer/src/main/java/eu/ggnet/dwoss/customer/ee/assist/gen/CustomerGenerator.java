@@ -133,7 +133,6 @@ public class CustomerGenerator {
      */
     public Customer makeSimpleBussinesCustomer() {
         Customer customer = new Customer();
-        int r = R.nextInt(5) + 1;
 
         Contact contact = makeContact(new Contact(), null, new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
         contact.getCommunications().add(new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int"));
@@ -142,7 +141,6 @@ public class CustomerGenerator {
         company.getContacts().add(contact);
         Address address = makeAddress();
         company.getAddresses().add(address);
-        contact.getAddresses().add(address);
 
         customer.getCompanies().add(company);       
 
@@ -200,6 +198,16 @@ public class CustomerGenerator {
         return companylist;
     }
 
+    /**
+     * Generates a {@link Contact} without address.
+     * {@link Contact#prefered} is never set.
+     * <p>
+     * @return a generated {@link Contact}.
+     */
+    public Contact makeBusinessContact() {
+        return makeContact(new Contact(), null, makeCommunication());
+    }
+    
     /**
      * Generates a {@link Contact}.
      * {@link Contact#prefered} is never set.

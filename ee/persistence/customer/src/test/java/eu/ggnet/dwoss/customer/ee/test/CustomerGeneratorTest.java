@@ -41,7 +41,7 @@ public class CustomerGeneratorTest {
     
     }
     
-        @Test
+    @Test
     public void makeSimpleBussinesCustomers() {
         for (int i = 0; i < 500; i++) {
             Customer c = GEN.makeSimpleBussinesCustomer();

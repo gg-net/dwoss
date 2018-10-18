@@ -78,6 +78,7 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
      */
     @Getter
     @Setter
+    @Deprecated
     private boolean prefered;
 
     @Getter
@@ -132,37 +133,37 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
         this.taxId = taxId;
     }
 
-    /**
-     * Returns the first prefered communication of that Type, may return null.
-     * If multiple Values of the same type are prefered the result is not gurantied.
-     * <p>
-     * @param type type of communication.
-     * @return the first prefered communication of that Type, may return null.
-     * @deprecated prefered is gone be removed.
-     */
-    @Deprecated
-    public Communication prefered(Communication.Type type) {
-        for (Communication communication : communications) {
-            if ( communication.getType() == type && communication.isPrefered() ) return communication;
-        }
-        return null;
-    }
-
-    /**
-     * Returns the first {@link Address} of the specified {@link AddressType}, may return null.
-     * If multiple Values of the same type are prefered the result is not gurantied.
-     * <p>
-     * @param type type of the prefered address
-     * @return the first prefered Address of that Type, may return null.
-     * @deprecated prefered is gone be removed.
-     */
-    @Deprecated
-    public Address prefered(AddressType type) {
-        for (Address address : addresses) {
-            if ( address.getPreferedType() == type ) return address;
-        }
-        return null;
-    }
+//    /**
+//     * Returns the first prefered communication of that Type, may return null.
+//     * If multiple Values of the same type are prefered the result is not gurantied.
+//     * <p>
+//     * @param type type of communication.
+//     * @return the first prefered communication of that Type, may return null.
+//     * @deprecated prefered is gone be removed.
+//     */
+//    @Deprecated
+//    public Communication prefered(Communication.Type type) {
+//        for (Communication communication : communications) {
+//            if ( communication.getType() == type && communication.isPrefered() ) return communication;
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * Returns the first {@link Address} of the specified {@link AddressType}, may return null.
+//     * If multiple Values of the same type are prefered the result is not gurantied.
+//     * <p>
+//     * @param type type of the prefered address
+//     * @return the first prefered Address of that Type, may return null.
+//     * @deprecated prefered is gone be removed.
+//     */
+//    @Deprecated
+//    public Address prefered(AddressType type) {
+//        for (Address address : addresses) {
+//            if ( address.getPreferedType() == type ) return address;
+//        }
+//        return null;
+//    }
 
     /**
      * Html representation of the class.
@@ -211,18 +212,20 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
      * <li>at least one Address</li>
      * <li>all Address have to be valid</li>
      * <li>all Contacts have to be valid</li>
+     * <li>all Contacts can not have any address assigned</li>
      * <li>all Communications have to be valid</li>
      * </ul>
      *
      * @return null if instance is valid, else a string representing the invalidation.
      */
-    // TODO: Validate, that the contact may only contain addresses of the company.
     public String getViolationMessage() {
         if ( StringUtils.isBlank(name) ) return "Name is blank";
         if ( addresses.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "One Address: " + addresses.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( contacts.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
+        if(contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 0)
+            return "Contacts on a Company can not have adresses assigned to them.";
         if ( communications.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Communications: " + communications.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         return null;

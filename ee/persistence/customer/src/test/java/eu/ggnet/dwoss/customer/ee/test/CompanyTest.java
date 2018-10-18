@@ -39,7 +39,7 @@ public class CompanyTest {
         company = new Company();
         company.setName("name");
         company.getAddresses().add(GEN.makeAddress());
-        company.getContacts().add(GEN.makeContact());
+        company.getContacts().add(GEN.makeBusinessContact());
         company.getCommunications().add(GEN.makeCommunication());
     }
 

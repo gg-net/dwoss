@@ -84,6 +84,7 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     @Getter
     @Setter
     @Field
+    @Deprecated
     private boolean prefered;
 
     /**

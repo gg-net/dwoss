@@ -151,7 +151,7 @@ public class CustomerExporterOperation implements CustomerExporter {
     }
 
     private static String applyAddress(Customer c, Function<Address, String> func) {
-        Address address = c.toPreferedInvoiceAddress().getAddress();
+        Address address = c.toInvoiceAddress().getAddress();
         if ( address == null ) return "";
         return func.apply(address);
     }
