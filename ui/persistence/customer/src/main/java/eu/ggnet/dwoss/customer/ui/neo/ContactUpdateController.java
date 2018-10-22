@@ -83,8 +83,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private TableColumn<Communication, Boolean> prefColumn = new TableColumn("prefered");
-
     private ObservableList<Address> addressList = FXCollections.observableArrayList();
 
     private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
@@ -279,35 +277,11 @@ public class ContactUpdateController implements Initializable, FxController, Con
                 }
             };
         });
-        prefColumn.setCellValueFactory(new PropertyValueFactory<>("preferred"));
-        prefColumn.setCellFactory(column -> {
-            return new TableCell<Communication, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if ( item == null || empty ) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        HBox checkHBox = new HBox();
-                        RadioButton prefRadioButton = new RadioButton();
-                        prefRadioButton.setSelected(item);
-                        prefRadioButton.setToggleGroup(prefGroup);
-
-                        checkHBox.getChildren().add(prefRadioButton);
-                        checkHBox.setAlignment(Pos.CENTER);
-
-                        setText("");
-                        setGraphic(checkHBox);
-                    }
-                }
-            };
-        });
 
         //fill the listViews
         addressListView.setItems(addressList);
         communicationTableView.setItems(communicationsList);
-        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
+        communicationTableView.getColumns().addAll(typeColumn, idColumn);
     }
 
     @FXML

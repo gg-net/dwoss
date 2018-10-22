@@ -103,15 +103,11 @@ public class CompanyUpdateController implements Initializable, FxController, Con
 
     private TableColumn<Communication, String> idColumn;
 
-    private TableColumn<Communication, Boolean> prefColumn;
-
     private ObservableList<Contact> contactsList;
 
     private ObservableList<Address> addressList;
 
     private ObservableList<Communication> communicationsList;
-
-    private ToggleGroup prefGroup;
 
     private boolean isCanceled = true;
 
@@ -359,34 +355,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 }
             };
         });
-        prefColumn = new TableColumn("prefered");
-        prefColumn.setCellValueFactory(new PropertyValueFactory<>("prefered"));
-        prefColumn.setCellFactory(column -> {
-            return new TableCell<Communication, Boolean>() {
-                @Override
-                protected void updateItem(Boolean item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if ( item == null || empty ) {
-                        setText(null);
-                        setGraphic(null);
-                    } else {
-                        prefGroup = new ToggleGroup();
-                        HBox checkHBox = new HBox();
-                        RadioButton prefRadioButton = new RadioButton();
-                        prefRadioButton.setSelected(item);
-                        prefRadioButton.setToggleGroup(prefGroup);
-
-                        checkHBox.getChildren().add(prefRadioButton);
-                        checkHBox.setAlignment(Pos.CENTER);
-
-                        setText("");
-                        setGraphic(checkHBox);
-                    }
-                }
-            };
-        });
+        
         //adding all columns to the communicationTable
-        communicationTableView.getColumns().addAll(typeColumn, idColumn, prefColumn);
+        communicationTableView.getColumns().addAll(typeColumn, idColumn);
 
         //Contact CellFactory
         contactListView.setCellFactory((ListView<Contact> p) -> {
