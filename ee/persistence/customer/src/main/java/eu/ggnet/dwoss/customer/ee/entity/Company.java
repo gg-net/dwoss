@@ -73,14 +73,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @Setter
     private int ledger;
 
-    /**
-     * Is this a prefered company to use.
-     */
-    @Getter
-    @Setter
-    @Deprecated
-    private boolean prefered;
-
     @Getter
     @Setter
     @Size(max = 255)
@@ -126,44 +118,11 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     }
 
     @Builder
-    public Company(String name, int ledger, boolean prefered, String taxId) {
+    public Company(String name, int ledger, String taxId) {
         this.name = name;
         this.ledger = ledger;
-        this.prefered = prefered;
         this.taxId = taxId;
     }
-
-//    /**
-//     * Returns the first prefered communication of that Type, may return null.
-//     * If multiple Values of the same type are prefered the result is not gurantied.
-//     * <p>
-//     * @param type type of communication.
-//     * @return the first prefered communication of that Type, may return null.
-//     * @deprecated prefered is gone be removed.
-//     */
-//    @Deprecated
-//    public Communication prefered(Communication.Type type) {
-//        for (Communication communication : communications) {
-//            if ( communication.getType() == type && communication.isPrefered() ) return communication;
-//        }
-//        return null;
-//    }
-//
-//    /**
-//     * Returns the first {@link Address} of the specified {@link AddressType}, may return null.
-//     * If multiple Values of the same type are prefered the result is not gurantied.
-//     * <p>
-//     * @param type type of the prefered address
-//     * @return the first prefered Address of that Type, may return null.
-//     * @deprecated prefered is gone be removed.
-//     */
-//    @Deprecated
-//    public Address prefered(AddressType type) {
-//        for (Address address : addresses) {
-//            if ( address.getPreferedType() == type ) return address;
-//        }
-//        return null;
-//    }
 
     /**
      * Html representation of the class.
@@ -173,7 +132,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append(name);
-        if ( prefered ) sb.append("&nbsp;<b>&oplus;</b>");
         if ( taxId != null || ledger > 0 ) sb.append("<br />");
         if ( taxId != null ) sb.append("TaxId: " + taxId);
         if ( taxId != null && ledger > 0 ) sb.append(", ");
@@ -200,7 +158,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
             }
             sb.append("</ul>");
         }
-        sb.append(prefered ? "</b>" : "");
         return sb.toString();
     }
 

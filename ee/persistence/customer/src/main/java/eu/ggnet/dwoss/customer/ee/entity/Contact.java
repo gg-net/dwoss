@@ -78,16 +78,6 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     private Sex sex;
 
     /**
-     * Is this Element prefered.
-     * Hint: Makes things simpler and nice, but may result in conflicts. If this becomes an issue, we can consider changing the database.
-     */
-    @Getter
-    @Setter
-    @Field
-    @Deprecated
-    private boolean prefered;
-
-    /**
      * All titles the contact carries.
      */
     @Getter
@@ -140,9 +130,8 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     }
 
     @Builder
-    public Contact(Sex sex, boolean prefered, String title, String firstName, String lastName) {
+    public Contact(Sex sex, String title, String firstName, String lastName) {
         this.sex = sex;
-        this.prefered = prefered;
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -163,20 +152,6 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     }
 
     /**
-     * Returns the first prefered {@link Address} of that Type, may return null.
-     * If multiple Values of the same type are prefered the result is not gurantied.
-     * <p>
-     * @param type the {@link AddressType}
-     * @return the first prefered communication of that Type, may return null.
-     */
-    public Address prefered(AddressType type) {
-        for (Address address : addresses) {
-            if ( address.getPreferedType() == type ) return address;
-        }
-        return null;
-    }
-
-    /**
      * Returns a human readable representation of title, first and lastname.
      *
      * @return a human readable representation of title, first and lastname.
@@ -188,7 +163,7 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append(title == null ? "" : title + "&nbsp;").append(firstName == null ? "" : firstName + "&nbsp;").append(lastName == null ? "" : lastName)
-                .append(sex == null ? "" : "&nbsp;(" + sex.getSign() + ")").append(prefered ? "&nbsp;<b>&oplus;</b>" : "").append("<br />");
+                .append(sex == null ? "" : "&nbsp;(" + sex.getSign() + ")").append("<br />");
         if ( !addresses.isEmpty() ) {
             sb.append("Adresse(n):<ul>");
             for (Address address : addresses) {

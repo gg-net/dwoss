@@ -55,7 +55,7 @@ public class StaticCustomerMaker {
      *         with one Address and no Communication.
      */
     public static Contact makeValidContact() {
-        Contact validContact = new Contact(Sex.MALE, true, "Dr", "Max", "Mustermann");
+        Contact validContact = new Contact(Sex.MALE, "Dr", "Max", "Mustermann");
         validContact.getAddresses().add(makeValidAddress());
         assertThat(validContact.getViolationMessage()).as("Valid Contact does not violate any Rule").isNull();
         return validContact;
@@ -131,7 +131,7 @@ public class StaticCustomerMaker {
     public static Customer makeValidSimpleBusiness() {
         Address address = makeValidAddress();
         assertThat(address.getViolationMessage()).as("Address does not violate any rule").isNull();
-        Company company = new Company("Musterfirma", 0, true, "1203223");
+        Company company = new Company("Musterfirma", 0, "1203223");
         company.getAddresses().add(address);
         assertThat(company.getViolationMessage()).as("Company does not violate any rule").isNull();
         Contact validContact = makeValidCompanyContact();

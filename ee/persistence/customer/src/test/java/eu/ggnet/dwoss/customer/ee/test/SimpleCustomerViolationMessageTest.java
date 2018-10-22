@@ -68,7 +68,7 @@ public class SimpleCustomerViolationMessageTest {
 
         simpleConsumer = makeValidSimpleConsumer();
         simpleConsumer.getContacts().clear();
-        Contact invalidContact = new Contact(Sex.MALE, true, null, "invalid", "");
+        Contact invalidContact = new Contact(Sex.MALE, null, "invalid", "");
         assertThat(invalidContact.getViolationMessage()).as("Contact without lastName is invalid").isNotNull();
         simpleConsumer.getContacts().add(invalidContact);
         assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with invalid contact is invalid").isNotNull();
@@ -204,7 +204,7 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getViolationMessage()).as("Addition of two AddressLabels to a BusinessCustomer always results invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        Company invalidCompany = new Company("", 0, true, "634855");
+        Company invalidCompany = new Company("", 0, "634855");
         assertThat(invalidCompany.getViolationMessage()).as("Company without a Name is invalid").isNotNull();
         simpleBusinessCustomer.getCompanies().add(invalidCompany);
         assertThat(simpleBusinessCustomer.getViolationMessage()).as("Adding an invalid Company to a SimpleBusinessCustomer results invalid").isNotNull();

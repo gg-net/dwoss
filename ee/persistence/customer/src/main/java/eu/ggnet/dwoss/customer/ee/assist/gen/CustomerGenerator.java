@@ -80,17 +80,9 @@ public class CustomerGenerator {
     public Customer makeCustomer() {
         Customer customer = new Customer();
         int r = R.nextInt(5) + 1;
-        boolean prefered = false;
         for (int i = 0; i < r; i++) {
             Contact con = makeContact();
-            if ( !prefered ) {
-                prefered = R.nextBoolean();
-                con.setPrefered(prefered);
-            }
             customer.getContacts().add(con);
-        }
-        if ( !prefered ) {
-            customer.getContacts().iterator().next().setPrefered(true);
         }
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
@@ -137,7 +129,7 @@ public class CustomerGenerator {
         Contact contact = makeContact(new Contact(), null, new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
         contact.getCommunications().add(new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int"));
 
-        Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), true, "DE " + RandomStringUtils.randomNumeric(8));
+        Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), "DE " + RandomStringUtils.randomNumeric(8));
         company.getContacts().add(contact);
         Address address = makeAddress();
         company.getAddresses().add(address);
@@ -263,7 +255,6 @@ public class CustomerGenerator {
 
     private Address makeAddress(Address address) {
         GeneratedAddress genereratedAddress = GEN.makeAddress();
-        if ( R.nextBoolean() ) address.setPreferedType(new RandomEnum<>(AddressType.class).random());
         address.setCity(genereratedAddress.getTown());
         address.setStreet(genereratedAddress.getStreet());
         address.setZipCode(genereratedAddress.getPostalCode());
@@ -340,7 +331,7 @@ public class CustomerGenerator {
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());
         m.setPaymentMethod(new RandomEnum<>(PaymentMethod.class).random());
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
-        EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.add(t));
+        EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.getAllowedSalesChannels().add(t));
         return m;
     }
 

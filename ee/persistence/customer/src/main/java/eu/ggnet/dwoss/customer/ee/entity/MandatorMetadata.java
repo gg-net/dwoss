@@ -117,24 +117,6 @@ public class MandatorMetadata implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<SalesChannel> allowedSalesChannels = new HashSet<>();
 
-    /**
-     *
-     * @deprecated use getAllowedSalesChannels.clear();
-     */
-    @Deprecated
-    public void clearSalesChannels() {
-        allowedSalesChannels.clear();
-    }
-
-    /**
-     *
-     * @deprecated use getAllowedSalesChannels.add();
-     */
-    @Deprecated
-    public void add(SalesChannel s) {
-        allowedSalesChannels.add(s);
-    }
-
     public MandatorMetadata(String mandatorMatchcode) {
         this.mandatorMatchcode = mandatorMatchcode;
     }

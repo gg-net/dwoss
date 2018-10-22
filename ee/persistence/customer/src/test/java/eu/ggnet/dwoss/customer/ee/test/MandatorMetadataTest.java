@@ -40,7 +40,7 @@ public class MandatorMetadataTest {
         validMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
         validMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
         validMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        validMandatorMetadata.add(SalesChannel.UNKNOWN);
+        validMandatorMetadata.getAllowedSalesChannels().add(SalesChannel.UNKNOWN);
 
         assertThat(validMandatorMetadata.getViolationMessage()).as("valid Communication").isNull();
         return validMandatorMetadata;
@@ -78,7 +78,7 @@ public class MandatorMetadataTest {
     @Test
     public void testGetViolationMessagesNonSalesChannels() {
         MandatorMetadata makeInValidMandatorMetadata = makeValidMandatorMetadata();
-        makeInValidMandatorMetadata.clearSalesChannels();
+        makeInValidMandatorMetadata.getAllowedSalesChannels().clear();
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
     }
 

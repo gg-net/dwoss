@@ -149,12 +149,12 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             comp = request(customer.getCompanies(), () -> new Company());
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
-            a = request(comp.getAddresses(), () -> new Address(AddressType.INVOICE));
+            a = request(comp.getAddresses(), () -> new Address());
             cont = request(comp.getContacts(), () -> new Contact());
             cont.getAddresses().add(a);
         } else {
             cont = request(customer.getContacts(), () -> new Contact());
-            a = request(cont.getAddresses(), () -> new Address(AddressType.INVOICE));
+            a = request(cont.getAddresses(), () -> new Address());
         }
         al = new AddressLabel(comp, cont, a, AddressType.INVOICE);
         // TODO: Remove old, reuse old ?

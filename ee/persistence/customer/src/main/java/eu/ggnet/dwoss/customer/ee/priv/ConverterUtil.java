@@ -48,7 +48,6 @@ public class ConverterUtil {
      * @return the converted old customer
      * @deprecated use only customer any more.
      */
-    
     //TODO Olli fragen ob okay
     @Deprecated
     public static OldCustomer convert(Customer customer, String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
@@ -163,14 +162,12 @@ public class ConverterUtil {
                 default:
             }
         }
-        contact.setPrefered(true);
         if ( !StringUtils.isBlank(old.getFirma()) || !customer.getCompanies().isEmpty() ) {
             if ( customer.getCompanies().isEmpty() ) customer.getCompanies().add(new Company());
             Company company = customer.getCompanies().get(0);
             company.setName(old.getFirma());
             company.setLedger(old.getLedger());
             company.setTaxId(old.getTaxId());
-            company.setPrefered(true);
         }
         for (Type t : EnumSet.of(EMAIL, FAX, PHONE, MOBILE)) {
             if ( !StringUtils.isBlank(get(old, t)) || contact.prefered(t) != null ) {
@@ -179,27 +176,27 @@ public class ConverterUtil {
             }
         }
 
-        if ( !StringUtils.isBlank(old.getREAdresse()) || contact.prefered(INVOICE) != null ) {
-            if ( contact.prefered(INVOICE) == null ) contact.getAddresses().add(new Address(INVOICE));
-            Address rad = contact.prefered(INVOICE);
+        if ( !StringUtils.isBlank(old.getREAdresse()) ) {
+            Address rad = new Address();
             rad.setStreet(old.getREAdresse());
             rad.setCity(old.getREOrt() == null ? "" : old.getREOrt());
             rad.setZipCode(old.getREPlz() == null ? "" : old.getREPlz());
+            contact.getAddresses().add(rad);
         }
-        if ( !StringUtils.isBlank(old.getLIAdresse()) || contact.prefered(SHIPPING) != null ) {
-            if ( contact.prefered(SHIPPING) == null ) contact.getAddresses().add(new Address(SHIPPING));
-            Address sad = contact.prefered(SHIPPING);
+        if ( !StringUtils.isBlank(old.getLIAdresse()) ) {
+            Address sad = new Address();
             sad.setStreet(old.getLIAdresse());
             sad.setCity(old.getLIOrt() == null ? "" : old.getLIOrt());
             sad.setZipCode(old.getLIPlz() == null ? "" : old.getLIPlz());
+            contact.getAddresses().add(sad);
         }
         MandatorMetadata m = customer.getMandatorMetadata(mandatorMatchCode);
         if ( m == null ) m = new MandatorMetadata();
         m.setMandatorMatchcode(mandatorMatchCode);
-        m.clearSalesChannels();
+        m.getAllowedSalesChannels().clear();
         if ( !old.getAllowedSalesChannels().equals(defaults.getAllowedSalesChannels()) ) {
             for (SalesChannel salesChannel : old.getAllowedSalesChannels()) {
-                m.add(salesChannel);
+                m.getAllowedSalesChannels().add(salesChannel);
             }
         }
         if ( old.getPaymentCondition() == defaults.getPaymentCondition() ) m.setPaymentCondition(null);

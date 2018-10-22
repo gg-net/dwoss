@@ -48,15 +48,6 @@ public class Address implements Serializable {
     @Version
     private short optLock;
 
-    /**
-     * Is this a address to be used for a specific type by default, null indicates no preference.
-     */
-    // Kann weg
-    @Deprecated
-    @Setter
-    @Enumerated
-    private AddressType preferedType;
-
     @Setter
     @NotNull
     @Field
@@ -90,10 +81,6 @@ public class Address implements Serializable {
      */
     public Address(long id) {
         this.id = id;
-    }
-
-    public Address(AddressType preferedType) {
-        this.preferedType = preferedType;
     }
 
     public void setCountry(Country country) {
