@@ -22,7 +22,7 @@ public class CustomerTest {
 
         makeValidConsumer = makeValidConsumerCustomer();
         makeValidConsumer.getAddressLabels().add(makeValidInvoiceAddressLabel());
-        assertThat(makeValidConsumer.isValid()).as("Consumer Customer is vaild").isTrue();
+        assertThat(makeValidConsumer.isValid()).as("Consumer should be invalid due to a third address label").isFalse();
 
         makeValidConsumer = makeValidConsumerCustomer();
         makeValidConsumer.getAddressLabels().clear();

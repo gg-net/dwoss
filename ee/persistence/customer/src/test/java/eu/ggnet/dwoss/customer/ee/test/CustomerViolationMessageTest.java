@@ -48,7 +48,7 @@ public class CustomerViolationMessageTest {
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getContacts().add(makeValidContact());
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with a Contact is invalid").isNotNull();
-
+        
         businessCustomer = makeValidBusinessCustomer();
         businessCustomer.getAddressLabels().clear();
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without AddressLabels is invalid").isNotNull();
@@ -70,13 +70,13 @@ public class CustomerViolationMessageTest {
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Communication is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        Company invalidCompany = new Company("", 0, "3486");
+        Company invalidCompany = new Company("", 0, true, "3486");
         assertThat(invalidCompany.getViolationMessage()).as("Invalid Company is invalid").isNotNull();
         businessCustomer.getCompanies().add(invalidCompany);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Company is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        Contact invalidContact = new Contact(Sex.MALE, "", "Hans", "");
+        Contact invalidContact = new Contact(Sex.MALE, false, "", "Hans", "");
         assertThat(invalidContact.getViolationMessage()).as("Invalid Contact is invalid").isNotNull();
         businessCustomer.getCompanies().get(0).getContacts().add(invalidContact);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Contact is invalid").isNotNull();
@@ -136,7 +136,7 @@ public class CustomerViolationMessageTest {
         assertThat(consumerCustomer.getViolationMessage()).as("ConsumerCustomer with invalid Communication is invalid").isNotNull();
 
         consumerCustomer = makeValidConsumerCustomer();
-        Contact invalidContact = new Contact(Sex.MALE, "", "Hans", "");
+        Contact invalidContact = new Contact(Sex.MALE, false, "", "Hans", "");
         assertThat(invalidContact.getViolationMessage()).as("Invalid Contact is invalid").isNotNull();
         consumerCustomer.getContacts().add(invalidContact);
         assertThat(consumerCustomer.getViolationMessage()).as("ConsumerCustomer with invalid Contact is invalid").isNotNull();
