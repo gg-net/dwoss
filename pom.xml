@@ -357,7 +357,7 @@
                 <plugin>
                     <groupId>de.juplo</groupId>
                     <artifactId>hibernate4-maven-plugin</artifactId>
-                    <version>1.1.1</version>
+                    <version>1.1.0</version>
                     <configuration>
                         <envers>true</envers>
                         <format>true</format>
@@ -608,7 +608,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.2</version>
+                <version>1.16.18</version> <!-- x.x.20 fails in netbeans -->
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -669,7 +669,7 @@
             <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4 , w12 = 5.5.8.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
-                <version>5.5.8.Final</version>
+                <version>5.5.4.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>

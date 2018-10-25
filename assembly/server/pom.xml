@@ -124,7 +124,7 @@
                     <version>${dw.version}</version>
                 </dependency>
                 <!-- Excluded. Is obsolede. Will be removed completely in the future -->
-                <!--                <dependency>
+<!--                                <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ee-pro-sopo</artifactId>
                     <version>${dw.version}</version>

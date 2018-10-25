@@ -219,18 +219,18 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     /**
      * Generates a human readable representation of the customers name.
      * This funktion will build a string that contains the company name (optional) and the contacts full name.
-     * 
+     *
      * @return a human readable representation of the customer
      */
     public String toName() {
-        
+
         AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().get();
-        
+
         //start with possible company name
         String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
         sb += invoiceLabel.getContact().toFullName();
         return sb;
-        
+
         //TODO: not used anymore, remove after validation - PP
 //        if ( isBusiness() ) {
 //            Company p = companies.stream().filter(c -> c.isPrefered()).findFirst().orElse(companies.get(0));
@@ -240,7 +240,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 //                                    .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).map(c -> " - " + c.toFullName()).findFirst()
 //                                            .orElse(""))));
 //        }
-
 //        return contacts.stream().filter(c -> c.isPrefered()).map(c -> c.toFullName()).findFirst()
 //                .orElse(contacts.get(0).toFullName());
     }
@@ -284,6 +283,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             sc.setLastName(companies.get(0).getContacts().get(0).getLastName());
             sc.setSex(companies.get(0).getContacts().get(0).getSex());
 
+            //TODO: should not happen anymore, remove the if part
             //if the Company have a Contact use this Address
             if ( !companies.get(0).getContacts().get(0).getAddresses().isEmpty() ) {
                 sc.setStreet(companies.get(0).getContacts().get(0).getAddresses().get(0).getStreet());
@@ -484,18 +484,14 @@ public class Customer implements Serializable, EagerAble, ContactStash {
                 return "Consumer: No Address on any Contact";
             if ( !contacts.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
                 return "Consumer: No Communication on any Contact";
-            if ( contacts.stream().flatMap(cntct -> cntct.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
-                return "Communications: " + contacts.stream().flatMap(cntct -> cntct.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).map(comm -> comm.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-
         }
         if ( isBusiness() ) {
             if ( companies.stream().flatMap(c -> c.getAddresses().stream()).count() == 0 ) return "BusinessCustomer has no Address.";
             if ( !companies.stream().flatMap(c -> c.getCommunications().stream()).findAny().isPresent()
                     && !companies.stream().flatMap(c -> c.getContacts().stream()).flatMap(c -> c.getCommunications().stream()).findAny().isPresent() )
                 return "BusinessCustomer: No Communication";
-            if ( Stream.concat(companies.stream().flatMap(cmp -> cmp.getCommunications().stream()), companies.stream().flatMap(cmp -> cmp.getContacts().stream()).flatMap(cntct -> cntct.getCommunications().stream())).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
+            if ( companies.stream().flatMap(cmp -> cmp.getContacts().stream()).flatMap(cntct -> cntct.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).findAny().isPresent() )
                 return "Communications: " + companies.stream().flatMap(cmp -> cmp.getCommunications().stream()).filter(comm -> comm.getViolationMessage() != null).map(comm -> comm.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-
         }
         return null;
     }

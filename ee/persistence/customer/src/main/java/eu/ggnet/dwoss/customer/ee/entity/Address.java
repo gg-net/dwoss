@@ -48,6 +48,13 @@ public class Address implements Serializable {
     @Version
     private short optLock;
 
+    /**
+     * Is this a address to be used for a specific type by default, null indicates no preference.
+     */
+    @Setter
+    @Enumerated
+    private AddressType preferedType;
+
     @Setter
     @NotNull
     @Field
@@ -123,9 +130,5 @@ public class Address implements Serializable {
         return sb.append(street).append(" ").append(zipCode)
                 .append(" ").append(city).toString();
     }
-
-    public void get(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
 }
