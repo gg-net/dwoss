@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
@@ -38,7 +39,7 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
     UserTransaction utx;
 
     @Inject
-    private CustomerGeneratorOperation genOp;
+    private CustomerGeneratorOperation cgo;
 
     @Inject
     private CustomerEao eao;
@@ -54,59 +55,67 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
-    private TradeName contractors = TradeName.LENOVO;
+    private final TradeName CONTRACTOR = TradeName.LENOVO;
 
-    private DocumentType types = DocumentType.ORDER;
+    private final DocumentType DOCUMENT_TYPE = DocumentType.ORDER;
 
     @Test
     public void make200Customers() {
         final int AMOUNT = 200;
 
-        List<Long> ids = genOp.makeCustomers(AMOUNT);
+        List<Long> ids = cgo.makeCustomers(AMOUNT);
         assertThat(ids).as("Generated Ids").isNotNull().isNotEmpty().hasSize(AMOUNT);
 
         assertThat(eao.count()).as("less Customer get found").isEqualTo(AMOUNT);
     }
 
     @Test
+    public void makeCustomerWithAssure() {
+        for (int i = 0; i < 20; i++) {
+            long cid = cgo.makeCustomer(Assure.builder().noMetadata(true).build());
+            assertThat(agent.findByIdEager(Customer.class,cid).getMandatorMetadata()).as("Customer Metadata must be empty").isEmpty();
+        }
+    }
+
+    @Test
     public void testMakeReceiptCustomers() {
         //ReceiptCustomers are Customer where ReceiptOperation are backed By Customer
-        genOp.makeReceiptCustomers(contractors);
+        cgo.makeReceiptCustomers(CONTRACTOR);
 
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(6);
     }
 
     @Test
     public void testMakeRepaymentCustomers() {
-        genOp.makeRepaymentCustomers(contractors);
+        cgo.makeRepaymentCustomers(CONTRACTOR);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeScrapCustomers() {
-        genOp.makeScrapCustomers(contractors);
+        cgo.makeScrapCustomers(CONTRACTOR);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeDeleteCustomers() {
-        genOp.makeDeleteCustomers(contractors);
+        cgo.makeDeleteCustomers(CONTRACTOR);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testMakeSpecialCustomers() {
-        genOp.makeSpecialCustomers(types);
+        cgo.makeSpecialCustomers(DOCUMENT_TYPE);
         assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
     }
 
     @Test
     public void testScrambleAddress() {
-        genOp.makeCustomers(25);
+        cgo.makeCustomers(25);
         Customer customerFormTheDb = agent.findByIdEager(Customer.class, 1l);
         assertThat(customerFormTheDb.isValid()).as("not a valid Customer").isTrue();
 
-        genOp.scrambleAddress(1, AddressType.INVOICE);
+        cgo.scrambleAddress(1, AddressType.INVOICE);
         Customer customerFormTheDbAfterScrambleAddress = agent.findByIdEager(Customer.class, 1l);
         assertThat(customerFormTheDbAfterScrambleAddress.isValid()).as("not a valid Customer").isTrue();
     }

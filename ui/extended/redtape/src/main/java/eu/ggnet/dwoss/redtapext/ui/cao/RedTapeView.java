@@ -275,16 +275,8 @@ public class RedTapeView extends JPanel implements ClosedListener {
             }
         });
 
-        JMenuItem showNewDetails = new JMenuItem("Neu Detailansicht");
-        showNewDetails.addActionListener(e -> {
-            Ui.exec(() -> {
-                Ui.build().title("Customer").fx().show(() -> Dl.remote().lookup(CustomerService.class).asNewHtmlHighDetailed(model.getPurchaseCustomer().getId()), () -> new HtmlPane());
-            });
-        });
-
         menu.add(newCustomerItem);
         menu.add(editEditItem);
-        menu.add(showNewDetails);
         return menu;
     }
 

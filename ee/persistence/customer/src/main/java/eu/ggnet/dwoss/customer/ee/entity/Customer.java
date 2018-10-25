@@ -22,7 +22,6 @@ import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -389,7 +388,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             if ( contacts.stream().flatMap(c -> c.getAddresses().stream()).count() > 1 )
                 return "Contact has more than one address";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).count() > 3 )
-                return "Contact of the consumer  has more than 3 communications";
+                return "Contact of the consumer has more than 3 communications";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> !allowedCommunicationTypes.contains(c.getType())).findAny().isPresent() )
                 return "At least one Communication Type not allowed for consumers were found";
             if ( contacts.stream().flatMap(c -> c.getCommunications().stream()).filter(c -> c.getType() == EMAIL).count() > 1 )

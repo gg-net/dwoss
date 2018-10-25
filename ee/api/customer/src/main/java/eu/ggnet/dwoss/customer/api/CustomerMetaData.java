@@ -66,5 +66,5 @@ public class CustomerMetaData implements Serializable {
      * Allowed {@link SalesChannel} for the customer.
      */
     private final Set<SalesChannel> allowedSalesChannel;
-
+    
 }

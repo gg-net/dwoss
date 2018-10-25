@@ -14,19 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ee.entity.stash;
-
-import java.util.List;
-
-import eu.ggnet.dwoss.customer.ee.entity.Address;
-
 /**
- * Stashing nature of addresses.
- * 
- * @author oliver.guenther
+ * Customer entity model.
  */
-public interface AddressStash {
-    
-    List<Address> getAddresses();
-    
-}
+package eu.ggnet.dwoss.customer.ee.entity;

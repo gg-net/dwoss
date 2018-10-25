@@ -21,7 +21,8 @@ import java.util.List;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 
 /**
- *
+ * Stashing nature for communications.
+ * 
  * @author oliver.guenther
  */
 public interface CommunicationStash {

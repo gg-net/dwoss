@@ -43,7 +43,7 @@ public class UiCustomer implements Serializable {
     private String simpleHtml;
 
     private String email;
-
+    
     /**
      * Ledger of the FiBu, if 0 not used.
      */

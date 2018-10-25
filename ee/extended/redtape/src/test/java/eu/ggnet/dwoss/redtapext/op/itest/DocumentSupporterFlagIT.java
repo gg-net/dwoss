@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
@@ -57,7 +58,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
 
     @Before
     public void makeOneCustomer() {
-        customerId = cgo.makeCustomer();
+        customerId = cgo.makeCustomer(Assure.builder().noMetadata(true).build());
     }
 
     @After

@@ -93,14 +93,6 @@ public interface CustomerService {
     String asHtmlHighDetailed(long id);
 
     /**
-     * Returns a highly detailed, newlly designed html formated string with most customer information.
-     * <p>
-     * @param id customer identifier
-     * @return a highly detailed, html formated string with most customer information.
-     */
-    String asNewHtmlHighDetailed(long id);
-
-    /**
      * Returns the comment (former Anmerkung) of the Customer or null if not found.
      * <p>
      * @param id the customerId
