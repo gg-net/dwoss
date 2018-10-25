@@ -49,7 +49,6 @@ public class CompanyUpdateTryOut {
 
         JButton editButton = new JButton("edit");
         editButton.addActionListener(ev -> {
-            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> company, CompanyUpdateController.class).opt().ifPresent(System.out::println);
             });

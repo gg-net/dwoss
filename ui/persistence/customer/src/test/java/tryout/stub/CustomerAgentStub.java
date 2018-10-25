@@ -48,7 +48,7 @@ public class CustomerAgentStub implements CustomerAgent {
 
     private final int AMOUNT = 25;
 
-    private final int SLOW = 40; 
+    private final int SLOW = 40;
 
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
 
@@ -406,6 +406,11 @@ public class CustomerAgentStub implements CustomerAgent {
 
         // TODO: implement email
         return result;
+    }
+
+    @Override
+    public List<String> mergeCustomerAfterAddressLabel() {
+        throw new UnsupportedOperationException(" not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -44,8 +44,6 @@ public class ContactUpdateTryout {
         contact.getAddresses().add(gen.makeAddressWithId(12));
         contact.getCommunications().add(gen.makeCommunicationWithId(22));
 
-        CustomerConnectorFascade.setCustomer(customer);
-
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 

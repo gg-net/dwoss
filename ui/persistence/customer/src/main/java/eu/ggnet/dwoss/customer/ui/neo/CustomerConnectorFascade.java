@@ -16,21 +16,27 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UiParent;
 
 import lombok.NonNull;
+
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
+import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
  * Contains all opperations for modification of customer objects in the database.
@@ -39,13 +45,6 @@ import lombok.NonNull;
  * @author oliver.guenther
  */
 public class CustomerConnectorFascade {
-
-    private static Customer customer;
-
-    /* REMOVE Me LATER */
-    public static void setCustomer(Customer c) {
-        CustomerConnectorFascade.customer = c;
-    }
 
     public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
@@ -205,9 +204,9 @@ public class CustomerConnectorFascade {
 
     public static Customer createOrUpdateMandatorMetadata(long customerId, MandatorMetadata mandatorMetadata) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        if(mandatorMetadata.getId() == 0)agent.create(new Root(Customer.class, customerId), mandatorMetadata);
+        if ( mandatorMetadata.getId() == 0 ) agent.create(new Root(Customer.class, customerId), mandatorMetadata);
         else agent.update(mandatorMetadata);
-        
+
         return agent.findByIdEager(Customer.class, customerId);
     }
 
@@ -240,6 +239,19 @@ public class CustomerConnectorFascade {
                 .thenApply(CustomerConnectorFascade::optionalStore)
                 .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
                 .handle(Ui.handler());
+    }
+
+    /**
+     * Merges the customer to have at least one invoice adresslabel and a shippinglabel if previously present.
+     * <p>
+     * This function will not modify anything if any addresslabel is already present.
+     *
+     * @return
+     * @throws IllegalStateException if any of the created addresslabels is not valid
+     */
+    @Deprecated
+    public static List<String> mergeCustomerAfterAddressLabel() {
+        return Dl.remote().lookup(CustomerAgent.class).mergeCustomerAfterAddressLabel();
     }
 
     /**

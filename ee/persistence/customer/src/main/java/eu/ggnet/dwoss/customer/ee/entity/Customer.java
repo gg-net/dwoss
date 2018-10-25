@@ -223,25 +223,14 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * @return a human readable representation of the customer
      */
     public String toName() {
+        AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().orElse(null);
 
-        AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().get();
+        if ( invoiceLabel == null ) return null;
 
         //start with possible company name
         String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
         sb += invoiceLabel.getContact().toFullName();
         return sb;
-
-        //TODO: not used anymore, remove after validation - PP
-//        if ( isBusiness() ) {
-//            Company p = companies.stream().filter(c -> c.isPrefered()).findFirst().orElse(companies.get(0));
-//            return p.getName() + p.getContacts().stream().filter(c -> c.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
-//                    .orElse(p.getContacts().stream().map(c -> " - " + c.toFullName()).findFirst()
-//                            .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).filter(cu -> cu.isPrefered()).map(c -> " - " + c.toFullName()).findFirst()
-//                                    .orElse(companies.stream().flatMap(c -> c.getContacts().stream()).map(c -> " - " + c.toFullName()).findFirst()
-//                                            .orElse(""))));
-//        }
-//        return contacts.stream().filter(c -> c.isPrefered()).map(c -> c.toFullName()).findFirst()
-//                .orElse(contacts.get(0).toFullName());
     }
 
     /**

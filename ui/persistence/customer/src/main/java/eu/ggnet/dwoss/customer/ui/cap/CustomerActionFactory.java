@@ -38,6 +38,7 @@ public class CustomerActionFactory implements ActionFactory {
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
                 new MetaAction(MENU_NAME, "Datenbank", new RecreateSearchIndex()),
+                new MetaAction(MENU_NAME, "Datenbank", new MergeCustomerAfterAddressLabel()),
                 new MetaAction("Geschäftsführung", new ExportAllCustomers()),
                 new MetaAction("Kunden und Aufträge", new CustomerSearchAction()),
                 new MetaAction("Kunden und Aufträge", new AddCustomerAction())

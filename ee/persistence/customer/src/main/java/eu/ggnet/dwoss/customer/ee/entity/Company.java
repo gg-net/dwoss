@@ -73,6 +73,14 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @Setter
     private int ledger;
 
+    /**
+     * Is this a prefered company to use.
+     */
+    @Getter
+    @Setter
+    @Deprecated
+    private boolean prefered;
+
     @Getter
     @Setter
     @Size(max = 255)

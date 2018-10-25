@@ -78,6 +78,16 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     private Sex sex;
 
     /**
+     * Is this Element prefered.
+     * Hint: Makes things simpler and nice, but may result in conflicts. If this becomes an issue, we can consider changing the database.
+     */
+    @Getter
+    @Setter
+    @Field
+    @Deprecated
+    private boolean prefered;
+
+    /**
      * All titles the contact carries.
      */
     @Getter
@@ -147,6 +157,20 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
     public Communication prefered(Communication.Type type) {
         for (Communication communication : communications) {
             if ( communication.getType() == type && communication.isPrefered() ) return communication;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the first prefered {@link Address} of that Type, may return null.
+     * If multiple Values of the same type are prefered the result is not gurantied.
+     * <p>
+     * @param type the {@link AddressType}
+     * @return the first prefered communication of that Type, may return null.
+     */
+    public Address prefered(AddressType type) {
+        for (Address address : addresses) {
+            if ( address.getPreferedType() == type ) return address;
         }
         return null;
     }

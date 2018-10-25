@@ -90,7 +90,6 @@ public class CustomerEnhanceTryout {
             customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
 
             Dl.remote().add(CustomerAgent.class, new CustomerAgentStub(customer));
-            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);
             });
@@ -121,7 +120,6 @@ public class CustomerEnhanceTryout {
                 return;
             }
             Dl.remote().add(CustomerAgent.class, new CustomerAgentStub(customer));
-            CustomerConnectorFascade.setCustomer(customer);
             Ui.exec(() -> {
                 Ui.build().fxml().eval(() -> customer, CustomerEnhanceController.class).opt().ifPresent(System.out::println);
             });
