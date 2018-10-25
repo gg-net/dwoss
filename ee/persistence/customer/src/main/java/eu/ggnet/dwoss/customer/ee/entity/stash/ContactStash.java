@@ -21,7 +21,8 @@ import java.util.List;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
 
 /**
- *
+ * Stashing nature of contacts.
+ * 
  * @author oliver.guenther
  */
 public interface ContactStash {

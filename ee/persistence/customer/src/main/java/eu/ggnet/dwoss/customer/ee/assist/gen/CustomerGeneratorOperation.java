@@ -21,7 +21,6 @@ import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
 import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
@@ -40,11 +39,11 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.util.gen.NameGenerator;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
@@ -59,13 +58,7 @@ public class CustomerGeneratorOperation {
 
     private final Logger L = LoggerFactory.getLogger(CustomerGeneratorOperation.class);
 
-    private final static EnumSet<CustomerFlag> ALLOWED_FLAG = EnumSet.of(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY, CustomerFlag.CONFIRMS_DOSSIER);
-
-    private final NameGenerator GEN = new NameGenerator();
-
     private final CustomerGenerator CGEN = new CustomerGenerator();
-
-    private final Random R = new Random();
 
     @Inject
     @Customers
@@ -73,12 +66,6 @@ public class CustomerGeneratorOperation {
 
     @Inject
     private MonitorFactory monitorFactory;
-
-    @Inject
-    private Mandator mandator;
-
-    @Inject
-    private DefaultCustomerSalesdata defaults;
 
     public void makeSystemCustomersBasedOnMandator(DefaultCustomerSalesdata defaults, DeleteCustomers deleteCustomers,
                                                    ReceiptCustomers receiptCustomers, RepaymentCustomers repaymentCustomers,
@@ -264,6 +251,20 @@ public class CustomerGeneratorOperation {
         return makeCustomers(1).get(0);
     }
 
+    /**
+     * Generates and persitst a new customer assureing the supplied rules.
+     *
+     * @param assure the rules
+     * @return the id of the customer.
+     */
+    @AutoLogger
+    public long makeCustomer(CustomerGenerator.Assure assure) {
+        Customer customer = CGEN.makeCustomer(assure);
+        em.persist(customer);
+        em.flush();
+        return customer.getId();
+    }
+
     public List<Long> makeCustomers(int amount) {
         SubMonitor m = monitorFactory.newSubMonitor("Generiere " + amount + " Kunden", amount);
         L.info("Generating {} customers", amount);
@@ -307,19 +308,6 @@ public class CustomerGeneratorOperation {
         }
         em.merge(customer);
 
-//        Customer customer = em.find(Customer.class, customerId);
-//        OldCustomer sc = ConverterUtil.convert(customer, mandator.getMatchCode(), defaults);
-//        GeneratedAddress newAddress = GEN.makeAddress();
-//        if ( type == INVOICE ) {
-//            sc.setREAdresse(newAddress.getStreet());
-//            sc.setREOrt(newAddress.getTown());
-//            sc.setREPlz(newAddress.getPostalCode());
-//        } else {
-//            sc.setLIAdresse(newAddress.getStreet());
-//            sc.setLIOrt(newAddress.getTown());
-//            sc.setLIPlz(newAddress.getPostalCode());
-//        }
-//        ConverterUtil.mergeFromOld(sc, customer, mandator.getMatchCode(), defaults);
     }
 
 }

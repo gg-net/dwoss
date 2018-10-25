@@ -37,6 +37,8 @@ import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.util.gen.*;
 
+import lombok.*;
+
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
@@ -64,7 +66,39 @@ public class CustomerGenerator {
         }
     }
 
+    @Builder
+    @Getter
+    public static class Assure {
+
+        @Builder.Default
+        private final boolean noMetadata = false;
+
+        @Builder.Default
+        private final boolean simple = false;
+
+    }
+
     private final NameGenerator GEN = new NameGenerator();
+
+    /**
+     * Generates a new customer assureing the supplied restrictions, never a Systemcustomer.
+     *
+     * @param assure the assurence
+     * @return the new customer
+     */
+    public Customer makeCustomer(@NonNull Assure assure) {
+        Customer c = null;
+        if ( assure.isSimple() ) {
+            c = R.nextBoolean() ? makeSimpleConsumerCustomer() : makeSimpleBussinesCustomer();
+        } else {
+            c = makeCustomer();
+        }
+        if(assure.isNoMetadata()) {
+            c.getMandatorMetadata().clear();
+        }
+        c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
+        return c;
+    }
 
     /**
      * Generates a {@link Customer}.
@@ -134,7 +168,7 @@ public class CustomerGenerator {
         Address address = makeAddress();
         company.getAddresses().add(address);
 
-        customer.getCompanies().add(company);       
+        customer.getCompanies().add(company);
 
         customer.getAddressLabels().add(new AddressLabel(company, contact, address, AddressType.INVOICE));
         customer.setComment("Das ist ein Kommentar zum Kunden");
@@ -199,7 +233,7 @@ public class CustomerGenerator {
     public Contact makeBusinessContact() {
         return makeContact(new Contact(), null, makeCommunication());
     }
-    
+
     /**
      * Generates a {@link Contact}.
      * {@link Contact#prefered} is never set.

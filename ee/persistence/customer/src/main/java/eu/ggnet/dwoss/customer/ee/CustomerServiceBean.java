@@ -37,9 +37,8 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 
 /**
  * CustomerService implementation for {@link OldCustomer}.
@@ -62,7 +61,6 @@ public class CustomerServiceBean implements CustomerService {
     @Override
     public String asHtmlHighDetailed(long customerId) {
         return Optional.ofNullable(customerEao.findById(customerId)).map(c -> Css.toHtml5WithStyle(c.toHtml(mandator.getMatchCode(), salesData))).orElse("Kein Kunde mit id " + customerId + " gefunden");
-//        return convert(customerEao.findById(customerId)).toHtmlHighDetailed();
     }
 
     @Override
@@ -72,7 +70,7 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        return customerEao.find(search, null ).stream().map((customer) -> {
+        return customerEao.find(search, null).stream().map((customer) -> {
             return asUiCustomer(customer);
         }).collect(Collectors.toList());
     }
@@ -117,88 +115,36 @@ public class CustomerServiceBean implements CustomerService {
     }
 
     private UiCustomer asUiCustomer(Customer customer) {
+        Objects.requireNonNull(customer, "Supplied customer ist null, not allowed");
 
-        if ( customer.isBusiness() ) {
-
-            String email = "";
-            Optional<Communication> findEMAIL = customer.getCompanies().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).findFirst();
-            if ( findEMAIL.isPresent() ) {
-                email = findEMAIL.get().getIdentifier();
-            }
-            return new UiCustomer(
-                    customer.getId(),
-                    customer.getCompanies().get(0).getContacts().get(0).getTitle() != null ? customer.getCompanies().get(0).getContacts().get(0).getTitle() + " " : "",
-                    customer.getCompanies().get(0).getContacts().get(0).getFirstName(),
-                    customer.getCompanies().get(0).getContacts().get(0).getLastName(),
-                    customer.getCompanies().get(0).getName(),
-                    customer.toString(),
-                    email,
-                    customer.getCompanies().get(0).getLedger());
-
+        Contact contact = null;
+        if (customer.toInvoiceAddress().getContact() != null) {
+            contact = customer.toInvoiceAddress().getContact();
         } else {
-            String email = "";
-            Optional<Communication> findEMAIL = customer.getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == EMAIL).findFirst();
-            if ( findEMAIL.isPresent() ) {
-                email = findEMAIL.get().getIdentifier();
-            }
-            return new UiCustomer(
-                    customer.getId(),
-                    customer.getContacts().get(0).getTitle() != null ? customer.getContacts().get(0).getTitle() + " " : "",
-                    customer.getContacts().get(0).getFirstName(),
-                    customer.getContacts().get(0).getLastName(),
-                    null,
-                    customer.toString(),
-                    email,
-                    0);
+            contact = customer.toInvoiceAddress().getCompany().getContacts().get(0);
         }
 
-        //TODO Olli fragen ob okay        
-//        return new UiCustomer(
-//                old.getId(),
-//                old.getTitel() != null ? old.getTitel() + " " : "",
-//                old.getVorname(),
-//                old.getNachname(),
-//                old.getFirma(),
-//                old.toHtmlSimple(),
-//                old.getEmail(),
-//                old.getLedger());
+        return new UiCustomer(
+                customer.getId(),
+                contact.getTitle() != null ? contact.getTitle() : "",
+                contact.getFirstName(),
+                contact.getLastName(),
+                Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getName).orElse(null),
+                customer.toName(),
+                getDefaultEmail(),
+                Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getLedger).orElse(0));
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
-        String email = "";
-        if ( customer.isBusiness() ) {
-            email = customer.getCompanies().get(0)
-                    .getCommunications().stream()
-                    .filter(c -> c.getType() == EMAIL)
-                    .map(Communication::getIdentifier)
-                    .findFirst()
-                    .orElse("no email");
-        } else {
-            email = customer.getContacts().get(0)
-                    .getCommunications().stream()
-                    .filter(c -> c.getType() == EMAIL)
-                    .map(Communication::getIdentifier)
-                    .findFirst().orElse("no email");
-        }
-
         return new CustomerMetaData(
                 customer.getId(),
-                email,
-                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getPaymentCondition() : null,
-                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getPaymentMethod() : null,
-                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getShippingCondition() : null,
+                getDefaultEmail(),
+                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentCondition).findAny().orElse(salesData.getPaymentCondition()),
+                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentMethod).findAny().orElse(salesData.getPaymentMethod()),
+                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getShippingCondition).findAny().orElse(salesData.getShippingCondition()),
                 customer.getFlags(),
-                customer.getMandatorMetadata().size() > 0 ? customer.getMandatorMetadata().get(0).getAllowedSalesChannels() : null
+                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getAllowedSalesChannels).findAny().orElse(salesData.getAllowedSalesChannels())
         );
-        //TODO Olli fragen ob okay
-//        return new CustomerMetaData(
-//                old.getId(),
-//                old.getEmail(),
-//                old.getPaymentCondition(),
-//                old.getPaymentMethod(),
-//                old.getShippingCondition(),
-//                old.getFlags(),
-//                old.getAllowedSalesChannels());
     }
 
     @Override
@@ -206,9 +152,8 @@ public class CustomerServiceBean implements CustomerService {
         return customerEao.findAllSystemCustomerIds();
     }
 
-    @Deprecated // Useless merged it allready
-    @Override
-    public String asNewHtmlHighDetailed(long id) {
-        return customerEao.findById(id).toHtml();
+    //TODO: See https://jira.cybertron.global/browse/DWOSS-278
+    private String getDefaultEmail() {
+        return null; // TODO: something like customer.getDefaultEmail() or customer.getDefaultCommunication(EMAIL)
     }
 }

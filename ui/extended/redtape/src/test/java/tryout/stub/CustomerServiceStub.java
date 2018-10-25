@@ -12,8 +12,6 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import java.util.*;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
 /**
  *
@@ -73,11 +71,6 @@ public class CustomerServiceStub implements CustomerService {
     @Override
     public List<Long> allSystemCustomerIds() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public String asNewHtmlHighDetailed(long id) {
-        return customer.toHtml();
     }
 
 }
