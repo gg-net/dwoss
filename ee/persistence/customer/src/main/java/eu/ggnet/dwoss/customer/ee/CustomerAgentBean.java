@@ -317,35 +317,34 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             //safety if addresslabels are already present
             if ( customer.getAddressLabels().isEmpty() ) {
 
+                Company company = customer.getCompanies().stream().filter(Company::isPrefered).findFirst().orElse(null);
+                Contact contact = customer.getContacts().stream().filter(Contact::isPrefered).findFirst().orElse(null);
+
+                Address invoice = contact == null
+                        ? company.getAddresses().stream().reduce((first, second) -> second).orElse(null)
+                        : contact.prefered(INVOICE);
+
                 //build invoice label
-                AddressLabel invoice = new AddressLabel(
-                        customer.getCompanies().stream().filter(Company::isPrefered).findFirst().orElse(null),
-                        customer.getContacts().stream().filter(Contact::isPrefered).findFirst().orElse(null),
-                        customer.getContacts().stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(INVOICE)).orElse(null),
-                        INVOICE);
+                AddressLabel invoiceLabel = new AddressLabel(company, contact, invoice, INVOICE);
 
                 //build shipping label only if neccesary
-                AddressLabel shipping = null;
-                AddressType type = customer.getContacts().stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(SHIPPING)).map(a -> SHIPPING).orElse(INVOICE);
-                if ( type == SHIPPING ) {
-                    shipping = new AddressLabel(
-                            customer.getCompanies().stream().filter(Company::isPrefered).findFirst().orElse(null),
-                            customer.getContacts().stream().filter(Contact::isPrefered).findFirst().orElse(null),
-                            customer.getContacts().stream().filter(Contact::isPrefered).findFirst().map(c -> c.prefered(type)).orElse(null),
-                            type);
+                AddressLabel shippingLabel = null;
+                Address shipping = contact == null ? invoice : contact.prefered(SHIPPING);
+                if ( shipping != null ) {
+                    shippingLabel = new AddressLabel(company, contact, shipping, SHIPPING);
                 }
 
                 //add violation info if neccesary and continue to next customer
-                if ( invoice.getViolationMessage() != null || (shipping != null && shipping.getViolationMessage() != null) ) {
-                    violations.add("Customer: " + customer.getId() + " - " + invoice.getViolationMessage());
-                    if ( shipping != null ) violations.add("Customer: " + customer.getId() + " - " + shipping.getViolationMessage());
+                if ( invoiceLabel.getViolationMessage() != null || (shippingLabel != null && shippingLabel.getViolationMessage() != null) ) {
+                    violations.add("Customer: " + customer.getId() + " - INVOICE: " + invoiceLabel.getViolationMessage());
+                    if ( shippingLabel != null ) violations.add("Customer: " + customer.getId() + " - SHIPPING: " + shippingLabel.getViolationMessage());
                     m.worked(1, "Failed merge for Customer: " + customer.getId());
                     continue;
                 }
 
                 //add addresslabel and update customer
-                customer.getAddressLabels().add(invoice);
-                if ( shipping != null ) customer.getAddressLabels().add(shipping);
+                customer.getAddressLabels().add(invoiceLabel);
+                if ( shippingLabel != null ) customer.getAddressLabels().add(shippingLabel);
                 update(customer);
                 m.worked(1, "Merged Customer: " + customer.getId());
             } else {
