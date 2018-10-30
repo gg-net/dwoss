@@ -159,7 +159,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * maximum of size2, consisting of
      */
     @OneToMany(orphanRemoval = true, cascade = ALL, fetch = EAGER, mappedBy = "customer")
-    List<AddressLabel> addressLabels = new ArrayList<>();
+    List<AddressLabel> addressLabels = new ArrayList<>();  
 
     /**
      * Returns the Metadata based on the matchcode, may return null.

@@ -55,6 +55,7 @@ import eu.ggnet.saft.core.Ui;
 
 import lombok.*;
 
+import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
@@ -132,8 +133,14 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void clickSaveButton(ActionEvent event) {
-        isCanceled = false;
-        Ui.closeWindowOf(customerIdLabel);
+
+        if ( !customer.isValid() ) {
+            new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").show();
+//            throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
+        } else {
+            isCanceled = false;
+            Ui.closeWindowOf(customerIdLabel);
+        }
     }
 
     @FXML
@@ -353,7 +360,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      */
     @Override
     public void accept(@NonNull Customer customer) {
-        if ( !customer.isValid() ) throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
+        if ( !customer.isValid() ) {
+            new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").showAndWait();
+//            throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
+        }
         isBusinessCustomer = customer.isBusiness();
         setCustomer(customer);
     }

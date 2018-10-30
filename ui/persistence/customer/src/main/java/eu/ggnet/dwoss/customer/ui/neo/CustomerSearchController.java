@@ -239,11 +239,13 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                 Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
                 System.out.println("Edit customer triggered: AdressLabel=" + customer.getAddressLabels().size());
                 customer.getAddressLabels().forEach(c -> System.out.println("Label:" + c));
-                if ( !customer.isValid() ) {
-                    Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
-                } else {
+                
+                //TODO: Check if the validation is really neccesary later, if not remove. We validate while editing
+//                if ( !customer.isValid() ) {
+//                    Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
+//                } else {
                     CustomerConnectorFascade.edit(customer, UiParent.of(resultListView));
-                }
+//                }
             });
         });
 
