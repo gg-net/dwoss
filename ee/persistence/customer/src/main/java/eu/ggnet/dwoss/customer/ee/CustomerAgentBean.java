@@ -41,8 +41,6 @@ import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
@@ -74,9 +72,6 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Inject
     private DefaultCustomerSalesdata salesdata;
-
-    @Inject
-    private MonitorFactory monitorFactory;
 
     @Override
     protected EntityManager getEntityManager() {
@@ -281,71 +276,5 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         List<Customer> results = customerEao.find(company, firstName, lastName, email, appendWildcard);
         results.forEach(Customer::fetchEager);
         return results;
-    }
-
-    /**
-     * Merges the customer to have at least one invoice adresslabel and a shippinglabel if previously present.
-     * <p>
-     * This function will not modify anything if any addresslabel is already present.
-     *
-     * @return
-     * @throws IllegalStateException if any of the created addresslabels is not valid
-     */
-    @Deprecated
-    @Override
-    public List<String> mergeCustomerAfterAddressLabel() {
-
-        List<String> violations = new ArrayList<>();
-
-        final SubMonitor m = monitorFactory.newSubMonitor("Merging Customer after AddressLabel implementation...");
-        m.start();
-
-        List<Customer> allCustomers = findAllEager(Customer.class);
-
-        m.setWorkRemaining(allCustomers.size());
-
-        for (Customer customer : allCustomers) {
-            m.message("Merging Customer: " + customer.getId());
-
-            //safety if addresslabels are already present
-            if ( customer.getAddressLabels().isEmpty() ) {
-
-                Company company = customer.getCompanies().stream().filter(Company::isPrefered).findFirst().orElse(null);
-                Contact contact = customer.getContacts().stream().filter(Contact::isPrefered).findFirst().orElse(null);
-
-                Address invoice = contact == null
-                        ? company.getAddresses().stream().reduce((first, second) -> second).orElse(null)
-                        : contact.prefered(INVOICE);
-
-                //build invoice label
-                AddressLabel invoiceLabel = new AddressLabel(company, contact, invoice, INVOICE);
-
-                //build shipping label only if neccesary
-                AddressLabel shippingLabel = null;
-                Address shipping = contact == null ? invoice : contact.prefered(SHIPPING);
-                if ( shipping != null ) {
-                    shippingLabel = new AddressLabel(company, contact, shipping, SHIPPING);
-                }
-
-                //add violation info if neccesary and continue to next customer
-                if ( invoiceLabel.getViolationMessage() != null || (shippingLabel != null && shippingLabel.getViolationMessage() != null) ) {
-                    violations.add("Customer: " + customer.getId() + " - INVOICE: " + invoiceLabel.getViolationMessage());
-                    if ( shippingLabel != null ) violations.add("Customer: " + customer.getId() + " - SHIPPING: " + shippingLabel.getViolationMessage());
-                    m.worked(1, "Failed merge for Customer: " + customer.getId());
-                    continue;
-                }
-
-                //add addresslabel and update customer
-                customer.getAddressLabels().add(invoiceLabel);
-                if ( shippingLabel != null ) customer.getAddressLabels().add(shippingLabel);
-                update(customer);
-                m.worked(1, "Merged Customer: " + customer.getId());
-            } else {
-                m.worked(1, "Skipped Customer: " + customer.getId());
-            }
-        }
-
-        m.finish();
-        return violations;
     }
 }

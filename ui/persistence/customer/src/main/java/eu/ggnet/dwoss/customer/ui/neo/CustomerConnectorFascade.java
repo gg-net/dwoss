@@ -242,19 +242,6 @@ public class CustomerConnectorFascade {
     }
 
     /**
-     * Merges the customer to have at least one invoice adresslabel and a shippinglabel if previously present.
-     * <p>
-     * This function will not modify anything if any addresslabel is already present.
-     *
-     * @return
-     * @throws IllegalStateException if any of the created addresslabels is not valid
-     */
-    @Deprecated
-    public static List<String> mergeCustomerAfterAddressLabel() {
-        return Dl.remote().lookup(CustomerAgent.class).mergeCustomerAfterAddressLabel();
-    }
-
-    /**
      * Opens the Uis to select and optionaly edit or create a new customer.
      *
      * @param p           a parent for the ui
