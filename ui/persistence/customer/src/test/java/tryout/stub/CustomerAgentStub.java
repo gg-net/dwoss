@@ -408,9 +408,4 @@ public class CustomerAgentStub implements CustomerAgent {
         return result;
     }
 
-    @Override
-    public List<String> mergeCustomerAfterAddressLabel() {
-        throw new UnsupportedOperationException(" not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

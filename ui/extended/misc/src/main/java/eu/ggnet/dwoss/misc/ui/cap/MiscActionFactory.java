@@ -85,6 +85,7 @@ public class MiscActionFactory implements ActionFactory {
         actions.add(new MetaAction("Geschäftsführung", "Abschluss Reporte", new ResolveRepaymentAction()));
         actions.add(new MetaAction("Hilfe", new AboutAction()));
         actions.add(new MetaAction("Hilfe", new ShowMandatorAction()));
+        actions.add(new MetaAction("System", "Datenbank", new MergeCustomerAfterAddressLabel()));
 
         return actions;
     }

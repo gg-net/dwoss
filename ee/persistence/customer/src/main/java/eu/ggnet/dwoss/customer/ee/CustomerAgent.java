@@ -141,6 +141,4 @@ public interface CustomerAgent extends RemoteAgent {
      */
     void delete(Root root, Object t);
     
-    @Deprecated
-    List<String> mergeCustomerAfterAddressLabel();
 }
