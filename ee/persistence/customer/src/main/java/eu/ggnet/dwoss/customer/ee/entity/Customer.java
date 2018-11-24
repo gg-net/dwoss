@@ -233,7 +233,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
         //start with possible company name
         String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
-        sb += invoiceLabel.getContact().toFullName();
+        sb += invoiceLabel.getContact() != null ? invoiceLabel.getContact().toFullName() : "NoNameContact";
         return sb;
     }
 

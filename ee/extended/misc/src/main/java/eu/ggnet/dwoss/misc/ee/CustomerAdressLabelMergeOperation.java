@@ -42,35 +42,23 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
     @RedTapes
     private EntityManager redTapeEm;
 
-    @Inject
-    private MonitorFactory monitorFactory;
-
-    public List<PicoCustomer> findNonAddressLabelCustomers() {
+    public List<Long> findNonAddressLabelCustomers() {
         return new JPAQuery<>(customerEm)
-                .select(customer)
+                .select(customer.id)
                 .from(customer)
-                .where(customer.addressLabels.isEmpty()).fetch()
-                .stream().map(cus -> cus.toPico())
-                .collect(Collectors.toList());
+                .where(customer.addressLabels.isEmpty()).fetch();
     }
 
-    public List<PicoCustomer> findNonDossierCustomers() {
-        List<Long> customerIds = new JPAQuery<>(customerEm)
-                .select(customer.id)
-                .from(customer).fetch();
-
+    public List<Long> findNonDossierCustomers() {
         List<Long> dossierCustomers = new JPAQuery<>(redTapeEm)
                 .select(dossier.customerId).distinct()
                 .from(dossier).fetch();
 
-        customerIds.removeAll(dossierCustomers);
-
         return new JPAQuery<>(customerEm)
-                .select(customer)
+                .select(customer.id)
                 .from(customer)
-                .where(customer.id.in(customerIds)).fetch()
-                .stream().map(cus -> cus.toPico())
-                .collect(Collectors.toList());
+                .where(customer.id.notIn(dossierCustomers))
+                .fetch();
     }
 
     public Map<String, List<PicoCustomer>> mergeCustomerAfterAddressLabel(Collection<Long> customerIds, IMonitor m) {
@@ -91,8 +79,8 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
                 Company company = customer.getCompanies().stream().filter(Company::isPrefered).findFirst().orElse(null);
                 Contact contact = customer.getContacts().stream().filter(Contact::isPrefered).findFirst().orElse(null);
 
-                L.info("---Customer company: " + (company == null ? company : company.getId() + " - " + company.getName()));
-                L.info("---Customer contact: " + (contact == null ? contact : contact.getId() + " - " + contact.toFullName()));
+                L.debug("---Customer company: " + (company == null ? company : company.getId() + " - " + company.getName()));
+                L.debug("---Customer contact: " + (contact == null ? contact : contact.getId() + " - " + contact.toFullName()));
 
                 Address invoice = (contact == null
                                    ? company.getAddresses().stream().reduce((first, second) -> second).orElse(null)
@@ -100,16 +88,16 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
 
                 //build invoice label
                 AddressLabel invoiceLabel = new AddressLabel(company, contact, invoice, INVOICE);
-                L.info("---Created Invoice Label: " + invoiceLabel);
+                L.debug("---Created Invoice Label: " + invoiceLabel);
 
                 //build shipping label only if neccesary
                 AddressLabel shippingLabel = null;
                 Address shipping = (contact == null ? invoice : contact.prefered(SHIPPING));
                 if ( shipping != null ) {
                     shippingLabel = new AddressLabel(company, contact, shipping, SHIPPING);
-                    L.info("---Created Shipping Label: " + invoiceLabel);
+                    L.debug("---Created Shipping Label: " + invoiceLabel);
                 } else {
-                    L.info("---Shipping address was null");
+                    L.debug("---Shipping address was null");
                 }
 
                 //add violation info if neccesary and continue to next customer

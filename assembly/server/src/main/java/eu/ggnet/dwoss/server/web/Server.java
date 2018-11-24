@@ -18,10 +18,11 @@ package eu.ggnet.dwoss.server.web;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,7 +49,7 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 @Named
 @ManagedBean
 @SessionScoped
-public class Server implements Serializable{
+public class Server implements Serializable {
 
     private final Logger L = LoggerFactory.getLogger(Server.class);
 
@@ -60,15 +61,15 @@ public class Server implements Serializable{
     private MonitorFactory monitorFactory;
 
     @Getter
-    private List<PicoCustomer> nonAddressLabelCustomers;
+    private List<Long> nonAddressLabelCustomers;
 
     @Getter
-    private List<PicoCustomer> nonDossierCustomers;
+    private List<Long> nonDossierCustomers;
 
     @Inject
     private CustomerAdressLabelMergeOperation customerMergeOperation;
 
-    @Inject
+    @EJB
     private Mandators mandatorSupport;
 
     @Getter
@@ -76,13 +77,25 @@ public class Server implements Serializable{
 
     @Getter
     private Map<String, List<PicoCustomer>> mergeViolations;
-    
+
     @Getter
-    private int onePercentWork;
+    @Setter
+    private String selectedKey;
+
+    @Getter
+    private int maxWork = 0;
 
     @PostConstruct
     public void init() {
-        nonDossierCustomers = customerMergeOperation.findNonAddressLabelCustomers();
+        System.out.println("Search for non addresslabeled customers");
+        L.info("Search for non addresslabeled customers");
+        nonAddressLabelCustomers = customerMergeOperation.findNonAddressLabelCustomers();
+        System.out.println("Found " + nonAddressLabelCustomers.size() + " entries");
+        L.info("Found {} entries", nonAddressLabelCustomers.size());
+
+        L.info("Search for non dossier customers");
+        nonDossierCustomers = customerMergeOperation.findNonDossierCustomers();
+        L.info("Found {} entries", nonDossierCustomers.size());
         monitor = monitorFactory.newSubMonitor("Customer merge not in progress..");
         mergeViolations = new HashMap<>();
     }
@@ -104,14 +117,19 @@ public class Server implements Serializable{
         L.info("-Start customer merge after AddressLabel implementation");
         monitor.message("Merging Customer after AddressLabel implementation...");
 
-        List<Long> collect = nonAddressLabelCustomers.stream().mapToLong(pc -> pc.getId()).boxed().collect(Collectors.toList());
-        collect.removeAll(nonDossierCustomers.stream().mapToLong(pc -> pc.getId()).boxed().collect(Collectors.toList()));
+        List<Long> collect = new ArrayList<>(nonAddressLabelCustomers);
+        collect.removeAll(nonDossierCustomers);
 
-        onePercentWork = 100 / collect.size();
+        maxWork = collect.size();
+
         monitor.setWorkRemaining(collect.size());
         monitor.start();
         mergeViolations = customerMergeOperation.mergeCustomerAfterAddressLabel(collect, monitor);
 
         monitor.finish();
+    }
+
+    public List<Entry<String, List<PicoCustomer>>> violationEntriesAsList() {
+        return new ArrayList<Map.Entry<String, List<PicoCustomer>>>(mergeViolations.entrySet());
     }
 }
