@@ -50,6 +50,7 @@ import lombok.NonNull;
 
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
  * implementaion of the CustomerAgent
@@ -110,27 +111,28 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return in.get(0);
     }
 
-    private void update(List<Communication> communications, Communication.Type type, String identifier) {
+    private void update(Customer customer, List<Communication> communications, Communication.Type type, String identifier) {
         if ( StringUtils.isBlank(identifier) ) {
-            Optional<Communication> optEmail = communications.stream()
+            communications.stream()
                     .filter(co -> co.getType() == type)
-                    .findFirst();
-            optEmail.ifPresent(email -> {
-                communications.remove(email);
-                em.remove(email);
-            });
+                    .findFirst().ifPresent(comm -> {
+                        communications.remove(comm);
+                        if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(null);
+                        em.remove(comm);
+                    });
         } else {
-            Optional<Communication> optEmail = communications.stream()
+            Optional<Communication> optComm = communications.stream()
                     .filter(co -> co.getType() == type)
                     .findFirst();
-            optEmail.ifPresent(email -> {
+            optComm.ifPresent(email -> {
                 email.setIdentifier(identifier);
             });
-            if ( !optEmail.isPresent() ) {
-                Communication email = new Communication();
-                communications.add(email);
-                email.setType(type);
-                email.setIdentifier(identifier);
+            if ( !optComm.isPresent() ) {
+                Communication comm = new Communication();
+                communications.add(comm);
+                comm.setType(type);
+                comm.setIdentifier(identifier);
+                if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(comm);
             }
         }
     }
@@ -156,9 +158,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             comp = request(customer.getCompanies(), () -> new Company());
             comp.setName(simpleCustomer.getCompanyName());
             comp.setTaxId(simpleCustomer.getTaxId());
-            a = request(comp.getAddresses(), () -> new Address());
             cont = request(comp.getContacts(), () -> new Contact());
-            cont.getAddresses().add(a);
+            a = request(comp.getAddresses(), () -> new Address());
         } else {
             cont = request(customer.getContacts(), () -> new Contact());
             a = request(cont.getAddresses(), () -> new Address());
@@ -179,9 +180,9 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         a.setStreet(simpleCustomer.getStreet());
         a.setZipCode(simpleCustomer.getZipCode());
 
-        update(cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail());
-        update(cont.getCommunications(), Type.PHONE, simpleCustomer.getLandlinePhone());
-        update(cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
+        update(customer, cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail());
+        update(customer, cont.getCommunications(), Type.PHONE, simpleCustomer.getLandlinePhone());
+        update(customer, cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
 
         L.info("Trying Customer {} with coms: {} ", simpleCustomer.getLastName(), cont.getCommunications());
 
@@ -216,11 +217,9 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     public <T> T create(@NonNull Root root, @NonNull T raw) {
         Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
-        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
+        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
-
-        //TODO: Address detached Entity while creating
-        else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class ) {
+        } else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class ) {
             AddressLabel al = (AddressLabel)raw;
             Customer c = (Customer)rootElement;
             Address add = findById(Address.class, al.getAddress().getId());
@@ -230,19 +229,15 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             al.setContact(cont);
             al.setAddress(add);
             al.setCustomer(c);
-        } else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
+        } else if ( raw instanceof Company && rootElement.getClass() == Customer.class ) {
             ((Customer)rootElement).getCompanies().add((Company)raw);
-
-        else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) )
+        } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((ContactStash)rootElement).getContacts().add((Contact)raw);
-
-        else if ( raw instanceof MandatorMetadata && rootElement.getClass() == Customer.class )
+        } else if ( raw instanceof MandatorMetadata && rootElement.getClass() == Customer.class ) {
             ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
-
-        else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) )
+        } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
-
-        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+        } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
         em.persist(raw);
         return raw;
     }
@@ -255,23 +250,21 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * Both root and raw are not allowed to be null.
      */
     public void delete(@NonNull Root root, @NonNull Object raw) {
-        Object rootElement = findByIdEager(root.getClazz(), root.getId());
+        Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
-        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) )
+        if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((AddressStash)rootElement).getAddresses().remove((Address)raw);
-
-        else if ( raw instanceof Company && rootElement.getClass() == Customer.class )
+        } else if ( raw instanceof Company && rootElement.getClass() == Customer.class ) {
             ((Customer)rootElement).getCompanies().remove((Company)raw);
-
-        else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) )
+        } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((ContactStash)rootElement).getContacts().remove((Contact)raw);
-
-        else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) )
-            ((CommunicationStash)rootElement).getCommunications().remove((Communication)raw);
-
-        else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
-
-        em.merge(rootElement);
+        } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
+            Communication comm = (Communication)raw;
+            ((CommunicationStash)rootElement).getCommunications().remove(comm);
+            if (comm.getType() == EMAIL) {
+                Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
+            }
+        } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
     }
 
     @AutoLogger

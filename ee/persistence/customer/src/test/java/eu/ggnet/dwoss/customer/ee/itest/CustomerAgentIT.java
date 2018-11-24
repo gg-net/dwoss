@@ -37,6 +37,7 @@ import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
+import eu.ggnet.saft.api.Reply;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,8 +58,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     @Inject
     UserTransaction utx;
 
-    @Inject
-    private CustomerGenerator GEN;
+    private CustomerGenerator GEN = new CustomerGenerator();
 
     @Inject
     private CustomerEao eao;
@@ -131,7 +131,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
         assertThat(agent.countSearch(firstName, customerFields)).as("can not find the City of Customer").isEqualTo(1);
     }
-
+    
     @Test
     public void testFindCustomerAsHtml() {
         String feedback = "Kein Kunde mit id 123 vorhanden";
@@ -139,4 +139,16 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         assertThat(findCustomerAsHtml).as("give back the Error Message").isEqualToIgnoringCase(feedback);
     }
 
+    @Test
+    public void testStoreSimpleCustomer() {
+        Reply<Customer> reply = agent.store(GEN.makeSimpleConsumerCustomer().toSimple().get());
+        assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
+        reply = agent.store(GEN.makeSimpleBussinesCustomer().toSimple().get());
+        assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
+        
+        assertThat(agent.count(Customer.class)).as("There should only be two customers in the db").isEqualTo(2);
+        
+        agent.findAllEager(Customer.class).forEach(c -> assertThat(c.getDefaultEmailCommunication()).as("A default email should be set, but isn't : " + c).isNotNull());
+    }
+    
 }

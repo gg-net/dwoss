@@ -36,7 +36,9 @@ import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
+import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.AbstractJPAQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.Value;
 
@@ -162,6 +164,18 @@ public class CustomerEao extends AbstractEao<Customer> {
         List<Customer> list = query.fetch();
         L.debug("Query successful wiht {}", list);
         return list;
+    }
+
+    /**
+     * Finds a customer, which has the supplied communication set as default email communication.
+     * 
+     * @param comm the communication
+     * @return a customer or null if non found
+     * @thorws NonUniqueResultException {@link AbstractJPAQuery#fetchOne() }.
+     */
+    public Customer findByDefaultEmailCommunication(Communication comm) throws NonUniqueResultException {
+        if ( comm == null || comm.getType() != EMAIL ) return null;
+        return new JPAQuery<Customer>(em).from(customer).where(customer.defaultEmailCommunication.eq(comm)).fetchOne();
     }
 
     /**

@@ -269,7 +269,9 @@ public class CustomerAgentStub implements CustomerAgent {
 
         //one Communication form eatch type email, phone, mobile allowed
         if ( simpleCustomer.getEmail() != null ) {
-            cont.getCommunications().add(new Communication(Type.EMAIL, simpleCustomer.getEmail()));
+            Communication comm = new Communication(Type.EMAIL, simpleCustomer.getEmail());
+            c.setDefaultEmailCommunication(comm);
+            cont.getCommunications().add(comm);
         }
         if ( simpleCustomer.getLandlinePhone() != null ) {
             cont.getCommunications().add(new Communication(Type.PHONE, simpleCustomer.getLandlinePhone()));

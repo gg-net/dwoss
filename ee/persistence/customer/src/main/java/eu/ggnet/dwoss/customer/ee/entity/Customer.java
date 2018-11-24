@@ -490,6 +490,11 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         return null;
     }
 
+    /**
+     * Returns the Customer as html.
+     * 
+     * @return the customer as html.
+     */
     public String toHtml() {
         return toHtml(
                 mandatorMetadata.stream().map(m -> "<li>" + m.toHtml() + "</li>").reduce((u, t) -> u + t).map(s -> "<b>Mandantenspezifische Informationen</b>:<ul>" + s + "</ul>").orElse(""),
@@ -561,6 +566,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         if ( !StringUtils.isBlank(salesRow) ) rowSpan++;
 
         sb.append("<td valign=top rowspan=").append(rowSpan).append(" >");
+        sb.append("<b>Standard eMail</b>:<ul><li>").append(defaultEmailCommunication == null ? "Keine!": defaultEmailCommunication.getIdentifier()).append("</li></ul>");
         sb.append(companies.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Firmen(n)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append(contacts.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Kontakt(e)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append("</td>");

@@ -50,7 +50,9 @@ public class CustomerHtmlTryout extends Application {
     public void start(Stage primaryStage) throws Exception {
         CustomerGenerator gen = new CustomerGenerator();
 
-        Customer c2 = gen.makeCustomer();
+        Customer c1 = gen.makeCustomer();
+        Customer c2 = gen.makeSimpleConsumerCustomer();
+        Customer c3 = gen.makeSimpleBussinesCustomer();
         
         DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
                 .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
@@ -58,14 +60,26 @@ public class CustomerHtmlTryout extends Application {
                 .shippingCondition(ShippingCondition.DEALER_ONE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
 
-        String MATCHCODE = c2.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
+        String c1mcode = c1.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
+        String c2mcode = c2.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
+        String c3mcode = c3.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
 
         WebView view = new WebView();
         view.getEngine().loadContent(Css.toHtml5WithStyle(
                 "<hr /><h1>makeCustmer : Customer.toHtml(MATCHCODE,defaults)</h1>"
-                + c2.toHtml(MATCHCODE, defaults)
+                + c1.toHtml(c1mcode, defaults)
                 + "<hr /><h1>makeCustmer : Customer.toHtml()</h1>"
-                + c2.toHtml()));
+                + c1.toHtml()
+                + "<hr /><h1>makeSimpleConsumerCustomer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                + c2.toHtml(c2mcode, defaults)
+                + "<hr /><h1>makeSimpleConsumerCustomer : Customer.toHtml()</h1>"
+                + c2.toHtml()
+                + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                + c3.toHtml(c3mcode, defaults)
+                + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml()</h1>"
+                + c3.toHtml()
+
+        ));
         primaryStage.setScene(new Scene(new BorderPane(view)));
         primaryStage.sizeToScene();
         primaryStage.show();

@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
- * @author jens.papenhagen
+ * @author oliver.guenther
  */
 public class Utils {
     /**

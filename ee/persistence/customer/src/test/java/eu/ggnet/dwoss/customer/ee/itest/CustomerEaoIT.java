@@ -127,4 +127,26 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
 
         assertThat(eao.countFind(firstName, customerFields)).as("found more than one Customer").isEqualTo(1);
     }
+    
+    @Test
+    public void testFindByDefaultEmailCommunication() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+
+        Customer c0 = GEN.makeSimpleConsumerCustomer();
+        em.persist(c0);
+
+        // Make 3 extra
+        em.persist(GEN.makeSimpleConsumerCustomer());
+        em.persist(GEN.makeSimpleConsumerCustomer());
+        em.persist(GEN.makeSimpleBussinesCustomer());
+        
+        utx.commit();
+
+        assertThat(c0.getDefaultEmailCommunication()).as("default email communication should not be null on generator").isNotNull();
+        
+        Customer c1 = eao.findByDefaultEmailCommunication(c0.getDefaultEmailCommunication());
+        
+        assertThat(c1).isEqualTo(c0);
+    }
 }
