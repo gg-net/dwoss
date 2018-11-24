@@ -155,6 +155,11 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     @Boost(0.5f)
     private String comment;
 
+    @Getter
+    @Setter
+    @OneToOne
+    private Communication defaultEmailCommunication;
+    
     /**
      * maximum of size2, consisting of
      */
@@ -379,7 +384,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         if ( !StringUtils.isBlank(keyAccounter) ) return "Keyaccounter is set";
         if ( !mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
         if ( addressLabels.size() > 1 ) return "More than one AddressLabel is set";
-
+                
         List<Communication.Type> allowedCommunicationTypes = Arrays.asList(EMAIL, MOBILE, PHONE);
 
         if ( isConsumer() ) {
@@ -466,7 +471,8 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
             return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-
+        if ( defaultEmailCommunication != null && defaultEmailCommunication.getType() != EMAIL ) return "Default email communication is not of type email";
+        
         if ( isConsumer() ) {
             if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() )
                 return "Consumer: No Address on any Contact";

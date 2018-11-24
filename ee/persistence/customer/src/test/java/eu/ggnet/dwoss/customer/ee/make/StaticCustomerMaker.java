@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.make;
 
-import java.util.Locale;
 
 import org.apache.commons.lang3.StringUtils;
 

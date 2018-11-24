@@ -93,7 +93,7 @@ public class CustomerGenerator {
         } else {
             c = makeCustomer();
         }
-        if(assure.isNoMetadata()) {
+        if ( assure.isNoMetadata() ) {
             c.getMandatorMetadata().clear();
         }
         c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
@@ -136,10 +136,11 @@ public class CustomerGenerator {
      */
     public Customer makeSimpleConsumerCustomer() {
         Customer customer = new Customer();
-        int r = R.nextInt(5) + 1;
 
         Contact con = makeContact(new Contact(), makeAddress(), new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
-        con.getCommunications().add(new Communication(Type.EMAIL, con.getLastName().toLowerCase() + "@demo.int"));
+        Communication email = new Communication(Type.EMAIL, con.getLastName().toLowerCase() + "@demo.int");
+        con.getCommunications().add(email);
+        customer.setDefaultEmailCommunication(email);
         customer.getContacts().add(con);
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
@@ -161,7 +162,9 @@ public class CustomerGenerator {
         Customer customer = new Customer();
 
         Contact contact = makeContact(new Contact(), null, new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
-        contact.getCommunications().add(new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int"));
+        Communication email = new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int");
+        contact.getCommunications().add(email);
+        customer.setDefaultEmailCommunication(email);
 
         Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), "DE " + RandomStringUtils.randomNumeric(8));
         company.getContacts().add(contact);

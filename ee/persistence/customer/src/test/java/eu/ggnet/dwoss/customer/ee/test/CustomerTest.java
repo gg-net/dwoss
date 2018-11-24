@@ -5,7 +5,10 @@ import org.junit.Test;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.PHONE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 
@@ -15,6 +18,8 @@ import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
  */
 public class CustomerTest {
 
+    private final CustomerGenerator GEN = new CustomerGenerator();
+    
     @Test
     public void testIsVaildConsumerCustomer() {
         Customer makeValidConsumer = makeValidConsumerCustomer();
@@ -50,15 +55,17 @@ public class CustomerTest {
         assertThat(makeValidConsumer.isValid()).as("Customer is not vaild, because there is no Company and no Contact is set").isFalse();
 
         makeValidConsumer = makeValidConsumerCustomer();
-        Contact makeValidContact = makeValidContact();
-        makeValidContact.setLastName("");
-        assertThat(makeValidContact.getViolationMessage()).as("not valid Contact").isNotNull();
+        Contact invalidContact = makeValidContact();
+        invalidContact.setLastName("");
+        assertThat(invalidContact.getViolationMessage()).as("not valid Contact").isNotNull();
 
-        makeValidConsumer.getContacts().add(makeValidContact);
+        makeValidConsumer.getContacts().add(invalidContact);
         assertThat(makeValidConsumer.isValid()).as("Consumer Customer is not vaild, because the Contact do not have a LastName").isFalse();
 
     }
 
+    
+    
     @Test
     public void testIsVaildBusinessCustomer() {
 
@@ -103,4 +110,27 @@ public class CustomerTest {
 
     }
 
+    /**
+     * Tests that a invalid communication type on the defaultEmailCommunication is detected.
+     */
+    @Test
+    public void validationOfDefaultEmailCommunication() {
+        Customer consumer = GEN.makeSimpleConsumerCustomer();
+        Contact contact = consumer.getContacts().get(0); // This is by definition correct.
+        if (contact.getCommunications().stream().anyMatch(c -> c.getType() == EMAIL)) {
+            // Make sure, there is one email communication.
+            Communication comm = new Communication(EMAIL, "demo@demo.com");
+            contact.getCommunications().add(comm);
+            consumer.setDefaultEmailCommunication(comm);            
+        }
+        
+        assertThat(consumer.getViolationMessage()).as("Should be a valid customer with a default email communication").isNull();
+
+        consumer.setDefaultEmailCommunication(null);
+        assertThat(consumer.getViolationMessage()).as("Should be a valid customer with a 'null' default email communication").isNull();
+        
+        consumer.setDefaultEmailCommunication(new Communication(PHONE, "123123123"));
+        assertThat(consumer.getViolationMessage()).as("Should be a invalid customer with an invalid default email communication, type is wrong").isNotNull();
+    }
+    
 }
