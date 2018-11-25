@@ -19,25 +19,41 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import java.util.*;
 import java.util.function.Consumer;
 
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.SelectionResult;
+import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
 import lombok.Value;
 
 /**
+ * Ui to sellect the default email address.
  *
  * @author oliver.guenther
  */
-public class SelectDefaultEmailCommunicationView extends BorderPane implements Consumer<List<Communication>>, ResultProducer<SelectionResult> {
+public class SelectDefaultEmailCommunicationView extends BorderPane implements Consumer<Selection>, ResultProducer<Selection> {
 
+    /**
+     * Used for result an accept.
+     */
     @Value
-    public static class SelectionResult {
+    public static class Selection {
+
+        public Selection(List<Communication> allEmailCommunications, Communication defaultEmailCommunication) {
+            this.allEmailCommunications = allEmailCommunications;
+            this.defaultEmailCommunication = defaultEmailCommunication;
+        }
+
+        public Selection(Communication defaultEmailCommunication) {
+            this.allEmailCommunications = Collections.emptyList();
+            this.defaultEmailCommunication = defaultEmailCommunication;
+        }
+
+        private final List<Communication> allEmailCommunications;
 
         private final Communication defaultEmailCommunication;
     }
@@ -46,32 +62,55 @@ public class SelectDefaultEmailCommunicationView extends BorderPane implements C
 
     private ToggleGroup toggleGroup;
 
+    private boolean ok = false;
+
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public SelectDefaultEmailCommunicationView() {
-        accept(Collections.emptyList());
+        accept(new Selection(null));
+        Button okButton = new Button("Speichern");
+        okButton.setOnAction(e -> {
+            ok = true;
+            Ui.closeWindowOf(SelectDefaultEmailCommunicationView.this);
+        });
+        Button cancel = new Button("Abbrechen");
+        cancel.setOnAction(e -> {
+            ok = false;
+            Ui.closeWindowOf(SelectDefaultEmailCommunicationView.this);
+        });
+
+        FlowPane fp = new FlowPane(5, 5, okButton, cancel);
+        setBottom(fp);
+        setPadding(new Insets(5));
     }
 
     @Override
-    public void accept(List<Communication> in) {
+    public void accept(Selection in) {
         List<RadioButton> buttons = new ArrayList<>();
         toggleGroup = new ToggleGroup();
         RadioButton none = new RadioButton("Keine!");
         none.setUserData(null);
         none.setToggleGroup(toggleGroup);
+        none.setSelected(true);
         buttons.add(none);
-        for (Communication comm : in) {
+        for (Communication comm : in.allEmailCommunications) {
             RadioButton rb = new RadioButton(comm.getIdentifier());
             rb.setUserData(comm);
             rb.setToggleGroup(toggleGroup);
             buttons.add(rb);
+            if ( comm.equals(in.defaultEmailCommunication) ) rb.setSelected(true);
         }
+
+        // Ui Change
+        if ( radioButtons != null ) getChildren().remove(radioButtons);
         radioButtons = new VBox();
         radioButtons.getChildren().addAll(buttons);
+        setCenter(radioButtons);
     }
 
     @Override
-    public SelectionResult getResult() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Selection getResult() {
+        if ( ok ) return new Selection((Communication)toggleGroup.getSelectedToggle().getUserData());
+        return null;
     }
 
 }
