@@ -23,7 +23,9 @@ import eu.ggnet.saft.core.ui.FxController;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -49,12 +51,14 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -130,6 +134,19 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private Customer customer;
 
     private boolean isCanceled = true;
+
+    @FXML
+    private void clickDefaultEmailButton(ActionEvent event) {
+        List<Communication> allEmails = Stream.concat(
+                Stream.concat(
+                        customer.getContacts().stream().flatMap((con) -> con.getCommunications().stream()),
+                        customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
+                customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
+                filter(c -> c.getType() == EMAIL).collect(Collectors.toList());
+        Ui.build().fx().eval(() -> new Selection(allEmails, customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
+                .thenAccept(System.out::println)  // Jetzt muss hier eine Store rein
+                .handle(Ui.handler());
+    }
 
     @FXML
     private void clickSaveButton(ActionEvent event) {
