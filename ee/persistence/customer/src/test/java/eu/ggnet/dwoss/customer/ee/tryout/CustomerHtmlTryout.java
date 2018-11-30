@@ -54,6 +54,10 @@ public class CustomerHtmlTryout extends Application {
         Customer c2 = gen.makeSimpleConsumerCustomer();
         Customer c3 = gen.makeSimpleBussinesCustomer();
         
+        //make wthout invoice adress
+        Customer c4 = gen.makeSimpleConsumerCustomer();
+        c4.getAddressLabels().clear();
+        
         DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
                 .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                 .paymentCondition(PaymentCondition.CUSTOMER)
@@ -63,6 +67,7 @@ public class CustomerHtmlTryout extends Application {
         String c1mcode = c1.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
         String c2mcode = c2.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
         String c3mcode = c3.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
+        String c4mcode = c4.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");
 
         WebView view = new WebView();
         view.getEngine().loadContent(Css.toHtml5WithStyle(
@@ -78,6 +83,10 @@ public class CustomerHtmlTryout extends Application {
                 + c3.toHtml(c3mcode, defaults)
                 + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml()</h1>"
                 + c3.toHtml()
+                + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                + c4.toHtml(c4mcode, defaults)
+                + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml()</h1>"
+                + c4.toHtml()
 
         ));
         primaryStage.setScene(new Scene(new BorderPane(view)));

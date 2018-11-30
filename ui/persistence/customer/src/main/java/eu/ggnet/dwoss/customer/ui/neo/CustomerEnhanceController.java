@@ -52,6 +52,7 @@ import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.*;
 
@@ -92,7 +93,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private Label contactOrCompanyLabel;
 
     @FXML
-    private TextField keyAccounterTextField;
+    private ComboBox<String> keyAccounterChoice;
 
     @FXML
     private Label nameOrCompanyLabel;
@@ -287,8 +288,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             deletedditionalCustomerIdButton.setDisable(newValue.intValue() < 0);
         });
 
-        keyAccounterTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if ( !newValue ) this.customer.setKeyAccounter(keyAccounterTextField.getText());
+        //prepare key accounter combobox        
+        keyAccounterChoice.setItems(FXCollections.observableArrayList(Dl.local().lookup(Guardian.class).getAllUsernames()));
+        keyAccounterChoice.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if ( !newValue ) this.customer.setKeyAccounter(keyAccounterChoice.getValue());
         });
 
         sourceChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -392,7 +395,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         }
 
         customerIdLabel.setText("" + customer.getId());
-        keyAccounterTextField.setText(customer.getKeyAccounter());
+        keyAccounterChoice.setValue(customer.getKeyAccounter());
 
         customerFlagsWithSelect.forEach((cfws) -> {
             cfws.selected.addListener((observable, oldValue, newValue) -> {

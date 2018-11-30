@@ -25,6 +25,11 @@ public class GuardianStub implements Guardian {
         return "user";
     }
 
+    @Override
+    public Set<String> getAllUsernames() {
+        return new HashSet<>(Arrays.asList("user1", "user2", "user3", "user4"));
+    }
+
     //<editor-fold defaultstate="collapsed" desc="Unused Methods">
     @Override
     public void logout() {
@@ -83,11 +88,6 @@ public class GuardianStub implements Guardian {
 
     @Override
     public boolean hasRight(Authorisation authorisation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Set<String> getAllUsernames() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
