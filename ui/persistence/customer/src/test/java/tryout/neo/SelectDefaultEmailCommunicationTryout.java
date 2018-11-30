@@ -42,11 +42,12 @@ public class SelectDefaultEmailCommunicationTryout extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        List<Communication> comms = Arrays.asList(c("demo@demo.com"), c("info@demo.com"));
+        Communication def = c("info@demo.com");
+        List<Communication> comms = Arrays.asList(c("demo@demo.com"), c("mega@demo.com"),def);
 
         UiCore.startJavaFx(primaryStage, () -> {
             Button b = new Button("Open Select Email");
-            b.setOnAction(e -> Ui.build().fx().eval(() -> new Selection(comms, null), () -> new SelectDefaultEmailCommunicationView())
+            b.setOnAction(e -> Ui.build().fx().eval(() -> new Selection(comms, def), () -> new SelectDefaultEmailCommunicationView())
                     .cf().thenAccept(System.out::println).handle(Ui.handler()));
             return new FlowPane(b);
         });

@@ -21,22 +21,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UiParent;
 
 import lombok.NonNull;
-
-import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
  * Contains all opperations for modification of customer objects in the database.
