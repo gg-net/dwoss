@@ -23,7 +23,6 @@ import eu.ggnet.saft.core.ui.FxController;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -143,8 +142,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
                 customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
                 filter(c -> c.getType() == EMAIL).collect(Collectors.toList());
-        Ui.build().fx().eval(() -> new Selection(allEmails, customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
-                .thenAccept(System.out::println)  // Jetzt muss hier eine Store rein
+        Ui.build(commentTextArea).fx().eval(() -> new Selection(allEmails, customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
+                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.getDefaultEmailCommunication())) 
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
     }
 

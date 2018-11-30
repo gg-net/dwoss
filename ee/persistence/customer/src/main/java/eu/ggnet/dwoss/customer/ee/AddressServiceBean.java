@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 
 /**
- * Really necessary?
+ * Interface for other operations to get address information.
  * <p>
  * @author pascal.perau
  */

@@ -40,9 +40,21 @@ import lombok.NonNull;
  */
 public class CustomerConnectorFascade {
 
+    /**
+     * Sets the supplied communication on the customer as default, may be null.
+     * 
+     * @param customerId the customerid
+     * @param comm the communication to be set or null to reset.
+     * @return the new customer.
+     */
+    public static Customer updateDefaultEmailCommunicaiton(long customerId, Communication comm) {
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        if (comm == null) return agent.clearDefaultEmailCommunication(customerId);
+        return agent.setDefaultEmailCommunication(customerId, comm.getId());
+    }
+    
     public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-
         if ( invoiceLabel.getId() < 1l ) {
             agent.create(new Root(Customer.class, customerId), invoiceLabel);
         } else {

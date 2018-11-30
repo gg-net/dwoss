@@ -39,9 +39,10 @@ public class Configurations {
                 .host("localhost")
                 .port(8080)
                 .username("admin")
-                .password("acbbaber")
-                .app("dw-ggnet")
+                .password("admin")
+                .app("dwoss-server")
                 .build());
+
         Optional.ofNullable(Dl.local().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
     }
 

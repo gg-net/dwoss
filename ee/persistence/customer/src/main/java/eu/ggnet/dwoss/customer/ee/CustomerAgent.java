@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
@@ -140,5 +139,22 @@ public interface CustomerAgent extends RemoteAgent {
      * @param t
      */
     void delete(Root root, Object t);
+    
+    /**
+     * Set {@link Customer#defaultEmailCommunication } to null.
+     * 
+     * @param customerid the customer to be manipulated
+     * @return returns the updated customer
+     */
+    Customer clearDefaultEmailCommunication(long customerid);
+    
+    /**
+     * Set {@link Customer#defaultEmailCommunication } to the supplied communication.
+     * 
+     * @param customerId the customer to be manipulated
+     * @param communicationId the communication, that should be set. Must be on the same customer and of type email.
+     * @return the updated customer
+     */
+    Customer setDefaultEmailCommunication(long customerId, long communicationId);
     
 }

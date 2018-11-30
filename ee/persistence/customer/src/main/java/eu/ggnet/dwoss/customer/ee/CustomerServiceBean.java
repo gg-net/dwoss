@@ -32,16 +32,14 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 
 /**
- * CustomerService implementation for {@link OldCustomer}.
+ * CustomerService implementation.
  */
 @Stateless
 @LocalBean
@@ -95,6 +93,7 @@ public class CustomerServiceBean implements CustomerService {
         return customerEao.findById(id).getComment();
     }
 
+    // TODO: Gehört hier eigentlich nicht hin, da es direkt aus ee.redtape benutzt wird. Eher extra bean.
     @Override
     public void updateCustomerFlags(long customerId, Set<CustomerFlag> flags) {
         Customer customer = customerEao.findById(customerId);
@@ -131,14 +130,14 @@ public class CustomerServiceBean implements CustomerService {
                 contact.getLastName(),
                 Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getName).orElse(null),
                 customer.toName(),
-                getDefaultEmail(),
+                Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
                 Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getLedger).orElse(0));
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
         return new CustomerMetaData(
                 customer.getId(),
-                getDefaultEmail(),
+                Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
                 customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentCondition).findAny().orElse(salesData.getPaymentCondition()),
                 customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentMethod).findAny().orElse(salesData.getPaymentMethod()),
                 customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getShippingCondition).findAny().orElse(salesData.getShippingCondition()),
@@ -152,8 +151,4 @@ public class CustomerServiceBean implements CustomerService {
         return customerEao.findAllSystemCustomerIds();
     }
 
-    //TODO: See https://jira.cybertron.global/browse/DWOSS-278
-    private String getDefaultEmail() {
-        return null; // TODO: something like customer.getDefaultEmail() or customer.getDefaultCommunication(EMAIL)
-    }
 }

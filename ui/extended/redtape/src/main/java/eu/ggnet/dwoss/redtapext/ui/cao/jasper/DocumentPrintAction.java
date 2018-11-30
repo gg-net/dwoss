@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import org.apache.commons.lang.StringUtils;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
@@ -83,9 +84,8 @@ public class DocumentPrintAction extends AbstractAction {
             // This meeans, for now no progress display.
             JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, type);
             CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
-            boolean mailAvailable = customer.getEmail() != null && !customer.getEmail().trim().isEmpty();
             Ui.exec(() -> {
-                Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, mailAvailable))
+                Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, !StringUtils.isBlank(customer.getEmail())))
                         .opt()
                         .filter(c -> c.isCorrectlyBriefed())
                         .ifPresent(c -> Ui.progress().call(() -> {

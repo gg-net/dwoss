@@ -17,7 +17,6 @@
 package tryout.stub;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +37,7 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.saft.api.Reply;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -408,6 +408,25 @@ public class CustomerAgentStub implements CustomerAgent {
 
         // TODO: implement email
         return result;
+    }
+
+    @Override
+    public Customer clearDefaultEmailCommunication(long customerid) {
+        customer.setDefaultEmailCommunication(null);
+        return customer;
+    }
+
+    @Override
+    public Customer setDefaultEmailCommunication(long customerId, long communicationId) {
+        Communication comm = Stream.concat(
+                Stream.concat(
+                        customer.getContacts().stream().flatMap((con) -> con.getCommunications().stream()),
+                        customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
+                customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
+                filter(c -> c.getId() == communicationId).findAny().get();
+        System.out.println(comm);
+        customer.setDefaultEmailCommunication(comm);
+        return customer;
     }
 
 }

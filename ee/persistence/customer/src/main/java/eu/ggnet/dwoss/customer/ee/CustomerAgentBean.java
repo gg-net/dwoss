@@ -46,8 +46,6 @@ import eu.ggnet.saft.api.Reply;
 
 import lombok.NonNull;
 
-import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
@@ -276,5 +274,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         List<Customer> results = customerEao.find(company, firstName, lastName, email, appendWildcard);
         results.forEach(Customer::fetchEager);
         return results;
+    }
+
+    @AutoLogger
+    @Override
+    public Customer clearDefaultEmailCommunication(long customerId) {        
+        Customer c = findByIdEager(Customer.class, customerId);
+        c.setDefaultEmailCommunication(null);
+        return c;
+    }
+
+    @AutoLogger
+    @Override
+    public Customer setDefaultEmailCommunication(long customerId, long communicationId) {
+        Customer c = findByIdEager(Customer.class, customerId);
+        Communication com = em.find(Communication.class, communicationId);
+        c.setDefaultEmailCommunication(com);
+        return c;
     }
 }
