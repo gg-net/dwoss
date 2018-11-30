@@ -159,12 +159,12 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     @Setter
     @OneToOne
     private Communication defaultEmailCommunication;
-    
+
     /**
      * maximum of size2, consisting of
      */
     @OneToMany(orphanRemoval = true, cascade = ALL, fetch = EAGER, mappedBy = "customer")
-    List<AddressLabel> addressLabels = new ArrayList<>();  
+    List<AddressLabel> addressLabels = new ArrayList<>();
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -195,17 +195,15 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     }
 
     /**
-     * Returns the first addresslabel of type invoice.
-     * This method shoud returns never null, and allways a valid addresslabel.
+     * Returns the first addresslabel of type invoice or null if nothing is found.
      *
-     * @return the first addresslabel of type invoice.
-     * @throws IllegalStateException if the customer is invalid an has no addresslabel set.
+     * @return the first addresslabel of type invoice or null if nothing is found.
      */
-    public AddressLabel toInvoiceAddress() throws IllegalStateException {
+    public AddressLabel toInvoiceAddress() {
         return addressLabels.stream()
                 .filter(al -> al.getType() == INVOICE)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Customer has no addresslabel of type invoice. Invalid !. " + this));
+                .orElse(null);
     }
 
     /**
@@ -384,7 +382,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         if ( !StringUtils.isBlank(keyAccounter) ) return "Keyaccounter is set";
         if ( !mandatorMetadata.isEmpty() ) return "MandatorMetadata is set";
         if ( addressLabels.size() > 1 ) return "More than one AddressLabel is set";
-                
+
         List<Communication.Type> allowedCommunicationTypes = Arrays.asList(EMAIL, MOBILE, PHONE);
 
         if ( isConsumer() ) {
@@ -472,7 +470,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
             return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( defaultEmailCommunication != null && defaultEmailCommunication.getType() != EMAIL ) return "Default email communication is not of type email";
-        
+
         if ( isConsumer() ) {
             if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() )
                 return "Consumer: No Address on any Contact";
@@ -492,7 +490,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
     /**
      * Returns the Customer as html.
-     * 
+     *
      * @return the customer as html.
      */
     public String toHtml() {
@@ -543,21 +541,42 @@ public class Customer implements Serializable, EagerAble, ContactStash {
 
         StringBuilder sb = new StringBuilder();
         sb.append("<table width=\"100%\"><tr>");
-        sb.append("<td colspan=2 ><b>Kid: ").append(id).append("&nbsp;-&nbsp;").append(toName()).append(" (");
-        sb.append(isBusiness() ? "Geschäftskunde" : "Endkunde");
-        sb.append(isSimple() ? "" : ", <i>komplex</i>");
-        sb.append(")</b></td>");
+
+        sb.append("<td colspan=2 ><div style=\"background-color:")
+                .append(getViolationMessage() == null ? "none;\">" : "tomato;\">(INVALID)")
+                .append("<b>Kid: ").append(id)
+                .append("&nbsp;-&nbsp;")
+                .append(toName())
+                .append(" (")
+                .append(isBusiness() ? "Geschäftskunde" : "Endkunde")
+                .append(isSimple() ? "" : ", <i>komplex</i>")
+                .append(")</b></div></td>");
 
         sb.append("</tr><tr>");
-
         sb.append("<td valign=top>");
-        if ( toShippingAddress() == null ) sb.append("<b>Rechnungs- und Lieferadresse</b><br />");
-        else sb.append("<b>Rechnungsadresse</b><br />");
-        sb.append(toInvoiceAddress().toHtml());
-        if ( toShippingAddress() != null && toShippingAddress().getType() == SHIPPING ) {
-            sb.append("<br /><b>Lieferadresse</b><br />");
+
+        //get possible invoice and shipping address labels
+        AddressLabel shippingAddress = toShippingAddress();
+        AddressLabel invoiceAddress = toInvoiceAddress();
+
+        sb.append("<p>");
+        //format invoice label
+        if ( invoiceAddress == null ) {
+            sb.append("<b>Rechnungsadresse fehlt!</b><br />");
+        } else {
+            sb.append("<b>Rechnungsadresse</b><br />");
+            sb.append(invoiceAddress.toHtml());
+        }
+        sb.append("</p><p>");
+
+        //format shipping label
+        if ( shippingAddress == null ) {
+            sb.append("<b>Lieferadresse wie Rechnungsadresse</b><br />");
+        } else {
+            sb.append("<b>Lieferadresse</b><br />");
             sb.append(toShippingAddress().toHtml());
         }
+        sb.append("</p>");
         sb.append("</td>");
 
         int rowSpan = 1;
@@ -566,7 +585,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         if ( !StringUtils.isBlank(salesRow) ) rowSpan++;
 
         sb.append("<td valign=top rowspan=").append(rowSpan).append(" >");
-        sb.append("<b>Standard eMail</b>:<ul><li>").append(defaultEmailCommunication == null ? "Keine!": defaultEmailCommunication.getIdentifier()).append("</li></ul>");
+        sb.append("<b>Standard eMail</b>:<ul><li>").append(defaultEmailCommunication == null ? "Keine!" : defaultEmailCommunication.getIdentifier()).append("</li></ul>");
         sb.append(companies.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Firmen(n)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append(contacts.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Kontakt(e)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append("</td>");

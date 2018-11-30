@@ -21,6 +21,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.customer;
 import static eu.ggnet.dwoss.redtape.ee.entity.QDossier.dossier;
 
@@ -83,7 +84,7 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
                 L.debug("---Customer contact: " + (contact == null ? contact : contact.getId() + " - " + contact.toFullName()));
 
                 Address invoice = (contact == null
-                                   ? company.getAddresses().stream().reduce((first, second) -> second).orElse(null)
+                                   ? company.getAddresses().stream().filter(adress -> adress.getPreferedType() == INVOICE).findFirst().orElse(null)
                                    : contact.prefered(INVOICE));
 
                 //build invoice label
@@ -92,7 +93,9 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
 
                 //build shipping label only if neccesary
                 AddressLabel shippingLabel = null;
-                Address shipping = (contact == null ? invoice : contact.prefered(SHIPPING));
+                Address shipping = (contact == null
+                                    ? company.getAddresses().stream().filter(adress -> adress.getPreferedType() == SHIPPING).findFirst().orElse(null)
+                                    : contact.prefered(SHIPPING));
                 if ( shipping != null ) {
                     shippingLabel = new AddressLabel(company, contact, shipping, SHIPPING);
                     L.debug("---Created Shipping Label: " + invoiceLabel);
@@ -119,10 +122,17 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
                     continue;
                 }
 
+                // Set default email 
+                
+                Communication defEmail = (contact != null 
+                        ? contact.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null)
+                        : company.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null));
+                
+                customer.setDefaultEmailCommunication(defEmail);
+                
                 //add addresslabel and update customer
                 customer.getAddressLabels().add(invoiceLabel);
                 if ( shippingLabel != null ) customer.getAddressLabels().add(shippingLabel);
-                customerEm.merge(customer);
                 L.info("---Updated Customer: " + customer.getId());
                 m.worked(1, "Merged Customer: " + customer.getId());
             } else {

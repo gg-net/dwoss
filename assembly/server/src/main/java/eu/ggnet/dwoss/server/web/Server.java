@@ -130,6 +130,6 @@ public class Server implements Serializable {
     }
 
     public List<Entry<String, List<PicoCustomer>>> violationEntriesAsList() {
-        return new ArrayList<Map.Entry<String, List<PicoCustomer>>>(mergeViolations.entrySet());
+        return new ArrayList<>(mergeViolations.entrySet());
     }
 }

@@ -21,19 +21,17 @@
             <h:form>
                 <h2>Customer AddressLabel Merge:</h2>
 
-                <p:panelGrid columns="3" class="ui-panelgrid-blank" layout="grid">
+                <p:panelGrid columns="2" class="ui-panelgrid-blank" layout="grid">
 
-                    <p:fieldset collapsed="true" legend="#{server.nonDossierCustomers.size()} Kunden ohne Aufträge bei #{server.companyName}" toggleable="true">
-                        <p:dataList value="#{server.nonDossierCustomers}" var="pico" itemType="none" lazy="true">
-                            <h:outputText value="#{pico}"/>
-                        </p:dataList>
-                    </p:fieldset>
+                    <h:panelGroup>
+                        <h:outputText value="#{server.nonDossierCustomers.size()} Kunden ohne Aufträge bei #{server.companyName}"/>
 
-                    <p:fieldset collapsed="true" legend="#{server.nonAddressLabelCustomers.size()} Kunden ohne Adresslabel bei #{server.companyName}" toggleable="true">
-                        <p:dataList value="#{server.nonAddressLabelCustomers}" var="pico" itemType="none" lazy="true">
-                            <h:outputText value="#{pico}"/>
-                        </p:dataList>
-                    </p:fieldset>
+                        <p:fieldset collapsed="true" legend="#{server.nonAddressLabelCustomers.size()} Kunden ohne Adresslabel bei #{server.companyName}" toggleable="true">
+                            <p:dataList value="#{server.nonAddressLabelCustomers}" var="pico" itemType="none" lazy="true">
+                                <h:outputText value="#{pico}"/>
+                            </p:dataList>
+                        </p:fieldset>
+                    </h:panelGroup>
 
                     <h:panelGroup layout="grid">
                         <p:commandButton value="Submit"  icon="ui-icon-check" actionListener="#{server.mergeCustomerAfterAddressLabel()}" update="@form:mergeGrid"/>

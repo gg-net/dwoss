@@ -28,13 +28,12 @@ import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
-import tryout.stub.CustomerAgentStub;
-import tryout.stub.MandatorsStub;
+import tryout.stub.*;
 
 /**
  *
@@ -56,6 +55,7 @@ public class CustomerEnhanceTryout {
             }
         });
         Dl.remote().add(Mandators.class, new MandatorsStub());
+        Dl.local().add(Guardian.class, new GuardianStub());
 
         CustomerGenerator gen = new CustomerGenerator();
 
