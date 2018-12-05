@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.itest.support;
 
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
@@ -39,9 +38,6 @@ public class MandatorSupportProducer {
 
     @Produces
     public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
-
-    @Produces
-    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
 
     @Produces
     public static PostLedger pl = new PostLedger();

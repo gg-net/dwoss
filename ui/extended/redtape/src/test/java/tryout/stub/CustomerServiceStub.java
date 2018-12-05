@@ -28,7 +28,7 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public CustomerMetaData asCustomerMetaData(long customerId) {
-        return new CustomerMetaData(customerId, "testmail@schnurz.de", PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, ShippingCondition.DEFAULT, EnumSet.noneOf(CustomerFlag.class), EnumSet.of(SalesChannel.CUSTOMER), null);
+        return new CustomerMetaData(customerId, "testmail@schnurz.de", PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, ShippingCondition.SIX_MIN_TEN, EnumSet.noneOf(CustomerFlag.class), EnumSet.of(SalesChannel.CUSTOMER), null);
     }
 
     @Override

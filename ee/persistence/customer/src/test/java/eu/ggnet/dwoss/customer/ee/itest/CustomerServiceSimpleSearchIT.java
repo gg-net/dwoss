@@ -59,12 +59,12 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
         c3.setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
         c3.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER));
         c3.setPaymentCondition(PaymentCondition.DEALER_3_PERCENT_DISCOUNT);
-        c3.setShippingCondition(ShippingCondition.DEALER_ONE);
+        c3.setShippingCondition(ShippingCondition.FIVE);
         OldCustomer c4 = new OldCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen", "Dünne Gasse 2", "22222", "Heimwehrhausen");
         c4.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
         c4.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER));
         c4.setPaymentCondition(PaymentCondition.EMPLOYEE);
-        c4.setShippingCondition(ShippingCondition.DEALER_ONE);
+        c4.setShippingCondition(ShippingCondition.FIVE);
         c4.setPaymentMethod(PaymentMethod.INVOICE);
         c4.setEmail("lisa@xxx.com");
 

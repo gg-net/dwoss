@@ -374,7 +374,7 @@ public class CustomerGenerator {
 
     @Deprecated
     private Customer makeOldCustomer() {
-        DefaultCustomerSalesdata salesdata = new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.ADVANCE_PAYMENT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L));
+        DefaultCustomerSalesdata salesdata = new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.ADVANCE_PAYMENT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L));
         return makeOldCustomer("GEN", salesdata);
     }
 

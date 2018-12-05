@@ -25,7 +25,6 @@ import lombok.*;
  */
 @Getter
 @RequiredArgsConstructor
-@ToString
 public enum PaymentCondition {
 
     /**

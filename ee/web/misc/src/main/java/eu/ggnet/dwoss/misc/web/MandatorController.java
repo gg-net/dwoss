@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.model.DefaultTreeNode;
@@ -31,10 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 
 import lombok.Getter;
 
@@ -42,45 +42,50 @@ import lombok.Getter;
  *
  * @author jacob.weinhold
  */
-@Getter
 @Named
 @ViewScoped
 public class MandatorController implements Serializable {
 
     private final static Logger LOG = LoggerFactory.getLogger(MandatorController.class);
 
-    @EJB
-    private Mandators mandator;
-
+@Getter
+    @Inject
+    private Mandator mandator;
+    
+    @Inject
+    private Contractors contractors;
+    
+    @Inject
+    private SpecialSystemCustomers specialSystemCustomers;
+    
+    @Inject
+    private ReceiptCustomers receiptCustomers;
+    
+    @Inject
+    private PostLedger postLedger;
+    
     private TreeNode root;
 
     public List<TradeName> getAllowedBrands() {
-        return mandator.loadContractors().allowedBrands().stream().collect(Collectors.toList());
+        return contractors.allowedBrands().stream().collect(Collectors.toList());
     }
 
     public List<TradeName> getAllContractors() {
-        return mandator.loadContractors().all().stream().collect(Collectors.toList());
+        return contractors.all().stream().collect(Collectors.toList());
     }
 
-    // ShippingTerms
-    public List<ConditionValue> getShippingConditionValues() {
-        List<ConditionValue> conditions = new ArrayList<>();
-        for (ShippingCondition value : ShippingCondition.values()) {
-
-            if ( mandator.loadShippingTerms().get(value).isPresent() )
-                conditions.add(mandator.loadShippingTerms().get(value).get());
-
-        }
-        return conditions;
+    // TODO: also show the default of mandator (DefaultSalesData)
+    public List<ShippingCondition> getShippingConditions() {
+       return Arrays.asList(ShippingCondition.values());
     }
 
     public List<Map.Entry<Long, DocumentType>> getSpecialSystemCustomers() {
-        return new ArrayList<>(mandator.loadSystemCustomers().getSpecialCustomers().entrySet());
+        return new ArrayList<>(specialSystemCustomers.getSpecialCustomers().entrySet());
 
     }
 
     public List<Map.Entry<Key, Long>> getReceiptCustomers() {
-        return new ArrayList<>(mandator.loadReceiptCustomers().getReceiptCustomers().entrySet());
+        return new ArrayList<>(receiptCustomers.getReceiptCustomers().entrySet());
     }
 
     public int sortReceiptCustomers(Map.Entry<Key, Long> obj, Map.Entry<Key, Long> other) {
@@ -98,7 +103,7 @@ public class MandatorController implements Serializable {
         for (PositionType posType : PositionType.values()) {
             for (TaxType taxType : TaxType.values()) {
 
-                Optional<Ledger> opt = mandator.loadPostLedger().get(posType, taxType);
+                Optional<Ledger> opt = postLedger.get(posType, taxType);
 
                 if ( opt.isPresent() ) {
 
@@ -109,7 +114,7 @@ public class MandatorController implements Serializable {
                         levelOneNodes.put(posType, new DefaultTreeNode(posType.toString(), root));
 
                     if ( !levelTwoNodes.containsKey(posType) ) {
-                        levelTwoNodes.put(posType, new EnumMap<TaxType, TreeNode>(TaxType.class));
+                        levelTwoNodes.put(posType, new EnumMap<>(TaxType.class));
                         levelTwoNodes.get(posType).put(taxType, new DefaultTreeNode(taxType, levelOneNodes.get(posType)));
                     } else if ( !levelTwoNodes.get(posType).containsKey(taxType) ) {
                         levelTwoNodes.get(posType).put(taxType, new DefaultTreeNode(taxType, levelOneNodes.get(posType)));

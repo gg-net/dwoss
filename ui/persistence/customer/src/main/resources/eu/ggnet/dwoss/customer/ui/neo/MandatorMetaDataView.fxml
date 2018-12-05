@@ -53,6 +53,7 @@
    <bottom>
       <FlowPane alignment="CENTER_RIGHT" hgap="5.0" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
+            <Button mnemonicParsing="false" onAction="#handleResetButtonAction" text="Zurücksetzen auf Standard" />
                 <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSaveButtonAction" text="Speichern" />
                 <Button mnemonicParsing="false" onAction="#handleCancelButtonAction" text="Abbrechen" />
          </children>

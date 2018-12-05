@@ -37,7 +37,7 @@ public class MandatorMetadataTest {
 
     public static MandatorMetadata makeValidMandatorMetadata() {
         MandatorMetadata validMandatorMetadata = new MandatorMetadata();
-        validMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
+        validMandatorMetadata.setShippingCondition(ShippingCondition.FIVE);
         validMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
         validMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
         validMandatorMetadata.getAllowedSalesChannels().add(SalesChannel.UNKNOWN);

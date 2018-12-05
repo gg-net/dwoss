@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
     <f:view contentType="text/html">
         <h:head>
-            <title>Mandator - #{mandatorsBean.loadMandator().company.name}</title>
+            <title>Mandator - #{mandatorController.mandator.company.name}</title>
             <style>
                 table, th, td {
                     border: 1px solid black;
@@ -17,8 +17,8 @@
 
         <h:body>
             <h:form>
-                <h1>Mandator - #{mandatorController.mandator.loadMandator().company.name}</h1>
-                <h:outputText escape="false" value="#{mandatorController.mandator.loadMandator().toHtml()}" />
+                <h1>Mandator - #{mandatorController.mandator.company.name}</h1>
+                <h:outputText escape="false" value="#{mandatorController.mandator.toHtml()}" />
                 <!--EXTRA INFO-->
 
                 <h2>Additional MandatorInfo </h2>
@@ -58,12 +58,12 @@
                             </p:tree>
                         </p:column>
                         <p:column >
-                            <p:dataTable value="#{mandatorController.getShippingConditionValues()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
+                            <p:dataTable value="#{mandatorController.getShippingConditions()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
                                 <f:facet name="header">
                                     Shipping Terms
                                 </f:facet>
                                 <p:column headerText="Note">
-                                    <h:outputText value="#{shippingCondition.note}"/>
+                                    <h:outputText value="#{shippingCondition.name}"/>
                                 </p:column>
 
                                 <p:column headerText="Price of One">

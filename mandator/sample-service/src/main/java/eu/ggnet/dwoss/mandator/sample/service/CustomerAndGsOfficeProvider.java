@@ -21,7 +21,6 @@ import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 
@@ -30,12 +29,9 @@ import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterConfig;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.util.MapBuilder;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
@@ -67,13 +63,6 @@ public class CustomerAndGsOfficeProvider {
 
     @Produces
     public final static SageExporterConfig SAGE_EXPORTER_CONFIG = new DefaultSageExporterConfig(1, false);
-
-    @Produces
-    public final static ShippingTerms st = new ShippingTerms(new MapBuilder<ShippingCondition, ConditionValue>()
-            .put(ShippingCondition.DEFAULT, new ConditionValue("6€/Gerät min. 10€", 10, 6))
-            .put(ShippingCondition.DEALER_ONE, new ConditionValue("5€/Gerät", 5, 5))
-            .put(ShippingCondition.DEALER_TWO, new ConditionValue("6€/Gerät", 6, 6))
-            .toHashMap());
 
     @Produces
     public final static PostLedger NEW_POST_LEDGER = new PostLedger(

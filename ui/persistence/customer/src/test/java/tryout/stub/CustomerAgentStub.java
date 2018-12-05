@@ -35,6 +35,7 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -335,7 +336,6 @@ public class CustomerAgentStub implements CustomerAgent {
         else if ( raw instanceof AddressLabel ) ((Customer)rootElement).getAddressLabels().add((AddressLabel)raw);
         else if ( raw instanceof Company ) ((Customer)rootElement).getCompanies().add((Company)raw);
         else if ( raw instanceof Contact ) ((ContactStash)rootElement).getContacts().add((Contact)raw);
-        else if ( raw instanceof MandatorMetadata ) ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
         else if ( raw instanceof Communication ) ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
         else throw new IllegalArgumentException("Raw instance is not supported Raw: " + raw);
         return raw;
@@ -426,6 +426,16 @@ public class CustomerAgentStub implements CustomerAgent {
                 filter(c -> c.getId() == communicationId).findAny().get();
         System.out.println(comm);
         customer.setDefaultEmailCommunication(comm);
+        return customer;
+    }
+
+    @Override
+    public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
+        MandatorsStub ms = new MandatorsStub();
+        DefaultCustomerSalesdata defaultCsd = ms.loadSalesdata();
+        if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null && mm.isSameAs(defaultCsd)) return customer;
+        if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null) customer.getMandatorMetadata().add(mm);
+        mm.normalize(defaultCsd);
         return customer;
     }
 

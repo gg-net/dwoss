@@ -95,7 +95,7 @@ public class CustomerViolationMessageTest {
         MandatorMetadata invalidMandatorMetadata = new MandatorMetadata();
         invalidMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
         invalidMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        invalidMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
+        invalidMandatorMetadata.setShippingCondition(ShippingCondition.FIVE);
         assertThat(invalidMandatorMetadata.getViolationMessage()).as("Invalid MandatorMetadata is invalid").isNotNull();
         businessCustomer.getMandatorMetadata().add(invalidMandatorMetadata);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid MandatorMetadata is invalid").isNotNull();
@@ -155,7 +155,7 @@ public class CustomerViolationMessageTest {
         MandatorMetadata invalidMandatorMetadata = new MandatorMetadata();
         invalidMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
         invalidMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        invalidMandatorMetadata.setShippingCondition(ShippingCondition.DEALER_ONE);
+        invalidMandatorMetadata.setShippingCondition(ShippingCondition.FIVE);
         assertThat(invalidMandatorMetadata.getViolationMessage()).as("Invalid MandatorMetadata is invalid").isNotNull();
         consumerCustomer.getMandatorMetadata().add(invalidMandatorMetadata);
         assertThat(consumerCustomer.getViolationMessage()).as("BusinessCustomer with invalid MandatorMetadata is invalid").isNotNull();

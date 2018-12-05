@@ -20,7 +20,6 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 
@@ -77,10 +76,4 @@ public interface Mandators {
      */
     PostLedger loadPostLedger();
 
-    /**
-     * Returns the {@link ShippingTerms}.
-     * <p>
-     * @return the {@link ShippingTerms}.
-     */
-    ShippingTerms loadShippingTerms();
 }

@@ -1,13 +1,9 @@
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitController;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
@@ -117,11 +113,6 @@ public class UnitViewTryout {
 
             @Override
             public PostLedger loadPostLedger() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public ShippingTerms loadShippingTerms() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 

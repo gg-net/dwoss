@@ -22,8 +22,7 @@ import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
@@ -170,6 +169,32 @@ public class MandatorMetadata implements Serializable {
         if ( paymentMethod == null ) return "No PaymentMethod is set";
         if ( allowedSalesChannels.isEmpty() ) return "No SalesChannel is listed";
         return null;
+    }
+    
+        /**
+     * Content equals test which imply null is true.
+     * 
+     * @param defaultCsd the defaults
+     * @return ture if contents equal or cmd is null.
+     */
+    public boolean isSameAs(@NonNull DefaultCustomerSalesdata defaultCsd) {
+        if (!defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels())) return false;
+        if (getPaymentCondition() != null && defaultCsd.getPaymentCondition() != getPaymentCondition()) return false;
+        if (getPaymentMethod() != null && defaultCsd.getPaymentMethod() != getPaymentMethod()) return false;
+        if (getShippingCondition() != null && defaultCsd.getShippingCondition() != getShippingCondition()) return false;
+        return true;
+    }
+    
+    /**
+     * Normalize the MandatorMetadata, setting all defaults to null.
+     * 
+     * @param defaultCsd
+     */
+    public void normalize(@NonNull DefaultCustomerSalesdata defaultCsd) {
+        if (defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels())) getAllowedSalesChannels().clear();
+        if (defaultCsd.getPaymentCondition() == getPaymentCondition()) setPaymentCondition(null);
+        if (defaultCsd.getPaymentMethod() == getPaymentMethod()) setPaymentMethod(null);
+        if (defaultCsd.getShippingCondition() == getShippingCondition()) setShippingCondition(null);
     }
 
 }

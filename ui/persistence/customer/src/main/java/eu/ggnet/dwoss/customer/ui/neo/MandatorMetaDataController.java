@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -132,6 +133,8 @@ public class MandatorMetaDataController implements Initializable, FxController, 
 
     private MandatorMetadata mandatorMetaData;
 
+    private DefaultCustomerSalesdata defaultCsd;
+
     private boolean isCanceled = true;
 
     @Override
@@ -153,12 +156,12 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         paymentConditionComboBox.getItems().setAll(PaymentCondition.values());
         paymentMethodComboBox.getItems().setAll(PaymentMethod.values());
 
-//         shippingConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.toString()));
+        shippingConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getName()));
         paymentConditionComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
         paymentMethodComboBox.setConverter(new ToWayOnlyConverter<>(s -> s.getNote()));
 
         paymentConditionComboBox.setCellFactory((ListView<PaymentCondition> l) -> new ListCell<PaymentCondition>() {
-            
+
             @Override
             protected void updateItem(PaymentCondition item, boolean empty) {
                 super.updateItem(item, empty);
@@ -182,20 +185,19 @@ public class MandatorMetaDataController implements Initializable, FxController, 
             }
         });
 
-        DefaultCustomerSalesdata defaults = Dl.local().lookup(CachedMandators.class).loadSalesdata();        
-        defaultshippingConditionTextField.setText(defaults.getShippingCondition().name());
-        defaultpaymentConditionTextField.setText(defaults.getPaymentCondition().getNote());
-        defaultpaymentMethodTextField.setText(defaults.getPaymentMethod().getNote());
+        defaultCsd = Dl.local().lookup(CachedMandators.class).loadSalesdata();
+        defaultshippingConditionTextField.setText(defaultCsd.getShippingCondition().getName());
+        defaultpaymentConditionTextField.setText(defaultCsd.getPaymentCondition().getNote());
+        defaultpaymentMethodTextField.setText(defaultCsd.getPaymentMethod().getNote());
         defaultSalesChannelsListView.getItems().forEach(i -> {
-           if (defaults.getAllowedSalesChannels().contains(i.getSalesChannel())) i.setSelected(true);
+            if ( defaultCsd.getAllowedSalesChannels().contains(i.getSalesChannel()) ) i.setSelected(true);
         });
-     
-        
+
         Guardian guardian = Dl.local().lookup(Guardian.class);
         guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_PAYMENT_CONDITION, paymentConditionComboBox));
         guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_PAYMENT_METHOD, paymentMethodComboBox));
         guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_SHIPPING_CONDITION, shippingConditionComboBox));
-        
+
     }
 
     @FXML
@@ -220,6 +222,15 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         Ui.closeWindowOf(defaultSalesChannelsListView);
     }
 
+    @FXML
+    private void handleResetButtonAction(ActionEvent event) {
+        allowedSalesChannelsListView.getItems()
+                .forEach(s -> s.setSelected(defaultCsd.getAllowedSalesChannels().contains(s.getSalesChannel())));
+        shippingConditionComboBox.getSelectionModel().select(defaultCsd.getShippingCondition());
+        paymentConditionComboBox.getSelectionModel().select(defaultCsd.getPaymentCondition());
+        paymentMethodComboBox.getSelectionModel().select(defaultCsd.getPaymentMethod());
+    }
+
     @Override
     public void accept(@NonNull MandatorMetadata consumable) {
         this.mandatorMetaData = consumable;
@@ -228,15 +239,15 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());
         this.shippingConditionComboBox.getSelectionModel().select(mandatorMetaData.getShippingCondition());
 
-        allowedSalesChannelsListView.getItems().stream()
-                .filter(s -> mandatorMetaData.getAllowedSalesChannels().contains(s.getSalesChannel()))
-                .forEach(s -> s.setSelected(true));
-        
+        if (!mandatorMetaData.getAllowedSalesChannels().isEmpty()) {// Empty = default
+        allowedSalesChannelsListView.getItems()
+                .forEach(s -> s.setSelected(mandatorMetaData.getAllowedSalesChannels().contains(s.getSalesChannel())));
+        }
     }
 
     @Override
     public MandatorMetadata getResult() {
-        if (isCanceled) return null;
+        if ( isCanceled ) return null;
         return mandatorMetaData;
     }
 }

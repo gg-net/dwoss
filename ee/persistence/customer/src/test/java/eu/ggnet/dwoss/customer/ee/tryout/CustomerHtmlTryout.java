@@ -61,7 +61,7 @@ public class CustomerHtmlTryout extends Application {
         DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
                 .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                 .paymentCondition(PaymentCondition.CUSTOMER)
-                .shippingCondition(ShippingCondition.DEALER_ONE)
+                .shippingCondition(ShippingCondition.FIVE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
 
         String c1mcode = c1.getMandatorMetadata().stream().map(MandatorMetadata::getMandatorMatchcode).findFirst().orElse("NONE");

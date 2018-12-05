@@ -20,7 +20,6 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 
@@ -56,9 +55,6 @@ public class MandatorsBean implements Mandators {
     @Inject
     private PostLedger postLedger;
 
-    @Inject
-    private ShippingTerms shippingTerms;
-
     @Override
     public Mandator loadMandator() {
         return mandator;
@@ -87,11 +83,6 @@ public class MandatorsBean implements Mandators {
     @Override
     public PostLedger loadPostLedger() {
         return postLedger;
-    }
-
-    @Override
-    public ShippingTerms loadShippingTerms() {
-        return shippingTerms;
     }
 
 }

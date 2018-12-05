@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
@@ -132,6 +133,18 @@ public interface CustomerAgent extends RemoteAgent {
      */
     <T> T update(T t);
 
+    
+    /**
+     * Create, Update or even delete MandatorMetadata based on the difference between the mandator defaults.
+     * If the MandatorMetadata is equal to the defaults, it will not be stored and if it exists, it will be deleted.
+     * If the it differs it becomes normalized and than stored.
+     * 
+     * @param customerId the customer of this metadata
+     * @param mm the mandator metadata.
+     * @return the updated customer.
+     */
+    Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm);
+            
     /**
      * Delete an entity on the root element
      *

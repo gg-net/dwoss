@@ -9,7 +9,9 @@ import eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
+import tryout.stub.GuardianStub;
 import tryout.stub.MandatorsStub;
 
 /*
@@ -48,6 +50,7 @@ public class MandatorMetaDataTryOut {
             }
         });
         Dl.remote().add(Mandators.class, new MandatorsStub());
+        Dl.local().add(Guardian.class, new GuardianStub());
 
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));

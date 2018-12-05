@@ -53,7 +53,7 @@ public class CreateCustomerTryout {
                 customer.setHandynummer("0123456789");
                 customer.setPaymentMethod(PaymentMethod.ADVANCE_PAYMENT);
                 customer.setPaymentCondition(PaymentCondition.DEALER);
-                customer.setShippingCondition(ShippingCondition.DEALER_ONE);
+                customer.setShippingCondition(ShippingCondition.FIVE);
                 customer.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER));
                 customer.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
                 customer.setHaendler(true);
