@@ -117,21 +117,25 @@ public class CustomerServiceBean implements CustomerService {
         Objects.requireNonNull(customer, "Supplied customer ist null, not allowed");
 
         Contact contact = null;
-        if (customer.toInvoiceAddress().getContact() != null) {
-            contact = customer.toInvoiceAddress().getContact();
+        Company company = null;
+        if ( customer.isBusiness() ) {
+            //should never be null
+            company = customer.getCompanies().stream().findFirst().get();
+            contact = company.getContacts().stream().findFirst().orElse(null);
         } else {
-            contact = customer.toInvoiceAddress().getCompany().getContacts().get(0);
+            //should never be null
+            contact = customer.getContacts().stream().findFirst().get();
         }
 
         return new UiCustomer(
                 customer.getId(),
-                contact.getTitle() != null ? contact.getTitle() : "",
-                contact.getFirstName(),
-                contact.getLastName(),
-                Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getName).orElse(null),
+                contact != null ? contact.getTitle() : "",
+                contact != null ? contact.getFirstName() : "KEIN KONTAKT",
+                contact != null ? contact.getLastName() : "KEIN KONTAKT",
+                company != null ? company.getName() : null,
                 customer.toName(),
                 Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
-                Optional.ofNullable(customer.toInvoiceAddress().getCompany()).map(Company::getLedger).orElse(0));
+                company != null ? company.getLedger() : 0);
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
@@ -142,7 +146,8 @@ public class CustomerServiceBean implements CustomerService {
                 customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentMethod).findAny().orElse(salesData.getPaymentMethod()),
                 customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getShippingCondition).findAny().orElse(salesData.getShippingCondition()),
                 customer.getFlags(),
-                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getAllowedSalesChannels).findAny().orElse(salesData.getAllowedSalesChannels())
+                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getAllowedSalesChannels).findAny().orElse(salesData.getAllowedSalesChannels()),
+                customer.getViolationMessage()
         );
     }
 

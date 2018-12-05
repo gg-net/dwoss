@@ -39,10 +39,12 @@ import javafx.util.StringConverter;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.NonNull;
 
@@ -187,7 +189,13 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         defaultSalesChannelsListView.getItems().forEach(i -> {
            if (defaults.getAllowedSalesChannels().contains(i.getSalesChannel())) i.setSelected(true);
         });
-                
+     
+        
+        Guardian guardian = Dl.local().lookup(Guardian.class);
+        guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_PAYMENT_CONDITION, paymentConditionComboBox));
+        guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_PAYMENT_METHOD, paymentMethodComboBox));
+        guardian.add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_SHIPPING_CONDITION, shippingConditionComboBox));
+        
     }
 
     @FXML

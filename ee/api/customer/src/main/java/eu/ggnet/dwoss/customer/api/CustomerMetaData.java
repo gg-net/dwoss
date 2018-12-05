@@ -67,4 +67,6 @@ public class CustomerMetaData implements Serializable {
      */
     private final Set<SalesChannel> allowedSalesChannel;
     
+    private final String violationMessage;
+    
 }

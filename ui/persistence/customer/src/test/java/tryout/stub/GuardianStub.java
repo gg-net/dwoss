@@ -73,7 +73,7 @@ public class GuardianStub implements Guardian {
 
     @Override
     public void add(Accessable accessable) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

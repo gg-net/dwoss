@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="250.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="250.0" prefWidth="324.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.AddressUpdateController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="5.0">
             <children>
@@ -22,35 +22,39 @@
          </padding>
         </HBox>
     </bottom>
-    <top>
-        <Label text="Kunden Adressen:">
-            <font>
-                <Font name="System Bold" size="12.0" />
-            </font>
-        </Label>
-    </top>
     <center>
-      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" BorderPane.alignment="CENTER">
+      <VBox maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="11.0">
+                <Label text="Strasse:" VBox.vgrow="NEVER">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+                <TextField fx:id="street" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Strasse" VBox.vgrow="NEVER" />
+            <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" VBox.vgrow="NEVER">
                <children>
-                      <Label text="Strasse:" VBox.vgrow="ALWAYS" />
-                      <TextField fx:id="zipcode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="75.0" promptText="Postlietzahl" VBox.vgrow="NEVER" />
-                      <Label text="Land" />
+                      <TextField fx:id="zipcode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Postleitzahl" />
+                      <TextField fx:id="city" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Stadt/Ort" HBox.hgrow="ALWAYS" />
                </children>
-            </VBox>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="100.0" minWidth="100.0" spacing="3.0" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="3.0" top="3.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" spacing="5.0">
                <children>
-                      <TextField fx:id="street" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Strasse" VBox.vgrow="NEVER" />
-                      <TextField fx:id="city" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Stadt/Ort" VBox.vgrow="NEVER" />
-                  <ComboBox fx:id="countryComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                      <Label text="Land:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="countryComboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                </children>
-            </VBox>
+            </HBox>
          </children>
          <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets right="5.0" />
          </padding>
-      </HBox>
+      </VBox>
     </center>
    <padding>
       <Insets left="5.0" top="5.0" />

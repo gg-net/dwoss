@@ -30,6 +30,8 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
@@ -52,12 +54,14 @@ import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.common.api.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.stage.Modality.WINDOW_MODAL;
@@ -87,7 +91,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private TextArea commentTextArea;
 
     @FXML
-    private ListView<CustomerFlagWithSelect> flagListView;
+    private ScrollPane flagPane;
 
     @FXML
     private HBox showHBox;
@@ -144,7 +148,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                 customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
                 filter(c -> c.getType() == EMAIL).collect(Collectors.toList());
         Ui.build(commentTextArea).fx().eval(() -> new Selection(allEmails, customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
-                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.getDefaultEmailCommunication())) 
+                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.getDefaultEmailCommunication()))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
     }
@@ -210,22 +214,15 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
         //for each CustomerFlag create a CustomerFlagWithSelect. If the customer contains the flag it is selected.
         for (CustomerFlag flag : CustomerFlag.values()) {
-            customerFlagsWithSelect.add(new CustomerFlagWithSelect(flag));
+            CustomerFlagWithSelect customerFlagWithSelect = new CustomerFlagWithSelect(flag);
+            customerFlagsWithSelect.add(customerFlagWithSelect);
+            if ( flag == SYSTEM_CUSTOMER ) {
+                Dl.local().lookup(Guardian.class).add(new NodeEnabler(AtomicRight.UPDATE_CUSTOMER_TO_SYSTEM_CUSTOMER, customerFlagWithSelect));
+            }
         }
 
-        flagListView.setItems(customerFlagsWithSelect);
-
-        flagListView.setCellFactory(CheckBoxListCell.forListView(CustomerFlagWithSelect::selectedProperty, new StringConverter<CustomerFlagWithSelect>() {
-            @Override
-            public String toString(CustomerFlagWithSelect object) {
-                return object.getFlag().getName();
-            }
-
-            @Override
-            public CustomerFlagWithSelect fromString(String string) {
-                return null;
-            }
-        }));
+        VBox flagBox = new VBox(3., customerFlagsWithSelect.toArray(new Node[0]));
+        flagPane.setContent(flagBox);
 
         sourceChoiceBox.getItems().addAll(Source.values());
         sourceChoiceBox.setConverter(new StringConverter<Source>() {
@@ -379,7 +376,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param customer must not be null by definition.
      */
     @Override
-    public void accept(@NonNull Customer customer) {
+    public void accept(@NonNull Customer customer
+    ) {
         if ( !customer.isValid() ) {
             new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").showAndWait();
 //            throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
@@ -393,8 +391,8 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         if ( isCanceled ) return null;
         return customer;
     }
-
     // consider merge with accept
+
     public void setCustomer(Customer customer) {
         this.customer = customer;
         customerNameLabel.setText(customer.toName());
@@ -415,7 +413,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         keyAccounterChoice.setValue(customer.getKeyAccounter());
 
         customerFlagsWithSelect.forEach((cfws) -> {
-            cfws.selected.addListener((observable, oldValue, newValue) -> {
+            cfws.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 if ( newValue ) {
                     customer.getFlags().add(cfws.flag.get());
                 } else {
@@ -433,12 +431,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
         mandatorMetadata.addAll(customer.getMandatorMetadata());
 
         //transfer the map into a List
-        additionalCustomerIds.clear();
-        additionalCustomerIds.addAll(
+//        additionalCustomerIds.clear(additionalCustomerIds);
+        additionalCustomerIds.setAll(
                 customer.getAdditionalCustomerIds().entrySet().stream()
                         .map(e -> new AdditionalCustomerId(e.getKey(), e.getValue()))
                         .collect(Collectors.toList()));
-
         commentTextArea.setText(customer.getComment());
 
         //TODO: build the whole box anew? meybe just reset components instead...
@@ -641,32 +638,22 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     }
 
-//extra class for the CheckBox ListView
-    class CustomerFlagWithSelect {
+    /**
+     * Checkboximplementation for customerflags
+     */
+    class CustomerFlagWithSelect extends CheckBox {
 
         private final ReadOnlyObjectWrapper<CustomerFlag> flag = new ReadOnlyObjectWrapper<>();
 
-        private final BooleanProperty selected = new SimpleBooleanProperty(false);
-
         public CustomerFlagWithSelect(CustomerFlag flag) {
             this.flag.set(flag);
+            this.setText(flag.getName());
         }
 
         public CustomerFlag getFlag() {
             return flag.get();
         }
 
-        public BooleanProperty selectedProperty() {
-            return selected;
-        }
-
-        public boolean isSelected() {
-            return selected.get();
-        }
-
-        public void setSelected(boolean selected) {
-            this.selected.set(selected);
-        }
     }
 
     private class AdditionalCustomerIDsDialogHandler implements EventHandler<ActionEvent> {

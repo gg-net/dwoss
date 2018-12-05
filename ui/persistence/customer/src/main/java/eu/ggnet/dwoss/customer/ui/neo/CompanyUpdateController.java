@@ -25,6 +25,7 @@ import eu.ggnet.saft.core.ui.FxController;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -217,7 +218,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     private void clickEditContactButton() {
         Contact selectedItem = contactListView.getSelectionModel().getSelectedItem();
         if ( selectedItem == null ) return;
-        Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, ContactUpdateController.class)
+        Ui.build().modality(WINDOW_MODAL).parent(companyNameTextField).fxml().eval(() -> selectedItem, CompanyContactUpdateController.class)
                 .cf()
                 .thenApply(add -> CustomerConnectorFascade.updateContactOnCompany(company.getId(), add))
                 .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
@@ -323,7 +324,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         addressListView.setOrientation(Orientation.HORIZONTAL);
 
         //adding a CellFactory for every Colum
-        typeColumn = new TableColumn("Type");
+        typeColumn = new TableColumn("Typ");
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
             return new TableCell<Communication, Type>() {
@@ -339,7 +340,7 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 }
             };
         });
-        idColumn = new TableColumn("Identifier");
+        idColumn = new TableColumn("Wert");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("identifier"));
         idColumn.setCellFactory(column -> {
             return new TableCell<Communication, String>() {
@@ -355,9 +356,10 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                 }
             };
         });
-        
+
         //adding all columns to the communicationTable
-        communicationTableView.getColumns().addAll(typeColumn, idColumn);
+        communicationTableView.getColumns().setAll(typeColumn, idColumn);
+        communicationTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Contact CellFactory
         contactListView.setCellFactory((ListView<Contact> p) -> {
@@ -369,14 +371,24 @@ public class CompanyUpdateController implements Initializable, FxController, Con
                         setGraphic(null);
                         setText("");
                     } else {
-                        String anrede = "";
+                        StringBuilder text = new StringBuilder("");
+                        //add pronoun
                         if ( item.getSex() == Sex.FEMALE ) {
-                            anrede = "Frau ";
+                            text.append("Frau ");
                         }
                         if ( item.getSex() == Sex.MALE ) {
-                            anrede = "Herr ";
+                            text.append("Herr ");
                         }
-                        setText(anrede + item.toFullName());
+
+                        //add full name
+                        text.append(item.toFullName());
+                        
+                        //add communication types to the line
+                        if ( !item.getCommunications().isEmpty() ) {
+                            text.append(" | ");
+                            text.append(item.getCommunications().stream().map(com -> com.getType().name()).collect(Collectors.joining(", ")));
+                        }
+                        setText(text.toString());
                     }
                 }
             };

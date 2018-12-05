@@ -54,6 +54,7 @@ public class CustomerEnhanceTryout {
                 return null;
             }
         });
+
         Dl.remote().add(Mandators.class, new MandatorsStub());
         Dl.local().add(Guardian.class, new GuardianStub());
 

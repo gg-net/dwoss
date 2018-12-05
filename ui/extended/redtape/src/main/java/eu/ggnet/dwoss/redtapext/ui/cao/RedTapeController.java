@@ -438,7 +438,9 @@ public class RedTapeController implements IDossierSelectionHandler {
         }));
 
         //build customer dependant actions.
-        if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
+        if ( model.getPurchaseCustomer().getViolationMessage() != null ) {
+            Ui.build().alert("Kunde ist invalid: " + model.getPurchaseCustomer().getViolationMessage());
+        } else if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
             // Don't allow anything here.
         } else if ( model.getPurchaseCustomer().getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
             view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));

@@ -16,12 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxController;
-
 import java.net.URL;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -31,36 +26,29 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.NonNull;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
 /**
- * Controller class for the editor view of a Contact. Allows the user to
- * change all values of the Contact.
+ * Controller class for the editor view of a company contact.
+ * Allows the user to change all values of the Contact.
  * <p>
  * import static javafx.stage.Modality.WINDOW_MODAL;
  *
- * @author jens.papenhagen
+ * @author pascal.perau
  */
-@Title("Kontakt bearbeiten")
-public class ContactUpdateController implements Initializable, FxController, Consumer<Contact>, ResultProducer<Contact> {
-
-    @FXML
-    private ListView<Address> addressListView;
+public class CompanyContactUpdateController implements Initializable, FxController, Consumer<Contact>, ResultProducer<Contact> {
 
     @FXML
     private TableView<Communication> communicationTableView;
@@ -83,17 +71,9 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
     private TableColumn<Communication, String> idColumn = new TableColumn("Identifier");
 
-    private ObservableList<Address> addressList = FXCollections.observableArrayList();
-
     private ObservableList<Communication> communicationsList = FXCollections.observableArrayList();
 
     private ToggleGroup prefGroup = new ToggleGroup();
-
-    @FXML
-    private Button editAddressButton;
-
-    @FXML
-    private Button deleteAddressButton;
 
     @FXML
     private Button editCommunicationButton;
@@ -115,40 +95,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        editAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull());
-        editAddressButton.setOnAction(e -> {
-            Address selectedItem = addressListView.getSelectionModel().getSelectedItem();
-            if ( selectedItem == null ) return;
-            Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> selectedItem, AddressUpdateController.class)
-                    .cf()
-                    .thenApply(add -> CustomerConnectorFascade.updateAddressOnContact(contact.getId(), add))
-                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
-                    .handle(Ui.handler());
-        });
-
-        //button behavior
-        deleteAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull().or(Bindings.size(addressList).lessThan(2)));
-        deleteAddressButton.setOnAction(e -> {
-            if ( addressListView.getSelectionModel().getSelectedItem() == null ) return;
-
-            Ui.build(addressListView).dialog().eval(() -> {
-                Dialog<Address> dialog = new Dialog<>();
-                dialog.setTitle("Löschen bestätigen");
-                dialog.setHeaderText("Möchten sie die Addresse wirklich löschen ?");
-                dialog.setContentText(addressListView.getSelectionModel().getSelectedItem().toHtml());
-                dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.NO);
-                dialog.setResultConverter((bt) -> {
-                    if ( bt == ButtonType.YES ) return addressListView.getSelectionModel().getSelectedItem();
-                    return null;
-                });
-                return dialog;
-            })
-                    .cf()
-                    .thenApply(add -> CustomerConnectorFascade.deleteAddressOnContact(contact.getId(), add))
-                    .thenAcceptAsync(cont -> accept(cont), Platform::runLater)
-                    .handle(Ui.handler());
-        });
-
         editCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull());
         editCommunicationButton.setOnAction(e -> {
             Communication selectedItem = communicationTableView.getSelectionModel().getSelectedItem();
@@ -164,7 +110,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         deleteCommunicationButton.setOnAction(e -> {
             if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
 
-            Ui.build(addressListView).dialog().eval(() -> {
+            Ui.build(communicationTableView).dialog().eval(() -> {
                 Dialog<Communication> dialog = new Dialog<>();
                 dialog.setTitle("Löschen bestätigen");
                 dialog.setHeaderText("Möchten sie diese Kommunikation wirklich löschen ?");
@@ -212,40 +158,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         });
         genderBox.getItems().addAll(Contact.Sex.values());
 
-        //Address HORIZONTAL CellFactory
-        addressListView.setCellFactory((ListView<Address> p) -> {
-            ListCell<Address> cell = new ListCell<Address>() {
-                @Override
-                protected void updateItem(Address item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if ( item == null || empty ) {
-                        setGraphic(null);
-                        setText("");
-                    } else {
-                        VBox anschriftbox = new VBox();
-                        Label street = new Label(item.getStreet());
-
-                        Label zipCode = new Label(item.getZipCode());
-                        Label city = new Label(item.getCity());
-                        HBox postBox = new HBox();
-                        postBox.getChildren().addAll(zipCode, city);
-                        postBox.setSpacing(2.0);
-
-                        Label country = new Label(new Locale("", item.getIsoCountry()).getDisplayCountry());
-
-                        anschriftbox.getChildren().addAll(street, postBox, country);
-                        anschriftbox.setSpacing(2.0);
-
-                        setText(null);
-                        setGraphic(anschriftbox);
-
-                    }
-                }
-            };
-            return cell;
-        });
-        addressListView.setOrientation(Orientation.HORIZONTAL);
-
         //adding a CellFactory for every Colum
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeColumn.setCellFactory(column -> {
@@ -279,7 +191,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
         });
 
         //fill the listViews
-        addressListView.setItems(addressList);
         communicationTableView.setItems(communicationsList);
         communicationTableView.getColumns().setAll(typeColumn, idColumn);
         communicationTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -289,15 +200,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
     private void clickCancelButton() {
         isCanceled = true;
         Ui.closeWindowOf(lastNameTextField);
-    }
-
-    @FXML
-    private void clickAddAddressButton() {
-        Ui.build().modality(WINDOW_MODAL).parent(firstNameTextField).fxml().eval(() -> new Address(), AddressUpdateController.class)
-                .cf()
-                .thenApply(add -> CustomerConnectorFascade.createAddressOnContact(contact.getId(), add))
-                .thenAcceptAsync(c -> accept(c), Platform::runLater)
-                .handle(Ui.handler());
     }
 
     @FXML
@@ -334,8 +236,6 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
         genderBox.getSelectionModel().select(contact.getSex());
 
-        addressList.clear();
-        addressList.addAll(contact.getAddresses());
         communicationsList.clear();
         communicationsList.addAll(contact.getCommunications());
     }

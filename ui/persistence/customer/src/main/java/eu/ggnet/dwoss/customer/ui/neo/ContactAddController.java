@@ -22,6 +22,7 @@ import eu.ggnet.saft.core.ui.FxController;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
