@@ -258,6 +258,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
                 Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
             }
         } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+        
+        
     }
 
     @AutoLogger

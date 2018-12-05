@@ -236,8 +236,7 @@ public class CompanyContactUpdateController implements Initializable, FxControll
 
         genderBox.getSelectionModel().select(contact.getSex());
 
-        communicationsList.clear();
-        communicationsList.addAll(contact.getCommunications());
+        communicationsList.setAll(contact.getCommunications());
     }
 
     /**
