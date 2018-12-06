@@ -43,6 +43,7 @@ public interface AddressService {
      * <p>
      * @param changeEvent object containing all adress changeing information
      */
+    // TODO: Wird im Moment nicht verwendet, das es in der Ui jetzt sehr schwer wäre festzustellen, ob ein Änderung an einem Kunden auch ein relevantes Adresslabel betrifft. Vielleicht 2025.
     void notifyAddressChange(AddressChange changeEvent);
 
 }

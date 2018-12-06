@@ -53,19 +53,12 @@ public class AddressServiceBean implements AddressService {
     @Inject
     private Event<AddressChange> adressChangeEvent;
 
-//    @Override
-//    public String defaultAddressLabel(long customerId, AddressType type) {
-//        if ( type == INVOICE )
-//            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toInvoiceAddress();
-//        else
-//            return ConverterUtil.convert(customerEao.findById(customerId), mandator.getMatchCode(), salesData).toShippingAddress();
-//    }
+    // TODO: Wird im Moment nicht verwendet, das es in der Ui jetzt sehr schwer wäre festzustellen, ob ein Änderung an einem Kunden auch ein relevantes Adresslabel betrifft. Vielleicht 2025.
     @Override
     public void notifyAddressChange(AddressChange changeEvent) {
         adressChangeEvent.fire(changeEvent);
     }
 
-    //TODO Olli fragen ob okay
     @Override
     public String defaultAddressLabel(long customerId, AddressType type) {
         Customer customer = customerEao.findById(customerId);
