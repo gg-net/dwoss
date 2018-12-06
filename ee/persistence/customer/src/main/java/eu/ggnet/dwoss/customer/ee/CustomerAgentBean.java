@@ -44,6 +44,9 @@ import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import lombok.NonNull;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -246,18 +249,62 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
-            ((AddressStash)rootElement).getAddresses().remove((Address)raw);
+
+            Address address = (Address)raw;
+            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.address.id, address.getId()) ) {
+                //if present, throw an exception
+                throw new IllegalStateException("AddressLabel is still referenced by address of Root: " + root + ", Instance: " + raw);
+            } else {
+                //else do the removal            
+                ((AddressStash)rootElement).getAddresses().remove(address);
+            }
+
         } else if ( raw instanceof Company && rootElement.getClass() == Customer.class ) {
-            ((Customer)rootElement).getCompanies().remove((Company)raw);
+
+            Company company = (Company)raw;
+            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.company.id, company.getId()) ) {
+                //if present, throw an exception
+                throw new IllegalStateException("AddressLabel is still referenced by company of Root: " + root + ", Instance: " + raw);
+            } else {
+                //else do the removal            
+                ((Customer)rootElement).getCompanies().remove(company);
+            }
+
         } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
-            ((ContactStash)rootElement).getContacts().remove((Contact)raw);
+
+            Contact contact = (Contact)raw;
+            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.contact.id, contact.getId()) ) {
+                //if present, throw an exception
+                throw new IllegalStateException("AddressLabel is still referenced by contact of Root: " + root + ", Instance: " + raw);
+            } else {
+                //else do the removal            
+                ((ContactStash)rootElement).getContacts().remove((Contact)raw);
+            }
+
         } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
             Communication comm = (Communication)raw;
             ((CommunicationStash)rootElement).getCommunications().remove(comm);
-            if (comm.getType() == EMAIL) {
+            if ( comm.getType() == EMAIL ) {
                 Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
             }
         } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
+
+    }
+
+    /**
+     * Evaluates if the given path of an entity base is already referenced by a given id.
+     *
+     * @param q      EntityBase
+     * @param idPath EntityBase primary key path
+     * @param id     possibly referenced key
+     * @return if the given path of an entity base is already referenced by a given id.
+     */
+    private boolean isReferencedByAddressLabel(NumberPath<Long> idPath, long id) {
+        return new JPAQuery<>(em)
+                .from(QAddressLabel.addressLabel)
+                .select(QAddressLabel.addressLabel)
+                .where(idPath.eq(id))
+                .fetchCount() > 0;
     }
 
     @AutoLogger
@@ -278,7 +325,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @AutoLogger
     @Override
-    public Customer clearDefaultEmailCommunication(long customerId) {        
+    public Customer clearDefaultEmailCommunication(long customerId) {
         Customer c = findByIdEager(Customer.class, customerId);
         c.setDefaultEmailCommunication(null);
         return c;
