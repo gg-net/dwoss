@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
@@ -21,7 +21,7 @@
                 <h:outputText escape="false" value="#{mandatorController.mandator.toHtml()}" />
                 <!--EXTRA INFO-->
 
-                <h2>Additional MandatorInfo </h2>
+                <h2>Zusätzliche Mandanten Informationen</h2>
 
                 <p:panelGrid>
 
@@ -44,12 +44,10 @@
                             </p:dataList>
                         </p:column>
 
-
-
                     </p:row>
                     <p:row >
                         <p:column>
-                            <h3>     Post Ledger </h3>
+                            <h3>Fibu Konten (Post Ledger)</h3>
                             <p:tree value="#{mandatorController.root}" var="node" >
 
                                 <p:treeNode >
@@ -60,28 +58,25 @@
                         <p:column >
                             <p:dataTable value="#{mandatorController.getShippingConditions()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
                                 <f:facet name="header">
-                                    Shipping Terms
+                                    Versandkonditionen (ShippingConditions)
                                 </f:facet>
+                                <p:column headerText="Enum">
+                                    <h:outputText value="#{shippingCondition.name()}"/>
+                                </p:column>
                                 <p:column headerText="Note">
                                     <h:outputText value="#{shippingCondition.name}"/>
                                 </p:column>
-
                                 <p:column headerText="Price of One">
                                     <h:outputText value="#{shippingCondition.priceOfOne}"/>
                                 </p:column>
-
                                 <p:column headerText="Multiplicator">
                                     <h:outputText value="#{shippingCondition.multiplicator}"/>
                                 </p:column>
                             </p:dataTable>
                         </p:column>
-
-
                     </p:row>
 
                     <p:row>
-
-
                         <p:column >
                             <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
                                 <f:facet name="header"> Special System Customers </f:facet>
@@ -96,11 +91,8 @@
 
 
                         <p:column>
-                            <f:facet name="header">Receipt Customers</f:facet>
                             <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" sortMode="multiple" >
-                                <f:facet name="header">
-                                    Single Column Sort
-                                </f:facet>
+                            <f:facet name="header">Receipt Customers</f:facet>
                                 <p:column headerText="Customer ID" sortBy="#{receiptCustomer.value}">
                                     <h:outputText value="#{receiptCustomer.value}"/>
 
@@ -116,15 +108,7 @@
                         </p:column>
                     </p:row>
 
-
-
-
-
                 </p:panelGrid>
-
-
-
-
 
             </h:form>
         </h:body>

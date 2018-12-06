@@ -13,7 +13,7 @@
             <h:form>
                 <p:poll interval="1" update="@form:progressTable"/>
 
-                <p:dataTable id="progressTable" value="#{progressObserverOperation.getActiveProgressKeys()}" var="k" stickyHeader="true" reflow="true" sortBy="#{k}">
+                <p:dataTable id="progressTable" value="#{progressObserverOperation.getActiveProgressKeys()}" var="k" stickyHeader="true" reflow="true">
                     <p:column headerText="Title" priority="2" width="20%">
                         #{progressObserverOperation.getMonitor(k).getTitle()}
                     </p:column>

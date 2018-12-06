@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 
 import lombok.Getter;
@@ -48,22 +46,23 @@ public class MandatorController implements Serializable {
 
     private final static Logger LOG = LoggerFactory.getLogger(MandatorController.class);
 
-@Getter
+    @Getter
     @Inject
     private Mandator mandator;
-    
+
     @Inject
     private Contractors contractors;
-    
+
     @Inject
     private SpecialSystemCustomers specialSystemCustomers;
-    
+
     @Inject
     private ReceiptCustomers receiptCustomers;
-    
+
     @Inject
     private PostLedger postLedger;
-    
+
+    @Getter
     private TreeNode root;
 
     public List<TradeName> getAllowedBrands() {
@@ -76,7 +75,7 @@ public class MandatorController implements Serializable {
 
     // TODO: also show the default of mandator (DefaultSalesData)
     public List<ShippingCondition> getShippingConditions() {
-       return Arrays.asList(ShippingCondition.values());
+        return Arrays.asList(ShippingCondition.values());
     }
 
     public List<Map.Entry<Long, DocumentType>> getSpecialSystemCustomers() {

@@ -207,7 +207,7 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         mandatorMetaData.setPaymentMethod(paymentMethodComboBox.getValue());
 
         mandatorMetaData.getAllowedSalesChannels().clear();
-        mandatorMetaData.getAllowedSalesChannels().addAll(defaultSalesChannelsListView.getItems()
+        mandatorMetaData.getAllowedSalesChannels().addAll(allowedSalesChannelsListView.getItems()
                 .stream()
                 .filter(s -> s.isSelected())
                 .map(s -> s.getSalesChannel())

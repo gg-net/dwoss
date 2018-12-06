@@ -141,7 +141,7 @@ public class MandatorMetadata implements Serializable {
         if ( !isSet() ) return "No Mandator Metadata";
         return "Mandant: " + mandatorMatchcode
                 + "<ul>"
-                + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition + "</li>")
+                + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition.getName() + "</li>")
                 + (paymentCondition == null ? "" : "<li>Zahlungskonditionen:" + paymentCondition.getNote() + "</li>")
                 + (paymentMethod == null ? "" : "<li>Zahlungsmodalität:" + paymentMethod.getNote() + "</li>")
                 + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
