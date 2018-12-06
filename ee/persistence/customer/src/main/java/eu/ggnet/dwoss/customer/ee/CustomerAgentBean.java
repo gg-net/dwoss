@@ -229,8 +229,6 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             ((Customer)rootElement).getCompanies().add((Company)raw);
         } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((ContactStash)rootElement).getContacts().add((Contact)raw);
-        } else if ( raw instanceof MandatorMetadata && rootElement.getClass() == Customer.class ) {
-            ((Customer)rootElement).getMandatorMetadata().add((MandatorMetadata)raw);
         } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((CommunicationStash)rootElement).getCommunications().add((Communication)raw);
         } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
@@ -338,5 +336,33 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         Communication com = em.find(Communication.class, communicationId);
         c.setDefaultEmailCommunication(com);
         return c;
+    }
+
+    @Override
+    public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
+        Customer customer = findByIdEager(Customer.class, customerId);
+        // The supplied instance is the same as defaults, don't store.
+        if ( customer.getMandatorMetadata(mandator.getMatchCode()) == null && mm.isSameAs(salesdata) ) {
+            return customer;
+        } else if ( customer.getMandatorMetadata(mandator.getMatchCode()) != null ) { // The Metadata exist on the customer, just merge
+            // TODO: This is shit, make it better please
+            if (mm.isSameAs(salesdata)) { // Delete case
+                for (Iterator<MandatorMetadata> iterator = customer.getMandatorMetadata().iterator(); iterator.hasNext();) {
+                    MandatorMetadata next = iterator.next();
+                    if (next.equals(mm)) {// Id equals
+                        iterator.remove();
+                    }
+                }
+            } else { // update case
+            mm.normalize(salesdata);
+            em.merge(mm);
+            em.flush();
+            customer = findByIdEager(Customer.class, customerId); // reload the customer after the merge
+            }
+        } else { // New Metadata.
+          mm.normalize(salesdata);
+          customer.getMandatorMetadata().add(mm);
+        }
+        return customer;
     }
 }

@@ -461,8 +461,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                     List<Customer> result1 = Dl.remote().lookup(CustomerAgent.class)
                             .search(companyNameTextField.getText(), firstNameTextField.getText(), lastNameTextField.getText(), emailTextField.getText(), true);
                     Platform.runLater(() -> {
-                        quickSearchList.clear();
-                        quickSearchList.addAll(result1);
+                        quickSearchList.setAll(result1);
                     });
                 });
             }

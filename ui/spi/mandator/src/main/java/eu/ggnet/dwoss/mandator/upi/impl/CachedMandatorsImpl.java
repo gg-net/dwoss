@@ -22,7 +22,6 @@ import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 
 import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.Logger;
@@ -72,11 +71,6 @@ public class CachedMandatorsImpl implements CachedMandators {
     @Override
     public PostLedger loadPostLedger() {
         return loadOnce().loadPostLedger();
-    }
-
-    @Override
-    public ShippingTerms loadShippingTerms() {
-        return loadOnce().loadShippingTerms();
     }
 
     private Mandators loadOnce() {

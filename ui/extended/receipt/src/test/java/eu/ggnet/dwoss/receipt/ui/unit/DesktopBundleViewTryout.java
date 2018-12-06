@@ -66,10 +66,6 @@ public class DesktopBundleViewTryout {
                 throw new UnsupportedOperationException("loadPostLedger - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
-            @Override
-            public ShippingTerms loadShippingTerms() {
-                throw new UnsupportedOperationException("loadShippingTerms - Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
 
         }, new SpecAgent() {
             @Override

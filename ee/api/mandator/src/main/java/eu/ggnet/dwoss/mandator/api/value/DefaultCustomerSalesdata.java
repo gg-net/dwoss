@@ -77,5 +77,5 @@ public class DefaultCustomerSalesdata implements Serializable {
                 + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
                 + "</ul>";
     }
-
+    
 }

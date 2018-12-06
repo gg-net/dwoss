@@ -40,7 +40,7 @@ public class MandatorsStub implements Mandators {
     public DefaultCustomerSalesdata loadSalesdata() {
         return DefaultCustomerSalesdata.builder()
                 .paymentCondition(PaymentCondition.CUSTOMER)
-                .shippingCondition(ShippingCondition.DEALER_ONE)
+                .shippingCondition(ShippingCondition.FIVE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT)
                 .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER)).build();
     }
@@ -62,11 +62,6 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public PostLedger loadPostLedger() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ShippingTerms loadShippingTerms() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

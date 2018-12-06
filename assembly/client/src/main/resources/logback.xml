@@ -51,6 +51,13 @@
         </encoder>
     </appender>
 
+    <appender name="multiplex" class="de.huxhorn.lilith.logback.appender.ClassicMultiplexSocketAppender"> 
+        <Compressing>true</Compressing>
+        <ReconnectionDelay>10000</ReconnectionDelay> 
+        <IncludeCallerData>true</IncludeCallerData> 
+        <RemoteHost>localhost</RemoteHost>
+    </appender>
+
     <!-- Needed to exclude, otherwise oure lookup of progress creates messages every 2 sec -->
     <logger name="eu.ggnet.saft.core.dl.LocalDl" level="INFO"/>
     <logger name="eu.ggnet.saft.core.dl.RemoteDl" level="INFO"/>
@@ -63,5 +70,6 @@
         <appender-ref ref="console"/>
         <appender-ref ref="file"/>
         <appender-ref ref="lilithfile"/>
+        <appender-ref ref="multiplex" />
     </root>
 </configuration>

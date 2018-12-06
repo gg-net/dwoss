@@ -19,15 +19,12 @@ package eu.ggnet.dwoss.misc.web.stub;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms.ConditionValue;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
 import eu.ggnet.dwoss.util.MapBuilder;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.*;
@@ -70,13 +67,6 @@ public class MandatorSupportStub {
     @Produces
     public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new MapBuilder<Long, DocumentType>()
             .put(34L, DocumentType.CAPITAL_ASSET).put(40L, DocumentType.RETURNS).toHashMap());
-
-    @Produces
-    public static ShippingTerms st = new ShippingTerms(new MapBuilder<ShippingCondition, ConditionValue>()
-            .put(ShippingCondition.DEFAULT, new ConditionValue("6€/Gerät min. 10€", 10, 6))
-            .put(ShippingCondition.DEALER_ONE, new ConditionValue("5€/Gerät", 5, 5))
-            .put(ShippingCondition.DEALER_TWO, new ConditionValue("6€/Gerät", 6, 6))
-            .toHashMap());
 
     @Produces
     public static PostLedger pl = new PostLedger(

@@ -432,12 +432,9 @@ public class CompanyUpdateController implements Initializable, FxController, Con
         taxIdTextField.setText(comp.getTaxId());
         ledgerTextField.setText(comp.getLedger() + "");
 
-        addressList.clear();
-        addressList.addAll(comp.getAddresses());
-        communicationsList.clear();
-        communicationsList.addAll(comp.getCommunications());
-        contactsList.clear();
-        contactsList.addAll(comp.getContacts());
+        addressList.setAll(comp.getAddresses());
+        communicationsList.setAll(comp.getCommunications());
+        contactsList.setAll(comp.getContacts());
 
     }
 

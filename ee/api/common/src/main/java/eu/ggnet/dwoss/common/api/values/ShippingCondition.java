@@ -23,10 +23,22 @@ import lombok.*;
  * <p/>
  * @author bastian.venz
  */
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 public enum ShippingCondition {
 
-    DEFAULT, DEALER_ONE, DEALER_TWO;
+    SIX_MIN_TEN("6€/Gerät min. 10€", 10, 6), FIVE("5€/Gerät", 5, 5), SIX("6€/Gerät", 6, 6), FIVE_EIGHTY("5,80€/Gerät", 5.8, 5.8);
+
+    private final String name;
+
+    /**
+     * Price of a single unit shipping
+     */
+    private final double priceOfOne;
+
+    /**
+     * Multiplicator for shippings of multiple unit
+     */
+    private final double multiplicator;
 
 }

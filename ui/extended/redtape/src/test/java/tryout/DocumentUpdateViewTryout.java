@@ -8,7 +8,6 @@ import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
@@ -186,14 +185,10 @@ public class DocumentUpdateViewTryout {
 
             @Override
             public DefaultCustomerSalesdata loadSalesdata() {
-                return new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, null, null);
+                return new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, null, null);
             }
 
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-            @Override
-            public ShippingTerms loadShippingTerms() {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
 
             @Override
             public Mandator loadMandator() {

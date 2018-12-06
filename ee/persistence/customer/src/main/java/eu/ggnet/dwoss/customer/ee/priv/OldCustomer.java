@@ -147,7 +147,7 @@ public class OldCustomer implements Serializable {
         this.allowedSalesChannels = new HashSet<>();
         this.paymentMethod = PaymentMethod.ADVANCE_PAYMENT;
         this.paymentCondition = PaymentCondition.CUSTOMER;
-        this.shippingCondition = ShippingCondition.DEFAULT;
+        this.shippingCondition = ShippingCondition.SIX_MIN_TEN;
     }
 
     public OldCustomer(OldCustomer oldCustomer) {
@@ -422,7 +422,7 @@ public class OldCustomer implements Serializable {
     }
 
     public ShippingCondition getShippingCondition() {
-        if ( shippingCondition == null ) return ShippingCondition.DEFAULT;
+        if ( shippingCondition == null ) return ShippingCondition.SIX_MIN_TEN;
         return shippingCondition;
     }
 

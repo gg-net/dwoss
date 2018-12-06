@@ -93,7 +93,7 @@ public class Sample {
                 .allowedSalesChannels(new TreeSet<>(EnumSet.of(SalesChannel.CUSTOMER)))
                 .paymentCondition(PaymentCondition.CUSTOMER)
                 .paymentMethod(PaymentMethod.ADVANCE_PAYMENT)
-                .shippingCondition(ShippingCondition.DEFAULT)
+                .shippingCondition(ShippingCondition.SIX_MIN_TEN)
                 .build();
 
     }

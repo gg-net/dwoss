@@ -26,8 +26,6 @@ import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.common.ui.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
@@ -72,7 +70,7 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
     @Getter
     private Set<AddressChange> changedAdresses = new HashSet<>();
 
-    private ShippingTerms shippingTerms;
+ 
 
     /** Creates new form EditCustomer
      * <p>
@@ -80,14 +78,14 @@ public class CustomerEditView extends javax.swing.JPanel implements IPreClose {
     public CustomerEditView() {
         initComponents();
 
-        shippingTerms = Dl.remote().lookup(Mandators.class).loadShippingTerms();
+
 
         shippingConditionBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if ( value instanceof ShippingCondition && shippingTerms != null )
-                    label.setText(shippingTerms.get((ShippingCondition)value).get().getNote());
+                if ( value instanceof ShippingCondition )
+                    label.setText(((ShippingCondition)value).getName());
                 return label;
             }
         });

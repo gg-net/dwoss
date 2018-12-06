@@ -67,6 +67,9 @@ public class CustomerMetaData implements Serializable {
      */
     private final Set<SalesChannel> allowedSalesChannel;
     
+    /**
+     * Contains a violation info, if the customer is not valid based on the entity model (Caused by a migration in 2018).
+     */
     private final String violationMessage;
     
 }

@@ -260,10 +260,11 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return the estimated amount for the search
      */
     public int countFind(String search, Set<SearchField> searchField) {
+        if (StringUtils.isBlank(search)) return 0;
+        search = search.trim();
         //fill the searchField if it does not contain any fields
-        if ( searchField == null || searchField.isEmpty() ) {
-            searchField = new HashSet<>(Arrays.asList(SearchField.values()));
-        }
+        if ( searchField == null || searchField.isEmpty() ) searchField = new HashSet<>(Arrays.asList(SearchField.values()));
+ 
         return buildSearchQuery(search, searchField).getResultSize();
     }
 

@@ -334,10 +334,8 @@ public class ContactUpdateController implements Initializable, FxController, Con
 
         genderBox.getSelectionModel().select(contact.getSex());
 
-        addressList.clear();
-        addressList.addAll(contact.getAddresses());
-        communicationsList.clear();
-        communicationsList.addAll(contact.getCommunications());
+        addressList.setAll(contact.getAddresses());
+        communicationsList.setAll(contact.getCommunications());
     }
 
     /**

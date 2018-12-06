@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.redtape.itest;
 
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ShippingTerms;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
 import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
@@ -43,9 +42,6 @@ public class MandatorSupportProducer {
 
     @Produces
     public static SpecialSystemCustomers sc = new SpecialSystemCustomers(new HashMap<>());
-
-    @Produces
-    public static ShippingTerms st = new ShippingTerms(new HashMap<>());
 
     @Produces
     public static PostLedger pl = new PostLedger();

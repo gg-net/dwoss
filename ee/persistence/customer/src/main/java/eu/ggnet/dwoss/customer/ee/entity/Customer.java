@@ -467,8 +467,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             return "Contacts: " + contacts.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
-        if ( mandatorMetadata.stream().anyMatch(m -> m.getViolationMessage() != null) )
-            return "MandatorMetadata: " + mandatorMetadata.stream().filter(m -> m.getViolationMessage() != null).map(m -> m.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( defaultEmailCommunication != null && defaultEmailCommunication.getType() != EMAIL ) return "Default email communication is not of type email";
 
         if ( isConsumer() ) {
@@ -515,7 +513,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         MandatorMetadata customerExtras = mandatorMetadata.stream().filter(m -> m.getMandatorMatchcode().equals(matchcode)).findFirst().orElse(new MandatorMetadata());
 
         sb.append("<li>Versandkonditionen: ")
-                .append(customerExtras.getShippingCondition() == null ? defaults.getShippingCondition() + " <i>(Standard)</i>" : customerExtras.getShippingCondition())
+                .append(customerExtras.getShippingCondition() == null ? defaults.getShippingCondition().getName() + " <i>(Standard)</i>" : customerExtras.getShippingCondition().getName())
                 .append("</li>");
         sb.append("<li>Zahlungskonditionen: ")
                 .append(customerExtras.getPaymentCondition() == null ? defaults.getPaymentCondition().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentCondition().getNote())

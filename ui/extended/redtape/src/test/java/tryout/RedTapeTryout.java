@@ -102,7 +102,7 @@ public class RedTapeTryout {
         Dl.remote().add(ShippingCostService.class, null);
 
         Mandators mandatorSupporterMock = mock(Mandators.class);
-        when(mandatorSupporterMock.loadSalesdata()).thenReturn(new DefaultCustomerSalesdata(ShippingCondition.DEFAULT, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
+        when(mandatorSupporterMock.loadSalesdata()).thenReturn(new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
                 Arrays.asList(SalesChannel.CUSTOMER, SalesChannel.RETAILER), null));
 
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
