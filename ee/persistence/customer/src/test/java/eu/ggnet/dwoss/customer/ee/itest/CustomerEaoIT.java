@@ -125,7 +125,7 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
         Set<SearchField> customerFields = new HashSet<>();
         customerFields.add(SearchField.FIRSTNAME);
 
-        assertThat(eao.countFind(firstName, customerFields)).as("found more than one Customer").isEqualTo(1);
+        assertThat(eao.countFind(firstName, customerFields)).as("found more than one Customer: " +  eao.find(firstName, customerFields)).isEqualTo(1);
     }
     
     @Test

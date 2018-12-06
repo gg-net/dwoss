@@ -122,7 +122,7 @@ public class MandatorMetadata implements Serializable {
 
     public MandatorMetadata() {
     }
-    
+
     /**
      * Returns true if at least on element is set.
      * <p>
@@ -149,52 +149,29 @@ public class MandatorMetadata implements Serializable {
     }
 
     /**
-     * <p>
-     * <p>
-     * /**
-     * Returns null, if the MandatorMetadata is valid.
-     * Rules are:
-     * <ul>
-     * <li>ShippingCondition must be set</li>
-     * <li>PaymentCondition must be set</li>
-     * <li>PaymentMethod must be set</li>
-     * <li>A SalesChannel must be set</li>
-     * </ul>
-     *
-     * @return null if instance is valid, else a string representing the invalidation.
-     */
-    public String getViolationMessage() {
-        if ( shippingCondition == null ) return "No ShippingCondition is set";
-        if ( paymentCondition == null ) return "No PaymentCondition is set";
-        if ( paymentMethod == null ) return "No PaymentMethod is set";
-        if ( allowedSalesChannels.isEmpty() ) return "No SalesChannel is listed";
-        return null;
-    }
-    
-        /**
      * Content equals test which imply null is true.
-     * 
+     *
      * @param defaultCsd the defaults
      * @return ture if contents equal or cmd is null.
      */
     public boolean isSameAs(@NonNull DefaultCustomerSalesdata defaultCsd) {
-        if (!defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels())) return false;
-        if (getPaymentCondition() != null && defaultCsd.getPaymentCondition() != getPaymentCondition()) return false;
-        if (getPaymentMethod() != null && defaultCsd.getPaymentMethod() != getPaymentMethod()) return false;
-        if (getShippingCondition() != null && defaultCsd.getShippingCondition() != getShippingCondition()) return false;
+        if ( !defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels()) ) return false;
+        if ( getPaymentCondition() != null && defaultCsd.getPaymentCondition() != getPaymentCondition() ) return false;
+        if ( getPaymentMethod() != null && defaultCsd.getPaymentMethod() != getPaymentMethod() ) return false;
+        if ( getShippingCondition() != null && defaultCsd.getShippingCondition() != getShippingCondition() ) return false;
         return true;
     }
-    
+
     /**
      * Normalize the MandatorMetadata, setting all defaults to null.
-     * 
+     *
      * @param defaultCsd
      */
     public void normalize(@NonNull DefaultCustomerSalesdata defaultCsd) {
-        if (defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels())) getAllowedSalesChannels().clear();
-        if (defaultCsd.getPaymentCondition() == getPaymentCondition()) setPaymentCondition(null);
-        if (defaultCsd.getPaymentMethod() == getPaymentMethod()) setPaymentMethod(null);
-        if (defaultCsd.getShippingCondition() == getShippingCondition()) setShippingCondition(null);
+        if ( defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels()) ) getAllowedSalesChannels().clear();
+        if ( defaultCsd.getPaymentCondition() == getPaymentCondition() ) setPaymentCondition(null);
+        if ( defaultCsd.getPaymentMethod() == getPaymentMethod() ) setPaymentMethod(null);
+        if ( defaultCsd.getShippingCondition() == getShippingCondition() ) setShippingCondition(null);
     }
 
 }

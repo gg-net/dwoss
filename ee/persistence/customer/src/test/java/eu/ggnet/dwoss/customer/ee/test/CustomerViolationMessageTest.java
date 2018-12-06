@@ -90,16 +90,6 @@ public class CustomerViolationMessageTest {
         assertThat(invalidAddress.getViolationMessage()).as("Invalid Address is invalid").isNotNull();
         businessCustomer.getCompanies().get(0).getAddresses().add(invalidAddress);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Address is invalid").isNotNull();
-
-        businessCustomer = makeValidBusinessCustomer();
-        MandatorMetadata invalidMandatorMetadata = new MandatorMetadata();
-        invalidMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
-        invalidMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        invalidMandatorMetadata.setShippingCondition(ShippingCondition.FIVE);
-        assertThat(invalidMandatorMetadata.getViolationMessage()).as("Invalid MandatorMetadata is invalid").isNotNull();
-        businessCustomer.getMandatorMetadata().add(invalidMandatorMetadata);
-        assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid MandatorMetadata is invalid").isNotNull();
-
     }
 
     @Test
@@ -150,15 +140,6 @@ public class CustomerViolationMessageTest {
         assertThat(invalidAddress.getViolationMessage()).as("Invalid Address is invalid").isNotNull();
         consumerCustomer.getContacts().get(0).getAddresses().add(invalidAddress);
         assertThat(consumerCustomer.getViolationMessage()).as("ConsumerCustomer with invalid Address is invalid").isNotNull();
-
-        consumerCustomer = makeValidConsumerCustomer();
-        MandatorMetadata invalidMandatorMetadata = new MandatorMetadata();
-        invalidMandatorMetadata.setPaymentCondition(PaymentCondition.CUSTOMER);
-        invalidMandatorMetadata.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        invalidMandatorMetadata.setShippingCondition(ShippingCondition.FIVE);
-        assertThat(invalidMandatorMetadata.getViolationMessage()).as("Invalid MandatorMetadata is invalid").isNotNull();
-        consumerCustomer.getMandatorMetadata().add(invalidMandatorMetadata);
-        assertThat(consumerCustomer.getViolationMessage()).as("BusinessCustomer with invalid MandatorMetadata is invalid").isNotNull();
 
     }
 }
