@@ -14,6 +14,21 @@
         </activatedProfiles>
     </action>
     <action>
+        <actionName>CUSTOM-RunClient GGNet Local Test</actionName>
+        <displayName>RunClient GGNet Local Test</displayName>
+        <goals>
+            <goal>clean</goal>
+            <goal>compile</goal>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=ggnet-local-test</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-ggnet</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
         <actionName>CUSTOM-RunClient GGNet Test</actionName>
         <displayName>RunClient GGNet Test</displayName>
         <goals>
@@ -49,6 +64,19 @@
         </goals>
         <properties>
             <jfx.runAppParameter>--config=elus-test</jfx.runAppParameter>
+        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-elus</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient Elus Local Test</actionName>
+        <displayName>RunClient Elus Local Test</displayName>
+        <goals>
+            <goal>jfx:run</goal>
+        </goals>
+        <properties>
+            <jfx.runAppParameter>--config=elus-local-test</jfx.runAppParameter>
         </properties>
         <activatedProfiles>
             <activatedProfile>client-elus</activatedProfile>
