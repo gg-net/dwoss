@@ -139,14 +139,15 @@ public class CustomerServiceBean implements CustomerService {
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
+        Optional<MandatorMetadata> omm = Optional.ofNullable(customer.getMandatorMetadata(mandator.getMatchCode()));
         return new CustomerMetaData(
                 customer.getId(),
                 Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
-                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentCondition).findAny().orElse(salesData.getPaymentCondition()),
-                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getPaymentMethod).findAny().orElse(salesData.getPaymentMethod()),
-                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getShippingCondition).findAny().orElse(salesData.getShippingCondition()),
+                omm.map(MandatorMetadata::getPaymentCondition).filter(mm -> mm != null).orElse(salesData.getPaymentCondition()),
+                omm.map(MandatorMetadata::getPaymentMethod).filter(mm -> mm != null).orElse(salesData.getPaymentMethod()),
+                omm.map(MandatorMetadata::getShippingCondition).filter(mm -> mm != null).orElse(salesData.getShippingCondition()),
                 customer.getFlags(),
-                customer.getMandatorMetadata().stream().filter(mm -> mandator.getMatchCode().equals(mm.getMandatorMatchcode())).map(MandatorMetadata::getAllowedSalesChannels).findAny().orElse(salesData.getAllowedSalesChannels()),
+                omm.map(MandatorMetadata::getAllowedSalesChannels).filter(sc -> !sc.isEmpty()).orElse(salesData.getAllowedSalesChannels()),
                 customer.getViolationMessage()
         );
     }

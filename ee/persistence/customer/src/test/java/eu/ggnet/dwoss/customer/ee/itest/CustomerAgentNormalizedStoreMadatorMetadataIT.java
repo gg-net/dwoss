@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ee.itest;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -30,12 +29,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
-import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -58,6 +56,9 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
 
     @EJB
     private CustomerAgent agent;
+
+    @EJB
+    private CustomerService apiService;
 
     @Inject
     @Customers
@@ -126,6 +127,10 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
                 .returns(null, MandatorMetadata::getPaymentCondition)
                 .returns(null, MandatorMetadata::getPaymentMethod)
                 .returns(mm.getShippingCondition(), MandatorMetadata::getShippingCondition);
+
+        // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
+        apiService.asCustomerMetaData(customer.getId());
+        apiService.asUiCustomer(customer.getId());
     }
 
     @Test
@@ -157,6 +162,10 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
                 .returns(null, MandatorMetadata::getPaymentMethod)
                 .returns(mm.getShippingCondition(), MandatorMetadata::getShippingCondition);
 
+        // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
+        apiService.asCustomerMetaData(customer.getId());
+        apiService.asUiCustomer(customer.getId());
+
         // Now set everything to defaults, which results in auto remove
         c0mm.getAllowedSalesChannels().clear();
         c0mm.getAllowedSalesChannels().addAll(dcs.getAllowedSalesChannels());
@@ -166,6 +175,11 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
 
         c0 = agent.findByIdEager(Customer.class, customer.getId());
         assertThat(c0.getMandatorMetadata(mandator.getMatchCode())).as("Defaults were stored, should be removed").isNull();
+
+        // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
+        apiService.asCustomerMetaData(customer.getId());
+        apiService.asUiCustomer(customer.getId());
+
     }
 
     @Test
@@ -180,6 +194,10 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
 
         Customer c0 = agent.findByIdEager(Customer.class, customer.getId());
         assertThat(c0.getMandatorMetadata(mandator.getMatchCode())).as("Defaults were stored, should not be persisted").isNull();
+
+        // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
+        apiService.asCustomerMetaData(customer.getId());
+        apiService.asUiCustomer(customer.getId());
 
     }
 }
