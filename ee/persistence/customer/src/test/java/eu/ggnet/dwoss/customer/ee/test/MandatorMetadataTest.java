@@ -81,5 +81,10 @@ public class MandatorMetadataTest {
         makeInValidMandatorMetadata.getAllowedSalesChannels().clear();
         assertThat(makeInValidMandatorMetadata.getViolationMessage()).as("MandatorMetadata without Allowed Sales Channels").isNotBlank();
     }
+    
+    @Test
+    public void normalize() {
+        
+    }
 
 }
