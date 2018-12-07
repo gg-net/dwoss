@@ -106,7 +106,7 @@ public class CompanyContactUpdateController implements Initializable, FxControll
                     .handle(Ui.handler());
         });
 
-        deleteCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull().or(Bindings.size(communicationsList).lessThan(2)));
+        deleteCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull());
         deleteCommunicationButton.setOnAction(e -> {
             if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
 

@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -127,7 +126,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
         });
 
         //button behavior
-        deleteAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull().or(Bindings.size(addressList).lessThan(2)));
+        deleteAddressButton.disableProperty().bind(addressListView.getSelectionModel().selectedItemProperty().isNull());
         deleteAddressButton.setOnAction(e -> {
             if ( addressListView.getSelectionModel().getSelectedItem() == null ) return;
 
@@ -160,7 +159,7 @@ public class ContactUpdateController implements Initializable, FxController, Con
                     .handle(Ui.handler());
         });
 
-        deleteCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull().or(Bindings.size(communicationsList).lessThan(2)));
+        deleteCommunicationButton.disableProperty().bind(communicationTableView.getSelectionModel().selectedItemProperty().isNull());
         deleteCommunicationButton.setOnAction(e -> {
             if ( communicationTableView.getSelectionModel().getSelectedItem() == null ) return;
 

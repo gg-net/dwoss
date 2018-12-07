@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.customer.ee;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -46,13 +45,14 @@ import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.NonNull;
 
 import static eu.ggnet.dwoss.customer.ee.entity.QAddressLabel.*;
 import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.*;
+import static eu.ggnet.dwoss.customer.ee.entity.QContact.*;
+import static eu.ggnet.dwoss.customer.ee.entity.QCompany.*;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
@@ -145,7 +145,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
         Customer customer;
         if ( exists ) {
-            customer = em.find(Customer.class, simpleCustomer.getId());
+            customer = findByIdEager(Customer.class, simpleCustomer.getId());
             Objects.requireNonNull(customer, "No Customer with id " + simpleCustomer.getId() + ", error");
         } else {
             customer = new Customer();
@@ -209,36 +209,36 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     /**
      * Stores the addresslabels on the customer, all addresslabels must be from one customer.
      * Creating all labels with an id == 0. updateing all with an id <> 0. Deleting all that are missing.
-     * 
+     *
      * @param aldtos
-     * @return 
+     * @return
      * @throws IllegalArgumentException if the collection is empty.
      */
     @Override
     public Customer autostore(@NonNull Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
-        if (aldtos.isEmpty()) throw new IllegalArgumentException("Empty collection of addresslabels not allowed");
+        if ( aldtos.isEmpty() ) throw new IllegalArgumentException("Empty collection of addresslabels not allowed");
         // TODO: Verify, that all dtos have only one customerid.
         AddressLabelDto first = aldtos.iterator().next();
         Customer c = findByIdEager(Customer.class, first.getCustomerId());
-        Map<Long,AddressLabel> existing = c.getAddressLabels().stream().collect(Collectors.toMap(AddressLabel::getId, a -> a));
+        Map<Long, AddressLabel> existing = c.getAddressLabels().stream().collect(Collectors.toMap(AddressLabel::getId, a -> a));
         for (AddressLabelDto dto : aldtos) {
             AddressLabel active = null;
-            if (dto.getId() == 0) {
+            if ( dto.getId() == 0 ) {
                 active = new AddressLabel();
             } else {
                 active = existing.get(dto.getId());
                 existing.remove(dto.getId());
-            }            
+            }
             // Saftynet, schould never happen
-            if (active == null) throw new IllegalArgumentException("DTO did not find an existing Label" + dto);
-            
+            if ( active == null ) throw new IllegalArgumentException("DTO did not find an existing Label" + dto);
+
             active.setCustomer(c);
             active.setType(dto.getType());
             active.setAddress(em.find(Address.class, dto.getAddressId()));
-            if (dto.getContactId() > 0) active.setContact(em.find(Contact.class, dto.getContactId()));
-            if (dto.getCompanyId() > 0) active.setCompany(em.find(Company.class, dto.getCompanyId()));
-            L.debug("autostore: creating or updating {}",active);
-            if (dto.getId() == 0) em.persist(active);
+            if ( dto.getContactId() > 0 ) active.setContact(em.find(Contact.class, dto.getContactId()));
+            if ( dto.getCompanyId() > 0 ) active.setCompany(em.find(Company.class, dto.getCompanyId()));
+            L.debug("autostore: creating or updating {}", active);
+            if ( dto.getId() == 0 ) em.persist(active);
         }
         for (AddressLabel deleteme : existing.values()) {
             deleteme.setAddress(null);
@@ -246,11 +246,11 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             deleteme.setCompany(null);
             deleteme.setContact(null);
             em.remove(deleteme);
-            L.debug("autostore: deleting: {}",deleteme);
+            L.debug("autostore: deleting: {}", deleteme);
         }
         return c;
     }
-    
+
     @AutoLogger
     @Override
     /**
@@ -283,7 +283,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      *
      * @throws
      */
-    public void delete(@NonNull Root root, @NonNull Object raw) throws IllegalArgumentException {
+    public void delete(@NonNull Root root, @NonNull Object raw) throws LastDeletionExecption, IllegalArgumentException, IllegalStateException {
 
         Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
@@ -291,7 +291,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             Address address = (Address)raw;
             //validate possible address label reference
             if ( isReferencdByAddressLabel(addressLabel.address.id, address.getId()) )
-                throw new IllegalStateException(address + " is part of an AddressLabel, delete not allowed");
+                throw new LastDeletionExecption(address + " is part of an AddressLabel, delete not allowed");
 
             ((AddressStash)rootElement).getAddresses().remove(address);
 
@@ -299,11 +299,18 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             Company company = (Company)raw;
             //check for possible address label reference
             if ( isReferencdByAddressLabel(addressLabel.company.id, company.getId()) )
-                throw new IllegalStateException(company + " is part of an AddressLabel, delete not allowed");
+                throw new LastDeletionExecption(company + " is part of an AddressLabel, delete not allowed");
             //prevent last company removal
             if ( isLastCompanyOnCustomer(company) )
-                throw new IllegalStateException("Company can not be deleted, because it`s only one present");
-
+                throw new LastDeletionExecption("Company can not be deleted, because it`s only one present");
+            for (Address addresse : company.getAddresses()) {
+                if ( isReferencdByAddressLabel(addressLabel.address.id, addresse.getId()) )
+                    throw new LastDeletionExecption(company + " is part of an AddressLabel, delete not allowed");
+            }
+            for (Contact contact : company.getContacts()) {
+                if ( isReferencdByAddressLabel(addressLabel.contact.id, contact.getId()) )
+                    throw new LastDeletionExecption(company + " is part of an AddressLabel, delete not allowed");
+            }
             ((Customer)rootElement).getCompanies().remove(company);
 
         } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
@@ -311,19 +318,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             Contact contact = (Contact)raw;
             //check for possible address label reference
             if ( isReferencdByAddressLabel(addressLabel.contact.id, contact.getId()) )
-                throw new IllegalStateException(contact + " is part of an AddressLabel, delete not allowed");
-            
+                throw new LastDeletionExecption(contact + " is part of an AddressLabel, delete not allowed");
+            for (Address addresse : contact.getAddresses()) {
+                if ( isReferencdByAddressLabel(addressLabel.address.id, addresse.getId()) )
+                    throw new LastDeletionExecption(contact + " is part of an AddressLabel, delete not allowed");
+            }
             //prevent last contact removal
-            if (rootElement instanceof Customer && isLastContactOnCustomer(contact) )
-                throw new IllegalStateException("Contact can not be deleted, because it`s only one present");
+            if ( rootElement instanceof Customer && isLastContactOnCustomer(contact) )
+                throw new LastDeletionExecption("Contact can not be deleted, because it`s only one present");
 
             ((ContactStash)rootElement).getContacts().remove(contact);
 
         } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
             Communication comm = (Communication)raw;
             if ( isLastCommunicationOnCustomer(rootElement, comm) )
-                throw new IllegalStateException(comm + " is the last communication in a customer. Delete not allowed.");
-            
+                throw new LastDeletionExecption(comm + " is the last communication in a customer. Delete not allowed.");
+
             ((CommunicationStash)rootElement).getCommunications().remove(comm);
             if ( comm.getType() == EMAIL ) {
                 Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
@@ -349,9 +359,9 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     /**
      * Checks if the given contact is the last one present on the referenced customer.
-     *
+     * <p>
      * This customer is expected to be on a consumer customer, not on a company.
-     * 
+     *
      * @param contact contact that might be the last one present
      * @return if the given contact is the last one present on the referenced customer.
      */
@@ -367,49 +377,24 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * @param communication the communication instance
      */
     private boolean isLastCommunicationOnCustomer(Object root, Communication communication) {
+        List<Customer> oneCustomer = new JPAQuery<>(em)
+                .select(QCustomer.customer)
+                .from(customer)
+                .join(customer.companies, company)
+                .join(company.contacts, contact)
+                .where(contact.communications.contains(communication).or(company.communications.contains(communication)))
+                .fetch();
+        oneCustomer.addAll(new JPAQuery<>(em)
+                .select(QCustomer.customer)
+                .from(customer)
+                .join(customer.contacts, contact)
+                .where(contact.communications.contains(communication))
+                .fetch());
 
-        List<Customer> onlyOnePresent = null;
-        if ( root instanceof Company ) {
-            //find customer based on company root object
-            onlyOnePresent = new JPAQuery<>(em)
-                    .from(QCustomer.customer)
-                    .select(QCustomer.customer)
-                    .where(QCustomer.customer.companies.contains((Company)root))
-                    .fetch();
-        } else if ( root instanceof Contact ) {
-            //find customer based on contact root object
-            onlyOnePresent = new JPAQuery<>(em)
-                    .select(QCustomer.customer)
-                    .from(QContact.contact)
-                    .join(QCustomer.customer).on(QCustomer.customer.contacts.contains(QContact.contact))
-                    .where(QContact.contact.communications.contains(communication))
-                    .fetch();
-        } else {
-            throw new IllegalArgumentException("Object: " + root + " is not allowed for communication removal");
+        if ( oneCustomer.size() > 1 || oneCustomer.isEmpty() || oneCustomer.get(0) == null ) {
+            throw new IllegalStateException("In LastCommunicationonCustomer, should never be thorwn: Too many or none or null found: " + oneCustomer);
         }
-
-        if ( onlyOnePresent.size() > 1 ) {
-            throw new IllegalStateException("Multiple customers with the same Contact. Found: " + onlyOnePresent);
-        } else if ( onlyOnePresent.isEmpty() ) {
-            throw new IllegalStateException("No customers found for contact: " + root);
-        }
-
-        Customer c = onlyOnePresent.get(0);
-        if ( root instanceof Company ) {
-            return c.getCompanies().stream()
-                    .flatMap(
-                            com -> Stream.concat(
-                                    com.getContacts().stream().flatMap(con -> con.getCommunications().stream()),
-                                    com.getCommunications().stream()
-                            )
-                    ).count() <= 1;
-
-        } else if ( root instanceof Contact ) {
-            return c.getContacts().stream().flatMap(con -> con.getCommunications().stream()).count() <= 1;
-
-        }
-
-        return false;
+        return oneCustomer.get(0).getAllCommunications().size() <= 1;
     }
 
     @AutoLogger

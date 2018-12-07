@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
+import eu.ggnet.dwoss.customer.ee.LastDeletionExecption;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -114,7 +115,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         assertThatThrownBy(() -> {
             agent.delete(new Root(Contact.class, comContactid), comunication);
         }).as("Address in AddressLabel should not be deleteable.")
-                .hasCauseInstanceOf(IllegalStateException.class);
+                .hasCauseInstanceOf(LastDeletionExecption.class);
 
     }
 
@@ -149,7 +150,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         assertThatThrownBy(() -> {
             agent.delete(new Root(Contact.class, 1l), foundAddress);
         }).as("Address in AddressLabel should not be deleteable.")
-                .hasCauseInstanceOf(IllegalStateException.class);
+                .hasCauseInstanceOf(LastDeletionExecption.class);
 
         foundContact = agent.findByIdEager(Contact.class, 1l);
         assertThat(foundContact.getAddresses().isEmpty()).as("Delete somehow worked address for contact with referenced addresslabel").isFalse();
@@ -197,7 +198,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
 
         assertThatThrownBy(() -> {
             agent.delete(new Root(Customer.class, 1l), foundContact);
-        }).hasCauseInstanceOf(IllegalStateException.class);
+        }).hasCauseInstanceOf(LastDeletionExecption.class);
 
         Contact otherContact = foundCustomer.getContacts().get(1);
         agent.delete(new Root(Customer.class, 1l), otherContact);

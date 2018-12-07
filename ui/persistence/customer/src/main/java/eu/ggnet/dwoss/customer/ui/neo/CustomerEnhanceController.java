@@ -142,13 +142,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void clickDefaultEmailButton(ActionEvent event) {
-        List<Communication> allEmails = Stream.concat(
-                Stream.concat(
-                        customer.getContacts().stream().flatMap((con) -> con.getCommunications().stream()),
-                        customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
-                customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
-                filter(c -> c.getType() == EMAIL).collect(Collectors.toList());
-        Ui.build(commentTextArea).fx().eval(() -> new Selection(allEmails, customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
+        Ui.build(commentTextArea).fx().eval(() -> new Selection(customer.getAllCommunications(EMAIL), customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
                 .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.getDefaultEmailCommunication()))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
@@ -156,7 +150,6 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     @FXML
     private void clickSaveButton(ActionEvent event) {
-
         if ( !customer.isValid() ) {
             new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").show();
 //            throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());

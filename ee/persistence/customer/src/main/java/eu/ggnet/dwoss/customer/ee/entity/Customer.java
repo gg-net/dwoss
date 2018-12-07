@@ -22,6 +22,7 @@ import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -39,9 +40,9 @@ import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 
@@ -231,6 +232,34 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
         sb += invoiceLabel.getContact() != null ? invoiceLabel.getContact().toFullName() : "NoNameContact";
         return sb;
+    }
+
+    /**
+     * Returns all communications of the customer (communication of contacts, communication of companies and communications of contacts of companies).
+     *
+     * @return all communications.
+     */
+    public List<Communication> getAllCommunications() {
+        return streamAllCommunications().collect(Collectors.toList());
+    }
+
+    /**
+     * Returns all communications of the customer (communication of contacts, communication of companies and communications of contacts of companies) of a
+     * selected type.
+     *
+     * @param type the type to filter
+     * @return all communications.
+     */
+    public List<Communication> getAllCommunications(Communication.Type type) {
+        return streamAllCommunications().filter(c -> c.getType() == type).collect(Collectors.toList());
+    }
+
+    private Stream<Communication> streamAllCommunications() {
+        return Stream.concat(
+                Stream.concat(
+                        contacts.stream().flatMap((con) -> con.getCommunications().stream()),
+                        companies.stream().flatMap((con) -> con.getCommunications().stream())),
+                companies.stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream()));
     }
 
     /**
