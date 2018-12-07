@@ -236,16 +236,9 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
-                Customer customer = Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId()));
-                System.out.println("Edit customer triggered: AdressLabel=" + customer.getAddressLabels().size());
-                customer.getAddressLabels().forEach(c -> System.out.println("Label:" + c));
-                
-                //TODO: Check if the validation is really neccesary later, if not remove. We validate while editing
-//                if ( !customer.isValid() ) {
-//                    Ui.build(resultListView).title("Fehlerhafter Datensatz").alert().message("Kundendaten sind invalid (aktuell normal): " + customer.getViolationMessage()).show(AlertType.WARNING);
-//                } else {
-                    CustomerConnectorFascade.edit(customer, UiParent.of(resultListView));
-//                }
+                CustomerConnectorFascade.edit(Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId())), UiParent.of(resultListView), () -> {
+                    // TODO: We could reload the picocustomer, which was changed and updaten the search list.
+                });
             });
         });
 

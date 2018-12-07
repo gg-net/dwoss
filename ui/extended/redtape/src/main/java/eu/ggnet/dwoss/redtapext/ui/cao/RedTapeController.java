@@ -342,11 +342,13 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        if ( !Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId) ) return;
-        //reset search to avoid wrong customer selections
-        model.setSearch(String.valueOf(recentCustomerId));
-        view.searchResultList.setSelectedIndex(0);
-        reloadSelectionOnCustomerChange();
+        Ui.exec(() -> {
+            Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId, () -> {
+                model.setSearch(String.valueOf(recentCustomerId));
+                view.searchResultList.setSelectedIndex(0);
+                reloadSelectionOnCustomerChange();
+            });
+        });
     }
 
     /**
@@ -439,7 +441,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
         //build customer dependant actions.
         if ( model.getPurchaseCustomer().getViolationMessage() != null ) {
-            Ui.build().alert("Kunde ist invalid: " + model.getPurchaseCustomer().getViolationMessage());
+            Ui.build(view).alert("Kunde ist invalid: " + model.getPurchaseCustomer().getViolationMessage());
         } else if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
             // Don't allow anything here.
         } else if ( model.getPurchaseCustomer().getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {

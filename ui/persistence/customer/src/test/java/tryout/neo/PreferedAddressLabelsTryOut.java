@@ -41,25 +41,17 @@ public class PreferedAddressLabelsTryOut {
         JButton firmenKundenButton = new JButton("Lade FirmenKunde");
         firmenKundenButton.addActionListener(ev -> {
 
-            Customer customer = GEN.makeCustomer();
-            customer.getContacts().clear();
+            Customer customer = new Customer();
             customer.getCompanies().add(GEN.makeCompany());
             customer.getCompanies().add(GEN.makeCompany());
 
-            if ( !customer.isValid() ) {
-                Ui.exec(() -> {
-                    Ui.build().alert("customer is invalid" + customer.getViolationMessage());
-                });
-
-                return;
-            }
+            if ( !customer.isValid() ) Ui.build().alert("customer is invalid: " + customer.getViolationMessage());
             Ui.build().fxml().eval(() -> customer, PreferedAddressLabelsController.class).cf().thenAccept(System.out::println).handle(Ui.handler());
         });
 
         JButton endKundenButton = new JButton("Lade Endkunde");
         endKundenButton.addActionListener(ev -> {
             Customer customer = GEN.makeCustomer();
-            customer.getCompanies().clear();
             customer.getContacts().add(GEN.makeContact());
             customer.getContacts().add(GEN.makeContact());
 

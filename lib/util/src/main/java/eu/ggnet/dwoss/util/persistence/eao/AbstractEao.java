@@ -21,12 +21,17 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An abstract Entity Access Object for the default actions.
  * T class of the Entity
  */
 public abstract class AbstractEao<T> {
 
+    private final Logger L = LoggerFactory.getLogger(this.getClass()); // logger of subclass.
+    
     private Class<T> entityClass;
 
     public AbstractEao(Class<T> entityClass) {
@@ -36,11 +41,13 @@ public abstract class AbstractEao<T> {
     public abstract EntityManager getEntityManager();
 
     public T findById(Object id) {
+        L.debug("findbyId({}) of entityClass={} called",id,entityClass);
         if ( id == null ) return null;
         return getEntityManager().find(entityClass, id);
     }
 
     public T findById(Object id, LockModeType lockModeType) {
+        L.debug("findbyId({}) of entityClass={} called",id,entityClass);
         if ( id == null ) return null;
         return getEntityManager().find(entityClass, id, lockModeType);
     }

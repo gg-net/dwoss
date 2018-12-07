@@ -23,12 +23,17 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * An Abstract RemoteAgent is used for general implementation of findAll and findById Methods for a full persistence unit.
  * <p/>
  * @author oliver.guenther
  */
 public abstract class AbstractAgentBean implements RemoteAgent {
+
+    private final Logger L = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Must return the EntityManager of the persistence unit.
@@ -47,6 +52,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> T findById(Class<T> entityClass, Object id) {
+        L.debug("findById({},{}) called", entityClass, id);
         validate(entityClass);
         if ( id == null ) return null;
         return getEntityManager().find(entityClass, id);
@@ -63,6 +69,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
+        L.debug("findByIdEager({},{}) called", entityClass, id);
         return optionalFetchEager(findById(entityClass, id));
     }
 
@@ -77,6 +84,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> T findById(Class<T> entityClass, Object id, LockModeType lockModeType) {
+        L.debug("findById({},{},{}) called", entityClass, id, lockModeType);
         validate(entityClass);
         if ( id == null ) return null;
         return getEntityManager().find(entityClass, id, lockModeType);
@@ -94,6 +102,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id, LockModeType lockModeType) {
+        L.debug("findByIdEager({},{},{}) called", entityClass, id, lockModeType);
         return optionalFetchEager(findById(entityClass, id, lockModeType));
     }
 
@@ -106,6 +115,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
+        L.debug("findAll({}) called", entityClass);
         validate(entityClass);
         javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
@@ -122,6 +132,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass) {
+        L.debug("findAllEager({}) called", entityClass);
         return optionalFetchEager(findAll(entityClass));
     }
 
@@ -136,6 +147,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> List<T> findAll(Class<T> entityClass, int start, int amount) {
+        L.debug("findAll({},{},{}) called", entityClass, start, amount);
         validate(entityClass);
         javax.persistence.criteria.CriteriaQuery<T> cq = getEntityManager().getCriteriaBuilder().createQuery(entityClass);
         cq.select(cq.from(entityClass));
@@ -154,6 +166,7 @@ public abstract class AbstractAgentBean implements RemoteAgent {
      */
     @Override
     public <T> List<T> findAllEager(Class<T> entityClass, int start, int amount) {
+        L.debug("findAllEager({},{},{}) called", entityClass, start, amount);
         return optionalFetchEager(findAll(entityClass, start, amount));
     }
 

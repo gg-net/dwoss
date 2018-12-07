@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ui.neo.*;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.UiParent;
@@ -44,12 +43,7 @@ public class NeoCustomerUpi implements CustomerUpi {
     }
 
     @Override
-    public boolean updateCustomer(UiParent parent, long customerId) {
-        Customer customer = Dl.remote().lookup(CustomerAgent.class).findByIdEager(Customer.class, customerId);
-        if ( customer == null ) return false;
-
-        CustomerConnectorFascade.edit(customer,parent);
-        // TODO: Change Result also to a consumer pattern. See first if the result is needed.
-        return false;
+    public void updateCustomer(UiParent parent, long customerId, Runnable change) {
+        CustomerConnectorFascade.edit(Dl.remote().lookup(CustomerAgent.class).findByIdEager(Customer.class, customerId),parent,change);
     }
 }

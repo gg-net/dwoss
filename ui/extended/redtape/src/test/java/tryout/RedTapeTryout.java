@@ -9,6 +9,7 @@ import eu.ggnet.dwoss.common.api.values.PaymentCondition;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import javax.swing.JLabel;
 
@@ -37,12 +38,11 @@ import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import tryout.stub.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
+import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
@@ -107,11 +107,15 @@ public class RedTapeTryout {
 
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
-        CustomerUpi ccos = mock(CustomerUpi.class);
-        //FIXME
-//        when(ccos.createCustomer(any())).thenReturn(0L);
-        when(ccos.updateCustomer(any(), anyLong())).thenReturn(true);
-        Dl.local().add(CustomerUpi.class, ccos);
+        Dl.local().add(CustomerUpi.class, new CustomerUpi() {
+            @Override
+            public void createCustomer(UiParent parent, Consumer<Long> id) {
+            }
+
+            @Override
+            public void updateCustomer(UiParent parent, long customerId, Runnable change) {
+            }
+        });
 
         UiCore.startSwing(() -> new JLabel("Main Applikation"));
         Ui.exec(() -> {

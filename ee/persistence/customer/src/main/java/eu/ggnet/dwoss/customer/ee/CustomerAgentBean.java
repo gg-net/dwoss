@@ -132,6 +132,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     @Override
     public Reply<Customer> store(SimpleCustomer simpleCustomer) {
+        L.info("store({})", simpleCustomer);
         boolean exists = (simpleCustomer.getId() > 0);
         boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
 
@@ -176,8 +177,6 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         update(customer, cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail());
         update(customer, cont.getCommunications(), Type.PHONE, simpleCustomer.getLandlinePhone());
         update(customer, cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
-
-        L.info("Trying Customer {} with coms: {} ", simpleCustomer.getLastName(), cont.getCommunications());
 
         customer.setSource(simpleCustomer.getSource());
         if ( !customer.isValid() ) return Reply.failure(customer.getViolationMessage());

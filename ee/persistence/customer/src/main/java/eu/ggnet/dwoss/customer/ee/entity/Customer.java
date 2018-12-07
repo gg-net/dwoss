@@ -226,9 +226,7 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      */
     public String toName() {
         AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().orElse(null);
-
-        if ( invoiceLabel == null ) return null;
-
+        if ( invoiceLabel == null ) return "- kein Adresslabel -";
         //start with possible company name
         String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
         sb += invoiceLabel.getContact() != null ? invoiceLabel.getContact().toFullName() : "NoNameContact";

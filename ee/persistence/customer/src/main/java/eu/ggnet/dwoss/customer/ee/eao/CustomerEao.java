@@ -287,7 +287,6 @@ public class CustomerEao extends AbstractEao<Customer> {
         }
 
         for (SearchField sf : searchField) {
-            L.info("Searchfieldname: {}", sf.name());
             switch (sf) {
                 case FIRSTNAME:
                     searchFieldStringSet.addAll(SEARCH_FIRSTNAME);
@@ -305,6 +304,7 @@ public class CustomerEao extends AbstractEao<Customer> {
                     break;
             }
         }
+        L.debug("Searchfields {} generated hibernate search string values {}",searchField,searchFieldStringSet);
         return searchFieldStringSet;
     }
 

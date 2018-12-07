@@ -40,6 +40,7 @@ import eu.ggnet.saft.core.ui.ResultProducer;
 
 import lombok.Getter;
 
+import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
 
 /**
@@ -184,35 +185,32 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         invoiceAddressAddressListView.getItems().addAll(allAddresses);
         shippingAddressAddressListView.getItems().addAll(allAddresses);
 
-        invoiceLabel = customer.getAddressLabels()
+        customer.getAddressLabels()
                 .stream()
                 .filter(addressLabel -> addressLabel.getType() == AddressType.INVOICE)
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No AddressLabel found, broken custmoer: " + customer));
-
-        invoiceAddressWebView.getEngine().loadContent(invoiceLabel.toHtml());
-        if ( invoiceLabel.getCompany() != null )
-            invoiceAddressCompanyListView.getSelectionModel().select(invoiceLabel.getCompany());
-        if ( invoiceLabel.getContact() != null )
-            invoiceAddressContactListView.getSelectionModel().select(invoiceLabel.getContact());
-
-        invoiceAddressAddressListView.getSelectionModel().select(invoiceLabel.getAddress());
+                .findFirst()
+                .ifPresent(il -> {
+                    invoiceAddressWebView.getEngine().loadContent(il.toHtml());
+                    if ( il.getCompany() != null )
+                        invoiceAddressCompanyListView.getSelectionModel().select(il.getCompany());
+                    if ( il.getContact() != null )
+                        invoiceAddressContactListView.getSelectionModel().select(il.getContact());
+                    invoiceAddressAddressListView.getSelectionModel().select(il.getAddress());
+                    invoiceLabel = il;
+                });
 
         customer.getAddressLabels()
                 .stream()
                 .filter(addressLabel -> addressLabel.getType() == AddressType.SHIPPING)
                 .findFirst()
-                .ifPresent(l -> {
-                    shippingLabel = l;
-
-                    shippingAddressWebView.getEngine().loadContent(shippingLabel.toHtml());
-
-                    if ( shippingLabel.getCompany() != null )
-                        shippingAddressCompanyListView.getSelectionModel().select(shippingLabel.getCompany());
-                    if ( shippingLabel.getContact() != null )
-                        shippingAddressContactListView.getSelectionModel().select(shippingLabel.getContact());
-
-                    shippingAddressAddressListView.getSelectionModel().select(shippingLabel.getAddress());
-
+                .ifPresent(sl -> {
+                    shippingAddressWebView.getEngine().loadContent(sl.toHtml());
+                    if ( sl.getCompany() != null )
+                        shippingAddressCompanyListView.getSelectionModel().select(sl.getCompany());
+                    if ( sl.getContact() != null )
+                        shippingAddressContactListView.getSelectionModel().select(sl.getContact());
+                    shippingAddressAddressListView.getSelectionModel().select(sl.getAddress());
+                    shippingLabel = sl;
                 });
     }
 
@@ -225,6 +223,11 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
 
+        if (invoiceLabel == null) {
+            invoiceLabel = new AddressLabel();
+            invoiceLabel.setType(INVOICE);
+        }
+        
         invoiceLabel.setCompany(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem());
         invoiceLabel.setContact(invoiceAddressContactListView.getSelectionModel().getSelectedItem());
         invoiceLabel.setAddress(invoiceAddressAddressListView.getSelectionModel().getSelectedItem());

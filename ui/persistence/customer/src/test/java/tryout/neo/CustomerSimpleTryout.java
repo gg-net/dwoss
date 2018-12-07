@@ -81,7 +81,7 @@ public class CustomerSimpleTryout {
             System.out.println("IS simple: " + consumerCustomer.getSimpleViolationMessage());
             System.out.println("Consumer Customer: " + consumerCustomer.isConsumer());
 
-            CustomerConnectorFascade.edit(consumerCustomer, UiParent.of(p));
+            CustomerConnectorFascade.edit(consumerCustomer, UiParent.of(p),null);
         });
 
         JButton bussinesCustomer = new JButton("Bussines Customer");
@@ -100,7 +100,7 @@ public class CustomerSimpleTryout {
 
             System.out.println("IS simple: " + bussnisCustomer.getSimpleViolationMessage());
             System.out.println("Bussines Customer: " + bussnisCustomer.isBusiness());
-            CustomerConnectorFascade.edit(bussnisCustomer, UiParent.of(p));
+            CustomerConnectorFascade.edit(bussnisCustomer, UiParent.of(p),null);
         });
 
         JButton nullCustomer = new JButton("Create SimpleCustomer");

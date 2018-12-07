@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.customer.ee.entity.dto;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Country;

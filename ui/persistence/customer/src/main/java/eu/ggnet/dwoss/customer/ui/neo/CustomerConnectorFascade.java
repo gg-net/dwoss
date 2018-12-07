@@ -17,14 +17,14 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
@@ -42,32 +42,42 @@ public class CustomerConnectorFascade {
 
     /**
      * Sets the supplied communication on the customer as default, may be null.
-     * 
+     *
      * @param customerId the customerid
-     * @param comm the communication to be set or null to reset.
+     * @param comm       the communication to be set or null to reset.
      * @return the new customer.
      */
     public static Customer updateDefaultEmailCommunicaiton(long customerId, Communication comm) {
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        if (comm == null) return agent.clearDefaultEmailCommunication(customerId);
+        if ( comm == null ) return agent.clearDefaultEmailCommunication(customerId);
         return agent.setDefaultEmailCommunication(customerId, comm.getId());
     }
-    
-    public static Customer updateAddressLabels(long customerId, AddressLabel invoiceLabel, Optional<AddressLabel> shippingLabel) {
+
+    public static Customer updateAddressLabels(long customerId, AddressLabel il, Optional<AddressLabel> optSl) {
+        ValidationUtil.validate(il);
+        optSl.ifPresent(l -> ValidationUtil.validate(l));
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        if ( invoiceLabel.getId() < 1l ) {
-            agent.create(new Root(Customer.class, customerId), invoiceLabel);
+        AddressLabel updatedIl = null;
+        if ( il.getId() < 1l ) {
+            agent.create(new Root(Customer.class, customerId), il);
         } else {
-            agent.update(invoiceLabel);
+            updatedIl = agent.update(il);
         }
-        if ( shippingLabel.isPresent() ) {
-            if ( shippingLabel.get().getId() < 1l ) {
-                agent.create(new Root(Customer.class, customerId), shippingLabel.get());
-            } else {
-                agent.update(shippingLabel.get());
+        
+        if ( optSl.isPresent() ) {
+            AddressLabel sl = optSl.get();
+            if ( sl.getId() < 1l ) {
+                agent.create(new Root(Customer.class, customerId), sl);
+            } else {                
+                if (updatedIl != null) {
+                    sl.setCustomer(updatedIl.getCustomer());
+                    if (updatedIl.getContact()!= null && updatedIl.getContact().equals(sl.getContact())) sl.setContact(updatedIl.getContact());
+                    if (updatedIl.getCompany() != null && updatedIl.getCompany().equals(sl.getCompany())) sl.setCompany(updatedIl.getCompany());
+                    if (updatedIl.getAddress().equals(sl.getAddress())) sl.setAddress(updatedIl.getAddress());
+                }
+                agent.update(sl);
             }
         }
-
         return agent.findByIdEager(Customer.class, customerId);
     }
 
@@ -217,16 +227,20 @@ public class CustomerConnectorFascade {
      *
      * @param c the customer, must not be null
      * @param p a parent for the ui
+     * @param change if present will be called with ture on success.
      */
-    public static void edit(@NonNull Customer c, UiParent p) {
+    public static void edit(@NonNull Customer c, UiParent p, Runnable change) {
+        if (change == null) change = () -> {};
         if ( c.isSimple() ) {
             Ui.build().parent(p).fxml().eval(() -> c, CustomerSimpleController.class).cf()
                     .thenApply(CustomerConnectorFascade::optionalStore)
                     .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                    .thenRun(change)
                     .handle(Ui.handler());
         } else {
             CompletableFuture.completedFuture(CustomerCommand.enhance(c))
                     .thenCompose(cc -> CustomerConnectorFascade.optionalEnhancedEditorAndStore(p, cc))
+                    .thenRun(change)
                     .handle(Ui.handler());
         }
     }
@@ -269,6 +283,10 @@ public class CustomerConnectorFascade {
     private static CompletionStage<Customer> optionalEnhancedEditorAndStore(UiParent p, CustomerCommand cc) {
         if ( !cc.enhance ) return CompletableFuture.completedFuture(cc.customer);
         return Ui.build().parent(p).fxml().eval(() -> cc.customer, CustomerEnhanceController.class).cf()
+                .thenApply(c -> {
+                    if ( !c.isValid() ) ValidationUtil.validate(c);
+                    return c;
+                })
                 .thenApply(c -> Dl.remote().lookup(CustomerAgent.class).update(c));
     }
 

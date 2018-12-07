@@ -73,9 +73,6 @@ public class Server implements Serializable {
     private Mandators mandatorSupport;
 
     @Getter
-    private SubMonitor monitor;
-
-    @Getter
     private Map<String, List<PicoCustomer>> mergeViolations;
 
     @Getter
@@ -96,8 +93,8 @@ public class Server implements Serializable {
         L.info("Search for non dossier customers");
         nonDossierCustomers = customerMergeOperation.findNonDossierCustomers();
         L.info("Found {} entries", nonDossierCustomers.size());
-        monitor = monitorFactory.newSubMonitor("Customer merge not in progress..");
-        mergeViolations = new HashMap<>();
+        mergeViolations = new HashMap<>() ;
+
     }
 
     public String getCompanyName() {
@@ -109,6 +106,7 @@ public class Server implements Serializable {
     }
 
     public void mergeCustomerAfterAddressLabel() {
+        SubMonitor monitor = monitorFactory.newSubMonitor("Customer merge not in progress..");
 
         Map<String, List<Customer>> violations = new HashMap<>();
         String noDossiers = "No Dossiers for Customer";
@@ -125,7 +123,6 @@ public class Server implements Serializable {
         monitor.setWorkRemaining(collect.size());
         monitor.start();
         mergeViolations = customerMergeOperation.mergeCustomerAfterAddressLabel(collect, monitor);
-
         monitor.finish();
     }
 

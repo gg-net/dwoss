@@ -71,6 +71,7 @@ public class AddressLabel implements Serializable {
 
     @Setter
     @Enumerated
+    @NotNull
     private AddressType type;
 
     public AddressLabel(Contact contact, Address address, AddressType type) {
@@ -166,6 +167,7 @@ public class AddressLabel implements Serializable {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" + "id=" + id + ", optLock=" + optLock
+                + ", customer=" + Optional.ofNullable(customer).map(c -> "(id=" + c.getId() + ") " + c.toName()).orElse("null")
                 + ", company=" + Optional.ofNullable(company).map(c -> "(id=" + c.getId() + ") " + c.getName()).orElse("null")
                 + ", contact=" + Optional.ofNullable(contact).map(c -> "(id=" + c.getId() + ") " + c.toFullName()).orElse("null")
                 + ", address=" + address + ", type=" + type + '}';

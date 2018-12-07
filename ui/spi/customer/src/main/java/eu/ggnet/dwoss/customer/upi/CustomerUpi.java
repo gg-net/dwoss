@@ -31,16 +31,16 @@ public interface CustomerUpi {
      * Method for Customer creation.
      * <p/>
      * @param parent optional parent
-     * @return id of a new, persisted customer or zero if canceled
+     * @param id
      */
-    void createCustomer(UiParent parent, Consumer<Long> csmr);
+    void createCustomer(UiParent parent, Consumer<Long> id);
 
     /**
      * Method for Customer modification.
      * <p/>
      * @param parent     optional parent
      * @param customerId the SopoCustomer to be modified
-     * @return weither the customer has changed
+     * @param change change consumer, will be called with true, if customer was changed.
      */
-    boolean updateCustomer(UiParent parent, long customerId);
+    void updateCustomer(UiParent parent, long customerId, Runnable change);
 }

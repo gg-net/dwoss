@@ -379,8 +379,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     public void accept(@NonNull Customer customer
     ) {
         if ( !customer.isValid() ) {
-            new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").showAndWait();
-//            throw new IllegalArgumentException("Invalid Customer: " + customer.getViolationMessage());
+            Ui.build(flagPane).alert("Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.");
         }
         isBusinessCustomer = customer.isBusiness();
         setCustomer(customer);
