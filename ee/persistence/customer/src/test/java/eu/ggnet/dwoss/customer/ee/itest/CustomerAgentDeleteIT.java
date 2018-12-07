@@ -41,6 +41,7 @@ import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -73,6 +74,51 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
     }
 
     @Test
+    public void testDeleteCommunication() throws Exception {
+        utx.begin();
+        em.joinTransaction();
+
+        //create a customer with two communications, one on company, one und company contact
+        Customer customer = GEN.makeSimpleBussinesCustomer();
+        Communication contactCom = customer.getCompanies().get(0).getContacts().get(0).getCommunications().get(0);
+        
+        //switch second company contact communication to company
+        customer.getCompanies().get(0).getContacts().get(0).getCommunications().remove(contactCom);
+        customer.getCompanies().get(0).getCommunications().add(contactCom);
+        em.persist(customer);
+        utx.commit();
+
+        Customer cus = agent.findByIdEager(Customer.class, 1l);
+        assertNotNull("No customer has been found.", cus);
+        assertThat(cus.getCompanies().size()).as("Wrong amount of companies on the customer").isEqualTo(1);
+
+        Company company = cus.getCompanies().get(0);
+        assertThat(company.getCommunications().size()).as("Wrong amount of communications on company").isEqualTo(1);
+        assertThat(company.getContacts().size()).as("Wrong amount of contacts on company").isEqualTo(1);
+
+        Contact comContact = company.getContacts().get(0);
+        assertThat(comContact.getCommunications().size()).as("Wrong amount of communocations on company contact").isEqualTo(1);
+
+        agent.delete(new Root(Company.class, company.getId()), company.getCommunications().get(0));
+
+        cus = agent.findByIdEager(Customer.class, 1l);
+        company = cus.getCompanies().get(0);
+        assertThat(company.getCommunications().size()).as("Wrong amount of communications on company").isEqualTo(0);
+
+        comContact = company.getContacts().get(0);
+        assertThat(comContact.getCommunications().size()).as("Wrong amount of communocations on company contact").isEqualTo(1);
+
+        long comContactid = comContact.getId();
+        Communication comunication = comContact.getCommunications().get(0);
+
+        assertThatThrownBy(() -> {
+            agent.delete(new Root(Contact.class, comContactid), comunication);
+        }).as("Address in AddressLabel should not be deleteable.")
+                .hasCauseInstanceOf(IllegalStateException.class);
+
+    }
+
+    @Test
     /**
      * Test delete for all supported entities on a contact.
      */
@@ -94,7 +140,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         Contact foundContact = agent.findByIdEager(Contact.class, 1l);
         assertThat(foundContact.getAddresses().size()).as("Not the correct amount of addresses on the contact").isEqualTo(1);
         Address foundAddress = foundContact.getAddresses().get(0);
-        foundAddress.setStreet("newStreet");
+//        foundAddress.setStreet("newStreet");
 
         List<AddressLabel> labels = agent.findAll(AddressLabel.class);
         assertThat(labels.size()).as("Exactly one AddressLabel should have been found").isEqualTo(1);
@@ -102,17 +148,11 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
 
         assertThatThrownBy(() -> {
             agent.delete(new Root(Contact.class, 1l), foundAddress);
-        }).hasMessageContaining("AddressLabel is still referenced");
+        }).as("Address in AddressLabel should not be deleteable.")
+                .hasCauseInstanceOf(IllegalStateException.class);
 
         foundContact = agent.findByIdEager(Contact.class, 1l);
         assertThat(foundContact.getAddresses().isEmpty()).as("Delete somehow worked address for contact with referenced addresslabel").isFalse();
-
-        assertThat(foundContact.getCommunications().size()).as("Not the correct amount of communications on the contact").isEqualTo(1);
-        Communication foundCommunication = foundContact.getCommunications().get(0);
-        foundCommunication.setIdentifier("newIdentifier");
-        agent.delete(new Root(Contact.class, 1l), foundCommunication);
-        foundContact = agent.findByIdEager(Contact.class, 1l);
-        assertThat(foundContact.getCommunications().isEmpty()).as("Delete didn't work on communication for contact").isTrue();
 
         utx.begin();
         em.joinTransaction();
@@ -157,7 +197,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
 
         assertThatThrownBy(() -> {
             agent.delete(new Root(Customer.class, 1l), foundContact);
-        }).hasMessageContaining("AddressLabel is still referenced");
+        }).hasCauseInstanceOf(IllegalStateException.class);
 
         Contact otherContact = foundCustomer.getContacts().get(1);
         agent.delete(new Root(Customer.class, 1l), otherContact);
@@ -190,14 +230,6 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         agent.delete(new Root(Company.class, 1l), foundAddress);
         foundCompany = agent.findByIdEager(Company.class, 1l);
         assertThat(foundCompany.getAddresses().isEmpty()).as("Delete didn't work on address for company").isTrue();
-
-        foundCompany = agent.findByIdEager(Company.class, 1l);
-        assertThat(foundCompany.getCommunications().size()).as("Not the correct amount of communications on the company").isEqualTo(1);
-        Communication foundCommunication = foundCompany.getCommunications().get(0);
-        foundCommunication.setIdentifier("newIdentifier");
-        agent.delete(new Root(Company.class, 1l), foundCommunication);
-        foundCompany = agent.findByIdEager(Company.class, 1l);
-        assertThat(foundCompany.getCommunications().isEmpty()).as("Delete didn't work on communication for company").isTrue();
 
         foundCompany = agent.findByIdEager(Company.class, 1l);
         assertThat(foundCompany.getContacts().size()).as("Not the correct amount of contacts on the company").isEqualTo(1);

@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.customer.ee;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -44,11 +45,13 @@ import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.NonNull;
 
+import static eu.ggnet.dwoss.customer.ee.entity.QAddressLabel.*;
+import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.*;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 
 /**
@@ -242,45 +245,50 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * Delete a raw object from given root. If the root element is not supported or not found by this method an IllegalArgumentException gets thrown.
      * If the raw object is not supported by this method an IllegalArguemntException gets thrown.
      * Both root and raw are not allowed to be null.
+     *
+     * @throws
      */
-    public void delete(@NonNull Root root, @NonNull Object raw) {
+    public void delete(@NonNull Root root, @NonNull Object raw) throws IllegalArgumentException {
+
         Object rootElement = findById(root.getClazz(), root.getId());
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
-
             Address address = (Address)raw;
-            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.address.id, address.getId()) ) {
-                //if present, throw an exception
-                throw new IllegalStateException("AddressLabel is still referenced by address of Root: " + root + ", Instance: " + raw);
-            } else {
-                //else do the removal            
-                ((AddressStash)rootElement).getAddresses().remove(address);
-            }
+            //validate possible address label reference
+            if ( isReferencdByAddressLabel(addressLabel.address.id, address.getId()) )
+                throw new IllegalStateException(address + " is part of an AddressLabel, delete not allowed");
+
+            ((AddressStash)rootElement).getAddresses().remove(address);
 
         } else if ( raw instanceof Company && rootElement.getClass() == Customer.class ) {
-
             Company company = (Company)raw;
-            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.company.id, company.getId()) ) {
-                //if present, throw an exception
-                throw new IllegalStateException("AddressLabel is still referenced by company of Root: " + root + ", Instance: " + raw);
-            } else {
-                //else do the removal            
-                ((Customer)rootElement).getCompanies().remove(company);
-            }
+            //check for possible address label reference
+            if ( isReferencdByAddressLabel(addressLabel.company.id, company.getId()) )
+                throw new IllegalStateException(company + " is part of an AddressLabel, delete not allowed");
+            //prevent last company removal
+            if ( isLastCompanyOnCustomer(company) )
+                throw new IllegalStateException("Company can not be deleted, because it`s only one present");
+
+            ((Customer)rootElement).getCompanies().remove(company);
 
         } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
 
             Contact contact = (Contact)raw;
-            if ( isReferencedByAddressLabel(QAddressLabel.addressLabel.contact.id, contact.getId()) ) {
-                //if present, throw an exception
-                throw new IllegalStateException("AddressLabel is still referenced by contact of Root: " + root + ", Instance: " + raw);
-            } else {
-                //else do the removal            
-                ((ContactStash)rootElement).getContacts().remove((Contact)raw);
-            }
+            //check for possible address label reference
+            if ( isReferencdByAddressLabel(addressLabel.contact.id, contact.getId()) )
+                throw new IllegalStateException(contact + " is part of an AddressLabel, delete not allowed");
+            
+            //prevent last contact removal
+            if (rootElement instanceof Customer && isLastContactOnCustomer(contact) )
+                throw new IllegalStateException("Contact can not be deleted, because it`s only one present");
+
+            ((ContactStash)rootElement).getContacts().remove(contact);
 
         } else if ( raw instanceof Communication && CommunicationStash.class.isAssignableFrom(rootElement.getClass()) ) {
             Communication comm = (Communication)raw;
+            if ( isLastCommunicationOnCustomer(rootElement, comm) )
+                throw new IllegalStateException(comm + " is the last communication in a customer. Delete not allowed.");
+            
             ((CommunicationStash)rootElement).getCommunications().remove(comm);
             if ( comm.getType() == EMAIL ) {
                 Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
@@ -289,20 +297,84 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
 
     }
 
+    private boolean isReferencdByAddressLabel(NumberPath<Long> pathidOfAddressCompanyOrContact, long id) {
+        return new JPAQuery<>(em).from(addressLabel).where(pathidOfAddressCompanyOrContact.eq(id)).fetchCount() > 0;
+    }
+
     /**
-     * Evaluates if the given path of an entity base is already referenced by a given id.
+     * Checks if the given company is the last one present on the referenced customer.
      *
-     * @param q      EntityBase
-     * @param idPath EntityBase primary key path
-     * @param id     possibly referenced key
-     * @return if the given path of an entity base is already referenced by a given id.
+     * @param company company that might be the last one present
+     * @return if the given company is the last one present on the referenced customer.
      */
-    private boolean isReferencedByAddressLabel(NumberPath<Long> idPath, long id) {
-        return new JPAQuery<>(em)
-                .from(QAddressLabel.addressLabel)
-                .select(QAddressLabel.addressLabel)
-                .where(idPath.eq(id))
-                .fetchCount() > 0;
+    private boolean isLastCompanyOnCustomer(Company company) {
+        return new JPAQuery<>(em).from(QCustomer.customer).select(QCustomer.customer)
+                .where(QCustomer.customer.companies.contains(company)).fetchOne().getCompanies().size() <= 1;
+    }
+
+    /**
+     * Checks if the given contact is the last one present on the referenced customer.
+     *
+     * This customer is expected to be on a consumer customer, not on a company.
+     * 
+     * @param contact contact that might be the last one present
+     * @return if the given contact is the last one present on the referenced customer.
+     */
+    private boolean isLastContactOnCustomer(Contact contact) {
+        return new JPAQuery<>(em).from(QCustomer.customer).select(QCustomer.customer)
+                .where(QCustomer.customer.contacts.contains(contact)).fetchOne().getContacts().size() <= 1;
+    }
+
+    /**
+     * Validates if a given communcation is the last one present on a customer.
+     *
+     * @param root          root object the communication comes from
+     * @param communication the communication instance
+     */
+    private boolean isLastCommunicationOnCustomer(Object root, Communication communication) {
+
+        List<Customer> onlyOnePresent = null;
+        if ( root instanceof Company ) {
+            //find customer based on company root object
+            onlyOnePresent = new JPAQuery<>(em)
+                    .from(QCustomer.customer)
+                    .select(QCustomer.customer)
+                    .where(QCustomer.customer.companies.contains((Company)root))
+                    .fetch();
+        } else if ( root instanceof Contact ) {
+            //find customer based on contact root object
+            onlyOnePresent = new JPAQuery<>(em)
+                    .select(QCustomer.customer)
+                    .from(QContact.contact)
+                    .join(QCustomer.customer).on(QCustomer.customer.contacts.contains(QContact.contact))
+                    .where(QContact.contact.communications.contains(communication))
+                    .fetch();
+        } else {
+            throw new IllegalArgumentException("Object: " + root + " is not allowed for communication removal");
+        }
+
+        if ( onlyOnePresent.size() > 1 ) {
+            throw new IllegalStateException("Multiple customers with the same Contact. Found: " + onlyOnePresent);
+        } else if ( onlyOnePresent.isEmpty() ) {
+            throw new IllegalStateException("No customers found for contact: " + root);
+        }
+
+        Customer c = onlyOnePresent.get(0);
+        if ( root instanceof Company ) {
+            return c.getCompanies().stream()
+                    .flatMap(
+                            com -> Stream.concat(
+                                    com.getContacts().stream().flatMap(con -> con.getCommunications().stream()),
+                                    com.getCommunications().stream()
+                            )
+                    ).count() <= 1;
+
+        } else if ( root instanceof Contact ) {
+            return c.getContacts().stream().flatMap(con -> con.getCommunications().stream()).count() <= 1;
+
+        }
+
+        return false;
     }
 
     @AutoLogger
@@ -346,22 +418,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             return customer;
         } else if ( customer.getMandatorMetadata(mandator.getMatchCode()) != null ) { // The Metadata exist on the customer, just merge
             // TODO: This is shit, make it better please
-            if (mm.isSameAs(salesdata)) { // Delete case
+            if ( mm.isSameAs(salesdata) ) { // Delete case
                 for (Iterator<MandatorMetadata> iterator = customer.getMandatorMetadata().iterator(); iterator.hasNext();) {
                     MandatorMetadata next = iterator.next();
-                    if (next.equals(mm)) {// Id equals
+                    if ( next.equals(mm) ) {// Id equals
                         iterator.remove();
                     }
                 }
             } else { // update case
-            mm.normalize(salesdata);
-            em.merge(mm);
-            em.flush();
-            customer = findByIdEager(Customer.class, customerId); // reload the customer after the merge
+                mm.normalize(salesdata);
+                em.merge(mm);
+                em.flush();
+                customer = findByIdEager(Customer.class, customerId); // reload the customer after the merge
             }
         } else { // New Metadata.
-          mm.normalize(salesdata);
-          customer.getMandatorMetadata().add(mm);
+            mm.normalize(salesdata);
+            customer.getMandatorMetadata().add(mm);
         }
         return customer;
     }
