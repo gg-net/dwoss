@@ -41,6 +41,7 @@ import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
@@ -205,6 +206,51 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
                 .orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
+    /**
+     * Stores the addresslabels on the customer, all addresslabels must be from one customer.
+     * Creating all labels with an id == 0. updateing all with an id <> 0. Deleting all that are missing.
+     * 
+     * @param aldtos
+     * @return 
+     * @throws IllegalArgumentException if the collection is empty.
+     */
+    @Override
+    public Customer autostore(@NonNull Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
+        if (aldtos.isEmpty()) throw new IllegalArgumentException("Empty collection of addresslabels not allowed");
+        // TODO: Verify, that all dtos have only one customerid.
+        AddressLabelDto first = aldtos.iterator().next();
+        Customer c = findByIdEager(Customer.class, first.getCustomerId());
+        Map<Long,AddressLabel> existing = c.getAddressLabels().stream().collect(Collectors.toMap(AddressLabel::getId, a -> a));
+        for (AddressLabelDto dto : aldtos) {
+            AddressLabel active = null;
+            if (dto.getId() == 0) {
+                active = new AddressLabel();
+            } else {
+                active = existing.get(dto.getId());
+                existing.remove(dto.getId());
+            }            
+            // Saftynet, schould never happen
+            if (active == null) throw new IllegalArgumentException("DTO did not find an existing Label" + dto);
+            
+            active.setCustomer(c);
+            active.setType(dto.getType());
+            active.setAddress(em.find(Address.class, dto.getAddressId()));
+            if (dto.getContactId() > 0) active.setContact(em.find(Contact.class, dto.getContactId()));
+            if (dto.getCompanyId() > 0) active.setCompany(em.find(Company.class, dto.getCompanyId()));
+            L.debug("autostore: creating or updating {}",active);
+            if (dto.getId() == 0) em.persist(active);
+        }
+        for (AddressLabel deleteme : existing.values()) {
+            deleteme.setAddress(null);
+            deleteme.setCustomer(null);
+            deleteme.setCompany(null);
+            deleteme.setContact(null);
+            em.remove(deleteme);
+            L.debug("autostore: deleting: {}",deleteme);
+        }
+        return c;
+    }
+    
     @AutoLogger
     @Override
     /**
@@ -217,16 +263,6 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
-        } else if ( raw instanceof AddressLabel && rootElement.getClass() == Customer.class ) {
-            AddressLabel al = (AddressLabel)raw;
-            Customer c = (Customer)rootElement;
-            Address add = findById(Address.class, al.getAddress().getId());
-            Company comp = al.getCompany() == null ? null : findById(Company.class, al.getCompany().getId());
-            Contact cont = al.getContact() == null ? null : findById(Contact.class, al.getContact().getId());
-            al.setCompany(comp);
-            al.setContact(cont);
-            al.setAddress(add);
-            al.setCustomer(c);
         } else if ( raw instanceof Company && rootElement.getClass() == Customer.class ) {
             ((Customer)rootElement).getCompanies().add((Company)raw);
         } else if ( raw instanceof Contact && ContactStash.class.isAssignableFrom(rootElement.getClass()) ) {
@@ -435,5 +471,9 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             customer.getMandatorMetadata().add(mm);
         }
         return customer;
+    }
+
+    private Exception IllegalArgumentException(String empty_collection_of_addresslabels_not_all) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

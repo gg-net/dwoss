@@ -342,12 +342,10 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        Ui.exec(() -> {
-            Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId, () -> {
-                model.setSearch(String.valueOf(recentCustomerId));
-                view.searchResultList.setSelectedIndex(0);
-                reloadSelectionOnCustomerChange();
-            });
+        Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId, () -> {
+            model.setSearch(String.valueOf(recentCustomerId));
+            view.searchResultList.setSelectedIndex(0);
+            reloadSelectionOnCustomerChange();
         });
     }
 

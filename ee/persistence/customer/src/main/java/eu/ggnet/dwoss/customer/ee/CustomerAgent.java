@@ -17,18 +17,19 @@
 package eu.ggnet.dwoss.customer.ee;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
+import lombok.NonNull;
 import lombok.Value;
 
 /**
@@ -98,6 +99,16 @@ public interface CustomerAgent extends RemoteAgent {
      */
     Reply<Customer> store(SimpleCustomer simpleCustomer);
 
+     /**
+     * Stores the addresslabels on the customer, all addresslabels must be from one customer.
+     * Creating all labels with an id == 0. updateing all with an id <> 0. Deleting all that are missing.
+     * 
+     * @param aldtos
+     * @return 
+     * @throws IllegalArgumentException if the collection is empty.
+     */
+    Customer autostore(@NonNull Collection<AddressLabelDto> aldtos) throws IllegalArgumentException;
+    
     /**
      * Returns a html representation of the customer enhanced by the actual active mandator.
      *

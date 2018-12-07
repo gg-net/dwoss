@@ -32,13 +32,11 @@ import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
-import eu.ggnet.dwoss.customer.ui.neo.PreferedAddressLabelsController.InvoiceAddressLabelWithNullableShippingAddressLabel;
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
-
-import lombok.Getter;
 
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
@@ -48,7 +46,7 @@ import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
  * @author jacob.weinhold
  *
  */
-public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<InvoiceAddressLabelWithNullableShippingAddressLabel> {
+public class PreferedAddressLabelsController implements Initializable, FxController, Consumer<Customer>, ResultProducer<Collection<AddressLabelDto>> {
 
     @FXML
     private ListView<Company> invoiceAddressCompanyListView;
@@ -86,12 +84,12 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @FXML
     private WebView shippingAddressWebView;
 
-    private InvoiceAddressLabelWithNullableShippingAddressLabel resultAdressLabel;
-
     private AddressLabel invoiceLabel;
 
     private AddressLabel shippingLabel;
 
+    private Customer customer;
+    
     private boolean isCanceled = true;
 
     @Override
@@ -167,6 +165,8 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     @Override
     public void accept(Customer customer) {
 
+        this.customer = customer;
+        
         invoiceAddressCompanyListView.getItems().addAll(customer.getCompanies());
         shippingAddressCompanyListView.getItems().addAll(customer.getCompanies());
 
@@ -215,9 +215,12 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
     }
 
     @Override
-    public InvoiceAddressLabelWithNullableShippingAddressLabel getResult() {
+    public Collection<AddressLabelDto> getResult() {
         if ( isCanceled ) return null;
-        return resultAdressLabel;
+        Collection<AddressLabelDto> result = new ArrayList<>();
+        result.add(new AddressLabelDto(invoiceLabel));
+        if (shippingLabel != null) result.add(new AddressLabelDto(shippingLabel));
+        return result;
     }
 
     @FXML
@@ -226,6 +229,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         if (invoiceLabel == null) {
             invoiceLabel = new AddressLabel();
             invoiceLabel.setType(INVOICE);
+            invoiceLabel.setCustomer(customer);            
         }
         
         invoiceLabel.setCompany(invoiceAddressCompanyListView.getSelectionModel().getSelectedItem());
@@ -240,6 +244,7 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
             shippingLabel = null;
         } else if ( shippingLabel == null ) { // create new
             shippingLabel = new AddressLabel(sCompany, sContact, sAddress, SHIPPING);
+            shippingLabel.setCustomer(customer);
         } else { // Update existing
             shippingLabel.setCompany(sCompany);
             shippingLabel.setContact(sContact);
@@ -247,7 +252,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         }
 
         isCanceled = false;
-        this.resultAdressLabel = new InvoiceAddressLabelWithNullableShippingAddressLabel(shippingLabel, invoiceLabel);
         Ui.closeWindowOf(saveButton);
     }
 
@@ -269,29 +273,6 @@ public class PreferedAddressLabelsController implements Initializable, FxControl
         shippingAddressCompanyListView.getSelectionModel().clearSelection();
         shippingAddressContactListView.getSelectionModel().clearSelection();
         shippingAddressAddressListView.getSelectionModel().clearSelection();
-    }
-
-    public static class InvoiceAddressLabelWithNullableShippingAddressLabel {
-
-        @Getter
-        private Optional<AddressLabel> shippingLabel;
-
-        @Getter
-        private AddressLabel invoiceLabel;
-
-        public InvoiceAddressLabelWithNullableShippingAddressLabel(AddressLabel shippingLabel, AddressLabel invoiceLabel) {
-            if ( invoiceLabel == null )
-                throw new IllegalArgumentException("invoice Label can not be null");
-
-            this.shippingLabel = Optional.ofNullable(shippingLabel);
-
-            this.invoiceLabel = invoiceLabel;
-        }
-
-        @Override
-        public String toString() {
-            return "InvoiceAddressLabelWithNullableShippingAddressLabel{" + "shippingLabel=" + shippingLabel + ", invoiceLabel=" + invoiceLabel + '}';
-        }
     }
 
     public static class CompanyListCell extends ListCell<Company> {

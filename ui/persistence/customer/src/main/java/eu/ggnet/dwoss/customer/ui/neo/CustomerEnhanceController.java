@@ -26,6 +26,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.swing.JOptionPane;
+
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -55,8 +57,7 @@ import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.*;
@@ -175,7 +176,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private void clickSelectPreferedAddressLabelsButton(ActionEvent event) {
         Ui.build(commentTextArea).fxml().eval(() -> customer, PreferedAddressLabelsController.class)
                 .cf()
-                .thenApply(ui -> CustomerConnectorFascade.updateAddressLabels(customer.getId(), ui.getInvoiceLabel(), ui.getShippingLabel()))
+                .thenApply(dtos -> CustomerConnectorFascade.updateAddressLabels(dtos))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
     }
@@ -376,10 +377,9 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param customer must not be null by definition.
      */
     @Override
-    public void accept(@NonNull Customer customer
-    ) {
+    public void accept(@NonNull Customer customer) {
         if ( !customer.isValid() ) {
-            Ui.build(flagPane).alert("Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.");
+            new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").showAndWait();
         }
         isBusinessCustomer = customer.isBusiness();
         setCustomer(customer);

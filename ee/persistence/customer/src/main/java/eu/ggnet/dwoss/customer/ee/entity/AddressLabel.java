@@ -27,6 +27,7 @@ import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 
 import lombok.*;
 
@@ -113,7 +114,7 @@ public class AddressLabel implements Serializable {
                 + Optional.ofNullable(contact).map(c -> c.toFullName() + "<br />").orElse("")
                 + Optional.ofNullable(address).map(a -> addressLine(a, "<br />")).orElse("");
     }
-
+    
     /**
      * Prints, what you would expect on a smail envelope.
      *

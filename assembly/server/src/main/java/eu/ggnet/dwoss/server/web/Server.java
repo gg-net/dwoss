@@ -63,9 +63,6 @@ public class Server implements Serializable {
     @Getter
     private List<Long> nonAddressLabelCustomers;
 
-    @Getter
-    private List<Long> nonDossierCustomers;
-
     @Inject
     private CustomerAdressLabelMergeOperation customerMergeOperation;
 
@@ -84,16 +81,9 @@ public class Server implements Serializable {
 
     @PostConstruct
     public void init() {
-        System.out.println("Search for non addresslabeled customers");
         L.info("Search for non addresslabeled customers");
         nonAddressLabelCustomers = customerMergeOperation.findNonAddressLabelCustomers();
-        System.out.println("Found " + nonAddressLabelCustomers.size() + " entries");
-        L.info("Found {} entries", nonAddressLabelCustomers.size());
-
-        L.info("Search for non dossier customers");
-        nonDossierCustomers = customerMergeOperation.findNonDossierCustomers();
-        L.info("Found {} entries", nonDossierCustomers.size());
-        mergeViolations = new HashMap<>() ;
+        mergeViolations = new HashMap<>();
 
     }
 
@@ -116,13 +106,13 @@ public class Server implements Serializable {
         monitor.message("Merging Customer after AddressLabel implementation...");
 
         List<Long> collect = new ArrayList<>(nonAddressLabelCustomers);
-        collect.removeAll(nonDossierCustomers);
 
         maxWork = collect.size();
 
         monitor.setWorkRemaining(collect.size());
         monitor.start();
         mergeViolations = customerMergeOperation.mergeCustomerAfterAddressLabel(collect, monitor);
+        nonAddressLabelCustomers = customerMergeOperation.findNonAddressLabelCustomers();
         monitor.finish();
     }
 

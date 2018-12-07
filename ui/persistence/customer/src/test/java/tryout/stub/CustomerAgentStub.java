@@ -32,13 +32,13 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
@@ -436,6 +436,12 @@ public class CustomerAgentStub implements CustomerAgent {
         if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null && mm.isSameAs(defaultCsd)) return customer;
         if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null) customer.getMandatorMetadata().add(mm);
         mm.normalize(defaultCsd);
+        return customer;
+    }
+
+    @Override
+    public Customer autostore(Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
+        // TODO: In einem anderen leben.
         return customer;
     }
 

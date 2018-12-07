@@ -24,6 +24,7 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
@@ -53,32 +54,8 @@ public class CustomerConnectorFascade {
         return agent.setDefaultEmailCommunication(customerId, comm.getId());
     }
 
-    public static Customer updateAddressLabels(long customerId, AddressLabel il, Optional<AddressLabel> optSl) {
-        ValidationUtil.validate(il);
-        optSl.ifPresent(l -> ValidationUtil.validate(l));
-        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        AddressLabel updatedIl = null;
-        if ( il.getId() < 1l ) {
-            agent.create(new Root(Customer.class, customerId), il);
-        } else {
-            updatedIl = agent.update(il);
-        }
-        
-        if ( optSl.isPresent() ) {
-            AddressLabel sl = optSl.get();
-            if ( sl.getId() < 1l ) {
-                agent.create(new Root(Customer.class, customerId), sl);
-            } else {                
-                if (updatedIl != null) {
-                    sl.setCustomer(updatedIl.getCustomer());
-                    if (updatedIl.getContact()!= null && updatedIl.getContact().equals(sl.getContact())) sl.setContact(updatedIl.getContact());
-                    if (updatedIl.getCompany() != null && updatedIl.getCompany().equals(sl.getCompany())) sl.setCompany(updatedIl.getCompany());
-                    if (updatedIl.getAddress().equals(sl.getAddress())) sl.setAddress(updatedIl.getAddress());
-                }
-                agent.update(sl);
-            }
-        }
-        return agent.findByIdEager(Customer.class, customerId);
+    public static Customer updateAddressLabels(Collection<AddressLabelDto> dtos) {
+        return Dl.remote().lookup(CustomerAgent.class).autostore(dtos);
     }
 
     public static Contact updateAddressOnContact(long contactId, Address address) {
@@ -225,12 +202,13 @@ public class CustomerConnectorFascade {
     /**
      * Open the Uis for editing an existing customer, simple or enhance.
      *
-     * @param c the customer, must not be null
-     * @param p a parent for the ui
+     * @param c      the customer, must not be null
+     * @param p      a parent for the ui
      * @param change if present will be called with ture on success.
      */
     public static void edit(@NonNull Customer c, UiParent p, Runnable change) {
-        if (change == null) change = () -> {};
+        if ( change == null ) change = () -> {
+            };
         if ( c.isSimple() ) {
             Ui.build().parent(p).fxml().eval(() -> c, CustomerSimpleController.class).cf()
                     .thenApply(CustomerConnectorFascade::optionalStore)

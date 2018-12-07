@@ -3,11 +3,13 @@ package eu.ggnet.dwoss.misc.ee;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.bouncycastle.util.io.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +84,15 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
 
                 L.debug("---Customer company: " + (company == null ? company : company.getId() + " - " + company.getName()));
                 L.debug("---Customer contact: " + (contact == null ? contact : contact.getId() + " - " + contact.toFullName()));
+                
+                Stream.concat(
+                        Stream.concat(
+                                customer.getContacts().stream().flatMap((con) -> con.getCommunications().stream()),
+                                customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
+                        customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
+                        forEach(c -> {
+                            if ( c.getIdentifier() != null ) c.setIdentifier(c.getIdentifier().trim());
+                        });
 
                 Address invoice = (contact == null
                                    ? company.getAddresses().stream().filter(adress -> adress.getPreferedType() == INVOICE).findFirst().orElse(null)
@@ -123,13 +134,12 @@ public class CustomerAdressLabelMergeOperation implements Serializable {
                 }
 
                 // Set default email 
-                
-                Communication defEmail = (contact != null 
-                        ? contact.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null)
-                        : company.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null));
-                
+                Communication defEmail = (contact != null
+                                          ? contact.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null)
+                                          : company.getCommunications().stream().filter(com -> com.getType() == EMAIL).findFirst().orElse(null));
+
                 customer.setDefaultEmailCommunication(defEmail);
-                
+
                 //add addresslabel and update customer
                 customer.getAddressLabels().add(invoiceLabel);
                 if ( shippingLabel != null ) customer.getAddressLabels().add(shippingLabel);
