@@ -129,7 +129,7 @@ public class AddressLabel implements Serializable {
 
     private String addressLine(Address address, String nl) {
         return address.getStreet() + nl
-                + (GlobalConfig.LOCAL_ISO_COUNTRY.equalsIgnoreCase(address.getIsoCountry()) ? "" : address.getIsoCountry() + " ")
+                + (GlobalConfig.LOCAL_ISO_COUNTRY.equalsIgnoreCase(address.getIsoCountry()) ? "" : (address.getIsoCountry() + " ").trim())
                 + address.getZipCode() + " " + address.getCity();
     }
 
