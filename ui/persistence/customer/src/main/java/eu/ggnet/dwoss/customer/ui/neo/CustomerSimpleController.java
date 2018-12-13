@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -140,7 +142,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
     private Timer timer = new Timer();
 
     private final ExecutorService ES = Executors.newSingleThreadExecutor();
-    
+
     private long customerId = 0;
 
     @FXML
@@ -240,10 +242,10 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         ContextMenu menu = new ContextMenu();
         MenuItem editItem = new MenuItem("Bearbeiten");
         editItem.setOnAction((event) -> {
-            
+
             Customer current = listView.getSelectionModel()
                     .getSelectedItem();
-            
+
             if ( current.isSimple() ) accept(current);
             else {
                 result = CustomerCommand.enhance(current);
@@ -315,17 +317,11 @@ public class CustomerSimpleController implements Initializable, FxController, Co
                 ));
 
         // force the zipcode field to be numeric only, becuase the ledger get saved as an int
-        zipcodeTextField.textFormatterProperty().set(
-                new TextFormatter<>(new IntegerStringConverter(), 0,
-                        change -> {
-                            String newText = change.getControlNewText();
-                            if ( Pattern.compile("-?((\\d*))").matcher(newText).matches() ) {
-                                return change;
-                            } else {
-                                return null;
-                            }
-                        })
-        );
+        zipcodeTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if ( !newValue.matches("\\d*") ) {
+                new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Nur Zahlen für die PLZ verwenden").showAndWait();
+            }
+        });
 
     }
 
