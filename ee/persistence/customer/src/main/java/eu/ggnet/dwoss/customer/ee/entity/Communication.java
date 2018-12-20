@@ -43,15 +43,16 @@ public class Communication implements Serializable {
 
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
-    public static final String PHONE_PATTERN = "^[_0-9\\+]+(\\s?[0-9]+)";
+    // PAttern still not perfekt.
+    public static final String PHONE_PATTERN = "^(((((((00|\\+)49[ \\-]?)|0)[1-9][0-9]{1,4})[ \\-]?)|((((00|\\+)49\\s?\\()|\\(0)[1-9][0-9]{1,4}\\)\\s?[ \\-]?))[0-9]{1,7}([ \\-]?[0-9]{1,5})?)$";
 
     /**
      * Represents some of the common ways to communicate nowadays.
      */
     public enum Type {
         // TODO: Reanable the Phonepattern if DWOSS-255 is fixed
-        // PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
-        PHONE, MOBILE, FAX, ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
+        PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
+        ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
 
         private final String validPattern;
 

@@ -76,7 +76,7 @@
         <netbeans.version>RELEASE82</netbeans.version>
         <javaee.groupId>javax</javaee.groupId>
         <javaee.artifactId>javaee-api</javaee.artifactId>
-        <javaee.version>7.0</javaee.version>
+        <javaee.version>8.0</javaee.version>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
         <netbeans.compile.on.save>test</netbeans.compile.on.save>
         <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
@@ -608,7 +608,7 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.16.18</version> <!-- x.x.20 fails in netbeans -->
+                <version>1.16.18</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -666,10 +666,10 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>4.2.1</version>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4 , w12 = 5.5.8.Final -->
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4 , w12 = 5.5.8.Final, w15 = 5.10.3.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
-                <version>5.5.4.Final</version>
+                <version>5.10.3.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>
@@ -677,10 +677,10 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency> <!-- Creating a extra MySQl Dialect in Util -->
+            <dependency> <!-- Creating a extra MySQl Dialect in Util, w15 = 5.3.7 -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>5.0.12.Final</version>
+                <version>5.3.7.Final</version>
                 <exclusions> <!-- Is in the JDK-->
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -855,19 +855,19 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>org.hibernate</groupId>
+                <groupId>org.hibernate</groupId> <!-- W15 = 6.0.13 -->
                 <artifactId>hibernate-validator</artifactId>
-                <version>5.4.1.Final</version>
+                <version>6.0.13.Final</version>
             </dependency>
             <dependency> <!-- Expresion factory for hibernate validator -->
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>el-impl</artifactId>
-                <version>2.2</version>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>3.0.1-b11</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.8.0</version>
+                <version>3.11.1</version>
             </dependency>
             <dependency>
                 <groupId>xom</groupId>
@@ -888,12 +888,12 @@
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-container-remote</artifactId>
-                <version>2.0.2.Final</version>
+                <version>2.1.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
                 <artifactId>wildfly-arquillian-container-managed</artifactId>
-                <version>2.0.2.Final</version>
+                <version>2.1.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.tomee</groupId>
@@ -903,7 +903,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
                 <artifactId>arquillian-jacoco</artifactId>
-                <version>1.0.0.Alpha9</version>
+                <version>1.0.0.Alpha10</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

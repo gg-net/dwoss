@@ -76,7 +76,6 @@ public class CommunicationTest {
         assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid phonenumber").isNotBlank();
     }
 
-    @Ignore
     @Test
     public void phoneNumbers() {
         String phonePattern = Communication.PHONE_PATTERN;
@@ -86,6 +85,9 @@ public class CommunicationTest {
         assertThat("  012345  ").doesNotMatch(phonePattern);
         assertThat("012345   ").doesNotMatch(phonePattern);
         assertThat("0123 12345").matches(phonePattern);
+
+        assertThat("0049(123)12345").matches(phonePattern);
+        assertThat("+49(123)12345").matches(phonePattern);
 
         assertThat("0049 (123) 12345").matches(phonePattern);
         assertThat("+49 (123) 12345").matches(phonePattern);
