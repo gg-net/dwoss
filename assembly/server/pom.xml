@@ -123,12 +123,6 @@
                     <artifactId>dw-ee-pro-price</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
-                <!-- Excluded. Is obsolede. Will be removed completely in the future -->
-<!--                                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ee-pro-sopo</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>-->
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ee-persistence-repair</artifactId>
