@@ -51,7 +51,7 @@
 
     <container qualifier="wildfly-managed">
         <configuration>
-            <property name="jbossHome">${jbossHome:target/wildfly-10.1.0.Final}</property>
+            <property name="jbossHome">${jbossHome:target/wildfly-15.0.0.Final}</property>
         </configuration>
     </container>
 </arquillian>

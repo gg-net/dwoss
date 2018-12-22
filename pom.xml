@@ -388,7 +388,8 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
+            <!-- Disabled on 2018-12-20 - jacoco is no longer working with arquilian -->
+            <!--            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.2</version>
@@ -419,7 +420,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin> -->
             <plugin>
                 <!-- For the the full documentation call: mvn markdown-page-generator:generate javadoc:javadoc -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -850,7 +851,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.1.13.Final</version>
+                <version>1.4.1.Final</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -900,6 +901,7 @@
                 <artifactId>arquillian-tomee-remote</artifactId>
                 <version>7.0.3</version>
             </dependency>
+            <!-- for now not in use -->
             <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
                 <artifactId>arquillian-jacoco</artifactId>
@@ -1066,7 +1068,7 @@
                                         <artifactItem>
                                             <groupId>org.wildfly</groupId>
                                             <artifactId>wildfly-dist</artifactId>
-                                            <version>10.1.0.Final</version>
+                                            <version>15.0.0.Final</version>
                                             <type>zip</type>
                                             <overWrite>false</overWrite>
                                             <outputDirectory>target</outputDirectory>

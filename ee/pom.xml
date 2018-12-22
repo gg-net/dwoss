@@ -48,21 +48,21 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>org.jboss.arquillian.extension</groupId>
             <artifactId>arquillian-jacoco</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-depchain</artifactId>
