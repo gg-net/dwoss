@@ -44,7 +44,7 @@ public class CompanyTest {
     }
 
     @Test
-    public void TestGetViolationMessages() { // TODO: Lucas
+    public void validCompany() { // TODO: Lucas
         assertThat(company.getViolationMessage()).as("Company with valid values").isNull();
     }
 
@@ -52,12 +52,6 @@ public class CompanyTest {
     public void TestGetViolationMessagesNonValid() { // TODO: Lucas
         company.setName("");
         assertThat(company.getViolationMessage()).as("Company without name").isNotBlank();
-    }
-
-    @Test
-    public void TestGetViolationMessagesNonValid2() { // TODO: Lucas
-        company.getAddresses().clear();
-        assertThat(company.getViolationMessage()).as("Company without addresses").isNotBlank();
     }
 
     @Test

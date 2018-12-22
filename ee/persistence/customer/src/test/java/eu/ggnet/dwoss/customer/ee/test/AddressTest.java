@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
-import java.util.Locale;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,11 +71,11 @@ public class AddressTest {
     }
 
     @Test
-    public void testGetViolationMessagesNonValid4() {
+    public void noCountrySet() {
         address.setStreet("street");
         address.setCity("city");
         address.setZipCode("12345");
-        address.setCountry(GERMANY);
+        address.setIsoCountry(null);
         assertThat(address.getViolationMessage()).as("Address without Iso Country").isNotBlank();
     }
 

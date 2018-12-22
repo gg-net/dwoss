@@ -16,22 +16,15 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
 import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -39,9 +32,9 @@ import eu.ggnet.dwoss.util.gen.*;
 
 import lombok.*;
 
+import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 
 /**
  *
@@ -348,7 +341,11 @@ public class CustomerGenerator {
         c.setType(new RandomEnum<>(Communication.Type.class).random());
         c.setIdentifier(RandomStringUtils.randomAlphanumeric(5));
         if ( c.getType().equals(Type.PHONE) || c.getType().equals(Type.FAX) || c.getType().equals(Type.MOBILE) ) {
-            c.setIdentifier(RandomStringUtils.randomNumeric(5));
+            c.setIdentifier("+" + (R.nextInt(8) + 1) + R.nextInt(8)
+                    + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(3)
+                    + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(7)
+                    + (R.nextBoolean() ? "" : "-" + (R.nextInt(8) + 1) + R.nextInt(8))
+            );
         }
         if ( c.getType().equals(Type.EMAIL) ) {
             c.setIdentifier("test@test.de");

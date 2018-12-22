@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
@@ -53,10 +52,10 @@ public class CommunicationTest {
     }
 
     @Test
-    public void testValidPhonenumber() {
+    public void validPhoneNumber() {
         Communication makeValidCommunication = makeValidCommunication();
         makeValidCommunication.setType(PHONE);
-        makeValidCommunication.setIdentifier("0401234567");
+        makeValidCommunication.setIdentifier("040 1234567");
         assertThat(makeValidCommunication.getViolationMessage()).as("Communication with valid phonenumber").isNull();
     }
 
@@ -80,16 +79,15 @@ public class CommunicationTest {
     public void phoneNumbers() {
         String phonePattern = Communication.PHONE_PATTERN;
         assertThat(phonePattern).as("phonePattern").isNotBlank();
-        assertThat("012345").matches(phonePattern);
-        assertThat("  012345").doesNotMatch(phonePattern);
-        assertThat("  012345  ").doesNotMatch(phonePattern);
-        assertThat("012345   ").doesNotMatch(phonePattern);
+        assertThat("012 345").matches(phonePattern);
+        assertThat("  012 345").doesNotMatch(phonePattern);
+        assertThat("  012 345  ").doesNotMatch(phonePattern);
+        assertThat("012 345   ").doesNotMatch(phonePattern);
         assertThat("0123 12345").matches(phonePattern);
 
-        assertThat("0049(123)12345").matches(phonePattern);
-        assertThat("+49(123)12345").matches(phonePattern);
+        assertThat("0049 123 12345").matches(phonePattern);
+        assertThat("+49 (123) 12345").matches(phonePattern);
 
-        assertThat("0049 (123) 12345").matches(phonePattern);
         assertThat("+49 (123) 12345").matches(phonePattern);
     }
 

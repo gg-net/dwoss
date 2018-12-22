@@ -43,8 +43,13 @@ public class Communication implements Serializable {
 
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
-    // PAttern still not perfekt.
-    public static final String PHONE_PATTERN = "^(((((((00|\\+)49[ \\-]?)|0)[1-9][0-9]{1,4})[ \\-]?)|((((00|\\+)49\\s?\\()|\\(0)[1-9][0-9]{1,4}\\)\\s?[ \\-]?))[0-9]{1,7}([ \\-]?[0-9]{1,5})?)$";
+    /**
+     * ISO5008 + Microsoft Phone Pattern, see {@linkplain https://de.wikipedia.org/wiki/Rufnummer#Schreibweisen}.
+     */
+    public static final String PHONE_PATTERN
+            = "^((\\+|00)[1-9]\\d+) ([1-9]\\d+) ([1-9]\\d+)(\\-\\d+){0,1}$" // ISO: +49 123 123456-78 o. 0049 123 123456-78
+            + "|^(\\+[1-9]\\d+) \\(([1-9]\\d+)\\) ([1-9]\\d+)(\\-\\d+){0,1}$" // MS: +49 (123) 132456-78
+            + "|^(0[1-9]\\d+) ([1-9]\\d+)(\\-\\d+){0,1}$"; // ISO: 040 123456
 
     /**
      * Represents some of the common ways to communicate nowadays.

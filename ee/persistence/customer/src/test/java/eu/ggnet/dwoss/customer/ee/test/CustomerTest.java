@@ -2,15 +2,14 @@ package eu.ggnet.dwoss.customer.ee.test;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.PHONE;
-import static org.assertj.core.api.Assertions.assertThat;
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -19,9 +18,9 @@ import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 public class CustomerTest {
 
     private final CustomerGenerator GEN = new CustomerGenerator();
-    
+
     @Test
-    public void testIsVaildConsumerCustomer() {
+    public void vaildConsumerCustomer() {
         Customer makeValidConsumer = makeValidConsumerCustomer();
         assertThat(makeValidConsumer.isConsumer()).as("Customer is a Consumer Customer").isTrue();
 
@@ -64,8 +63,6 @@ public class CustomerTest {
 
     }
 
-    
-    
     @Test
     public void testIsVaildBusinessCustomer() {
 
@@ -117,20 +114,20 @@ public class CustomerTest {
     public void validationOfDefaultEmailCommunication() {
         Customer consumer = GEN.makeSimpleConsumerCustomer();
         Contact contact = consumer.getContacts().get(0); // This is by definition correct.
-        if (contact.getCommunications().stream().anyMatch(c -> c.getType() == EMAIL)) {
+        if ( contact.getCommunications().stream().anyMatch(c -> c.getType() == EMAIL) ) {
             // Make sure, there is one email communication.
             Communication comm = new Communication(EMAIL, "demo@demo.com");
             contact.getCommunications().add(comm);
-            consumer.setDefaultEmailCommunication(comm);            
+            consumer.setDefaultEmailCommunication(comm);
         }
-        
+
         assertThat(consumer.getViolationMessage()).as("Should be a valid customer with a default email communication").isNull();
 
         consumer.setDefaultEmailCommunication(null);
         assertThat(consumer.getViolationMessage()).as("Should be a valid customer with a 'null' default email communication").isNull();
-        
+
         consumer.setDefaultEmailCommunication(new Communication(PHONE, "123123123"));
         assertThat(consumer.getViolationMessage()).as("Should be a invalid customer with an invalid default email communication, type is wrong").isNotNull();
     }
-    
+
 }

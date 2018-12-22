@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.make;
 
-
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.api.values.AddressType;
@@ -24,17 +23,16 @@ import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Makes static data for test.
- * 
+ *
  * @author oliver.guenther
  */
 public class StaticCustomerMaker {
-    
+
     /**
      *
      * @return Valid Company without Contact or Communication
@@ -59,7 +57,7 @@ public class StaticCustomerMaker {
         assertThat(validContact.getViolationMessage()).as("Valid Contact does not violate any Rule").isNull();
         return validContact;
     }
-    
+
     /**
      *
      * @return Valid Contact as in Contact.getViolationMessage()
@@ -169,7 +167,6 @@ public class StaticCustomerMaker {
         return customer;
     }
 
-    
     /**
      *
      * @return Valid ConsumerCustomer with two AddressLabels, a valid Contact with one valid Communication and a CustomerFlag
@@ -177,7 +174,7 @@ public class StaticCustomerMaker {
     public static Customer makeValidConsumerCustomer() {
         Customer customer = new Customer();
         customer.getContacts().add(makeValidContact());
-        customer.getContacts().get(0).getCommunications().add(makeValidCommunication(Type.MOBILE, "0170123456"));
+        customer.getContacts().get(0).getCommunications().add(makeValidCommunication(Type.MOBILE, "0170 123456"));
         customer.getAddressLabels().add(new AddressLabel(null, customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
         customer.getAddressLabels().add(new AddressLabel(null, customer.getContacts().get(0), makeValidAddress(), AddressType.SHIPPING));
         customer.getFlags().add(CustomerFlag.values()[(int)Math.random() * (CustomerFlag.values().length - 1)]);
@@ -207,5 +204,5 @@ public class StaticCustomerMaker {
         assertThat(customer.isConsumer()).isTrue();
         return customer;
     }
-    
+
 }

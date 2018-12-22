@@ -17,23 +17,19 @@
 package eu.ggnet.dwoss.customer.ee.test;
 
 import java.util.Arrays;
-import java.util.Locale;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 
-import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
-import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
-import static java.util.Locale.GERMANY;
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -136,8 +132,8 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with more than one Address violates SimpleCustomer's Rules").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
-        Communication phone = new Communication(Type.PHONE, "36184165");
-        Communication mobile = new Communication(Type.MOBILE, "64682552");
+        Communication phone = new Communication(Type.PHONE, "040 36184165");
+        Communication mobile = new Communication(Type.MOBILE, "0049 125 64682552");
         Communication email = new Communication(Type.EMAIL, "email@mail.com");
 
         simpleConsumer.getContacts().get(0).getCommunications().addAll(Arrays.asList(phone, mobile, email));
@@ -167,9 +163,9 @@ public class SimpleCustomerViolationMessageTest {
         simpleConsumer.getContacts().get(0).getCommunications().add(mobile);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type MOBILE is valid").isNull();
         Communication otherMobile = new Communication(Type.MOBILE, false);
-        mobile.setIdentifier("16461385");
+        mobile.setIdentifier("0172 16461385");
         simpleConsumer.getContacts().stream().findAny().get().getCommunications().add(otherMobile);
-        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type  is invalid").isNotNull();
+        assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
         simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
@@ -252,7 +248,7 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with a FACEBOOK Communication is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(FAX, "1345678"));
+        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(FAX, "040 1345678"));
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with a FAX Communication is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
@@ -273,13 +269,13 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with two Communications of same allowed Type is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.PHONE, "0123456789"));
-        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.PHONE, "0987654321"));
+        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.PHONE, "0123 456789"));
+        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.PHONE, "098 7654321"));
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with two Communications of same allowed Type is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.MOBILE, "0123456789"));
-        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.MOBILE, "0987654321"));
+        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.MOBILE, "0123 456789"));
+        simpleBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(makeValidCommunication(Communication.Type.MOBILE, "098 7654321"));
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with two Communications of same allowed Type is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
@@ -287,7 +283,7 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one Contact is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
-        simpleBusinessCustomer.getCompanies().get(0).getCommunications().add(makeValidCommunication(MOBILE, "0123456789"));
+        simpleBusinessCustomer.getCompanies().get(0).getCommunications().add(makeValidCommunication(MOBILE, "0123 456789"));
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with a valid Communication on it's Company is invalid").isNotNull();
 
         simpleBusinessCustomer = makeValidSimpleBusiness();
@@ -304,4 +300,3 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleBusinessCustomer.getSimpleViolationMessage()).as("SimpleBusinessCustomer with more than one Address is invalid").isNotNull();
     }
 }
-
