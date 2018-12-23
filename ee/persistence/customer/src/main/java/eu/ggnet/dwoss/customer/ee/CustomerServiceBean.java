@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee;
 
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.customer.api.UiCustomer;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,13 +26,13 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 
 /**
  * CustomerService implementation.
@@ -85,7 +81,9 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public CustomerMetaData asCustomerMetaData(long customerId) {
-        return asCustomerMetaData(customerEao.findById(customerId));
+        CustomerMetaData data = asCustomerMetaData(customerEao.findById(customerId));
+        L.info("asCustomerMetadata(id={}):{}", customerId, data);
+        return data;
     }
 
     @Override

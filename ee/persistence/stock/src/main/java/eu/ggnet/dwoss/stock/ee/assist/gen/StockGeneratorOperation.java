@@ -24,9 +24,11 @@ import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockLocation;
+import eu.ggnet.dwoss.util.gen.NameGenerator;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
@@ -37,6 +39,8 @@ import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 @Stateless
 @TransactionAttribute(REQUIRES_NEW)
 public class StockGeneratorOperation {
+
+    private final NameGenerator GEN = new NameGenerator();
 
     public static final String[] STOCK_LOCATION_NAMES = {
         "Regal Endnummer - 0",
@@ -63,10 +67,13 @@ public class StockGeneratorOperation {
     }
 
     public List<Stock> makeStocksAndLocations(int amount) {
+        if ( SalesChannel.values().length < amount )
+            throw new IllegalArgumentException("Amount auf Stocks (" + amount + ") to be generated must be lower that amount of Saleschannels");
         List<Stock> result = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             Stock s = new Stock(i);
-            s.setName("Lager#" + i);
+            s.setName("Lager " + GEN.makeAddress().getTown());
+            s.setPrimaryChannel(SalesChannel.values()[i]);
             em.persist(s);
             for (String name : STOCK_LOCATION_NAMES) {
                 StockLocation sl = new StockLocation(name);

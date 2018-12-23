@@ -40,7 +40,7 @@ public class CustomerMetaData implements Serializable {
     /**
      * Email information from the customer.
      */
-    private final String email;
+    private final String electronicMail;
 
     /**
      * {@link PaymentCondition} on wich the customer buys.
@@ -66,10 +66,23 @@ public class CustomerMetaData implements Serializable {
      * Allowed {@link SalesChannel} for the customer.
      */
     private final Set<SalesChannel> allowedSalesChannel;
-    
+
     /**
      * Contains a violation info, if the customer is not valid based on the entity model (Caused by a migration in 2018).
      */
     private final String violationMessage;
-    
+
+    /**
+     * Returns true if email is set and valide
+     *
+     * @return
+     */
+    public boolean hasEmail() {
+        return electronicMail != null && !electronicMail.trim().isEmpty();
+    }
+
+    public String getEmail() {
+        return electronicMail;
+    }
+
 }

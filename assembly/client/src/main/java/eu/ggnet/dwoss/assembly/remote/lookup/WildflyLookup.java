@@ -17,14 +17,14 @@
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import javax.naming.*;
 
-import org.jboss.ejb.client.*;
-import org.jboss.ejb.client.remoting.ConfigBasedEJBClientContextSelector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wildfly.security.auth.client.*;
 
 import eu.ggnet.dwoss.common.api.IsStateful;
 import eu.ggnet.dwoss.discovery.Discovery;
@@ -59,6 +59,8 @@ public class WildflyLookup implements RemoteLookup {
 
     private Context _context;
 
+    private AuthenticationContext context;
+
     // full classname, full lookup
     private Map<String, String> namesAndLookup;
 
@@ -78,38 +80,43 @@ public class WildflyLookup implements RemoteLookup {
     private synchronized void init() {
         if ( initialized ) return;
 
-        Properties p = new Properties();
-        p.put("endpoint.name", "client-endpoint");
-        p.put("remote.connectionprovider.create.options.org.xnio.Options.SSL_ENABLED", "false");
-        p.put("remote.connections", "one");
-        p.put("remote.connection.one.port", Integer.toString(CONFIG.getPort()));
-        p.put("remote.connection.one.host", CONFIG.getHost());
-        p.put("remote.connection.one.username", CONFIG.getUsername());
-        p.put("remote.connection.one.password", CONFIG.getPassword());
+        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(CONFIG.getUsername()).usePassword(CONFIG.getPassword());
+        context = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(CONFIG.getHost()), ejbConfig);
 
-        EJBClientConfiguration cc = new PropertiesBasedEJBClientConfiguration(p);
-        ContextSelector<EJBClientContext> selector = new ConfigBasedEJBClientContextSelector(cc);
-        EJBClientContext.setSelector(selector);
+        Callable<List<String>> callable = () -> {
 
-        final String APP = CONFIG.getApp();
-        Object instance = null;
-        String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
+            // create an InitialContext
+            Properties properties = new Properties();
+            properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.getHost() + ":" + CONFIG.getPort());
+            InitialContext c = new InitialContext(properties);
+
+            final String APP = CONFIG.getApp();
+            Object instance = null;
+            String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
+            try {
+                instance = c.lookup(discoveryName);
+            } catch (NamingException ex) {
+                throw new RuntimeException("Error on frist lookup", ex);
+            }
+            L.info("Lookup of {} sucessfull", discoveryName);
+            Discovery discovery = (Discovery)instance;
+            List<String> result = discovery.allJndiNames("java:app/" + APP);
+            L.debug("Discovery returned {} raw entries", result.size());
+            return result;
+        };
+
         try {
-            instance = context().lookup(discoveryName);
-        } catch (NamingException ex) {
-            throw new RuntimeException("Error on frist lookup", ex);
+            List<String> names = context.runCallable(callable);
+            namesAndLookup = names.stream()
+                    .filter(n -> n.contains("!"))
+                    .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + CONFIG.getApp() + "//" + n))
+                    .distinct() // Removes posible multiple implementations. If these exist in the JNDI tree, we can ignore them, as we discover via Interface.
+                    .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
+            if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
-        L.debug("Lookup of {} sucessfull", discoveryName);
-        Discovery discovery = (Discovery)instance;
-        List<String> names = discovery.allJndiNames("java:app/" + APP);
-        L.debug("Discovery returned {} raw entries", names.size());
-
-        namesAndLookup = names.stream()
-                .filter(n -> n.contains("!"))
-                .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + APP + "//" + n))
-                .distinct() // Removes posible multiple implementations. If these exist in the JNDI tree, we can ignore them, as we discover via Interface.
-                .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
-        if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
 
         L.debug("RemoteLookup initilaized");
         initialized = true;
@@ -120,21 +127,20 @@ public class WildflyLookup implements RemoteLookup {
         init();
     }
 
-    private Context context() {
-        // TODO: Experiment, with new and reused context.
-        if ( _context != null ) return _context;
-        final Properties properties = new Properties();
-        properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-
-        try {
-            _context = new InitialContext(properties);
-            L.debug("New Context for " + this.getClass().getName() + " created");
-            return _context;
-        } catch (NamingException ex) {
-            throw new RuntimeException("Error on Context init", ex);
-        }
-    }
-
+//    private Context context() {
+//        // TODO: Experiment, with new and reused context.
+//        if ( _context != null ) return _context;
+//        final Properties properties = new Properties();
+//        properties.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
+//
+//        try {
+//            _context = new InitialContext(properties);
+//            L.debug("New Context for " + this.getClass().getName() + " created");
+//            return _context;
+//        } catch (NamingException ex) {
+//            throw new RuntimeException("Error on Context init", ex);
+//        }
+//    }
     @Override
     public <T> boolean contains(Class<T> clazz) {
         initOnce();
@@ -144,21 +150,33 @@ public class WildflyLookup implements RemoteLookup {
     @Override
     public <T> T lookup(Class<T> clazz) {
         initOnce();
-        String namespace = namesAndLookup.get(Objects.requireNonNull(clazz, "Class must not be null").getName());
-        if ( namespace == null ) {
-            L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
-            return null;
-        }
-        if ( clazz.isAnnotationPresent(IsStateful.class) ) {
-            namespace += "?stateful";
-        }
 
-        L.debug("Trying to lookup {}", namespace);
-        try {
-            T t = (T)context().lookup(namespace);
+        Callable<T> callable = () -> {
+            String namespace = namesAndLookup.get(Objects.requireNonNull(clazz, "Class must not be null").getName());
+            if ( namespace == null ) {
+                L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
+                return null;
+            }
+            if ( clazz.isAnnotationPresent(IsStateful.class) ) {
+                namespace += "?stateful";
+            }
+
+            L.debug("Trying to lookup {}", namespace);
+
+            // create an InitialContext
+            Properties properties = new Properties();
+            properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.getHost() + ":" + CONFIG.getPort());
+            InitialContext c = new InitialContext(properties);
+
+            T t = (T)c.lookup(namespace);
             L.debug("Successfull lookup {}", namespace);
             return t;
-        } catch (NamingException ex) {
+        };
+
+        try {
+            return context.runCallable(callable);
+        } catch (Exception ex) {
             throw new RuntimeException("Error on Lookup", ex);
         }
     }
