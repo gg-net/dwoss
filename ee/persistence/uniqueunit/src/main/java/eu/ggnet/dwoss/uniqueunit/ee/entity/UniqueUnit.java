@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.Warranty;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
@@ -29,11 +23,14 @@ import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
+import javax.validation.constraints.Null;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.*;
+import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 import lombok.*;
@@ -386,7 +383,6 @@ public class UniqueUnit implements Serializable, EagerAble {
 
     @Getter
     @Setter
-    @Past
     @Temporal(TemporalType.DATE)
     private Date mfgDate;
 
@@ -551,6 +547,14 @@ public class UniqueUnit implements Serializable, EagerAble {
 
     public PicoUnit toPicoUnit() {
         return new PicoUnit(id, UniqueUnitFormater.toPositionName(this));
+    }
+
+    // TODO: @Past fails in integration test. It seams that hibernate validator 6 uses toInstant on SQL date.
+    @Null(message = "ViolationMessage is not null, but '${validatedValue}'")
+    public String getViolationMessage() {
+        if ( mfgDate != null && mfgDate.after(new Date()) )
+            return "MFGDate (" + mfgDate + ") must be in the past, but is in the future. Now=" + new Date();
+        return null;
     }
 
     /**

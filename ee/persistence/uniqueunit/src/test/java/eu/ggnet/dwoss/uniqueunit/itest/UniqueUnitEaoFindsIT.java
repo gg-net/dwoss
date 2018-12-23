@@ -11,29 +11,25 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Condition;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
@@ -62,7 +58,7 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         UniqueUnitEao eao = new UniqueUnitEao(em);
 
         UniqueUnit unit1 = new UniqueUnit();
-        unit1.setMfgDate(new Date());
+        unit1.setMfgDate(DateUtils.addDays(new Date(), -5));
         unit1.setIdentifier(SERIAL, "ROFFFLAASSS");
         unit1.setIdentifier(REFURBISHED_ID, "22223");
         unit1.setContractor(TradeName.ONESELF);
@@ -96,8 +92,6 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         unit5.setContractor(TradeName.ONESELF);
         unit5.setCondition(Condition.AS_NEW);
         unit5.setProduct(p);
-        Set<ConstraintViolation<UniqueUnit>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(unit1);
-        assertTrue(ConstraintViolationFormater.toMultiLine(new HashSet<>(validate), true), validate.isEmpty());
 
         utx.begin();
         em.joinTransaction();

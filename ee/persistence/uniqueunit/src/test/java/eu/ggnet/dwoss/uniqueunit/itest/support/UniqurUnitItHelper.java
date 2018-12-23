@@ -16,23 +16,22 @@
  */
 package eu.ggnet.dwoss.uniqueunit.itest.support;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-
-import java.util.*;
+import java.util.Date;
 
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import org.apache.commons.lang3.time.DateUtils;
+
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.mandator.api.value.Contractors;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 
 /**
@@ -60,7 +59,7 @@ public class UniqurUnitItHelper {
             p.addFlag(Product.Flag.PRICE_FIXED);
             em.persist(p);
         }
-        UniqueUnit unit = new UniqueUnit(p, new Date(), "");
+        UniqueUnit unit = new UniqueUnit(p, DateUtils.addDays(new Date(), -5), "");
         unit.setIdentifier(Identifier.SERIAL, "AAAAAAAAAAA123AAADFSADFSA");
         unit.setIdentifier(Identifier.REFURBISHED_ID, "30001");
         unit.setContractor(TradeName.ONESELF);
@@ -76,6 +75,5 @@ public class UniqurUnitItHelper {
     public void send(int id, String msg, String arranger) {
         historyEvent.fire(new UnitHistory(id, msg, arranger));
     }
-
 
 }

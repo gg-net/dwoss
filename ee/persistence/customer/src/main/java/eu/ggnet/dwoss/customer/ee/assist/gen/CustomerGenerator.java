@@ -130,8 +130,8 @@ public class CustomerGenerator {
     public Customer makeSimpleConsumerCustomer() {
         Customer customer = new Customer();
 
-        Contact con = makeContact(new Contact(), makeAddress(), new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
-        Communication email = new Communication(Type.EMAIL, con.getLastName().toLowerCase() + "@demo.int");
+        Contact con = makeContact(new Contact(), makeAddress(), makeCommunication(Type.PHONE));
+        Communication email = makeCommunication(Type.EMAIL);
         con.getCommunications().add(email);
         customer.setDefaultEmailCommunication(email);
         customer.getContacts().add(con);
@@ -154,8 +154,8 @@ public class CustomerGenerator {
     public Customer makeSimpleBussinesCustomer() {
         Customer customer = new Customer();
 
-        Contact contact = makeContact(new Contact(), null, new Communication(Type.PHONE, "+49 (555) " + RandomStringUtils.randomNumeric(8)));
-        Communication email = new Communication(Type.EMAIL, contact.getLastName().toLowerCase() + "@demo.int");
+        Contact contact = makeContact(new Contact(), null, makeCommunication(Type.PHONE));
+        Communication email = makeCommunication(Type.EMAIL);
         contact.getCommunications().add(email);
         customer.setDefaultEmailCommunication(email);
 
@@ -333,24 +333,43 @@ public class CustomerGenerator {
         return makeCommunication(new Communication());
     }
 
+    /**
+     * Generates a non persisted valid {@link Communication} of the supplied type.
+     *
+     * @param type the type to be generated
+     * @return a new communication
+     */
+    public Communication makeCommunication(Type type) {
+        return makeCommunication(new Communication(), type);
+    }
+
     public Communication makeCommunicationWithId(long id) {
         return makeCommunication(new Communication(id));
     }
 
     private Communication makeCommunication(Communication c) {
-        c.setType(new RandomEnum<>(Communication.Type.class).random());
-        c.setIdentifier(RandomStringUtils.randomAlphanumeric(5));
-        if ( c.getType().equals(Type.PHONE) || c.getType().equals(Type.FAX) || c.getType().equals(Type.MOBILE) ) {
-            c.setIdentifier("+" + (R.nextInt(8) + 1) + R.nextInt(8)
-                    + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(3)
-                    + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(7)
-                    + (R.nextBoolean() ? "" : "-" + (R.nextInt(8) + 1) + R.nextInt(8))
-            );
-        }
-        if ( c.getType().equals(Type.EMAIL) ) {
-            c.setIdentifier("test@test.de");
-        }
+        return makeCommunication(c, new RandomEnum<>(Communication.Type.class).random());
+    }
 
+    private Communication makeCommunication(Communication c, Type type) {
+        c.setType(type);
+        switch (c.getType()) {
+            case PHONE:
+            case FAX:
+            case MOBILE:
+                c.setIdentifier("+" + (R.nextInt(8) + 1) + R.nextInt(8)
+                        + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(3)
+                        + " " + (R.nextInt(8) + 1) + RandomStringUtils.randomNumeric(7)
+                        + (R.nextBoolean() ? "" : "-" + (R.nextInt(8) + 1) + R.nextInt(8))
+                );
+                break;
+            case EMAIL:
+                c.setIdentifier(RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphabetic(8) + ".com");
+                break;
+            default:
+                c.setIdentifier(RandomStringUtils.randomAlphanumeric(10));
+                break;
+        }
         return c;
     }
 

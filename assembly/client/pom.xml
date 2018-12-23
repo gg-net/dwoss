@@ -72,7 +72,7 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <exclusions>
                 <exclusion>
@@ -174,11 +174,11 @@
             <version>8.2.0</version>
             <type>jar</type>
         </dependency>
-        <dependency> 
-            <groupId>de.huxhorn.lilith</groupId> 
-            <artifactId>de.huxhorn.lilith.logback.appender.multiplex-classic</artifactId> 
-            <version>8.2.0</version> 
-            <scope>runtime</scope> 
+        <dependency>
+            <groupId>de.huxhorn.lilith</groupId>
+            <artifactId>de.huxhorn.lilith.logback.appender.multiplex-classic</artifactId>
+            <version>8.2.0</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

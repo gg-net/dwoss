@@ -48,7 +48,6 @@ public class ArquillianProjectArchive {
                 .loadPomFromFile("pom.xml")
                 .importRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator is needed on many places.
-                .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "customer-persistence-test.war")
@@ -63,7 +62,6 @@ public class ArquillianProjectArchive {
                 .addClass(StaticCustomerMaker.class)
                 .addClass(Utils.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
-                .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);

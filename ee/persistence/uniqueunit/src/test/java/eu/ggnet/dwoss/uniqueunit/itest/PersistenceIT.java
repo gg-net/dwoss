@@ -1,14 +1,5 @@
 package eu.ggnet.dwoss.uniqueunit.itest;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
-
 import java.util.Date;
 import java.util.List;
 
@@ -17,12 +8,15 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
@@ -77,7 +71,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         uc2.setPartNoExtension("demo2");
         uc2.setNameExtension("Demo2");
 
-        UniqueUnit unit1 = new UniqueUnit(p1, now, "");
+        UniqueUnit unit1 = new UniqueUnit(p1, DateUtils.addDays(now, -5), "");
         unit1.setIdentifier(SERIAL, "ROFFFLAASSS");
         unit1.setPrice(PriceType.SALE, 125, "JUnit - Testcase");
         unit1.addFlag(UniqueUnit.Flag.PRICE_FIXED);
@@ -97,7 +91,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
         UniqueUnit unit3 = new UniqueUnit();
         unit3.setProduct(p1);
-        unit3.setMfgDate(now);
+        unit3.setMfgDate(DateUtils.addDays(now, -5));
         unit3.setIdentifier(SERIAL, "ABCDEFJKHKZHJI");
         unit3.setContractor(TradeName.ONESELF);
         unit3.setCondition(UniqueUnit.Condition.AS_NEW);
