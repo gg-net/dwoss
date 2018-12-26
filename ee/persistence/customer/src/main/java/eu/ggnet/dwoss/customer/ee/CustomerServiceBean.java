@@ -140,7 +140,6 @@ public class CustomerServiceBean implements CustomerService {
         Optional<MandatorMetadata> omm = Optional.ofNullable(customer.getMandatorMetadata(mandator.getMatchCode()));
         return new CustomerMetaData(
                 customer.getId(),
-                Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
                 omm.map(MandatorMetadata::getPaymentCondition).filter(mm -> mm != null).orElse(salesData.getPaymentCondition()),
                 omm.map(MandatorMetadata::getPaymentMethod).filter(mm -> mm != null).orElse(salesData.getPaymentMethod()),
                 omm.map(MandatorMetadata::getShippingCondition).filter(mm -> mm != null).orElse(salesData.getShippingCondition()),
@@ -155,4 +154,8 @@ public class CustomerServiceBean implements CustomerService {
         return customerEao.findAllSystemCustomerIds();
     }
 
+    @Override
+    public String defaultEmailCommunication(long customerId) {
+        return Optional.ofNullable(customerEao.findById(customerId).getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null);
+    }
 }

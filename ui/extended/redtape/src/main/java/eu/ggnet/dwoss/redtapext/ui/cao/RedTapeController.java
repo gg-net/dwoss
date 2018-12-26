@@ -57,10 +57,9 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
-import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.UiParent;
+import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import lombok.Getter;
@@ -267,8 +266,8 @@ public class RedTapeController implements IDossierSelectionHandler {
         model.setSelectedDossier(null);
 
         //ensure that even without selection a customer is found
-        if ( model.getSelectedSearchResult() == 0 ) model.setPurchaseCustomer(model.getPurchaseCustomer().getId());
-        else model.setPurchaseCustomer(model.getSelectedSearchResult());
+        updateCustomer(model.getSelectedSearchResult() == 0 ? model.getPurchaseCustomer().getId() : model.getSelectedSearchResult());
+
         view.dossierButtonPanel.removeAll();
         view.dossierButtonPanel.repaint();
         view.dossierCommentArea.setText("");
@@ -308,7 +307,6 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-//        long customerId = Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view));
         Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view), (custId) -> {
 
             if ( custId == 0 ) {
@@ -317,23 +315,11 @@ public class RedTapeController implements IDossierSelectionHandler {
                 });
                 return;
             }
-            model.setPurchaseCustomer(custId);
+            updateCustomer(custId);
             //reset search to avoid wrong customer selections
             model.setSearch(String.valueOf(custId));
             view.searchResultList.setSelectedIndex(0);
         });
-
-//
-//        if ( customerId == 0 ) {
-//            Ui.exec(() -> {
-//                Ui.build().alert("Customer with Id 0 createt. Not possible. Either create error or we are running on a stub.");
-//            });
-//            return;
-//        }
-//        model.setPurchaseCustomer(customerId);
-//        //reset search to avoid wrong customer selections
-//        model.setSearch(String.valueOf(customerId));
-//        view.searchResultList.setSelectedIndex(0);
     }
 
     /**
@@ -387,7 +373,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         d.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
         d.setLocationRelativeTo(view);
         d.getContentPane().setLayout(new BorderLayout());
-        boolean canEmaild = model.getPurchaseCustomer().getEmail() != null && model.getPurchaseCustomer().getEmail().trim().isEmpty();
+        boolean canEmaild = Optional.ofNullable(Dl.remote().lookup(CustomerService.class).defaultEmailCommunication(model.getPurchaseCustomer().getId())).isPresent();
         JRViewerCask jrViewerCask = new JRViewerCask(print, document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT), canEmaild);
         d.getContentPane().add(jrViewerCask, BorderLayout.CENTER);
         d.setVisible(true);
@@ -536,6 +522,11 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     private Window parent() {
         return SwingCore.windowAncestor(view).orElse(SwingCore.mainFrame());
+    }
+
+    private void updateCustomer(long id) {
+        CustomerService cs = Dl.remote().lookup(CustomerService.class);
+        model.setPurchaseCustomer(cs.asCustomerMetaData(id));
     }
 
 }

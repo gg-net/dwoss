@@ -21,12 +21,13 @@ import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.saft.core.Dl;
 
 import lombok.Getter;
 
@@ -36,6 +37,8 @@ import lombok.Getter;
  * @author pascal.perau
  */
 public class RedTapeModel {
+
+    private final static Logger L = LoggerFactory.getLogger(RedTapeModel.class);
 
     private List<Document> documents;
 
@@ -123,14 +126,9 @@ public class RedTapeModel {
         propertyChangeSupport.firePropertyChange(PROP_SELECTED_SEARCH_RESULT, oldSelectedSearchResult, selectedSearchResult);
     }
 
-    /**
-     * Set the value of customer
-     *
-     * @param id id of the customer
-     */
-    public void setPurchaseCustomer(long id) {
+    public void setPurchaseCustomer(CustomerMetaData cmd) {
         CustomerMetaData old = this.purchaseCustomer;
-        this.purchaseCustomer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(id);
+        this.purchaseCustomer = cmd;
         propertyChangeSupport.firePropertyChange(PROP_CUSTOMER, old, purchaseCustomer);
     }
 

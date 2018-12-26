@@ -25,14 +25,14 @@ import javax.validation.constraints.NotNull;
 import eu.ggnet.dwoss.common.api.values.*;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
 /**
  * Mandator Specific Metadata.
  * <p>
  * @author oliver.guenther
  */
-@Value
+@Data  // Wildfly 15 cannot deserialize final collections remotly. 
 public class DefaultCustomerSalesdata implements Serializable {
 
     @Builder
@@ -48,25 +48,25 @@ public class DefaultCustomerSalesdata implements Serializable {
      * The default {@link ShippingCondition} of the Mandator.
      */
     @NotNull
-    private final ShippingCondition shippingCondition;
+    private ShippingCondition shippingCondition;
 
     /**
      * The default {@link PaymentCondition} of the Mandator.
      */
     @NotNull
-    private final PaymentCondition paymentCondition;
+    private PaymentCondition paymentCondition;
 
     /**
      * The default {@link PaymentMethod} of the Mandator.
      */
     @NotNull
-    private final PaymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @NotNull
-    private final NavigableSet<SalesChannel> allowedSalesChannels;
+    private NavigableSet<SalesChannel> allowedSalesChannels;
 
     @NotNull
-    private final NavigableSet<Long> viewOnlyCustomerIds;
+    private NavigableSet<Long> viewOnlyCustomerIds;
 
     public String toHtml() {
         return "Mandantenstandard"
@@ -77,5 +77,5 @@ public class DefaultCustomerSalesdata implements Serializable {
                 + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
                 + "</ul>";
     }
-    
+
 }

@@ -36,6 +36,7 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
@@ -50,7 +51,6 @@ import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Flag;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -172,7 +172,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     public void mail(Document document, DocumentViewType jtype) throws UserInfoException, RuntimeException {
         UiCustomer customer = customerService.asUiCustomer(document.getDossier().getCustomerId());
 
-        String customerMailAddress = customerService.asCustomerMetaData(document.getDossier().getCustomerId()).getEmail();
+        String customerMailAddress = customerService.defaultEmailCommunication(document.getDossier().getCustomerId());
         if ( customerMailAddress == null ) {
             throw new UserInfoException("Kunde hat keine E-Mail Hinterlegt! Senden einer E-Mail ist nicht Möglich!");
         }

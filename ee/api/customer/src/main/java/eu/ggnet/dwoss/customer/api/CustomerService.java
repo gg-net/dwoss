@@ -31,6 +31,14 @@ import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 public interface CustomerService {
 
     /**
+     * Returns the default emailcommunication of the customer or null if none.
+     *
+     * @param customerId the customer id.
+     * @return default email or null.
+     */
+    String defaultEmailCommunication(long customerId);
+
+    /**
      * Method that collects/aggregates costumer purchase condition information in a wrapper class used in the user interfaces;
      * <p>
      * @param customerId customer identifier.

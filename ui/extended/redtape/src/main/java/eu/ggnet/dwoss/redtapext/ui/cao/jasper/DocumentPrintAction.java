@@ -35,9 +35,9 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
@@ -83,9 +83,12 @@ public class DocumentPrintAction extends AbstractAction {
             // TODO: This is a very special case, there the Ui needs the result on construction. So the consumer pattern cannot be used.
             // This meeans, for now no progress display.
             JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, type);
-            CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
+            CustomerService cs = Dl.remote().lookup(CustomerService.class);
+            CustomerMetaData customer = cs.asCustomerMetaData(customerId);
+            boolean canEmail = !StringUtils.isBlank(cs.defaultEmailCommunication(customerId));
+
             Ui.exec(() -> {
-                Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, !StringUtils.isBlank(customer.getEmail())))
+                Ui.build().parent(controller.getView()).swing().eval(() -> new JRViewerCask(print, document, type, canEmail))
                         .opt()
                         .filter(c -> c.isCorrectlyBriefed())
                         .ifPresent(c -> Ui.progress().call(() -> {

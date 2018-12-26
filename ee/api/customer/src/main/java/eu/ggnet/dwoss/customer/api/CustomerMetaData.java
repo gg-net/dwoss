@@ -21,7 +21,8 @@ import java.util.Set;
 
 import eu.ggnet.dwoss.common.api.values.*;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * Wrapper class for purchase information from a customer.
@@ -29,60 +30,42 @@ import lombok.Value;
  * @author pascal.perau
  */
 // HINT: This Name is still open for debate.
-@Value
+@Data // Wildfly 15 cannot deserialize final collection or @Value.
+@AllArgsConstructor
 public class CustomerMetaData implements Serializable {
 
     /**
      * Customer identifier.
      */
-    private final long id;
-
-    /**
-     * Email information from the customer.
-     */
-    private final String electronicMail;
+    private long id;
 
     /**
      * {@link PaymentCondition} on wich the customer buys.
      */
-    private final PaymentCondition paymentCondition;
+    private PaymentCondition paymentCondition;
 
     /**
      * {@link PaymentMethod} on wich the customer buys.
      */
-    private final PaymentMethod paymentMethod;
+    private PaymentMethod paymentMethod;
 
     /**
      * {@link ShippingCondition} on wich the customer buys.
      */
-    private final ShippingCondition shippingCondition;
+    private ShippingCondition shippingCondition;
 
     /**
      * {@link CustomerFlag}<code>s</code> of the customer.
      */
-    private final Set<CustomerFlag> flags;
+    private Set<CustomerFlag> flags;
 
     /**
      * Allowed {@link SalesChannel} for the customer.
      */
-    private final Set<SalesChannel> allowedSalesChannel;
+    private Set<SalesChannel> allowedSalesChannel;
 
     /**
      * Contains a violation info, if the customer is not valid based on the entity model (Caused by a migration in 2018).
      */
-    private final String violationMessage;
-
-    /**
-     * Returns true if email is set and valide
-     *
-     * @return
-     */
-    public boolean hasEmail() {
-        return electronicMail != null && !electronicMail.trim().isEmpty();
-    }
-
-    public String getEmail() {
-        return electronicMail;
-    }
-
+    private String violationMessage;
 }
