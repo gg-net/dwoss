@@ -17,16 +17,20 @@
 package eu.ggnet.dwoss.mandator.sample.gen;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 import javax.ejb.*;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
@@ -38,7 +42,6 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.eao.StockEao;
-import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 
 import static javax.ejb.LockType.READ;
@@ -89,10 +92,10 @@ public class SampleGeneratorOperation implements Serializable {
     private ReportLineEao reportLineEao;
 
     @Inject
-    private ProductEao productEao;
-
-    @Inject
     private MonitorFactory monitorFactory;
+    
+    @Inject
+    private Mandator mandator;
 
     /**
      * If true this generator is generating samples.
@@ -120,6 +123,7 @@ public class SampleGeneratorOperation implements Serializable {
     @TransactionAttribute(REQUIRES_NEW)
     public void generateSampleData() {
         if ( stockEao.count() == 0 && customerEao.count() == 0 && uniqueUnitEao.count() == 0 && dossierEao.count() == 0 && reportLineEao.count() == 0 ) {
+;
             SubMonitor m = monitorFactory.newSubMonitor("Data generator", 7);
             m.start();
             generating = true;
@@ -130,7 +134,11 @@ public class SampleGeneratorOperation implements Serializable {
             m.worked(1, "Generating Stocks");
             stockGenerator.makeStocksAndLocations(2);
             m.worked(1, "Generating 300 Customers");
-            customerGenerator.makeCustomers(300);
+            customerGenerator.makeCustomers(50);
+            customerGenerator.makeCustomers(50, Assure.builder().simple(true).build());
+            customerGenerator.makeCustomers(50, Assure.builder().simple(true).mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode())).build());
+            customerGenerator.makeCustomers(50, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode())).build());
+            customerGenerator.makeCustomers(100, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
             m.worked(1, "Generating 100 Specs");
             receiptGenerator.makeProductSpecs(100, true);
             m.worked(1, "Generating 200 Units");

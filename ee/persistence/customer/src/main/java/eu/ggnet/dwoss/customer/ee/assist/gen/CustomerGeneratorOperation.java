@@ -248,7 +248,7 @@ public class CustomerGeneratorOperation {
     }
 
     public long makeCustomer() {
-        return makeCustomers(1).get(0);
+        return makeCustomer(CustomerGenerator.Assure.builder().build());
     }
 
     /**
@@ -265,14 +265,29 @@ public class CustomerGeneratorOperation {
         return customer.getId();
     }
 
+    /**
+     * Generates and persists a predefined Amount of Customers.
+     * 
+     * @param amount the amount
+     * @return the generated ids.
+     */
     public List<Long> makeCustomers(int amount) {
+        return makeCustomers(amount, CustomerGenerator.Assure.builder().build());
+    }
+    /**
+     * Generates and persists a predefined Amount of Customers, assuring the supplied conditions.
+     * 
+     * @param amount the amount 
+     * @param assure the conditions
+     * @return the generated ids.
+     */
+    public List<Long> makeCustomers(int amount, CustomerGenerator.Assure assure) {
         SubMonitor m = monitorFactory.newSubMonitor("Generiere " + amount + " Kunden", amount);
         L.info("Generating {} customers", amount);
         m.start();
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            // Customer c = CGEN.makeOldCustomer(mandator.getMatchCode(), defaults);
-            Customer customer = CGEN.makeCustomer();
+            Customer customer = CGEN.makeCustomer(assure);
             if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) )
                 L.error("Generated Customer with flag SystemCustomer, which defentifly should not be. {}", customer);
             em.persist(customer);

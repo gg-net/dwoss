@@ -38,6 +38,7 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.commons.io.FileUtils;
 
+import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
 import eu.ggnet.dwoss.util.ImageFinder;
 
@@ -77,7 +78,24 @@ public class Sample {
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
                 new DocumentIdentifierGeneratorConfiguration("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
+        
+        Set<MandatorMailAttachment> mailAttachment = new HashSet<>();
+        mailAttachment.add(
+                MandatorMailAttachment.builder()
+                        .attachmentData(null)
+                        .attachmentName("Widerrufsbelehrung.pdf")
+                        .attachmentDescription("Belehrung zum Widerruf des Auftrages.")
+                        .build());
+        mailAttachment.add(
+                MandatorMailAttachment.builder()
+                        .attachmentData(null)
+                        .attachmentName("Widerruf Formular.pdf")
+                        .attachmentDescription("Vorlage für den Widerruf des Auftrages.")
+                        .build());
+
+        
         MANDATOR = Mandator.builder()
+                .defaultMailAttachment(mailAttachment)
                 .smtpConfiguration(smtpConfiguration)
                 .mailTemplateLocation(new UrlLocation(loadMailDocument()))
                 .company(company)

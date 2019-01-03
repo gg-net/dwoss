@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 
@@ -88,6 +89,11 @@ public class TestWildfly {
 
         System.out.println(mandator);
         System.out.println(mandator.getDocumentIntermix().toMultiLine());
+        
+        DefaultCustomerSalesdata sd = supporter.loadSalesdata();
+        
+        System.out.println(sd);
+        
     }
 
 }

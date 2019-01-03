@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
@@ -72,7 +71,7 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
     @Test
     public void makeCustomerWithAssure() {
         for (int i = 0; i < 20; i++) {
-            long cid = cgo.makeCustomer(Assure.builder().noMetadata(true).build());
+            long cid = cgo.makeCustomer();
             assertThat(agent.findByIdEager(Customer.class,cid).getMandatorMetadata()).as("Customer Metadata must be empty").isEmpty();
         }
     }

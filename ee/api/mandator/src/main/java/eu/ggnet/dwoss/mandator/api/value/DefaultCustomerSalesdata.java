@@ -40,8 +40,8 @@ public class DefaultCustomerSalesdata implements Serializable {
         this.shippingCondition = shippingCondition;
         this.paymentCondition = paymentCondition;
         this.paymentMethod = paymentMethod;
-        this.allowedSalesChannels = Collections.unmodifiableNavigableSet(allowedSalesChannels == null ? new TreeSet<>() : new TreeSet<>(allowedSalesChannels));
-        this.viewOnlyCustomerIds = Collections.unmodifiableNavigableSet(viewOnlyCustomerIds == null ? new TreeSet<>() : new TreeSet<>(viewOnlyCustomerIds));
+        this.allowedSalesChannels = Collections.unmodifiableSet(allowedSalesChannels == null ? new HashSet<>() : new HashSet<>(allowedSalesChannels));
+        this.viewOnlyCustomerIds = Collections.unmodifiableSet(viewOnlyCustomerIds == null ? new HashSet<>() : new HashSet<>(viewOnlyCustomerIds));
     }
 
     /**
@@ -63,10 +63,10 @@ public class DefaultCustomerSalesdata implements Serializable {
     private PaymentMethod paymentMethod;
 
     @NotNull
-    private NavigableSet<SalesChannel> allowedSalesChannels;
+    private Set<SalesChannel> allowedSalesChannels;
 
     @NotNull
-    private NavigableSet<Long> viewOnlyCustomerIds;
+    private Set<Long> viewOnlyCustomerIds;
 
     public String toHtml() {
         return "Mandantenstandard"

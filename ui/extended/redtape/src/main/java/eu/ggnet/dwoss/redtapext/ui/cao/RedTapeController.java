@@ -84,7 +84,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     private Set<Action> accessDependentActions;
 
-    private NavigableSet<Long> viewOnlyCustomerIds;
+    private Set<Long> viewOnlyCustomerIds;
 
     private SwingWorker<Void, Dossier> closedLoader;
 
@@ -95,7 +95,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         return shippingCostUiHelpEnabled;
     }
 
-    private NavigableSet<Long> getViewOnlyCustomerIds() {
+    private Set<Long> getViewOnlyCustomerIds() {
         if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Dl.local().lookup(CachedMandators.class).loadSalesdata().getViewOnlyCustomerIds();
         return viewOnlyCustomerIds;
     }

@@ -58,7 +58,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
 
     @Before
     public void makeOneCustomer() {
-        customerId = cgo.makeCustomer(Assure.builder().noMetadata(true).build());
+        customerId = cgo.makeCustomer(Assure.builder().mandatorMetadataMatchCodes(null).build());
     }
 
     @After

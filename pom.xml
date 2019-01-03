@@ -78,6 +78,7 @@
         <javaee.artifactId>javaee-api</javaee.artifactId>
         <javaee.version>8.0</javaee.version>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
+        <netbeans.hint.jdkPlatform>JDK_1.8</netbeans.hint.jdkPlatform>
         <netbeans.compile.on.save>test</netbeans.compile.on.save>
         <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
         <org-netbeans-modules-editor-indent.CodeStyle.usedProfile>project</org-netbeans-modules-editor-indent.CodeStyle.usedProfile>

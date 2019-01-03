@@ -59,15 +59,24 @@ public class CustomerGenerator {
         }
     }
 
+    /**
+     * Flags for the generator instead of a million extra methods.
+     */
     @Builder
     @Getter
     public static class Assure {
 
-        @Builder.Default
-        private final boolean noMetadata = false;
-
+        /**
+         * Indicates, that only simple customers must be generated.
+         */
         @Builder.Default
         private final boolean simple = false;
+        
+        /**
+         * For all supplied strings, metadata will be generated. Null or empty indicates no metadata generation.
+         */
+        @Builder.Default
+        private final List<String> mandatorMetadataMatchCodes = null;
 
     }
 
@@ -86,8 +95,10 @@ public class CustomerGenerator {
         } else {
             c = makeCustomer();
         }
-        if ( assure.isNoMetadata() ) {
-            c.getMandatorMetadata().clear();
+        if ( assure.getMandatorMetadataMatchCodes() != null && assure.getMandatorMetadataMatchCodes().size() > 0 ) {
+            for (String mc : assure.getMandatorMetadataMatchCodes()) {
+                c.getMandatorMetadata().add(makeMandatorMetadata(mc));
+            }
         }
         c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
         return c;
@@ -113,8 +124,7 @@ public class CustomerGenerator {
         }
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
-        customer.getMandatorMetadata().add(makeMandatorMetadata());
-        if ( R.nextBoolean() ) {
+        if ( R.nextDouble() < 0.4 ) {
             customer.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
         customer.setComment("Das ist ein Kommentar zum Kunden");
@@ -378,9 +388,13 @@ public class CustomerGenerator {
      * <p>
      * @return a generated {@link MandatorMetadata}.
      */
-    public MandatorMetadata makeMandatorMetadata() {
+    public MandatorMetadata makeMandatorMetadata() {        
+        return makeMandatorMetadata(RandomStringUtils.randomAlphanumeric(4));
+    }
+    
+    private MandatorMetadata makeMandatorMetadata(String matchcode) {
         MandatorMetadata m = new MandatorMetadata();
-        m.setMandatorMatchcode(RandomStringUtils.randomAlphanumeric(4));
+        m.setMandatorMatchcode(matchcode);
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());
         m.setPaymentMethod(new RandomEnum<>(PaymentMethod.class).random());
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
