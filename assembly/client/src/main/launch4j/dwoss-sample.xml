@@ -3,7 +3,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>client.jar</jar>
-  <outfile>C:\Users\olive\Documents\NetBeansProjects\dwoss\assembly\client-remote\target\jfx\app\client.exe</outfile>
+  <outfile>C:\Users\oliver.guenther\Documents\Development\dwoss\assembly\client\target\dw-sample.exe</outfile>
   <errTitle></errTitle>
   <cmdLine>--config=local</cmdLine>
   <chdir>.</chdir>
@@ -15,12 +15,20 @@
   <manifest></manifest>
   <icon></icon>
   <jre>
-    <path></path>
-    <bundledJre64Bit>false</bundledJre64Bit>
+    <path>C:\Program Files\Java\jdk1.8.0_181</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>1.8.0</minVersion>
     <maxVersion></maxVersion>
-    <jdkPreference>preferJre</jdkPreference>
-    <runtimeBits>64/32</runtimeBits>
+    <jdkPreference>jdkOnly</jdkPreference>
+    <runtimeBits>64</runtimeBits>
+    <maxHeapSize>2000</maxHeapSize>
+    <maxHeapPercent>70</maxHeapPercent>
   </jre>
+  <splash>
+    <file>C:\Users\oliver.guenther\Documents\Development\dwoss\assembly\client\src\main\resources\splash.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
 </launch4jConfig>

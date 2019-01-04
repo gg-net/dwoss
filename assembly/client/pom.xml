@@ -13,6 +13,7 @@
 
     <build>
         <defaultGoal>install</defaultGoal>
+        <finalName>client</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -24,29 +25,141 @@
         </resources>
         <plugins>
             <plugin>
-                <!--
-                Die Dokumentation ist grad total schrott:
-                Für direkten Aufruf:
-                mvn compile jfx:run -Djfx.runAppParameter="- - config=local"
-                (die beiden minuse ohne freizeichen)
-                -->
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.8.3</version>
-                <configuration>
-                    <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
-                    <jfxMainAppJarName>client.jar</jfxMainAppJarName>
-                    <preLoader>eu.ggnet.dwoss.assembly.remote.DwPreloader</preLoader>
-                    <allPermissions>true</allPermissions>
-
-                </configuration>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>jfx-jar</id>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
-                        <phase>package</phase>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <JavaFX-Preloader-Class>eu.ggnet.dwoss.assembly.remote.DwPreloader</JavaFX-Preloader-Class>
+                            <Permissions>all-permissions</Permissions>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal> <!-- will be used by netbeans default -->
+                        </goals>
+                        <configuration>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>eu.ggnet.dwoss.assembly.remote.RunClientFx</argument>
+                                <argument>--config=local</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sample</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=local</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ggnet-local-test</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=ggnet-local-test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ggnet-test</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=ggnet-test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ggnet</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=ggnet</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>elus-local-test</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=elus-local-test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>elus-test</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=elus-test</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>elus</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>eu.ggnet.dwoss.assembly.remote.RunClientFx</mainClass>
+                            <arguments>
+                                <argument>--config=elus</argument>
+                            </arguments>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -54,12 +167,6 @@
     </build>
 
     <dependencies>
-        <!-- tomee - 7.0
-        Description:
-        - all exlusions: exclusions are in openejb-javaee-api
-        - hibernate-core: classes used in remote client
-        - geronimo-mail: missing results in java.lang.NoClassDefFoundError: org/apache/geronimo/osgi/locator/ProviderLocator
-        -->
         <dependency>
             <groupId>${javaee.groupId}</groupId>
             <artifactId>${javaee.artifactId}</artifactId>
@@ -211,12 +318,6 @@
                     <artifactId>dw-ui-persistence-repair</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
-                <!-- Will be removed in the future -->
-                <!--                <dependency>
-                    <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ui-pro-sopo</artifactId>
-                    <version>${dw.version}</version>
-                </dependency>-->
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
                     <artifactId>dw-ui-pro-price</artifactId>

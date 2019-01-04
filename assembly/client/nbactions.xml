@@ -4,26 +4,15 @@
         <actionName>CUSTOM-RunClient Sample Localhost</actionName>
         <displayName>RunClient Sample Localhost</displayName>
         <goals>
-            <goal>jfx:run</goal>
+            <goal>exec:java@sample</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=local</jfx.runAppParameter>
-        </properties>
-        <activatedProfiles>
-            <activatedProfile>client-sample</activatedProfile>
-        </activatedProfiles>
     </action>
     <action>
         <actionName>CUSTOM-RunClient GGNet Local Test</actionName>
         <displayName>RunClient GGNet Local Test</displayName>
         <goals>
-            <goal>clean</goal>
-            <goal>compile</goal>
-            <goal>jfx:run</goal>
+            <goal>exec:java@ggnet-local-test</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=ggnet-local-test</jfx.runAppParameter>
-        </properties>
         <activatedProfiles>
             <activatedProfile>client-ggnet</activatedProfile>
         </activatedProfiles>
@@ -32,13 +21,8 @@
         <actionName>CUSTOM-RunClient GGNet Test</actionName>
         <displayName>RunClient GGNet Test</displayName>
         <goals>
-            <goal>clean</goal>
-            <goal>compile</goal>
-            <goal>jfx:run</goal>
+            <goal>exec:java@ggnet-test</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=ggnet-test</jfx.runAppParameter>
-        </properties>
         <activatedProfiles>
             <activatedProfile>client-ggnet</activatedProfile>
         </activatedProfiles>
@@ -47,37 +31,28 @@
         <actionName>CUSTOM-RunClient GGNet Produktiv</actionName>
         <displayName>RunClient GGNet Produktiv</displayName>
         <goals>
-            <goal>jfx:run</goal>
+            <goal>exec:java@ggnet</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=ggnet</jfx.runAppParameter>
-        </properties>
         <activatedProfiles>
             <activatedProfile>client-ggnet</activatedProfile>
-        </activatedProfiles>
-    </action>
-    <action>
-        <actionName>CUSTOM-RunClient Elus Test</actionName>
-        <displayName>RunClient Elus Test</displayName>
-        <goals>
-            <goal>jfx:run</goal>
-        </goals>
-        <properties>
-            <jfx.runAppParameter>--config=elus-test</jfx.runAppParameter>
-        </properties>
-        <activatedProfiles>
-            <activatedProfile>client-elus</activatedProfile>
         </activatedProfiles>
     </action>
     <action>
         <actionName>CUSTOM-RunClient Elus Local Test</actionName>
         <displayName>RunClient Elus Local Test</displayName>
         <goals>
-            <goal>jfx:run</goal>
+            <goal>exec:java@elus-local-test</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=elus-local-test</jfx.runAppParameter>
-        </properties>
+        <activatedProfiles>
+            <activatedProfile>client-elus</activatedProfile>
+        </activatedProfiles>
+    </action>
+    <action>
+        <actionName>CUSTOM-RunClient Elus Test</actionName>
+        <displayName>RunClient Elus Test</displayName>
+        <goals>
+            <goal>exec:java@elus-test</goal>
+        </goals>
         <activatedProfiles>
             <activatedProfile>client-elus</activatedProfile>
         </activatedProfiles>
@@ -86,11 +61,8 @@
         <actionName>CUSTOM-RunClient Elus Produktiv</actionName>
         <displayName>RunClient Elus Produktiv</displayName>
         <goals>
-            <goal>jfx:run</goal>
+            <goal>exec:java@elus</goal>
         </goals>
-        <properties>
-            <jfx.runAppParameter>--config=elus</jfx.runAppParameter>
-        </properties>
         <activatedProfiles>
             <activatedProfile>client-elus</activatedProfile>
         </activatedProfiles>
