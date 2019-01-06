@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,36 +16,36 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.stock.ee.assist.Stocks;
-import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
-import eu.ggnet.dwoss.stock.ee.emo.Transfer;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.ee.emo.Transfer;
+import eu.ggnet.dwoss.stock.ee.entity.Stock;
+import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-
-import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.*;
-
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
+
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
+import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.RETAILER;
 
 @Stateless
 public class SalesChannelHandlerOperation implements SalesChannelHandler {
@@ -77,7 +77,7 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
 
     /**
      * Returns all units, which are in a stock. Units which are on a transaction, are not displayed.
-     *
+     * <p>
      * TODO: Turn it around. Fist take all StockUnits, which are not in a transaction. Then filter them against the SopoUnit information
      * <p/>
      * @return all units, which are in a stock
@@ -101,16 +101,16 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
             if ( uniqueUnit.getProduct() == null ) L.warn("UniqueUnit(id=" + uniqueUnit.getId() + ").product==null");
             lines.add(
                     SalesChannelLine.builder()
-                    .unitId(stockUnit.getId())
-                    .refurbishedId(uniqueUnit.getRefurbishId())
-                    .description(ProductFormater.toName(uniqueUnit.getProduct()))
-                    .comment((uniqueUnit.getEquipments().contains(Equipment.ORIGINAL_BOXED) ? "Originalkarton, " : "") + (uniqueUnit.getCondition().getNote()))
-                    .retailerPrice(uniqueUnit.getPrice(RETAILER))
-                    .customerPrice(uniqueUnit.getPrice(CUSTOMER))
-                    .stockName(stockUnit.getStock().getName())
-                    .salesChannel(uniqueUnit.getSalesChannel())
-                    .originalSalesChannel(uniqueUnit.getSalesChannel())
-                    .stockId(stockUnit.getStock().getId()).build()
+                            .unitId(stockUnit.getId())
+                            .refurbishedId(uniqueUnit.getRefurbishId())
+                            .description(ProductFormater.toName(uniqueUnit.getProduct()))
+                            .comment((uniqueUnit.getEquipments().contains(Equipment.ORIGINAL_BOXED) ? "Originalkarton, " : "") + (uniqueUnit.getCondition().getNote()))
+                            .retailerPrice(uniqueUnit.getPrice(RETAILER))
+                            .customerPrice(uniqueUnit.getPrice(CUSTOMER))
+                            .stockName(stockUnit.getStock().getName())
+                            .salesChannel(uniqueUnit.getSalesChannel())
+                            .originalSalesChannel(uniqueUnit.getSalesChannel())
+                            .stockId(stockUnit.getStock().getId()).build()
             );
             m.worked(1);
         }
@@ -125,7 +125,7 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
      * @param arranger
      * @param transactionComment
      * @return true if something was changed.
-     * @throws de.dw.util.UserInfoException
+     * @throws UserInfoException
      */
     @Override
     public boolean update(final List<SalesChannelLine> lines, String arranger, String transactionComment) throws UserInfoException {
@@ -136,7 +136,7 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
                 .filter(l -> l.getDestination() != null) // No Destination change
                 .sorted(new LastCharsRefurbishIdSorter()) // Sort
                 .collect(Collectors.groupingBy(SalesChannelLine::getDestination,
-                                Collectors.mapping(SalesChannelLine::getUnitId, Collectors.toList())));
+                        Collectors.mapping(SalesChannelLine::getUnitId, Collectors.toList())));
         StockTransactionEmo emo = new StockTransactionEmo(stockEm);
 
         SortedMap<Integer, String> histories = new TreeMap<>();

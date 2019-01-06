@@ -16,20 +16,16 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.Dl;
-
 import java.awt.event.ActionEvent;
-import java.util.concurrent.*;
 
-import org.openide.util.Lookup;
-
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
+import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerData;
+import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerView;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
-import eu.ggnet.dwoss.misc.ui.saleschannel.*;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.OPEN_SALES_CHANNEL_MANAGER;
@@ -49,19 +45,11 @@ public class OpenSalesChannelManagerAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.build().swing().eval(
                 () -> new SalesChannelManagerData(Dl.remote().lookup(SalesChannelHandler.class).findAvailableUnits(), Dl.remote().lookup(StockAgent.class).findAll(Stock.class)),
-                () -> new SalesChannelManagerView())
-                .cf()
-                .thenApply(lines -> {
-                    try {
-                        return Dl.remote().lookup(SalesChannelHandler.class)
-                                .update(lines, Dl.local().lookup(Guardian.class).getUsername(), "Erzeugt duch Verkaufskanalmanager");
-                    } catch (UserInfoException ex) {
-                        throw new CompletionException(ex);
-                    }
-                })
-                .thenAccept(change -> {
-                    Ui.build().alert().message((change ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt")).show();
-                })
+                () -> new SalesChannelManagerView()).cf()
+                .thenApply(lines
+                        -> Ui.exception().wrap(() -> Dl.remote().lookup(SalesChannelHandler.class).update(lines, Dl.local().lookup(Guardian.class).getUsername(), "Erzeugt duch Verkaufskanalmanager")))
+                .thenAccept(change
+                        -> Ui.build().alert().message((change ? "Verkaufskanaländerungen durchgeführt und Umfuhren vorbereitet" : "Keine Änderungen an Verkaufskanälen durchgeführt")).show())
                 .handle(Ui.handler());
     }
 }

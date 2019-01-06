@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
+import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 import eu.ggnet.dwoss.util.UserInfoException;
 
@@ -45,7 +46,7 @@ public interface SalesChannelHandler {
      * @param arranger
      * @param transactionComment
      * @return true if something was changed.
-     * @throws de.dw.util.UserInfoException
+     * @throws UserInfoException {@link StockTransactionEmo#prepare(eu.ggnet.dwoss.stock.ee.emo.Transfer, eu.ggnet.dwoss.progress.IMonitor) }
      */
     boolean update(final List<SalesChannelLine> lines, String arranger, String transactionComment) throws UserInfoException;
 }
