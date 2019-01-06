@@ -17,9 +17,6 @@
 package eu.ggnet.saft.core;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -44,9 +41,9 @@ public class UiUtil {
      * @param controllerClazz the controller class.
      * @return a loaded loader.
      * @throws IllegalArgumentException see {@link FxSaft#loadView(java.lang.Class) }
-     * @throws IllegalStateException see {@link FxSaft#loadView(java.lang.Class) }
-     * @throws NullPointerException see {@link FxSaft#loadView(java.lang.Class) }
-     * @throws RuntimeException wrapped IOException of {@link FXMLLoader#load() }.
+     * @throws IllegalStateException    see {@link FxSaft#loadView(java.lang.Class) }
+     * @throws NullPointerException     see {@link FxSaft#loadView(java.lang.Class) }
+     * @throws RuntimeException         wrapped IOException of {@link FXMLLoader#load() }.
      */
     public static <T, R extends FxController> FXMLLoader constructFxml(Class<R> controllerClazz) throws IllegalArgumentException, NullPointerException, IllegalStateException, RuntimeException {
         if ( !Platform.isFxApplicationThread() ) throw new IllegalStateException("Method constructFxml is not called from the JavaFx Ui Thread, illegal");

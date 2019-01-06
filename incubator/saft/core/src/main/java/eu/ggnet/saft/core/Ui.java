@@ -135,6 +135,15 @@ public class Ui {
     }
 
     /**
+     * Allows the wrapping of Exeptions into {@link CompletionException}.
+     *
+     * @return the ExceptionWrapper.
+     */
+    public static ExceptionWrapper exception() {
+        return ExceptionWrapper.getInstance();
+    }
+
+    /**
      * Allows the closing of a window from within a Pane or Panel
      * <pre>
      * {@code
