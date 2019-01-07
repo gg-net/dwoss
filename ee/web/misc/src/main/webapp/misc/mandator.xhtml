@@ -16,101 +16,91 @@
         </h:head>
 
         <h:body>
-            <h:form>
-                <h1>Mandator - #{mandatorController.mandator.company.name}</h1>
-                <h:outputText escape="false" value="#{mandatorController.mandator.toHtml()}" />
-                <!--EXTRA INFO-->
+            <h1>Mandator - #{mandatorController.mandator.company.name}</h1>
+            <h:outputText escape="false" value="#{mandatorController.mandator.toHtml()}" />
 
-                <h2>Zusätzliche Mandanten Informationen</h2>
+            <h1>Zusätzliche Mandanten Informationen</h1>
 
-                <p:panelGrid>
+            <p:panelGrid>
 
-                    <p:row>
-                        <p:column style="width: 50%">
-                            <p:dataList value="#{mandatorController.getAllowedBrands()}" var="contractor" emptyMessage="No allowed Brands found" >
-                                <f:facet name="header">
-                                    Allowed Brands
-                                </f:facet>
-                                #{contractor.getName()}
-                            </p:dataList>
+                <p:row>
+                    <p:column>
+                        <b>Allowed Brands</b>
+                        <p:dataList value="#{mandatorController.getAllowedBrands()}" var="contractor" emptyMessage="No allowed Brands found" >
+                            #{contractor.name}
+                        </p:dataList>
 
-                        </p:column>
-                        <p:column >
-                            <p:dataList value="#{mandatorController.getAllContractors()}" var="contractor" emptyMessage="No contractors found" >
-                                <f:facet name="header">
-                                    All our Contractors
-                                </f:facet>
-                                #{contractor.getName()}
-                            </p:dataList>
-                        </p:column>
+                    </p:column>
+                    <p:column >
+                        <b>All Contractors</b>
+                        <p:dataList value="#{mandatorController.getAllContractors()}" var="contractor" emptyMessage="No contractors found" >
 
-                    </p:row>
-                    <p:row >
-                        <p:column>
-                            <h3>Fibu Konten (Post Ledger)</h3>
-                            <p:tree value="#{mandatorController.root}" var="node" >
+                            #{contractor.name}
+                        </p:dataList>
+                    </p:column>
+                    <p:column>
+                        <b>Fibu Konten (Post Ledger)</b>
+                        <p:tree value="#{mandatorController.root}" var="node" >
+                            <p:treeNode >
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </p:column>
+                </p:row>
 
-                                <p:treeNode >
-                                    <h:outputText value="#{node}" />
-                                </p:treeNode>
-                            </p:tree>
-                        </p:column>
-                        <p:column >
-                            <p:dataTable value="#{mandatorController.getShippingConditions()}" var="shippingCondition"  sortBy="#{shippingCondition.priceOfOne}" sortOrder="ascending">
-                                <f:facet name="header">
-                                    Versandkonditionen (ShippingConditions)
-                                </f:facet>
-                                <p:column headerText="Enum">
-                                    <h:outputText value="#{shippingCondition.name()}"/>
-                                </p:column>
-                                <p:column headerText="Note">
-                                    <h:outputText value="#{shippingCondition.name}"/>
-                                </p:column>
-                                <p:column headerText="Price of One">
-                                    <h:outputText value="#{shippingCondition.priceOfOne}"/>
-                                </p:column>
-                                <p:column headerText="Multiplicator">
-                                    <h:outputText value="#{shippingCondition.multiplicator}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:column>
-                    </p:row>
+            </p:panelGrid>
+            <p>
+                <b>Versandkonditionen (ShippingConditions)</b>
+                <h:dataTable value="#{mandatorController.getShippingConditions()}" var="shippingCondition" >
+                    <h:column>
+                        <f:facet name="header">Enum</f:facet>
+                        <h:outputText value="#{shippingCondition.name()}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Note</f:facet>
+                        <h:outputText value="#{shippingCondition.name}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Price of One</f:facet>
+                        <h:outputText value="#{shippingCondition.priceOfOne}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Multiplicator</f:facet>
+                        <h:outputText value="#{shippingCondition.multiplicator}"/>
+                    </h:column>
+                </h:dataTable>
 
-                    <p:row>
-                        <p:column >
-                            <p:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
-                                <f:facet name="header"> Special System Customers </f:facet>
-                                <p:column headerText="Customer ID" >
-                                    <h:outputText value="#{specialSystemCustomer.key}"/>
-                                </p:column>
-                                <p:column headerText="DocumentType">
-                                    <h:outputText value="#{specialSystemCustomer.value.name}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:column>
-
-
-                        <p:column>
-                            <p:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer" sortMode="multiple" >
-                            <f:facet name="header">Receipt Customers</f:facet>
-                                <p:column headerText="Customer ID" sortBy="#{receiptCustomer.value}">
-                                    <h:outputText value="#{receiptCustomer.value}"/>
-
-                                </p:column>
-                                <p:column headerText="Contractor" sortBy="#{receiptCustomer.key.contractor}">
-                                    <h:outputText value="#{receiptCustomer.key.contractor}" />
-                                </p:column>
-
-                                <p:column headerText="ReceiptOperation" sortBy="#{receiptCustomer.key.operation}">
-                                    <h:outputText value="#{receiptCustomer.key.operation}"/>
-                                </p:column>
-                            </p:dataTable>
-                        </p:column>
-                    </p:row>
-
-                </p:panelGrid>
-
-            </h:form>
+            </p>
+            <p>
+                <b>Receipt Customers</b>
+                <h:dataTable value="#{mandatorController.receiptCustomers}" var="receiptCustomer">
+                    <h:column>
+                        <f:facet name="header">Customer Id</f:facet>
+                        <h:outputText value="#{receiptCustomer.value}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Contractor</f:facet>
+                        <h:outputText value="#{receiptCustomer.key.contractor}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">ReceiptOperation</f:facet>
+                        <h:outputText value="#{receiptCustomer.key.operation}"/>
+                    </h:column>
+                </h:dataTable>
+            </p>
+            <p>
+                <b>Special System Customers</b>
+                <h:dataTable value="#{mandatorController.specialSystemCustomers}" var="specialSystemCustomer" >
+                    <h:column>
+                        <f:facet name="header">Customer Id</f:facet>
+                        <h:outputText value="#{specialSystemCustomer.key}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">DocumentType</f:facet>
+                        <h:outputText value="#{specialSystemCustomer.value.name}"/>
+                    </h:column>
+                </h:dataTable>
+            </p>
         </h:body>
 
     </f:view>

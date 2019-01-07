@@ -111,7 +111,7 @@ public class StockTransactionPosition implements Serializable {
      *
      * @param stockUnit the StockUnit to be set.
      */
-    public final void setStockUnit(StockUnit stockUnit) {
+    public void setStockUnit(StockUnit stockUnit) {
         internalSetUnitPosition(stockUnit, this);
     }
 
