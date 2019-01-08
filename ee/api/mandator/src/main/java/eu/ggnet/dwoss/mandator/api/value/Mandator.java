@@ -71,6 +71,9 @@ public class Mandator implements Serializable {
     @NotNull
     private Set<MandatorMailAttachment> defaultMailAttachment;
 
+    @NotNull
+    private Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType;
+
     /**
      * The company master data information.
      */
