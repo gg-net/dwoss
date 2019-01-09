@@ -14,9 +14,7 @@
 
     <description>Misc Web Komponents. Everything that has no home, starts here.</description>
 
-    <build>
-        <finalName>${project.artifactId}</finalName>
-    </build>
+
 
     <dependencies>
         <dependency>
@@ -70,6 +68,9 @@
     <profiles>
         <profile>
             <id>tryout</id>
+            <build>
+                <finalName>misc-tryout</finalName>
+            </build>
             <dependencies>
                 <dependency>
                     <groupId>${project.groupId}</groupId>
