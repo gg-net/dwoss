@@ -62,7 +62,7 @@ public class ContactTest {
 
     @Test
     public void testGetViolationMessagesNonValid3() {
-        contact.getCommunications().add(new Communication(Type.SKYPE, true));
+        contact.getCommunications().add(new Communication(Type.SKYPE));
         assertThat(contact.getViolationMessage()).as("Contact with invalid Communication").isNotBlank();
     }
 

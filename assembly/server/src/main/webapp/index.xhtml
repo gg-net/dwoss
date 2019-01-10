@@ -17,45 +17,7 @@
             <h:link value="Users" outcome="misc/users" />
             | Search:
             <h:link value="Suche" outcome="search/search" />
-            <hr />
-            <h:form>
-                <h2>Customer AddressLabel Merge:</h2>
-
-                <p:panelGrid columns="2" class="ui-panelgrid-blank" layout="grid">
-
-                    <h:panelGroup>
-                        <p:fieldset collapsed="true" legend="#{server.nonAddressLabelCustomers.size()} Kunden ohne Adresslabel bei #{server.companyName}" toggleable="true">
-                            <p:dataList value="#{server.nonAddressLabelCustomers}" var="pico" itemType="none" lazy="true">
-                                <h:outputText value="#{pico}"/>
-                            </p:dataList>
-                        </p:fieldset>
-                    </h:panelGroup>
-
-                    <h:panelGroup layout="grid">
-                        <p:commandButton value="Submit"  icon="ui-icon-check" actionListener="#{server.mergeCustomerAfterAddressLabel()}" update="@form:mergeGrid"/>
-
-                        <p:dataTable id="mergeGrid" value="#{server.violationEntriesAsList()}" var="entry">
-                            <p:column>
-                                <p:panel header="#{server.mergeViolations.get(entry.key).size()} - #{entry.key}">
-                                    <p:commandLink update="@form:detailDialog" oncomplete="PF('detailDlg').show()" title="Einträge ansehen">
-                                        <h:outputText value="Details" style="margin:0 auto;"/>
-                                        <f:setPropertyActionListener value="#{entry.key}" target="#{server.selectedKey}" />
-                                    </p:commandLink>
-                                </p:panel>
-                            </p:column>
-                        </p:dataTable>
-                    </h:panelGroup>
-                </p:panelGrid>
-
-                <p:dialog id="detailDialog" widgetVar="detailDlg" dynamic="true">
-                    <p:dataTable value="#{server.mergeViolations.get(server.selectedKey)}" var="pico" scrollable="true" scrollHeight="700">
-                        <p:column headerText="#{server.selectedKey}">
-                            <h:outputText value="#{pico.id} - #{pico.shortDescription}"/>
-                        </p:column>
-                    </p:dataTable>
-
-                </p:dialog>
-            </h:form>
+            <hr />      
         </h:body>
     </f:view>
 </html>

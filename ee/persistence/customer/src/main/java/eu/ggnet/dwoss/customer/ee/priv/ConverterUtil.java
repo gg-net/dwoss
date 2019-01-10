@@ -168,12 +168,7 @@ public class ConverterUtil {
             company.setLedger(old.getLedger());
             company.setTaxId(old.getTaxId());
         }
-        for (Type t : EnumSet.of(EMAIL, FAX, PHONE, MOBILE)) {
-            if ( !StringUtils.isBlank(get(old, t)) || contact.prefered(t) != null ) {
-                if ( contact.prefered(t) == null ) contact.getCommunications().add(new Communication(t, true));
-                contact.prefered(t).setIdentifier(get(old, t));
-            }
-        }
+
 
         if ( !StringUtils.isBlank(old.getREAdresse()) ) {
             Address rad = new Address();

@@ -77,7 +77,7 @@ public class StaticCustomerMaker {
      */
     public static Communication makeValidCommunication(Type type, String identifier) {
         if ( type == null || identifier == null || StringUtils.isBlank(identifier) ) throw new NullPointerException();
-        Communication validCommunication = new Communication(type, true);
+        Communication validCommunication = new Communication(type);
         validCommunication.setIdentifier(identifier);
         assertThat(validCommunication.getViolationMessage()).as("Communication does not violate any rule").isNull();
         return validCommunication;

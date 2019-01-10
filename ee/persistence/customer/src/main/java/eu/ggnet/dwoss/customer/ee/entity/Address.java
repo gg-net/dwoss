@@ -24,8 +24,6 @@ import javax.validation.constraints.*;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
-
 import lombok.*;
 
 /**
@@ -48,13 +46,6 @@ public class Address implements Serializable {
     @Version
     private short optLock;
 
-    /**
-     * Is this a address to be used for a specific type by default, null indicates no preference.
-     */
-    @Setter
-    @Enumerated
-    private AddressType preferedType;
-
     @Setter
     @NotNull
     @Field
@@ -63,7 +54,6 @@ public class Address implements Serializable {
     @Setter
     @NotNull
     @Field
-    @Boost(1.5F)
     private String city;
 
     @Setter

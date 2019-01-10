@@ -100,13 +100,6 @@ public class Communication implements Serializable {
     private String identifier;
 
     /**
-     * Is this a prefered way of communication.
-     */
-    @Setter
-    @Deprecated
-    private boolean prefered;
-
-    /**
      * Tryout constructor, do not use in productive.
      *
      * @param id
@@ -115,9 +108,8 @@ public class Communication implements Serializable {
         this.id = id;
     }
 
-    public Communication(Type type, boolean prefered) {
+    public Communication(Type type) {
         this.type = type;
-        this.prefered = prefered;
     }
 
     public Communication(Type type, String identifier) {

@@ -78,7 +78,7 @@ public class SimpleCustomerViolationMessageTest {
         assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer without communications is invalid").isNotNull();
 
         simpleConsumer = makeValidSimpleConsumer();
-        Communication invalidEmailCommunication = new Communication(Type.EMAIL, false);
+        Communication invalidEmailCommunication = new Communication(Type.EMAIL);
         simpleConsumer.getContacts().get(0).getCommunications().clear();
         simpleConsumer.getContacts().get(0).getCommunications().add(invalidEmailCommunication);
         assertThat(simpleConsumer.getViolationMessage()).as("SimpleConsumer with invalid Communication is invalid").isNotNull();
@@ -153,7 +153,7 @@ public class SimpleCustomerViolationMessageTest {
         simpleConsumer.getContacts().get(0).getCommunications().add(email);
         assertThat(simpleConsumer.getContacts().isEmpty() && simpleConsumer.getCompanies().isEmpty()).as("either Contact or Company is set").isFalse();
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type EMAIL is valid").isNull();
-        Communication otherEmail = new Communication(Type.EMAIL, false);
+        Communication otherEmail = new Communication(Type.EMAIL);
         email.setIdentifier("otherEmail@mail.com");
         simpleConsumer.getContacts().get(0).getCommunications().add(otherEmail);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
@@ -162,7 +162,7 @@ public class SimpleCustomerViolationMessageTest {
         simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
         simpleConsumer.getContacts().get(0).getCommunications().add(mobile);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type MOBILE is valid").isNull();
-        Communication otherMobile = new Communication(Type.MOBILE, false);
+        Communication otherMobile = new Communication(Type.MOBILE);
         mobile.setIdentifier("0172 16461385");
         simpleConsumer.getContacts().stream().findAny().get().getCommunications().add(otherMobile);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();
@@ -171,7 +171,7 @@ public class SimpleCustomerViolationMessageTest {
         simpleConsumer.getContacts().forEach(contact -> contact.getCommunications().clear());
         simpleConsumer.getContacts().get(0).getCommunications().add(phone);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with one communication of type PHONE is valid").isNull();
-        Communication otherPhone = new Communication(Type.PHONE, false);
+        Communication otherPhone = new Communication(Type.PHONE);
         mobile.setIdentifier("6541351");
         simpleConsumer.getContacts().stream().findAny().get().getCommunications().add(otherPhone);
         assertThat(simpleConsumer.getSimpleViolationMessage()).as("SimpleConsumer with two communications of same type is invalid").isNotNull();

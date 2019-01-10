@@ -17,30 +17,21 @@
 package eu.ggnet.dwoss.server.web;
 
 import java.io.Serializable;
-import java.util.*;
-import java.util.Map.Entry;
 
 import javax.annotation.ManagedBean;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import eu.ggnet.dwoss.mandator.ee.Mandators;
-import eu.ggnet.dwoss.misc.ee.CustomerAdressLabelMergeOperation;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
 
 /**
  *
@@ -57,20 +48,8 @@ public class Server implements Serializable {
     @Setter
     private String prefix = "";
 
-    @Inject
-    private MonitorFactory monitorFactory;
-
-    @Getter
-    private List<Long> nonAddressLabelCustomers;
-
-    @Inject
-    private CustomerAdressLabelMergeOperation customerMergeOperation;
-
     @EJB
     private Mandators mandatorSupport;
-
-    @Getter
-    private Map<String, List<PicoCustomer>> mergeViolations;
 
     @Getter
     @Setter
@@ -78,14 +57,6 @@ public class Server implements Serializable {
 
     @Getter
     private int maxWork = 0;
-
-    @PostConstruct
-    public void init() {
-        L.info("Search for non addresslabeled customers");
-        nonAddressLabelCustomers = customerMergeOperation.findNonAddressLabelCustomers();
-        mergeViolations = new HashMap<>();
-
-    }
 
     public String getCompanyName() {
         return mandatorSupport.loadMandator().getCompany().getName();
@@ -95,28 +66,4 @@ public class Server implements Serializable {
         return mandatorSupport.loadMandator();
     }
 
-    public void mergeCustomerAfterAddressLabel() {
-        SubMonitor monitor = monitorFactory.newSubMonitor("Customer merge not in progress..");
-
-        Map<String, List<Customer>> violations = new HashMap<>();
-        String noDossiers = "No Dossiers for Customer";
-        violations.put(noDossiers, new ArrayList<>());
-
-        L.info("-Start customer merge after AddressLabel implementation");
-        monitor.message("Merging Customer after AddressLabel implementation...");
-
-        List<Long> collect = new ArrayList<>(nonAddressLabelCustomers);
-
-        maxWork = collect.size();
-
-        monitor.setWorkRemaining(collect.size());
-        monitor.start();
-        mergeViolations = customerMergeOperation.mergeCustomerAfterAddressLabel(collect, monitor);
-        nonAddressLabelCustomers = customerMergeOperation.findNonAddressLabelCustomers();
-        monitor.finish();
-    }
-
-    public List<Entry<String, List<PicoCustomer>>> violationEntriesAsList() {
-        return new ArrayList<>(mergeViolations.entrySet());
-    }
 }

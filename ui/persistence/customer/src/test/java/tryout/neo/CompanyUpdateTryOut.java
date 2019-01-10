@@ -41,7 +41,6 @@ public class CompanyUpdateTryOut {
         customer.getContacts().clear();
         Company company = gen.makeCompanyWithId(120l);
         company.setTaxId("Steuernummer");
-        company.getCommunications().stream().findFirst().ifPresent(com -> com.setPrefered(true));
         customer.getCompanies().add(company);
 
         JButton close = new JButton("Schliessen");

@@ -63,8 +63,8 @@ public class CustomerViolationMessageTest {
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer without Communication is invalid").isNotNull();
 
         businessCustomer = makeValidBusinessCustomer();
-        Communication invalidPhoneCommunication = new Communication(Type.PHONE, false);
-        Communication invalidEmailCommunication = new Communication(Type.EMAIL, false);
+        Communication invalidPhoneCommunication = new Communication(Type.PHONE);
+        Communication invalidEmailCommunication = new Communication(Type.EMAIL);
         businessCustomer.getCompanies().get(0).getCommunications().add(invalidPhoneCommunication);
         businessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().add(invalidEmailCommunication);
         assertThat(businessCustomer.getViolationMessage()).as("BusinessCustomer with invalid Communication is invalid").isNotNull();
@@ -121,7 +121,7 @@ public class CustomerViolationMessageTest {
         assertThat(consumerCustomer.getViolationMessage()).as("ConsumerCustomer without Communications is invalid").isNotNull();
 
         consumerCustomer = makeValidConsumerCustomer();
-        Communication invalidEmailCommunication = new Communication(Type.EMAIL, false);
+        Communication invalidEmailCommunication = new Communication(Type.EMAIL);
         consumerCustomer.getContacts().get(0).getCommunications().add(invalidEmailCommunication);
         assertThat(consumerCustomer.getViolationMessage()).as("ConsumerCustomer with invalid Communication is invalid").isNotNull();
 
