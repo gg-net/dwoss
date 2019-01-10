@@ -63,7 +63,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @Setter
     @NotNull
     @Field
-    @Boost(2f)
     private String name;
 
     /**
@@ -72,14 +71,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @Getter
     @Setter
     private int ledger;
-
-    /**
-     * Is this a prefered company to use.
-     */
-    @Getter
-    @Setter
-    @Deprecated
-    private boolean prefered;
 
     @Getter
     @Setter
