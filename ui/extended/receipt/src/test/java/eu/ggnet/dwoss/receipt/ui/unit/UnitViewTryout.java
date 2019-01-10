@@ -10,8 +10,6 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
 import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 
@@ -30,11 +28,7 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
 import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
@@ -259,41 +253,7 @@ public class UnitViewTryout {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
-            @Override
-            public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
             // </editor-fold>
-
-            @Override
-            public Reply<Void> deleteCategoryProduct(long id) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Reply<Void> unsetUnitCollection(PicoUnit unit) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public Reply<Void> delete(UnitCollection dto) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
 
         });
 

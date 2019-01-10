@@ -61,7 +61,7 @@ public class DiscoveryBean implements Discovery {
      * @param prefixes
      * @return
      */
-    public static List<NameClassPair> inspect(Context context, String... prefixes) {
+    private static List<NameClassPair> inspect(Context context, String... prefixes) {
         Objects.requireNonNull(context, "Context must not be null");
         Objects.requireNonNull(prefixes, "At least one prefix must be supplied");
 

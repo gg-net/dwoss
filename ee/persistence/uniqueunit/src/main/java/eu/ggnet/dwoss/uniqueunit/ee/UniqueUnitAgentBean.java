@@ -49,9 +49,6 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     @UniqueUnits
     private EntityManager em;
 
-    @Inject
-    private CategoryProductMapper categoryProductMapper;
-
     @Override
     protected EntityManager getEntityManager() {
         return em;
@@ -90,86 +87,5 @@ public class UniqueUnitAgentBean extends AbstractAgentBean implements UniqueUnit
     public UniqueUnit findUnitByIdentifierEager(UniqueUnit.Identifier type, String identifier) {
         return optionalFetchEager(new UniqueUnitEao(em).findByIdentifier(type, identifier));
     }
-
-    @Override
-    public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) {
-        Objects.requireNonNull(dto, "DTO is null, not allowed");
-        L.info("Trying to store category product from DTO: {}", dto);
-        CategoryProduct cp = dto.getId() == 0 ? new CategoryProduct() : findById(CategoryProduct.class, dto.getId());
-        Objects.requireNonNull(cp, "No CategoryProduct found for id=" + dto.getId());
-        categoryProductMapper.update(cp, dto);
-        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
-            cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
-        }
-        if ( dto.getId() == 0 ) em.persist(cp);
-        return cp;
-    }
-
-    @Override
-    public Reply<Void> deleteCategoryProduct(long id) {
-        CategoryProduct cp = em.find(CategoryProduct.class, id);
-        if ( cp == null ) return Reply.failure("No Instance of CategoryProduct with id " + id + " found");
-        cp.getProducts().clear();
-        em.remove(cp);
-        return Reply.success(null);
-    }
-
-    @Override
-    public Reply<Void> addToUnitCollection(PicoUnit punit, long unitCollectionId) {
-        if ( punit == null ) return Reply.failure("PicoUnit is null");
-        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
-        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
-        UnitCollection uc = em.find(UnitCollection.class, unitCollectionId);
-        if ( uc == null ) return Reply.failure("No UnitCollection found for id " + unitCollectionId);
-        uc.getUnits().add(uu);
-        return Reply.success(null);
-    }
-
-    @Override
-    public Reply<Void> unsetUnitCollection(PicoUnit punit) {
-        if ( punit == null ) return Reply.failure("PicoUnit is null");
-        UniqueUnit uu = em.find(UniqueUnit.class, punit.getUniqueUnitId());
-        if ( uu == null ) return Reply.failure("No UniqueUnit found for id " + punit.id());
-        uu.setUnitCollection(null);
-        return Reply.success(null);
-    }
-
-    @Override
-    public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
-        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
-        Product product = em.find(Product.class, productId);
-        if ( product == null ) return Reply.failure("Product of id " + productId + " does not exist");
-        UnitCollection unitCollection = new UnitCollection();
-        UnitCollectionMapper.INSTANCE.update(unitCollection, dto);
-        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
-            unitCollection.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
-        }
-        unitCollection.setProduct(product);
-        em.persist(unitCollection);
-        return Reply.success(unitCollection);
-    }
-
-    @Override
-    public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
-        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
-        UnitCollection unitCollection = em.find(UnitCollection.class, dto.getId());
-        if ( unitCollection == null ) return Reply.failure("UnitCollection of id " + dto.getId() + " does not exist");
-        UnitCollectionMapper.INSTANCE.update(unitCollection, dto);
-        for (Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
-            unitCollection.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
-        }
-        return Reply.success(unitCollection);
-    }
-
-    @Override
-    public Reply<Void> delete(UnitCollection dto) {
-        if ( dto == null ) return Reply.failure("UnitCollectionDto is null");
-        UnitCollection unitCollection = em.find(UnitCollection.class, dto.getId());
-        if ( unitCollection == null ) return Reply.failure("UnitCollection of id " + dto.getId() + " does not exist");
-        unitCollection.setProduct(null);
-        unitCollection.getUnits().clear();
-        em.remove(unitCollection);
-        return Reply.success(null);
-    }
-
+    
 }

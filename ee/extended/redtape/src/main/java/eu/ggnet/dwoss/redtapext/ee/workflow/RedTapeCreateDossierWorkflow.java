@@ -75,49 +75,7 @@ public class RedTapeCreateDossierWorkflow {
 
     @Inject
     private SpecialSystemCustomers specialSystemCustomers;
-
-    /**
-     * Returns the first Directive on a created Document.
-     * See Implementation. Uses Dispatch.
-     *
-     * @param type          the {@link DocumentType}
-     * @param paymentMethod the payment method
-     * @param flags         the customerFlags
-     * @param dispatch      value specifying weither this is a dispatch process
-     * @return the Directive.
-     */
-    public static Document.Directive primeDirective(DocumentType type, PaymentMethod paymentMethod, Set<CustomerFlag> flags, boolean dispatch) {
-        if ( paymentMethod == null ) throw new NullPointerException("PaymentMethod is Null");
-        if ( type == DocumentType.BLOCK ) return Directive.NONE;
-        if ( type == DocumentType.CAPITAL_ASSET ) return Directive.HAND_OVER_GOODS;
-        // Default für Block, Returns und Anlagevermögen.
-        switch (paymentMethod) {
-            case CASH_ON_DELIVERY: // Implies dispatch
-                if ( !dispatch ) throw new IllegalArgumentException("A PickUp Order cannot be of PaymentMethod " + paymentMethod);
-                if ( flags.contains(CONFIRMED_CASH_ON_DELIVERY) && flags.contains(CONFIRMS_DOSSIER) ) return Directive.SEND_ORDER;
-                if ( flags.contains(CONFIRMED_CASH_ON_DELIVERY) ) return Directive.PREPARE_SHIPPING;
-                return Directive.SEND_CASH_ON_DELIVERY_CONTRACT;
-            case ADVANCE_PAYMENT:
-                if ( dispatch ) return Directive.SEND_ORDER;
-                return Directive.WAIT_FOR_MONEY;
-            case DIRECT_DEBIT:
-            case INVOICE:
-                if ( dispatch && flags.contains(CONFIRMS_DOSSIER) ) return Directive.SEND_ORDER;
-                if ( dispatch ) return Directive.PREPARE_SHIPPING;
-                // This is also ok for Returns and Capital Asset
-                return Directive.HAND_OVER_GOODS;
-            default:
-        }
-        throw new IllegalArgumentException("A Prime Directive for " + paymentMethod
-                + ", " + flags + "dispatch=" + dispatch + " not found");
-    }
-
-    private PaymentMethod selectPaymentMethod(boolean dispatch, CustomerMetaData customer) {
-        // A PickUp Order with Cash on Delivery is impossible.
-        if ( !dispatch && customer.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY ) return PaymentMethod.ADVANCE_PAYMENT;
-        else return customer.getPaymentMethod();
-    }
-
+  
     /**
      * Creates the Dossier.
      *
@@ -182,5 +140,47 @@ public class RedTapeCreateDossierWorkflow {
         Directive directive = primeDirective(type, paymentMethod, customer.getFlags(), dispatch);
         L.info("Directive {} in execute Dossier in RedTapeCreateDossierWorkflow ", directive);
         return createDossier(customerId, dispatch, type, paymentMethod, directive, arranger);
+    }
+    
+      /**
+     * Returns the first Directive on a created Document.
+     * See Implementation. Uses Dispatch.
+     *
+     * @param type          the {@link DocumentType}
+     * @param paymentMethod the payment method
+     * @param flags         the customerFlags
+     * @param dispatch      value specifying weither this is a dispatch process
+     * @return the Directive.
+     */
+    private static Document.Directive primeDirective(DocumentType type, PaymentMethod paymentMethod, Set<CustomerFlag> flags, boolean dispatch) {
+        if ( paymentMethod == null ) throw new NullPointerException("PaymentMethod is Null");
+        if ( type == DocumentType.BLOCK ) return Directive.NONE;
+        if ( type == DocumentType.CAPITAL_ASSET ) return Directive.HAND_OVER_GOODS;
+        // Default für Block, Returns und Anlagevermögen.
+        switch (paymentMethod) {
+            case CASH_ON_DELIVERY: // Implies dispatch
+                if ( !dispatch ) throw new IllegalArgumentException("A PickUp Order cannot be of PaymentMethod " + paymentMethod);
+                if ( flags.contains(CONFIRMED_CASH_ON_DELIVERY) && flags.contains(CONFIRMS_DOSSIER) ) return Directive.SEND_ORDER;
+                if ( flags.contains(CONFIRMED_CASH_ON_DELIVERY) ) return Directive.PREPARE_SHIPPING;
+                return Directive.SEND_CASH_ON_DELIVERY_CONTRACT;
+            case ADVANCE_PAYMENT:
+                if ( dispatch ) return Directive.SEND_ORDER;
+                return Directive.WAIT_FOR_MONEY;
+            case DIRECT_DEBIT:
+            case INVOICE:
+                if ( dispatch && flags.contains(CONFIRMS_DOSSIER) ) return Directive.SEND_ORDER;
+                if ( dispatch ) return Directive.PREPARE_SHIPPING;
+                // This is also ok for Returns and Capital Asset
+                return Directive.HAND_OVER_GOODS;
+            default:
+        }
+        throw new IllegalArgumentException("A Prime Directive for " + paymentMethod
+                + ", " + flags + "dispatch=" + dispatch + " not found");
+    }
+
+    private PaymentMethod selectPaymentMethod(boolean dispatch, CustomerMetaData customer) {
+        // A PickUp Order with Cash on Delivery is impossible.
+        if ( !dispatch && customer.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY ) return PaymentMethod.ADVANCE_PAYMENT;
+        else return customer.getPaymentMethod();
     }
 }

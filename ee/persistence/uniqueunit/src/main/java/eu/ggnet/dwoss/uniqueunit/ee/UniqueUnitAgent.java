@@ -18,12 +18,8 @@ package eu.ggnet.dwoss.uniqueunit.ee;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * The UniqueUnitAgent.
@@ -58,65 +54,4 @@ public interface UniqueUnitAgent extends RemoteAgent {
      */
     Product findProductByPartNoEager(String partNo);
 
-    /**
-     * Creates or Updates a CategoryProduct based on the dto.
-     * If the id is 0 a new categoryproduct is assumed. Deletion of prices is done by setting a price to 0. *
-     *
-     * @param dto      the dto as basis, must not be null.
-     * @param username the user who changed that.
-     * @return the created or updated CategoryProduct.
-     */
-    CategoryProduct createOrUpdate(CategoryProductDto dto, String username);
-
-    /**
-     * Delete a category product.
-     *
-     * @param id the id
-     * @return a reply
-     */
-    Reply<Void> deleteCategoryProduct(long id);
-
-    /**
-     * Adds a Unit do the unitCollection.
-     *
-     * @param unit             the unit.
-     * @param unitCollectionId the unitCollectionId
-     * @return reply of success.
-     */
-    Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId);
-
-    /**
-     * Sets the UnitCollection null on the unit.
-     *
-     * @param unit the unit
-     * @return reply of success.
-     */
-    Reply<Void> unsetUnitCollection(PicoUnit unit);
-
-    /**
-     * Creates a new unitcollection based on the dto and appends it to the suplied productId.
-     *
-     * @param productId the productId
-     * @param dto       the dto to be stored, must not be null.
-     * @param username
-     * @return a reply
-     */
-    Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username);
-
-    /**
-     * Update existing Unit collection.
-     *
-     * @param dto      the dto as basis.
-     * @param username
-     * @return a reply
-     */
-    Reply<UnitCollection> update(UnitCollectionDto dto, String username);
-
-    /**
-     * Deletes UnitCollection.
-     *
-     * @param dto unitCollection
-     * @return a reply.
-     */
-    Reply<Void> delete(UnitCollection dto);
 }

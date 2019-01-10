@@ -339,11 +339,6 @@ public class UniqueUnit implements Serializable, EagerAble {
     @ManyToOne(cascade = {PERSIST, REFRESH, DETACH}, fetch = FetchType.EAGER)
     private Product product;
 
-    // No Merge, Product may change while a UniqueUnit is detached.
-    @Getter
-    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
-    private UnitCollection unitCollection;
-
     @Getter
     @Setter
     @ElementCollection
@@ -580,40 +575,13 @@ public class UniqueUnit implements Serializable, EagerAble {
         this.product = product;
     }
 
-    /**
-     * Sets the {@link UnitCollection} in consideration of equalancy and bidirectional
-     * behaviour.
-     * <p>
-     * @param unitCollection
-     */
-    @SuppressWarnings("null")
-    public void setUnitCollection(UnitCollection unitCollection) {
-        if ( unitCollection == null && this.unitCollection == null ) {
-            return;
-        }
-        if ( this.unitCollection != null && this.unitCollection.equals(unitCollection) ) {
-            return;
-        }
-        if ( this.unitCollection != null ) {
-            this.unitCollection.units.remove(this);
-        }
-        if ( unitCollection != null ) {
-            unitCollection.units.add(this);
-        }
-        this.unitCollection = unitCollection;
-    }
-
     @Override
     public String toString() {
         String productString = null;
         String formatedMfgDate = null;
         String formatedInputDate = null;
-        String unitCollectionString = null;
         if ( product != null ) {
             productString = "[" + product.getPartNo() + "]" + product.getTradeName() + " " + product.getName();
-        }
-        if ( unitCollection != null ) {
-            unitCollectionString = "[id=" + unitCollection.getId() + ", nameExtension=" + unitCollection.getNameExtension() + "]";
         }
         if ( mfgDate != null ) {
             formatedMfgDate = DateFormats.ISO.format(mfgDate);
@@ -621,7 +589,7 @@ public class UniqueUnit implements Serializable, EagerAble {
         if ( inputDate != null ) {
             formatedInputDate = MEDIUM.format(inputDate);
         }
-        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString + ", unitCollection=" + unitCollectionString
+        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString 
                 + ", prices=" + getPrices() + ", equipments=" + equipments + ", flags=" + flags + ", comments=" + comments + ", internalComments=" + internalComments
                 + ", condition=" + condition
                 + ", contractor=" + contractor + ", mfgDate=" + formatedMfgDate + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel

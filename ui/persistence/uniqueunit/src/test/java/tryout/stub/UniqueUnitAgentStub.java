@@ -5,10 +5,7 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.CategoryProduct;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import java.util.*;
@@ -17,11 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.CategoryProductDto;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.UnitCollectionDto;
-import eu.ggnet.saft.api.Reply;
 
 /**
  *
@@ -35,15 +27,11 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
 
     private final Logger L = LoggerFactory.getLogger(UniqueUnitAgentStub.class);
 
-    private final CategoryProductGenerator CPGEN = new CategoryProductGenerator();
-
     private final ProductGenerator PGEN = new ProductGenerator();
 
     @Override
     public <T> long count(Class<T> entityClass) {
-        if ( entityClass.equals(CategoryProduct.class) ) {
-            return AMOUNT;
-        } else if ( entityClass.equals(Product.class) ) {
+        if ( entityClass.equals(Product.class) ) {
             return AMOUNT;
         }
         throw new UnsupportedOperationException(entityClass + " not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -52,14 +40,7 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
 
-        if ( entityClass.equals(CategoryProduct.class) ) {
-            try {
-                Thread.sleep(SLOW * AMOUNT);
-                return (List<T>)(CPGEN.generateCategoryProduct(AMOUNT));
-            } catch (InterruptedException ex) {
-                return Collections.emptyList();
-            }
-        } else if ( entityClass.equals(Product.class) ) {
+        if ( entityClass.equals(Product.class) ) {
             try {
                 Thread.sleep(SLOW * AMOUNT);
                 return (List<T>)(PGEN.generateProduct(AMOUNT));
@@ -74,27 +55,8 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     @Override
     public <T> List<T> findAll(Class<T> entityClass, int start, int limit) {
 
-        if ( entityClass.equals(CategoryProduct.class) ) {
-            if ( start + limit > AMOUNT ) {
-                return Collections.emptyList();
-            }
-            try {
-                Thread.sleep(SLOW * limit);
-                return (List<T>)(CPGEN.generateCategoryProduct(limit));
-            } catch (InterruptedException ex) {
-                return Collections.emptyList();
-            }
-        }
-
         if ( entityClass.equals(Product.class) ) {
             if ( start + limit > AMOUNT ) {
-                return Collections.emptyList();
-            }
-            try {
-                Thread.sleep(SLOW * limit);
-                L.info("Collecting Products..");
-                return (List<T>)(PGEN.generateProduct(limit));
-            } catch (InterruptedException ex) {
                 return Collections.emptyList();
             }
         }
@@ -102,47 +64,9 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
     }
 
     @Override
-    public CategoryProduct createOrUpdate(CategoryProductDto dto, String username) throws NullPointerException {
-        CategoryProduct cp = new CategoryProduct();
-        cp.setName(dto.getName());
-        cp.setDescription(dto.getDescription());
-        cp.setSalesChannel(dto.getSalesChannel());
-        cp.getProducts().forEach(p -> p.setCategoryProduct(null));
-
-        for (PicoProduct pp : dto.getProducts()) {
-            Product p = new Product();
-            p.setName(pp.getShortDescription());
-            cp.getProducts().add(p);
-        }
-        for (Map.Entry<PriceType, Double> price : dto.getPrices().entrySet()) {
-            cp.setPrice(price.getKey(), price.getValue(), "Price changed by " + username);
-
-        }
-        System.out.println("Storing " + cp);
-        return cp;
-    }
-
-    @Override
-    public Reply<Void> addToUnitCollection(PicoUnit unit, long unitCollectionId) {
-        return Reply.success(null);
-    }
-
-    @Override
-    public Reply<Void> unsetUnitCollection(PicoUnit unit) {
-        return Reply.success(null);
-    }
-
-    @Override
-    public Reply<Void> deleteCategoryProduct(long id) {
-        return Reply.success(null);
-    }
-
-    @Override
     public <T> T findByIdEager(Class<T> entityClass, Object id) {
         if ( entityClass == Product.class ) {
             return (T)PGEN.generateProduct(1).get(0);
-        } else if ( entityClass == UnitCollection.class ) {
-            return (T)PGEN.generateProduct(1).get(0).getUnitCollections().get(0);
         }
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -188,20 +112,5 @@ public class UniqueUnitAgentStub implements UniqueUnitAgent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     //</editor-fold>
-
-    @Override
-    public Reply<UnitCollection> createOnProduct(long productId, UnitCollectionDto dto, String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Reply<UnitCollection> update(UnitCollectionDto dto, String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Reply<Void> delete(UnitCollection dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
 }

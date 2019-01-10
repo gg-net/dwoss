@@ -116,9 +116,7 @@ public class ProductListController implements Initializable, FxController, Close
 
     @FXML
     private void openAssignment(ActionEvent event) {
-        Ui.exec(() -> {
-            Ui.build().parent(tableView).fxml().show(AssignmentController.class);
-        });
+        // TODO : Remove me
     }
 
     /**

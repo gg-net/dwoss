@@ -5,10 +5,8 @@
  */
 package tryout.stub;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UnitCollection;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -41,9 +39,7 @@ public class ProductGenerator {
     private final List<Date> dates = new ArrayList<>(Arrays.asList(Date.from(now.minusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.plusDays(1).toInstant(ZoneOffset.UTC)), Date.from(now.toInstant(ZoneOffset.UTC))));
 
     private final List<PriceType> priceTypes = new ArrayList<>(Arrays.asList(PriceType.values()));
-
-    private final UnitCollectionGenerator ucGen = new UnitCollectionGenerator();
-
+    
     private final UniqueUnitGenerator uuGen = new UniqueUnitGenerator();
 
     /**
@@ -64,16 +60,6 @@ public class ProductGenerator {
             p.setGtin(rand.nextInt(15000));
             p.setEol(dates.get(rand.nextInt(dates.size())));
             p.setPrice(priceTypes.get(rand.nextInt(priceTypes.size())), rand.nextInt(9999), "");
-
-            ucGen.generateUnitCollections().forEach((generateUnitCollection) -> {
-                p.getUnitCollections().add(generateUnitCollection);
-            });
-
-            for (UnitCollection collection : p.getUnitCollections()) {
-                for (UniqueUnit unit : collection.getUnits()) {
-                    unit.setProduct(p);
-                }
-            }
 
             for (int j = 0; j < 5; j++) {
                 p.getUniqueUnits().add(uuGen.makeUniqueUnit(p.getTradeName(), p.getGroup()));

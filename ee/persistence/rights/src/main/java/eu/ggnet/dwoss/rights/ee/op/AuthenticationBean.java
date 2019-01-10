@@ -75,7 +75,7 @@ public class AuthenticationBean implements Authentication {
             }
         } else {
             if ( op.getPassword() != null && op.getSalt() != null
-                    && Arrays.equals(op.getPassword(), hashPassword(password, op.getSalt())) ) {
+                    && Arrays.equals(op.getPassword(), PasswordUtil.hashPassword(password, op.getSalt())) ) {
                 eu.ggnet.dwoss.rights.api.Operator login = op.toDto();
                 L.info("Authentication successful: {}", login);
                 return login;
@@ -86,26 +86,4 @@ public class AuthenticationBean implements Authentication {
         throw new UserInfoException("Authentifizierung nicht gelungen!");
     }
 
-    /**
-     * This hash the given password with the given salt.
-     * <p>
-     * @param password is the readable Password.
-     * @param salt     is the Salt that will used to salt the password.
-     * @return return the hashed and salted password.
-     */
-    public static byte[] hashPassword(char[] password, byte[] salt) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            byte[] pwBytes = new String(password).getBytes("UTF-8");
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            byte[] bytes = md.digest(pwBytes);
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            return sb.toString().getBytes("UTF-8");
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            throw new RuntimeException();
-        }
-    }
 }

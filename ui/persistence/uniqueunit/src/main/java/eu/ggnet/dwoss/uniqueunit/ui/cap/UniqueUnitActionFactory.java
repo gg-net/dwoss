@@ -36,8 +36,7 @@ public class UniqueUnitActionFactory implements ActionFactory {
     @Override
     public List<MetaAction> createMetaActions() {
         return Arrays.asList(
-                new MetaAction(MENU_NAME, new ProductListAction()),
-                new MetaAction(MENU_NAME, new CategoryProductListAction())
+                new MetaAction(MENU_NAME, new ProductListAction())
         );
     }
 }

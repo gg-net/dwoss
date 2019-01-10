@@ -123,10 +123,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @SuppressWarnings("FieldMayBeFinal")
     private Map<TradeName, String> additionalPartNo = new EnumMap<>(TradeName.class);
 
-    @Getter
-    @ManyToOne(cascade = {PERSIST, REFRESH, DETACH, MERGE})
-    private CategoryProduct categoryProduct;
-
     /**
      * Represents Flags the user can set for this element.
      * This is a better aproacht, than creating multiple boolean falues.
@@ -141,10 +137,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @NotNull
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
     List<UniqueUnit> units = new ArrayList<>();
-
-    @NotNull
-    @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
-    List<UnitCollection> unitCollections = new ArrayList<>();
 
     @Setter
     @Getter
@@ -224,21 +216,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         };
     }
 
-    /**
-     * Returns a bidirectional wrapper List, mapping changes to the UnitCollection.
-     *
-     * @return a bidirectional wrapper List
-     */
-    public List<UnitCollection> getUnitCollections() {
-        return new AbstractBidirectionalListWrapper<UnitCollection>(unitCollections) {
-            @Override
-            protected void update(UnitCollection e, boolean add) {
-                if ( add ) e.setProduct(Product.this);
-                else e.setProduct(null);
-            }
-        };
-    }
-
     public void setAdditionalPartNo(TradeName tradeName, String partNo) {
         additionalPartNo.put(tradeName, partNo);
     }
@@ -261,29 +238,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     public boolean addFlag(Flag flag) {
         return flags.add(flag);
-    }
-
-    /**
-     * Sets the {@link Product} in consideration of equalancy and bidirectional
-     * behaviour.
-     * <p>
-     * @param categoryProduct
-     */
-    @SuppressWarnings("null")
-    public void setCategoryProduct(CategoryProduct categoryProduct) {
-        if ( categoryProduct == null && this.categoryProduct == null ) {
-            return;
-        }
-        if ( this.categoryProduct != null && this.categoryProduct.equals(categoryProduct) ) {
-            return;
-        }
-        if ( this.categoryProduct != null ) {
-            this.categoryProduct.products.remove(this);
-        }
-        if ( categoryProduct != null ) {
-            categoryProduct.products.add(this);
-        }
-        this.categoryProduct = categoryProduct;
     }
 
     /**
@@ -310,8 +264,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
 
     @Override
     public void fetchEager() {
-        if ( categoryProduct != null ) categoryProduct.fetchEager();
-        unitCollections.forEach(u -> u.fetchEager());
         units.forEach(u -> u.fetchEager());
         priceHistories.size();
     }

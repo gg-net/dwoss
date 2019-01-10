@@ -30,6 +30,7 @@ import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
 import eu.ggnet.dwoss.rights.ee.op.AuthenticationBean;
+import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
@@ -74,7 +75,7 @@ public class RightsGeneratorOperation {
                 operator.add(persona);
             }
             operator.setSalt(RandomStringUtils.randomAlphanumeric(6).getBytes());
-            operator.setPassword(AuthenticationBean.hashPassword(RandomStringUtils.randomAlphanumeric(15).toCharArray(), operator.getSalt()));
+            operator.setPassword(PasswordUtil.hashPassword(RandomStringUtils.randomAlphanumeric(15).toCharArray(), operator.getSalt()));
             operator.setQuickLoginKey((int)(Math.random() * 999));
             em.persist(operator);
         }
@@ -105,7 +106,7 @@ public class RightsGeneratorOperation {
         operator.setUsername(username);
         operator.setQuickLoginKey(0);
         operator.setSalt(RandomStringUtils.randomAlphanumeric(6).getBytes());
-        operator.setPassword(AuthenticationBean.hashPassword(Objects.requireNonNull(password.toCharArray()), operator.getSalt()));
+        operator.setPassword(PasswordUtil.hashPassword(Objects.requireNonNull(password.toCharArray()), operator.getSalt()));
         for (AtomicRight right : activeRights) {
             operator.add(right);
         }
