@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
@@ -48,8 +49,8 @@ import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
@@ -135,11 +136,11 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      */
     @Override
     public Dossier create(long customerId, boolean dispatch, String arranger) {
-        L.info("Start create Dossier in RedTapeWorkerOperation with customer id {} is dispatch {} and the arrager {}",customerId, dispatch, arranger);
+        L.info("Start create Dossier in RedTapeWorkerOperation with customer id {} is dispatch {} and the arrager {}", customerId, dispatch, arranger);
         Dossier createdDos = createDossierWorkflow.execute(customerId, dispatch, arranger);
         L.info(createdDos.toString());
         redTapeEm.detach(createdDos);
-        
+
         return createdDos;
     }
 
@@ -180,7 +181,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     @Override
     public Addresses requestAdressesByCustomer(long customerId) {
         AddressEmo addressEmo = new AddressEmo(redTapeEm);
-        
+
         Address invoice = addressEmo.request(addressService.defaultAddressLabel(customerId, AddressType.INVOICE));
         Address shipping = addressEmo.request(addressService.defaultAddressLabel(customerId, AddressType.SHIPPING));
         return new Addresses(invoice, shipping);
@@ -405,6 +406,37 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
         redTapeEm.detach(result); // Detacht the result, just to be on the safe side. This should allways be a remote call.
         redTapeEm.clear();
         return result;
+    }
+
+    /**
+     * Changes the warranty of every eligible position on the dossier.
+     *
+     * @param disserId the disserId for the dossier on wich a warranty change is triggered
+     * @param warranty the warranty to wich the dossier position are changed
+     * @param username
+     * @return the updated dossier
+     * @throws eu.ggnet.dwoss.util.UserInfoException if the dossiers crucial document is not an order,
+     *                                               the dosser is closed or in legacy state, there are no unit type positions
+     */
+    @Override
+    public Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException {
+        Dossier dos = redTapeEm.find(Dossier.class, disserId);
+        if ( dos == null ) return null;
+        if ( dos.getCrucialDocument().getType() != ORDER ) throw new UserInfoException("Nur bestellungen sind für Garantieänderungen zugelassen.");
+        if ( dos.isClosed() || dos.isLegacy() ) throw new UserInfoException("Geschlossene oder zu alte Vorgänge sind nich für Garantieänderungen zugelassen.");
+        if ( dos.getCrucialDocument().getPositions(PositionType.UNIT).isEmpty() )
+            throw new UserInfoException("Vorgänge ohne Geräte sind nich für Garantieänderungen zugelassen.");
+
+        for (Position position : dos.getCrucialDocument().getPositions(PositionType.UNIT).values()) {
+            UniqueUnit uu = uuEm.find(UniqueUnit.class, position.getUniqueUnitId());
+            uu.setWarranty(warranty);
+
+            uu.addHistory("Changed warranty to: " + warranty + " through bulk action by " + username);
+            position.setDescription(UniqueUnitFormater.toDetailedDiscriptionLine(uu));
+
+        }
+
+        return dos;
     }
 
     private Document fetchEager(Document doc) {

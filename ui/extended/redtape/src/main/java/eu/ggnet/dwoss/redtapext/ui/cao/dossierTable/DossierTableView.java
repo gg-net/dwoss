@@ -27,6 +27,14 @@ import javax.swing.RowFilter.Entry;
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
+import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
+import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.VBox;
+
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.common.ui.HtmlDialog;
 import eu.ggnet.dwoss.common.ui.table.TableColumnChooserPopup;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
@@ -34,7 +42,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.*;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -102,7 +110,7 @@ public class DossierTableView extends javax.swing.JPanel {
         JMenuItem detailsItem = new JMenuItem(new AbstractAction("Details") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Dossier dos = model.getDossier(table.convertRowIndexToModel(table.getSelectedRow()));
+                Dossier dos = selectedDossier();
                 new HtmlDialog(SwingUtilities.getWindowAncestor(DossierTableView.this), Dialog.ModalityType.MODELESS)
                         .setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
             }
@@ -113,14 +121,55 @@ public class DossierTableView extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 HtmlDialog dialog = new HtmlDialog(SwingUtilities.getWindowAncestor(DossierTableView.this), ModalityType.MODELESS);
-                dialog.setText(DossierFormater.toHtmlHistory(model.getDossier(table.convertRowIndexToModel(table.getSelectedRow()))));
+                dialog.setText(DossierFormater.toHtmlHistory(selectedDossier()));
                 dialog.setVisible(true);
             }
         });
         historyItem.setText("Verlauf");
 
+        JMenuItem warrantyChangeItem = new JMenuItem(new AbstractAction("Garantie ändern") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ComboBox<Warranty> warrantyBox = new ComboBox<>(FXCollections.observableArrayList(Warranty.values()));
+                warrantyBox.setCellFactory((callback) -> {
+                    return new ListCell<Warranty>() {
+                        @Override
+                        protected void updateItem(Warranty item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if ( item == null || empty ) {
+                                setGraphic(null);
+                            } else {
+                                setText(item.getName());
+                            }
+                        }
+                    };
+                });
+
+                Button okayButton = new Button("Durchführen");
+                okayButton.setOnAction((event) -> {
+                    if ( warrantyBox.getValue() != null ) {
+                        controller.updateDossierWarranty(selectedDossier(), warrantyBox.getValue());
+                    } else {
+                        new Alert(AlertType.WARNING, "Bitte auswahl treffen", ButtonType.OK).showAndWait();
+                    }
+                });
+
+                VBox box = new VBox(5.,
+                        new Label("Garantie für alle Geräte des Auftrages auf folgenden Wert ändern:"),
+                        warrantyBox,
+                        new Separator(Orientation.HORIZONTAL),
+                        okayButton
+                );
+                Ui.exec(() -> {
+                    Ui.build(DossierTableView.this).title("Garantieänderung").fx().show(() -> box);
+                });
+            }
+        });
+        warrantyChangeItem.setText("Garantie ändern");
+
         menu.add(detailsItem);
         menu.add(historyItem);
+//        menu.add(warrantyChangeItem);
         return menu;
     }
 
@@ -221,6 +270,10 @@ public class DossierTableView extends javax.swing.JPanel {
                 controller.loadOpenDossiers(customerId);
             }
         }
+    }
+
+    private Dossier selectedDossier() {
+        return model.getDossier(table.convertRowIndexToModel(table.getSelectedRow()));
     }
 
     /** This method is called from within the constructor to
@@ -327,10 +380,10 @@ public class DossierTableView extends javax.swing.JPanel {
         if ( model == null || controller == null ) return;
         int row = table.rowAtPoint(evt.getPoint());
         table.setRowSelectionInterval(row, row);
-        Dossier selectedDos = model.getDossier(table.convertRowIndexToModel(table.getSelectedRow()));
+        Dossier selectedDos = selectedDossier();
         controller.selectionChanged(selectedDos);
         if ( evt.getClickCount() == 2 && table.getSelectedRow() != -1 && model != null ) {
-            Dossier dos = model.getDossier(table.convertRowIndexToModel(table.getSelectedRow()));
+            Dossier dos = selectedDossier();
             new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS).setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
         }
         if ( SwingUtilities.isRightMouseButton(evt) ) {

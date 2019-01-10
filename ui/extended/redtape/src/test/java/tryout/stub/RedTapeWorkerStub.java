@@ -3,6 +3,7 @@ package tryout.stub;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
@@ -74,6 +75,11 @@ public class RedTapeWorkerStub implements RedTapeWorker {
 
     @Override
     public String toDetailedHtml(long dossierId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
