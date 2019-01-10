@@ -191,8 +191,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             email.setMsg(text + mandator.getDefaultMailSignature());
             email.attach(
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
-                    "Dokument.pdf", "Das ist das Dokument zu Ihrem Aufrag als PDF.");
-            for (MandatorMailAttachment mma : mandator.getDefaultMailAttachment()) {
+                    "Dokument.pdf", "Dokument zu Ihrem Vorgang."
+            );
+            for (MandatorMailAttachment mma : mandator.getMailAttachmentByDocumentType().getOrDefault(document.getType(), new HashSet<>())) {
                 email.attach(mma.getAttachmentData().toURL(), mma.getAttachmentName(), mma.getAttachmentDescription());
             }
             email.send();

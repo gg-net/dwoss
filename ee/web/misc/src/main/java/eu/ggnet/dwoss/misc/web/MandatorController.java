@@ -86,7 +86,7 @@ public class MandatorController implements Serializable {
     public List<Map.Entry<Key, Long>> getReceiptCustomers() {
         return new ArrayList<>(receiptCustomers.getReceiptCustomers().entrySet());
     }
-
+    
     public int sortReceiptCustomers(Map.Entry<Key, Long> obj, Map.Entry<Key, Long> other) {
         return obj.getValue().compareTo(other.getValue());
 

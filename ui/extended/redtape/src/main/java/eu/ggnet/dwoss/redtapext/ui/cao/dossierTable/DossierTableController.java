@@ -20,18 +20,23 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 import javax.swing.SwingWorker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
+import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -242,6 +247,16 @@ public class DossierTableController {
 
     public void selectionChanged(Dossier dos) {
         selectionHandler.selected(dos);
+    }
+    
+    public void updateDossierWarranty(Dossier dos, Warranty warranty){
+        try {
+            Dossier updateWarranty = Dl.local().lookup(RedTapeWorker.class).updateWarranty(dos.getId(), warranty, Dl.local().lookup(Guardian.class).getUsername());
+            model.update(dos, updateWarranty);
+            selectionChanged(dos);
+        } catch (UserInfoException ex) {
+            Ui.handle(ex);
+        }
     }
 
     /**
