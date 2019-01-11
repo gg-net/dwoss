@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ee.priv;
+package eu.ggnet.dwoss.customer.ee;
 
 import javax.ejb.Remote;
 
@@ -23,7 +23,7 @@ import javax.ejb.Remote;
  * @author bastian.venz
  */
 @Remote
-public interface SearchSingleton {
+public interface CustomerIndexManager {
 
     /**
      * Recreate the hibernate search index of Customer.

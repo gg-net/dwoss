@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ee.priv;
+package eu.ggnet.dwoss.customer.ee;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -41,9 +41,9 @@ import lombok.Getter;
  */
 @Singleton
 @Startup
-public class SearchSingletonBean implements SearchSingleton {
+public class CustomerIndexManagerBean implements CustomerIndexManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SearchSingletonBean.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CustomerIndexManagerBean.class);
 
     @Inject
     @Customers

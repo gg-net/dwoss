@@ -27,10 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.ee.priv.SearchSingleton;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import eu.ggnet.dwoss.customer.ee.CustomerIndexManager;
 
 /**
  *
@@ -38,9 +39,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(Arquillian.class)
 
-public class CustomerSearchIndexerIT extends ArquillianProjectArchive {
+public class CustomerIndexManagerIT extends ArquillianProjectArchive {
 
-    private Logger L = LoggerFactory.getLogger(CustomerSearchIndexerIT.class);
+    private Logger L = LoggerFactory.getLogger(CustomerIndexManagerIT.class);
 
     @Inject
     private CustomerGeneratorOperation gen;
@@ -49,7 +50,7 @@ public class CustomerSearchIndexerIT extends ArquillianProjectArchive {
     private CustomerEao customerEao;
 
     @EJB
-    private SearchSingleton search;
+    private CustomerIndexManager search;
 
     @Test
     public void testIndexer() throws InterruptedException {
