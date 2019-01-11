@@ -1,38 +1,25 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.api.GlobalKey;
 import eu.ggnet.dwoss.search.api.SearchProvider;
 import eu.ggnet.dwoss.search.api.SearchRequest;
 
-import java.util.EnumSet;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -42,57 +29,29 @@ import static org.junit.Assert.assertTrue;
 public class CustomerSearchIT extends ArquillianProjectArchive {
 
     @Inject
-    private CustomerEao eao;
-
-    @Inject
-    @Customers
-    private EntityManager em;
-
-    @Inject
-    private UserTransaction utx;
-
-    @Inject
-    private Mandator mandator;
-
-    @Inject
-    private DefaultCustomerSalesdata salesData;
-
-    @Inject
     private SearchProvider searchProvider;
+
+    @EJB
+    private CustomerAgent agent;
 
     @Test
     @Ignore
     public void testLucenceSearch() throws Exception {
-        OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
-        OldCustomer c2 = new OldCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen", "Dünne Gasse 2", "22222", "Wolfsstaaad");
-        c2.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        c2.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c1.setPaymentCondition(PaymentCondition.CUSTOMER);
+        SimpleCustomer c1 = makeSimpleCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
+        c1.setLandlinePhone("040 1232123");
+        SimpleCustomer c2 = makeSimpleCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen");
+        c2.setMobilePhone("+49 172 12312131");
+        SimpleCustomer c3 = makeSimpleCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
+        c3.setEmail("rolf@rofl.de");
+        SimpleCustomer c4 = makeSimpleCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen");
+        c4.setEmail("lisa@xxx.com");
 
-        //by pp
-        OldCustomer c3 = new OldCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
-        c3.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c3.addFlag(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
-        c3.setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
-        c3.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER));
-        c3.setPaymentCondition(PaymentCondition.DEALER_3_PERCENT_DISCOUNT);
-        c3.setShippingCondition(ShippingCondition.FIVE);
-        OldCustomer c4 = new OldCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen", "Dünne Gasse 2", "22222", "Heimwehrhausen");
-        c4.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c4.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER));
-        c4.setPaymentCondition(PaymentCondition.EMPLOYEE);
-        c4.setShippingCondition(ShippingCondition.FIVE);
-        c4.setPaymentMethod(PaymentMethod.INVOICE);
+        // --------
+        agent.store(c1);
+        agent.store(c2);
+        agent.store(c3);
+        agent.store(c4);
 
-        utx.begin();
-        em.joinTransaction();
-
-        em.persist(convert(c1));
-        em.persist(convert(c2));
-        em.persist(convert(c3));
-        em.persist(convert(c4));
-
-        utx.commit();
         /* //this methode calling on 
         List<Customer> find = eao.find("schlag*");
 
@@ -113,10 +72,16 @@ public class CustomerSearchIT extends ArquillianProjectArchive {
         assertThat(result).as("Searchresult").hasSize(1);
     }
 
-    private Customer convert(OldCustomer old) {
-        Customer customer = new Customer();
-        ConverterUtil.mergeFromOld(old, customer, mandator.getMatchCode(), salesData);
-        return customer;
+    private SimpleCustomer makeSimpleCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt) {
+        SimpleCustomer sc = new SimpleCustomer();
+        sc.setCompanyName(firma);
+        sc.setTitle(titel);
+        sc.setFirstName(vorname);
+        sc.setLastName(nachname);
+        sc.setComment(anmerkung);
+        sc.setStreet(REAdresse);
+        sc.setZipCode(REPlz);
+        sc.setCity(REOrt);
+        return sc;
     }
-
 }

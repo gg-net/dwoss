@@ -59,7 +59,7 @@ public class WildflyLookup implements RemoteLookup {
 
     private Context _context;
 
-    private AuthenticationContext context;
+    private AuthenticationContext authenticationContext;
 
     // full classname, full lookup
     private Map<String, String> namesAndLookup;
@@ -81,40 +81,37 @@ public class WildflyLookup implements RemoteLookup {
         if ( initialized ) return;
 
         AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(CONFIG.getUsername()).usePassword(CONFIG.getPassword());
-        context = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(CONFIG.getHost()), ejbConfig);
+        authenticationContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(CONFIG.getHost()), ejbConfig);
+        AuthenticationContext.getContextManager().setGlobalDefault(authenticationContext);
 
-        Callable<List<String>> callable = () -> {
+        try {
 
             // create an InitialContext
             Properties properties = new Properties();
             properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
             properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.getHost() + ":" + CONFIG.getPort());
-            InitialContext c = new InitialContext(properties);
+            _context = new InitialContext(properties);
 
             final String APP = CONFIG.getApp();
             Object instance = null;
             String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
             try {
-                instance = c.lookup(discoveryName);
+                instance = _context.lookup(discoveryName);
             } catch (NamingException ex) {
                 throw new RuntimeException("Error on frist lookup", ex);
             }
             L.info("Lookup of {} sucessfull", discoveryName);
             Discovery discovery = (Discovery)instance;
-            List<String> result = discovery.allJndiNames("java:app/" + APP);
-            L.debug("Discovery returned {} raw entries", result.size());
-            return result;
-        };
+            List<String> names = discovery.allJndiNames("java:app/" + APP);
+            L.debug("Discovery returned {} raw entries", names.size());
 
-        try {
-            List<String> names = context.runCallable(callable);
             namesAndLookup = names.stream()
                     .filter(n -> n.contains("!"))
                     .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + CONFIG.getApp() + "//" + n))
                     .distinct() // Removes posible multiple implementations. If these exist in the JNDI tree, we can ignore them, as we discover via Interface.
                     .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
             if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));
-        } catch (Exception ex) {
+        } catch (NamingException ex) {
             throw new RuntimeException(ex);
         }
 
@@ -141,6 +138,7 @@ public class WildflyLookup implements RemoteLookup {
 //            throw new RuntimeException("Error on Context init", ex);
 //        }
 //    }
+    
     @Override
     public <T> boolean contains(Class<T> clazz) {
         initOnce();
@@ -150,33 +148,22 @@ public class WildflyLookup implements RemoteLookup {
     @Override
     public <T> T lookup(Class<T> clazz) {
         initOnce();
+        String namespace = namesAndLookup.get(Objects.requireNonNull(clazz, "Class must not be null").getName());
+        if ( namespace == null ) {
+            L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
+            return null;
+        }
+        if ( clazz.isAnnotationPresent(IsStateful.class) ) {
+            namespace += "?stateful";
+        }
 
-        Callable<T> callable = () -> {
-            String namespace = namesAndLookup.get(Objects.requireNonNull(clazz, "Class must not be null").getName());
-            if ( namespace == null ) {
-                L.info("No remote candidate in namespace discovery found for {}", clazz.getName());
-                return null;
-            }
-            if ( clazz.isAnnotationPresent(IsStateful.class) ) {
-                namespace += "?stateful";
-            }
-
-            L.debug("Trying to lookup {}", namespace);
-
-            // create an InitialContext
-            Properties properties = new Properties();
-            properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.getHost() + ":" + CONFIG.getPort());
-            InitialContext c = new InitialContext(properties);
-
-            T t = (T)c.lookup(namespace);
+        L.debug("Trying to lookup {}", namespace);
+     
+        try {
+            T t = (T)_context.lookup(namespace);
             L.debug("Successfull lookup {}", namespace);
             return t;
-        };
-
-        try {
-            return context.runCallable(callable);
-        } catch (Exception ex) {
+        } catch (NamingException ex) {
             throw new RuntimeException("Error on Lookup", ex);
         }
     }

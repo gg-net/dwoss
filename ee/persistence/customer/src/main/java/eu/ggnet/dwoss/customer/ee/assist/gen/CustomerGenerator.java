@@ -22,17 +22,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.priv.ConverterUtil;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.util.gen.*;
 
 import lombok.*;
 
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
 
@@ -400,53 +394,6 @@ public class CustomerGenerator {
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
         EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.getAllowedSalesChannels().add(t));
         return m;
-    }
-
-    @Deprecated
-    private Customer makeOldCustomer() {
-        DefaultCustomerSalesdata salesdata = new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.ADVANCE_PAYMENT, Arrays.asList(SalesChannel.CUSTOMER), Arrays.asList(0L));
-        return makeOldCustomer("GEN", salesdata);
-    }
-
-    @Deprecated
-    private Customer makeOldCustomer(String mandatorMatchCode, DefaultCustomerSalesdata defaults) {
-        Name name = GEN.makeName();
-        GeneratedAddress address = GEN.makeAddress();
-        OldCustomer old = new OldCustomer(null, (name.getGender() == Name.Gender.MALE ? "Herr" : "Frau"), name.getFirst(), name.getLast(), null, address.getStreet() + " " + address.getNumber(), address.getPostalCode(), address.getTown());
-        if ( R.nextInt(10) < 3 ) old.setAnmerkung("Eine wichtige Anmerkung");
-        if ( R.nextInt(10) < 3 ) old.setSource(Source.values()[R.nextInt(Source.values().length)]);
-        if ( R.nextInt(10) < 3 ) {
-            old.getAdditionalCustomerIds().put(ExternalSystem.values()[R.nextInt(ExternalSystem.values().length)], RandomStringUtils.randomNumeric(5, 10));
-        }
-        for (CustomerFlag f : ALLOWED_FLAGS) {
-            if ( R.nextInt(10) < 3 ) old.addFlag(f);
-        }
-        old.setLedger(R.nextInt(10000));
-
-        if ( R.nextInt(10) < 3 ) {
-            old.setFirma(old.getNachname() + " GmbH");
-            old.setTaxId("HRB123456");
-            old.getAllowedSalesChannels().add(RETAILER);
-        }
-        if ( R.nextInt(10) < 3 ) {
-            GeneratedAddress lia = GEN.makeAddress();
-            old.setLIAdresse(lia.getStreet());
-            old.setLIOrt(lia.getTown());
-            old.setLIPlz(lia.getPostalCode());
-        }
-        old.setEmail(name.getLast().toLowerCase() + "@example.com");
-        old.setTelefonnummer("+49 99 123456789");
-        old.setHandynummer("+49 555 12344321");
-        if ( R.nextInt(10) < 3 ) old.setFaxnummer("+49 88 123456789");
-
-        Customer customer = new Customer();
-        ConverterUtil.mergeFromOld(old, customer, mandatorMatchCode, defaults);
-
-        MandatorMetadata makeMandatorMetadata = makeMandatorMetadata();
-        makeMandatorMetadata.setMandatorMatchcode(mandatorMatchCode);
-        customer.getMandatorMetadata().add(makeMandatorMetadata);
-
-        return customer;
     }
 
 }

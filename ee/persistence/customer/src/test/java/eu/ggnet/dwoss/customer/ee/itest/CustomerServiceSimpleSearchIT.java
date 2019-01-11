@@ -1,12 +1,5 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -21,10 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomer;
-import eu.ggnet.dwoss.customer.ee.priv.OldCustomerAgent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -38,7 +31,7 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
     private CustomerService customerService;
 
     @EJB
-    private OldCustomerAgent agent;
+    private CustomerAgent agent;
 
     @Inject
     private CustomerEao eao;
@@ -46,26 +39,14 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
     @Ignore
     @Test
     public void testFind() {
-        OldCustomer c1 = new OldCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
-        OldCustomer c2 = new OldCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen", "Dünne Gasse 2", "22222", "Wolfsstaaad");
-        c2.setPaymentMethod(PaymentMethod.DIRECT_DEBIT);
-        c2.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c1.setPaymentCondition(PaymentCondition.CUSTOMER);
 
-        //by pp
-        OldCustomer c3 = new OldCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
-        c3.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c3.addFlag(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
-        c3.setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
-        c3.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER));
-        c3.setPaymentCondition(PaymentCondition.DEALER_3_PERCENT_DISCOUNT);
-        c3.setShippingCondition(ShippingCondition.FIVE);
-        OldCustomer c4 = new OldCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen", "Dünne Gasse 2", "22222", "Heimwehrhausen");
-        c4.addFlag(CustomerFlag.CONFIRMS_DOSSIER);
-        c4.setAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER));
-        c4.setPaymentCondition(PaymentCondition.EMPLOYEE);
-        c4.setShippingCondition(ShippingCondition.FIVE);
-        c4.setPaymentMethod(PaymentMethod.INVOICE);
+        SimpleCustomer c1 = makeSimpleCustomer("Die Firma", "Herr", "Max", "Mustermann", "Keine Bemerkungen", "Helle Strasse 22", "12345", "Musterhausen");
+        c1.setLandlinePhone("040 1232123");
+        SimpleCustomer c2 = makeSimpleCustomer(null, "Frau", "Marria", "Mustermann", "Grosse Tüten", "Dunkle Allee 7", "12345", "Musterhausen");
+        c2.setMobilePhone("+49 172 12312131");
+        SimpleCustomer c3 =  makeSimpleCustomer("Schlagstock Ltd.", "Herr", "Michael", "Wankelmeier", "Bloß freundlich sein !!!", "Adamsweg 3", "00666", "Eisenhüttenstadt");
+        c3.setEmail("rolf@rofl.de");
+        SimpleCustomer c4 =  makeSimpleCustomer(null, "Frau", "Lisa", "Lüstling", null, "Freie Straße 2", "98745", "Heimwehrhausen");
         c4.setEmail("lisa@xxx.com");
 
         // --------
@@ -103,6 +84,19 @@ public class CustomerServiceSimpleSearchIT extends ArquillianProjectArchive {
         assertEquals(1, customerService.asUiCustomers("Schla", null, null, null, true).size());
         assertEquals(1, customerService.asUiCustomers(null, "Mic", null, null, true).size());
         assertEquals(3, customerService.asUiCustomers(null, "M", null, null, true).size());
+    }
+
+    private SimpleCustomer makeSimpleCustomer(String firma, String titel, String vorname, String nachname, String anmerkung, String REAdresse, String REPlz, String REOrt) {
+        SimpleCustomer sc = new SimpleCustomer();
+        sc.setCompanyName(firma);
+        sc.setTitle(titel);
+        sc.setFirstName(vorname);
+        sc.setLastName(nachname);
+        sc.setComment(anmerkung);
+        sc.setStreet(REAdresse);
+        sc.setZipCode(REPlz);
+        sc.setCity(REOrt);
+        return sc;
     }
 
 }
