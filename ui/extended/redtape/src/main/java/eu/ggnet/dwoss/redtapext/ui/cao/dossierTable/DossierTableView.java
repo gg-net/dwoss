@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cao.dossierTable;
 
 import java.awt.Dialog;
 import java.awt.Dialog.ModalityType;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -28,11 +29,14 @@ import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 
 import javafx.collections.FXCollections;
-import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.common.ui.HtmlDialog;
@@ -42,7 +46,9 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,6 +61,8 @@ import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.Filt
  * @author pascal.perau
  */
 public class DossierTableView extends javax.swing.JPanel {
+
+    private static final Logger L = LoggerFactory.getLogger(DossierTableView.class);
 
     private static final FilterType INIT_FILTER = FilterType.ACCOUNTANCY_OPEN;
 
@@ -130,46 +138,59 @@ public class DossierTableView extends javax.swing.JPanel {
         JMenuItem warrantyChangeItem = new JMenuItem(new AbstractAction("Garantie ändern") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ComboBox<Warranty> warrantyBox = new ComboBox<>(FXCollections.observableArrayList(Warranty.values()));
-                warrantyBox.setCellFactory((callback) -> {
-                    return new ListCell<Warranty>() {
-                        @Override
-                        protected void updateItem(Warranty item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if ( item == null || empty ) {
-                                setGraphic(null);
-                            } else {
-                                setText(item.getName());
+                Ui.build(DossierTableView.this).title("Garantieänderung").modality(Modality.WINDOW_MODAL).dialog().eval(() -> {
+
+                    //prepare warranty combobox
+                    ComboBox<Warranty> warrantyBox = new ComboBox<>(FXCollections.observableArrayList(Warranty.values()));
+                    warrantyBox.setCellFactory((callback) -> {
+                        return new ListCell<Warranty>() {
+                            @Override
+                            protected void updateItem(Warranty item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if ( item == null || empty ) {
+                                    setGraphic(null);
+                                } else {
+                                    setText(item.getName());
+                                }
+                            }
+                        };
+                    });
+
+                    //prepare vbox to display components
+                    VBox box = new VBox(5.,
+                            new Label("Garantie für alle Geräte des Auftrages auf folgenden Wert ändern:"),
+                            warrantyBox,
+                            new Separator(Orientation.HORIZONTAL)
+                    );
+
+                    ButtonType addButtonType = new ButtonType("Durchführen", ButtonData.OK_DONE);
+                    javafx.scene.control.Dialog<Dossier> dialog = new javafx.scene.control.Dialog<>();
+                    dialog.getDialogPane().setContent(box);
+                    dialog.getDialogPane().getButtonTypes().add(addButtonType);
+                    dialog.setResultConverter(bType -> {
+                        if ( bType == addButtonType ) {
+                            if ( warrantyBox.getValue() != null ) {
+                                return controller.updateDossierWarranty(selectedDossier(), warrantyBox.getValue());
                             }
                         }
-                    };
-                });
-
-                Button okayButton = new Button("Durchführen");
-                okayButton.setOnAction((event) -> {
-                    if ( warrantyBox.getValue() != null ) {
-                        controller.updateDossierWarranty(selectedDossier(), warrantyBox.getValue());
-                    } else {
-                        new Alert(AlertType.WARNING, "Bitte auswahl treffen", ButtonType.OK).showAndWait();
-                    }
-                });
-
-                VBox box = new VBox(5.,
-                        new Label("Garantie für alle Geräte des Auftrages auf folgenden Wert ändern:"),
-                        warrantyBox,
-                        new Separator(Orientation.HORIZONTAL),
-                        okayButton
-                );
-                Ui.exec(() -> {
-                    Ui.build(DossierTableView.this).title("Garantieänderung").fx().show(() -> box);
-                });
+                        Ui.build(DossierTableView.this).alert("Bitte Garantietyp wählen");
+                        return null;
+                    });
+                    return dialog;
+                }).cf().thenAcceptAsync((dos) -> {
+                    L.debug("Finished warranty update, calling model/view updates");
+                    model.update(selectedDossier(), dos);
+                    controller.selectionChanged(null);
+                    controller.selectionChanged(dos);
+                }, EventQueue::invokeLater);
             }
         });
         warrantyChangeItem.setText("Garantie ändern");
+        Dl.local().lookup(Guardian.class).add(warrantyChangeItem, AtomicRight.UPDATE_UNIQUE_UNIT);
 
         menu.add(detailsItem);
         menu.add(historyItem);
-//        menu.add(warrantyChangeItem);
+        menu.add(warrantyChangeItem);
         return menu;
     }
 

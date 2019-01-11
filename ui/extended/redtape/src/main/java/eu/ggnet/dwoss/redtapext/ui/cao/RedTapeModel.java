@@ -167,6 +167,7 @@ public class RedTapeModel {
      * @param selectedDossier new value of selectedDossier
      */
     public void setSelectedDossier(Dossier selectedDossier) {
+        L.debug("RedTapeModel.setSelectedDossier with: {}", selectedDossier);
         Dossier oldSelectedDossier = this.selectedDossier;
         this.selectedDossier = selectedDossier;
         propertyChangeSupport.firePropertyChange(PROP_SELECTED_DOSSIER, oldSelectedDossier, selectedDossier);

@@ -43,12 +43,13 @@ import lombok.RequiredArgsConstructor;
 
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
 
-
 /**
  *
  * @author pascal.perau
  */
 public class DossierTableController {
+
+    private final static Logger L = LoggerFactory.getLogger(DossierTableController.class);
 
     @Getter
     @RequiredArgsConstructor
@@ -248,15 +249,22 @@ public class DossierTableController {
     public void selectionChanged(Dossier dos) {
         selectionHandler.selected(dos);
     }
-    
-    public void updateDossierWarranty(Dossier dos, Warranty warranty){
+
+    /**
+     * Updates the warranty type of all unit positions on the crucial document of the dossier.
+     *
+     * @param dos
+     * @param warranty
+     */
+    public Dossier updateDossierWarranty(Dossier dos, Warranty warranty) {
+        L.debug("Attempting to update warranty={} on dossier={}", warranty, dos);
+        Dossier updatedDos = null;
         try {
-            Dossier updateWarranty = Dl.local().lookup(RedTapeWorker.class).updateWarranty(dos.getId(), warranty, Dl.local().lookup(Guardian.class).getUsername());
-            model.update(dos, updateWarranty);
-            selectionChanged(dos);
+            updatedDos = Dl.remote().lookup(RedTapeWorker.class).updateWarranty(dos.getId(), warranty, Dl.local().lookup(Guardian.class).getUsername());
         } catch (UserInfoException ex) {
             Ui.handle(ex);
         }
+        return updatedDos;
     }
 
     /**

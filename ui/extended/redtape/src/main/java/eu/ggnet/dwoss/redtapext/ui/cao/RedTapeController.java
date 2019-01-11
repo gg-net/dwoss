@@ -30,6 +30,9 @@ import javax.swing.border.SoftBevelBorder;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.ui.*;
@@ -90,6 +93,8 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     private Boolean shippingCostUiHelpEnabled = null;
 
+    private static final Logger L = LoggerFactory.getLogger(RedTapeController.class);
+
     private boolean isShippingCostUiHelpEnabled() {
         if ( shippingCostUiHelpEnabled == null ) shippingCostUiHelpEnabled = Dl.remote().contains(ShippingCostService.class);
         return shippingCostUiHelpEnabled;
@@ -101,12 +106,13 @@ public class RedTapeController implements IDossierSelectionHandler {
     }
 
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
+
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
 
             switch (evt.getPropertyName()) {
                 case RedTapeModel.PROP_SELECTED_DOSSIER:
-
+                    L.debug("PROP_SELECTED_DOSSIER: selected {}", model.getSelectedDossier());
                     //break if null selection
                     if ( model.getSelectedDossier() == null ) {
                         model.setDocuments(new ArrayList<>());
@@ -135,8 +141,9 @@ public class RedTapeController implements IDossierSelectionHandler {
                         view.afterTaxSumLabel.setText(NumberFormat.getCurrencyInstance().format(0.));
                         view.positionAmountLabel.setText("" + 0);
                     } else {
-                        if ( model.getPurchaseCustomer() == null ) JOptionPane.showMessageDialog(null, "Kein Kunde gewählt");
-                        else {
+                        if ( model.getPurchaseCustomer() == null ) {
+                            JOptionPane.showMessageDialog(null, "Kein Kunde gewählt");
+                        } else {
                             CustomerDocument cdoc = new CustomerDocument(
                                     model.getPurchaseCustomer().getFlags(),
                                     model.getSelectedDocument(),
@@ -145,9 +152,11 @@ public class RedTapeController implements IDossierSelectionHandler {
                             List<StateTransition<CustomerDocument>> transitions = Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(cdoc);
                             // Remove old Actions from the receiving of right changes.
                             for (Action accessDependent : accessDependentActions) {
-                                if ( accessDependent instanceof AccessableAction )
+                                if ( accessDependent instanceof AccessableAction ) {
                                     Dl.local().lookup(Guardian.class).remove((AccessableAction)accessDependent);
-                                else Dl.local().lookup(Guardian.class).remove(accessDependent);
+                                } else {
+                                    Dl.local().lookup(Guardian.class).remove(accessDependent);
+                                }
                             }
                             accessDependentActions.clear();
                             List<Action> stateActions = new ArrayList<>();
@@ -157,6 +166,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                             } else if ( (model.getSelectedDocument().getType() == DocumentType.ORDER
                                          && !model.getSelectedDossier().getActiveDocuments(DocumentType.INVOICE).isEmpty())
                                     || getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
+                                //
                             } else {
                                 for (StateTransition<CustomerDocument> originalStateTransition : transitions) {
                                     RedTapeStateTransition stateTransition = (RedTapeStateTransition)originalStateTransition;
@@ -405,6 +415,7 @@ public class RedTapeController implements IDossierSelectionHandler {
 
     @Override
     public void selected(Dossier dossier) {
+        L.debug("Triggered Dossier selection for {}", dossier);
         model.setSelectedDossier(dossier);
     }
 
