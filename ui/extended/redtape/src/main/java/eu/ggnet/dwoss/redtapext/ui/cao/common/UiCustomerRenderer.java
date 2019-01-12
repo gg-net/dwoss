@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,31 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.common.ui;
+package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
 import java.awt.Component;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import eu.ggnet.dwoss.util.Tuple2;
-import eu.ggnet.dwoss.util.Tuple2;
-
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 
 /**
  *
  * @author pascal.perau
  */
-public class TupleHtmlRenderer extends DefaultListCellRenderer {
+public class UiCustomerRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if ( value instanceof Tuple2 ) {
-            label.setText("<html>" + ((Tuple2<Long, String>)value)._2 + "</html>");
+        if ( value instanceof UiCustomer ) {
+            UiCustomer c = (UiCustomer)value;
+            label.setText("<html>" + c.toIdNameCompanyHtml() + "</html>");
             label.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         }
         return label;

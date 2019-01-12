@@ -16,10 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Dl;
-
 import java.util.*;
 
 import javax.swing.JLabel;
@@ -28,9 +24,9 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cap.UnitAvailabilityViewCask;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.util.Tuple2;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.saft.core.*;
 
 /**
  *
@@ -38,29 +34,42 @@ import eu.ggnet.dwoss.util.interactiveresult.Result;
  */
 public class UnitAvailabillityTryout {
 
+    private static class Wrap {
+
+        private final UnitShard shard;
+
+        private final String details;
+
+        public Wrap(UnitShard shard, String details) {
+            this.shard = shard;
+            this.details = details;
+        }
+
+    }
+
     public static void main(String[] args) {
         Dl.remote().add(UnitOverseer.class, new UnitOverseer() {
-            private Map<String, Tuple2<UnitShard, String>> data = new HashMap<>();
+            private Map<String, Wrap> data = new HashMap<>();
 
             {
-                data.put("1", new Tuple2<>(new UnitShard("1", 1, "SopoNr.: 1", Boolean.TRUE, 1), "Details zu Unit 1"));
-                data.put("2", new Tuple2<>(new UnitShard("2", 2, "SopoNr.: 2", Boolean.FALSE, 1), "Details zu Unit 2"));
-                data.put("3", new Tuple2<>(new UnitShard("3", 3, "SopoNr.: 3", Boolean.TRUE, 1), "Details zu Unit 3"));
-                data.put("4", new Tuple2<>(new UnitShard("4", 4, "SopoNr.: 4", Boolean.FALSE, 1), "Details zu Unit 4"));
-                data.put("5", new Tuple2<>(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null, null), "Existiert Nicht"));
-                data.put("6", new Tuple2<>(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE, null), "Details zu Unit 6"));
+                data.put("1", new Wrap(new UnitShard("1", 1, "SopoNr.: 1", Boolean.TRUE, 1), "Details zu Unit 1"));
+                data.put("2", new Wrap(new UnitShard("2", 2, "SopoNr.: 2", Boolean.FALSE, 1), "Details zu Unit 2"));
+                data.put("3", new Wrap(new UnitShard("3", 3, "SopoNr.: 3", Boolean.TRUE, 1), "Details zu Unit 3"));
+                data.put("4", new Wrap(new UnitShard("4", 4, "SopoNr.: 4", Boolean.FALSE, 1), "Details zu Unit 4"));
+                data.put("5", new Wrap(new UnitShard("5", 5, "SopoNr.: 5 exitiert nicht", null, null), "Existiert Nicht"));
+                data.put("6", new Wrap(new UnitShard("6", 6, "SopoNr.: 6", Boolean.FALSE, null), "Details zu Unit 6"));
             }
 
             @Override
             public String toDetailedHtml(String refurbishId, String username) {
                 if ( !data.containsKey(refurbishId) ) return refurbishId + " existiert nicht";
-                return data.get(refurbishId)._2;
+                return data.get(refurbishId).details;
             }
 
             @Override
             public UnitShard find(String refurbishId) {
                 if ( !data.containsKey(refurbishId) ) return new UnitShard(refurbishId, 0, "SopoNr.: " + refurbishId + " exitiert nicht", null, null);
-                return data.get(refurbishId)._1;
+                return data.get(refurbishId).shard;
             }
 
             @Override

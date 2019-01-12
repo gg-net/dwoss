@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
-import eu.ggnet.dwoss.util.Tuple2;
 
 import lombok.Getter;
 
@@ -50,7 +50,7 @@ public class RedTapeModel {
 
     private String search;
 
-    private List<Tuple2<Long, String>> searchResult;
+    private List<UiCustomer> searchResult;
 
     @Getter
     private CustomerMetaData purchaseCustomer;
@@ -91,7 +91,7 @@ public class RedTapeModel {
      *
      * @return the value of searchResult
      */
-    public List<Tuple2<Long, String>> getSearchResult() {
+    public List<UiCustomer> getSearchResult() {
         return searchResult;
     }
 
@@ -100,8 +100,8 @@ public class RedTapeModel {
      *
      * @param searchResult new value of searchResult
      */
-    public void setSearchResult(List<Tuple2<Long, String>> searchResult) {
-        List<Tuple2<Long, String>> oldSearchResult = this.searchResult;
+    public void setSearchResult(List<UiCustomer> searchResult) {
+        List<UiCustomer> oldSearchResult = this.searchResult;
         this.searchResult = searchResult;
         propertyChangeSupport.firePropertyChange(PROP_SEARCH_RESULT, oldSearchResult, searchResult);
     }

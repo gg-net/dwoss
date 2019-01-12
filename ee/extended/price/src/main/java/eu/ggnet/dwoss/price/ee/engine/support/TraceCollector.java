@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.price.ee.engine.support;
 import java.util.*;
 
 import eu.ggnet.dwoss.price.ee.EngineTracer;
-import eu.ggnet.dwoss.util.Tuple2;
+import eu.ggnet.dwoss.price.ee.engine.Tuple2;
 
 /**
  * This makes the world simple.

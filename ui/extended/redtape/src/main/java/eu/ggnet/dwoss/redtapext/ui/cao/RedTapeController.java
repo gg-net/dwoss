@@ -46,7 +46,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.redtapext.ee.*;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
 import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
@@ -221,7 +222,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                     reloadSelectionOnCustomerChange();
                     break;
                 case RedTapeModel.PROP_SEARCH:
-                    model.setSearchResult(Dl.remote().lookup(UniversalSearcher.class).searchCustomers(model.getSearch()));
+                    model.setSearchResult(Dl.remote().lookup(CustomerService.class).asUiCustomers(model.getSearch()));
                     break;
             }
         }

@@ -1,13 +1,5 @@
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -15,16 +7,19 @@ import javax.swing.JLabel;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtapext.ee.*;
+import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.RedTapeController;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
@@ -32,17 +27,16 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.dl.RemoteLookup;
+import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import tryout.stub.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
-import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  *
@@ -64,7 +58,6 @@ public class RedTapeTryout {
         });
         Dl.remote().add(RedTapeAgent.class, new RedTapeAgentStub());
         Dl.remote().add(RedTapeWorker.class, new RedTapeWorkerStub());
-        Dl.remote().add(UniversalSearcher.class, new UniversalSearcherStub());
         Dl.remote().add(CustomerService.class, new CustomerServiceStub());
         Dl.remote().add(DocumentSupporter.class, new DocumentSupporter() {
             @Override

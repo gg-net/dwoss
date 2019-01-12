@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +28,9 @@ import javax.validation.constraints.Null;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.ContactStash;
@@ -634,8 +634,41 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         return sb.toString();
     }
 
+    /**
+     * Projects this customer to a PicoCustomer.
+     *
+     * @return the picocustomer
+     */
     public PicoCustomer toPico() {
         return new PicoCustomer(id, toName());
+    }
+
+    /**
+     * Projects this customer to a UiCustomer.
+     *
+     * @return the ui customer
+     */
+    public UiCustomer toUiCustomer() {
+        Contact contact;
+        Company company = null;
+        if ( isBusiness() ) {
+            //should never be null
+            company = getCompanies().stream().findFirst().get();
+            contact = getContacts().stream().findFirst().orElse(null);
+        } else {
+            //should never be null
+            contact = getContacts().stream().findFirst().get();
+        }
+
+        return new UiCustomer(
+                getId(),
+                contact != null ? contact.getTitle() : "",
+                contact != null ? contact.getFirstName() : "KEIN KONTAKT",
+                contact != null ? contact.getLastName() : "KEIN KONTAKT",
+                company != null ? company.getName() : null,
+                toName(),
+                Optional.ofNullable(getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
+                company != null ? company.getLedger() : 0);
     }
 
     @Override

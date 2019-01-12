@@ -16,17 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.Once;
-import eu.ggnet.saft.core.ui.ClosedListener;
-import eu.ggnet.saft.core.ui.StoreLocation;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
-import eu.ggnet.saft.experimental.ops.Selector;
-import eu.ggnet.saft.experimental.Ops;
-import eu.ggnet.saft.experimental.FxOps;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -54,24 +43,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.HtmlPane;
-import eu.ggnet.dwoss.common.ui.TupleHtmlRenderer;
-import eu.ggnet.dwoss.customer.api.CustomerMetaData;
-import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.DocumentStringRenderer;
-import eu.ggnet.dwoss.redtapext.ui.cao.common.PositionListCell;
+import eu.ggnet.dwoss.redtapext.ui.cao.common.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
-import eu.ggnet.dwoss.util.Tuple2;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.experimental.FxOps;
+import eu.ggnet.saft.experimental.Ops;
+import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
+import eu.ggnet.saft.experimental.ops.Selector;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 
 /**
  * The main UI for using RedTape components.
- * <p/>
+ * <p>
  * @author pascal.perau
  */
 @eu.ggnet.saft.core.ui.Frame
@@ -128,13 +120,11 @@ public class RedTapeView extends JPanel implements ClosedListener {
         dossierTableViewPanel.add(dossierTableView, BorderLayout.CENTER);
 
         initFxComponents();
-//        setIconImage(new ImageIcon(loadImage()).getImage());
-//
-//        setTitle("Kunden und Aufträge");
+
         documentList.setModel(new DefaultListModel());
         documentList.setCellRenderer(new DocumentStringRenderer());
         searchResultList.setModel(new DefaultListModel());
-        searchResultList.setCellRenderer(new TupleHtmlRenderer());
+        searchResultList.setCellRenderer(new UiCustomerRenderer());
 
         customerDetailArea.setComponentPopupMenu(buildCustomerPopup());
         dossierButtonPanel.setComponentPopupMenu(builtStateInfoPopup());
@@ -167,16 +157,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
             positionsFxList.setItems(positions);
             positionsFxList.setContextMenu(FxOps.contextMenuOf(selectionModel, selectionEnhancer));
             positionsFxList.setOnMouseClicked(FxOps.defaultMouseEventOf(selectionModel));
-            /*
-             positionsFxList.setOnMouseClicked((evt) -> {
-             if ( positionsFxList.getSelectionModel().isEmpty() ) return;
-             if ( evt.getButton() != PRIMARY ) return;
-             if ( evt.getClickCount() != 2 ) return;
-             HtmlDialog d = new HtmlDialog(RedTapeView.this, ModalityType.MODELESS);
-             d.setText(controller.getDetailedPositionToHtml(positionsFxList.getSelectionModel().getSelectedItem()));
-             d.setVisible(true);
-             });
-             */
+
             pane.setCenter(positionsFxList);
             jfxp.setScene(scene);
         });
@@ -600,7 +581,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
     private void searchResultSelectionChanged(ListSelectionEvent evt) {//GEN-FIRST:event_searchResultSelectionChanged
         if ( model == null ) return;
         if ( evt.getValueIsAdjusting() || searchResultList.getSelectedIndex() == -1 ) return;
-        model.setSelectedSearchResult(((Tuple2<Long, String>)searchResultList.getSelectedValue())._1.intValue());
+        model.setSelectedSearchResult(((UiCustomer)searchResultList.getSelectedValue()).getId());
     }//GEN-LAST:event_searchResultSelectionChanged
 
     private void newCustomerButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_newCustomerButtonActionPerformed

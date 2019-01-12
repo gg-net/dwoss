@@ -1,10 +1,12 @@
 package tryout.stub;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 
 /**
  *
@@ -12,11 +14,19 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
  */
 public class CustomerServiceStub implements CustomerService {
 
-    private eu.ggnet.dwoss.customer.ee.entity.Customer customer;
+    private final List<Customer> customers;
 
     public CustomerServiceStub() {
         CustomerGenerator gen = new CustomerGenerator();
-        customer = gen.makeCustomer();
+        customers = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            customers.add(gen.makeCustomer());
+        }
+    }
+
+    private long normalize(long id) {
+        if ( id >= customers.size() ) return (long)(customers.size() / 2);
+        return id;
     }
 
     @Override
@@ -31,7 +41,8 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // TODO: Returns random, make it work some day.
+        return customers.stream().map(Customer::toUiCustomer).collect(Collectors.toList());
     }
 
     @Override
@@ -41,7 +52,7 @@ public class CustomerServiceStub implements CustomerService {
 
     @Override
     public String asHtmlHighDetailed(long id) {
-        return customer.toHtml();
+        return customers.get((int)normalize(id)).toHtml();
     }
 
     @Override

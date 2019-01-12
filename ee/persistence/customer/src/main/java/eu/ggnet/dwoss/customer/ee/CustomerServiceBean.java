@@ -59,24 +59,19 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public UiCustomer asUiCustomer(long customerId) {
-        return asUiCustomer(customerEao.findById(customerId));
+        return customerEao.findById(customerId).toUiCustomer();
     }
 
     @Override
     public List<UiCustomer> asUiCustomers(String search) {
-        return customerEao.find(search, null).stream().map((customer) -> {
-            return asUiCustomer(customer);
-        }).collect(Collectors.toList());
+        return customerEao.find(search, null).stream().map(Customer::toUiCustomer).collect(Collectors.toCollection(() -> new ArrayList<>()));
     }
 
     @Override
     public List<UiCustomer> asUiCustomers(String company, String firstName, String lastName, String email, boolean appendWildcard) {
         L.debug("asUiCustomers called with company={},firstName={},lastName={},email={},wildcard={}", company, firstName, lastName, email, appendWildcard);
-        List<UiCustomer> customers = new ArrayList<>();
-        for (Customer customer : customerEao.find(company, firstName, lastName, email, appendWildcard)) {
-            customers.add(asUiCustomer(customer));
-        }
-        return customers;
+        return customerEao.find(company, firstName, lastName, email, appendWildcard)
+                .stream().map(Customer::toUiCustomer).collect(Collectors.toCollection(() -> new ArrayList<>()));
     }
 
     @Override
@@ -109,31 +104,6 @@ public class CustomerServiceBean implements CustomerService {
         }
 
         return customers;
-    }
-
-    private UiCustomer asUiCustomer(Customer customer) {
-        Objects.requireNonNull(customer, "Supplied customer ist null, not allowed");
-
-        Contact contact = null;
-        Company company = null;
-        if ( customer.isBusiness() ) {
-            //should never be null
-            company = customer.getCompanies().stream().findFirst().get();
-            contact = company.getContacts().stream().findFirst().orElse(null);
-        } else {
-            //should never be null
-            contact = customer.getContacts().stream().findFirst().get();
-        }
-
-        return new UiCustomer(
-                customer.getId(),
-                contact != null ? contact.getTitle() : "",
-                contact != null ? contact.getFirstName() : "KEIN KONTAKT",
-                contact != null ? contact.getLastName() : "KEIN KONTAKT",
-                company != null ? company.getName() : null,
-                customer.toName(),
-                Optional.ofNullable(customer.getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
-                company != null ? company.getLedger() : 0);
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {

@@ -23,9 +23,9 @@ import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import static eu.ggnet.dwoss.redtape.ee.format.DocumentFormater.toConditions;
@@ -46,7 +46,8 @@ public class DocumentStringRenderer extends DefaultListCellRenderer {
      * This method generates a html formated string.
      * Make sure to add the "<html> - </html>" tags manually.
      * <p/>
-     * @param doc the Document
+     * @param doc         the Document
+     * @param showTaxType
      * @return a html string representation of a document.
      */
     public static String toHtmlSimple(Document doc, boolean showTaxType) {
