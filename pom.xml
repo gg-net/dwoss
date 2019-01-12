@@ -78,6 +78,7 @@
         <javaee.artifactId>javaee-api</javaee.artifactId>
         <javaee.version>8.0</javaee.version>
         <netbeans.hint.license>gpl30</netbeans.hint.license>
+        <netbeans.hint.jdkPlatform>JDK_1.8</netbeans.hint.jdkPlatform>
         <netbeans.compile.on.save>test</netbeans.compile.on.save>
         <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
         <org-netbeans-modules-editor-indent.CodeStyle.usedProfile>project</org-netbeans-modules-editor-indent.CodeStyle.usedProfile>
@@ -393,39 +394,6 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- Disabled on 2018-12-20 - jacoco is no longer working with arquilian -->
-            <!--            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                            <goal>prepare-agent-integration</goal>
-                            <goal>report</goal>
-                            <goal>report-integration</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>merge</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>merge</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet implementation="org.apache.maven.shared.model.fileset.FileSet">
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>*.exec</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin> -->
             <plugin>
                 <!-- For the the full documentation call: mvn markdown-page-generator:generate javadoc:javadoc -->
                 <groupId>org.apache.maven.plugins</groupId>
@@ -672,7 +640,7 @@
                 <artifactId>querydsl-apt</artifactId>
                 <version>4.2.1</version>
             </dependency>
-            <dependency> <!-- For Indexer connection - keep in sync with wildfly, actula w10 = 5.5.4 , w12 = 5.5.8.Final, w15 = 5.10.3.Final -->
+            <dependency> <!-- For Indexer connection - keep in sync with wildfly, w10 = 5.5.4 , w12 = 5.5.8.Final, w15 = 5.10.3.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
                 <version>5.10.3.Final</version>
@@ -680,17 +648,6 @@
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>
                         <artifactId>hibernate-jpa-2.1-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency> <!-- Creating a extra MySQl Dialect in Util, w15 = 5.3.7 -->
-                <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-core</artifactId>
-                <version>5.3.7.Final</version>
-                <exclusions> <!-- Is in the JDK-->
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -786,7 +743,29 @@
                 <artifactId>groovy-all</artifactId>
                 <version>2.4.12</version>
             </dependency>
+            <!-- Web -->
+            <dependency>
+                <groupId>org.primefaces</groupId>
+                <artifactId>primefaces</artifactId>
+                <version>6.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.primefaces.extensions</groupId>
+                <artifactId>primefaces-extensions</artifactId>
+                <version>6.2.10</version>
+            </dependency>
             <!-- Runtime UI -->
+            <dependency> <!-- Clientside for the collections, w15 = 5.3.7 -->
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>5.3.7.Final</version>
+                <exclusions> <!-- Is in the JDK-->
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <dependency> <!-- Candidat for removal after switch to JDK9 as Services are declared in module.info -->
                 <groupId>org.netbeans.api</groupId>
                 <artifactId>org-netbeans-api-annotations-common</artifactId>
@@ -901,17 +880,6 @@
                 <artifactId>wildfly-arquillian-container-managed</artifactId>
                 <version>2.1.1.Final</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.tomee</groupId>
-                <artifactId>arquillian-tomee-remote</artifactId>
-                <version>7.0.3</version>
-            </dependency>
-            <!-- for now not in use -->
-            <dependency>
-                <groupId>org.jboss.arquillian.extension</groupId>
-                <artifactId>arquillian-jacoco</artifactId>
-                <version>1.0.0.Alpha10</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -946,40 +914,6 @@
     </modules>
 
     <profiles>
-        <profile>
-            <id>integration-tomee-remote</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.tomee</groupId>
-                    <artifactId>arquillian-tomee-remote</artifactId>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                    <goal>verify</goal>
-                                </goals>
-                                <configuration>
-                                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>integration-wildfly-remote</id>
             <dependencies>
@@ -1073,7 +1007,7 @@
                                         <artifactItem>
                                             <groupId>org.wildfly</groupId>
                                             <artifactId>wildfly-dist</artifactId>
-                                            <version>15.0.0.Final</version>
+                                            <version>15.0.1.Final</version>
                                             <type>zip</type>
                                             <overWrite>false</overWrite>
                                             <outputDirectory>target</outputDirectory>

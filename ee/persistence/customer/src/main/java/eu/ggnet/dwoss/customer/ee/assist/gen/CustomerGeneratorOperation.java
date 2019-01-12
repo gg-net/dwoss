@@ -16,32 +16,21 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
-import eu.ggnet.dwoss.mandator.api.value.CustomersBuilder;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.DeleteCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ScrapCustomers;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 
@@ -67,31 +56,12 @@ public class CustomerGeneratorOperation {
     @Inject
     private MonitorFactory monitorFactory;
 
-    public void makeSystemCustomersBasedOnMandator(DefaultCustomerSalesdata defaults, DeleteCustomers deleteCustomers,
-                                                   ReceiptCustomers receiptCustomers, RepaymentCustomers repaymentCustomers,
-                                                   ScrapCustomers scrapCustomers, SpecialSystemCustomers specialSystemCustomers) {
-        Map<Long, String> systemCustomerName = deleteCustomers.getContractorCustomers().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getValue(), e -> "SystemCustomer Delete " + e.getKey()));
-        systemCustomerName.putAll(repaymentCustomers.getContractorCustomers().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getValue(), e -> "SystemCustomer Repayment " + e.getKey())));
-        systemCustomerName.putAll(scrapCustomers.getContractorCustomers().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getValue(), e -> "SystemCustomer Scrap " + e.getKey())));
-        systemCustomerName.putAll(specialSystemCustomers.getSpecialCustomers().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> "SystemCustomer " + e.getValue())));
-        systemCustomerName.putAll(receiptCustomers.getReceiptCustomers().entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getValue(), e -> "SystemCustomer " + e.getKey().getContractor() + " - " + e.getKey().getOperation())));
-        long max = systemCustomerName.keySet().stream().max(Comparator.comparingLong(v -> v)).orElse(0l);
-
-        for (int i = 0; i < max; i++) {
-            Customer c = CGEN.makeCustomer();
-            c.setComment("Generatered Customer Number: " + i);
-            em.persist(c);
-            if ( systemCustomerName.containsKey(c.getId()) ) {
-                c.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-            }
-        }
-    }
-
+    /**
+     * Generates Customers which to enable the receipt.
+     *
+     * @param contractors tradenames as contractors which are these customers for.
+     * @return the generateded contaioner of contractors with customer ids.
+     */
     public ReceiptCustomers makeReceiptCustomers(TradeName... contractors) {
         if ( contractors == null || contractors.length == 0 ) return null;
         ReceiptCustomers.Builder receiptCustomersBuilder = ReceiptCustomers.builder();
@@ -125,6 +95,12 @@ public class CustomerGeneratorOperation {
         return receiptCustomersBuilder.build();
     }
 
+    /**
+     * Generates Customers which to enable the repayment operation.
+     *
+     * @param contractors tradenames as contractors which are these customers for.
+     * @return the generateded contaioner of contractors with customer ids.
+     */
     public RepaymentCustomers makeRepaymentCustomers(TradeName... contractors) {
         if ( contractors == null || contractors.length == 0 ) return null;
         CustomersBuilder repaymentCustomersBuilder = new CustomersBuilder();
@@ -152,6 +128,12 @@ public class CustomerGeneratorOperation {
         return repaymentCustomersBuilder.toRepayment();
     }
 
+    /**
+     * Generates Customers which to enable the receipt scrap operation.
+     *
+     * @param contractors tradenames as contractors which are these customers for.
+     * @return the generateded contaioner of contractors with customer ids.
+     */
     public ScrapCustomers makeScrapCustomers(TradeName... contractors) {
         if ( contractors == null || contractors.length == 0 ) return null;
         CustomersBuilder scrapCustomersBuilder = new CustomersBuilder();
@@ -179,6 +161,12 @@ public class CustomerGeneratorOperation {
         return scrapCustomersBuilder.toScrap();
     }
 
+    /**
+     * Generates Customers which to enable the receipt delete operation.
+     *
+     * @param contractors tradenames as contractors which are these customers for.
+     * @return the generateded contaioner of contractors with customer ids.
+     */
     public DeleteCustomers makeDeleteCustomers(TradeName... contractors) {
         if ( contractors == null || contractors.length == 0 ) return null;
         CustomersBuilder deleteCustomersBuilder = new CustomersBuilder();
@@ -206,6 +194,12 @@ public class CustomerGeneratorOperation {
         return deleteCustomersBuilder.toDelete();
     }
 
+    /**
+     * Generates Customers which of type system customer.
+     *
+     * @param types the special document types.
+     * @return the generateded contaioner of contractors with customer ids.
+     */
     public SpecialSystemCustomers makeSpecialCustomers(DocumentType... types) {
         Map<Long, DocumentType> specialCustomers = new HashMap<>();
         if ( types == null || types.length == 0 ) return new SpecialSystemCustomers(specialCustomers);
@@ -233,20 +227,11 @@ public class CustomerGeneratorOperation {
         return new SpecialSystemCustomers(specialCustomers);
     }
 
-    public void makeSystemCustomers(TradeName... contractors) {
-        L.info("Start makeReceiptCustomers");
-        makeReceiptCustomers(contractors);
-
-        L.info("Start makeDeleteCustomers");
-        makeDeleteCustomers(contractors);
-
-        L.info("Start makeScrapCustomers");
-        makeScrapCustomers(contractors);
-
-        L.info("Start makeRepaymentCustomers");
-        makeRepaymentCustomers(contractors);
-    }
-
+    /**
+     * Generates one randome customer.
+     *
+     * @return the id of the generated customer.
+     */
     public long makeCustomer() {
         return makeCustomer(CustomerGenerator.Assure.builder().build());
     }
@@ -266,18 +251,19 @@ public class CustomerGeneratorOperation {
     }
 
     /**
-     * Generates and persists a predefined Amount of Customers.
-     * 
+     * Generates and persists a predefined Amount of random Customers.
+     *
      * @param amount the amount
      * @return the generated ids.
      */
     public List<Long> makeCustomers(int amount) {
         return makeCustomers(amount, CustomerGenerator.Assure.builder().build());
     }
+
     /**
      * Generates and persists a predefined Amount of Customers, assuring the supplied conditions.
-     * 
-     * @param amount the amount 
+     *
+     * @param amount the amount
      * @param assure the conditions
      * @return the generated ids.
      */
@@ -299,30 +285,41 @@ public class CustomerGeneratorOperation {
         return ids;
     }
 
-    @Deprecated
+    /**
+     * Generates a new address on the customer and modifies the Addresslabel of the supplied type.
+     *
+     * @param customerId the customerid to scramble
+     * @param type       the type to change or add
+     */
     public void scrambleAddress(long customerId, AddressType type) {
-        Customer customer = em.find(Customer.class, customerId);
-        Address newGeneratedAddress = CGEN.makeAddress();
-        Optional<AddressLabel> findAddressLabel = customer.getAddressLabels().stream()
-                .filter(a -> a.getType() == type)
-                .findFirst();
-        if ( findAddressLabel.isPresent() ) {
-            findAddressLabel.get().setAddress(newGeneratedAddress);
+        Customer customer = Objects.requireNonNull(em.find(Customer.class, customerId), "No Customer found of id " + customerId);
+        Address newAddress = CGEN.makeAddress();
+        Contact newContact = CGEN.makeContact();
+
+        if ( customer.isBusiness() ) {
+            customer.getCompanies().get(0).getAddresses().add(newAddress);
+            customer.getCompanies().get(0).getContacts().add(newContact);
         } else {
-            //Generate a AddressLabel with this type if not exist.
-            AddressLabel al = null;
-            Contact contact = null;
-            if ( customer.isBusiness() ) {
-                contact = customer.getCompanies().get(0).getContacts().get(0);
-            } else {
-                contact = customer.getContacts().get(0);
-            }
-
-            al = new AddressLabel(contact, newGeneratedAddress, type);
-            customer.getAddressLabels().add(al);
+            customer.getContacts().get(0).getAddresses().add(newAddress);
+            customer.getContacts().add(newContact);
         }
-        em.merge(customer);
 
+        AddressLabel al = customer.getAddressLabels().stream()
+                .filter(a -> a.getType() == type)
+                .findFirst()
+                .map((AddressLabel t) -> {
+                    t.setContact(newContact);
+                    t.setAddress(newAddress);
+                    return t;
+                })
+                .orElseGet(() -> {
+                    AddressLabel t = new AddressLabel(newContact, newAddress, type);
+                    customer.getAddressLabels().add(t);
+                    return t;
+                });
+        L.info("scrambleAddress(customerId={},addressType={}) generated {}", customerId, type, al);
+        em.persist(newAddress);
+        em.persist(newContact);
     }
 
 }

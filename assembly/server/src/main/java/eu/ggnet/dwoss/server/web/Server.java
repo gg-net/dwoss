@@ -19,8 +19,8 @@ package eu.ggnet.dwoss.server.web;
 import java.io.Serializable;
 
 import javax.annotation.ManagedBean;
-import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 import lombok.Getter;
-import lombok.Setter;
-
-import eu.ggnet.dwoss.mandator.ee.Mandators;
 
 /**
  *
@@ -45,25 +42,7 @@ public class Server implements Serializable {
     private final Logger L = LoggerFactory.getLogger(Server.class);
 
     @Getter
-    @Setter
-    private String prefix = "";
-
-    @EJB
-    private Mandators mandatorSupport;
-
-    @Getter
-    @Setter
-    private String selectedKey;
-
-    @Getter
-    private int maxWork = 0;
-
-    public String getCompanyName() {
-        return mandatorSupport.loadMandator().getCompany().getName();
-    }
-
-    public Mandator getMandator() {
-        return mandatorSupport.loadMandator();
-    }
+    @Inject
+    private Mandator mandator;
 
 }

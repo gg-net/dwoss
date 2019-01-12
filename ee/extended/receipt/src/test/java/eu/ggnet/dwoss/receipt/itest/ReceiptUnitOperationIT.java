@@ -1,18 +1,5 @@
 package eu.ggnet.dwoss.receipt.itest;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.util.*;
 
 import javax.ejb.EJB;
@@ -22,6 +9,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
@@ -29,10 +17,12 @@ import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.receipt.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -83,7 +73,12 @@ public class ReceiptUnitOperationIT extends ArquillianProjectArchive {
 
     @Test
     public void testReceiptAndUpdate() throws InterruptedException {
-        customerGenerator.makeSystemCustomers(contractors.all().toArray(new TradeName[0]));
+        TradeName[] all = contractors.all().toArray(new TradeName[0]);
+        customerGenerator.makeReceiptCustomers(all);
+        customerGenerator.makeDeleteCustomers(all);
+        customerGenerator.makeScrapCustomers(all);
+        customerGenerator.makeRepaymentCustomers(all);
+
         // Constants ,later permutate throug all
         Stock stock = stockGenerator.makeStocksAndLocations(2).get(0);
 

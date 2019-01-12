@@ -1,11 +1,5 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
@@ -18,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat; 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -70,7 +65,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
     public void testDocumentFlags() {
         Document doc = testBriefed();
         doc = testOrder(doc);
-        doc = testInvoice(doc);
+        doc = testInvoice(doc); 
         testCreditMemo(doc);
         testClosed();
 

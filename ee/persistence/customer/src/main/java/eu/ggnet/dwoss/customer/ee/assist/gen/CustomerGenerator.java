@@ -65,7 +65,7 @@ public class CustomerGenerator {
          */
         @Builder.Default
         private final boolean simple = false;
-        
+
         /**
          * For all supplied strings, metadata will be generated. Null or empty indicates no metadata generation.
          */
@@ -101,7 +101,6 @@ public class CustomerGenerator {
     /**
      * Generates a {@link Customer}.
      * This customer will contain randomly generated collections for:<ul>
-     * <li>{@link Customer#companies}</li>
      * <li>{@link Customer#contacts}</li>
      * <li>{@link Customer#mandatorMetadata}</li>
      * </ul>
@@ -180,27 +179,6 @@ public class CustomerGenerator {
         return customer;
     }
 
-    /**
-     * Generates a {@link Company}.
-     * {@link Company#prefered} is never set.
-     * <p>
-     * @return a generated {@link Company}.
-     */
-    private Company makeCompany(Company company) {
-        company.setLedger(R.nextInt(1000) + 1);
-        company.setName(GEN.makeCompanyName());
-        Contact contact = makeContact();
-        contact.getAddresses().clear();
-        contact.getCommunications().clear();
-
-        company.getContacts().add(contact);
-
-        company.getAddresses().add(makeAddress());
-        company.getCommunications().add(makeCommunication());
-
-        return company;
-    }
-
     public Company makeCompany() {
         return makeCompany(new Company());
     }
@@ -208,20 +186,6 @@ public class CustomerGenerator {
     public Company makeCompanyWithId(long companyId) {
         return makeCompany(new Company(companyId));
 
-    }
-
-    /**
-     * Generates an amount of {@link Company}.
-     * <p>
-     * @param amount the amount
-     * @return the generated instances.
-     */
-    public List<Company> makeCompanies(int amount) {
-        List<Company> companylist = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            companylist.add(makeCompany());
-        }
-        return companylist;
     }
 
     /**
@@ -248,31 +212,6 @@ public class CustomerGenerator {
         return makeContact(new Contact(contactId), makeAddressWithId(addressId), makeCommunicationWithId(communicationId));
     }
 
-    private Contact makeContact(Contact contact, Address address, Communication communication) {
-        Name name = GEN.makeName();
-        contact.setFirstName(name.getFirst());
-        contact.setLastName(name.getLast());
-        contact.setSex(name.getGender().ordinal() == 1 ? FEMALE : MALE);
-        contact.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
-        if ( communication != null ) contact.getCommunications().add(communication);
-        if ( address != null ) contact.getAddresses().add(address);
-        return contact;
-    }
-
-    /**
-     * Generates an amount of {@link Contact}.
-     * <p>
-     * @param amount the amount
-     * @return the generated instances.
-     */
-    public List<Contact> makeContacts(int amount) {
-        List<Contact> contactslist = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            contactslist.add(makeContact());
-        }
-        return contactslist;
-    }
-
     /**
      * Generates a {@link Address}.
      * {@link Address#preferedType} is never set.
@@ -285,46 +224,6 @@ public class CustomerGenerator {
 
     public Address makeAddressWithId(long id) {
         return makeAddress(new Address(id));
-    }
-
-    private Address makeAddress(Address address) {
-        GeneratedAddress genereratedAddress = GEN.makeAddress();
-        address.setCity(genereratedAddress.getTown());
-        address.setStreet(genereratedAddress.getStreet());
-        address.setZipCode(genereratedAddress.getPostalCode());
-        return address;
-    }
-
-    /**
-     * Generates an amount of persisted {@link Address}.
-     * <p>
-     * @param amount the amount
-     * @return the generated instances.
-     */
-    public List<Address> makeAddresses(int amount) {
-        List<Address> addresses = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            addresses.add(makeAddress());
-        }
-        return addresses;
-    }
-
-    /**
-     * Generates a non persisted invoice {@link AddressLabel}.
-     * <p>
-     * @return a generated {@link AddressLabel}.
-     */
-    public AddressLabel makeInVoiceAddressLabel() {
-        return new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.INVOICE);
-    }
-
-    /**
-     * Generates a non persisted shipping {@link AddressLabel}.
-     * <p>
-     * @return a generated {@link AddressLabel}.
-     */
-    public AddressLabel makeShippingAddressLabel() {
-        return new AddressLabel(makeCompany(), makeContact(), makeAddress(), AddressType.SHIPPING);
     }
 
     /**
@@ -349,6 +248,15 @@ public class CustomerGenerator {
 
     public Communication makeCommunicationWithId(long id) {
         return makeCommunication(new Communication(id));
+    }
+
+    /**
+     * Generates a non persisted {@link MandatorMetadata}.
+     * <p>
+     * @return a generated {@link MandatorMetadata}.
+     */
+    public MandatorMetadata makeMandatorMetadata() {
+        return makeMandatorMetadata(RandomStringUtils.randomAlphanumeric(4));
     }
 
     private Communication makeCommunication(Communication c) {
@@ -377,15 +285,6 @@ public class CustomerGenerator {
         return c;
     }
 
-    /**
-     * Generates a non persisted {@link MandatorMetadata}.
-     * <p>
-     * @return a generated {@link MandatorMetadata}.
-     */
-    public MandatorMetadata makeMandatorMetadata() {        
-        return makeMandatorMetadata(RandomStringUtils.randomAlphanumeric(4));
-    }
-    
     private MandatorMetadata makeMandatorMetadata(String matchcode) {
         MandatorMetadata m = new MandatorMetadata();
         m.setMandatorMatchcode(matchcode);
@@ -394,6 +293,46 @@ public class CustomerGenerator {
         m.setShippingCondition(new RandomEnum<>(ShippingCondition.class).random());
         EnumSet.allOf(SalesChannel.class).stream().forEach(t -> m.getAllowedSalesChannels().add(t));
         return m;
+    }
+
+    /**
+     * Generates a {@link Company}.
+     * {@link Company#prefered} is never set.
+     * <p>
+     * @return a generated {@link Company}.
+     */
+    private Company makeCompany(Company company) {
+        company.setLedger(R.nextInt(1000) + 1);
+        company.setName(GEN.makeCompanyName());
+        Contact contact = makeContact();
+        contact.getAddresses().clear();
+        contact.getCommunications().clear();
+
+        company.getContacts().add(contact);
+
+        company.getAddresses().add(makeAddress());
+        company.getCommunications().add(makeCommunication());
+
+        return company;
+    }
+
+    private Contact makeContact(Contact contact, Address address, Communication communication) {
+        Name name = GEN.makeName();
+        contact.setFirstName(name.getFirst());
+        contact.setLastName(name.getLast());
+        contact.setSex(name.getGender().ordinal() == 1 ? FEMALE : MALE);
+        contact.setTitle(R.nextInt(1000) % 3 == 0 ? "Dr." : null);
+        if ( communication != null ) contact.getCommunications().add(communication);
+        if ( address != null ) contact.getAddresses().add(address);
+        return contact;
+    }
+
+    private Address makeAddress(Address address) {
+        GeneratedAddress genereratedAddress = GEN.makeAddress();
+        address.setCity(genereratedAddress.getTown());
+        address.setStreet(genereratedAddress.getStreet());
+        address.setZipCode(genereratedAddress.getPostalCode());
+        return address;
     }
 
 }

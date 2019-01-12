@@ -9,7 +9,7 @@
             <title>Deutsche Warenwirtschaft Server</title>
         </h:head>
         <h:body>
-            <p style="width: 100%; align-content: center; font-size: xx-large">Deutsche Warenwirtschft Server - <h:outputText value="#{server.companyName}"/></p>
+            <p style="width: 100%; align-content: center; font-size: xx-large">Deutsche Warenwirtschft Server - <h:outputText value="#{server.mandator.company.name}"/></p>
             <hr />
             Misc:
             <h:link value="Monitor" outcome="misc/monitor" /> ,
@@ -17,7 +17,7 @@
             <h:link value="Users" outcome="misc/users" />
             | Search:
             <h:link value="Suche" outcome="search/search" />
-            <hr />      
+            <hr />
         </h:body>
     </f:view>
 </html>

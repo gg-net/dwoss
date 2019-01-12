@@ -18,12 +18,6 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Hibernate Dialekt -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

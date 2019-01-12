@@ -30,23 +30,10 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>6.1</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces.extensions</groupId>
             <artifactId>primefaces-extensions</artifactId>
-            <version>6.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.16</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>stax</groupId>
-                    <artifactId>stax-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -170,59 +157,6 @@
                     <version>${project.version}</version>
                 </dependency>
             </dependencies>
-        </profile>
-        <profile>
-            <id>tomee-7.0.3</id>
-            <!-- For best usage, build with tomee profile. so the logging of the application is redirected to log4j, see log4j.properties -->
-            <dependencies>
-                <dependency>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.tomee.maven</groupId>
-                        <artifactId>tomee-maven-plugin</artifactId>
-                        <version>7.0.3</version>
-                        <configuration>
-                            <systemVariables>
-                                <openejb.system.apps>true</openejb.system.apps>
-                                <tomee.serialization.class.blacklist>-</tomee.serialization.class.blacklist>
-                                <tomee.remote.support>true</tomee.remote.support>
-                            </systemVariables>
-                            <finalName>${app.name}</finalName>
-                            <tomeeVersion>7.0.3</tomeeVersion>
-                            <tomeeClassifier>plus</tomeeClassifier>
-                            <removeDefaultWebapps>false</removeDefaultWebapps>
-                            <removeTomeeWebapp>false</removeTomeeWebapp>
-                            <libs>
-                                <lib>org.hibernate:hibernate-entitymanager:5.0.12.Final</lib>
-                                <lib>org.hibernate:hibernate-core:5.0.12.Final</lib>
-                                <lib>org.hibernate:hibernate-c3p0:5.0.12.Final</lib>
-                                <lib>org.hibernate:hibernate-validator:5.4.1.Final</lib>
-                                <lib>org.hibernate:hibernate-search-orm:5.6.1.Final</lib>
-                                <lib>org.hibernate:hibernate-search-engine:5.6.1.Final</lib>
-                                <lib>org.apache.lucene:lucene-core:5.5.4</lib>
-                                <lib>org.apache.lucene:lucene-facet:5.5.4</lib>
-                                <lib>org.apache.lucene:lucene-misc:5.5.4</lib>
-                                <lib>org.apache.lucene:lucene-queries:5.5.4</lib>
-                                <lib>org.apache.lucene:lucene-analyzers-common:5.5.4</lib>
-                                <lib>org.hibernate.common:hibernate-commons-annotations:5.0.1.Final</lib>
-                                <lib>com.fasterxml:classmate:1.3.1</lib>
-                                <lib>org.jboss.logging:jboss-logging:3.3.0.Final</lib>
-                                <lib>org.javassist:javassist:3.20.0-GA</lib>
-                                <lib>dom4j:dom4j:1.6.1</lib>
-                                <lib>antlr:antlr:2.7.7</lib>
-                                <lib>remove:asm</lib>
-                                <lib>remove:openjpa</lib>
-                                <lib>remove:serp</lib>
-                            </libs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 

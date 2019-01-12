@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ViewScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -31,8 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 import lombok.Getter;
 
@@ -86,7 +86,7 @@ public class MandatorController implements Serializable {
     public List<Map.Entry<Key, Long>> getReceiptCustomers() {
         return new ArrayList<>(receiptCustomers.getReceiptCustomers().entrySet());
     }
-    
+
     public int sortReceiptCustomers(Map.Entry<Key, Long> obj, Map.Entry<Key, Long> other) {
         return obj.getValue().compareTo(other.getValue());
 
