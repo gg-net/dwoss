@@ -149,6 +149,7 @@ public class StockTransaction implements Serializable, EagerAble {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, optional = false)
     private StockTransactionStatus status;
 
+    @Deprecated // Nie implementiert.
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<StockTransaction> alternativeTransactions = new ArrayList<>();
 
@@ -163,14 +164,6 @@ public class StockTransaction implements Serializable, EagerAble {
 
     public StockTransaction(StockTransactionType type) {
         this.type = type;
-    }
-
-    public List<StockTransaction> getAlternativeTransactions() {
-        return alternativeTransactions;
-    }
-
-    public void setAlternativeTransactions(List<StockTransaction> alternativeTransactions) {
-        this.alternativeTransactions = alternativeTransactions;
     }
 
     public void addUnit(StockUnit stockUnit) {
