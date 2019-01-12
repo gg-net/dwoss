@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,8 @@
  */
 package eu.ggnet.dwoss.util.gen;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.StringTokenizer;
-
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.util.*;
 
 /**
  * Generates useful names.
@@ -68,7 +59,7 @@ public class NameGenerator {
         for (String resource : sources.keySet()) {
             // load txt files.
             try (InputStream in = this.getClass().getResourceAsStream(resource)) {
-                String all = IOUtils.toString(in, "UTF-8");
+                String all = read(in, "UTF-8");
                 List<String> data = sources.get(resource);
                 for (StringTokenizer st = new StringTokenizer(all, "\n"); st.hasMoreTokens();) {
                     String s = st.nextToken();
@@ -144,4 +135,21 @@ public class NameGenerator {
             System.out.println(n.makeCompanyName());
         }
     }
+
+    // Copied from IOUtils
+    private String read(InputStream input, String encoding) throws IOException {
+        final int EOF = -1;
+        final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+        try (final StringWriter sw = new StringWriter();
+                final InputStreamReader in = new InputStreamReader(input, "UTF-8")) {
+            int n;
+            char[] buffer = new char[DEFAULT_BUFFER_SIZE];
+            while (EOF != (n = in.read(buffer))) {
+                sw.write(buffer, 0, n);
+            }
+            return sw.toString();
+        }
+    }
+
 }
