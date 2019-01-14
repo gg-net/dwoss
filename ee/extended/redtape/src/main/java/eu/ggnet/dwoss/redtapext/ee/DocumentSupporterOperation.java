@@ -193,9 +193,19 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
                     "Dokument.pdf", "Dokument zu Ihrem Vorgang."
             );
-            for (MandatorMailAttachment mma : mandator.getMailAttachmentByDocumentType().getOrDefault(document.getType(), new HashSet<>())) {
+
+            //get needed mail attachments
+            Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType = mandator.getMailAttachmentByDocumentType();
+            Set<MandatorMailAttachment> attachmentByType = mailAttachmentByDocumentType.getOrDefault(document.getType(), new HashSet<>());
+
+            //fallback to default if none is set
+            if ( attachmentByType.isEmpty() ) attachmentByType = mandator.getDefaultMailAttachment();
+
+            //add attachments
+            for (MandatorMailAttachment mma : attachmentByType) {
                 email.attach(mma.getAttachmentData().toURL(), mma.getAttachmentName(), mma.getAttachmentDescription());
             }
+
             email.send();
         } catch (EmailException ex) {
             L.error("Error on Mail sending", ex);
