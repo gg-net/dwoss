@@ -18,6 +18,7 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -165,6 +166,24 @@ public class Mandator implements Serializable {
                 MandatorMailAttachment attachment = it.next();
                 sb.append("<li>");
                 sb.append(attachment);
+                sb.append("</li>");
+            }
+            sb.append("</ul>");
+        }
+        sb.append("</td></tr>");
+
+        sb.append("<tr><td colspan=\"2\"><p><b>Mail Attachment by Document Type:</b></p>");
+        if ( mailAttachmentByDocumentType == null || mailAttachmentByDocumentType.isEmpty() ) {
+            sb.append("<b>No Attachment</b>");
+        } else {
+            Iterator<Entry<DocumentType, Set<MandatorMailAttachment>>> it = mailAttachmentByDocumentType.entrySet().iterator();
+            sb.append("<ul>");
+            while (it.hasNext()) {
+                Entry<DocumentType, Set<MandatorMailAttachment>> entry = it.next();
+                sb.append("<li>");
+                sb.append(entry.getKey());
+                sb.append(" -> ");
+                sb.append(entry.getValue());
                 sb.append("</li>");
             }
             sb.append("</ul>");
