@@ -3,9 +3,9 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>client.jar</jar>
-  <outfile>/home/oliver.guenther/Development/dwoss/assembly/client/target/dwoss-server.exe</outfile>
+  <outfile>/home/oliver.guenther/Development/dwoss/assembly/client/target/dw-ggnet.exe</outfile>
   <errTitle></errTitle>
-  <cmdLine>--config=local</cmdLine>
+  <cmdLine>--config=ggnet</cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl></downloadUrl>
@@ -13,9 +13,9 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon></icon>
+  <icon>/home/oliver.guenther/Development/dwoss/assembly/client/src/main/resources/application.ico</icon>
   <jre>
-    <path>C:\Program Files\Java\jdk1.8.0_181</path>
+    <path>jre1.8.0</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>1.8.0</minVersion>
@@ -25,4 +25,10 @@
     <maxHeapSize>2000</maxHeapSize>
     <maxHeapPercent>70</maxHeapPercent>
   </jre>
+  <splash>
+    <file>/home/oliver.guenther/Development/dwoss/assembly/client/src/main/resources/initialsiere.bmp</file>
+    <waitForWindow>true</waitForWindow>
+    <timeout>60</timeout>
+    <timeoutErr>true</timeoutErr>
+  </splash>
 </launch4jConfig>
