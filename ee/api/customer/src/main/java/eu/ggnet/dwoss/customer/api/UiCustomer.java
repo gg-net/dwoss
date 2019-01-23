@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ public class UiCustomer implements Serializable {
     private String simpleHtml;
 
     private String email;
-    
+
     /**
      * Ledger of the FiBu, if 0 not used.
      */
@@ -51,10 +51,10 @@ public class UiCustomer implements Serializable {
 
     public String toNameCompanyLine() {
         StringBuilder sb = new StringBuilder();
-        sb.append(company != null ? company + " " : "");
-        sb.append(title != null ? title + " " : "");
-        sb.append(firstName != null ? firstName + " " : "");
-        sb.append(lastName != null ? lastName : "");
+        if ( company != null ) sb.append(company).append(" - ");
+        if ( title != null ) sb.append(title).append(" ");
+        if ( firstName != null ) sb.append(firstName).append(" ");
+        if ( lastName != null ) sb.append(lastName);
         return sb.toString();
     }
 
@@ -72,8 +72,8 @@ public class UiCustomer implements Serializable {
         sb.append(lastName != null ? lastName : "");
         return sb.toString();
     }
-    
-    public String toIdNameCompanyHtml(){        
+
+    public String toIdNameCompanyHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<b>").append(id).append("</b> ");
         sb.append(company != null ? "<i>Unternehmen</i><br />" : "<i>Endkunde</i><br />");

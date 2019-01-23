@@ -226,12 +226,50 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * @return a human readable representation of the customer
      */
     public String toName() {
-        AddressLabel invoiceLabel = addressLabels.stream().filter(al -> al.getType() == INVOICE).findFirst().orElse(null);
-        if ( invoiceLabel == null ) return "- kein Adresslabel -";
-        //start with possible company name
-        String sb = invoiceLabel.getCompany() != null ? invoiceLabel.getCompany().getName() + " - " : "";
-        sb += invoiceLabel.getContact() != null ? invoiceLabel.getContact().toFullName() : "NoNameContact";
-        return sb;
+        return preferedCompany().map(c -> c.getName() + " - ").orElse("")
+                + preferedContact().map(Contact::toFullName).orElse("No Contact");
+    }
+
+    /**
+     * Returns the prefered company of the customer.
+     * Preference is done by the following rules:
+     * <ol>
+     * <li>The company on the AddressLabel of type invoice, if any</li>
+     * <li>The first company of all companyies, if any</li>
+     * <li>empty</li>
+     * </ol>
+     *
+     * @return the prefered company.
+     */
+    public Optional<Company> preferedCompany() {
+        return Optional.ofNullable(addressLabels.stream()
+                .filter(al -> al.getType() == INVOICE)
+                .findFirst()
+                .map(AddressLabel::getCompany)
+                .orElse(getCompanies().stream().findFirst().orElse(null)));
+    }
+
+    /**
+     * Returns the prefered contact of the customer.
+     * Preference is done by the following rules:
+     * <ol>
+     * <li>The contact on the AddressLabel of type invoice, if any</li>
+     * <li>The first contact on the first company with a contact, if any</li>
+     * <li>The first contact of all contacts if any</li>
+     * <li>empty</li>
+     * </ol>
+     *
+     * @return the prefered contact of the customer.
+     */
+    public Optional<Contact> preferedContact() {
+        return Optional.ofNullable(addressLabels.stream()
+                .filter(al -> al.getType() == INVOICE)
+                .findFirst()
+                .map(AddressLabel::getContact)
+                .orElse(Stream.concat(
+                        companies.stream().flatMap((con) -> con.getContacts().stream()),
+                        contacts.stream()
+                ).findFirst().orElse(null)));
     }
 
     /**
@@ -649,26 +687,15 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      * @return the ui customer
      */
     public UiCustomer toUiCustomer() {
-        Contact contact;
-        Company company = null;
-        if ( isBusiness() ) {
-            //should never be null
-            company = getCompanies().stream().findFirst().get();
-            contact = getContacts().stream().findFirst().orElse(null);
-        } else {
-            //should never be null
-            contact = getContacts().stream().findFirst().get();
-        }
-
         return new UiCustomer(
                 getId(),
-                contact != null ? contact.getTitle() : "",
-                contact != null ? contact.getFirstName() : "KEIN KONTAKT",
-                contact != null ? contact.getLastName() : "KEIN KONTAKT",
-                company != null ? company.getName() : null,
+                preferedContact().map(Contact::getTitle).orElse(""),
+                preferedContact().map(Contact::getFirstName).orElse(""),
+                preferedContact().map(Contact::getLastName).orElse(""),
+                preferedCompany().map(Company::getName).orElse(null),
                 toName(),
                 Optional.ofNullable(getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
-                company != null ? company.getLedger() : 0);
+                preferedCompany().map(Company::getLedger).orElse(0));
     }
 
     @Override
