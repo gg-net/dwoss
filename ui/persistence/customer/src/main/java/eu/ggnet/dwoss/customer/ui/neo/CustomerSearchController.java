@@ -33,6 +33,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,8 +115,16 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                     super.updateItem(item, empty);
                     if ( item == null || empty ) {
                         setText("");
+                        setGraphic(null);
                     } else {
-                        setText(item.getShortDescription());
+                        Text id = new Text(item.getId() + " ");
+                        id.setStyle("-fx-font-weight: bold;");
+
+                        Text description = new Text(item.getShortDescription());
+                        description.setStyle("-fx-font-weight: regular");
+                        TextFlow flow = new TextFlow(id, description);
+
+                        setGraphic(flow);
                     }
                 }
             };
