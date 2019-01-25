@@ -193,7 +193,7 @@ public class LoginView extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void close() {
-        if ( usernameTextField.getText().trim().equals("") || passwordField.getPassword().toString().trim().equals("") ) {
+        if ( usernameTextField.getText().trim().equals("") || passwordField.getPassword().length < 1) {
             JOptionPane pane = new JOptionPane("Keines der Felder darf leer sein.", JOptionPane.INFORMATION_MESSAGE);
             JDialog d = pane.createDialog(this, "LayerEightLogin");
             d.setAlwaysOnTop(true);
