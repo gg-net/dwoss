@@ -56,7 +56,7 @@ public class Communication implements Serializable {
      */
     public enum Type {
         // TODO: Reanable the Phonepattern if DWOSS-255 is fixed
-        PHONE(PHONE_PATTERN), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
+        PHONE(/*PHONE_PATTERN*/), MOBILE(PHONE_PATTERN), FAX(PHONE_PATTERN),
         ICQ, SKYPE, EMAIL(EMAIL_PATTERN), FACEBOOK;
 
         private final String validPattern;
