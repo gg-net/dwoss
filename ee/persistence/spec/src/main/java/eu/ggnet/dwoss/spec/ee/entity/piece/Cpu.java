@@ -44,7 +44,7 @@ public class Cpu implements Serializable {
     public static enum Manufacturer implements INoteModel {
 
         AMD("AMD", EnumSet.of(ATHLON, PHENOM, SEMPRON, TURION, OPTERON, AMD_A, AMD_C, AMD_E, AMD_V, AMD_FX, AMD_G, AMD_RYZEN)),
-        INTEL("Intel", EnumSet.of(ATOM, CELERON, PENTIUM, CORE, CORE_I3, CORE_I5, CORE_I7, CORE_M, XEON)),
+        INTEL("Intel", EnumSet.of(ATOM, CELERON, PENTIUM, CORE, CORE_I3, CORE_I5, CORE_I7, CORE_I9, CORE_M, XEON)),
         NVIDIA("nVidia", EnumSet.of(TEGRA)),
         MEDIATEK("MediaTek", EnumSet.of(MT)),
         APPLE("Apple", EnumSet.of(APPLE_A));
@@ -106,7 +106,8 @@ public class Cpu implements Serializable {
         APPLE_A("A Series"),
         AMD_G("G Series"),
         CORE_M("Core Mobile"),
-        AMD_RYZEN("Ryzen");
+        AMD_RYZEN("Ryzen"),
+        CORE_I9("Core I9");
 
         String note;
 

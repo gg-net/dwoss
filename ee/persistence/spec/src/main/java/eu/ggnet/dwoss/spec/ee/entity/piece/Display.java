@@ -278,7 +278,8 @@ public class Display implements Serializable {
         _4_5(4.5, WVGA),
         _12_5(12.5, FULL_HD),
         _23_8(23.8, FULL_HD),
-        _6(6, FULL_HD);
+        _6(6, FULL_HD),
+        _55(55, _4K);
 
         private final double size;
 

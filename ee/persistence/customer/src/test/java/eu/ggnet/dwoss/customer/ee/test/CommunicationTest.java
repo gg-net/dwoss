@@ -67,7 +67,7 @@ public class CommunicationTest {
         assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid email").isNotBlank();
     }
 
-    @Test
+//    @Test not tested as the validation pattern has been deactivated
     public void testNonValidPhonenumber() {
         Communication makeInvalidCommunication = makeValidCommunication();
         makeInvalidCommunication.setType(PHONE);
@@ -75,7 +75,7 @@ public class CommunicationTest {
         assertThat(makeInvalidCommunication.getViolationMessage()).as("Communication with nonvalid phonenumber").isNotBlank();
     }
 
-    @Test
+//    @Test not tested as the validation pattern has been deactivated
     public void phoneNumbers() {
         String phonePattern = Communication.PHONE_PATTERN;
         assertThat(phonePattern).as("phonePattern").isNotBlank();
