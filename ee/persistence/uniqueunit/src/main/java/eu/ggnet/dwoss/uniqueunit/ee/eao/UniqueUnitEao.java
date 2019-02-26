@@ -266,7 +266,7 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
      * @return a collection of manufactures, which are used by any product, like product.tradeName.getManufacturer.
      */
     public NavigableSet<TradeName> findUsedManufactuers() {
-        return new JPAQuery<TradeName>(em).from(product).groupBy(product.tradeName).fetch()
+        return new JPAQuery<>(em).select(product.tradeName).from(product).groupBy(product.tradeName).fetch()
                 .stream().map(TradeName::getManufacturer).collect(Collectors.toCollection(() -> new TreeSet<>()));
     }
 
