@@ -41,7 +41,7 @@ public class CheckBoxTableNoteModel<T extends INoteModel> extends SimpleTableMod
     public CheckBoxTableNoteModel(final List<T> lines, String columnTitle) {
         super(lines);
         marked = new HashSet<>();
-        addColumn(new Column<T>("", true, 0, Boolean.class, new IColumnGetSetAction() {
+        addColumn(new Column<T>("", true, 25, Boolean.class, new IColumnGetSetAction() {
 
             @Override
             public void setValue(int row, Object selected) {
@@ -54,7 +54,7 @@ public class CheckBoxTableNoteModel<T extends INoteModel> extends SimpleTableMod
                 return marked.contains(lines.get(row));
             }
         }));
-        addColumn(new Column<>(columnTitle, false, 1000, String.class, (row) -> lines.get(row).getNote()));
+        addColumn(new Column<>(columnTitle, false, 200, String.class, (row) -> lines.get(row).getNote()));
     }
 
     public void setFiltered(final Collection<T> filtered) {
