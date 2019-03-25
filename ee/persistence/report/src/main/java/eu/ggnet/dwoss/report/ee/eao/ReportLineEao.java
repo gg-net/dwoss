@@ -189,11 +189,6 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return all unreported warranties.
      */
     public List<ReportLine> findUnreportedWarrentys() {
-        // This works in mysql, but fails in hsqldb.
-//        return new JPAQuery(em).from(reportLine)
-//                .where(reportLine.positionType.eq(PRODUCT_BATCH),
-//                        reportLine.singleReferences.containsKey(WARRANTY),
-//                        reportLine.reports.isEmpty()).list(reportLine);
         return new JPAQuery<ReportLine>(em)
                 .from(reportLine)
                 .where(reportLine.positionType.eq(PRODUCT_BATCH),
@@ -332,6 +327,7 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                         + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
                         + ",keys=" + nice(result.keySet(), step)
                 );
+            L.debug("revenueByPositionTypesAndDate() first call to Revenue.add({},{},{},{},0,0)",holder.getSalesChannel(),holder.getDocumentType(), holder.getContractor(),holder.getPrice());
             revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), holder.getPrice(), 0., 0.);
         }
         if ( !extraReported ) return result;
@@ -348,6 +344,7 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
                         + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
                         + ",keys=" + nice(result.keySet(), step)
                 );
+            L.debug("revenueByPositionTypesAndDate() second call to Revenue.add({},{},{},0,{},{})",holder.getSalesChannel(),holder.getDocumentType(), holder.getContractor(),holder.getPrice(), holder.getPurchasePrice());
             revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), 0., holder.getPrice(), holder.getPurchasePrice());
         }
         return result;

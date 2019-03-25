@@ -6,6 +6,7 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Map.Entry;
 import java.util.*;
 
@@ -15,8 +16,7 @@ import javax.transaction.UserTransaction;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.report.ee.assist.Reports;
@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.util.Utils;
 
 import com.querydsl.jpa.impl.JPADeleteClause;
 
@@ -37,7 +38,6 @@ import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
 import static eu.ggnet.dwoss.common.ee.Step.DAY;
 import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
-import static org.apache.commons.lang3.time.DateUtils.parseDate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -183,7 +183,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testFindByUniqueUnitId() throws Exception {
+    public void findByUniqueUnitId() throws Exception {
         String ISO = "yyyy-MM-dd";
         Date d1 = DateUtils.parseDate("2010-01-01", ISO);
 
@@ -220,7 +220,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testFindUnreported() throws Exception {
+    public void findUnreported() throws Exception {
         utx.begin();
         em.joinTransaction();
 
@@ -266,7 +266,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testFindUnreportedUnit() throws Exception {
+    public void findUnreportedUnit() throws Exception {
         utx.begin();
         em.joinTransaction();
 
@@ -311,7 +311,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testFindFromTillUnreportedUnit() throws Exception {
+    public void findFromTillUnreportedUnit() throws Exception {
         String ISO = "yyyy-MM-dd";
 
         ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
@@ -359,41 +359,36 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testRevenue() throws Exception {
+    public void differentRevenueByPositionTypesAndDateRanges() throws Exception {
         ReportLineEao reportLineEao = new ReportLineEao(em);
 
         utx.begin();
         em.joinTransaction();
-        em.persist(make("2010-06-01", INVOICE, UNIT, 100));
-        em.persist(make("2010-06-02", INVOICE, UNIT, 100));
-        em.persist(make("2010-06-03", INVOICE, UNIT, 100));
-        em.persist(make("2010-06-04", INVOICE, UNIT, 100));
-        em.persist(make("2010-06-04", ANNULATION_INVOICE, UNIT, -50));
-        em.persist(make("2010-06-05", INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 1), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 2), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 3), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 4), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 4), ANNULATION_INVOICE, UNIT, -50));
+        em.persist(make(LocalDate.of(2010, 6, 5), INVOICE, UNIT, 100));
 
-        em.persist(make("2010-07-05", INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 7, 5), INVOICE, UNIT, 100));
         utx.commit();
 
         // Month and count
         utx.begin();
         em.joinTransaction();
-        NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), DAY, true);
+        NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 6, 5)), DAY, true);
         for (Entry<Date, Revenue> e : result.entrySet()) {
             assertEquals(100.0, e.getValue().sumBy(INVOICE), 0.0001);
-//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
         }
-        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-06-05", "yyyy-MM-dd"), Step.MONTH, true);
+        
+        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT),Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 6, 5)), Step.MONTH, true);
         assertEquals(1, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
         assertEquals(450.0, result.firstEntry().getValue().sum(), 0.0001);
 
-//        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), DAY);
-//        for (Entry<Date, Revenue> e : result.entrySet()) {
-//            System.out.println(DateFormats.ISO.format(e.getKey()) + " - I:" + e.getValue().sum(INVOICE) + " A:" + e.getValue().sum(ANNULATION_INVOICE) + " S:" + e.getValue().sum());
-//        }
-        System.out.println(" -- ");
-        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-06-01", "yyyy-MM-dd"), parseDate("2010-07-30", "yyyy-MM-dd"), Step.MONTH, true);
+        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 7, 30)), Step.MONTH, true);
         assertEquals(2, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
@@ -401,24 +396,48 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         assertEquals(100.0, result.lastEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(0.0, result.lastEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
         assertEquals(100.0, result.lastEntry().getValue().sum(), 0.0001);
+        
+        utx.commit();
+    }
+    @Test 
+    @Ignore // Not really a test, but something with output. Enable if needed.
+    public void showRevenueByPositionTypesAndDate() throws Exception {
+        System.out.println("showRevenueByPositionTypesAndDate() - start");
+        ReportLineEao reportLineEao = new ReportLineEao(em);
 
+        utx.begin();
+        em.joinTransaction();
+        em.persist(make(LocalDate.of(2010, 6, 1), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 2), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 3), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 4), INVOICE, UNIT, 100));
+        em.persist(make(LocalDate.of(2010, 6, 4), ANNULATION_INVOICE, UNIT, -50));
+        em.persist(make(LocalDate.of(2010, 6, 5), INVOICE, UNIT, 100));
+
+        em.persist(make(LocalDate.of(2010, 7, 5), INVOICE, UNIT, 100));
+        utx.commit();
+
+        // Month and count
+        utx.begin();
+        em.joinTransaction();
+ 
         for (Step step : Step.values()) {
-            // Shortcut to test all steps.
-//            System.out.println("-----");
-//            System.out.println(step);
-//            System.out.println("-----");
-            result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), parseDate("2010-01-01", "yyyy-MM-dd"), parseDate("2010-12-31", "yyyy-MM-dd"), step, true);
-//            for (Entry<Date, Revenue> e : result.entrySet()) {
-//                System.out.println(step.format(e.getKey()) + "|" + DateFormats.ISO.format(e.getKey()) + " - " + e.getValue());
-//            }
+            // Shortcut to show all steps.
+            System.out.println("-----");
+            System.out.println("Step: " +  step);
+            System.out.println("-----");
+            NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 1, 1)), Utils.toDate(LocalDate.of(2010, 12, 31)), step, true);
+            for (Entry<Date, Revenue> e : result.entrySet()) {
+                System.out.println(step.format(e.getKey()) + "|" + DateFormats.ISO.format(e.getKey()) + " - " + e.getValue());
+            }
         }
 
         utx.commit();
-
+        System.out.println("showRevenueByPositionTypesAndDate() - end");
     }
 
-    private ReportLine make(String isoDate, DocumentType docType, PositionType posType, double price) throws ParseException {
-        Date date = DateUtils.parseDate(isoDate, "yyyy-MM-dd");
+        private ReportLine make(LocalDate ldate, DocumentType docType, PositionType posType, double price) throws ParseException {
+        Date date = Utils.toDate(ldate);
 
         ReportLine line = ReportLine.builder()
                 .name("PositionName")
@@ -441,6 +460,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         return line;
     }
 
+    
     private ReportLine make(TradeName contractor, long productId, String contractorPartNo) {
         ReportLine line = generator.makeReportLine();
         line.setPositionType(PositionType.UNIT);

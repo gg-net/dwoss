@@ -38,7 +38,6 @@
 
     <properties>
         <global-resources-path>.</global-resources-path>
-        <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.6</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>
     </properties>
 
     <dependencies>

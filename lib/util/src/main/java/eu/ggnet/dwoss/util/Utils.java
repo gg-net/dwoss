@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.util;
 
 import java.net.*;
+import java.time.*;
 import java.util.*;
 
 import javax.persistence.EntityManager;
@@ -89,6 +90,96 @@ public class Utils {
         }
     }
 
+      /**
+     * Converts a Date to a LocalDateTime based on the SystemTimeZone.
+     * If an java.sql.Date is supplied, its converted to locaDate.atStartOfDay().
+     * If an java.sql.Time is supplied, its converted to localTime.atDate(LocalDate.now());
+     *
+     * @param in the date to convert.
+     * @return a LocalDateTime instance or null if date was null.
+     */
+    public static LocalDateTime toLdt(Date in) {
+        if ( in == null ) return null;
+        if ( in instanceof java.sql.Date ) {
+            return ((java.sql.Date)in).toLocalDate().atStartOfDay();
+        }
+        return LocalDateTime.ofInstant(in.toInstant(), ZoneId.systemDefault());
+    }
+
+    /**
+     * Converts a Date to a LocalDate based on the SystemTimeZone.
+     * If an java.sql.Date is supplied, its converted via toLocalDate;
+     *
+     * @param in the date to convert
+     * @return a LocalDate instance or null if date was null;
+     */
+    public static LocalDate toLd(Date in) {
+        if ( in == null ) return null;
+        if ( in instanceof java.sql.Date ) {
+            return ((java.sql.Date)in).toLocalDate();
+        }
+        return in.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * Converts a LocalTime to a LocalDate based on the SystemTimeZone.
+     * If an java.sql.Date is supplied, its converted to a localTime 00:00
+     *
+     * @param in the date to convert
+     * @return a LocalDate instance or null if date was null;
+     */
+    public static LocalTime toLt(Date in) {
+        if ( in == null ) return null;
+        if ( in instanceof java.sql.Date ) {
+            return ((java.sql.Date)in).toLocalDate().atStartOfDay().toLocalTime();
+        } else if ( in instanceof java.sql.Time ) {
+            return ((java.sql.Time)in).toLocalTime();
+        }
+        return in.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+    }
+
+    /**
+     * Converts a LocalDate to a Date.
+     *
+     * @param in the localDate to convert.
+     * @return a Date
+     */
+    public static Date toDate(LocalDate in) {
+        if ( in == null ) return null;
+        return Date.from(in.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Converts a LocalDateTime to a Date.
+     *
+     * @param in the localDate to convert.
+     * @return a Date
+     */
+    public static Date toDate(LocalDateTime in) {
+        if ( in == null ) return null;
+        return Date.from(in.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Start of day based on Date.
+     *
+     * @param in input
+     * @return returns a date.
+     */
+    public static Date startOfDay(Date in) {
+        return toDate(toLd(in).atStartOfDay());
+    }
+
+    /**
+     * End of day based on Date.
+     *
+     * @param in input
+     * @return a date.
+     */
+    public static Date endOfDay(Date in) {
+        return toDate(toLd(in).atTime(23, 59, 59));
+    }
+    
     public static void main(String[] args) {
         System.out.println(externalIpv4Address().getHostAddress());
     }
