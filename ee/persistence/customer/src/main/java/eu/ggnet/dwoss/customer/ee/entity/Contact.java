@@ -26,12 +26,9 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.stash.AddressStash;
 import eu.ggnet.dwoss.customer.ee.entity.stash.CommunicationStash;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-
-import lombok.*;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -47,22 +44,27 @@ import static javax.persistence.CascadeType.ALL;
  * @author pascal.perau
  */
 @Entity
-@ToString(exclude = {"addresses", "communications"})
-@EqualsAndHashCode(of = {"id"})
 @Indexed
+@SuppressWarnings("PersistenceUnitPresent")
 public class Contact implements Serializable, AddressStash, CommunicationStash, EagerAble {
 
-    @RequiredArgsConstructor
     public enum Sex {
 
         MALE("m"), FEMALE("w");
 
-        @Getter
         private final String sign;
+
+        Sex(String sign) {
+            this.sign = sign;
+        }
+
+        public String getSign() {
+            return sign;
+        }
+
     }
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
@@ -73,38 +75,27 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
      * Salutation for the contact.
      * Seperated from the title for more flexibility.
      */
-    @Getter
-    @Setter
     private Sex sex;
 
     /**
      * All titles the contact carries.
      */
-    @Getter
-    @Setter
     @Field
     private String title;
 
-    @Getter
-    @Setter
     @NotNull
     @Field
-    @Boost(1.5F)
     private String firstName;
 
-    @Getter
-    @Setter
     @NotNull
     @Field
-    @Boost(2f)
     private String lastName;
 
     /**
      * All {@link Address}<code>es</code> associated with the contact.
      */
     @OneToMany(cascade = ALL)
-    @NonNull
-    @Getter
+    @NotNull
     @IndexedEmbedded
     private final List<Address> addresses = new ArrayList<>();
 
@@ -112,8 +103,7 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
      * All {@link Address}<code>es</code> associated with the contact.
      */
     @OneToMany(cascade = ALL)
-    @NonNull
-    @Getter
+    @NotNull
     @IndexedEmbedded
     private final List<Communication> communications = new ArrayList<>();
 
@@ -129,13 +119,59 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
         this.id = id;
     }
 
-    @Builder
     public Contact(Sex sex, String title, String firstName, String lastName) {
         this.sex = sex;
         this.title = title;
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    // <editor-fold defaultstate="collapsed" desc="Getter/Setter">
+    @Override
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    @Override
+    public List<Communication> getCommunications() {
+        return communications;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }// </editor-fold>
 
     /**
      * Returns a human readable representation of title, first and lastname.
@@ -216,4 +252,27 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
         getCommunications().size();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="hashCode/equals/toString">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + (int)(this.id ^ (this.id >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final Contact other = (Contact)obj;
+        if ( this.id != other.id ) return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" + "id=" + id + ", optLock=" + optLock + ", sex=" + sex + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + '}';
+    }
+    // </editor-fold>
 }

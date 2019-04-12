@@ -78,8 +78,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         ADDRESS
     }
 
-    @AllArgsConstructor
-    @Getter
     public enum Source {
         EXISTING("Bestandskunde"),
         JH_CAM_TOOL("CAM Tool T&S"),
@@ -88,6 +86,15 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         ONEADO("Oneado Online Shop");
 
         private final String name;
+
+        Source(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
     }
 
     public enum ExternalSystem {
