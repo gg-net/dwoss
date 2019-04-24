@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,10 @@ import java.util.Set;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.statemachine.StateTransition;
 
-import lombok.Getter;
-
 /**
  *
  * @author oliver.guenther
  */
-@Getter
 public abstract class RedTapeStateTransition extends StateTransition<CustomerDocument> {
 
     /**
@@ -36,11 +33,11 @@ public abstract class RedTapeStateTransition extends StateTransition<CustomerDoc
      */
     public enum Hint {
 
-        ADD_SHIPPING_COSTS, REMOVE_SHIPPING_COSTS, 
+        ADD_SHIPPING_COSTS, REMOVE_SHIPPING_COSTS,
         /**
          * Transition creates a Invoice.
          */
-        CREATES_INVOICE, 
+        CREATES_INVOICE,
         /**
          * Transition that is setted that the document informed.
          */
@@ -48,7 +45,7 @@ public abstract class RedTapeStateTransition extends StateTransition<CustomerDoc
         /**
          * Transition creates a Credit Memo.
          */
-        CREATES_CREDIT_MEMO, 
+        CREATES_CREDIT_MEMO,
         /**
          * Transition creates a Complaint (Reklamation).
          */
@@ -76,11 +73,20 @@ public abstract class RedTapeStateTransition extends StateTransition<CustomerDoc
 
     public RedTapeStateTransition(String name, String description, String toolTip, Set<Hint> hints) {
         this(name, description, toolTip, hints, null);
-    }    
+    }
 
     public RedTapeStateTransition(String name, String description, String toolTip, Set<Hint> hints, AtomicRight enablingRight) {
         super(name, description, toolTip);
         this.enablingRight = enablingRight;
         this.hints = hints;
     }
+
+    public AtomicRight getEnablingRight() {
+        return enablingRight;
+    }
+
+    public Set<Hint> getHints() {
+        return hints;
+    }
+
 }

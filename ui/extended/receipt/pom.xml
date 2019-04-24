@@ -11,9 +11,8 @@
     <name>DwOss • Ui • Extended • Receipt</name>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

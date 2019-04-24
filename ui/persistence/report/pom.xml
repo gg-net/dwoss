@@ -53,9 +53,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency> <!-- Adding JavaAssist -->
             <groupId>org.hibernate</groupId>

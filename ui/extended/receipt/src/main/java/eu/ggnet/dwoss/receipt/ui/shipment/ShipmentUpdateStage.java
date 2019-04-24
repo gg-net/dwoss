@@ -34,12 +34,10 @@ import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.core.Dl;
-
-import lombok.Getter;
 
 import static eu.ggnet.dwoss.stock.ee.entity.Shipment.Status.OPENED;
 import static java.lang.Double.MAX_VALUE;
@@ -53,8 +51,7 @@ public class ShipmentUpdateStage extends Stage {
 
     private Shipment shipment;
 
-    @Getter
-    private boolean isOk = false;
+    private boolean ok = false;
 
     private ComboBox<TradeName> ownerBox;
 
@@ -82,15 +79,19 @@ public class ShipmentUpdateStage extends Stage {
         init(shipment);
     }
 
+    public boolean isOk() {
+        return ok;
+    }
+
     private boolean isValid() {
-        isOk = (shipment.getContractor() != null
-                && !StringUtils.isBlank(shipment.getShipmentId())
-                && shipment.getStatus() != null
-                && shipment.getDefaultManufacturer() != null);
-        if ( !isOk ) {
+        ok = (shipment.getContractor() != null
+              && !StringUtils.isBlank(shipment.getShipmentId())
+              && shipment.getStatus() != null
+              && shipment.getDefaultManufacturer() != null);
+        if ( !ok ) {
             errorLabel.setTextFill(Color.web("#600000"));
         }
-        return isOk;
+        return ok;
     }
 
     private void init(Shipment s) {

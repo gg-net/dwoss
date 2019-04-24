@@ -69,8 +69,8 @@ public class ShipmentInclusionViewTryout {
         ShipmentInclusionViewCask sid = new ShipmentInclusionViewCask(null, shipment, null);
         sid.setLocationRelativeTo(null);
         sid.setVisible(true);
-        System.out.println("Is Aborted: " + sid.isInclusionAbort());
-        System.out.println("Is Closed: " + sid.isInclusionClosed());
+        System.out.println("Is Aborted: " + sid.inclusionAborted());
+        System.out.println("Is Closed: " + sid.inclusionClosed());
         System.exit(0);
     }
 

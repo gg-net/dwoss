@@ -18,13 +18,11 @@ package eu.ggnet.dwoss.receipt.ui.shipment;
 
 import java.awt.Window;
 
-import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
+import eu.ggnet.dwoss.receipt.ui.UiUnitSupport;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.saft.core.Dl;
-
-import lombok.Getter;
 
 /**
  *
@@ -32,17 +30,14 @@ import lombok.Getter;
  */
 public class ShipmentInclusionViewCask extends javax.swing.JDialog {
 
-    @Getter
     private final Shipment productShipment;
 
     private final StockTransaction stockTransaction;
 
     private final UiUnitSupport controller;
 
-    @Getter
-    private boolean inclusionAbort;
+    private boolean inclusionAborted;
 
-    @Getter
     private boolean inclusionClosed;
 
     public ShipmentInclusionViewCask(java.awt.Window parent, Shipment shipment, StockTransaction stockTransaction) {
@@ -60,6 +55,14 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
         inclusionOwnerField.setText(shipment.getContractor().toString());
         this.controller = new UiUnitSupport(unitProcessor);
 
+    }
+
+    public boolean inclusionAborted() {
+        return inclusionAborted;
+    }
+
+    public boolean inclusionClosed() {
+        return inclusionClosed;
     }
 
     /** This method is called from within the constructor to
@@ -177,7 +180,7 @@ public class ShipmentInclusionViewCask extends javax.swing.JDialog {
 
     private void inclusionCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inclusionCancelButtonActionPerformed
         this.setVisible(false);
-        this.inclusionAbort = true;
+        this.inclusionAborted = true;
     }//GEN-LAST:event_inclusionCancelButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed

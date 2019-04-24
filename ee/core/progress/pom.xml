@@ -14,9 +14,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>xom</groupId>
@@ -24,5 +23,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
 </project>

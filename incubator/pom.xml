@@ -11,8 +11,6 @@
     <name>DwOss • Incubator</name>
     <description>Incubator projects, which might be release as separate projects if stable.</description>
     <modules>
-        <module>saft</module>
-        <module>lucidcalc</module>
         <module>statemachine</module>
     </modules>
 </project>

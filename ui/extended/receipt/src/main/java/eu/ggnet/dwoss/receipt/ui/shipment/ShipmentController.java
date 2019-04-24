@@ -25,10 +25,9 @@ import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.auth.Guardian;
-
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 public class ShipmentController extends AbstractController {
 
@@ -79,8 +78,8 @@ public class ShipmentController extends AbstractController {
         ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(view, shipment, stockTransaction);
         sip.setLocationRelativeTo(view);
         sip.setVisible(true);
-        if ( sip.isInclusionClosed() ) shipment.setStatus(Shipment.Status.CLOSED);
-        else if ( sip.isInclusionAbort() ) shipment.setStatus(Shipment.Status.OPENED);
+        if ( sip.inclusionClosed() ) shipment.setStatus(Shipment.Status.CLOSED);
+        else if ( sip.inclusionAborted() ) shipment.setStatus(Shipment.Status.OPENED);
         else return;
 
         model.remove(shipment);
