@@ -79,33 +79,32 @@ public class CustomerGeneratorIT extends ArquillianProjectArchive {
     @Test
     public void testMakeReceiptCustomers() {
         //ReceiptCustomers are Customer where ReceiptOperation are backed By Customer
-        cgo.makeReceiptCustomers(CONTRACTOR);
-
-        assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(6);
+        cgo.makeReceiptCustomers(CONTRACTOR);        
+        assertThat(eao.findAll().size()).as("ReceiptCustomers for " + CONTRACTOR).isEqualTo(ReceiptOperation.valuesBackedByCustomer().size());
     }
 
     @Test
     public void testMakeRepaymentCustomers() {
         cgo.makeRepaymentCustomers(CONTRACTOR);
-        assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
+        assertThat(eao.findAll().size()).as("RepaymentCustomers").isEqualTo(1);
     }
 
     @Test
     public void testMakeScrapCustomers() {
         cgo.makeScrapCustomers(CONTRACTOR);
-        assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
+        assertThat(eao.findAll().size()).as("ScrapCustomers").isEqualTo(1);
     }
 
     @Test
     public void testMakeDeleteCustomers() {
         cgo.makeDeleteCustomers(CONTRACTOR);
-        assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
+        assertThat(eao.findAll().size()).as("DeleteCustomers").isEqualTo(1);
     }
 
     @Test
     public void testMakeSpecialCustomers() {
         cgo.makeSpecialCustomers(DOCUMENT_TYPE);
-        assertThat(eao.findAll().size()).as("get not amount Customer").isEqualTo(2);
+        assertThat(eao.findAll().size()).as("SpecialCustomer for " + DOCUMENT_TYPE).isEqualTo(1);
     }
 
     @Test

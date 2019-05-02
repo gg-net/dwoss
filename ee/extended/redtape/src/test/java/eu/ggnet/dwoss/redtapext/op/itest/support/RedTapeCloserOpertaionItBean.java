@@ -30,6 +30,7 @@ import javax.persistence.EntityManager;
 
 import org.junit.Assert;
 
+import eu.ggnet.dwoss.redtapext.op.itest.RedTapeCloserOperationOfWarrantyIT;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
@@ -71,8 +72,8 @@ public class RedTapeCloserOpertaionItBean {
         }
     }
 
-    public Product makeWarrantyProduct() {
-        Product p = new Product(ProductGroup.COMMENTARY, TradeName.HP, RedTapeCloserOperationIT.WARRANTY_PART_NO, "Warranty Product");
+    public Product makeWarrantyProduct(String partNo) {
+        Product p = new Product(ProductGroup.COMMENTARY, TradeName.HP, partNo, "Warranty Product");
         uuEm.persist(p);
         return p;
     }

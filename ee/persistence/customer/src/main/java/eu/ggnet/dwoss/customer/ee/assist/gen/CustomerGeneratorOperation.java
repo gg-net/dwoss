@@ -50,7 +50,7 @@ public class CustomerGeneratorOperation {
     private final CustomerGenerator CGEN = new CustomerGenerator();
 
     @Inject
-    @Customers
+    @Customers 
     private EntityManager em;
 
     @Inject
@@ -68,27 +68,14 @@ public class CustomerGeneratorOperation {
         for (TradeName contractor : contractors) {
             L.info("try to create consumer and busines customer for TradeName " + contractor);
             for (ReceiptOperation operation : ReceiptOperation.valuesBackedByCustomer()) {
-                L.info("ReceiptOperation " + operation);
-
-                L.info("creating consumer customer for " + operation);
-                Customer customer = CGEN.makeCustomer();
+                L.info("creating customer for " + operation);
+                Customer customer = CGEN.makeSimpleBussinesCustomer();
+                customer.getCompanies().get(0).setName("Receipt Customer " + contractor);
                 customer.setComment("Generatered Receipt Customer: " + contractor + "," + operation);
                 customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
                 em.persist(customer);
                 L.info("ReceiptCustomers (consumer) ID " + customer.getId());
                 receiptCustomersBuilder.put(contractor, operation, customer.getId());
-
-                L.info("creating business customer for " + operation);
-                Customer businessCustomer = CGEN.makeCustomer();
-                businessCustomer.setComment("Generatered Receipt Customer: " + contractor + "," + operation);
-                businessCustomer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-
-                Company company = CGEN.makeCompany();
-                businessCustomer.getCompanies().add(company);
-                businessCustomer.getContacts().clear();
-                em.persist(businessCustomer);
-                L.info("ReceiptCustomers (business) ID" + businessCustomer.getId());
-                receiptCustomersBuilder.put(contractor, operation, businessCustomer.getId());
             }
 
         }
@@ -106,24 +93,12 @@ public class CustomerGeneratorOperation {
         CustomersBuilder repaymentCustomersBuilder = new CustomersBuilder();
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeCustomer();
+            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            customer.getCompanies().get(0).setName("Repayment Customer " + contractor);
             customer.setComment("Generatered Repayment Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             em.persist(customer);
             repaymentCustomersBuilder.put(contractor, customer.getId());
-        }
-        L.info("for business Customer");
-        for (TradeName contractor : contractors) {
-            L.info("TradeName " + contractor);
-            Customer businessCustomer = CGEN.makeCustomer();
-            businessCustomer.setComment("Generatered Repayment Customer: " + contractor);
-            businessCustomer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-
-            Company company = CGEN.makeCompany();
-            businessCustomer.getCompanies().add(company);
-            businessCustomer.getContacts().clear();
-            em.persist(businessCustomer);
-            repaymentCustomersBuilder.put(contractor, businessCustomer.getId());
         }
         return repaymentCustomersBuilder.toRepayment();
     }
@@ -140,23 +115,12 @@ public class CustomerGeneratorOperation {
 
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeCustomer();
+            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            customer.getCompanies().get(0).setName("Scrap Customer " + contractor);
             customer.setComment("Generatered Scrap Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             em.persist(customer);
             scrapCustomersBuilder.put(contractor, customer.getId());
-        }
-        L.info("for business Customer");
-        for (TradeName contractor : contractors) {
-            L.info("TradeName " + contractor);
-            Customer businessCustomer = CGEN.makeCustomer();
-            businessCustomer.setComment("Generatered Scrap Customer: " + contractor);
-            businessCustomer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-            Company company = CGEN.makeCompany();
-            businessCustomer.getCompanies().add(company);
-            businessCustomer.getContacts().clear();
-            em.persist(businessCustomer);
-            scrapCustomersBuilder.put(contractor, businessCustomer.getId());
         }
         return scrapCustomersBuilder.toScrap();
     }
@@ -172,24 +136,12 @@ public class CustomerGeneratorOperation {
         CustomersBuilder deleteCustomersBuilder = new CustomersBuilder();
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeCustomer();
+            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            customer.getCompanies().get(0).setName("Delete Customer " + contractor);
             customer.setComment("Generatered Delete Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             em.persist(customer);
             deleteCustomersBuilder.put(contractor, customer.getId());
-        }
-        L.info("for business Customer");
-        for (TradeName contractor : contractors) {
-            L.info("TradeName " + contractor);
-            Customer businessCustomer = CGEN.makeCustomer();
-            businessCustomer.setComment("Generatered Delete Customer: " + contractor);
-            businessCustomer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-
-            Company company = CGEN.makeCompany();
-            businessCustomer.getCompanies().add(company);
-            businessCustomer.getContacts().clear();
-            em.persist(businessCustomer);
-            deleteCustomersBuilder.put(contractor, businessCustomer.getId());
         }
         return deleteCustomersBuilder.toDelete();
     }
@@ -205,24 +157,12 @@ public class CustomerGeneratorOperation {
         if ( types == null || types.length == 0 ) return new SpecialSystemCustomers(specialCustomers);
         for (DocumentType type : types) {
             L.info("DocumentType " + type);
-            Customer customer = CGEN.makeCustomer();
+            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            customer.getCompanies().get(0).setName(type.getName() + " Special Customer");
             customer.setComment("Generatered " + type.getName() + "");
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
             em.persist(customer);
             specialCustomers.put(customer.getId(), type);
-        }
-        L.info("for business Customer");
-        for (DocumentType type : types) {
-            L.info("DocumentType " + type);
-            Customer businessCustomer = CGEN.makeCustomer();
-            businessCustomer.setComment("Generatered " + type.getName() + "");
-            businessCustomer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
-
-            Company company = CGEN.makeCompany();
-            businessCustomer.getCompanies().add(company);
-            businessCustomer.getContacts().clear();
-            em.persist(businessCustomer);
-            specialCustomers.put(businessCustomer.getId(), type);
         }
         return new SpecialSystemCustomers(specialCustomers);
     }

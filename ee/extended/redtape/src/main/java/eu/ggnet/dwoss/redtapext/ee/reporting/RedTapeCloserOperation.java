@@ -376,7 +376,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * </table>
      * Comments:
      * <ul>
-     * <li>A canceled order will be closed, but not reported.</li>
+     * <li>A canceled order, capital asset ore return will be closed, but not reported.</li>
      * <li>A complaint is a very special case, which might be closed two times. See {@link  RedTapeWorkflow#refreshAndPrepare(de.dw.redtape.entity.Document, de.dw.redtape.entity.Document)
      * }</li>
      * </ul>
@@ -397,13 +397,26 @@ public class RedTapeCloserOperation implements RedTapeCloser {
         for (Dossier dossier : openDossiers) {
             m.worked(1, " selecting " + dossier.getIdentifier());
 
-            // Check if there is only an order.
+            // Canceled Order
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.ORDER).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.ORDER).get(0);
                 if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
-                L.debug("Filtered not reportable {}, cause: canceled order", doc.getDossier().getIdentifier());
-                // Shortcut: If there is only an order, that is not canceled. we do not close it. If it is canceled, we close it.
-                continue;
+                L.debug("Filtered not reportable {}, cause: canceled order", doc.getDossier().getIdentifier());               
+                continue; // Shortcut
+            }
+            // Canceled CAPITAL_ASSET
+            if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.CAPITAL_ASSET).size() == 1 ) {
+                Document doc = dossier.getActiveDocuments(DocumentType.CAPITAL_ASSET).get(0);
+                if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
+                L.debug("Filtered not reportable {}, cause: canceled capital asset", doc.getDossier().getIdentifier());
+                continue; // Shortcut
+            }
+            // Canceled RETURNS
+            if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.RETURNS).size() == 1 ) {
+                Document doc = dossier.getActiveDocuments(DocumentType.RETURNS).get(0);
+                if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
+                L.debug("Filtered not reportable {}, cause: canceled returns", doc.getDossier().getIdentifier());
+                continue; // Shortcut
             }
             // Check the Closing State. Every closable document is removed from the copied collection.
             // If the collection is empty at the end, the dossier can be closed, meaning we remove all cases that we consider closing state.
@@ -462,6 +475,18 @@ public class RedTapeCloserOperation implements RedTapeCloser {
         return closeable;
     }
 
+    /**
+     * Returns all Blocker Documents, which are in a closeable state. 
+     * Blocker Documents are in closing state if:
+     * <ul>
+     * <li>The customer is not a member of {@link ReceiptCustomers}</li>
+     * <li>The blocker document has only comment possitions</li>
+     * <li>The blocker document has unit positions, but no stockunit exists (deleted or scraped)</li>
+     * </ul>
+     * Todo: What about other position types, like service or product batch.
+     * 
+     * @return all Documents of type Blocker, which are in a closable state.
+     */
     private Set<Document> findCloseableBlocker() {
         Collection<Long> receipts = receiptCustomers.getReceiptCustomers().values();
         List<Dossier> openDossiers = new DossierEao(redTapeEm).findByClosed(false)

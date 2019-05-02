@@ -123,4 +123,5 @@ public class CustomerAndGsOfficeProvider {
         if ( specialSystemCustomers == null ) specialSystemCustomers = gen.makeSpecialCustomers(CAPITAL_ASSET, RETURNS);
         return specialSystemCustomers;
     }
+    
 }
