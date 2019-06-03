@@ -292,9 +292,8 @@
         </dependency>
         <!-- components -->
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -10,9 +10,8 @@
     <name>DwOss • Ui • Spi • Customer</name>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
+            <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
