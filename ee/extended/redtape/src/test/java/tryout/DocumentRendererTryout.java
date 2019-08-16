@@ -16,13 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.dwoss.common.api.values.TaxType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import java.awt.BorderLayout;
 
@@ -31,10 +24,12 @@ import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.swing.JRViewer;
 
-import eu.ggnet.dwoss.mandator.sample.impl.Sample;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
-import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
+import eu.ggnet.dwoss.mandator.sample.impl.Sample;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
+import eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil;
 
 /**
  *
@@ -42,8 +37,8 @@ import eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation;
  */
 public class DocumentRendererTryout {
 
-    public static void main(String[] args) {
-
+    private static JasperPrint makeStaticDocument() {
+        @SuppressWarnings("UseInjectionInsteadOfInstantion")
         DocumentSupporterOperation documentSupporter = new DocumentSupporterOperation();
         documentSupporter.setMandator(Sample.MANDATOR);
 
@@ -74,16 +69,22 @@ public class DocumentRendererTryout {
         System.out.println("Netto " + doc.getPrice());
         System.out.println("Brutto: " + doc.toAfterTaxPrice());
         System.out.println("SumTax: " + (doc.toAfterTaxPrice() - doc.getPrice()));
-        JasperPrint print = documentSupporter.render(doc, DocumentViewType.DEFAULT);
+        return documentSupporter.render(doc, DocumentViewType.DEFAULT);
+    }
 
-        JRViewer viewer = new JRViewer(print);
+    private static void showSwing() {
+        JRViewer viewer = new JRViewer(makeStaticDocument());
         JFrame frame = new JFrame("Viewer");
         frame.getContentPane().setLayout(new BorderLayout());
         frame.getContentPane().add(viewer, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
 
+
+    public static void main(String[] args) {
+        showSwing();
     }
 
 }

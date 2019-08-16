@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import static org.mockito.Mockito.mock;
 
@@ -36,7 +37,17 @@ public class AnnulationViewTryout {
 
     public static void main(String[] args) {
         StockAgent stockStub = mock(StockAgent.class);
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
 
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
         Dl.remote().add(StockAgent.class, stockStub);
 
         Position p1 = Position.builder().amount(1).name("P1").price(12.).tax(1.19).build();

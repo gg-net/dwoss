@@ -54,7 +54,7 @@ import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
-import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentPrintAction;
+import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentViewAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
@@ -472,11 +472,11 @@ public class RedTapeController implements IDossierSelectionHandler {
                 }
             });
 
-            view.actionBar.add(new JButton(new DocumentPrintAction(selDocument, DocumentViewType.DEFAULT, this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.DEFAULT, this, model.getPurchaseCustomer().getId())));
             if ( selDocument.getType() == DocumentType.ORDER )
-                view.actionBar.add(new JButton(new DocumentPrintAction(selDocument, DocumentViewType.RESERVATION, this, model.getPurchaseCustomer().getId())));
+                view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.RESERVATION, this, model.getPurchaseCustomer().getId())));
             if ( !EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.COMPLAINT, DocumentType.CREDIT_MEMO).contains(selDocument.getType()) ) {
-                view.actionBar.add(new DocumentPrintAction(selDocument, DocumentViewType.SHIPPING, this, model.getPurchaseCustomer().getId()));
+                view.actionBar.add(new DocumentViewAction(selDocument, DocumentViewType.SHIPPING, this, model.getPurchaseCustomer().getId()));
             }
         }
         for (Component component : view.actionBar.getComponents()) {

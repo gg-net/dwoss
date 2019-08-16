@@ -42,10 +42,11 @@ import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 /**
- *
+ * Copy of the old version, if all is successful, this code can be removed.
+ * 
  * @author pascal.perau
  */
-public class DocumentPrintAction extends AbstractAction {
+public class DocumentViewActionOld extends AbstractAction {
 
     private Document document;
 
@@ -56,7 +57,7 @@ public class DocumentPrintAction extends AbstractAction {
     private long customerId;
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
-    public DocumentPrintAction(Document document, DocumentViewType type, RedTapeController controller, long customerId) {
+    public DocumentViewActionOld(Document document, DocumentViewType type, RedTapeController controller, long customerId) {
         this.document = document;
         this.controller = controller;
         this.type = type;

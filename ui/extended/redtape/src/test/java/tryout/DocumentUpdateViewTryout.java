@@ -1,28 +1,16 @@
 package tryout;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-
 import java.awt.Font;
 import java.util.Arrays;
 
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ui.AbstractGuardian;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -32,16 +20,17 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
 
-import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.SEND_ORDER;
 import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 import static eu.ggnet.dwoss.common.api.values.TaxType.*;
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.SEND_ORDER;
 
 /**
  *
@@ -58,7 +47,17 @@ public class DocumentUpdateViewTryout {
     public static void main(String[] args) {
         // Test different settings of booking accounts in ledgers and in positions
         // Test comment
+        Dl.local().add(RemoteLookup.class, new RemoteLookup() {
+            @Override
+            public <T> boolean contains(Class<T> clazz) {
+                return false;
+            }
 
+            @Override
+            public <T> T lookup(Class<T> clazz) {
+                return null;
+            }
+        });
         Dl.remote().add(CustomerService.class, new CustomerServiceStub());
         try {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -123,7 +122,7 @@ public class DocumentUpdateViewTryout {
                 .price(100)
                 .uniqueUnitId(3)
                 .uniqueUnitProductId(3)
-                .tax(0.07)
+                .tax(doc.getSingleTax())
                 .build());
         doc.append(Position.builder()
                 .type(SERVICE)
@@ -134,7 +133,7 @@ public class DocumentUpdateViewTryout {
                 .name("Service Acer Aspire E1-572P-74508G75Dnii")
                 .price(100)
                 .bookingAccount(L_1001_HW_SW_STORE)
-                .tax(0)
+                .tax(doc.getSingleTax())
                 .build());
         doc.append(Position.builder()
                 .type(SHIPPING_COST)
@@ -189,7 +188,6 @@ public class DocumentUpdateViewTryout {
             }
 
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">
-
             @Override
             public Mandator loadMandator() {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
