@@ -21,8 +21,6 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 
-import lombok.Getter;
-
 import static eu.ggnet.dwoss.util.UserInfoException.Type.INFO;
 
 /**
@@ -38,10 +36,8 @@ public class UserInfoException extends Exception {
         ERROR, WARNING, INFO
     }
 
-    @Getter
     private final Type type;
 
-    @Getter
     private final String head;
 
     public UserInfoException(String message) {
@@ -80,6 +76,14 @@ public class UserInfoException extends Exception {
         head = (title == null ? "Nutzerfehler" : title);
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public String getHead() {
+        return head;
+    }
+    
     private static String fromList(List<String> messages) {
         StringBuilder sb = new StringBuilder();
         if ( messages.size() > 2 ) sb.append("Viele Fehler:\n");

@@ -16,24 +16,27 @@
  */
 package eu.ggnet.dwoss.util.gen;
 
-import lombok.Value;
+import org.inferred.freebuilder.FreeBuilder;
+
 
 /**
  * A Name
  *
  * @author oliver.guenther
  */
-@Value
-public class Name {
+@FreeBuilder
+public interface Name {
 
     public static enum Gender {
         MALE, FEMALE
     }
 
-    private final String first;
+    String getFirst();
 
-    private final String last;
+    String getLast();
 
-    private final Gender gender;
+    Gender getGender();
+    
+    class Builder extends Name_Builder {};
 
 }

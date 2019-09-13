@@ -106,10 +106,10 @@ public class NameGenerator {
         Name.Gender gender = Name.Gender.MALE;
         if ( female ) gender = Name.Gender.FEMALE;
         List<String> first = (female ? namesFemaleFirst : namesMaleFirst);
-        return new Name(
-                first.get(R.nextInt(first.size())),
-                namesLast.get(R.nextInt(namesLast.size())),
-                gender);
+        return new Name.Builder()
+                .setFirst(first.get(R.nextInt(first.size())))
+                .setLast(namesLast.get(R.nextInt(namesLast.size())))
+                .setGender(gender).build();
     }
 
     public String makeCompanyName() {
@@ -121,11 +121,12 @@ public class NameGenerator {
     }
 
     public GeneratedAddress makeAddress() {
-        return new GeneratedAddress(
-                streets.get(R.nextInt(streets.size())),
-                R.nextInt(300),
-                String.format("%05d", R.nextInt(100000)),
-                towns.get(R.nextInt(towns.size())));
+        return new GeneratedAddress.Builder()
+                .setStreet(streets.get(R.nextInt(streets.size())))
+                .setNumber(R.nextInt(300))
+                .setPostalCode(String.format("%05d", R.nextInt(100000)))
+                .setTown(towns.get(R.nextInt(towns.size())))
+                .build();
     }
 
     public static void main(String[] args) {

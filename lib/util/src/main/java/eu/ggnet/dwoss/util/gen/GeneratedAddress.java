@@ -16,22 +16,25 @@
  */
 package eu.ggnet.dwoss.util.gen;
 
-import lombok.Value;
+import org.inferred.freebuilder.FreeBuilder;
+
 
 /**
  * A Address
  *
  * @author oliver.guenther
  */
-@Value
-public class GeneratedAddress {
+@FreeBuilder
+public interface GeneratedAddress {
 
-    private final String street;
+    String getStreet();
 
-    private final int number;
+    int getNumber();
 
-    private final String postalCode;
+    String getPostalCode();
 
-    private final String town;
+    String getTown();
+    
+    class Builder extends GeneratedAddress_Builder {};
 
 }

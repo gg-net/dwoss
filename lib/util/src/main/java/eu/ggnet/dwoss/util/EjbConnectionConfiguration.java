@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.util;
 
-import lombok.Builder;
-import lombok.Value;
+import org.inferred.freebuilder.FreeBuilder;
+
 
 /**
  * Configuration for an EjbConnection.
@@ -25,18 +25,19 @@ import lombok.Value;
  *
  * @author oliver.guenther
  */
-@Value
-@Builder
-public class EjbConnectionConfiguration {
+@FreeBuilder
+public interface EjbConnectionConfiguration {
 
-    private final int port;
+    int port();
 
-    private final String host;
+    String host();
 
-    private final String username;
+    String username();
 
-    private final String password;
+    String password();
 
-    private final String app;
+    String app();
+    
+    class Builder extends EjbConnectionConfiguration_Builder {};
 
 }

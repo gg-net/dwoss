@@ -17,7 +17,6 @@
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import javax.naming.*;
@@ -68,11 +67,11 @@ public class WildflyLookup implements RemoteLookup {
 
     public WildflyLookup(EjbConnectionConfiguration config) {
         requireNonNull(config, "LookupConfig must not be null");
-        requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
-        requireNonNull(config.getUsername(), "Username of LookupConfig must not be null");
-        requireNonNull(config.getPassword(), "Password of LookupConfig must not be null");
-        requireNonNull(config.getApp(), "App of LookupConfig must not be null");
-        if ( config.getPort() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
+        requireNonNull(config.host(), "Host of LookupConfig must not be null");
+        requireNonNull(config.username(), "Username of LookupConfig must not be null");
+        requireNonNull(config.password(), "Password of LookupConfig must not be null");
+        requireNonNull(config.app(), "App of LookupConfig must not be null");
+        if ( config.port() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
 
         this.CONFIG = config;
     }
@@ -80,8 +79,8 @@ public class WildflyLookup implements RemoteLookup {
     private synchronized void init() {
         if ( initialized ) return;
 
-        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(CONFIG.getUsername()).usePassword(CONFIG.getPassword());
-        authenticationContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(CONFIG.getHost()), ejbConfig);
+        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(CONFIG.username()).usePassword(CONFIG.password());
+        authenticationContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(CONFIG.host()), ejbConfig);
         AuthenticationContext.getContextManager().setGlobalDefault(authenticationContext);
 
         try {
@@ -89,10 +88,10 @@ public class WildflyLookup implements RemoteLookup {
             // create an InitialContext
             Properties properties = new Properties();
             properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.getHost() + ":" + CONFIG.getPort());
+            properties.put(Context.PROVIDER_URL, "remote+http://" + CONFIG.host() + ":" + CONFIG.port());
             _context = new InitialContext(properties);
 
-            final String APP = CONFIG.getApp();
+            final String APP = CONFIG.app();
             Object instance = null;
             String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
             try {
@@ -107,7 +106,7 @@ public class WildflyLookup implements RemoteLookup {
 
             namesAndLookup = names.stream()
                     .filter(n -> n.contains("!"))
-                    .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + CONFIG.getApp() + "//" + n))
+                    .map(n -> new KeyEquals(n.split("!")[1], "ejb:/" + CONFIG.app() + "//" + n))
                     .distinct() // Removes posible multiple implementations. If these exist in the JNDI tree, we can ignore them, as we discover via Interface.
                     .collect(Collectors.toMap(KeyEquals::getKey, KeyEquals::getValue));
             if ( L.isDebugEnabled() ) namesAndLookup.forEach((k, v) -> L.debug("Lookup cache key={}, value={}", k, v));

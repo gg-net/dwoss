@@ -21,7 +21,6 @@ import java.util.*;
 
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import lombok.*;
 
 /**
  * A Result for afterwards questioning of the result.
@@ -30,8 +29,6 @@ import lombok.*;
  */
 public class Result<T> implements Serializable {
 
-    @Setter
-    @Getter
     private T payload;
 
     private final List<YesNoQuestion> questions = new ArrayList<>();
@@ -51,4 +48,13 @@ public class Result<T> implements Serializable {
         }
         return payload;
     }
+
+    public T getPayload() {
+        return payload;
+    }
+
+    public void setPayload(T payload) {
+        this.payload = payload;
+    }
+    
 }

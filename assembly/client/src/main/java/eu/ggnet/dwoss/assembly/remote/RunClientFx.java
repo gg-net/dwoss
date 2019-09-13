@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.exception.DwFinalExceptionConsumer;
-import eu.ggnet.dwoss.common.ui.exception.UnhandledExceptionCatcher;
-import eu.ggnet.dwoss.common.ui.exception.ConstraintViolationConsumer;
-import eu.ggnet.dwoss.common.ui.exception.UserInfoExceptionConsumer;
-
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.Map;
@@ -36,13 +28,15 @@ import javafx.stage.Stage;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
+import eu.ggnet.dwoss.common.ui.exception.*;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
-import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
 
 import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
@@ -91,7 +85,7 @@ public class RunClientFx extends Application {
          */
         Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
-            swingClient.show("(Remote," + lookupConfig.getHost() + ":" + lookupConfig.getPort() + ") - Mandant:"
+            swingClient.show("(Remote," + lookupConfig.host() + ":" + lookupConfig.port() + ") - Mandant:"
                     + Dl.local().lookup(CachedMandators.class).loadMandator().getCompany().getName(), getParameters());
         });
 

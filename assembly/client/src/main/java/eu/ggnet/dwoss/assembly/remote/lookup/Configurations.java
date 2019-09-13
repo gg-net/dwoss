@@ -35,7 +35,7 @@ public class Configurations {
     private static void init() {
         if ( !Objects.isNull(conf) ) return;
         conf = new HashMap<>();
-        conf.put("local", EjbConnectionConfiguration.builder()
+        conf.put("local", new EjbConnectionConfiguration.Builder()
                 .host("localhost")
                 .port(8080)
                 .username("admin")

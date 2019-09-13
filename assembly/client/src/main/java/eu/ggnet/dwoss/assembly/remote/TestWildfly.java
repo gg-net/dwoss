@@ -18,7 +18,6 @@ package eu.ggnet.dwoss.assembly.remote;
 
 import java.util.List;
 import java.util.Properties;
-
 import java.util.concurrent.Callable;
 
 import javax.naming.*;
@@ -27,12 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wildfly.security.auth.client.*;
 
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 
 /**
  *
@@ -44,7 +43,7 @@ public class TestWildfly {
 
     public static void main(String[] args) throws Exception {
 
-        EjbConnectionConfiguration c = EjbConnectionConfiguration.builder()
+        EjbConnectionConfiguration c = new EjbConnectionConfiguration.Builder()
                 .host("localhost")
                 .port(8080)
                 .username("admin")
@@ -58,21 +57,21 @@ public class TestWildfly {
 
     public static void tryEjbJndi(EjbConnectionConfiguration config) throws Exception {
 
-        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(config.getUsername()).usePassword(config.getPassword());
-        AuthenticationContext authContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(config.getHost()), ejbConfig);
+        AuthenticationConfiguration ejbConfig = AuthenticationConfiguration.empty().useName(config.username()).usePassword(config.password());
+        AuthenticationContext authContext = AuthenticationContext.empty().with(MatchRule.ALL.matchHost(config.host()), ejbConfig);
         
         AuthenticationContext.getContextManager().setGlobalDefault(authContext);
 
         Properties properties = new Properties();
         properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-        properties.put(Context.PROVIDER_URL, "remote+http://" + config.getHost() + ":" + config.getPort());
+        properties.put(Context.PROVIDER_URL, "remote+http://" + config.host() + ":" + config.port());
 
         Callable<List<String>> nameDiscovery = () -> {
 
             // create an InitialContext
             InitialContext c = new InitialContext(properties);
 
-            final String APP = config.getApp();
+            final String APP = config.app();
             Object instance = null;
             String discoveryName = "ejb:/" + APP + "//" + Discovery.NAME;
             L.debug("Trying lookup of {} ", discoveryName);
@@ -97,7 +96,7 @@ public class TestWildfly {
             // create an InitialContext
             InitialContext c = new InitialContext(properties);
 
-            final String APP = config.getApp();
+            final String APP = config.app();
             Mandators instance = null;
             String name = "ejb:/" + APP + "//MandatorsBean!eu.ggnet.dwoss.mandator.ee.Mandators";
             L.debug("Trying lookup of {} ", name);

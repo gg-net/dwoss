@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote.lookup;
 
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-
 import java.util.*;
 
 import javax.naming.*;
@@ -25,6 +23,7 @@ import javax.naming.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import static java.util.Objects.requireNonNull;
@@ -49,9 +48,9 @@ public class TomeeLookup implements RemoteLookup {
 
     public TomeeLookup(EjbConnectionConfiguration config) {
         requireNonNull(config, "LookupConfig must not be null");
-        requireNonNull(config.getHost(), "Host of LookupConfig must not be null");
-        if ( config.getPort() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
-        this.URL = "http://" + config.getHost() + ":" + config.getPort() + "/tomee/ejb";
+        requireNonNull(config.host(), "Host of LookupConfig must not be null");
+        if ( config.port() <= 0 ) throw new IllegalArgumentException("Port of LookupConfig must be greater than 0. " + config);
+        this.URL = "http://" + config.host() + ":" + config.port() + "/tomee/ejb";
     }
 
     public TomeeLookup(String URL) {
