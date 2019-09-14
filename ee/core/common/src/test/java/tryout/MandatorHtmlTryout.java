@@ -62,21 +62,21 @@ public class MandatorHtmlTryout extends Application {
 
         Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations = new HashMap<>();
         documentIdentifierGeneratorConfigurations.put(DocumentType.INVOICE,
-                new DocumentIdentifierGeneratorConfiguration("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
         documentIdentifierGeneratorConfigurations.put(DocumentType.ANNULATION_INVOICE,
-                new DocumentIdentifierGeneratorConfiguration("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
-                new DocumentIdentifierGeneratorConfiguration("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
         String defaultMailSignature = "Mail Signatur \n Test Test \t Senior System Requirements Specilist \n  Mobiel: 0174 123 45 67 \n  Phone; 040 123 45 67 \n Impressums: xxxx";
         UrlLocation mailTemplateLocation = new UrlLocation(new URL("http://example.com/"));
 
-        MandatorMailAttachment attachment1 = MandatorMailAttachment.builder()
+        MandatorMailAttachment attachment1 = new MandatorMailAttachment.Builder()
                 .attachmentName("NewFile.txt")
                 .attachmentDescription("txt file")
                 .attachmentData(mailTemplateLocation)
                 .build();
-        MandatorMailAttachment attachment2 = MandatorMailAttachment.builder()
+        MandatorMailAttachment attachment2 = new MandatorMailAttachment.Builder()
                 .attachmentName("NewFile.docx")
                 .attachmentDescription("Microsoft Word Document")
                 .attachmentData(mailTemplateLocation)

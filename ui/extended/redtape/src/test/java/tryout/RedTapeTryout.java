@@ -1,6 +1,7 @@
 package tryout;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.function.Consumer;
 
 import javax.swing.JLabel;
@@ -95,8 +96,13 @@ public class RedTapeTryout {
         Dl.remote().add(ShippingCostService.class, null);
 
         Mandators mandatorSupporterMock = mock(Mandators.class);
-        when(mandatorSupporterMock.loadSalesdata()).thenReturn(new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT,
-                Arrays.asList(SalesChannel.CUSTOMER, SalesChannel.RETAILER), null));
+        when(mandatorSupporterMock.loadSalesdata()).thenReturn(
+                new DefaultCustomerSalesdata.Builder()
+                        .shippingCondition(ShippingCondition.SIX_MIN_TEN)
+                        .paymentCondition(PaymentCondition.CUSTOMER)
+                        .paymentMethod(PaymentMethod.DIRECT_DEBIT)
+                        .addAllAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER, SalesChannel.RETAILER))
+                        .build());
 
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 

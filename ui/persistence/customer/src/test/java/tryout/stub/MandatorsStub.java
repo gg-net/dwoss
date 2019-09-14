@@ -30,7 +30,7 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public Mandator loadMandator() {
-          return Mandator.builder()
+        return Mandator.builder()
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
                 .build();
@@ -38,11 +38,11 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public DefaultCustomerSalesdata loadSalesdata() {
-        return DefaultCustomerSalesdata.builder()
+        return new DefaultCustomerSalesdata.Builder()
                 .paymentCondition(PaymentCondition.CUSTOMER)
                 .shippingCondition(ShippingCondition.FIVE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT)
-                .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER)).build();
+                .addAllAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER)).build();
     }
 
     @Override

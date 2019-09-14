@@ -18,24 +18,25 @@ package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
 
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import org.inferred.freebuilder.FreeBuilder;
 
-import lombok.Builder;
-import lombok.Value;
+import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
 /**
  * Valueholder for attachments in {@link Mandator} mail attachments.
  * <p>
  * @author pascal.perau
  */
-@Value
-@Builder
-public class MandatorMailAttachment implements Serializable {
+@FreeBuilder
+public interface MandatorMailAttachment extends Serializable {
 
-    private String attachmentName;
+    class Builder extends MandatorMailAttachment_Builder {
+    };
 
-    private String attachmentDescription;
+    String attachmentName();
 
-    private UrlLocation attachmentData;
+    String attachmentDescription();
+
+    UrlLocation attachmentData();
 
 }

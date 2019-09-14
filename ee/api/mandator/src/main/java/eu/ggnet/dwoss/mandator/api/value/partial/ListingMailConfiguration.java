@@ -18,41 +18,28 @@ package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Wither;
+import org.inferred.freebuilder.FreeBuilder;
 
 /**
  *
  * @author oliver.guenther
  */
-@Wither
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-public class ListingMailConfiguration implements Serializable {
+@FreeBuilder
+public interface ListingMailConfiguration extends Serializable {
 
-    @NotNull
-    private String fromAddress; // Reconsider if we need that. Wie have a default.
+    class Builder extends ListingMailConfiguration_Builder {
+    };
 
-    @NotNull
-    private String toAddress;
+    String fromAddress();
 
-    @NotNull
-    private String subject;
+    String toAddress();
 
-    @NotNull
-    private String message;
+    String subject();
 
-    @NotNull
-    private String charset;
+    String message();
 
-    private String signature;
+    String charset();
 
-    public String toMessage() {
-        return message + (signature == null ? "" : signature);
-    }
+    String signature();
+
 }

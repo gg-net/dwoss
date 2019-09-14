@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
-
 import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -33,8 +31,10 @@ import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
@@ -102,11 +102,11 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
     private MandatorMetadata makeTotalDifferentMetadata() {
         MandatorMetadata mm = new MandatorMetadata(mandator.getMatchCode());
         mm.getAllowedSalesChannels().add(SalesChannel.CUSTOMER);
-        if ( mm.getAllowedSalesChannels().equals(dcs.getAllowedSalesChannels()) ) mm.getAllowedSalesChannels().add(SalesChannel.RETAILER);
+        if ( mm.getAllowedSalesChannels().equals(dcs.allowedSalesChannels()) ) mm.getAllowedSalesChannels().add(SalesChannel.RETAILER);
 
-        mm.setShippingCondition(dcs.getShippingCondition() != FIVE ? FIVE : FIVE_EIGHTY);
-        mm.setPaymentCondition(dcs.getPaymentCondition() != CUSTOMER ? CUSTOMER : EMPLOYEE);
-        mm.setPaymentMethod(dcs.getPaymentMethod() != DIRECT_DEBIT ? DIRECT_DEBIT : ADVANCE_PAYMENT);
+        mm.setShippingCondition(dcs.shippingCondition() != FIVE ? FIVE : FIVE_EIGHTY);
+        mm.setPaymentCondition(dcs.paymentCondition() != CUSTOMER ? CUSTOMER : EMPLOYEE);
+        mm.setPaymentMethod(dcs.paymentMethod() != DIRECT_DEBIT ? DIRECT_DEBIT : ADVANCE_PAYMENT);
         return mm;
     }
 
@@ -114,8 +114,8 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
     public void addPartialNewMetadata() {
         MandatorMetadata mm = makeTotalDifferentMetadata();
         // These two elements should be nullified on normalizedstore
-        mm.setPaymentCondition(dcs.getPaymentCondition());
-        mm.setPaymentMethod(dcs.getPaymentMethod());
+        mm.setPaymentCondition(dcs.paymentCondition());
+        mm.setPaymentMethod(dcs.paymentMethod());
 
         agent.normalizedStoreMandatorMetadata(customer.getId(), mm);
 
@@ -148,8 +148,8 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
                 .returns(mm.getShippingCondition(), MandatorMetadata::getShippingCondition);
 
         // Modify payment codition and method to defaults
-        c0mm.setPaymentCondition(dcs.getPaymentCondition());
-        c0mm.setPaymentMethod(dcs.getPaymentMethod());
+        c0mm.setPaymentCondition(dcs.paymentCondition());
+        c0mm.setPaymentMethod(dcs.paymentMethod());
 
         agent.normalizedStoreMandatorMetadata(customer.getId(), c0mm);
 
@@ -168,8 +168,8 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
 
         // Now set everything to defaults, which results in auto remove
         c0mm.getAllowedSalesChannels().clear();
-        c0mm.getAllowedSalesChannels().addAll(dcs.getAllowedSalesChannels());
-        c0mm.setShippingCondition(dcs.getShippingCondition());
+        c0mm.getAllowedSalesChannels().addAll(dcs.allowedSalesChannels());
+        c0mm.setShippingCondition(dcs.shippingCondition());
 
         agent.normalizedStoreMandatorMetadata(customer.getId(), c0mm);
 
@@ -185,10 +185,10 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
     @Test
     public void addTotalNewOnlyDefaults() {
         MandatorMetadata mm = new MandatorMetadata(mandator.getMatchCode());
-        mm.getAllowedSalesChannels().addAll(dcs.getAllowedSalesChannels());
-        mm.setShippingCondition(dcs.getShippingCondition());
-        mm.setPaymentCondition(dcs.getPaymentCondition());
-        mm.setPaymentMethod(dcs.getPaymentMethod());
+        mm.getAllowedSalesChannels().addAll(dcs.allowedSalesChannels());
+        mm.setShippingCondition(dcs.shippingCondition());
+        mm.setPaymentCondition(dcs.paymentCondition());
+        mm.setPaymentMethod(dcs.paymentMethod());
 
         agent.normalizedStoreMandatorMetadata(customer.getId(), mm);
 

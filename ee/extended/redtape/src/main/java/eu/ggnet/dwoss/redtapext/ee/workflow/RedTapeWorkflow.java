@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,13 +24,14 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
 import eu.ggnet.dwoss.redtape.ee.eao.AddressEao;
 import eu.ggnet.dwoss.redtape.ee.emo.RedTapeCounterEmo;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.emo.EquilibrationResult;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
@@ -192,11 +187,11 @@ public abstract class RedTapeWorkflow {
         DocumentIdentifierGeneratorConfiguration digc = mandator.getDocumentIdentifierGeneratorConfigurations().get(document.getType());
         if ( digc == null ) return null;
 
-        RedTapeCounter counter = new RedTapeCounterEmo(redTapeEm).requestNext(document.getType(), digc.getPrefixType().generate());
+        RedTapeCounter counter = new RedTapeCounterEmo(redTapeEm).requestNext(document.getType(), digc.prefixType().generate());
         String identifier = digc
-                .getPattern()
+                .pattern()
                 .replace(DocumentIdentifierGeneratorConfiguration.VAR_PREFIX, counter.getPrefix())
-                .replace(DocumentIdentifierGeneratorConfiguration.VAR_COUNTER, digc.getCounterFormat().format(counter.getValue()));
+                .replace(DocumentIdentifierGeneratorConfiguration.VAR_COUNTER, digc.counterFormat().format(counter.getValue()));
 
         document.setIdentifier(identifier);
         L.debug("Generated Identifier: {}", document.getIdentifier());

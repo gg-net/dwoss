@@ -93,10 +93,10 @@ public class FtpConfiguration {
         public final String pass;
 
         public ConnectionConfig(String host, int port, String user, String pass) {
-            this.host = host;
+            this.host = Objects.requireNonNull(host, "new ConnectionConfig with host=null called, not allowed");
             this.port = port;
-            this.user = user;
-            this.pass = pass;
+            this.user = Objects.requireNonNull(user, "new ConnectionConfig with user=null called, not allowed");;
+            this.pass = Objects.requireNonNull(pass, "new ConnectionConfig with pass=null called, not allowed");;
         }
 
         @Override
@@ -111,8 +111,8 @@ public class FtpConfiguration {
     private final Set<UploadCommand> updloadCommands;
 
     public FtpConfiguration(ConnectionConfig config, Set<UploadCommand> updloadCommands) {
-        this.config = config;
-        this.updloadCommands = updloadCommands;
+        this.config = Objects.requireNonNull(config, "new FtpConfiguration with config=null called, not allowed");;
+        this.updloadCommands = Objects.requireNonNull(updloadCommands, "new FtpConfiguration with updloadCommands=null called, not allowed");;
     }
 
     public ConnectionConfig getConfig() {

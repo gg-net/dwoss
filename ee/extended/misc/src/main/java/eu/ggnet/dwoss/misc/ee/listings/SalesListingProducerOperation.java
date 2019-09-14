@@ -33,7 +33,6 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRSaver;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
@@ -453,11 +452,12 @@ public class SalesListingProducerOperation implements SalesListingProducer {
         if ( listingService.isAmbiguous() || listingService.isUnsatisfied() ) {
             for (TradeName brand : TradeName.values()) {
                 for (ProductGroup value : ProductGroup.values()) {
-                    configs.add(ListingConfiguration.builder()
+                    configs.add(new ListingConfiguration.Builder()
                             .filePrefix("Geräteliste ")
-                            .name(brand.getName() + " " + value.getName())
+                            .name(brand.getDescription() + " " + value.description)
                             .brand(brand)
-                            .groups(EnumSet.of(value))
+                            .addAllGroups(EnumSet.of(value))
+                            .addAllSupplementBrands(EnumSet.noneOf(TradeName.class))
                             .headLeft("Beispieltext Links\nZeile 2")
                             .headCenter("Beispieltext Mitte\nZeile 2")
                             .headRight("Beispieltext Rechts\nZeile 2")
@@ -473,18 +473,19 @@ public class SalesListingProducerOperation implements SalesListingProducer {
 
         Map<TradeName, Collection<FileJacket>> jackets = new HashMap<>();
         for (ListingConfiguration config : configs) {
-            m.worked(1, "erstelle Liste " + config.getName());
+            m.worked(1, "erstelle Liste " + config.name());
+            ListingConfiguration.Builder finalConfigBuilder = new ListingConfiguration.Builder().mergeFrom(config);
 
-            if ( StringUtils.isBlank(config.getJasperTemplateFile()) )
-                config.setJasperTemplateFile(compileReportToTempFile("CustomerSalesListing"));
+            if ( !config.jasperTemplateFile().isPresent() )
+                finalConfigBuilder.jasperTemplateFile(compileReportToTempFile("CustomerSalesListing"));
 
-            if ( StringUtils.isBlank(config.getJasperTempleteUnitsFile()) )
-                config.setJasperTempleteUnitsFile(compileReportToTempFile("CustomerSalesListingUnits"));
+            if ( !config.jasperTempleteUnitsFile().isPresent() )
+                finalConfigBuilder.jasperTempleteUnitsFile(compileReportToTempFile("CustomerSalesListingUnits"));
 
-            FileJacket fj = createListing(config, stackedLines);
+            FileJacket fj = createListing(finalConfigBuilder.build(), stackedLines);
             if ( fj != null ) {
-                if ( !jackets.containsKey(config.getBrand()) ) jackets.put(config.getBrand(), new HashSet<>());
-                jackets.get(config.getBrand()).add(fj);
+                if ( !jackets.containsKey(config.brand()) ) jackets.put(config.brand(), new HashSet<>());
+                jackets.get(config.brand()).add(fj);
             }
         }
         m.finish();
@@ -500,16 +501,19 @@ public class SalesListingProducerOperation implements SalesListingProducer {
      * @return a filejacket from a collection of lines that are filtered by configuration parameters.
      */
     private FileJacket createListing(ListingConfiguration config, Collection<StackedLine> all) {
+        // Todo. Validate optional
         try {
             SortedSet<StackedLine> filtered = all.stream()
-                    .filter(line -> (config.getAllBrands().contains(line.getBrand()) && config.getGroups().contains(line.getGroup())))
+                    .filter(line -> (config.getAllBrands().contains(line.getBrand()) && config.groups().contains(line.getGroup())))
                     .collect(Collectors.toCollection(TreeSet::new));
             if ( filtered.isEmpty() ) return null;
-            L.info("Creating listing {} with {} lines", config.getName(), filtered.size());
-            JRDataSource datasource = new JRBeanCollectionDataSource(filtered);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(config.getJasperTemplateFile(), config.toReportParamters(), datasource);
+            L.info("Creating listing {} with {} lines", config.name(), filtered.size());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(config.jasperTemplateFile().orElseThrow(
+                    () -> new NullPointerException("JasperTemplateUnitsFile not set in toReportParameters. Unsing " + this)),
+                    config.toReportParamters(),
+                    new JRBeanCollectionDataSource(filtered));
             byte[] pdfContend = JasperExportManager.exportReportToPdf(jasperPrint);
-            return new FileJacket(config.getFilePrefix() + config.getName(), ".pdf", pdfContend);
+            return new FileJacket(config.filePrefix() + config.name(), ".pdf", pdfContend);
         } catch (JRException ex) {
             throw new RuntimeException(ex);
         }
@@ -529,10 +533,10 @@ public class SalesListingProducerOperation implements SalesListingProducer {
             ListingMailConfiguration config = listingService.get().listingMailConfiguration();
 
             MultiPartEmail email = mandator.prepareDirectMail();
-            email.setFrom(config.getFromAddress());
-            email.addTo(config.getToAddress());
-            email.setSubject(config.getSubject());
-            email.setMsg(config.toMessage());
+            email.setFrom(config.fromAddress());
+            email.addTo(config.toAddress());
+            email.setSubject(config.subject());
+            email.setMsg(config.message() + config.signature());
 
             for (FileJacket fj : fileJackets) {
                 email.attach(

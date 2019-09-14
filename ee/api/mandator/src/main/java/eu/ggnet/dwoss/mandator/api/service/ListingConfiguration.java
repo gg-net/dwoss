@@ -20,106 +20,77 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.*;
 
-import javax.validation.constraints.NotNull;
+import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-
-import lombok.*;
-
-import static java.util.EnumSet.noneOf;
 
 /**
  *
  * @author pascal.perau
  */
-@Data
-@AllArgsConstructor
-public class ListingConfiguration implements Serializable {
+@FreeBuilder
+public abstract class ListingConfiguration implements Serializable {
 
-    @NotNull
-    private String jasperTemplateFile;
+    public abstract Optional<String> jasperTemplateFile();
 
-    @NotNull
-    private String jasperTempleteUnitsFile;
+    public abstract Optional<String> jasperTempleteUnitsFile();
 
-    private URL logoLeft;
+    public abstract URL logoLeft();
 
-    private URL logoRight;
+    public abstract URL logoRight();
 
-    private String orderLink;
+    public abstract String orderLink();
 
-    private String filePrefix;
+    public abstract String filePrefix();
 
-    private String name;
+    public abstract String name();
 
-    private TradeName brand;
+    public abstract TradeName brand();
 
-    private Set<TradeName> supplementBrands;
+    public abstract Set<TradeName> supplementBrands();
 
-    private Set<ProductGroup> groups;
+    public abstract Set<ProductGroup> groups();
 
-    private String headLeft;
+    public abstract String headLeft();
 
-    private String headCenter;
+    public abstract String headCenter();
 
-    private String headRight;
+    public abstract String headRight();
 
-    private String footer;
+    public abstract String footer();
 
-    @Builder
-    public ListingConfiguration(String name,
-                                URL logoLeft, URL logoRight,
-                                String orderLink, String filePrefix,
-                                TradeName brand,
-                                Set<TradeName> supplementBrands,
-                                Set<ProductGroup> groups,
-                                String headLeft,
-                                String headCenter,
-                                String headRight,
-                                String footer) {
-        this.name = name;
-        this.logoLeft = logoLeft;
-        this.logoRight = logoRight;
-        this.orderLink = orderLink;
-        this.filePrefix = filePrefix;
-        this.brand = brand;
-        this.supplementBrands = supplementBrands;
-        this.groups = groups;
-        this.headLeft = headLeft;
-        this.headRight = headRight;
-        this.headCenter = headCenter;
-        this.footer = footer;
-    }
+    public static class Builder extends ListingConfiguration_Builder {
+    };
 
     public ListingConfiguration copyWith(String name, Set<ProductGroup> groups) {
-        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand,
-                supplementBrands, groups, headLeft, headCenter, headRight, footer);
+        return new ListingConfiguration.Builder().mergeFrom(this).name(name).addAllGroups(groups).build();
     }
 
     public ListingConfiguration copyWith(TradeName brand, URL logoLeft, String orderLink) {
-        return new ListingConfiguration(jasperTemplateFile, jasperTempleteUnitsFile, logoLeft, logoRight, orderLink, filePrefix, name, brand,
-                noneOf(TradeName.class), groups, headLeft, headCenter, headRight, footer);
+        return new ListingConfiguration.Builder().mergeFrom(this).brand(brand).addAllSupplementBrands(EnumSet.noneOf(TradeName.class))
+                .logoLeft(logoLeft).orderLink(orderLink).build();
     }
 
     public Set<TradeName> getAllBrands() {
-        EnumSet<TradeName> result = EnumSet.of(brand);
-        if ( supplementBrands != null && !supplementBrands.isEmpty() ) result.addAll(supplementBrands);
+        EnumSet<TradeName> result = EnumSet.of(brand());
+        result.addAll(supplementBrands());
         return result;
     }
 
     public Map<String, Object> toReportParamters() {
         Map<String, Object> reportParameter = new HashMap<>();
-        reportParameter.put("SUB_REPORT", jasperTempleteUnitsFile);
-        reportParameter.put("BRAND_LOGO", logoLeft);
-        reportParameter.put("COMPANY_LOGO", logoRight);
-        reportParameter.put("TITLE", name);
-        reportParameter.put("ORDERLINK", orderLink);
+        reportParameter.put("SUB_REPORT", jasperTempleteUnitsFile().orElseThrow(
+                () -> new NullPointerException("JasperTemplateUnitsFile not set in toReportParameters. Unsing " + this)));
+        reportParameter.put("BRAND_LOGO", logoLeft());
+        reportParameter.put("COMPANY_LOGO", logoRight());
+        reportParameter.put("TITLE", name());
+        reportParameter.put("ORDERLINK", orderLink());
         reportParameter.put("REPORT_LOCALE", Locale.GERMANY);
-        reportParameter.put("HEAD_LEFT", headLeft);
-        reportParameter.put("HEAD_CENTER", headCenter);
-        reportParameter.put("HEAD_RIGHT", headRight);
-        reportParameter.put("FOOTER", footer);
+        reportParameter.put("HEAD_LEFT", headLeft());
+        reportParameter.put("HEAD_CENTER", headCenter());
+        reportParameter.put("HEAD_RIGHT", headRight());
+        reportParameter.put("FOOTER", footer());
         return reportParameter;
     }
 

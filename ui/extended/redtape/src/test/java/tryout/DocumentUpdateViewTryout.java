@@ -184,7 +184,11 @@ public class DocumentUpdateViewTryout {
 
             @Override
             public DefaultCustomerSalesdata loadSalesdata() {
-                return new DefaultCustomerSalesdata(ShippingCondition.SIX_MIN_TEN, PaymentCondition.CUSTOMER, PaymentMethod.DIRECT_DEBIT, null, null);
+                return new DefaultCustomerSalesdata.Builder()
+                        .shippingCondition(ShippingCondition.SIX_MIN_TEN)
+                        .paymentCondition(PaymentCondition.CUSTOMER)
+                        .paymentMethod(PaymentMethod.DIRECT_DEBIT)
+                        .build();
             }
 
             //<editor-fold defaultstate="collapsed" desc="Unused Methods">

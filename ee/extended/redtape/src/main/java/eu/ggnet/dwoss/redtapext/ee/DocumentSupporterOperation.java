@@ -203,7 +203,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
 
             //add attachments
             for (MandatorMailAttachment mma : attachmentByType) {
-                email.attach(mma.getAttachmentData().toURL(), mma.getAttachmentName(), mma.getAttachmentDescription());
+                email.attach(mma.attachmentData().toURL(), mma.attachmentName(), mma.attachmentDescription());
             }
 
             email.send();

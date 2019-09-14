@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.mandator.api.service;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
@@ -44,10 +45,10 @@ public class ListingActionConfiguration implements Serializable {
     public final String name;
 
     public ListingActionConfiguration(Type type, Location location, SalesChannel channel, String name) {
-        this.type = type;
-        this.location = location;
-        this.channel = channel;
-        this.name = name;
+        this.type = Objects.requireNonNull(type, "new ListingActionConfiguration with type=null called, not allowed");;
+        this.location = Objects.requireNonNull(location, "new ListingActionConfiguration with location=null called, not allowed");;
+        this.channel = Objects.requireNonNull(channel, "new ListingActionConfiguration with channel=null called, not allowed");;
+        this.name = Objects.requireNonNull(name, "new ListingActionConfiguration with name=null called, not allowed");;
     }
 
     @Override

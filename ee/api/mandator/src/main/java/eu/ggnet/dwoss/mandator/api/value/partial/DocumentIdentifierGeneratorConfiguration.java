@@ -21,15 +21,18 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import lombok.Data;
+import org.inferred.freebuilder.FreeBuilder;
 
 /**
  * A DocumentIdentifierGeneratorConfiguration
  * <p/>
  * @author oliver.guenther
  */
-@Data
-public class DocumentIdentifierGeneratorConfiguration implements Serializable {
+@FreeBuilder
+public interface DocumentIdentifierGeneratorConfiguration extends Serializable {
+
+    class Builder extends DocumentIdentifierGeneratorConfiguration_Builder {
+    };
 
     public static String VAR_PREFIX = "{PREFIX}";
 
@@ -80,24 +83,29 @@ public class DocumentIdentifierGeneratorConfiguration implements Serializable {
 
     /**
      * The pattern of the identifier, that contains {PREFIX} and {COUNTER}.
-     * <p/>
+     * </>
      * e.g.: RS{PREFIX}_{COUNTER}
+     *
+     * @return the pattern
      */
-    private final String pattern;
+    String pattern();
 
     /**
      * The PrefixType.
+     *
+     * @return the prefice type.
      */
-    private final PrefixType prefixType;
+    PrefixType prefixType();
 
     /**
      * The Format for the counter.
+     *
+     * @return the counter.
      */
-    private final DecimalFormat counterFormat;
+    DecimalFormat counterFormat();
 
-    @Override
-    public String toString() {
-        return "DocumentIdentifierGeneratorConfiguration{" + "pattern=" + pattern + ", prefixType=" + prefixType + "}";
+    public static DocumentIdentifierGeneratorConfiguration create(String pattern, PrefixType type, DecimalFormat counterFormat) {
+        return new DocumentIdentifierGeneratorConfiguration.Builder().pattern(pattern).prefixType(type).counterFormat(counterFormat).build();
     }
 
 }

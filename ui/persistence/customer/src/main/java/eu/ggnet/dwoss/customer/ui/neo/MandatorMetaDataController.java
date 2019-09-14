@@ -16,18 +16,13 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.net.URL;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -37,6 +32,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
@@ -186,11 +182,11 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         });
 
         defaultCsd = Dl.local().lookup(CachedMandators.class).loadSalesdata();
-        defaultshippingConditionTextField.setText(defaultCsd.getShippingCondition().getName());
-        defaultpaymentConditionTextField.setText(defaultCsd.getPaymentCondition().getNote());
-        defaultpaymentMethodTextField.setText(defaultCsd.getPaymentMethod().getNote());
+        defaultshippingConditionTextField.setText(defaultCsd.shippingCondition().description);
+        defaultpaymentConditionTextField.setText(defaultCsd.paymentCondition().description);
+        defaultpaymentMethodTextField.setText(defaultCsd.paymentMethod().description);
         defaultSalesChannelsListView.getItems().forEach(i -> {
-            if ( defaultCsd.getAllowedSalesChannels().contains(i.getSalesChannel()) ) i.setSelected(true);
+            if ( defaultCsd.allowedSalesChannels().contains(i.getSalesChannel()) ) i.setSelected(true);
         });
 
         Guardian guardian = Dl.local().lookup(Guardian.class);
@@ -225,10 +221,10 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     @FXML
     private void handleResetButtonAction(ActionEvent event) {
         allowedSalesChannelsListView.getItems()
-                .forEach(s -> s.setSelected(defaultCsd.getAllowedSalesChannels().contains(s.getSalesChannel())));
-        shippingConditionComboBox.getSelectionModel().select(defaultCsd.getShippingCondition());
-        paymentConditionComboBox.getSelectionModel().select(defaultCsd.getPaymentCondition());
-        paymentMethodComboBox.getSelectionModel().select(defaultCsd.getPaymentMethod());
+                .forEach(s -> s.setSelected(defaultCsd.allowedSalesChannels().contains(s.getSalesChannel())));
+        shippingConditionComboBox.getSelectionModel().select(defaultCsd.shippingCondition());
+        paymentConditionComboBox.getSelectionModel().select(defaultCsd.paymentCondition());
+        paymentMethodComboBox.getSelectionModel().select(defaultCsd.paymentMethod());
     }
 
     @Override
@@ -239,9 +235,9 @@ public class MandatorMetaDataController implements Initializable, FxController, 
         this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());
         this.shippingConditionComboBox.getSelectionModel().select(mandatorMetaData.getShippingCondition());
 
-        if (!mandatorMetaData.getAllowedSalesChannels().isEmpty()) {// Empty = default
-        allowedSalesChannelsListView.getItems()
-                .forEach(s -> s.setSelected(mandatorMetaData.getAllowedSalesChannels().contains(s.getSalesChannel())));
+        if ( !mandatorMetaData.getAllowedSalesChannels().isEmpty() ) {// Empty = default
+            allowedSalesChannelsListView.getItems()
+                    .forEach(s -> s.setSelected(mandatorMetaData.getAllowedSalesChannels().contains(s.getSalesChannel())));
         }
     }
 

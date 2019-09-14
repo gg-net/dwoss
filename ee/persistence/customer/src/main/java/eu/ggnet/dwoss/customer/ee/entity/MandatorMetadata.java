@@ -16,18 +16,15 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
 import lombok.*;
@@ -53,22 +50,22 @@ public class MandatorMetadata implements Serializable {
         private final DefaultCustomerSalesdata defaults;
 
         public ShippingCondition getShippingCondition() {
-            if ( metadata == null || metadata.getShippingCondition() == null ) return defaults.getShippingCondition();
+            if ( metadata == null || metadata.getShippingCondition() == null ) return defaults.shippingCondition();
             return metadata.getShippingCondition();
         }
 
         public PaymentCondition getPaymentCondition() {
-            if ( metadata == null || metadata.getPaymentCondition() == null ) return defaults.getPaymentCondition();
+            if ( metadata == null || metadata.getPaymentCondition() == null ) return defaults.paymentCondition();
             return metadata.getPaymentCondition();
         }
 
         public PaymentMethod getPaymentMethod() {
-            if ( metadata == null || metadata.getPaymentMethod() == null ) return defaults.getPaymentMethod();
+            if ( metadata == null || metadata.getPaymentMethod() == null ) return defaults.paymentMethod();
             return metadata.getPaymentMethod();
         }
 
         public Set<SalesChannel> getAllowedSalesChannels() {
-            if ( metadata == null || metadata.getAllowedSalesChannels().isEmpty() ) return defaults.getAllowedSalesChannels();
+            if ( metadata == null || metadata.getAllowedSalesChannels().isEmpty() ) return defaults.allowedSalesChannels();
             return metadata.getAllowedSalesChannels();
         }
 
@@ -155,10 +152,10 @@ public class MandatorMetadata implements Serializable {
      * @return ture if contents equal or cmd is null.
      */
     public boolean isSameAs(@NonNull DefaultCustomerSalesdata defaultCsd) {
-        if ( !defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels()) ) return false;
-        if ( getPaymentCondition() != null && defaultCsd.getPaymentCondition() != getPaymentCondition() ) return false;
-        if ( getPaymentMethod() != null && defaultCsd.getPaymentMethod() != getPaymentMethod() ) return false;
-        if ( getShippingCondition() != null && defaultCsd.getShippingCondition() != getShippingCondition() ) return false;
+        if ( !defaultCsd.allowedSalesChannels().equals(getAllowedSalesChannels()) ) return false;
+        if ( getPaymentCondition() != null && defaultCsd.paymentCondition() != getPaymentCondition() ) return false;
+        if ( getPaymentMethod() != null && defaultCsd.paymentMethod() != getPaymentMethod() ) return false;
+        if ( getShippingCondition() != null && defaultCsd.shippingCondition() != getShippingCondition() ) return false;
         return true;
     }
 
@@ -168,10 +165,10 @@ public class MandatorMetadata implements Serializable {
      * @param defaultCsd
      */
     public void normalize(@NonNull DefaultCustomerSalesdata defaultCsd) {
-        if ( defaultCsd.getAllowedSalesChannels().equals(getAllowedSalesChannels()) ) getAllowedSalesChannels().clear();
-        if ( defaultCsd.getPaymentCondition() == getPaymentCondition() ) setPaymentCondition(null);
-        if ( defaultCsd.getPaymentMethod() == getPaymentMethod() ) setPaymentMethod(null);
-        if ( defaultCsd.getShippingCondition() == getShippingCondition() ) setShippingCondition(null);
+        if ( defaultCsd.allowedSalesChannels().equals(getAllowedSalesChannels()) ) getAllowedSalesChannels().clear();
+        if ( defaultCsd.paymentCondition() == getPaymentCondition() ) setPaymentCondition(null);
+        if ( defaultCsd.paymentMethod() == getPaymentMethod() ) setPaymentMethod(null);
+        if ( defaultCsd.shippingCondition() == getShippingCondition() ) setShippingCondition(null);
     }
 
 }

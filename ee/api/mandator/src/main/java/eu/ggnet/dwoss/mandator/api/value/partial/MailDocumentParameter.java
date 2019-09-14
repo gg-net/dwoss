@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,14 +19,11 @@ package eu.ggnet.dwoss.mandator.api.value.partial;
 import java.io.Serializable;
 import java.util.Objects;
 
-import lombok.Data;
-
 /**
  * DocumentParameter.
  *
  * @author oliver.guenther
  */
-@Data
 public class MailDocumentParameter implements Serializable {
 
     private final String name;
@@ -42,8 +39,18 @@ public class MailDocumentParameter implements Serializable {
     //TODO: Another worst case solution, but we can life with it.
     public String eval(String template) {
         return Objects.requireNonNull(template, "eval was called with null template")
-                .replaceAll("\\$parameter.name", getName())
-                .replaceAll("\\$parameter.documentType", getDocumentType());
-
+                .replaceAll("\\$parameter.name", name)
+                .replaceAll("\\$parameter.documentType", documentType);
     }
+
+    public MailDocumentParameter(String name, String documentType) {
+        this.name = Objects.requireNonNull(name, "new MailDocumentParameter with name=null called, not allowed");
+        this.documentType = Objects.requireNonNull(documentType, "new MailDocumentParameter with documentType=null called, not allowed");;
+    }
+
+    @Override
+    public String toString() {
+        return "MailDocumentParameter{" + "name=" + name + ", documentType=" + documentType + '}';
+    }
+
 }

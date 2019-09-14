@@ -110,11 +110,11 @@ public class CustomerServiceBean implements CustomerService {
         Optional<MandatorMetadata> omm = Optional.ofNullable(customer.getMandatorMetadata(mandator.getMatchCode()));
         return new CustomerMetaData(
                 customer.getId(),
-                omm.map(MandatorMetadata::getPaymentCondition).filter(mm -> mm != null).orElse(salesData.getPaymentCondition()),
-                omm.map(MandatorMetadata::getPaymentMethod).filter(mm -> mm != null).orElse(salesData.getPaymentMethod()),
-                omm.map(MandatorMetadata::getShippingCondition).filter(mm -> mm != null).orElse(salesData.getShippingCondition()),
+                omm.map(MandatorMetadata::getPaymentCondition).filter(mm -> mm != null).orElse(salesData.paymentCondition()),
+                omm.map(MandatorMetadata::getPaymentMethod).filter(mm -> mm != null).orElse(salesData.paymentMethod()),
+                omm.map(MandatorMetadata::getShippingCondition).filter(mm -> mm != null).orElse(salesData.shippingCondition()),
                 customer.getFlags(),
-                omm.map(MandatorMetadata::getAllowedSalesChannels).filter(sc -> !sc.isEmpty()).orElse(salesData.getAllowedSalesChannels()),
+                omm.map(MandatorMetadata::getAllowedSalesChannels).filter(sc -> !sc.isEmpty()).orElse(salesData.allowedSalesChannels()),
                 customer.getViolationMessage()
         );
     }

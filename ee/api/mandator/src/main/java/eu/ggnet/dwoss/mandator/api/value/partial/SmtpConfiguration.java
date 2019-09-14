@@ -17,26 +17,24 @@
 package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
-
-import lombok.Data;
+import java.util.Objects;
 
 /**
  * Configuration for SMTP Operations.
  * <p/>
  * @author oliver.guenther
  */
-@Data
 public class SmtpConfiguration implements Serializable {
 
-    private final String hostname;
+    public final String hostname;
 
-    private final String smtpAuthenticationUser;
+    public final String smtpAuthenticationUser;
 
-    private final String smtpAuthenticationPass;
+    public final String smtpAuthenticationPass;
 
-    private final String charset;
+    public final String charset;
 
-    private final boolean useStartTls;
+    public final boolean useStartTls;
 
     public String toHtml() {
         return "<p>"
@@ -45,6 +43,14 @@ public class SmtpConfiguration implements Serializable {
                 + "Pass:&nbsp;" + smtpAuthenticationPass + "<br />"
                 + "Charset:&nbsp;" + charset + "<br />"
                 + "StartTls:&nbsp;" + useStartTls + "</p>";
+    }
+
+    public SmtpConfiguration(String hostname, String smtpAuthenticationUser, String smtpAuthenticationPass, String charset, boolean useStartTls) {
+        this.hostname = Objects.requireNonNull(hostname, "new SmtpConfiguration with hostname=null called, not allowed");;
+        this.smtpAuthenticationUser = Objects.requireNonNull(smtpAuthenticationUser, "new SmtpConfiguration with smtpAuthenticationUser=null called, not allowed");;
+        this.smtpAuthenticationPass = Objects.requireNonNull(smtpAuthenticationPass, "new SmtpConfiguration with smtpAuthenticationPass=null called, not allowed");;
+        this.charset = Objects.requireNonNull(charset, "new SmtpConfiguration with charset=null called, not allowed");;
+        this.useStartTls = useStartTls;
     }
 
 }

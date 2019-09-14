@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,30 +17,32 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Set;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
-
-import lombok.AllArgsConstructor;
 
 /**
  * Contains TradeNames, which we do business with.
  * <p>
  * @author oliver.guenther
  */
-@AllArgsConstructor
 public class Contractors implements Serializable {
 
-    private final Set<TradeName> _contractors;
+    private final Set<TradeName> all;
 
-    private final Set<TradeName> _allowedBrands;
+    private final Set<TradeName> allowedBrands;
 
     public Set<TradeName> all() {
-        return _contractors;
+        return all;
     }
 
     public Set<TradeName> allowedBrands() {
-        return _allowedBrands;
+        return allowedBrands;
+    }
+
+    public Contractors(Set<TradeName> contractors, Set<TradeName> allowedBrands) {
+        this.all = contractors;
+        this.allowedBrands = allowedBrands;
     }
 
 }

@@ -72,6 +72,11 @@ public class Mandator implements Serializable {
     @NotNull
     private Set<MandatorMailAttachment> defaultMailAttachment;
 
+    // Info, can be empty.
+    public Set<MandatorMailAttachment> getDefaultMailAttachment() {
+        return defaultMailAttachment;
+    }
+
     @NotNull
     private Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType;
 
@@ -112,14 +117,14 @@ public class Mandator implements Serializable {
      */
     public MultiPartEmail prepareDirectMail() throws EmailException {
         MultiPartEmail email = new MultiPartEmail();
-        email.setHostName(smtpConfiguration.getHostname());
+        email.setHostName(smtpConfiguration.hostname);
         email.addBcc(company.email());
         email.setFrom(company.email(), company.emailName());
-        email.setAuthentication(smtpConfiguration.getSmtpAuthenticationUser(), smtpConfiguration.getSmtpAuthenticationPass());
+        email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
         email.setStartTLSEnabled(false);
         email.setSSLCheckServerIdentity(false);
         email.setSSLOnConnect(false);
-        email.setCharset(smtpConfiguration.getCharset());
+        email.setCharset(smtpConfiguration.charset);
         return email;
     }
 

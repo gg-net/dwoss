@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.tryout;
 
-import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 
@@ -31,6 +25,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
@@ -53,13 +49,13 @@ public class CustomerHtmlTryout extends Application {
         Customer c1 = gen.makeCustomer();
         Customer c2 = gen.makeSimpleConsumerCustomer();
         Customer c3 = gen.makeSimpleBussinesCustomer();
-        
+
         //make wthout invoice adress
         Customer c4 = gen.makeSimpleConsumerCustomer();
         c4.getAddressLabels().clear();
-        
-        DefaultCustomerSalesdata defaults = DefaultCustomerSalesdata.builder()
-                .allowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
+
+        DefaultCustomerSalesdata defaults = new DefaultCustomerSalesdata.Builder()
+                .addAllAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                 .paymentCondition(PaymentCondition.CUSTOMER)
                 .shippingCondition(ShippingCondition.FIVE)
                 .paymentMethod(PaymentMethod.DIRECT_DEBIT).build();
@@ -87,7 +83,6 @@ public class CustomerHtmlTryout extends Application {
                 + c4.toHtml(c4mcode, defaults)
                 + "<hr /><h1>makeSimpleBussinesCustomer : Customer.toHtml()</h1>"
                 + c4.toHtml()
-
         ));
         primaryStage.setScene(new Scene(new BorderPane(view)));
         primaryStage.sizeToScene();

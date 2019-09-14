@@ -60,28 +60,13 @@ public class Sample {
 
         Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations = new HashMap<>();
         documentIdentifierGeneratorConfigurations.put(DocumentType.INVOICE,
-                new DocumentIdentifierGeneratorConfiguration("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("RS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
         documentIdentifierGeneratorConfigurations.put(DocumentType.ANNULATION_INVOICE,
-                new DocumentIdentifierGeneratorConfiguration("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
+                DocumentIdentifierGeneratorConfiguration.create("SR{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
-                new DocumentIdentifierGeneratorConfiguration("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
-
-        Set<MandatorMailAttachment> mailAttachment = new HashSet<>();
-        mailAttachment.add(
-                MandatorMailAttachment.builder()
-                        .attachmentData(null)
-                        .attachmentName("Widerrufsbelehrung.pdf")
-                        .attachmentDescription("Belehrung zum Widerruf des Auftrages.")
-                        .build());
-        mailAttachment.add(
-                MandatorMailAttachment.builder()
-                        .attachmentData(null)
-                        .attachmentName("Widerruf Formular.pdf")
-                        .attachmentDescription("Vorlage für den Widerruf des Auftrages.")
-                        .build());
+                DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
         MANDATOR = Mandator.builder()
-                .defaultMailAttachment(mailAttachment)
                 .smtpConfiguration(smtpConfiguration)
                 .mailTemplateLocation(new UrlLocation(loadMailDocument()))
                 .company(company)
@@ -92,14 +77,12 @@ public class Sample {
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
                 .build();
-
-        DEFAULT_CUSTOMER_SALES_DATA = DefaultCustomerSalesdata.builder()
-                .allowedSalesChannels(new TreeSet<>(EnumSet.of(SalesChannel.CUSTOMER)))
+        DEFAULT_CUSTOMER_SALES_DATA = new DefaultCustomerSalesdata.Builder()
+                .addAllAllowedSalesChannels(EnumSet.of(SalesChannel.CUSTOMER))
                 .paymentCondition(PaymentCondition.CUSTOMER)
                 .paymentMethod(PaymentMethod.ADVANCE_PAYMENT)
                 .shippingCondition(ShippingCondition.SIX_MIN_TEN)
                 .build();
-
     }
 
     @Produces

@@ -102,7 +102,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     }
 
     private Set<Long> getViewOnlyCustomerIds() {
-        if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Dl.local().lookup(CachedMandators.class).loadSalesdata().getViewOnlyCustomerIds();
+        if ( viewOnlyCustomerIds == null ) viewOnlyCustomerIds = Dl.local().lookup(CachedMandators.class).loadSalesdata().viewOnlyCustomerIds();
         return viewOnlyCustomerIds;
     }
 

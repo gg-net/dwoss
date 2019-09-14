@@ -29,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
@@ -585,18 +584,18 @@ public class Customer implements Serializable, EagerAble, ContactStash {
         MandatorMetadata customerExtras = mandatorMetadata.stream().filter(m -> m.getMandatorMatchcode().equals(matchcode)).findFirst().orElse(new MandatorMetadata());
 
         sb.append("<li>Versandkonditionen: ")
-                .append(customerExtras.getShippingCondition() == null ? defaults.getShippingCondition().getName() + " <i>(Standard)</i>" : customerExtras.getShippingCondition().getName())
+                .append(customerExtras.getShippingCondition() == null ? defaults.shippingCondition().getName() + " <i>(Standard)</i>" : customerExtras.getShippingCondition().getName())
                 .append("</li>");
         sb.append("<li>Zahlungskonditionen: ")
-                .append(customerExtras.getPaymentCondition() == null ? defaults.getPaymentCondition().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentCondition().getNote())
+                .append(customerExtras.getPaymentCondition() == null ? defaults.paymentCondition().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentCondition().getNote())
                 .append("</li>");
         sb.append("<li>Zahlungsmodalität: ")
-                .append(customerExtras.getPaymentMethod() == null ? defaults.getPaymentMethod().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentMethod().getNote())
+                .append(customerExtras.getPaymentMethod() == null ? defaults.paymentMethod().getNote() + " <i>(Standard)</i>" : customerExtras.getPaymentMethod().getNote())
                 .append("</li>");
         sb.append("<li>Verkaufskanäle: ")
                 .append(customerExtras.getAllowedSalesChannels().isEmpty()
-                        ? defaults.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()) + " <i>(Standard)</i>"
-                        : customerExtras.getAllowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()))
+                        ? defaults.allowedSalesChannels().stream().map(s -> s.decription).collect(Collectors.toList()) + " <i>(Standard)</i>"
+                        : customerExtras.getAllowedSalesChannels().stream().map(s -> s.decription).collect(Collectors.toList()))
                 .append("</li>");
 
         sb.append("</ul>");

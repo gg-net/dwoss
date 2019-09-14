@@ -17,64 +17,57 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.NotNull;
+import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.common.api.values.*;
-
-import lombok.Builder;
-import lombok.Data;
 
 /**
  * Mandator Specific Metadata.
  * <p>
  * @author oliver.guenther
  */
-@Data  // Wildfly 15 cannot deserialize final collections remotly. 
-public class DefaultCustomerSalesdata implements Serializable {
+// Wildfly 15 cannot deserialize final collections remotly. This seeams not the case with freebuilder. Remove me later.
+@FreeBuilder
+public abstract class DefaultCustomerSalesdata implements Serializable {
 
-    @Builder
-    public DefaultCustomerSalesdata(ShippingCondition shippingCondition, PaymentCondition paymentCondition, PaymentMethod paymentMethod, Collection<SalesChannel> allowedSalesChannels, Collection<Long> viewOnlyCustomerIds) {
-        this.shippingCondition = shippingCondition;
-        this.paymentCondition = paymentCondition;
-        this.paymentMethod = paymentMethod;
-        this.allowedSalesChannels = Collections.unmodifiableSet(allowedSalesChannels == null ? new HashSet<>() : new HashSet<>(allowedSalesChannels));
-        this.viewOnlyCustomerIds = Collections.unmodifiableSet(viewOnlyCustomerIds == null ? new HashSet<>() : new HashSet<>(viewOnlyCustomerIds));
-    }
+    public static class Builder extends DefaultCustomerSalesdata_Builder {
+    };
 
     /**
      * The default {@link ShippingCondition} of the Mandator.
+     *
+     * @return
      */
-    @NotNull
-    private ShippingCondition shippingCondition;
+    public abstract ShippingCondition shippingCondition();
 
     /**
      * The default {@link PaymentCondition} of the Mandator.
+     *
+     * @return
      */
-    @NotNull
-    private PaymentCondition paymentCondition;
+    public abstract PaymentCondition paymentCondition();
 
     /**
      * The default {@link PaymentMethod} of the Mandator.
+     *
+     * @return
      */
-    @NotNull
-    private PaymentMethod paymentMethod;
+    public abstract PaymentMethod paymentMethod();
 
-    @NotNull
-    private Set<SalesChannel> allowedSalesChannels;
+    public abstract Set<SalesChannel> allowedSalesChannels();
 
-    @NotNull
-    private Set<Long> viewOnlyCustomerIds;
+    public abstract Set<Long> viewOnlyCustomerIds();
 
     public String toHtml() {
         return "Mandantenstandard"
                 + "<ul>"
-                + (shippingCondition == null ? "" : "<li>Versandkonditionen:" + shippingCondition + "</li>")
-                + (paymentCondition == null ? "" : "<li>Zahlungskonditionen:" + paymentCondition.getNote() + "</li>")
-                + (paymentMethod == null ? "" : "<li>Zahlungsmodalität:" + paymentMethod.getNote() + "</li>")
-                + (allowedSalesChannels.isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels.stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
+                + "<li>Versandkonditionen:" + shippingCondition() + "</li>"
+                + "<li>Zahlungskonditionen:" + paymentCondition().description + "</li>"
+                + "<li>Zahlungsmodalität:" + paymentMethod().description + "</li>"
+                + (allowedSalesChannels().isEmpty() ? "" : "<li>Erlaubte Verkaufskanäle:" + allowedSalesChannels().stream().map(SalesChannel::getName).collect(Collectors.toList()) + "</li>")
                 + "</ul>";
     }
 
