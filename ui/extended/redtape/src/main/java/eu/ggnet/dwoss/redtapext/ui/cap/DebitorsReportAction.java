@@ -18,11 +18,11 @@ package eu.ggnet.dwoss.redtapext.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.reporting.DebitorsReporter;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_DEBITOR_REPORT;
 
@@ -40,7 +40,7 @@ public class DebitorsReportAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
-                Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+                Ui.osOpen(Ui.progress().title("Debitorenreport").call(() -> Dl.remote().lookup(DebitorsReporter.class).toXls(r.startAsDate(), r.endAsDate()).toTemporaryFile()));
             });
         });
     }

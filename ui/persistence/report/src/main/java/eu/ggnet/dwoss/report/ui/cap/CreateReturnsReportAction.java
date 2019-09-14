@@ -18,12 +18,12 @@ package eu.ggnet.dwoss.report.ui.cap;
 
 import java.awt.event.ActionEvent;
 
+import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
@@ -45,7 +45,7 @@ public class CreateReturnsReportAction extends AccessableAction {
             Ui.build().fx().eval(() -> new DateRangeChooserView()).opt()
                     .ifPresent(r -> {
                         Ui.build().swing().show(() -> Dl.remote().lookup(ReportAgent.class).findReportLinesByDocumentType(
-                                RETURNS, r.getStartAsDate(), r.getEndAsDate()), () -> new ReturnsReportView());
+                                RETURNS, r.startAsDate(), r.endAsDate()), () -> new ReturnsReportView());
                     });
         });
     }

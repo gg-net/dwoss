@@ -11,6 +11,11 @@
     <name>DwOss • Ui • Persistence • Stock</name>
     <dependencies>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.toedter</groupId>
             <artifactId>jcalendar</artifactId>
         </dependency>

@@ -339,8 +339,8 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         reportParameter.put(IDENTIFIER_TYPE, document.getType().getName());
         reportParameter.put(IDENTIFIER_ID, document.getIdentifier() == null ? (dossier.getIdentifier() == null ? "-" : dossier.getIdentifier()) : document.getIdentifier());
         // The two \n are a workaround for Windows/Remote Client. Otherwise the last line of an address is not shown.
-        reportParameter.put(INVOICE_ADDRESS, document.getInvoiceAddress().getDetailedDescription() + "\n");
-        reportParameter.put(SHIPPING_ADDRESS, document.getShippingAddress().getDetailedDescription() + "\n");
+        reportParameter.put(INVOICE_ADDRESS, document.getInvoiceAddress().getDescription() + "\n");
+        reportParameter.put(SHIPPING_ADDRESS, document.getShippingAddress().getDescription() + "\n");
         reportParameter.put(SUM_NETTO, document.getPrice());
         reportParameter.put(SUM_BRUTTO, document.toAfterTaxPrice());
         double sumTax = document.toAfterTaxPrice() - document.getPrice();

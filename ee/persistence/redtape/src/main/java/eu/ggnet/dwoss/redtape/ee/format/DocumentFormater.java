@@ -18,8 +18,6 @@ package eu.ggnet.dwoss.redtape.ee.format;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;
@@ -38,10 +36,10 @@ public class DocumentFormater {
 
     public static String toHtmlDetailedWithPositions(Document doc) {
         String res = toHtmlDetailed(doc) + "<br />";
-        res += "<b>" + (doc.isClosed() ? "<font color=\"#666600\">Dokument geschlossen" : "<font color=\"#009900\">Dokument offen") + "</font></b><br />";        
+        res += "<b>" + (doc.isClosed() ? "<font color=\"#666600\">Dokument geschlossen" : "<font color=\"#009900\">Dokument offen") + "</font></b><br />";
         res += "Document.dossier.kid=" + doc.getDossier().getCustomerId() + "<br />";
         res += Optional.ofNullable(doc.getInvoiceAddress())
-                .map(Address::getDetailedDescription)                
+                .map(Address::getDescription)
                 .map(s -> s.replaceAll("\n", "<br />"))
                 .orElse("No Invoice Address");
         res += "<br />";

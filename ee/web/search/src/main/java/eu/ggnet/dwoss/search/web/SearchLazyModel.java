@@ -28,8 +28,6 @@ import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.SearcherOperation;
 
-import lombok.Getter;
-
 /**
  *
  * @author oliver.guenther
@@ -44,8 +42,11 @@ public class SearchLazyModel extends LazyDataModel<ShortSearchResult> {
 
     private final List<ShortSearchResult> alreadyLoaded = new ArrayList<>();
 
-    @Getter
     private String search;
+
+    public String getSearch() {
+        return search;
+    }
 
     public void setSearch(String search) {
         if ( Objects.equals(this.search, search) ) return;

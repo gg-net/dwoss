@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
@@ -54,7 +55,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 import lombok.Getter;
 
@@ -198,20 +198,20 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         Style boldStyle = addressesArea.addStyle("bold", null);
         StyleConstants.setBold(boldStyle, true);
         try {
-            if ( document.getInvoiceAddress().getDetailedDescription().equals(document.getShippingAddress().getDetailedDescription()) ) {
+            if ( document.getInvoiceAddress().getDescription().equals(document.getShippingAddress().getDescription()) ) {
                 doc.insertString(doc.getLength(), "Rechnungs und Lieferadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDetailedDescription(), null);
+                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDescription(), null);
             } else {
                 doc.insertString(doc.getLength(), "Rechnungsadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDetailedDescription(), null);
+                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDescription(), null);
                 doc.insertString(doc.getLength(), "\n\nLieferadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getShippingAddress().getDetailedDescription(), null);
+                doc.insertString(doc.getLength(), document.getShippingAddress().getDescription(), null);
             }
         } catch (BadLocationException ex) {
             addressesArea.setText("Rechnungsadresse:\n"
-                    + document.getInvoiceAddress().getDetailedDescription()
+                    + document.getInvoiceAddress().getDescription()
                     + "\n\nLieferAdresse:\n"
-                    + document.getShippingAddress().getDetailedDescription());
+                    + document.getShippingAddress().getDescription());
         }
     }
 

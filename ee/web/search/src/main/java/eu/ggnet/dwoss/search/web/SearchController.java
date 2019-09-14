@@ -34,9 +34,6 @@ import eu.ggnet.dwoss.search.api.GlobalKey;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.SearcherOperation;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * This class provides methods for RevenueReport generation in DW-Web.
  * <p>
@@ -54,9 +51,15 @@ public class SearchController implements Serializable {
     @Inject
     private SearcherOperation searcher;
 
-    @Getter
-    @Setter
     private ShortSearchResult selectedShortSearchResult;
+
+    public ShortSearchResult getSelectedShortSearchResult() {
+        return selectedShortSearchResult;
+    }
+
+    public void setSelectedShortSearchResult(ShortSearchResult selectedShortSearchResult) {
+        this.selectedShortSearchResult = selectedShortSearchResult;
+    }
 
     @PostConstruct
     public void init() {

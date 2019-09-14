@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.price.ui;
 
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelVetoResult;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
-
 import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
@@ -28,10 +24,9 @@ import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.common.ui.saftwrap.*;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask.Prices;
 import eu.ggnet.saft.core.ui.ResultProducer;
-
-import lombok.*;
 
 /**
  * Ui for setting on price fixed.
@@ -72,12 +67,17 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements Vetoable
         }
     };
 
-    @Value
     public static class Prices {
 
-        public double retailerPrice;
+        public final double retailerPrice;
 
-        public double customerPrice;
+        public final double customerPrice;
+
+        public Prices(double retailerPrice, double customerPrice) {
+            this.retailerPrice = retailerPrice;
+            this.customerPrice = customerPrice;
+        }
+
     }
 
     @Override
@@ -361,8 +361,8 @@ public class PriceBlockerViewCask extends javax.swing.JPanel implements Vetoable
         okCancelVetoResult.setPreferredSize(pbp.getPreferredSize());
         okCancelVetoResult.setVisible(true);
 
-        System.out.println(okCancelVetoResult.getResult().getPayload().getCustomerPrice());
-        System.out.println(okCancelVetoResult.getResult().getPayload().getRetailerPrice());
+        System.out.println(okCancelVetoResult.getResult().getPayload().customerPrice);
+        System.out.println(okCancelVetoResult.getResult().getPayload().retailerPrice);
         System.exit(0);
 
 //        PriceBlockerViewCask pbp = new PriceBlockerViewCask("TestUnit des Testens", "Hier wird getestets\n<b>BLARG</b>", 10d, 15d);

@@ -27,6 +27,7 @@ import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.ui.CloseType;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
@@ -37,10 +38,9 @@ import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
@@ -163,7 +163,7 @@ public class DocumentUpdateController {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
-        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getInvoiceAddress().getDetailedDescription(), true);
+        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getInvoiceAddress().getDescription(), true);
         OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
@@ -182,7 +182,7 @@ public class DocumentUpdateController {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
-        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getShippingAddress().getDetailedDescription(), false);
+        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getShippingAddress().getDescription(), false);
         OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);

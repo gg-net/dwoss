@@ -30,8 +30,6 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.Once;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
-import lombok.Value;
-
 /**
  * A generic Date range chooser.
  *
@@ -40,12 +38,16 @@ import lombok.Value;
 @Once(false)
 public class DateRangeChooserView extends BorderPane implements ResultProducer<DateRangeChooserView.Range> {
 
-    @Value
     public static final class Range {
 
-        private final LocalDate start;
+        public final LocalDate start;
 
-        private final LocalDate end;
+        public final LocalDate end;
+
+        public Range(LocalDate start, LocalDate end) {
+            this.start = start;
+            this.end = end;
+        }
 
         public boolean isValid() {
             return violationMessages() == null;
@@ -58,11 +60,11 @@ public class DateRangeChooserView extends BorderPane implements ResultProducer<D
             return null;
         }
 
-        public Date getStartAsDate() {
+        public Date startAsDate() {
             return Date.from(start.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         }
 
-        public Date getEndAsDate() {
+        public Date endAsDate() {
             return Date.from(end.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         }
 

@@ -39,7 +39,7 @@ public class AuditReportByRangeAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
             Ui.build().title("Audit Report nach Datum").fx().eval(() -> new DateRangeChooserView()).opt().ifPresent(r -> {
-                Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).byRange(r.getStartAsDate(), r.getEndAsDate()).toTemporaryFile()));
+                Ui.osOpen(Ui.progress().title("Auditreport").call(() -> Dl.remote().lookup(AuditReporter.class).byRange(r.startAsDate(), r.endAsDate()).toTemporaryFile()));
             });
         });
     }

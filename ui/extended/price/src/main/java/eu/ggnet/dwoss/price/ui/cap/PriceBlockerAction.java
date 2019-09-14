@@ -16,23 +16,22 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
-import eu.ggnet.dwoss.price.ee.Exporter;
-import eu.ggnet.dwoss.price.ee.Importer;
-
 import java.awt.event.ActionEvent;
 import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
 import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
+import eu.ggnet.dwoss.price.ee.Exporter;
+import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;
+import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_SET_UNIT_PRICE;
 
@@ -68,12 +67,12 @@ public class PriceBlockerAction extends AccessableAction {
                                 .filter(Ui.failure()::handle)
                                 .map(Reply::getPayload)
                                 .ifPresent(payload -> {
-                            priceEngineResult.setCustomerPrice(payload.getCustomerPrice());
-                            priceEngineResult.setRetailerPrice(payload.getRetailerPrice());
-                            priceEngineResult.setUnitPriceFixed(Change.SET);
-                            Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
+                                    priceEngineResult.setCustomerPrice(payload.customerPrice);
+                                    priceEngineResult.setRetailerPrice(payload.retailerPrice);
+                                    priceEngineResult.setUnitPriceFixed(Change.SET);
+                                    Dl.remote().lookup(Importer.class).store(priceEngineResult, "Set directly via PriceBlocker", Dl.local().lookup(Guardian.class).getUsername());
 
-                        });
+                                });
                     });
 
         }

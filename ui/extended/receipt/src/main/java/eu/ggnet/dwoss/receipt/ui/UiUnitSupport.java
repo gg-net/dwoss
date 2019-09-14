@@ -16,17 +16,6 @@
  */
 package eu.ggnet.dwoss.receipt.ui;
 
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitView;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;
-import eu.ggnet.dwoss.receipt.ui.unit.UnitController;
-import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-
 import java.awt.Component;
 import java.awt.Window;
 import java.util.Objects;
@@ -36,15 +25,19 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
-import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
+import eu.ggnet.dwoss.receipt.ui.unit.*;
 import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.Value;
-
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
  * Ui support for the unit Operations.
@@ -112,17 +105,17 @@ public class UiUnitSupport {
         if ( refurbishedIdOrSerial == null || refurbishedIdOrSerial.trim().equals("") ) return;
         refurbishedIdOrSerial = refurbishedIdOrSerial.trim().toUpperCase();
         UnitProcessor.EditableUnit eu = unitProcessor.findEditableUnit(refurbishedIdOrSerial);
-        if ( eu.getOperation() == ReceiptOperation.IN_SALE ) {
+        if ( eu.operation == ReceiptOperation.IN_SALE ) {
             JOptionPane.showMessageDialog(parent, "Achtung, dieses Gerät ist in einem Kundenauftrag, ändern nicht empfohlen.");
-        } else if ( eu.getOperation() != ReceiptOperation.SALEABLE ) {
-            JOptionPane.showMessageDialog(parent, "Gerät ist in Operation : " + eu.getOperation());
+        } else if ( eu.operation != ReceiptOperation.SALEABLE ) {
+            JOptionPane.showMessageDialog(parent, "Gerät ist in Operation : " + eu.operation);
         }
 
-        UniqueUnit uu = eu.getUniqueUnit();
-        if ( eu.getStockUnit() != null )
-            uu = optionalChangeStock(eu.getUniqueUnit(), eu.getStockUnit(), Dl.local().lookup(StockUpi.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
+        UniqueUnit uu = eu.uniqueUnit;
+        if ( eu.stockUnit != null )
+            uu = optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(StockUpi.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
 
-        UnitAndModel result = createEditUnit(parent, uu, eu.getOperation(), eu.getPartNo(), null);
+        UnitAndModel result = createEditUnit(parent, uu, eu.operation, eu.partNo, null);
         if ( result == null ) return;
 
         unitProcessor.update(

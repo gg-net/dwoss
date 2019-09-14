@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,30 +19,50 @@ package eu.ggnet.dwoss.common.ui.table;
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
 
-import javax.swing.AbstractAction;
-import javax.swing.JCheckBox;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 /**
- * A popupmenu designed to enable easy hide/show funktions for table columns. 
+ * A popupmenu designed to enable easy hide/show funktions for table columns.
+ *
  * @author pascal.perau
  */
 public class TableColumnChooserPopup extends JPopupMenu {
-        
-    @Data
-    @AllArgsConstructor
+
     private class TableColumnContainer {
+
         private TableColumn column;
 
         private int index;
+
+        //<editor-fold defaultstate="collapsed" desc="constructors and getter/setter">
+        public TableColumnContainer() {
+        }
+
+        public TableColumnContainer(TableColumn column, int index) {
+            this.column = column;
+            this.index = index;
+        }
+
+        public TableColumn getColumn() {
+            return column;
+        }
+
+        public void setColumn(TableColumn column) {
+            this.column = column;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public void setIndex(int index) {
+            this.index = index;
+        }
+        //</editor-fold>
     }
-    
+
     private class ColumCheckBox extends JCheckBox {
 
         public ColumCheckBox(final TableColumnContainer cc) {
@@ -68,7 +88,7 @@ public class TableColumnChooserPopup extends JPopupMenu {
         while (tablecols.hasMoreElements()) {
             TableColumn tableColumn = tablecols.nextElement();
             int index = table.getColumnModel().getColumnIndex(tableColumn.getIdentifier());
-            
+
             this.add(new ColumCheckBox(new TableColumnContainer(tableColumn, index)));
         }
     }

@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ui.cap.support;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.Once;
-import eu.ggnet.saft.core.ui.ResultProducer;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -33,8 +29,7 @@ import javafx.scene.paint.Color;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.core.Ui;
-
-import lombok.Value;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * A Date range and contractor chooser.
@@ -45,14 +40,19 @@ import lombok.Value;
 @Title("Datum und Lieferant")
 public class DateRangeAndContractorChooserView extends BorderPane implements ResultProducer<DateRangeAndContractorChooserView.RangeAndContractor> {
 
-    @Value
     public static final class RangeAndContractor {
 
-        private final LocalDate start;
+        public final LocalDate start;
 
-        private final LocalDate end;
+        public final LocalDate end;
 
-        private final TradeName contractor;
+        public final TradeName contractor;
+
+        public RangeAndContractor(LocalDate start, LocalDate end, TradeName contractor) {
+            this.start = start;
+            this.end = end;
+            this.contractor = contractor;
+        }
 
         public boolean isValid() {
             return violationMessages() == null;
@@ -66,11 +66,11 @@ public class DateRangeAndContractorChooserView extends BorderPane implements Res
             return null;
         }
 
-        public Date getStart() {
+        public Date startAsDate() {
             return Date.from(start.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         }
 
-        public Date getEnd() {
+        public Date endAsDate() {
             return Date.from(end.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         }
 

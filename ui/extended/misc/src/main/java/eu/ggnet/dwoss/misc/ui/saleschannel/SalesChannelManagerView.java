@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.misc.ui.saleschannel;
 
 import java.util.List;
-import java.util.function.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.swing.ListSelectionModel;
@@ -124,7 +124,6 @@ public class SalesChannelManagerView extends javax.swing.JPanel implements Consu
         model.autoSelectChannel();
     }//GEN-LAST:event_autoSelectChannelButtonActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton autoSelectChannelButton;
     private javax.swing.JButton cancelButton;
@@ -136,8 +135,8 @@ public class SalesChannelManagerView extends javax.swing.JPanel implements Consu
 
     @Override
     public void accept(SalesChannelManagerData data) {
-        this.model = new SalesChannelTableModel(data.getLines(), data.getStocks().stream().collect(Collectors.toMap(Stock::getPrimaryChannel, s -> s)));
-        salesChanelTable.setDefaultEditor(Stock.class, new StockTableEditor(data.getStocks().toArray()));
+        this.model = new SalesChannelTableModel(data.lines, data.stocks.stream().collect(Collectors.toMap(Stock::getPrimaryChannel, s -> s)));
+        salesChanelTable.setDefaultEditor(Stock.class, new StockTableEditor(data.stocks.toArray()));
         salesChanelTable.setModel(model);
         for (int i = 0; i < model.getColumnCount(); i++) {
             salesChanelTable.getColumnModel().getColumn(i).setPreferredWidth(model.getPreferredWidth(i));

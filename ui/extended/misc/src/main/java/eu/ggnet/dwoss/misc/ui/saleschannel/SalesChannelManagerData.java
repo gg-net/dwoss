@@ -21,17 +21,19 @@ import java.util.List;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 
-import lombok.Value;
-
 /**
  *
  * @author oliver.guenther
  */
-@Value
 public class SalesChannelManagerData {
-    
-    private final List<SalesChannelLine> lines;
-    
-    private final List<Stock> stocks;
-    
+
+    public final List<SalesChannelLine> lines;
+
+    public final List<Stock> stocks;
+
+    public SalesChannelManagerData(List<SalesChannelLine> lines, List<Stock> stocks) {
+        this.lines = lines;
+        this.stocks = stocks;
+    }
+
 }

@@ -5,28 +5,14 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-
 import java.time.LocalDate;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import lombok.Getter;
-import lombok.Setter;
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 
 /**
  *
@@ -37,48 +23,40 @@ public class ProductFx {
     /**
      * constructor with test data
      */
-    public ProductFx()
-    {
+    public ProductFx() {
     }
 
     public static class AdditionalPartNo {
 
-        public AdditionalPartNo(TradeName contractor, String partNo)
-        {
+        public AdditionalPartNo(TradeName contractor, String partNo) {
             this.contractor = contractor;
             this.partNoProperty.set(partNo);
         }
 
-        public AdditionalPartNo()
-        {
+        public AdditionalPartNo() {
         }
 
         private TradeName contractor;
 
         private StringProperty partNoProperty = new SimpleStringProperty(this, "partNo");
 
-        public final void setPartNo(String value)
-        {
+        public final void setPartNo(String value) {
             partNoProperty.set(value);
         }
 
-        public final String getPartNo()
-        {
+        public final String getPartNo() {
             return partNoProperty.get();
         }
 
-        public final StringProperty partNoProperty()
-        {
+        public final StringProperty partNoProperty() {
             return partNoProperty;
         }
 
-        public TradeName getContractor()
-        {
+        public TradeName getContractor() {
             return contractor;
         }
 
-        public void setContractor(TradeName contractor)
-        {
+        public void setContractor(TradeName contractor) {
             this.contractor = contractor;
         }
 
@@ -87,196 +65,186 @@ public class ProductFx {
     public static class Prices {
 
         private DoubleProperty price = new SimpleDoubleProperty(this, "price");
+
         private PriceType priceType;
 
-        public final void setPrice(Double value)
-        {
+        public final void setPrice(Double value) {
             price.set(value);
         }
 
-        public final Double getPrice()
-        {
+        public final Double getPrice() {
             return price.get();
         }
 
-        public final DoubleProperty priceProperty()
-        {
+        public final DoubleProperty priceProperty() {
             return price;
         }
 
-        public PriceType getPriceType()
-        {
+        public PriceType getPriceType() {
             return this.priceType;
         }
 
-        public void setPriceType(PriceType priceType)
-        {
+        public void setPriceType(PriceType priceType) {
             this.priceType = priceType;
         }
 
     }
 
     private ObservableList<AdditionalPartNo> additionalPartNos = FXCollections.observableArrayList();
+
     private ObservableList<Prices> prices = FXCollections.observableArrayList();
+
     private ObjectProperty<TradeName> tradeName = new SimpleObjectProperty<>();
+
     private ObjectProperty<ProductGroup> productGroup = new SimpleObjectProperty<>();
+
     private ObjectProperty<SalesChannel> salesChannel = new SimpleObjectProperty<>();
+
     private ObjectProperty<LocalDate> eol = new SimpleObjectProperty<>();
+
     private StringProperty name = new SimpleStringProperty();
+
     private StringProperty description = new SimpleStringProperty();
+
     private StringProperty partNo = new SimpleStringProperty();
+
     private IntegerProperty imageId = new SimpleIntegerProperty();
+
     private LongProperty gtin = new SimpleLongProperty();
 
-    @Getter
-    @Setter
     private long id;
-    @Getter
-    @Setter
+
     private short optLock;
 
-    public SalesChannel getSalesChannel()
-    {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public short getOptLock() {
+        return optLock;
+    }
+
+    public void setOptLock(short optLock) {
+        this.optLock = optLock;
+    }
+
+    public SalesChannel getSalesChannel() {
         return this.salesChannel.getValue();
     }
 
-    public TradeName getTradeName()
-    {
+    public TradeName getTradeName() {
         return this.tradeName.getValue();
     }
 
-    public ProductGroup getProductGroup()
-    {
+    public ProductGroup getProductGroup() {
         return this.productGroup.getValue();
     }
 
-    public LocalDate getEol()
-    {
+    public LocalDate getEol() {
         return eol.getValue();
     }
 
-    public void setTradeName(TradeName tr)
-    {
+    public void setTradeName(TradeName tr) {
         this.tradeName.setValue(tr);
     }
 
-    public void setProductGroup(ProductGroup tr)
-    {
+    public void setProductGroup(ProductGroup tr) {
         this.productGroup.setValue(tr);
     }
 
-    public void setSalesChannel(SalesChannel tr)
-    {
+    public void setSalesChannel(SalesChannel tr) {
         this.salesChannel.setValue(tr);
     }
 
-    public void setEol(LocalDate ld)
-    {
+    public void setEol(LocalDate ld) {
         this.eol.set(ld);
     }
 
-    public final ObservableList<AdditionalPartNo> getAdditionalPartNos()
-    {
+    public final ObservableList<AdditionalPartNo> getAdditionalPartNos() {
         return additionalPartNos;
     }
 
-    public final ObservableList<Prices> getPrices()
-    {
+    public final ObservableList<Prices> getPrices() {
         return prices;
     }
 
-    public final ObjectProperty<TradeName> tradeNameProperty()
-    {
+    public final ObjectProperty<TradeName> tradeNameProperty() {
         return tradeName;
     }
 
-    public final ObjectProperty<ProductGroup> productGroupProperty()
-    {
+    public final ObjectProperty<ProductGroup> productGroupProperty() {
         return productGroup;
     }
 
-    public final ObjectProperty<SalesChannel> salesChannelProperty()
-    {
+    public final ObjectProperty<SalesChannel> salesChannelProperty() {
         return salesChannel;
     }
 
-    public final ObjectProperty<LocalDate> eolProperty()
-    {
+    public final ObjectProperty<LocalDate> eolProperty() {
         return eol;
     }
 
-    public final void setName(String value)
-    {
+    public final void setName(String value) {
         name.set(value);
     }
 
-    public final String getName()
-    {
+    public final String getName() {
         return name.get();
     }
 
-    public final StringProperty nameProperty()
-    {
+    public final StringProperty nameProperty() {
         return name;
     }
 
-    public final void setDescription(String value)
-    {
+    public final void setDescription(String value) {
         description.set(value);
     }
 
-    public final String getDescription()
-    {
+    public final String getDescription() {
         return description.get();
     }
 
-    public final StringProperty descriptionProperty()
-    {
+    public final StringProperty descriptionProperty() {
         return description;
     }
 
-    public final void setPartNo(String value)
-    {
+    public final void setPartNo(String value) {
         partNo.set(value);
     }
 
-    public final String getPartNo()
-    {
+    public final String getPartNo() {
         return partNo.get();
     }
 
-    public final StringProperty partNoProperty()
-    {
+    public final StringProperty partNoProperty() {
         return partNo;
     }
 
-    public final void setImageId(Integer value)
-    {
+    public final void setImageId(Integer value) {
         imageId.set(value);
     }
 
-    public final Integer getImageId()
-    {
+    public final Integer getImageId() {
         return imageId.get();
     }
 
-    public final IntegerProperty imageIdProperty()
-    {
+    public final IntegerProperty imageIdProperty() {
         return imageId;
     }
 
-    public final void setGtin(Long value)
-    {
+    public final void setGtin(Long value) {
         gtin.set(value);
     }
 
-    public final Long getGtin()
-    {
+    public final Long getGtin() {
         return gtin.get();
     }
 
-    public final LongProperty gtinProperty()
-    {
+    public final LongProperty gtinProperty() {
         return gtin;
     }
 

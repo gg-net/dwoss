@@ -16,21 +16,15 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.Shipment;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-
 import java.io.Serializable;
 
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import lombok.Data;
 
 /**
  *
@@ -39,30 +33,42 @@ import lombok.Data;
 @Remote
 public interface UnitProcessor {
 
-    @Data
     public static class ModifiedDossiers implements Serializable {
 
         /**
          * DossierId for which a remove has happened.
          */
-        private final Long removedFromId;
+        public final Long removedFromId;
 
         /**
          * DossierId to which an ad has happened.
          */
-        private final Long addedToId;
+        public final Long addedToId;
+
+        public ModifiedDossiers(Long removedFromId, Long addedToId) {
+            this.removedFromId = removedFromId;
+            this.addedToId = addedToId;
+        }
+
     }
 
-    @Data
     public static class EditableUnit implements Serializable {
 
-        private final UniqueUnit uniqueUnit;
+        public final UniqueUnit uniqueUnit;
 
-        private final StockUnit stockUnit;
+        public final StockUnit stockUnit;
 
-        private final ReceiptOperation operation;
+        public final ReceiptOperation operation;
 
-        private final String partNo;
+        public final String partNo;
+
+        public EditableUnit(UniqueUnit uniqueUnit, StockUnit stockUnit, ReceiptOperation operation, String partNo) {
+            this.uniqueUnit = uniqueUnit;
+            this.stockUnit = stockUnit;
+            this.operation = operation;
+            this.partNo = partNo;
+        }
+
     }
 
     /**

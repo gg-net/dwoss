@@ -19,10 +19,6 @@ package eu.ggnet.dwoss.stock.upi.impl;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
-
-import lombok.Getter;
-import lombok.Setter;
-
 import eu.ggnet.dwoss.stock.upi.StockUpi;
 
 /**
@@ -32,8 +28,16 @@ import eu.ggnet.dwoss.stock.upi.StockUpi;
 @ServiceProvider(service = StockUpi.class)
 public class StockUpiImpl implements StockUpi {
 
-    @Getter
-    @Setter
     private PicoStock activeStock;
+
+    @Override
+    public PicoStock getActiveStock() {
+        return activeStock;
+    }
+
+    @Override
+    public void setActiveStock(PicoStock activeStock) {
+        this.activeStock = activeStock;
+    }
 
 }

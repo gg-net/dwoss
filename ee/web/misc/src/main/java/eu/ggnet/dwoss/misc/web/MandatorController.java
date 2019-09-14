@@ -34,8 +34,6 @@ import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers.Key;
 import eu.ggnet.dwoss.mandator.api.value.*;
 
-import lombok.Getter;
-
 /**
  *
  * @author jacob.weinhold
@@ -46,7 +44,6 @@ public class MandatorController implements Serializable {
 
     private final static Logger LOG = LoggerFactory.getLogger(MandatorController.class);
 
-    @Getter
     @Inject
     private Mandator mandator;
 
@@ -62,7 +59,6 @@ public class MandatorController implements Serializable {
     @Inject
     private PostLedger postLedger;
 
-    @Getter
     private TreeNode root;
 
     public List<TradeName> getAllowedBrands() {
@@ -90,6 +86,14 @@ public class MandatorController implements Serializable {
     public int sortReceiptCustomers(Map.Entry<Key, Long> obj, Map.Entry<Key, Long> other) {
         return obj.getValue().compareTo(other.getValue());
 
+    }
+
+    public Mandator getMandator() {
+        return mandator;
+    }
+
+    public TreeNode getRoot() {
+        return root;
     }
 
     @PostConstruct
