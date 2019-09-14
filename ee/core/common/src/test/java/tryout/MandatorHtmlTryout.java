@@ -16,14 +16,6 @@
  */
 package tryout;
 
-import eu.ggnet.dwoss.mandator.api.value.partial.UrlLocation;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIntermix;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
-import eu.ggnet.dwoss.mandator.api.value.partial.SmtpConfiguration;
-import eu.ggnet.dwoss.mandator.api.value.partial.MandatorMailAttachment;
-import eu.ggnet.dwoss.mandator.api.value.partial.Company;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -35,9 +27,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
-import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.mandator.api.value.partial.*;
 
 /**
  *
@@ -48,7 +42,7 @@ public class MandatorHtmlTryout extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Company company = Company.builder()
+        Company company = new Company.Builder()
                 .name("Example GmbH")
                 .street("Test Street 7")
                 .zip("99999")

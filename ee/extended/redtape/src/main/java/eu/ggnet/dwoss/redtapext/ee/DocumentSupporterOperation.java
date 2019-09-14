@@ -349,7 +349,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         reportParameter.put(TAX_INFO, document.getSingleTax() < 0.001 ? null : String.format("%.0f %% MwSt.", document.getSingleTax() * 100));
         reportParameter.put(ACTUAL, document.getActual());
         reportParameter.put(COMPANY, mandator.getCompany().toSingleLine());
-        reportParameter.put(COMPANY_LOGO, mandator.getCompany().getLogo().toURL());
+        reportParameter.put(COMPANY_LOGO, mandator.getCompany().logo().toURL());
         reportParameter.put(FOOTER, mandator.getDocumentIntermix().getFooter() + "\n");
         reportParameter.put(PAYMENT_TEXT, "");
 

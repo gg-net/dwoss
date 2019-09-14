@@ -16,20 +16,6 @@
  */
 package eu.ggnet.dwoss.mandator.sample.impl;
 
-import eu.ggnet.dwoss.mandator.api.value.partial.SmtpConfiguration;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.partial.Company;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.partial.UrlLocation;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIntermix;
-import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.PaymentCondition;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -38,8 +24,10 @@ import javax.enterprise.inject.Produces;
 
 import org.apache.commons.io.FileUtils;
 
-import eu.ggnet.dwoss.mandator.api.value.partial.*;
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
+import eu.ggnet.dwoss.mandator.api.value.partial.*;
 import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.*;
@@ -51,7 +39,7 @@ import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 public class Sample {
 
     static {
-        Company company = Company.builder()
+        Company company = new Company.Builder()
                 .name("Example GmbH")
                 .street("Test Street 7")
                 .zip("99999")
@@ -78,7 +66,6 @@ public class Sample {
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
                 new DocumentIdentifierGeneratorConfiguration("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
-        
         Set<MandatorMailAttachment> mailAttachment = new HashSet<>();
         mailAttachment.add(
                 MandatorMailAttachment.builder()
@@ -93,7 +80,6 @@ public class Sample {
                         .attachmentDescription("Vorlage für den Widerruf des Auftrages.")
                         .build());
 
-        
         MANDATOR = Mandator.builder()
                 .defaultMailAttachment(mailAttachment)
                 .smtpConfiguration(smtpConfiguration)

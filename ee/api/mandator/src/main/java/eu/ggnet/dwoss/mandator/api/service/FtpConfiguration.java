@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,16 +19,12 @@ package eu.ggnet.dwoss.mandator.api.service;
 import java.io.File;
 import java.util.*;
 
-import lombok.Data;
-
 /**
  *
  * @author pascal.perau
  */
-@Data
 public class FtpConfiguration {
 
-    @Data
     public static class UploadCommand {
 
         /**
@@ -52,12 +48,24 @@ public class FtpConfiguration {
         /**
          * The path on the ftp host to use.
          */
-        private String path;
+        private final String path;
 
         /**
          * An optional list of file extensions, which should be removed in these folders.
          */
         private final Set<String> deleteFileTypes = new HashSet<>();
+
+        public Set<File> getFiles() {
+            return files;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public Set<String> getDeleteFileTypes() {
+            return deleteFileTypes;
+        }
 
         public void add(File file) {
             files.add(file);
@@ -66,22 +74,58 @@ public class FtpConfiguration {
         public void deleteType(String type) {
             deleteFileTypes.add(type);
         }
+
+        @Override
+        public String toString() {
+            return "UploadCommand{" + "files=" + files + ", path=" + path + ", deleteFileTypes=" + deleteFileTypes + '}';
+        }
+
     }
 
-    @Data
     public static class ConnectionConfig {
 
-        private final String host;
+        public final String host;
 
-        private final int port;
+        public final int port;
 
-        private final String user;
+        public final String user;
 
-        private final String pass;
+        public final String pass;
+
+        public ConnectionConfig(String host, int port, String user, String pass) {
+            this.host = host;
+            this.port = port;
+            this.user = user;
+            this.pass = pass;
+        }
+
+        @Override
+        public String toString() {
+            return "ConnectionConfig{" + "host=" + host + ", port=" + port + ", user=" + user + ", pass=" + pass + '}';
+        }
+
     }
 
     private final ConnectionConfig config;
 
     private final Set<UploadCommand> updloadCommands;
+
+    public FtpConfiguration(ConnectionConfig config, Set<UploadCommand> updloadCommands) {
+        this.config = config;
+        this.updloadCommands = updloadCommands;
+    }
+
+    public ConnectionConfig getConfig() {
+        return config;
+    }
+
+    public Set<UploadCommand> getUpdloadCommands() {
+        return updloadCommands;
+    }
+
+    @Override
+    public String toString() {
+        return "FtpConfiguration{" + "config=" + config + ", updloadCommands=" + updloadCommands + '}';
+    }
 
 }

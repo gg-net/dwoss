@@ -17,8 +17,8 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -113,8 +113,8 @@ public class Mandator implements Serializable {
     public MultiPartEmail prepareDirectMail() throws EmailException {
         MultiPartEmail email = new MultiPartEmail();
         email.setHostName(smtpConfiguration.getHostname());
-        email.addBcc(company.getEmail());
-        email.setFrom(company.getEmail(), company.getEmailName());
+        email.addBcc(company.email());
+        email.setFrom(company.email(), company.emailName());
         email.setAuthentication(smtpConfiguration.getSmtpAuthenticationUser(), smtpConfiguration.getSmtpAuthenticationPass());
         email.setStartTLSEnabled(false);
         email.setSSLCheckServerIdentity(false);

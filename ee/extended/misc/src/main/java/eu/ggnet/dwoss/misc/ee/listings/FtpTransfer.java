@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,27 +16,19 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.SocketException;
 import java.util.Collection;
 
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.ConnectionConfig;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
-
 import eu.ggnet.dwoss.progress.IMonitor;
-
 import eu.ggnet.dwoss.progress.SubMonitor;
 
 /**
@@ -78,10 +70,10 @@ public class FtpTransfer {
         ftp.addProtocolCommandListener(PROTOCOL_TO_LOGGER);
 
         try {
-            ftp.connect(config.getHost(), config.getPort());
+            ftp.connect(config.host, config.port);
             if ( !FTPReply.isPositiveCompletion(ftp.getReplyCode()) ) throw new IOException("FTPReply.isPositiveCompletion(ftp.getReplyCode()) = false");
-            if ( !ftp.login(config.getUser(), config.getPass()) ) throw new IOException("Login with " + config.getUser() + " not successful");
-            L.info("Connected to {} idenfied by {}", config.getHost(), ftp.getSystemType());
+            if ( !ftp.login(config.user, config.pass) ) throw new IOException("Login with " + config.user + " not successful");
+            L.info("Connected to {} idenfied by {}", config.host, ftp.getSystemType());
 
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             ftp.enterLocalPassiveMode();

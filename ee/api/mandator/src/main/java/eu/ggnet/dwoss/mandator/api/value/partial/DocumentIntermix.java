@@ -21,11 +21,9 @@ import java.net.URL;
 import java.util.Map.Entry;
 import java.util.*;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
-import lombok.*;
 
 /**
  * Contains Details about a Document to intermix in the rendering process.
@@ -33,14 +31,10 @@ import lombok.*;
  * @author oliver.guenther
  */
 // TODO: We could make a Builder for this, but not now. For now I risk manipulation.
-@ToString
-@EqualsAndHashCode
 public class DocumentIntermix implements Serializable {
 
     private final UrlLocation defaultDocumentTemplate;
 
-    @Getter
-    @Setter
     private String footer;
 
     private final Map<DocumentViewType, UrlLocation> viewTypeDocumentTemplates = new HashMap<>();
@@ -50,6 +44,14 @@ public class DocumentIntermix implements Serializable {
     private final Map<DocumentViewType, Map<FreeDocumentTemplateParameter, String>> viewTypeTexts = new HashMap<>();
 
     private final Map<DocumentType, Map<FreeDocumentTemplateParameter, String>> documentTypeTexts = new HashMap<>();
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public void setFooter(String footer) {
+        this.footer = footer;
+    }
 
     public String toMultiLine() {
         final StringBuilder sb = new StringBuilder("DocumentIntermix\n");
@@ -210,4 +212,10 @@ public class DocumentIntermix implements Serializable {
         }
         return "";
     }
+
+    @Override
+    public String toString() {
+        return "DocumentIntermix{" + "defaultDocumentTemplate=" + defaultDocumentTemplate + ", footer=" + footer + ", viewTypeDocumentTemplates=" + viewTypeDocumentTemplates + ", defaultTexts=" + defaultTexts + ", viewTypeTexts=" + viewTypeTexts + ", documentTypeTexts=" + documentTypeTexts + '}';
+    }
+
 }

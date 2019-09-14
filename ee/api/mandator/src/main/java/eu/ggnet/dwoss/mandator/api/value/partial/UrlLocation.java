@@ -23,19 +23,14 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
-
 /**
  * A serializable (for wildfly) wrapper for URL.
  *
  * @author oliver.guenther
  */
-@ToString
-@EqualsAndHashCode
 public class UrlLocation implements Serializable {
 
-    @Getter
-    private String location;
+    private final String location;
 
     public UrlLocation(@NotNull URL url) {
         location = Objects.requireNonNull(url, "Url must not be null").toString();
@@ -52,6 +47,32 @@ public class UrlLocation implements Serializable {
         } catch (MalformedURLException ex) {
             throw new RuntimeException("UrlLocation=" + location + " cannot be converted to an URL. This should never happen");
         }
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.location);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final UrlLocation other = (UrlLocation)obj;
+        if ( !Objects.equals(this.location, other.location) ) return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "UrlLocation{" + "location=" + location + '}';
     }
 
 }

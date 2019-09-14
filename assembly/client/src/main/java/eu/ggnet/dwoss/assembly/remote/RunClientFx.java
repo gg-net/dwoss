@@ -86,7 +86,7 @@ public class RunClientFx extends Application {
         Platform.setImplicitExit(false);
         EventQueue.invokeLater(() -> {
             swingClient.show("(Remote," + lookupConfig.host() + ":" + lookupConfig.port() + ") - Mandant:"
-                    + Dl.local().lookup(CachedMandators.class).loadMandator().getCompany().getName(), getParameters());
+                    + Dl.local().lookup(CachedMandators.class).loadMandator().getCompany().name(), getParameters());
         });
 
     }

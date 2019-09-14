@@ -30,7 +30,7 @@ public class CompanyGen {
 
     public static Company makeCompany() {
         try {
-            return Company.builder()
+            return new Company.Builder()
                     .name("Example GmbH")
                     .street("Test Street 7")
                     .zip("99999")

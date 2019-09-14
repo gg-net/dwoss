@@ -16,19 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
-import eu.ggnet.dwoss.common.api.values.Warranty;
-import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration;
-import eu.ggnet.dwoss.mandator.api.service.ListingConfigurationService;
-import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-import eu.ggnet.dwoss.mandator.api.service.ListingConfiguration;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,8 +39,10 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
+import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
 import eu.ggnet.dwoss.progress.MonitorFactory;
@@ -63,6 +52,7 @@ import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.*;
 import eu.ggnet.lucidcalc.CFormat.Representation;
@@ -265,18 +255,18 @@ public class SalesListingProducerOperation implements SalesListingProducer {
 
         Map<TradeName, Collection<FileJacket>> result = new HashMap<>();
 
-        switch (config.getType()) {
+        switch (config.type) {
             case XLS:
-                result = generateXlsListings(config.getChannel());
+                result = generateXlsListings(config.channel);
                 break;
             case PDF:
-                result = generatePdfListings(config.getChannel());
+                result = generatePdfListings(config.channel);
                 break;
         }
 
         List<FileJacket> jackets = result.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 
-        switch (config.getLocation()) {
+        switch (config.location) {
             case LOCAL:
                 return jackets;
             case MAIL:

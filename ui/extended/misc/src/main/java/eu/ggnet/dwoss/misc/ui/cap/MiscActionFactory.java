@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionService;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer;
 import eu.ggnet.dwoss.misc.ee.movement.MovementListingProducer.ListType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.saft.core.Dl;
@@ -51,7 +51,7 @@ public class MiscActionFactory implements ActionFactory {
 
         if ( Dl.remote().contains(ListingActionService.class) ) {
             Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = Dl.remote().lookup(ListingActionService.class).listingActionConfigurations().stream()
-                    .collect(Collectors.groupingBy(ListingActionConfiguration::getLocation));
+                    .collect(Collectors.groupingBy(conf -> conf.location));
             if ( actionConfigs != null && !actionConfigs.isEmpty() ) {
                 for (List<ListingActionConfiguration> listingActionConfigurations : actionConfigs.values()) {
                     actions.add(new MetaAction(s, null));

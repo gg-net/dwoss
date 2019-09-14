@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,39 +20,39 @@ import java.io.Serializable;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
-import lombok.*;
-
 /**
  * Class used as a valueholder for listing actions.
  * <p>
  * @author pascal.perau
  */
-@Getter
-@ToString
-@RequiredArgsConstructor
 public class ListingActionConfiguration implements Serializable {
 
     public enum Type {
-
         PDF, XLS;
-
     }
 
     public enum Location {
-
         LOCAL, FTP, MAIL;
-
     }
 
-    private final Type type;
+    public final Type type;
 
-    private final Location location;
+    public final Location location;
 
-    private final SalesChannel channel;
+    public final SalesChannel channel;
 
-    private final String name;
+    public final String name;
 
-    /*
-     right !!!
-     */
+    public ListingActionConfiguration(Type type, Location location, SalesChannel channel, String name) {
+        this.type = type;
+        this.location = location;
+        this.channel = channel;
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "ListingActionConfiguration{" + "type=" + type + ", location=" + location + ", channel=" + channel + ", name=" + name + '}';
+    }
+
 }

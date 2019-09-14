@@ -29,10 +29,10 @@ import org.hibernate.search.query.dsl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
@@ -40,7 +40,6 @@ import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.AbstractJPAQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.Value;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.QCommunication.communication;
@@ -60,13 +59,16 @@ public class CustomerEao extends AbstractEao<Customer> {
     /**
      * Nice Helper Class, shorter code.
      */
-    @Value
     private static class WildCardHelper {
 
         private final boolean appendWildcard;
 
         public String trim(String s) {
             return s.toLowerCase() + (appendWildcard ? "%" : "");
+        }
+
+        public WildCardHelper(boolean appendWildcard) {
+            this.appendWildcard = appendWildcard;
         }
 
     }
@@ -168,7 +170,7 @@ public class CustomerEao extends AbstractEao<Customer> {
 
     /**
      * Finds a customer, which has the supplied communication set as default email communication.
-     * 
+     *
      * @param comm the communication
      * @return a customer or null if non found
      * @thorws NonUniqueResultException {@link AbstractJPAQuery#fetchOne() }.
@@ -260,11 +262,11 @@ public class CustomerEao extends AbstractEao<Customer> {
      * @return the estimated amount for the search
      */
     public int countFind(String search, Set<SearchField> searchField) {
-        if (StringUtils.isBlank(search)) return 0;
+        if ( StringUtils.isBlank(search) ) return 0;
         search = search.trim();
         //fill the searchField if it does not contain any fields
         if ( searchField == null || searchField.isEmpty() ) searchField = new HashSet<>(Arrays.asList(SearchField.values()));
- 
+
         return buildSearchQuery(search, searchField).getResultSize();
     }
 
@@ -304,7 +306,7 @@ public class CustomerEao extends AbstractEao<Customer> {
                     break;
             }
         }
-        L.debug("Searchfields {} generated hibernate search string values {}",searchField,searchFieldStringSet);
+        L.debug("Searchfields {} generated hibernate search string values {}", searchField, searchFieldStringSet);
         return searchFieldStringSet;
     }
 

@@ -18,37 +18,32 @@ package eu.ggnet.dwoss.mandator.api.value.partial;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-
-import lombok.Builder;
-import lombok.Value;
+import org.inferred.freebuilder.FreeBuilder;
 
 /**
  * Masterdata for Mandator.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
-@Builder
-@Value
-public class Company implements Serializable {
+@FreeBuilder
+public abstract class Company implements Serializable {
 
-    private final String name;
+    public abstract String name();
 
-    private final String street;
+    public abstract String street();
 
-    private final String city;
+    public abstract String city();
 
-    private final String zip;
+    public abstract String zip();
 
-    @NotNull
-    private final UrlLocation logo;
+    public abstract UrlLocation logo();
 
-    private final String email;
+    public abstract String email();
 
-    private final String emailName;
+    public abstract String emailName();
 
     public String toSingleLine() {
-        return name + " - " + street + " - " + zip + " " + city;
+        return name() + " - " + street() + " - " + zip() + " " + city();
     }
 
     /**
@@ -58,10 +53,13 @@ public class Company implements Serializable {
      */
     public String toHtml() {
         return "<p>"
-                + name + "( Logo:" + logo + " )<br />"
-                + street + "<br />"
-                + zip + "&nbsp;" + city + "<br />"
-                + "email:&nbsp;" + emailName + "&nbsp;&lt;" + email + "&gt;"
+                + name() + "( Logo:" + logo() + " )<br />"
+                + street() + "<br />"
+                + zip() + "&nbsp;" + city() + "<br />"
+                + "email:&nbsp;" + emailName() + "&nbsp;&lt;" + email() + "&gt;"
                 + "</p>";
     }
+
+    public static class Builder extends Company_Builder {
+    };
 }

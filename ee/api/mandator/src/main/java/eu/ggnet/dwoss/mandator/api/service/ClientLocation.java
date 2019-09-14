@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,17 +18,27 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import java.io.Serializable;
 import java.net.InetAddress;
-import java.util.Set;
-
-import lombok.Data;
+import java.util.*;
 
 /**
  *
  * @author pascal.perau
  */
-@Data
-public class ClientLocation implements Serializable{
+public class ClientLocation implements Serializable {
 
     private final Set<InetAddress> inetAdresses;
+
+    public ClientLocation(Set<InetAddress> inetAdresses) {
+        this.inetAdresses = new HashSet<>(inetAdresses);
+    }
+
+    public Set<InetAddress> getInetAdresses() {
+        return Collections.unmodifiableSet(inetAdresses);
+    }
+
+    @Override
+    public String toString() {
+        return "ClientLocation{" + "inetAdresses=" + inetAdresses + '}';
+    }
 
 }

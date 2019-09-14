@@ -35,14 +35,14 @@ public class SalesListingCreateAction extends AbstractAction {
     ListingActionConfiguration config;
 
     public SalesListingCreateAction(ListingActionConfiguration config) {
-        super(config.getName());
+        super(config.name);
         this.config = config;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Ui.progress().title(config.getName()).call(() -> {
+            Ui.progress().title(config.name).call(() -> {
                 Dl.remote().lookup(SalesListingProducer.class).generateListings(config).forEach(fj -> fj.toFile(GlobalConfig.APPLICATION_PATH_OUTPUT));
                 return null;
             });

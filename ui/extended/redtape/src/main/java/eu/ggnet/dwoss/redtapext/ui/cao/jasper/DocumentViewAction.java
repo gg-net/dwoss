@@ -90,15 +90,15 @@ public class DocumentViewAction extends AbstractAction {
         }, () -> new JasperFxView())
                 .cf()
                 .thenApplyAsync(r -> updateBriefedInDatabase(r), UiCore.getExecutor())
-                .thenAcceptAsync(od ->  od.ifPresent(d -> controller.reloadSelectionOnStateChange(d)), EventQueue::invokeLater);
+                .thenAcceptAsync(od -> od.ifPresent(d -> controller.reloadSelectionOnStateChange(d)), EventQueue::invokeLater);
     }
 
     // TODO: Verbessere mich :-)
     /**
-     * Updates the Briefed status of a dossier. 
+     * Updates the Briefed status of a dossier.
      * If the document of the view result needs transition, the transition is applied. Allso the briefed status is updated.
      * If nothing changed in the briefed world, nothing is happening.
-     * 
+     *
      * @param result the result of the view.
      * @return a dossier if something changed.
      */
