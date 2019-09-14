@@ -163,7 +163,7 @@ public class DocumentUpdateController {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
-        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getInvoiceAddress().getDescription(), true);
+        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getInvoiceAddress().getDetailedDescription(), true);
         OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);
@@ -182,7 +182,7 @@ public class DocumentUpdateController {
             JOptionPane.showMessageDialog(view, "Ein Kunde muss ausgewählt sein.");
             return;
         }
-        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getShippingAddress().getDescription(), false);
+        DocumentAdressUpdateView dauv = new DocumentAdressUpdateView(view.getCustomerId(), document.getShippingAddress().getDetailedDescription(), false);
         OkCancelDialog<DocumentAdressUpdateView> dialog = new OkCancelDialog<>(parent, Dialog.ModalityType.DOCUMENT_MODAL, "Adressen ändern", dauv);
         dialog.setLocationRelativeTo(view);
         dialog.setVisible(true);

@@ -16,14 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
-import eu.ggnet.dwoss.common.api.values.TaxType;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
+import eu.ggnet.dwoss.common.api.values.TaxType;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.Title;
@@ -42,12 +41,12 @@ public class TaxChangePane extends StackPane implements ResultProducer<TaxType> 
         VBox p = new VBox(10);
         p.setAlignment(Pos.CENTER);
         for (TaxType taxType : TaxType.values()) {
-            Button button = new Button(taxType.getName());
+            Button button = new Button(taxType.description);
             button.setOnAction(e -> {
                 result = taxType;
                 close();
             });
-            button.setTooltip(new Tooltip(taxType.getDescription()));
+            button.setTooltip(new Tooltip(taxType.detailedDescription));
             p.getChildren().add(button);
 
         }

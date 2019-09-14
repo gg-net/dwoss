@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,8 @@ public enum ProductGroup implements INoteModel {
 
     /**
      * Represents a Product, which has no physical representative, like a service or a free text.
-     *//**
+     */
+    /**
      * Represents a Product, which has no physical representative, like a service or a free text.
      */
     COMMENTARY("!!"),
@@ -43,18 +44,28 @@ public enum ProductGroup implements INoteModel {
     TABLET_SMARTPHONE("Tablet/SmartPhone"),
     PHONE("SimplePhone");
 
-    private final String note;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
     private ProductGroup(String note) {
-        this.note = note;
+        this.description = note;
     }
 
     @Override
     public String getNote() {
-        return note;
+        return description;
     }
 
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
     public String getName() {
-        return note;
+        return description;
     }
 }

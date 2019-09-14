@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,29 +16,67 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.*;
-
 /**
  * These are the ShippingCondition in a Enum.
  * <p/>
- * @author bastian.venz
+ * @author bastian.venz, oliver.guenther
  */
-@RequiredArgsConstructor
-@Getter
 public enum ShippingCondition {
 
     SIX_MIN_TEN("6€/Gerät min. 10€", 10, 6), FIVE("5€/Gerät", 5, 5), SIX("6€/Gerät", 6, 6), FIVE_EIGHTY("5,80€/Gerät", 5.8, 5.8);
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
     /**
      * Price of a single unit shipping
      */
-    private final double priceOfOne;
+    public final double priceOfOne;
 
     /**
      * Multiplicator for shippings of multiple unit
      */
-    private final double multiplicator;
+    public final double multiplicator;
+
+    private ShippingCondition(String name, double priceOfOne, double multiplicator) {
+        this.description = name;
+        this.priceOfOne = priceOfOne;
+        this.multiplicator = multiplicator;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
+    }
+
+    /**
+     * Returns the price for one unit.
+     *
+     * @return the price for one unit.
+     * @deprecated use field priceOfOne
+     */
+    @Deprecated
+    public double getPriceOfOne() {
+        return priceOfOne;
+    }
+
+    /**
+     * Returns the price for multiple units.
+     *
+     * @return the price for multiple units.
+     * @deprecated use field multiplicator
+     */
+    @Deprecated
+    public double getMultiplicator() {
+        return multiplicator;
+    }
 
 }

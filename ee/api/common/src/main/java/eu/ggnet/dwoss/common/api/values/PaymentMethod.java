@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,44 +25,59 @@ public enum PaymentMethod {
     /**
      * Advance Payment - Vorkasse.
      */
-    ADVANCE_PAYMENT("Vorkasse", 0,"Zahlungsbedingungen: Vorauskasse oder EC/Barzahlung bei Abholung.","Rechnungsbetrag bereits dankend erhalten."),
+    ADVANCE_PAYMENT("Vorkasse", "Zahlungsbedingungen: Vorauskasse oder EC/Barzahlung bei Abholung.", "Rechnungsbetrag bereits dankend erhalten."),
     /**
      * Direct Debit - Lastschrift.
      */
-    DIRECT_DEBIT("Lastschrift", 3,"Zahlungsbedingungen: Lastschrift.","Rechnungsbetrag fällig, wird per Lastschrift eingezogen."),
+    DIRECT_DEBIT("Lastschrift", "Zahlungsbedingungen: Lastschrift.", "Rechnungsbetrag fällig, wird per Lastschrift eingezogen."),
     /**
      * Invoice - Rechnung.
      */
-    INVOICE("Rechnung", 2,"Zahlungsbedingungen: Rechnung","Rechnungsbetrag fällig, zahlbar %s nach Erhalt der Ware"),
+    INVOICE("Rechnung", "Zahlungsbedingungen: Rechnung", "Rechnungsbetrag fällig, zahlbar %s nach Erhalt der Ware"),
     /**
      * Cash on Delivery - Nachname.
      */
-    CASH_ON_DELIVERY("Nachnahme", 1,"Zahlungsbedingungen: Nachnahme","Rechnungsbetrag fällig, wird bei Erhalt der Ware via Nachnahme eingezogen.");
+    CASH_ON_DELIVERY("Nachnahme", "Zahlungsbedingungen: Nachnahme", "Rechnungsbetrag fällig, wird bei Erhalt der Ware via Nachnahme eingezogen.");
 
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
-    private final String note;
+    /**
+     * Text in the order document.
+     */
+    public final String orderText;
 
-    private final int sopoPaymentMethodId;
-
-    private final String orderText;
-
+    /**
+     * Text in the invoice document, maycontain special charater %s to repaces with days.
+     */
     private final String invoiceText;
 
-    private PaymentMethod(String note, int sopoPaymentMethodId, String orderText, String invoiceText) {
-        this.note = note;
-        this.sopoPaymentMethodId = sopoPaymentMethodId;
+    private PaymentMethod(String note, String orderText, String invoiceText) {
+        this.description = note;
         this.orderText = orderText;
         this.invoiceText = invoiceText;
     }
 
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
     public String getNote() {
-        return note;
+        return description;
     }
 
-    public int getSopoPaymentMethodId() {
-        return sopoPaymentMethodId;
-    }
-
+    /**
+     * Text in the order document.
+     *
+     * @return text in the order document
+     * @deprecated use field orderText.
+     */
+    @Deprecated
     public String getOrderText() {
         return orderText;
     }
@@ -73,11 +88,11 @@ public enum PaymentMethod {
      * @param days the days a invoice may be paid
      * @return the text.
      */
-    public String getInvoiceText(int days) {
-        if (!invoiceText.contains("%s")) return invoiceText;
+    public String invoiceText(int days) {
+        if ( !invoiceText.contains("%s") ) return invoiceText;
         String daysText = "sofort";
-        if (days == 1) daysText = "1 Tag";
-        if (days > 1) daysText = days + " Tage";
+        if ( days == 1 ) daysText = "1 Tag";
+        if ( days > 1 ) daysText = days + " Tage";
         return String.format(invoiceText, daysText);
     }
 

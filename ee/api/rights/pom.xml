@@ -16,6 +16,11 @@
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
 

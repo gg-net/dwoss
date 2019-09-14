@@ -20,8 +20,6 @@ import java.util.*;
 
 import eu.ggnet.dwoss.common.api.values.partno.*;
 
-import lombok.Getter;
-
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -184,23 +182,42 @@ public enum TradeName {
         }
     };
 
-    @Getter
-    private final String name;
+    private final String description;
 
     /**
      * Rule: if we are a brand, the Manufacturer is not null.
      */
-    @Getter
     private final TradeName manufacturer = null;
 
     /**
      * Rule: If we are a Manufacturer, brands is not Empty (never null).
      */
-    @Getter
-    private final Set<TradeName> brands = Collections.EMPTY_SET;
+    private final Set<TradeName> brands = Collections.emptySet();
 
     private TradeName(String name) {
-        this.name = name;
+        this.description = name;
+    }
+
+    /**
+     *
+     * @return
+     * @deprecated use getDescription().
+     */
+    @Deprecated
+    public String getName() {
+        return description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public TradeName getManufacturer() {
+        return manufacturer;
+    }
+
+    public Set<TradeName> getBrands() {
+        return brands;
     }
 
     /**

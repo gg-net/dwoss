@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,32 +16,46 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Warranty.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public enum Warranty {
 
-    ONE_YEAR_CARRY_IN("1 Jahr Bring-In Garantie"), 
+    ONE_YEAR_CARRY_IN("1 Jahr Bring-In Garantie"),
     ONE_YEAR_CARRY_IN_ADVANCED("1 Jahr Bring-In, Verlängerung mögl."),
-    FOURTEEN_DAYS_FUNTION_WARRANTY("14 Tage Funktionsgarantie"), 
-    TWO_YEARS_CARRY_IN("2 Jahre Bring-In Garantie"), 
+    FOURTEEN_DAYS_FUNTION_WARRANTY("14 Tage Funktionsgarantie"),
+    TWO_YEARS_CARRY_IN("2 Jahre Bring-In Garantie"),
     NO_WARRANTY("Keine Garantie"),
     WARRANTY_TILL_DATE("Garantie bis Datum"),
     ONE_YEAR_STATUTORY_WARRANTY("12 Monate gesetzliche Gewährleistung ab Lieferung der Ware"),
     ONE_YEAR_STATUTORY_PLUS_ONEADO("12 Monate gesetzliche Gewährleistung ab Lieferung der Ware & 13 Monate oneado-Garantie ab Lieferung der Ware gemäß der beiliegenden Bedingungen"),
     NO_B2B_WARRANTY("Händlergeschäft, die Gewährleistung ist ausgeschlossen");
 
-    @Getter
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
+
+    private Warranty(String name) {
+        this.description = name;
+    }
 
     public static Warranty getWarrantyById(int id) {
-        if (id < 0 || id >= Warranty.values().length) return null;
+        if ( id < 0 || id >= Warranty.values().length ) return null;
         return Warranty.values()[id];
     }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
+    }
+
 }

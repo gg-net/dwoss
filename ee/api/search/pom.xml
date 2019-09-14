@@ -12,5 +12,13 @@
     <packaging>ejb</packaging>
     <name>DwOss • EE • Api • Search</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 </project>
 

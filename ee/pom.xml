@@ -42,10 +42,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>${javaee.groupId}</groupId>
             <artifactId>${javaee.artifactId}</artifactId>
             <version>${javaee.version}</version>

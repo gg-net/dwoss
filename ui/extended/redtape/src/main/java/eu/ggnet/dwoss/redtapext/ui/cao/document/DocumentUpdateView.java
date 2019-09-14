@@ -198,20 +198,20 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         Style boldStyle = addressesArea.addStyle("bold", null);
         StyleConstants.setBold(boldStyle, true);
         try {
-            if ( document.getInvoiceAddress().getDescription().equals(document.getShippingAddress().getDescription()) ) {
+            if ( document.getInvoiceAddress().getDetailedDescription().equals(document.getShippingAddress().getDetailedDescription()) ) {
                 doc.insertString(doc.getLength(), "Rechnungs und Lieferadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDescription(), null);
+                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDetailedDescription(), null);
             } else {
                 doc.insertString(doc.getLength(), "Rechnungsadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDescription(), null);
+                doc.insertString(doc.getLength(), document.getInvoiceAddress().getDetailedDescription(), null);
                 doc.insertString(doc.getLength(), "\n\nLieferadresse:\n", boldStyle);
-                doc.insertString(doc.getLength(), document.getShippingAddress().getDescription(), null);
+                doc.insertString(doc.getLength(), document.getShippingAddress().getDetailedDescription(), null);
             }
         } catch (BadLocationException ex) {
             addressesArea.setText("Rechnungsadresse:\n"
-                    + document.getInvoiceAddress().getDescription()
+                    + document.getInvoiceAddress().getDetailedDescription()
                     + "\n\nLieferAdresse:\n"
-                    + document.getShippingAddress().getDescription());
+                    + document.getShippingAddress().getDetailedDescription());
         }
     }
 

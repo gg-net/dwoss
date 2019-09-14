@@ -18,16 +18,11 @@ package eu.ggnet.dwoss.common.api.values;
 
 import eu.ggnet.dwoss.common.api.INoteModel;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * Flags set on the Customer, but used on multiple ocations.
  *
  * @author pascal.perau
  */
-@Getter
-@AllArgsConstructor
 public enum CustomerFlag implements INoteModel {
     /**
      * Has a special workflow assigned.
@@ -40,11 +35,29 @@ public enum CustomerFlag implements INoteModel {
     ITC_CUSTOMER("Systemhauskunde"),
     PRIO_A_CUSTOMER("Prio A Kunde");
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
     @Override
     public String getNote() {
-        return name;
+        return description;
+    }
+
+    private CustomerFlag(String name) {
+        this.description = name;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
     }
 
 }

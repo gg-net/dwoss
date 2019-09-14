@@ -16,15 +16,11 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.*;
-
 /**
  * Payment Conditions for Customers.
  *
  * @author bastian.venz
  */
-@Getter
-@RequiredArgsConstructor
 public enum PaymentCondition {
 
     /**
@@ -56,6 +52,24 @@ public enum PaymentCondition {
      */
     DEALER_3_PERCENT_DISCOUNT("Händler 3% Rabatt");
 
-    private final String note;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
+
+    private PaymentCondition(String note) {
+        this.description = note;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getNote() {
+        return description;
+    }
 
 }

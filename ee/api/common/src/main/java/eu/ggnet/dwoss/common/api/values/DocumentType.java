@@ -18,8 +18,6 @@ package eu.ggnet.dwoss.common.api.values;
 
 import java.util.EnumSet;
 
-import lombok.ToString;
-
 /**
  * The possible Types of Documents.
  * Hint on notation: A short notation is used. A CreditMemo can only exist if a Invoice exits means a Dossier can only have an active Document of type
@@ -27,7 +25,6 @@ import lombok.ToString;
  * the dossier has an active Document of type Invoice.
  * Hint: Only on this component to have type safty in the Mandator.
  */
-@ToString
 public enum DocumentType {
 
     /**
@@ -265,15 +262,18 @@ public enum DocumentType {
      */
     CAPITAL_ASSET("Anlagevermögen", "AN");
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
     /**
      * the MatchCode (eg Invoice = SR, CreditMemo = GS).
      */
-    private final String matchCode;
+    public final String matchCode;
 
     private DocumentType(String name, String matchCode) {
-        this.name = name;
+        this.description = name;
         this.matchCode = matchCode;
     }
 
@@ -281,15 +281,24 @@ public enum DocumentType {
         this(name, null);
     }
 
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
     public String getName() {
-        return name;
+        return description;
     }
 
     /**
      * Returns the MatchCode (e.g. Invoice = SR, CreditMemo = GS)
      *
      * @return the MatchCode, may be null.
+     * @deprecated use field matchCode.
      */
+    @Deprecated
     public String getMatchCode() {
         return matchCode;
     }
@@ -302,6 +311,11 @@ public enum DocumentType {
      */
     public static boolean isRepayment(DocumentType type) {
         return EnumSet.of(CREDIT_MEMO, ANNULATION_INVOICE).contains(type);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" + "name=" + description + ", matchCode=" + matchCode + '}';
     }
 
 }

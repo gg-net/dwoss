@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,27 +18,18 @@ package eu.ggnet.dwoss.progress;
 
 import java.io.Serializable;
 
-import lombok.*;
-
 /**
  *
  * @author oliver.guenther
  */
-@ToString
 public class HiddenMonitor implements IMonitor, Serializable {
 
-    @Setter
-    @Getter
     private String title;
 
-    @Setter
-    @Getter
     private String message;
 
-    @Getter
     private boolean started = false;
 
-    @Getter
     private boolean finished = false;
 
     private int progress = 100;
@@ -99,8 +90,40 @@ public class HiddenMonitor implements IMonitor, Serializable {
         return this;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     @Override
     public int getAbsolutRemainingTicks() {
         return progress;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    //</editor-fold>
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" + "title=" + title + ", message=" + message + ", started=" + started + ", finished=" + finished + ", progress=" + progress + ", lastChange=" + lastChange + '}';
+    }
+
 }

@@ -41,7 +41,7 @@ public class DocumentFormater {
         res += "<b>" + (doc.isClosed() ? "<font color=\"#666600\">Dokument geschlossen" : "<font color=\"#009900\">Dokument offen") + "</font></b><br />";        
         res += "Document.dossier.kid=" + doc.getDossier().getCustomerId() + "<br />";
         res += Optional.ofNullable(doc.getInvoiceAddress())
-                .map(Address::getDescription)                
+                .map(Address::getDetailedDescription)                
                 .map(s -> s.replaceAll("\n", "<br />"))
                 .orElse("No Invoice Address");
         res += "<br />";

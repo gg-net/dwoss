@@ -16,20 +16,33 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * A type for differentiate between addresses.
  * <p>
  * @author pascal.perau
  */
-@Getter
-@RequiredArgsConstructor
 public enum AddressType {
 
     INVOICE("Rechnungsadresse"), SHIPPING("Lieferadresse");
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
+
+    private AddressType(String name) {
+        this.description = name;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
+    }
 
 }

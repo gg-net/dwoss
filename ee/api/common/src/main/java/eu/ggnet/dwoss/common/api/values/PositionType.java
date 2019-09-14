@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,15 +16,11 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-
-import lombok.Getter;
-
 /**
  * The different Types of position.
  * <p>
  * @author oliver.guenther
  */
-@Getter
 public enum PositionType {
 
     /**
@@ -53,10 +49,24 @@ public enum PositionType {
      */
     SHIPPING_COST("Versandkosten");
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
     private PositionType(String name) {
-        this.name = name;
+        this.description = name;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
     }
 
 }

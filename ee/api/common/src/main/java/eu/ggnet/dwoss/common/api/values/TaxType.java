@@ -16,17 +16,12 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * Represents Taxtype for Documents.
  * Used in persistence layer, so order must noch change.
  *
  * @author oliver.guenther
  */
-@AllArgsConstructor
-@Getter
 public enum TaxType {
 
     GENERAL_SALES_TAX_DE_SINCE_2007(0.19,
@@ -48,26 +43,89 @@ public enum TaxType {
     /**
      * Tax value, must never Change.
      */
-    private final double tax;
+    public final double tax;
 
     /**
      * Short name of the tax type, typical usage on buttons.
      */
-    private final String name;
+    public final String description;
 
     /**
-     * A more detailed description about the tax type, may be used as tooltip.
+     * A more detailed detailedDescription about the tax type, may be used as tooltip.
      */
-    private final String description; // Usefull as Tooltip
+    public final String detailedDescription; // Usefull as Tooltip
 
     /**
      * A optional Text, that must be displayed in invoices.
      */
-    private final String documentText;
+    public final String documentText;
 
     /**
      * Code used in the exporter to finacial software (sage in our case).
      */
-    private final String taxCode;
+    public final String taxCode;
+
+    private TaxType(double tax, String name, String description, String documentText, String taxCode) {
+        this.tax = tax;
+        this.description = name;
+        this.detailedDescription = description;
+        this.documentText = documentText;
+        this.taxCode = taxCode;
+    }
+
+    /**
+     * Returs the tax
+     *
+     * @return the tax
+     * @deprecated use field tax
+     */
+    @Deprecated
+    public double getTax() {
+        return tax;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getName() {
+        return description;
+    }
+
+    /**
+     * Returns a detailed description
+     *
+     * @return a detailed desctiption
+     * @deprecated use field detailedDescription
+     */
+    @Deprecated
+    public String getDetailedDescription() {
+        return detailedDescription;
+    }
+
+    /**
+     * Returns a text in the document.
+     *
+     * @return text for the document.
+     * @deprecated use field documentText
+     */
+    @Deprecated
+    public String getDocumentText() {
+        return documentText;
+    }
+
+    /**
+     * Returns a tax code.
+     *
+     * @return a tax code
+     * @deprecated use field taxCode
+     */
+    @Deprecated
+    public String getTaxCode() {
+        return taxCode;
+    }
 
 }

@@ -16,20 +16,33 @@
  */
 package eu.ggnet.dwoss.common.api.values;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Represents a sales channel
  */
-@Getter
-@RequiredArgsConstructor
 public enum SalesChannel {
 
     UNKNOWN("Unbekannt"),
     RETAILER("Händlerkanal"),
     CUSTOMER("Endkundenkanal");
 
-    private final String name;
+    /**
+     * A short (german) description.
+     */
+    public final String decription;
+
+    private SalesChannel(String decription) {
+        this.decription = decription;
+    }
+
+    /**
+     * Returns a description
+     *
+     * @return
+     * @deprecated use public discripton field
+     */
+    @Deprecated
+    public String getName() {
+        return decription;
+    }
 
 }

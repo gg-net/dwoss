@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2014 GG-Net GmbH - Oliver Günther
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.*;
-
 /**
  * These are possible special operations that either show a status, like saleable, or have in common, that a unit is block some there for some internal/external
  * process.
  *
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
-@Getter
 public enum ReceiptOperation implements Serializable {
 
     /**
@@ -56,9 +52,32 @@ public enum ReceiptOperation implements Serializable {
     // HINT: OG doesn't like a process indicator which is handled different, but accepts it for now.
     IN_SALE("Im Verkauf oder Reported (akiver Kundenauftrag)", false);
 
-    private final String note;
+    /**
+     * A short (german) description.
+     */
+    public final String description;
 
-    private final boolean backedByCustomer;
+    public final boolean backedByCustomer;
+
+    private ReceiptOperation(String note, boolean backedByCustomer) {
+        this.description = note;
+        this.backedByCustomer = backedByCustomer;
+    }
+
+    /**
+     * A short (german) description.
+     *
+     * @return a short (german) description.
+     * @deprecated use field description.
+     */
+    @Deprecated
+    public String getNote() {
+        return description;
+    }
+
+    public boolean isBackedByCustomer() {
+        return backedByCustomer;
+    }
 
     public static List<ReceiptOperation> valuesBackedByCustomer() {
         return Arrays.asList(values()).stream().filter(ReceiptOperation::isBackedByCustomer).collect(Collectors.toList());
