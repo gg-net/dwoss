@@ -20,93 +20,46 @@ import java.io.Serializable;
 import java.util.Map.Entry;
 import java.util.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.MultiPartEmail;
+import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
-
-import lombok.Builder;
-import lombok.Value;
 
 /**
  *
  * @author oliver.guenther
  */
-@Value
-@Builder
-public class Mandator implements Serializable {
+// @Value
+@FreeBuilder
+public abstract class Mandator implements Serializable {
+    
+    public static class Builder extends Mandator_Builder {};
 
-    /**
-     * The default Signature below mails.
-     */
-    @NotNull
-    private final String defaultMailSignature;
+    public abstract String defaultMailSignature();
 
-    /**
-     * A Smtp Configuration, used for direct mailing.
-     */
-    @Valid
-    @NotNull
-    private final SmtpConfiguration smtpConfiguration;
+    public abstract SmtpConfiguration smtpConfiguration();
 
-    /**
-     * A generic velocity template for emails.
-     * Available Parameters are:
-     * <ul>
-     * <li>$parameter.neutralTitle - Boolean, is true if neither Herr nor Frau is set.</li>
-     * <li>$parameter.name - last name of the customer</li>
-     * <li>$parameter.title - the title of the customer</li>
-     * <li>$parameter.documentType - the documentType</li>
-     * </ul>
-     */
-    @NotNull
-    private final UrlLocation mailTemplateLocation;
+    public abstract UrlLocation mailTemplateLocation();
 
-    /**
-     * File used as default attachment when sending mails.
-     */
-    @NotNull
-    private Set<MandatorMailAttachment> defaultMailAttachment;
+    public abstract Set<MandatorMailAttachment> defaultMailAttachment();
 
-    // Info, can be empty.
-    public Set<MandatorMailAttachment> getDefaultMailAttachment() {
-        return defaultMailAttachment;
-    }
+    public abstract Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType();
 
-    @NotNull
-    private Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType;
+    public abstract Company company();
 
-    /**
-     * The company master data information.
-     */
-    @NotNull
-    private final Company company;
+    public abstract String dossierPrefix();
 
-    /**
-     * The Prefix for Dossiers.
-     */
-    @NotNull
-    private final String dossierPrefix;
+    public abstract DocumentIntermix documentIntermix();
 
-    @NotNull
-    private final DocumentIntermix documentIntermix;
+    public abstract Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations();
 
-    @NotNull
-    private final Map<DocumentType, DocumentIdentifierGeneratorConfiguration> documentIdentifierGeneratorConfigurations;
+    public abstract boolean applyDefaultChannelOnRollIn();
 
-    /**
-     * Defines, if the primary sales channel should be set on roll in.
-     */
-    private final boolean applyDefaultChannelOnRollIn;
+    public abstract String matchCode();
 
-    @NotNull
-    private final String matchCode;
-
-    private String bugMail;
+    public abstract String bugMail();
 
     /**
      * Prepares a eMail to be send direct over the mandator smtp configuration.
@@ -117,14 +70,14 @@ public class Mandator implements Serializable {
      */
     public MultiPartEmail prepareDirectMail() throws EmailException {
         MultiPartEmail email = new MultiPartEmail();
-        email.setHostName(smtpConfiguration.hostname);
-        email.addBcc(company.email());
-        email.setFrom(company.email(), company.emailName());
-        email.setAuthentication(smtpConfiguration.smtpAuthenticationUser, smtpConfiguration.smtpAuthenticationPass);
+        email.setHostName(smtpConfiguration().hostname);
+        email.addBcc(company().email());
+        email.setFrom(company().email(), company().emailName());
+        email.setAuthentication(smtpConfiguration().smtpAuthenticationUser, smtpConfiguration().smtpAuthenticationPass);
         email.setStartTLSEnabled(false);
         email.setSSLCheckServerIdentity(false);
         email.setSSLOnConnect(false);
-        email.setCharset(smtpConfiguration.charset);
+        email.setCharset(smtpConfiguration().charset);
         return email;
     }
 
@@ -132,40 +85,40 @@ public class Mandator implements Serializable {
         StringBuilder sb = new StringBuilder("<table>");
         sb.append("<tr>");
         sb.append("<td><p><b>Company</b></p>");
-        sb.append(company == null ? "null" : company.toHtml());
+        sb.append(company().toHtml());
         sb.append("</td>");
         sb.append("<td><p><b>Smtp Configuration</b></p>");
-        sb.append(smtpConfiguration == null ? "null" : smtpConfiguration.toHtml());
+        sb.append(smtpConfiguration().toHtml());
         sb.append("</td>");
         sb.append("</tr>");
 
         sb.append("<tr><td colspan=\"2\"><ul>");
         sb.append("<li><b>Dossier Prefix: </b>");
-        sb.append(dossierPrefix);
+        sb.append(dossierPrefix());
         sb.append("</li><li><b>MailTemplateLocation: </b>");
-        sb.append(mailTemplateLocation == null ? "null" : mailTemplateLocation.getLocation());
+        sb.append(mailTemplateLocation().getLocation());
         sb.append("</li><li><b>ApplyDefaultChannelOnRollIn: </b>");
-        sb.append(applyDefaultChannelOnRollIn);
+        sb.append(applyDefaultChannelOnRollIn());
         sb.append("</li><li><b>matchCode: </b>");
-        sb.append(matchCode);
+        sb.append(matchCode());
         sb.append("</li><li><b>Bug Report Mail:</b>");
-        sb.append(bugMail);
+        sb.append(bugMail());
         sb.append("</li>");
 
         sb.append("</td></tr><tr><td colspan=\"2\">");
         sb.append("<p><b>DocumentIntermix</b></p>");
-        sb.append(documentIntermix == null ? "null" : documentIntermix.toHtml());
+        sb.append(documentIntermix().toHtml());
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>DefaultMailSignature</b></p>");
-        sb.append(defaultMailSignature);
+        sb.append(defaultMailSignature());
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>Default Mail Attachment:</b></p>");
-        if ( defaultMailAttachment == null || defaultMailAttachment.isEmpty() ) {
+        if ( defaultMailAttachment().isEmpty() ) {
             sb.append("<b>No Attachment</b>");
         } else {
-            Iterator<MandatorMailAttachment> it = defaultMailAttachment.iterator();
+            Iterator<MandatorMailAttachment> it = defaultMailAttachment().iterator();
             sb.append("<ul>");
             while (it.hasNext()) {
                 MandatorMailAttachment attachment = it.next();
@@ -178,10 +131,10 @@ public class Mandator implements Serializable {
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>Mail Attachment by Document Type:</b></p>");
-        if ( mailAttachmentByDocumentType == null || mailAttachmentByDocumentType.isEmpty() ) {
+        if ( mailAttachmentByDocumentType().isEmpty() ) {
             sb.append("<b>No Attachment</b>");
         } else {
-            Iterator<Entry<DocumentType, Set<MandatorMailAttachment>>> it = mailAttachmentByDocumentType.entrySet().iterator();
+            Iterator<Entry<DocumentType, Set<MandatorMailAttachment>>> it = mailAttachmentByDocumentType().entrySet().iterator();
             sb.append("<ul>");
             while (it.hasNext()) {
                 Entry<DocumentType, Set<MandatorMailAttachment>> entry = it.next();
@@ -196,11 +149,11 @@ public class Mandator implements Serializable {
         sb.append("</td></tr>");
 
         sb.append("<tr><td colspan=\"2\"><p><b>Document Identifier Generator Configurations:</b></p>");
-        if ( documentIdentifierGeneratorConfigurations == null || documentIdentifierGeneratorConfigurations.isEmpty() ) {
+        if ( documentIdentifierGeneratorConfigurations().isEmpty() ) {
             sb.append("<b>No Document Identifier Generator Configuration</b>");
         } else {
             sb.append("<ul>");
-            documentIdentifierGeneratorConfigurations.forEach((type, generatorConfig) -> {
+            documentIdentifierGeneratorConfigurations().forEach((type, generatorConfig) -> {
                 sb.append("<li>");
                 sb.append(type);
                 sb.append(" : ");

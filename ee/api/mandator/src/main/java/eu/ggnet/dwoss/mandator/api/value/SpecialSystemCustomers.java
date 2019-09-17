@@ -17,19 +17,16 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 
-import lombok.Value;
 
 /**
  * Contains SystemCustomers, which do not use the {@link DocumentType#BLOCK}, but a special one.
  * <p>
  * @author oliver.guenther
  */
-@Value
 public class SpecialSystemCustomers implements Serializable {
 
     private final Map<Long, DocumentType> specialCustomers;
@@ -38,4 +35,12 @@ public class SpecialSystemCustomers implements Serializable {
         return Optional.ofNullable(specialCustomers.get(customerId));
     }
 
+    public SpecialSystemCustomers(Map<Long, DocumentType> specialCustomers) {
+        this.specialCustomers = specialCustomers;
+    }
+
+    public Map<Long, DocumentType> getSpecialCustomers() {
+        return Collections.unmodifiableMap(specialCustomers);
+    }
+    
 }

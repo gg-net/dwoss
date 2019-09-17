@@ -23,27 +23,56 @@ import java.util.stream.Collectors;
 import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import lombok.*;
 
 /**
  * Contains SystemCustomers which are used for the receipt operations based on the Contractor.
  * <p/>
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public class ReceiptCustomers implements Serializable {
 
-    @Value
     public static class Key implements Serializable {
 
-        private final TradeName contractor;
+        public final TradeName contractor;
 
-        private final ReceiptOperation operation;
+        public final ReceiptOperation operation;
+
+        public Key(TradeName contractor, ReceiptOperation operation) {
+            this.contractor = contractor;
+            this.operation = operation;
+        }
 
         public static Key of(TradeName contractor, ReceiptOperation operation) {
             // TODO: if lazy, implement some cache.
             return new Key(contractor, operation);
         }
+        
+        //<editor-fold defaultstate="collapsed" desc="equals and hashcode of contractor,operation">        
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 43 * hash + Objects.hashCode(this.contractor);
+            hash = 43 * hash + Objects.hashCode(this.operation);
+            return hash;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final Key other = (Key)obj;
+            if ( this.contractor != other.contractor ) return false;
+            if ( this.operation != other.operation ) return false;
+            return true;
+        }
+        //</editor-fold>
+
+        @Override
+        public String toString() {
+            return "Key{" + "contractor=" + contractor + ", operation=" + operation + '}';
+        }
+      
     }
 
     public static class Builder {
@@ -69,9 +98,16 @@ public class ReceiptCustomers implements Serializable {
         return new Builder();
     }
 
-    @Getter
     private final Map<Key, Long> receiptCustomers;
 
+    public ReceiptCustomers(Map<Key, Long> receiptCustomers) {
+        this.receiptCustomers = receiptCustomers;
+    }
+
+    public Map<Key, Long> getReceiptCustomers() {
+        return Collections.unmodifiableMap(receiptCustomers);
+    }    
+    
     /**
      * Returns the customer id for the contractor and the operation
      * <p>
@@ -96,7 +132,7 @@ public class ReceiptCustomers implements Serializable {
                 .stream()
                 .filter(e -> e.getValue() == customerId)
                 .findFirst()
-                .map(e -> e.getKey().getOperation());
+                .map(e -> e.getKey().operation);
     }
 
     /**
@@ -109,8 +145,8 @@ public class ReceiptCustomers implements Serializable {
         return receiptCustomers
                 .keySet()
                 .stream()
-                .filter(k -> k.getContractor() == contractor)
-                .map(k -> k.getOperation())
+                .filter(k -> k.contractor == contractor)
+                .map(k -> k.operation)
                 .collect(Collectors.toSet());
     }
 }

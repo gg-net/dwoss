@@ -1,12 +1,14 @@
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
 
 import javax.persistence.LockModeType;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
@@ -30,15 +32,10 @@ public class DesktopBundleViewTryout {
         DesktopBundleView view = new DesktopBundleView(new Mandators() {
             @Override
             public Mandator loadMandator() {
-                return Mandator.builder()
-                        .defaultMailSignature(null)
-                        .smtpConfiguration(null)
-                        .mailTemplateLocation(null)
+                return new Mandator.Builder()
                         .company(CompanyGen.makeCompany())
                         .dossierPrefix("DW")
-                        .documentIntermix(null)
-                        .documentIdentifierGeneratorConfigurations(new EnumMap<>(DocumentType.class))
-                        .build();
+                        .buildPartial();
             }
 
             @Override

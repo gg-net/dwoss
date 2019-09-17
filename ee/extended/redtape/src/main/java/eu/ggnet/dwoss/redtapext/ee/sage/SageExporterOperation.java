@@ -102,7 +102,7 @@ public class SageExporterOperation implements SageExporter {
             SageExporterEngine exporter = new SageExporterEngine(out, customerInvoices, config);
             exporter.execute(m);
             m.finish();
-            return new FileJacket("Buchungsaetze DW " + mandator.getCompany().name() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
+            return new FileJacket("Buchungsaetze DW " + mandator.company().name() + " von " + DATE_FORMAT.format(start) + " bis " + DATE_FORMAT.format(end), ".xml", out.toByteArray());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -30,10 +30,10 @@ public class MandatorsStub implements Mandators {
 
     @Override
     public Mandator loadMandator() {
-        return Mandator.builder()
+        return new Mandator.Builder()
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
-                .build();
+                .buildPartial();
     }
 
     @Override

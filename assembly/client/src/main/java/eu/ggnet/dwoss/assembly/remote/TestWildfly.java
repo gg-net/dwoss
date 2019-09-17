@@ -120,7 +120,7 @@ public class TestWildfly {
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);
-        System.out.println(mandator.getDocumentIntermix().toMultiLine());
+        System.out.println(mandator.documentIntermix().toMultiLine());
 
 //        
 //        final Properties env = new Properties();
@@ -141,7 +141,7 @@ public class TestWildfly {
         Mandator mandator = supporter.loadMandator();
 
         System.out.println(mandator);
-        System.out.println(mandator.getDocumentIntermix().toMultiLine());
+        System.out.println(mandator.documentIntermix().toMultiLine());
 
         DefaultCustomerSalesdata sd = supporter.loadSalesdata();
 

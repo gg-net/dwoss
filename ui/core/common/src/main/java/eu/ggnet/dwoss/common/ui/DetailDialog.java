@@ -39,7 +39,7 @@ public class DetailDialog extends javax.swing.JDialog {
                 .message(messsage)
                 .overview(overview)
                 .details(details)
-                .bugMail(Dl.local().lookup(CachedMandators.class).loadMandator().getBugMail())
+                .bugMail(Dl.local().lookup(CachedMandators.class).loadMandator().bugMail())
                 .showDialog();
     }
 

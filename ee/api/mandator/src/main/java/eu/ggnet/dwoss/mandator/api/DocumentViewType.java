@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.mandator.api;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Document View Types.
  * These types can be used, to supply different templates or texts in the resulting documents.
@@ -26,8 +23,6 @@ import lombok.RequiredArgsConstructor;
  *
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
-@Getter
 public enum DocumentViewType {
 
     /**
@@ -43,9 +38,16 @@ public enum DocumentViewType {
      */
     SHIPPING("Lieferschein", "Lieferschein", "Shipping_Template.jrxml");
 
-    private final String name;
+    public final String description;
 
-    private final String documentTitle;
+    public final String documentTitle;
     
-    private final String fileName;
+    public final String fileName;
+
+    private DocumentViewType(String name, String documentTitle, String fileName) {
+        this.description = name;
+        this.documentTitle = documentTitle;
+        this.fileName = fileName;
+    }
+
 }

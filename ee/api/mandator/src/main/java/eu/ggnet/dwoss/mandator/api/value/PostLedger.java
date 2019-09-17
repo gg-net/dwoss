@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.api.values.TaxType;
 
-import lombok.Value;
 
 /**
  * PostLedger (Fibu Buchungskonto) engine.
@@ -33,7 +32,6 @@ import lombok.Value;
  * @author Bastian Venz
  * @author Oliver Guenther
  */
-@Value
 public class PostLedger implements Serializable {
 
     private final static Logger L = LoggerFactory.getLogger(PostLedger.class);
@@ -90,7 +88,6 @@ public class PostLedger implements Serializable {
         return new Loader();
     }
 
-    @Value
     public static class Storage implements Serializable {
 
         private final Ledger primaryLedger;
@@ -104,7 +101,7 @@ public class PostLedger implements Serializable {
         public Storage(Ledger primaryLedger, List<Ledger> alternativeLedgers) {
             this.primaryLedger = primaryLedger;
             this.alternativeLedgers.addAll(alternativeLedgers);
-        }
+        }      
 
     }
 

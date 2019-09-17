@@ -136,9 +136,9 @@ public class SampleGeneratorOperation implements Serializable {
             m.worked(1, "Generating 300 Customers");
             customerGenerator.makeCustomers(50);
             customerGenerator.makeCustomers(50, Assure.builder().simple(true).build());
-            customerGenerator.makeCustomers(50, Assure.builder().simple(true).mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode())).build());
-            customerGenerator.makeCustomers(50, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode())).build());
-            customerGenerator.makeCustomers(100, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.getMatchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
+            customerGenerator.makeCustomers(50, Assure.builder().simple(true).mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
+            customerGenerator.makeCustomers(50, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
+            customerGenerator.makeCustomers(100, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
             m.worked(1, "Generating 100 Specs");
             receiptGenerator.makeProductSpecs(100, true);
             m.worked(1, "Generating 200 Units");

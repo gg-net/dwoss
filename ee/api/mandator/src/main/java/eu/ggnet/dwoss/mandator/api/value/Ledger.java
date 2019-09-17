@@ -18,19 +18,59 @@ package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
 /**
  *
  * @author oliver.guenther
  */
-@Value
-@EqualsAndHashCode(of = {"value"})
 public class Ledger implements Serializable {
 
-    private final int value;
+    /**
+     * The Ledger Value.
+     */
+    public final int value;
 
-    private final String description;
+    public final String description;
 
+    public Ledger(int value, String description) {
+        this.value = value;
+        this.description = description;
+    }
+
+    /**
+     * The Ledger Value.
+     * 
+     * @return
+     * @deprecated use pulic field value.
+     */
+    @Deprecated
+    public int getValue() {
+        return value;
+    }
+
+    // TODO: Verifiy if this is needed.
+    //<editor-fold defaultstate="collapsed" desc="Hashcode and Equals of Value">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + this.value;
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final Ledger other = (Ledger)obj;
+        if ( this.value != other.value ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return "Ledger{" + "value=" + value + ", description=" + description + '}';
+    }
+    
 }

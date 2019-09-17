@@ -195,7 +195,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     @Override
     public String findCustomerAsMandatorHtml(long id) {
         return Optional.ofNullable(customerEao.findById(id))
-                .map(c -> c.toHtml(mandator.getMatchCode(), salesdata))
+                .map(c -> c.toHtml(mandator.matchCode(), salesdata))
                 .orElse("Kein Kunde mit id " + id + " vorhanden");
     }
 
@@ -434,9 +434,9 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
         Customer customer = findByIdEager(Customer.class, customerId);
         // The supplied instance is the same as defaults, don't store.
-        if ( customer.getMandatorMetadata(mandator.getMatchCode()) == null && mm.isSameAs(salesdata) ) {
+        if ( customer.getMandatorMetadata(mandator.matchCode()) == null && mm.isSameAs(salesdata) ) {
             return customer;
-        } else if ( customer.getMandatorMetadata(mandator.getMatchCode()) != null ) { // The Metadata exist on the customer, just merge
+        } else if ( customer.getMandatorMetadata(mandator.matchCode()) != null ) { // The Metadata exist on the customer, just merge
             // TODO: This is shit, make it better please
             if ( mm.isSameAs(salesdata) ) { // Delete case
                 for (Iterator<MandatorMetadata> iterator = customer.getMandatorMetadata().iterator(); iterator.hasNext();) {

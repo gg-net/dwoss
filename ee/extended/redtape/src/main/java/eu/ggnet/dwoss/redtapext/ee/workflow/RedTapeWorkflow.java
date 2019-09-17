@@ -184,7 +184,7 @@ public abstract class RedTapeWorkflow {
      */
     protected String generateIdentifier(Document document) {
         // Verify if a config exist.
-        DocumentIdentifierGeneratorConfiguration digc = mandator.getDocumentIdentifierGeneratorConfigurations().get(document.getType());
+        DocumentIdentifierGeneratorConfiguration digc = mandator.documentIdentifierGeneratorConfigurations().get(document.getType());
         if ( digc == null ) return null;
 
         RedTapeCounter counter = new RedTapeCounterEmo(redTapeEm).requestNext(document.getType(), digc.prefixType().generate());

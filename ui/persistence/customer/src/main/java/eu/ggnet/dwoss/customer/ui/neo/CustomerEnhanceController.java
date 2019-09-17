@@ -24,16 +24,11 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import javax.swing.JOptionPane;
 
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.*;
 import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
@@ -45,7 +40,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
@@ -183,7 +177,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @FXML
     private void clickMandatorMetaDataButton(ActionEvent event) {
         Ui.exec(() -> {
-            final String matchCode = Dl.local().lookup(CachedMandators.class).loadMandator().getMatchCode();
+            final String matchCode = Dl.local().lookup(CachedMandators.class).loadMandator().matchCode();
             Ui.build(commentTextArea).title("Mandantenmetadaten für " + matchCode).fxml()
                     .eval(() -> {
                         return customer.getMandatorMetadata().stream()

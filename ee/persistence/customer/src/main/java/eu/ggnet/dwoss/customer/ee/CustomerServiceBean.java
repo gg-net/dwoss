@@ -54,7 +54,7 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public String asHtmlHighDetailed(long customerId) {
-        return Optional.ofNullable(customerEao.findById(customerId)).map(c -> Css.toHtml5WithStyle(c.toHtml(mandator.getMatchCode(), salesData))).orElse("Kein Kunde mit id " + customerId + " gefunden");
+        return Optional.ofNullable(customerEao.findById(customerId)).map(c -> Css.toHtml5WithStyle(c.toHtml(mandator.matchCode(), salesData))).orElse("Kein Kunde mit id " + customerId + " gefunden");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class CustomerServiceBean implements CustomerService {
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
-        Optional<MandatorMetadata> omm = Optional.ofNullable(customer.getMandatorMetadata(mandator.getMatchCode()));
+        Optional<MandatorMetadata> omm = Optional.ofNullable(customer.getMandatorMetadata(mandator.matchCode()));
         return new CustomerMetaData(
                 customer.getId(),
                 omm.map(MandatorMetadata::getPaymentCondition).filter(mm -> mm != null).orElse(salesData.paymentCondition()),

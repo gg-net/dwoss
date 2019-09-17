@@ -31,22 +31,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.*;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_POSITION_WITH_EXISTING_DOCUMENT;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_OF_UNITS_AND_PRODUCT_BATCH;
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  *
@@ -125,7 +125,7 @@ public class PositionUpdateCask extends javax.swing.JPanel implements Consumer<P
                 JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if ( value instanceof Ledger ) {
                     Ledger l = (Ledger)value;
-                    label.setText(l.getValue() + ":" + l.getDescription());
+                    label.setText(l.value + ":" + l.description);
                 }
                 return label;
             }

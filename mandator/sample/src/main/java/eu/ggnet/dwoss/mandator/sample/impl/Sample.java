@@ -66,15 +66,16 @@ public class Sample {
         documentIdentifierGeneratorConfigurations.put(DocumentType.CREDIT_MEMO,
                 DocumentIdentifierGeneratorConfiguration.create("GS{PREFIX}_{COUNTER}", PrefixType.YY, new DecimalFormat("00000")));
 
-        MANDATOR = Mandator.builder()
+        MANDATOR = new Mandator.Builder()
                 .smtpConfiguration(smtpConfiguration)
                 .mailTemplateLocation(new UrlLocation(loadMailDocument()))
                 .company(company)
                 .dossierPrefix("DW")
                 .documentIntermix(documentIntermix)
-                .documentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
+                .putAllDocumentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
                 .applyDefaultChannelOnRollIn(false)
                 .matchCode("SAMPLE")
+                .defaultMailSignature("Sample Signatur")
                 .bugMail("error@localhost")
                 .build();
         DEFAULT_CUSTOMER_SALES_DATA = new DefaultCustomerSalesdata.Builder()

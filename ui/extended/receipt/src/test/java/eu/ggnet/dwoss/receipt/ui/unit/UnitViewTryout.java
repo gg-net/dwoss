@@ -23,7 +23,6 @@ import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
@@ -74,15 +73,10 @@ public class UnitViewTryout {
         Dl.remote().add(Mandators.class, new Mandators() {
             @Override
             public Mandator loadMandator() {
-                return Mandator.builder()
-                        .defaultMailSignature(null)
-                        .smtpConfiguration(null)
-                        .mailTemplateLocation(null)
+                return new Mandator.Builder()
                         .company(CompanyGen.makeCompany())
                         .dossierPrefix("DW")
-                        .documentIntermix(null)
-                        .documentIdentifierGeneratorConfigurations(new EnumMap<>(DocumentType.class))
-                        .build();
+                        .buildPartial();
             }
 
             @Override

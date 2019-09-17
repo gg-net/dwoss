@@ -97,7 +97,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
         List<StockUnit> stockUnits = stockTransactionEmo.completeRollIn(arranger, transactions);
         m.worked(2, "adding History");
         for (StockUnit stockUnit : stockUnits) {
-            if ( mandator.isApplyDefaultChannelOnRollIn() ) {
+            if ( mandator.applyDefaultChannelOnRollIn() ) {
                 SalesChannel channel = stockUnit.getStock().getPrimaryChannel();
                 channelChanger.fire(new SalesChannelChange(stockUnit.getUniqueUnitId(), channel));
                 history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName() + " with " + channel.getName(), arranger));

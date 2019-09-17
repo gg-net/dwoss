@@ -177,9 +177,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             throw new UserInfoException("Kunde hat keine E-Mail Hinterlegt! Senden einer E-Mail ist nicht Möglich!");
         }
 
-        String doctype = (jtype == DocumentViewType.DEFAULT ? document.getType().getName() : jtype.getName());
+        String doctype = (jtype == DocumentViewType.DEFAULT ? document.getType().description : jtype.description);
 
-        try (InputStream is = mandator.getMailTemplateLocation().toURL().openStream();
+        try (InputStream is = mandator.mailTemplateLocation().toURL().openStream();
                 InputStreamReader templateReader = new InputStreamReader(is)) {
             String text = new MailDocumentParameter(customer.toTitleNameLine(), doctype).eval(IOUtils.toString(templateReader));
             MultiPartEmail email = mandator.prepareDirectMail();
@@ -187,19 +187,19 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             email.setCharset("UTF-8");
 
             email.addTo(customerMailAddress);
-            email.setSubject(document.getType().getName() + " | " + document.getDossier().getIdentifier());
-            email.setMsg(text + mandator.getDefaultMailSignature());
+            email.setSubject(document.getType().description + " | " + document.getDossier().getIdentifier());
+            email.setMsg(text + mandator.defaultMailSignature());
             email.attach(
                     new ByteArrayDataSource(JasperExportManager.exportReportToPdf(jasper(document, jtype)), "application/pdf"),
                     "Dokument.pdf", "Dokument zu Ihrem Vorgang."
             );
 
             //get needed mail attachments
-            Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType = mandator.getMailAttachmentByDocumentType();
+            Map<DocumentType, Set<MandatorMailAttachment>> mailAttachmentByDocumentType = mandator.mailAttachmentByDocumentType();
             Set<MandatorMailAttachment> attachmentByType = mailAttachmentByDocumentType.getOrDefault(document.getType(), new HashSet<>());
 
             //fallback to default if none is set
-            if ( attachmentByType.isEmpty() ) attachmentByType = mandator.getDefaultMailAttachment();
+            if ( attachmentByType.isEmpty() ) attachmentByType = mandator.defaultMailAttachment();
 
             //add attachments
             for (MandatorMailAttachment mma : attachmentByType) {
@@ -307,9 +307,9 @@ public class DocumentSupporterOperation implements DocumentSupporter {
      * @return a JasperPrint
      */
     private JasperPrint jasper(Document document, DocumentViewType viewType) {
-        URL url = mandator.getDocumentIntermix().getTemplate(viewType) != null
-                ? mandator.getDocumentIntermix().getTemplate(viewType)
-                : DocumentSupporterOperation.class.getResource(viewType.getFileName());
+        URL url = mandator.documentIntermix().getTemplate(viewType) != null
+                ? mandator.documentIntermix().getTemplate(viewType)
+                : DocumentSupporterOperation.class.getResource(viewType.fileName);
         try (InputStream inputStream = url.openStream()) {
             JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
             JasperPrint result = JasperFillManager.fillReport(jasperReport, toTemplateParameters(document, viewType), toNormalizedDataSource(document));
@@ -348,18 +348,18 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         reportParameter.put(SUM_TAX, Math.abs(sumTax) < 0.001 ? null : sumTax);
         reportParameter.put(TAX_INFO, document.getSingleTax() < 0.001 ? null : String.format("%.0f %% MwSt.", document.getSingleTax() * 100));
         reportParameter.put(ACTUAL, document.getActual());
-        reportParameter.put(COMPANY, mandator.getCompany().toSingleLine());
-        reportParameter.put(COMPANY_LOGO, mandator.getCompany().logo().toURL());
-        reportParameter.put(FOOTER, mandator.getDocumentIntermix().getFooter() + "\n");
+        reportParameter.put(COMPANY, mandator.company().toSingleLine());
+        reportParameter.put(COMPANY_LOGO, mandator.company().logo().toURL());
+        reportParameter.put(FOOTER, mandator.documentIntermix().getFooter() + "\n");
         reportParameter.put(PAYMENT_TEXT, "");
 
-        reportParameter.put(TERMS1, mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS1, viewType, document.getType()));
+        reportParameter.put(TERMS1, mandator.documentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS1, viewType, document.getType()));
 
         // Building Terms 2
         StringBuilder terms2 = new StringBuilder();
         if ( StringUtils.isNotBlank(document.getTaxType().getDocumentText()) )
             terms2.append("<p>").append(document.getTaxType().getDocumentText()).append("</p>");
-        terms2.append("<p>").append(mandator.getDocumentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS2, viewType, document.getType())).append("</p>");
+        terms2.append("<p>").append(mandator.documentIntermix().getFreeTexts(FreeDocumentTemplateParameter.TERMS2, viewType, document.getType())).append("</p>");
 
         terms2.append("<p><b>");
         if ( documentService == null || documentService.isAmbiguous() || documentService.isUnsatisfied() ) {
@@ -380,7 +380,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
             reportParameter.put(PERFOMANCE_ON, invoices.get(0).getActual());
         }
 
-        if ( viewType != null && viewType != DocumentViewType.DEFAULT ) reportParameter.put(IDENTIFIER_TYPE, viewType.getDocumentTitle());
+        if ( viewType != null && viewType != DocumentViewType.DEFAULT ) reportParameter.put(IDENTIFIER_TYPE, viewType.documentTitle);
         // TODO: Should be somethere else, but keep it here for now.
         else if ( document.getType() == DocumentType.ORDER ) reportParameter.put(IDENTIFIER_TYPE, "Auftragsbestätigung/Proformarechnung");
 

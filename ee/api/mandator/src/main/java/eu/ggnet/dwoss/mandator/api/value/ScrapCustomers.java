@@ -22,14 +22,12 @@ import java.util.Optional;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import lombok.Value;
 
 /**
  * Contains SystemCustomers which are used for the scrap operation based on the Contractor.
  * <p>
  * @author oliver.guenther
  */
-@Value
 public class ScrapCustomers implements Serializable {
 
     private final Map<TradeName, Long> contractorCustomers;
@@ -38,4 +36,8 @@ public class ScrapCustomers implements Serializable {
         return Optional.ofNullable(contractorCustomers.get(contractor));
     }
 
+    public ScrapCustomers(Map<TradeName, Long> contractorCustomers) {
+        this.contractorCustomers = contractorCustomers;
+    }
+    
 }

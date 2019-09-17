@@ -17,24 +17,36 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import lombok.Value;
 
 /**
  * Contains SystemCustomers which are used for the delete operation based on the Contractor.
  * <p>
  * @author oliver.guenther
  */
-@Value
 public class DeleteCustomers  implements Serializable{
 
     private final Map<TradeName, Long> contractorCustomers;
 
     public Optional<Long> get(TradeName contractor) {
         return Optional.ofNullable(contractorCustomers.get(contractor));
+    }
+
+    public DeleteCustomers(Map<TradeName, Long> contractorCustomers) {
+        this.contractorCustomers = contractorCustomers;
+    }
+
+    public Map<TradeName, Long> getContractorCustomers() {
+        return contractorCustomers;
+    }
+
+    @Override
+    public String toString() {
+        return "DeleteCustomers{" + "contractorCustomers=" + contractorCustomers + '}';
     }
 
 }

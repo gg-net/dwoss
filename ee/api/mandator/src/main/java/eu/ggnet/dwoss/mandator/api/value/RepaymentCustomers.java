@@ -17,18 +17,17 @@
 package eu.ggnet.dwoss.mandator.api.value;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import lombok.Value;
 
 /**
  * Contains SystemCustomers which are used for the Repayment operation based on the Contractor.
  * <p>
  * @author oliver.guenther
  */
-@Value
 public class RepaymentCustomers  implements Serializable{
 
     private final Map<TradeName, Long> contractorCustomers;
@@ -37,4 +36,13 @@ public class RepaymentCustomers  implements Serializable{
         return Optional.ofNullable(contractorCustomers.get(contractor));
     }
 
+    public RepaymentCustomers(Map<TradeName, Long> contractorCustomers) {
+        this.contractorCustomers = contractorCustomers;
+    }
+
+    @Override
+    public String toString() {
+        return "RepaymentCustomers{" + "contractorCustomers=" + contractorCustomers + '}';
+    }
+    
 }

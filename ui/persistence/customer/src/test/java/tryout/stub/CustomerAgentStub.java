@@ -433,8 +433,8 @@ public class CustomerAgentStub implements CustomerAgent {
     public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
         MandatorsStub ms = new MandatorsStub();
         DefaultCustomerSalesdata defaultCsd = ms.loadSalesdata();
-        if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null && mm.isSameAs(defaultCsd)) return customer;
-        if (customer.getMandatorMetadata(ms.loadMandator().getMatchCode()) == null) customer.getMandatorMetadata().add(mm);
+        if (customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null && mm.isSameAs(defaultCsd)) return customer;
+        if (customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null) customer.getMandatorMetadata().add(mm);
         mm.normalize(defaultCsd);
         return customer;
     }

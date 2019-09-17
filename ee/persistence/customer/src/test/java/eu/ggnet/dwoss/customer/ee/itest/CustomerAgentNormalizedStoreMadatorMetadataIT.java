@@ -100,7 +100,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
      * @return a mandator metadata instance.
      */
     private MandatorMetadata makeTotalDifferentMetadata() {
-        MandatorMetadata mm = new MandatorMetadata(mandator.getMatchCode());
+        MandatorMetadata mm = new MandatorMetadata(mandator.matchCode());
         mm.getAllowedSalesChannels().add(SalesChannel.CUSTOMER);
         if ( mm.getAllowedSalesChannels().equals(dcs.allowedSalesChannels()) ) mm.getAllowedSalesChannels().add(SalesChannel.RETAILER);
 
@@ -120,7 +120,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
         agent.normalizedStoreMandatorMetadata(customer.getId(), mm);
 
         Customer c0 = agent.findByIdEager(Customer.class, customer.getId());
-        MandatorMetadata c0mm = c0.getMandatorMetadata(mandator.getMatchCode());
+        MandatorMetadata c0mm = c0.getMandatorMetadata(mandator.matchCode());
         assertThat(c0mm).as("Customer should have the partial mandator metadata, payment method and condition should be null")
                 .isNotNull()
                 .returns(mm.getAllowedSalesChannels(), MandatorMetadata::getAllowedSalesChannels)
@@ -139,7 +139,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
         agent.normalizedStoreMandatorMetadata(customer.getId(), mm);
 
         Customer c0 = agent.findByIdEager(Customer.class, customer.getId());
-        MandatorMetadata c0mm = c0.getMandatorMetadata(mandator.getMatchCode());
+        MandatorMetadata c0mm = c0.getMandatorMetadata(mandator.matchCode());
         assertThat(c0mm).as("Customer should have the full mandator metadata, as it differs completly from the defaults")
                 .isNotNull()
                 .returns(mm.getAllowedSalesChannels(), MandatorMetadata::getAllowedSalesChannels)
@@ -154,7 +154,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
         agent.normalizedStoreMandatorMetadata(customer.getId(), c0mm);
 
         c0 = agent.findByIdEager(Customer.class, customer.getId());
-        c0mm = c0.getMandatorMetadata(mandator.getMatchCode());
+        c0mm = c0.getMandatorMetadata(mandator.matchCode());
         assertThat(c0mm).as("Customer should have the partial mandator metadata, payment method and condition should be null")
                 .isNotNull()
                 .returns(mm.getAllowedSalesChannels(), MandatorMetadata::getAllowedSalesChannels)
@@ -174,7 +174,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
         agent.normalizedStoreMandatorMetadata(customer.getId(), c0mm);
 
         c0 = agent.findByIdEager(Customer.class, customer.getId());
-        assertThat(c0.getMandatorMetadata(mandator.getMatchCode())).as("Defaults were stored, should be removed").isNull();
+        assertThat(c0.getMandatorMetadata(mandator.matchCode())).as("Defaults were stored, should be removed").isNull();
 
         // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
         apiService.asCustomerMetaData(customer.getId());
@@ -184,7 +184,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
 
     @Test
     public void addTotalNewOnlyDefaults() {
-        MandatorMetadata mm = new MandatorMetadata(mandator.getMatchCode());
+        MandatorMetadata mm = new MandatorMetadata(mandator.matchCode());
         mm.getAllowedSalesChannels().addAll(dcs.allowedSalesChannels());
         mm.setShippingCondition(dcs.shippingCondition());
         mm.setPaymentCondition(dcs.paymentCondition());
@@ -193,7 +193,7 @@ public class CustomerAgentNormalizedStoreMadatorMetadataIT extends ArquillianPro
         agent.normalizedStoreMandatorMetadata(customer.getId(), mm);
 
         Customer c0 = agent.findByIdEager(Customer.class, customer.getId());
-        assertThat(c0.getMandatorMetadata(mandator.getMatchCode())).as("Defaults were stored, should not be persisted").isNull();
+        assertThat(c0.getMandatorMetadata(mandator.matchCode())).as("Defaults were stored, should not be persisted").isNull();
 
         // Doublecheck. All api service implementation should work. No Exceptions should be thrown.
         apiService.asCustomerMetaData(customer.getId());

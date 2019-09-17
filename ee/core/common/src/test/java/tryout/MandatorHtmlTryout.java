@@ -86,15 +86,15 @@ public class MandatorHtmlTryout extends Application {
         defaultMailAttachment.add(attachment1);
         defaultMailAttachment.add(attachment2);
 
-        Mandator mandator = Mandator.builder()
+        Mandator mandator = new Mandator.Builder()
                 .smtpConfiguration(smtpConfiguration)
                 .company(company)
                 .dossierPrefix("DW")
                 .documentIntermix(documentIntermix)
                 .defaultMailSignature(defaultMailSignature)
                 .mailTemplateLocation(mailTemplateLocation)
-                .defaultMailAttachment(defaultMailAttachment)
-                .documentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
+                .addAllDefaultMailAttachment(defaultMailAttachment)
+                .putAllDocumentIdentifierGeneratorConfigurations(documentIdentifierGeneratorConfigurations)
                 .applyDefaultChannelOnRollIn(false)
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
