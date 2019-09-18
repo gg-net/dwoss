@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.common.ui;
 
-import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
-
 import java.util.*;
 
 import javax.swing.Action;
@@ -27,8 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
-import eu.ggnet.saft.experimental.auth.Accessable;
 import eu.ggnet.saft.api.Authorisation;
+import eu.ggnet.saft.experimental.auth.*;
 
 /**
  * An Implementation which handles the AccessDependent and Rights Storage, but without an actual Authentication.
@@ -54,7 +51,7 @@ public abstract class AbstractGuardian implements Guardian {
     public Set<String> getOnceLoggedInUsernames() {
         Set<String> loggedInUsernames = new HashSet<>();
         for (Operator op : quickRights.values()) {
-            loggedInUsernames.add(op.getUsername());
+            loggedInUsernames.add(op.username);
         }
         return loggedInUsernames;
     }
@@ -79,7 +76,7 @@ public abstract class AbstractGuardian implements Guardian {
 
     @Override
     public String getUsername() {
-        return (operator == null ? "" : operator.getUsername());
+        return (operator == null ? "" : operator.username);
     }
 
     @Override
@@ -106,21 +103,21 @@ public abstract class AbstractGuardian implements Guardian {
      */
     protected void setRights(Operator dto) {
         operator = dto;
-        quickRights.put(dto.getQuickLoginKey(), dto);
+        quickRights.put(dto.quickLoginKey, dto);
         for (Accessable accessable : accessables) {
             accessable.setEnabled(false);
         }
         rights.clear();
-        rights.addAll(dto.getRights());
+        rights.addAll(dto.rights());
         for (Accessable accessable : accessables) {
-            for (AtomicRight atomicRight : dto.getRights()) {
+            for (AtomicRight atomicRight : dto.rights()) {
                 if ( accessable.getNeededRight().equals(atomicRight) )
                     accessable.setEnabled(true);
             }
         }
-        if ( !StringUtils.isBlank(dto.getUsername()) ) {
+        if ( !StringUtils.isBlank(dto.username) ) {
             for (UserChangeListener listener : userChangeListeners) {
-                listener.loggedIn(dto.getUsername());
+                listener.loggedIn(dto.username);
             }
         }
     }

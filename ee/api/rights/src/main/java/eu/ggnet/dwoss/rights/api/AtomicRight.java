@@ -18,15 +18,10 @@ package eu.ggnet.dwoss.rights.api;
 
 import eu.ggnet.saft.api.Authorisation;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  *
  * @author Bastian Venz
  */
-@AllArgsConstructor
-@Getter
 public enum AtomicRight implements Authorisation {
 
     /**
@@ -251,11 +246,20 @@ public enum AtomicRight implements Authorisation {
      */
     VIEW_COST_AND_REFERENCE_PRICES("Darf Cost und Referenzpreise sehen");
 
-    private final String name;
+    private final String description;
 
+    private AtomicRight(String description) {
+        this.description = description;
+    }    
+    
     @Override
     public String toName() {
-        return name;
+        return description;
     }
+
+    @Override
+    public String toString() {
+        return "AtomicRight{" + "description=" + description + '}';
+    }    
 
 }

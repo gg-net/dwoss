@@ -22,6 +22,7 @@ import java.util.*;
 
 import javax.persistence.EntityManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,6 +170,21 @@ public class Utils {
     public static Date startOfDay(Date in) {
         return toDate(toLd(in).atStartOfDay());
     }
+    
+    
+    /**
+     * Verifys a string, if it's not blank. Throws an exception, if not valid. It's like Objects.requireNonNull().
+     * 
+     * @param value the value to verify
+     * @param message an optional 
+     * @return the value
+     * @throws IllegalArgumentException if value is null or blank. 
+     */
+    public static String requireNonBlank(String value, String message) throws IllegalArgumentException {
+        String em = message == null ? "" + value + " is blank, not allowed": message;
+        if (StringUtils.isBlank(value)) throw new IllegalArgumentException(em);
+        return value;
+    }
 
     /**
      * End of day based on Date.
@@ -183,5 +199,5 @@ public class Utils {
     public static void main(String[] args) {
         System.out.println(externalIpv4Address().getHostAddress());
     }
-
+    
 }

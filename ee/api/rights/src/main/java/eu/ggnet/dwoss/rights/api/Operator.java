@@ -17,9 +17,7 @@
 package eu.ggnet.dwoss.rights.api;
 
 import java.io.Serializable;
-import java.util.List;
-
-import lombok.*;
+import java.util.*;
 
 /**
  * This is a Data Transfer Object for {@link Operator}.
@@ -27,15 +25,31 @@ import lombok.*;
  * @author Bastian Venz
  * <p>
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Operator implements Serializable {
 
-    private String username;
+    public final String username;
 
-    private int quickLoginKey;
+    public final int quickLoginKey;
 
-    private List<AtomicRight> rights;
+    private final List<AtomicRight> rights;
+
+    public Operator(String username, int quickLoginKey, List<AtomicRight> rights) {
+        this.username = Objects.requireNonNull(username,"username must not be null");
+        if (username.trim().isEmpty()) throw new IllegalArgumentException("username must not be blank");
+        this.quickLoginKey = Objects.requireNonNull(quickLoginKey,"quickLoginKey must not be null");
+        this.rights = new ArrayList<>();
+        if (rights != null) {
+            this.rights.addAll(rights);
+        }
+    }
+
+    public List<AtomicRight> rights() {
+        return Collections.unmodifiableList(rights);
+    }
+
+    @Override
+    public String toString() {
+        return "Operator{" + "username=" + username + ", quickLoginKey=" + quickLoginKey + ", rights=" + rights + '}';
+    }   
 
 }

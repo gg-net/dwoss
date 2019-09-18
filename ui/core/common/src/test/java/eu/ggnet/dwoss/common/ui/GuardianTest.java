@@ -1,13 +1,12 @@
 package eu.ggnet.dwoss.common.ui;
 
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
-
 import java.util.Arrays;
 
 import org.junit.Test;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
+import eu.ggnet.saft.experimental.auth.UserChangeListener;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_IMAGE_IDS;
 import static org.junit.Assert.*;
@@ -58,12 +57,12 @@ public class GuardianTest {
 
         access.remove(ad2);
 
-        access.quickAuthenticate(operator.getQuickLoginKey()); // This is like successful authentication
+        access.quickAuthenticate(operator.quickLoginKey); // This is like successful authentication
 
         assertTrue("Successfull authenticated, should be enabled", ad1.isEnabled());
         assertFalse("Successfull authenticated, but ad2 is removed, should be disabled", ad2.isEnabled());
 
-        assertEquals("User should be equal", operator.getUsername(), listener.lastUser);
+        assertEquals("User should be equal", operator.username, listener.lastUser);
     }
     
     @Test

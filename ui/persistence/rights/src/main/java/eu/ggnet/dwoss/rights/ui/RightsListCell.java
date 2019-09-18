@@ -16,11 +16,11 @@
  */
 package eu.ggnet.dwoss.rights.ui;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+
+import eu.ggnet.dwoss.rights.api.AtomicRight;
 
 /**
  *
@@ -42,7 +42,7 @@ public class RightsListCell extends ListCell<AtomicRight> {
         if ( empty || item == null ) {
             setText("");
         } else {
-            setText(item.getName());
+            setText(item.toName());
         }
     }
 }

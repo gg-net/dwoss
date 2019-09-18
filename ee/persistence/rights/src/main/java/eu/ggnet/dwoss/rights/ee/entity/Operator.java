@@ -119,9 +119,9 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
      * @param dtoOperator
      */
     public Operator(eu.ggnet.dwoss.rights.api.Operator dtoOperator) {
-        this.quickLoginKey = dtoOperator.getQuickLoginKey();
-        this.rights = dtoOperator.getRights();
-        this.username = dtoOperator.getUsername();
+        this.quickLoginKey = dtoOperator.quickLoginKey;
+        this.rights = dtoOperator.rights();
+        this.username = dtoOperator.username;
     }
 
     public Operator(String username) {
