@@ -17,18 +17,28 @@
 package eu.ggnet.dwoss.stock.api;
 
 import java.io.Serializable;
-
-import lombok.Value;
+import java.util.Objects;
 
 /**
  * Pico implementation of Stock.
  *
  * @author oliver.guenther
  */
-@Value
 public class PicoStock implements Serializable {
 
-    private final int id;
+    public final int id;
 
-    private final String shortDescription;
+    public final String shortDescription;
+
+    public PicoStock(int id, String shortDescription) {
+        this.id = id;
+        this.shortDescription = Objects.requireNonNull(shortDescription,"shortDescription must not be null");
+        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be empty");
+    }
+
+    @Override
+    public String toString() {
+        return "PicoStock{" + "id=" + id + ", shortDescription=" + shortDescription + '}';
+    }
+
 }

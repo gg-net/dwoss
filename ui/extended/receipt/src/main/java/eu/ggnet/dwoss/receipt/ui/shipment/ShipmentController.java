@@ -72,7 +72,7 @@ public class ShipmentController extends AbstractController {
         Shipment shipment = model.getSelected();
         if ( shipment == null ) return;
         StockTransaction stockTransaction = stockAgent.findOrCreateRollInTransaction(
-                Dl.local().lookup(StockUpi.class).getActiveStock().getId(),
+                Dl.local().lookup(StockUpi.class).getActiveStock().id,
                 Dl.local().lookup(Guardian.class).getUsername(),
                 "Roll in through Inclusion");
         ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(view, shipment, stockTransaction);

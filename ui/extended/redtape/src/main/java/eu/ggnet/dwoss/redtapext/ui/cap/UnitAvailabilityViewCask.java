@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cap;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.experimental.Ops;
-
 import java.awt.*;
 import java.util.*;
 
@@ -30,12 +26,15 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.common.ui.MainComponent;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.MainComponent;
 import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
 import eu.ggnet.saft.experimental.ops.Selector;
 
@@ -72,7 +71,7 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
             // now we are available
             return Dl.local().optional(StockUpi.class)
                     .map(StockUpi::getActiveStock)
-                    .map(ps -> Objects.equals(ps.getId(), us.getStockId()) ? Color.GREEN : Color.CYAN)
+                    .map(ps -> Objects.equals(ps.id, us.getStockId()) ? Color.GREEN : Color.CYAN)
                     .orElse(Color.CYAN);
         }
     }

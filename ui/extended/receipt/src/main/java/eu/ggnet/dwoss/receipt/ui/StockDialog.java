@@ -61,7 +61,7 @@ public class StockDialog extends javax.swing.JDialog {
     public void setSelection(PicoStock ps) {
         for (int i = 0; i < selectionBox.getItemCount(); i++) {
             Stock elem = selectionBox.getItemAt(i);
-            if ( elem.getId() == ps.getId() ) selectionBox.setSelectedIndex(i);
+            if ( elem.getId() == ps.id ) selectionBox.setSelectedIndex(i);
         }
     }
 

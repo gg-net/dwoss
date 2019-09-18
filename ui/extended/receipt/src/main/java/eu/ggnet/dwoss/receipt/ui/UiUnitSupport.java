@@ -174,16 +174,16 @@ public class UiUnitSupport {
 
     private UniqueUnit optionalChangeStock(UniqueUnit uniqueUnit, StockUnit stockUnit, PicoStock localStock, Window parent, String account) {
         if ( !stockUnit.isInStock() ) return uniqueUnit;
-        if ( localStock.getId() == stockUnit.getStock().getId() ) return uniqueUnit;
+        if ( localStock.id == stockUnit.getStock().getId() ) return uniqueUnit;
         if ( stockUnit.isInTransaction() ) {
             JOptionPane.showMessageDialog(parent,
-                    "Achtung, Gerät ist nicht auf " + localStock.getShortDescription() + ",\n"
+                    "Achtung, Gerät ist nicht auf " + localStock.shortDescription + ",\n"
                     + "aber Gerät ist auch auf einer Transaktion.\n"
                     + "Automatische Lageränderung nicht möglich !");
             return uniqueUnit;
         }
         int option = JOptionPane.showConfirmDialog(parent,
-                "Gerät steht nicht auf " + localStock.getShortDescription() + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
+                "Gerät steht nicht auf " + localStock.shortDescription + ", welches als Standort angegeben ist. Gerätestandort ändern ?",
                 "Standortabweichung", JOptionPane.YES_NO_OPTION);
         if ( option == JOptionPane.YES_OPTION ) {
             StockDialog dialog = new StockDialog(parent, Dl.remote().lookup(StockAgent.class).findAll(Stock.class).toArray(new Stock[0]), new StockCellRenderer());

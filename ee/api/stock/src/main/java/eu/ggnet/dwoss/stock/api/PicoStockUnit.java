@@ -17,20 +17,30 @@
 package eu.ggnet.dwoss.stock.api;
 
 import java.io.Serializable;
-
-import lombok.Value;
+import java.util.Objects;
 
 /**
  *
  * @author oliver.guenther
  */
-@Value
 public class PicoStockUnit implements Serializable {
 
-    private final long id;
+    public final long id;
 
-    private final long uniqueUnitId;
+    public final long uniqueUnitId;
 
-    private final String shortDescription;
+    public final String shortDescription;
 
+    public PicoStockUnit(long id, long uniqueUnitId, String shortDescription) {
+        this.id = id;
+        this.uniqueUnitId = uniqueUnitId;
+        this.shortDescription = Objects.requireNonNull(shortDescription,"shortDescription must not be null");
+        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be empty");
+    }
+
+    @Override
+    public String toString() {
+        return "PicoStockUnit{" + "id=" + id + ", uniqueUnitId=" + uniqueUnitId + ", shortDescription=" + shortDescription + '}';
+    }
+    
 }
