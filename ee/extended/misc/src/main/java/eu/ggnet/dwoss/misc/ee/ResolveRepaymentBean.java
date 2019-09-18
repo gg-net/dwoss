@@ -16,16 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,9 +28,10 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.emo.ReportEmo;
 import eu.ggnet.dwoss.report.ee.entity.Report;
@@ -50,6 +41,8 @@ import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
@@ -156,7 +149,7 @@ public class ResolveRepaymentBean implements ResolveRepayment {
             StockTransaction st = stEmo.requestRollOutPrepared(stockUnit.getStock().getId(), arranger, "Resolved Repayment");
             st.addUnit(stockUnit);
             msgs.stockMessage = stockUnit.toSimple() + " aus Lager ausgerollt auf StockTransaction(id=" + st.getId() + ")";
-            history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
+            history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Resolved Repayment", arranger));
             stEmo.completeRollOut(arranger, Arrays.asList(st));
             stockEm.flush();
             if ( lt.getUnits().isEmpty() ) {

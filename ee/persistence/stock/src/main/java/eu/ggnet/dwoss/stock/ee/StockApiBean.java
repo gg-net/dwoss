@@ -49,14 +49,14 @@ public class StockApiBean implements StockApi {
 
     @Override
     public List<PicoUnit> filterAvailable(List<PicoUnit> units) {
-        Set<Integer> avialableUuIds = eao.findByUniqueUnitIds(units.stream().map(PicoUnit::getUniqueUnitId).collect(Collectors.toList()))
+        Set<Integer> avialableUuIds = eao.findByUniqueUnitIds(units.stream().map(p -> p.uniqueUnitId).collect(Collectors.toList()))
                 .stream().map(StockUnit::getUniqueUnitId).collect(Collectors.toSet());
-        return units.stream().filter(p -> avialableUuIds.contains(p.getUniqueUnitId())).collect(Collectors.toList());
+        return units.stream().filter(p -> avialableUuIds.contains(p.uniqueUnitId)).collect(Collectors.toList());
     }
 
     @Override
     public boolean isAvailable(PicoUnit unit) {
-        return eao.findByUniqueUnitId(unit.getUniqueUnitId()) != null;
+        return eao.findByUniqueUnitId(unit.uniqueUnitId) != null;
     }
 
 }

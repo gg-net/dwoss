@@ -29,17 +29,17 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
-import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.*;
 import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 
@@ -99,10 +99,10 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
         for (StockUnit stockUnit : stockUnits) {
             if ( mandator.applyDefaultChannelOnRollIn() ) {
                 SalesChannel channel = stockUnit.getStock().getPrimaryChannel();
-                channelChanger.fire(new SalesChannelChange(stockUnit.getUniqueUnitId(), channel));
-                history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName() + " with " + channel.getName(), arranger));
+                channelChanger.fire(new SalesChannelChange.Builder().uniqueUnitId(stockUnit.getUniqueUnitId()).newChannel(channel).build());
+                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName() + " with " + channel.decription, arranger));
             } else {
-                history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName(), arranger));
+                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName(), arranger));
             }
         }
         m.finish();
@@ -154,7 +154,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
         StockTransactionPosition position = stockUnit.getPosition();
         stockEm.remove(position);
         transaction.setComment(transaction.getComment() + ", Unit " + stockUnit.getRefurbishId() + " removed by " + arranger + ", cause=" + comment);
-        history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") " + transaction.getSource().getName()
+        history.fire( UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") " + transaction.getSource().getName()
                 + ", removed from Transaction, cause: " + comment, arranger));
         L.info("{} removed from {}", stockUnit, transaction);
     }
@@ -177,7 +177,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
         status.addParticipation(new StockTransactionParticipation(ARRANGER, arranger));
         transaction.addStatus(status);
         for (StockUnit stockUnit : transaction.getUnits()) {
-            history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") "
+            history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") "
                     + transaction.getSource().getName() + ", cancelled Transaction(" + transaction.getId() + ")", arranger));
             L.info("cancelTransaction(): Returning {} to Stock {} ", stockUnit, transaction.getSource());
             stockUnit.setPosition(null);
@@ -231,7 +231,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
             for (StockUnit stockUnit : transaction.getUnits()) {
                 stockUnit.setPosition(null);
                 discoverer.discoverAndSetLocation(stockUnit, destination);
-                history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), "Unit received in Stock(" + destination.getId() + ") " + destination.getName(), reciever));
+                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit received in Stock(" + destination.getId() + ") " + destination.getName(), reciever));
             }
         }
     }

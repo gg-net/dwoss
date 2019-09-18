@@ -73,7 +73,7 @@ public class UniqurUnitItHelper {
     private Event<UnitHistory> historyEvent;
 
     public void send(int id, String msg, String arranger) {
-        historyEvent.fire(new UnitHistory(id, msg, arranger));
+        historyEvent.fire(UnitHistory.create(id, msg, arranger));
     }
 
 }

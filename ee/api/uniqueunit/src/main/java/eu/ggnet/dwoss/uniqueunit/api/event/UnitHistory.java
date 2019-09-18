@@ -18,20 +18,29 @@ package eu.ggnet.dwoss.uniqueunit.api.event;
 
 import java.io.Serializable;
 
-import lombok.Value;
+import org.inferred.freebuilder.FreeBuilder;
 
 /**
  * History Event designated for a UniqueUnit.
  *
  * @author oliver.guenther
  */
-@Value
-public class UnitHistory implements Serializable {
+@FreeBuilder
+public interface UnitHistory extends Serializable {
 
-    private final int uniqueUnitId;
+    class Builder extends UnitHistory_Builder{};
+    
+    int uniqueUnitId();
 
-    private final String comment;
+    String comment();
 
-    private final String arranger;
+    String arranger();
 
+    static UnitHistory create (int uniqueUnitId, String comment, String arranger) {
+        return new Builder()
+                .uniqueUnitId(uniqueUnitId)
+                .comment(comment)
+                .arranger(arranger)
+                .build();
+    }
 }

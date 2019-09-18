@@ -50,8 +50,8 @@ public class UnitListenerOperation {
      */
     public void addHistory(@Observes UnitHistory history) {
         L.debug("Observed: " + history);
-        UniqueUnit uu = em.find(UniqueUnit.class, history.getUniqueUnitId());
-        if ( uu != null ) uu.addHistory(history.getComment() + " - " + history.getArranger());
+        UniqueUnit uu = em.find(UniqueUnit.class, history.uniqueUnitId());
+        if ( uu != null ) uu.addHistory(history.comment() + " - " + history.arranger());
         else L.warn("No UniqueUnit for Event " + history);
     }
 
@@ -62,8 +62,8 @@ public class UnitListenerOperation {
      */
     public void changeChannel(@Observes SalesChannelChange change) {
         L.debug("Observed: " + change);
-        UniqueUnit uu = em.find(UniqueUnit.class, change.getUniqueUnitId());
-        if ( uu != null ) uu.setSalesChannel(change.getNewChannel());
+        UniqueUnit uu = em.find(UniqueUnit.class, change.uniqueUnitId());
+        if ( uu != null ) uu.setSalesChannel(change.newChannel());
         else L.warn("No UniqueUnit for Event " + change);
     }
 }

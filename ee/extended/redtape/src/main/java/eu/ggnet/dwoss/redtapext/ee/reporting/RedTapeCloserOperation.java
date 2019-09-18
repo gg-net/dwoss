@@ -16,17 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
-import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
-import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.eao.StockEao;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.util.Map.Entry;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,40 +33,41 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.progress.*;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeWorkflow;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.stock.ee.eao.*;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.progress.IMonitor;
 import eu.ggnet.statemachine.State.Type;
 
-import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
-import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.common.api.values.PaymentMethod.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
+import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 import static org.apache.commons.lang3.StringUtils.normalizeSpace;
@@ -255,7 +245,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
             for (StockUnit stockUnit : entry.getValue()) {
                 m.worked(1, h + "verbuche (refurbishId=" + stockUnit.getRefurbishId() + ",uniqueUnitId=" + stockUnit.getUniqueUnitId() + ")");
                 st.addUnit(stockUnit);
-                history.fire(new UnitHistory(stockUnit.getUniqueUnitId(), msg, arranger));
+                history.fire( UnitHistory.create(stockUnit.getUniqueUnitId(), msg, arranger));
             }
             stockTransactions.add(st);
 

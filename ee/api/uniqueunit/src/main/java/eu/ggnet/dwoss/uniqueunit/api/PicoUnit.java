@@ -17,19 +17,15 @@
 package eu.ggnet.dwoss.uniqueunit.api;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import eu.ggnet.saft.api.IdSupplier;
-
-import lombok.EqualsAndHashCode;
-import lombok.Value;
 
 /**
  * The smallest representation of a unique unit.
  * <p>
  * @author oliver.guenther
  */
-@Value
-@EqualsAndHashCode(of = {"uniqueUnitId"})
 public class PicoUnit implements IdSupplier, Serializable {
 
     public static final String MIME_TYPE = "dw-api/picounit";
@@ -38,8 +34,10 @@ public class PicoUnit implements IdSupplier, Serializable {
 
     public final String shortDescription;
 
-    public String shortDescription() {
-        return shortDescription;
+    public PicoUnit(int uniqueUnitId, String shortDescription) {
+        this.uniqueUnitId = uniqueUnitId;
+        this.shortDescription = Objects.requireNonNull(shortDescription,"shortDescription must not be null");
+        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be empty");
     }
 
     @Override
@@ -47,4 +45,28 @@ public class PicoUnit implements IdSupplier, Serializable {
         return "" + uniqueUnitId;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="hashCode and Equals of uniqueUnitId">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 47 * hash + this.uniqueUnitId;
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final PicoUnit other = (PicoUnit)obj;
+        if ( this.uniqueUnitId != other.uniqueUnitId ) return false;
+        return true;
+    }
+//</editor-fold>
+
+    @Override
+    public String toString() {
+        return "PicoUnit{" + "uniqueUnitId=" + uniqueUnitId + ", shortDescription=" + shortDescription + '}';
+    }
+    
 }

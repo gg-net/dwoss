@@ -20,16 +20,17 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.*;
 
-import lombok.*;
-
 /**
  * Represents some Information of a Unit with possible reference.
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+/*
+TODO:
+In the lombok removal phase, i didn't have time to verify, how best to convert this class.
+So as long as there are no cool tests, i use a simple pojo.
+Consider conversion to Freebuilder.
+*/
 public class UnitShard implements Serializable {
 
     private String refurbishedId;
@@ -48,8 +49,64 @@ public class UnitShard implements Serializable {
 
     private Integer stockId;
 
+    public UnitShard() {
+    }
+
+    public UnitShard(String refurbishedId, int uniqueUnitId, String htmlDescription, Boolean available, Integer stockId) {
+        this.refurbishedId = refurbishedId;
+        this.uniqueUnitId = uniqueUnitId;
+        this.htmlDescription = htmlDescription;
+        this.available = available;
+        this.stockId = stockId;
+    }
+
+    public String getRefurbishedId() {
+        return refurbishedId;
+    }
+
+    public void setRefurbishedId(String refurbishedId) {
+        this.refurbishedId = refurbishedId;
+    }
+
+    public int getUniqueUnitId() {
+        return uniqueUnitId;
+    }
+
+    public void setUniqueUnitId(int uniqueUnitId) {
+        this.uniqueUnitId = uniqueUnitId;
+    }
+
+    public String getHtmlDescription() {
+        return htmlDescription;
+    }
+
+    public void setHtmlDescription(String htmlDescription) {
+        this.htmlDescription = htmlDescription;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
+    }
+
+    public Integer getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Integer stockId) {
+        this.stockId = stockId;
+    }
+    
     public boolean isAvailable() {
         return Boolean.TRUE.equals(available);
+    }
+
+    @Override
+    public String toString() {
+        return "UnitShard{" + "refurbishedId=" + refurbishedId + ", uniqueUnitId=" + uniqueUnitId + ", htmlDescription=" + htmlDescription + ", available=" + available + ", stockId=" + stockId + '}';
     }
 
 }

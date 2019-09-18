@@ -16,20 +16,22 @@
  */
 package eu.ggnet.dwoss.uniqueunit.api.event;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import org.inferred.freebuilder.FreeBuilder;
 
-import lombok.Value;
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 
 /**
  * Informs about a SalesChannelChange
  * <p>
  * @author oliver.guenther
  */
-@Value
-public class SalesChannelChange {
+@FreeBuilder
+public interface SalesChannelChange {
 
-    private final int uniqueUnitId;
+    class Builder extends SalesChannelChange_Builder {};
+    
+    int uniqueUnitId();
 
-    private final SalesChannel newChannel;
+    SalesChannel newChannel();
 
 }

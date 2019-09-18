@@ -2,9 +2,9 @@ package eu.ggnet.dwoss.uniqueunit.ui.product;
 
 import java.net.URL;
 import java.time.*;
-import java.util.*;
+import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -15,21 +15,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.uniqueunit.api.PicoProduct;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.ClosedListener;
-import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.core.ui.FxSaft;
+import eu.ggnet.saft.core.ui.*;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -41,7 +37,7 @@ import static javafx.scene.control.SelectionMode.MULTIPLE;
  */
 public class ProductListController implements Initializable, FxController, ClosedListener {
 
-    public static final DataFormat PICO_PRODUCT_DATA_FORMAT = Optional.ofNullable(DataFormat.lookupMimeType(PicoProduct.MIME_TYPE)).orElse(new DataFormat(PicoProduct.MIME_TYPE));
+  //  public static final DataFormat PICO_PRODUCT_DATA_FORMAT = Optional.ofNullable(DataFormat.lookupMimeType(PicoProduct.MIME_TYPE)).orElse(new DataFormat(PicoProduct.MIME_TYPE));
 
     private static final Logger L = LoggerFactory.getLogger(ProductListController.class);
 
@@ -130,19 +126,19 @@ public class ProductListController implements Initializable, FxController, Close
 
         menuTradeName.getItems().addAll(FXCollections.observableArrayList(TradeName.values()));
         menuProductGroup.getItems().addAll(ProductGroup.values());
-
-        tableView.setOnDragDetected((MouseEvent event) -> {
-            ArrayList<Product> selectedProducts = new ArrayList<>();
-            selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
-            ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
-            if ( selectedProducts.isEmpty() ) return;
-            Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
-            ClipboardContent content = new ClipboardContent();
-            selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
-            content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
-            db.setContent(content);
-            event.consume();
-        });
+//      TODO: Was for DragNDrop. Removed PicoProduct from API, so ....
+//        tableView.setOnDragDetected((MouseEvent event) -> {
+//            ArrayList<Product> selectedProducts = new ArrayList<>();
+//            selectedProducts.addAll(tableView.getSelectionModel().getSelectedItems());
+//            ArrayList<PicoProduct> selectedPicoProducts = new ArrayList<>();
+//            if ( selectedProducts.isEmpty() ) return;
+//            Dragboard db = tableView.startDragAndDrop(TransferMode.ANY);
+//            ClipboardContent content = new ClipboardContent();
+//            selectedPicoProducts.addAll(selectedProducts.stream().map(p -> new PicoProduct(p.getId(), p.getName())).collect(Collectors.toList()));
+//            content.put(PICO_PRODUCT_DATA_FORMAT, selectedPicoProducts);
+//            db.setContent(content);
+//            event.consume();
+//        });
 
         setCellValues();
 
@@ -245,17 +241,11 @@ public class ProductListController implements Initializable, FxController, Close
 
     @FXML
     private void create() {
-        Ui.exec(() -> {
-            Ui.build().parent(tableView).fxml().eval(ProductEditorController.class)
-                    .opt().ifPresent(System.out::println);
-        });
+        Ui.build(tableView).alert("Not yet implemented");
     }
 
     @FXML
     private void edit() {
-        Ui.exec(() -> {
-            Ui.build().parent(tableView).fxml().eval(() -> tableView.getSelectionModel().getSelectedItem(), ProductEditorController.class)
-                    .opt().ifPresent(System.out::println);
-        });
+       Ui.build(tableView).alert("Not yet implemented");
     }
 }

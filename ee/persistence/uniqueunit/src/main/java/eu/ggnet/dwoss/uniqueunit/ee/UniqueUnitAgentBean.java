@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee;
 
-import java.util.Map.Entry;
-import java.util.Objects;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -26,14 +24,12 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.dto.*;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
-import eu.ggnet.saft.api.Reply;
 
 /**
  * The Implementation of the UniqueUnitAgent
