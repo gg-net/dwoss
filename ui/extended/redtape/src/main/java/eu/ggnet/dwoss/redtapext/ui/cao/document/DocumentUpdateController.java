@@ -107,7 +107,7 @@ public class DocumentUpdateController {
                 document.append(createCommentPosition());
                 break;
             case SHIPPING_COST:
-                ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).shippingCondition());
                 break;
         }
     }
@@ -233,7 +233,7 @@ public class DocumentUpdateController {
                 return false;
             case JOptionPane.YES_OPTION:
                 if ( document.getDossier().isDispatch() ) {
-                    ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).getShippingCondition());
+                    ShippingCostHelper.modifyOrAddShippingCost(document, Dl.remote().lookup(CustomerService.class).asCustomerMetaData(view.getCustomerId()).shippingCondition());
                 } else {
                     ShippingCostHelper.removeShippingCost(document);
                 }

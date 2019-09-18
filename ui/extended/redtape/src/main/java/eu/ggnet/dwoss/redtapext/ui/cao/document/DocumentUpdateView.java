@@ -182,7 +182,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
         String labelText = Dl.remote().lookup(CustomerService.class).asUiCustomer(customerId).getSimpleHtml();
         recentCustomerLabel.setText("<html><div align=\"center\" width=\"120px\"><i>" + labelText + "</i></div></html>");
         recentCustomerLabel.setToolTipText("<html>" + labelText + "</html>");
-        paymentMethodLabel.setText(paymentMethodLabel.getText() + " " + Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId).getPaymentMethod().getNote());
+        paymentMethodLabel.setText(paymentMethodLabel.getText() + " " + Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId).paymentMethod().getNote());
     }
 
     public Document getDocument() {
@@ -689,7 +689,7 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
                 document.setTaxType(taxType);
                 final PostLedger ledgers = Dl.local().lookup(CachedMandators.class).loadPostLedger();
                 document.getPositions().values().forEach(p -> {
-                    p.setTax(taxType.getTax());
+                    p.setTax(taxType.tax);
                     p.setBookingAccount(ledgers.get(p.getType(), taxType).orElse(null));
                 });
                 refreshAll();

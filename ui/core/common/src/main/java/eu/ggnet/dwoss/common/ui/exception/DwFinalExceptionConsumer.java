@@ -26,13 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.DetailDialog;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
 import eu.ggnet.saft.core.ui.builder.UiWorkflowBreak;
+import eu.ggnet.saft.experimental.auth.Guardian;
 
-import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;
 import static eu.ggnet.saft.core.ui.AlertType.WARNING;
+import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.*;
 
 /**
  *
@@ -49,7 +49,7 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
             return;
         }
         L.error("Systemfehler: {} , {}", b.getClass().getSimpleName(), b.getMessage());
-        if ( b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
+        if ( b.getMessage() != null && b.getMessage().contains("pushingpixels") ) return; // Ignore alle plaf problems
         String deepestMessage = extractDeepestMessage(b);
         if ( deepestMessage.contains("EJBCLIENT000025") ) {
             Ui.exec(() -> {

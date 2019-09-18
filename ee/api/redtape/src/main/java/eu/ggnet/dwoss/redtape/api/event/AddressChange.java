@@ -17,41 +17,62 @@
 package eu.ggnet.dwoss.redtape.api.event;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import eu.ggnet.dwoss.common.api.values.AddressType;
-
-import lombok.Value;
 
 /**
  * Adress change event.
  * <p>
  * @author pascal.perau
  */
-@Value
 public class AddressChange implements Serializable {
 
     /**
      * Identifier of the customer.
      */
-    private final long customerId;
+    public final long customerId;
 
     /**
      * The arranger of the change.
      */
-    private final String arranger;
+    public final String arranger;
 
     /**
      * Type of the address.
      */
-    private final AddressType type;
+    public final AddressType type;
 
     /**
      * The old address.
      */
-    private final String oldAdress;
+    public final String oldAddress;
 
     /**
      * The new address.
      */
-    private final String newAdress;
+    public final String newAddress;
+
+    /**
+     * All Args Constructor. All values must not be null.
+     * 
+     * @param customerId the customerid
+     * @param arranger the arranger
+     * @param type the type
+     * @param oldAddress the old address
+     * @param newAddress the new address
+     */
+    public AddressChange(long customerId, String arranger, AddressType type, String oldAddress, String newAddress) {
+        this.customerId = customerId;
+        this.arranger = Objects.requireNonNull(arranger,"arranger must not be null");
+        this.type = Objects.requireNonNull(type,"arranger must not be null");
+        this.oldAddress = Objects.requireNonNull(oldAddress,"oldAddress must not be null");
+        this.newAddress = Objects.requireNonNull(newAddress,"newAddress must not be null");
+    }
+
+    @Override
+    public String toString() {
+        return "AddressChange{" + "customerId=" + customerId + ", arranger=" + arranger + ", type=" + type + ", oldAdress=" + oldAddress + ", newAdress=" + newAddress + '}';
+    }
+    
 }

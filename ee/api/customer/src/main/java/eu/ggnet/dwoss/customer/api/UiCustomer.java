@@ -18,37 +18,134 @@ package eu.ggnet.dwoss.customer.api;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 /**
  * A concise representation of a customer.
+ * Every field can be null.
+ * 
  * <p>
  * @author pascal.perau
  */
-@Data
-@AllArgsConstructor
+// TODO: As every field of this class can be null, keep it like this.
 public class UiCustomer implements Serializable {
 
-    private long id;
+    public long id;
 
-    private String title;
+    public String title;
 
-    private String firstName;
+    public String firstName;
 
-    private String lastName;
+    public String lastName;
 
-    private String company;
+    public String company;
 
-    private String simpleHtml;
+    public String simpleHtml;
 
-    private String email;
+    public String email;
 
     /**
      * Ledger of the FiBu, if 0 not used.
      */
     private int ledger;
 
+    public UiCustomer(long id, String title, String firstName, String lastName, String company, String simpleHtml, String email, int ledger) {
+        this.id = id;
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.company = company;
+        this.simpleHtml = simpleHtml;
+        this.email = email;
+        this.ledger = ledger;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getCompany() {
+        return company;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getSimpleHtml() {
+        return simpleHtml;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Returns id.
+     * 
+     * @return
+     * @deprecated use public field
+     */
+    @Deprecated
+    public int getLedger() {
+        return ledger;
+    }
+    
     public String toNameCompanyLine() {
         StringBuilder sb = new StringBuilder();
         if ( company != null ) sb.append(company).append(" - ");

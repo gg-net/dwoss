@@ -93,7 +93,7 @@ public class DocumentViewActionOld extends AbstractAction {
                         .opt()
                         .filter(c -> c.isCorrectlyBriefed())
                         .ifPresent(c -> Ui.progress().call(() -> {
-                    CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
+                    CustomerDocument customerDocument = new CustomerDocument(customer.flags(), document, customer.shippingCondition(), customer.paymentMethod());
                     for (StateTransition<CustomerDocument> stateTransition : Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
                         RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
                         for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {

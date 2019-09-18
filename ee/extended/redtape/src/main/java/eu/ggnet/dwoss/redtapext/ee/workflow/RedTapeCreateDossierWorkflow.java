@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Set;
@@ -35,6 +27,7 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -43,6 +36,7 @@ import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 
 import static eu.ggnet.dwoss.common.api.values.CustomerFlag.*;
@@ -131,13 +125,13 @@ public class RedTapeCreateDossierWorkflow {
         DocumentType type = DocumentType.ORDER;
         CustomerMetaData customer = customerService.asCustomerMetaData(customerId);
         L.info("Found Customer: {}", customer);
-        if ( customer.getFlags().contains(SYSTEM_CUSTOMER) ) {
+        if ( customer.flags().contains(SYSTEM_CUSTOMER) ) {
             type = specialSystemCustomers.get(customerId).orElse(BLOCK);
             L.info("CustomerId {} is SystemCustomer, using DocumentType: {}, source {}", customerId, type, specialSystemCustomers);
         }
         PaymentMethod paymentMethod = selectPaymentMethod(dispatch, customer);
         L.info("PaymentMethod {} in execute Dossier in RedTapeCreateDossierWorkflow with dispatch {} and customer {} ", paymentMethod, dispatch, customer);
-        Directive directive = primeDirective(type, paymentMethod, customer.getFlags(), dispatch);
+        Directive directive = primeDirective(type, paymentMethod, customer.flags(), dispatch);
         L.info("Directive {} in execute Dossier in RedTapeCreateDossierWorkflow ", directive);
         return createDossier(customerId, dispatch, type, paymentMethod, directive, arranger);
     }
@@ -180,7 +174,7 @@ public class RedTapeCreateDossierWorkflow {
 
     private PaymentMethod selectPaymentMethod(boolean dispatch, CustomerMetaData customer) {
         // A PickUp Order with Cash on Delivery is impossible.
-        if ( !dispatch && customer.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY ) return PaymentMethod.ADVANCE_PAYMENT;
-        else return customer.getPaymentMethod();
+        if ( !dispatch && customer.paymentMethod() == PaymentMethod.CASH_ON_DELIVERY ) return PaymentMethod.ADVANCE_PAYMENT;
+        else return customer.paymentMethod();
     }
 }

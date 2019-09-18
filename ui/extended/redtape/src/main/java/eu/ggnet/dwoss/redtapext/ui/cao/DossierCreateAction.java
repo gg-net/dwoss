@@ -61,7 +61,7 @@ public class DossierCreateAction extends AbstractAction {
         this.customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
         this.controller = controller;
         SpecialSystemCustomers special = Dl.local().lookup(CachedMandators.class).loadSystemCustomers();
-        if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
+        if ( customer.flags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
             putValue(NAME, special.get(customerId).orElse(DocumentType.BLOCK).getName());
         } else {
             putValue(NAME, (dispatch ? "Versandauftrag" : "Abholauftrag"));
@@ -71,17 +71,17 @@ public class DossierCreateAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         Ui.exec(() -> {
-            Dossier dos = Dl.remote().lookup(RedTapeWorker.class).create(customer.getId(), dispatch, Dl.local().lookup(Guardian.class).getUsername());
+            Dossier dos = Dl.remote().lookup(RedTapeWorker.class).create(customer.id(), dispatch, Dl.local().lookup(Guardian.class).getUsername());
             Document doc = dos.getDocuments().iterator().next();  // This is safe, as a create will return exactly one document.
 
-            Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.getId());
+            Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.id());
             doc.setInvoiceAddress(addresses.getInvoice());
             doc.setShippingAddress(addresses.getShipping());
             Ui.exec(() -> {
                 Ui.build().parent(controller.getView()).swing().eval(() -> {
                     DocumentUpdateView docView = new DocumentUpdateView(doc);
                     docView.setController(new DocumentUpdateController(docView, doc));
-                    docView.setCustomerValues(customer.getId());
+                    docView.setCustomerValues(customer.id());
                     return OkCancelWrap.vetoResult(docView);
                 }).opt().filter(r -> handleFailure(r, doc))
                         .map(Reply::getPayload)

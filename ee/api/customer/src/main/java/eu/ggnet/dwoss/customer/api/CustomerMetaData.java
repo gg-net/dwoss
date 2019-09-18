@@ -17,12 +17,9 @@
 package eu.ggnet.dwoss.customer.api;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.*;
 
 import eu.ggnet.dwoss.common.api.values.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * Wrapper class for purchase information from a customer.
@@ -30,8 +27,7 @@ import lombok.Data;
  * @author pascal.perau
  */
 // HINT: This Name is still open for debate.
-@Data // Wildfly 15 cannot deserialize final collection or @Value.
-@AllArgsConstructor
+// TODO: Wildfly 15 deserialisation fails if this is converted to Freebuilder. Seams some problem with Final Collections or so.
 public class CustomerMetaData implements Serializable {
 
     /**
@@ -68,4 +64,48 @@ public class CustomerMetaData implements Serializable {
      * Contains a violation info, if the customer is not valid based on the entity model (Caused by a migration in 2018).
      */
     private String violationMessage;
+
+    public CustomerMetaData(long id, PaymentCondition paymentCondition, PaymentMethod paymentMethod, ShippingCondition shippingCondition, Set<CustomerFlag> flags, Set<SalesChannel> allowedSalesChannel, String violationMessage) {
+        this.id = id;
+        this.paymentCondition = Objects.requireNonNull(paymentCondition);
+        this.paymentMethod = Objects.requireNonNull(paymentMethod);
+        this.shippingCondition = Objects.requireNonNull(shippingCondition);
+        this.flags = Objects.requireNonNull(flags);
+        this.allowedSalesChannel = Objects.requireNonNull(allowedSalesChannel);
+        this.violationMessage = violationMessage;
+    }
+
+    public long id() {
+        return id;
+    }
+
+    public PaymentCondition paymentCondition() {
+        return paymentCondition;
+    }
+
+    public PaymentMethod paymentMethod() {
+        return paymentMethod;
+    }
+
+    public ShippingCondition shippingCondition() {
+        return shippingCondition;
+    }
+
+    public Set<CustomerFlag> flags() {
+        return flags;
+    }
+
+    public Set<SalesChannel> allowedSalesChannel() {
+        return allowedSalesChannel;
+    }
+
+    public Optional<String> violationMessage() {
+        return Optional.ofNullable(violationMessage);
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerMetaData{" + "id=" + id + ", paymentCondition=" + paymentCondition + ", paymentMethod=" + paymentMethod + ", shippingCondition=" + shippingCondition + ", flags=" + flags + ", allowedSalesChannel=" + allowedSalesChannel + ", violationMessage=" + violationMessage + '}';
+    }
+
 }

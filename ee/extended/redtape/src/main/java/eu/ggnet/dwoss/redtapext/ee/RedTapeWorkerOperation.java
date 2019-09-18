@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -32,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
@@ -261,20 +257,20 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     @Override
     public void updateAllDocumentAdresses(AddressChange addressChange) {
         AddressEmo addressEmo = new AddressEmo(redTapeEm);
-        Address address = addressEmo.request(addressService.defaultAddressLabel(addressChange.getCustomerId(), addressChange.getType()));
+        Address address = addressEmo.request(addressService.defaultAddressLabel(addressChange.customerId, addressChange.type));
         redTapeEm.detach(address);
-        List<Dossier> dossiers = new DossierEao(redTapeEm).findByCustomerId(addressChange.getCustomerId());
+        List<Dossier> dossiers = new DossierEao(redTapeEm).findByCustomerId(addressChange.customerId);
         for (Dossier dossier : dossiers) {
             if ( !dossier.getActiveDocuments(DocumentType.INVOICE).isEmpty() ) continue;
             for (Document document : new HashSet<>(dossier.getActiveDocuments(DocumentType.ORDER))) {
                 if ( document.getConditions().contains(Document.Condition.CANCELED) ) continue;
                 // May be fetchEager
                 redTapeEm.detach(document);
-                if ( addressChange.getType() == AddressType.INVOICE ) document.setInvoiceAddress(address);
-                if ( addressChange.getType() == AddressType.SHIPPING ) document.setShippingAddress(address);
+                if ( addressChange.type == AddressType.INVOICE ) document.setInvoiceAddress(address);
+                if ( addressChange.type == AddressType.SHIPPING ) document.setShippingAddress(address);
                 redTapeEm.flush();
                 redTapeEm.clear();
-                internalUpdate(document, null, addressChange.getArranger());
+                internalUpdate(document, null, addressChange.arranger);
             }
         }
     }

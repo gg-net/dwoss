@@ -146,10 +146,10 @@ public class RedTapeController implements IDossierSelectionHandler {
                             JOptionPane.showMessageDialog(null, "Kein Kunde gewählt");
                         } else {
                             CustomerDocument cdoc = new CustomerDocument(
-                                    model.getPurchaseCustomer().getFlags(),
+                                    model.getPurchaseCustomer().flags(),
                                     model.getSelectedDocument(),
-                                    model.getPurchaseCustomer().getShippingCondition(),
-                                    model.getPurchaseCustomer().getPaymentMethod());
+                                    model.getPurchaseCustomer().shippingCondition(),
+                                    model.getPurchaseCustomer().paymentMethod());
                             List<StateTransition<CustomerDocument>> transitions = Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(cdoc);
                             // Remove old Actions from the receiving of right changes.
                             for (Action accessDependent : accessDependentActions) {
@@ -166,7 +166,7 @@ public class RedTapeController implements IDossierSelectionHandler {
                                 // Now this implies a legacy wrapped dossier, so no actions are possible.
                             } else if ( (model.getSelectedDocument().getType() == DocumentType.ORDER
                                          && !model.getSelectedDossier().getActiveDocuments(DocumentType.INVOICE).isEmpty())
-                                    || getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
+                                    || getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().id()) ) {
                                 //
                             } else {
                                 for (StateTransition<CustomerDocument> originalStateTransition : transitions) {
@@ -277,7 +277,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         model.setSelectedDossier(null);
 
         //ensure that even without selection a customer is found
-        updateCustomer(model.getSelectedSearchResult() == 0 ? model.getPurchaseCustomer().getId() : model.getSelectedSearchResult());
+        updateCustomer(model.getSelectedSearchResult() == 0 ? model.getPurchaseCustomer().id() : model.getSelectedSearchResult());
 
         view.dossierButtonPanel.removeAll();
         view.dossierButtonPanel.repaint();
@@ -286,7 +286,7 @@ public class RedTapeController implements IDossierSelectionHandler {
             if ( !closedLoader.cancel(false) )
                 JOptionPane.showMessageDialog(view, "Canceling of running loader not possible, call Olli!");
         }
-        view.dossierTableView.resetTableData((int)model.getPurchaseCustomer().getId());
+        view.dossierTableView.resetTableData((int)model.getPurchaseCustomer().id());
     }
 
     /**
@@ -384,7 +384,7 @@ public class RedTapeController implements IDossierSelectionHandler {
         d.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
         d.setLocationRelativeTo(view);
         d.getContentPane().setLayout(new BorderLayout());
-        boolean canEmaild = Optional.ofNullable(Dl.remote().lookup(CustomerService.class).defaultEmailCommunication(model.getPurchaseCustomer().getId())).isPresent();
+        boolean canEmaild = Optional.ofNullable(Dl.remote().lookup(CustomerService.class).defaultEmailCommunication(model.getPurchaseCustomer().id())).isPresent();
         JRViewerCask jrViewerCask = new JRViewerCask(print, document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT), canEmaild);
         d.getContentPane().add(jrViewerCask, BorderLayout.CENTER);
         d.setVisible(true);
@@ -410,7 +410,7 @@ public class RedTapeController implements IDossierSelectionHandler {
     public void openDocumentViewer(Document doc) {
         HtmlDialog dialog = new HtmlDialog(parent(), Dialog.ModalityType.MODELESS);
         dialog.setText("<html>" + DocumentFormater.toHtmlDetailedWithPositions(doc) + "<br />"
-                + Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()) + "</html>");
+                + Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()) + "</html>");
         dialog.setVisible(true);
     }
 
@@ -430,30 +430,30 @@ public class RedTapeController implements IDossierSelectionHandler {
         view.actionBar.add(new JButton(new AbstractAction("Kunden bearbeiten") {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openUpdateCustomer(model.getPurchaseCustomer().getId());
-                view.customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
+                openUpdateCustomer(model.getPurchaseCustomer().id());
+                view.customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()));
             }
         }));
 
         //build customer dependant actions.
-        if ( model.getPurchaseCustomer().getViolationMessage() != null ) {
-            Ui.build(view).alert("Kunde ist invalid: " + model.getPurchaseCustomer().getViolationMessage());
-        } else if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
+        if ( model.getPurchaseCustomer().violationMessage().isPresent() ) {
+            Ui.build(view).alert("Kunde ist invalid: " + model.getPurchaseCustomer().violationMessage().get());
+        } else if ( getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().id()) ) {
             // Don't allow anything here.
-        } else if ( model.getPurchaseCustomer().getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
-            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));
+        } else if ( model.getPurchaseCustomer().flags().contains(CustomerFlag.SYSTEM_CUSTOMER) ) {
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().id())));
         } else {
-            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().getId())));
-            view.actionBar.add(new JButton(new DossierCreateAction(parent(), true, RedTapeController.this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), false, RedTapeController.this, model.getPurchaseCustomer().id())));
+            view.actionBar.add(new JButton(new DossierCreateAction(parent(), true, RedTapeController.this, model.getPurchaseCustomer().id())));
         }
 
         JToolBar.Separator sep = new JToolBar.Separator();
         sep.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         view.actionBar.add(sep);
 
-        if ( model.getSelectedDocument() != null && !getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().getId()) ) {
+        if ( model.getSelectedDocument() != null && !getViewOnlyCustomerIds().contains(model.getPurchaseCustomer().id()) ) {
             Document selDocument = model.getSelectedDocument();
-            DossierUpdateAction action = new DossierUpdateAction(parent(), this, model.getPurchaseCustomer().getId(), model.getSelectedDocument());
+            DossierUpdateAction action = new DossierUpdateAction(parent(), this, model.getPurchaseCustomer().id(), model.getSelectedDocument());
             view.actionBar.add(new JButton(action));
 
             //Deactivate Button if a Update isn't possible or allowed.
@@ -472,11 +472,11 @@ public class RedTapeController implements IDossierSelectionHandler {
                 }
             });
 
-            view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.DEFAULT, this, model.getPurchaseCustomer().getId())));
+            view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.DEFAULT, this, model.getPurchaseCustomer().id())));
             if ( selDocument.getType() == DocumentType.ORDER )
-                view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.RESERVATION, this, model.getPurchaseCustomer().getId())));
+                view.actionBar.add(new JButton(new DocumentViewAction(selDocument, DocumentViewType.RESERVATION, this, model.getPurchaseCustomer().id())));
             if ( !EnumSet.of(DocumentType.ANNULATION_INVOICE, DocumentType.COMPLAINT, DocumentType.CREDIT_MEMO).contains(selDocument.getType()) ) {
-                view.actionBar.add(new DocumentViewAction(selDocument, DocumentViewType.SHIPPING, this, model.getPurchaseCustomer().getId()));
+                view.actionBar.add(new DocumentViewAction(selDocument, DocumentViewType.SHIPPING, this, model.getPurchaseCustomer().id()));
             }
         }
         for (Component component : view.actionBar.getComponents()) {

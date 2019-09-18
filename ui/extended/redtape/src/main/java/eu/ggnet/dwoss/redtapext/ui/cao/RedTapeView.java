@@ -84,7 +84,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
             final RedTapeModel m = (RedTapeModel)evt.getSource();
             switch (evt.getPropertyName()) {
                 case RedTapeModel.PROP_CUSTOMER:
-                    customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().getId()));
+                    customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(m.getPurchaseCustomer().id()));
                     controller.fillToolBar();
                     break;
                 case RedTapeModel.PROP_DOCUMENTS:
@@ -219,10 +219,10 @@ public class RedTapeView extends JPanel implements ClosedListener {
                 CustomerMetaData customer = model.getPurchaseCustomer();
                 if ( model.getSelectedDocument() != null && customer != null ) {
                     CustomerDocument cdoc = new CustomerDocument(
-                            customer.getFlags(),
+                            customer.flags(),
                             model.getSelectedDocument(),
-                            customer.getShippingCondition(),
-                            customer.getPaymentMethod());
+                            customer.shippingCondition(),
+                            customer.paymentMethod());
                     RedTapeStateCharacteristic sc = (RedTapeStateCharacteristic)new RedTapeStateCharacteristicFactory().characterize(cdoc);
                     Ui.exec(() -> {
                         Ui.build().parent(jLabel1).title("StageInfo").fx()
@@ -251,8 +251,8 @@ public class RedTapeView extends JPanel implements ClosedListener {
         JMenuItem editEditItem = new JMenuItem("Bearbeiten");
         editEditItem.addActionListener(e -> {
             if ( model.getPurchaseCustomer() != null ) {
-                controller.openUpdateCustomer(model.getPurchaseCustomer().getId());
-                customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().getId()));
+                controller.openUpdateCustomer(model.getPurchaseCustomer().id());
+                customerDetailArea.setText(Dl.remote().lookup(CustomerService.class).asHtmlHighDetailed(model.getPurchaseCustomer().id()));
             }
         });
 

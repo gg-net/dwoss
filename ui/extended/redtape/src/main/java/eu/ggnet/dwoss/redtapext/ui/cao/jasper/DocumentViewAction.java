@@ -105,7 +105,7 @@ public class DocumentViewAction extends AbstractAction {
     private Optional<Dossier> updateBriefedInDatabase(JasperFxViewResult result) {
         if ( !result.correctlyBriefed() ) return Optional.empty();
         CustomerMetaData customer = Dl.remote().lookup(CustomerService.class).asCustomerMetaData(customerId);
-        CustomerDocument customerDocument = new CustomerDocument(customer.getFlags(), document, customer.getShippingCondition(), customer.getPaymentMethod());
+        CustomerDocument customerDocument = new CustomerDocument(customer.flags(), document, customer.shippingCondition(), customer.paymentMethod());
         for (StateTransition<CustomerDocument> stateTransition : Dl.remote().lookup(RedTapeWorker.class).getPossibleTransitions(customerDocument)) {
             RedTapeStateTransition redTapeStateTransition = (RedTapeStateTransition)stateTransition;
             for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
