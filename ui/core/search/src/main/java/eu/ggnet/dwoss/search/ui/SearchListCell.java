@@ -40,7 +40,7 @@ public class SearchListCell extends ListCell<ShortSearchResult> {
     protected void updateItem(ShortSearchResult item, boolean empty) {
         super.updateItem(item, empty);
         if ( item == null ) setText("");
-        else setText(item.getShortDescription() + " [" + item.getKey().getComponent() + ":" + item.getKey().getId() + "]");
+        else setText(item.shortDescription + " [" + item.key.component + ":" + item.key.id + "]");
     }
 
 }

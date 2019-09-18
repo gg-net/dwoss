@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.op;
 
-import eu.ggnet.dwoss.search.api.SearchProvider;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -30,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
+import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
@@ -70,7 +66,7 @@ public class ProductSearchProvider implements SearchProvider {
     @Override
     public String details(GlobalKey key) {
 
-        return ProductFormater.toHtml(eao.findById(key.getId()));
+        return ProductFormater.toHtml(eao.findById(key.id));
     }
 
 }

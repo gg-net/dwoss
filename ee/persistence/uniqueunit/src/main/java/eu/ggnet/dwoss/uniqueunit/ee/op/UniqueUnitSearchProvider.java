@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.op;
 
-import eu.ggnet.dwoss.search.api.SearchProvider;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +64,7 @@ public class UniqueUnitSearchProvider implements SearchProvider {
 
     @Override
     public String details(GlobalKey key) {
-        return UniqueUnitFormater.toHtmlDetailed(eao.findById((int)key.getId())); // Downcast to int needed, otherwise the galaxy explodes.
+        return UniqueUnitFormater.toHtmlDetailed(eao.findById((int)key.id)); // Downcast to int needed, otherwise the galaxy explodes.
     }
 
 }

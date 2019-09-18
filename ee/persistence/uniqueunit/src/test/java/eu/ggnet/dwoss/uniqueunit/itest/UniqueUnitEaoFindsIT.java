@@ -1,11 +1,7 @@
 package eu.ggnet.dwoss.uniqueunit.itest;
 
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-import eu.ggnet.dwoss.search.api.SearchProvider;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
 
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -19,6 +15,7 @@ import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.search.api.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
@@ -122,7 +119,7 @@ public class UniqueUnitEaoFindsIT extends ArquillianProjectArchive {
         }
 
         assertThat(search.estimateMaxResults(new SearchRequest("*5*"))).as("Counting via Searchprovider *5*").isEqualTo(3);
-        assertThat(search.search(new SearchRequest("*5*"), 0, 1000)).as("Find of *5*").extracting(ShortSearchResult::getKey).
+        assertThat(search.search(new SearchRequest("*5*"), 0, 1000)).as("Find of *5*").extracting(ssr -> ssr.key).
                 contains(
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit2.getId()),
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, unit3.getId()),

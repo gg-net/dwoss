@@ -17,25 +17,53 @@
 package eu.ggnet.dwoss.search.api;
 
 import java.io.Serializable;
-
-import lombok.Value;
+import java.util.Objects;
 
 /**
  * The short result of a search.
  *
  * @author oliver.guenther
  */
-@Value
 public class ShortSearchResult implements Serializable {
 
     /**
      * Global Key of the result.
      */
-    private final GlobalKey key;
+    public final GlobalKey key;
 
     /**
      * A short description of the result.
      */
-    private final String shortDescription;
+    public final String shortDescription;
+
+    public ShortSearchResult(GlobalKey key, String shortDescription) {
+        this.key = Objects.requireNonNull(key, "key must not be null");
+        this.shortDescription = Objects.requireNonNull(shortDescription, "shortDescription must not be null");
+        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be blank");
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="hashCode and equals of key">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.key);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final ShortSearchResult other = (ShortSearchResult)obj;
+        if ( !Objects.equals(this.key, other.key) ) return false;
+        return true;
+    }
+    //</editor-fold>
+
+    @Override
+    public String toString() {
+        return "ShortSearchResult{" + "key=" + key + ", shortDescription=" + shortDescription + '}';
+    }
 
 }

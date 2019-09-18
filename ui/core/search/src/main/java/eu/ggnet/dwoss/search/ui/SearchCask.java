@@ -16,14 +16,6 @@
  */
 package eu.ggnet.dwoss.search.ui;
 
-import eu.ggnet.saft.core.ui.ClosedListener;
-import eu.ggnet.saft.core.ui.Once;
-import eu.ggnet.saft.core.ui.Frame;
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.experimental.Ops;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -47,8 +39,11 @@ import eu.ggnet.dwoss.search.api.SearchRequest;
 import eu.ggnet.dwoss.search.api.ShortSearchResult;
 import eu.ggnet.dwoss.search.ee.Searcher;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
+import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.experimental.ops.Selector;
-import eu.ggnet.saft.core.ui.FxSaft;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.UNIQUE_UNIT;
 import static java.lang.Double.MAX_VALUE;
@@ -110,7 +105,7 @@ public class SearchCask extends BorderPane implements ClosedListener {
                     @Override
                     protected List<ShortSearchResult> call() throws Exception {
                         updateProgress(-1, -1);
-                        if ( StringUtils.isEmpty(searchProperty.get()) ) return Collections.EMPTY_LIST; // Empty check.
+                        if ( StringUtils.isBlank(searchProperty.get()) ) return Collections.emptyList(); // Empty check.
                         LOG.info("Searching {}", searchProperty.get());
                         searcher.initSearch(new SearchRequest(searchProperty.get()));
                         List<ShortSearchResult> last = Collections.EMPTY_LIST;
@@ -154,8 +149,8 @@ public class SearchCask extends BorderPane implements ClosedListener {
             if ( click.getClickCount() == 2 ) {
                 ShortSearchResult selectedItem = resultListView.getSelectionModel().getSelectedItem();
                 Ui.exec(() -> {
-                    Ui.build(SearchCask.this).title(selectedItem.getKey().toString()).fx()
-                            .show(() -> searcher.details(selectedItem.getKey()), () -> new HtmlPane());
+                    Ui.build(SearchCask.this).title(selectedItem.key.toString()).fx()
+                            .show(() -> searcher.details(selectedItem.key), () -> new HtmlPane());
                 });
             }
         });
@@ -167,8 +162,8 @@ public class SearchCask extends BorderPane implements ClosedListener {
                 // Call the selector of PicoUnit if the slected element is of picounit.
                 if ( c.getAddedSubList().isEmpty() ) continue;
                 ShortSearchResult selectedResult = c.getAddedSubList().get(0);
-                if ( selectedResult.getKey().getComponent() != UNIQUE_UNIT ) continue;
-                seletor.selected(new PicoUnit((int)selectedResult.getKey().getId(), selectedResult.getShortDescription()));
+                if ( selectedResult.key.component != UNIQUE_UNIT ) continue;
+                seletor.selected(new PicoUnit((int)selectedResult.key.id, selectedResult.shortDescription));
             }
         });
     }

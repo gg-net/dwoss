@@ -17,12 +17,6 @@
 package eu.ggnet.dwoss.customer.ee;
 
 import java.util.HashSet;
-
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-import eu.ggnet.dwoss.search.api.SearchProvider;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +24,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.search.api.*;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
 
@@ -60,7 +55,7 @@ public class CustomerSearchProvider implements SearchProvider {
 
     @Override
     public String details(GlobalKey key) {
-        return customerEao.findById(key.getId()).toHtml();
+        return customerEao.findById(key.id).toHtml();
     }
 
     @Override

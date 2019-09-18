@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.search.ee;
 
-import eu.ggnet.dwoss.search.api.SearchRequest;
-import eu.ggnet.dwoss.search.api.SearchProvider;
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-
 import java.util.*;
 
 import javax.ejb.LocalBean;
@@ -113,7 +108,7 @@ public class SearcherOperation implements Searcher {
 
     private boolean isInvalidate() {
         if ( request == null ) return true;
-        if ( StringUtils.isBlank(request.getSearch()) ) return true;
+        if ( StringUtils.isBlank(request.search) ) return true;
         if ( providers.isUnsatisfied() ) {
             // TODO: Verifiy, that isUnsatisfied doesen't take too long.
             LOG.warn("No SearchProviders are found, but SearchOperation.next was called");
@@ -127,7 +122,7 @@ public class SearcherOperation implements Searcher {
         if ( key == null ) return "";
         if ( isInvalidate() ) return "";
         for (SearchProvider provider : providers) {
-            if ( provider.getSource() == key.getComponent() ) return provider.details(key);
+            if ( provider.getSource() == key.component ) return provider.details(key);
         }
         return "";
     }

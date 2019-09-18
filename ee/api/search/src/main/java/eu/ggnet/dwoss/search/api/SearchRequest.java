@@ -18,17 +18,36 @@ package eu.ggnet.dwoss.search.api;
 
 import java.io.Serializable;
 
-import lombok.Value;
-
 /**
  * Wrapper for a request.
  * This class will be enhanced in the future.
  *
  * @author oliver.guenther
  */
-@Value
 public class SearchRequest implements Serializable {
 
-    private final String search;
+    /**
+     * May be null.
+     */
+    public final String search;
+
+    public SearchRequest(String search) {
+        this.search = search;
+    }
+
+    /**
+     * 
+     * @return
+     * @deprecated use public field.
+     */
+    @Deprecated
+    public String getSearch() {
+        return search;
+    }
+    
+    @Override
+    public String toString() {
+        return "SearchRequest{" + "search=" + search + '}';
+    }
 
 }

@@ -17,15 +17,13 @@
 package eu.ggnet.dwoss.search.api;
 
 import java.io.Serializable;
-
-import lombok.Value;
+import java.util.Objects;
 
 /**
  * Global Key to identify an entity uniquely.
  *
  * @author oliver.guenther
  */
-@Value
 public class GlobalKey implements Serializable {
 
     /**
@@ -36,10 +34,42 @@ public class GlobalKey implements Serializable {
         CUSTOMER, UNIQUE_UNIT, UNIQUE_PRODUCT, REDTAPE_DOCUMENT_INVOICE
     }
 
-    private final Component component;
+    public final Component component;
 
     /**
      * A unique database identifier.
      */
-    private final long id;
+    public final long id;
+
+    public GlobalKey(Component component, long id) {
+        this.component = component;
+        this.id = id;
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="hashcode and equals of all">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + Objects.hashCode(this.component);
+        hash = 41 * hash + (int)(this.id ^ (this.id >>> 32));
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final GlobalKey other = (GlobalKey)obj;
+        if ( this.id != other.id ) return false;
+        if ( this.component != other.component ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return "GlobalKey{" + "component=" + component + ", id=" + id + '}';
+    }
+    
 }

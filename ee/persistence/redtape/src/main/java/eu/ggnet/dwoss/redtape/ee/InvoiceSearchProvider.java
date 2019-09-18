@@ -59,7 +59,7 @@ public class InvoiceSearchProvider implements SearchProvider {
 
     @Override
     public String details(GlobalKey key) {
-        return DocumentFormater.toHtmlDetailedWithPositions(documentEao.findById(key.getId()));
+        return DocumentFormater.toHtmlDetailedWithPositions(documentEao.findById(key.id));
     }
 
 }

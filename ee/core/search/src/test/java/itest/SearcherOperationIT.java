@@ -1,9 +1,5 @@
 package itest;
 
-import eu.ggnet.dwoss.search.api.ShortSearchResult;
-import eu.ggnet.dwoss.search.api.SearchRequest;
-import eu.ggnet.dwoss.search.api.GlobalKey;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +58,7 @@ public class SearcherOperationIT extends ArquillianProjectArchive {
             allResult.addAll(searcher.next());
         }
 
-        assertThat(allResult).as("12345").extracting(ShortSearchResult::getKey).
+        assertThat(allResult).as("12345").extracting(ssr -> ssr.key).
                 contains(
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, 1),
                         new GlobalKey(GlobalKey.Component.UNIQUE_UNIT, 2),
