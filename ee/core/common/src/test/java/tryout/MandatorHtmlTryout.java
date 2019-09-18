@@ -49,7 +49,8 @@ public class MandatorHtmlTryout extends Application {
                 .city("Testcity")
                 .email("test@example.de")
                 .emailName("Example GmbH Shop")
-                .build();
+                .logo(new UrlLocation(new URL("http://noimage")))
+                .build(); // Logo missing
 
         SmtpConfiguration smtpConfiguration = new SmtpConfiguration("example.de", "user", "password", "UTF-8", true);
 
@@ -98,7 +99,7 @@ public class MandatorHtmlTryout extends Application {
                 .applyDefaultChannelOnRollIn(false)
                 .matchCode("SAMPLE")
                 .bugMail("error@localhost")
-                .build();
+                .buildPartial(); // Logo missing
 
         stage.setTitle("HtmlViewer");
         WebView view = new WebView();
