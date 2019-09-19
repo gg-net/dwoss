@@ -25,13 +25,11 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
 
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.redtape.ee.entity.Position.Key;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
+import eu.ggnet.dwoss.redtape.ee.entity.Position.Key;
 import eu.ggnet.dwoss.util.TwoDigits;
-
-import lombok.*;
 
 import static javax.persistence.CascadeType.*;
 
@@ -56,13 +54,10 @@ import static javax.persistence.CascadeType.*;
  */
 @Entity
 @IdClass(Key.class)
-@NamedQueries({
-    @NamedQuery(name = "Position.findByDocumentId", query = "SELECT p FROM Position p WHERE p.document.id = ?1")
-    ,
-    @NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1")
-    ,
-    @NamedQuery(name = "Position.findByUniqueUnitId", query = "SELECT p FROM Position p WHERE p.uniqueUnitId = ?1")
-})
+@NamedQuery(name = "Position.findByDocumentId", query = "SELECT p FROM Position p WHERE p.document.id = ?1")
+@NamedQuery(name = "Position.countByDocumentId", query = "SELECT COUNT(p) FROM Position p WHERE p.document.id = ?1")
+@NamedQuery(name = "Position.findByUniqueUnitId", query = "SELECT p FROM Position p WHERE p.uniqueUnitId = ?1")
+@SuppressWarnings("PersistenceUnitPresent")
 public class Position implements Serializable, Comparable<Position> {
 
     /**
@@ -83,7 +78,6 @@ public class Position implements Serializable, Comparable<Position> {
     public static interface Blocks {
     };
 
-    @Data
     public static class Key implements Serializable {
 
         private long document;
@@ -97,6 +91,32 @@ public class Position implements Serializable, Comparable<Position> {
 
         public Key() {
             this(0, 0);
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 83 * hash + (int)(this.document ^ (this.document >>> 32));
+            hash = 83 * hash + this.id;
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final Key other = (Key)obj;
+            if ( this.document != other.document ) return false;
+            if ( this.id != other.id ) return false;
+            return true;
+        }
+        //</editor-fold>
+
+        @Override
+        public String toString() {
+            return "Document.Key{" + "document=" + document + ", id=" + id + '}';
         }
 
     }
@@ -155,21 +175,16 @@ public class Position implements Serializable, Comparable<Position> {
     /**
      * The refurbished id associated with the position.
      */
-    @Getter
-    @Setter
     private String refurbishedId;
 
     /**
      * Serialnumber of the associated unit.
      */
-    @Getter
-    @Setter
     private String serial;
 
     public Position() {
     }
 
-    @Builder
     Position(PositionType type, String name, double price, double amount, double tax, String description, Ledger bookingAccount, int uniqueUnitId, long uniqueUnitProductId, String refurbishedId, String serialNumber) {
         this.type = type;
         this.name = name;
@@ -185,26 +200,104 @@ public class Position implements Serializable, Comparable<Position> {
     }
 
     /**
-     * Creates a partial clone of the position, but without the document.
-     * <p/>
-     * @return a copy with document == null
+     * Returns a new Builder for the Position.
+     *
+     * @return a new Builder.
      */
-    public Position partialClone() {
-        return new Position(type, name, price, amount, tax, description, new Ledger(bookingAccount, "fromPartialClone"), uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
+    public static PositionBuilder builder() {
+        return new PositionBuilder();
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public int getId() {
         return id;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    public String getRefurbishedId() {
+        return refurbishedId;
+    }
+    
+    public void setRefurbishedId(String refurbishedId) {
+        this.refurbishedId = refurbishedId;
+    }
+    
+    public String getSerial() {
+        return serial;
+    }
+    
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
+    
+    public Short getOptLock() {
+        return optLock;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    public double getAmount() {
+        return amount;
+    }
+    
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    
+    public double getTax() {
+        return tax;
+    }
+    
+    public void setTax(double tax) {
+        this.tax = tax;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public PositionType getType() {
+        return type;
+    }
+    
+    public void setType(PositionType type) {
+        this.type = type;
+    }
+    
+    public Document getDocument() {
+        return document;
+    }
+    
+    public int getUniqueUnitId() {
+        return uniqueUnitId;
+    }
+    
+    public void setUniqueUnitId(int uniqueUnitId) {
+        this.uniqueUnitId = uniqueUnitId;
+    }
+    
+    public long getUniqueUnitProductId() {
+        return uniqueUnitProductId;
+    }
+    
+    public void setUniqueUnitProductId(long uniqueUnitProductId) {
+        this.uniqueUnitProductId = uniqueUnitProductId;
+    }
+    //</editor-fold>
+    
     /**
      * Returns price * tax optimized to 0.00 look. (+0.01 and .99 are changed)
      *
@@ -214,36 +307,8 @@ public class Position implements Serializable, Comparable<Position> {
         return TwoDigits.roundedApply(getPrice(), getTax(), 0);
     }
 
-    public double getPrice() {
-        return price;
-    }
-
     public void setPrice(double nettoPrice) {
         this.price = TwoDigits.round(nettoPrice);
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public double getTax() {
-        return tax;
-    }
-
-    public void setTax(double tax) {
-        this.tax = tax;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     /**
@@ -259,35 +324,15 @@ public class Position implements Serializable, Comparable<Position> {
     public void setBookingAccount(Ledger bookingAccount) {
         this.bookingAccount = Optional.ofNullable(bookingAccount).map(Ledger::getValue).orElse(-1);
     }
-
-    public PositionType getType() {
-        return type;
+    /**
+     * Creates a partial clone of the position, but without the document.
+     * <p/>
+     * @return a copy with document == null
+     */
+    public Position partialClone() {
+        return new Position(type, name, price, amount, tax, description, new Ledger(bookingAccount, "fromPartialClone"), uniqueUnitId, uniqueUnitProductId, refurbishedId, serial);
     }
-
-    public void setType(PositionType type) {
-        this.type = type;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public int getUniqueUnitId() {
-        return uniqueUnitId;
-    }
-
-    public void setUniqueUnitId(int uniqueUnitId) {
-        this.uniqueUnitId = uniqueUnitId;
-    }
-
-    public long getUniqueUnitProductId() {
-        return uniqueUnitProductId;
-    }
-
-    public void setUniqueUnitProductId(long uniqueUnitProductId) {
-        this.uniqueUnitProductId = uniqueUnitProductId;
-    }
-
+    
     @Override
     public int compareTo(Position other) {
         if ( other == null ) return 1;

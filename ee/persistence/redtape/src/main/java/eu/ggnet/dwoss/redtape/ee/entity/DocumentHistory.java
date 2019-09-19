@@ -19,11 +19,7 @@ package eu.ggnet.dwoss.redtape.ee.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Lob;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -64,30 +60,32 @@ public class DocumentHistory implements Serializable {
         this.comment = comment;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public Date getRelease() {
         return release;
     }
-
+    
     public void setRelease(Date release) {
         this.release = release;
     }
-
+    
     public String getArranger() {
         return arranger;
     }
-
+    
     public void setArranger(String arranger) {
         this.arranger = arranger;
     }
-
+    
     public String getComment() {
         return comment;
     }
-
+    
     public void setComment(String comment) {
         this.comment = comment;
     }
-
+    //</editor-fold>
+    
     @Override
     public String toString() {
         return "DocumentHistory{" + "release=" + release + ", arranger=" + arranger + ", comment=" + comment + '}';

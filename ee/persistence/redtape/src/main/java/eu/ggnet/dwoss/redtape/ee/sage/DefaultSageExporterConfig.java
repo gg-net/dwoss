@@ -23,23 +23,36 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 /**
  * Default implementation for the sage exporter config.
  *
  * @author oliver.guenther
  */
-@AllArgsConstructor
 public class DefaultSageExporterConfig implements SageExporterConfig, Serializable {
 
-    @Getter
-    private int defaultDebitorLedger = 0;
+    private int defaultDebitorLedger;
 
-    @Getter
-    private boolean customerLedgersDisabled = false;
+    private boolean customerLedgersDisabled;
 
+    public DefaultSageExporterConfig(int defaultDebitorLedger, boolean customerLedgersDisabled) {
+        this.defaultDebitorLedger = defaultDebitorLedger;
+        this.customerLedgersDisabled = customerLedgersDisabled;
+    }
+
+    public DefaultSageExporterConfig() {
+        this(0,false);
+    }
+
+    @Override
+    public int getDefaultDebitorLedger() {
+        return defaultDebitorLedger;
+    }
+
+    @Override
+    public boolean isCustomerLedgersDisabled() {
+        return customerLedgersDisabled;
+    }    
+    
     @Override
     public String beleg(Document doc, UiCustomer customer) {
         String dossierIdentifier = doc.getDossier().getIdentifier() == null ? "NoDossierIdentifier" : doc.getDossier().getIdentifier().replace("_", "");

@@ -1,17 +1,13 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Reminder;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.util.Arrays;
 import java.util.Objects;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 import static org.junit.Assert.*;
 
@@ -25,22 +21,22 @@ public class DossierTest {
     public void testGetActive() {
         Dossier dos = new Dossier();
 
-        Document doc1 = new Document();
+        Document doc1 = new Document(1);
         doc1.setType(DocumentType.ORDER);
         doc1.setActive(true);
         dos.add(doc1);
 
-        Document doc2 = new Document();
+        Document doc2 = new Document(2);
         doc2.setType(DocumentType.ORDER);
         doc2.setActive(false);
         dos.add(doc2);
 
-        Document doc3 = new Document();
+        Document doc3 = new Document(3);
         doc3.setType(DocumentType.INVOICE);
         doc3.setActive(true);
         dos.add(doc3);
 
-        Document doc4 = new Document();
+        Document doc4 = new Document(4);
         doc4.setType(DocumentType.CREDIT_MEMO);
         doc4.setActive(true);
         dos.add(doc4);
@@ -174,28 +170,29 @@ public class DossierTest {
     @Test
     public void testGetRelevantPositions() {
         Dossier dos1 = new Dossier();
-        Document dos1Order = new Document(DocumentType.ORDER, Document.Directive.CREATE_INVOICE, null);
-        dos1Order.setActive(true);
+        Document doc1Order = makeDocument(1, DocumentType.ORDER, Document.Directive.CREATE_INVOICE);
+
+        doc1Order.setActive(true);
         Position p1 = new Position();
         p1.setUniqueUnitId(1);
         p1.setType(PositionType.UNIT);
         Position p2 = new Position();
         p2.setType(PositionType.COMMENT);
-        dos1Order.appendAll(p1, p2);
-        dos1.add(dos1Order);
+        doc1Order.appendAll(p1, p2);
+        dos1.add(doc1Order);
         assertEquals(1, dos1.getRelevantUniqueUnitIds().size());
 
         Position p3 = new Position();
         p3.setUniqueUnitId(2);
         p3.setType(PositionType.UNIT);
-        dos1Order.append(p3);
-        Document dos1Invoice = dos1Order.partialClone();
+        doc1Order.append(p3);
+        Document dos1Invoice = doc1Order.partialClone();
         dos1Invoice.setActive(true);
         dos1Invoice.setType(DocumentType.INVOICE);
         dos1.add(dos1Invoice);
         assertTrue(dos1.getRelevantUniqueUnitIds().containsAll(Arrays.asList(new Integer[]{1, 2})));
 
-        Document dos1CreditMemo = new Document(DocumentType.CREDIT_MEMO, Document.Directive.BALANCE_REPAYMENT, null);
+        Document dos1CreditMemo = makeDocument(2, DocumentType.CREDIT_MEMO, Document.Directive.BALANCE_REPAYMENT);
         dos1CreditMemo.setActive(true);
         dos1CreditMemo.append(p3.partialClone());
         dos1.add(dos1CreditMemo);
@@ -203,7 +200,7 @@ public class DossierTest {
         assertTrue("UniqueUnitId 1 should be in the list", dos1.getRelevantUniqueUnitIds().contains(1));
 
         Dossier dos2 = new Dossier();
-        Document blocker = new Document(DocumentType.BLOCK, Document.Directive.NONE, null);
+        Document blocker = makeDocument(3, DocumentType.BLOCK, Document.Directive.NONE);
         blocker.setActive(true);
         Position pb1 = new Position();
         pb1.setUniqueUnitId(1);
@@ -234,5 +231,12 @@ public class DossierTest {
         d1.setClosed(true);
         dos.add(d1);
         return dos;
+    }
+
+    private Document makeDocument(long id, DocumentType documentType, Directive directive) {
+        Document d = new Document(id);
+        d.setType(documentType);
+        d.setDirective(directive);
+        return d;
     }
 }

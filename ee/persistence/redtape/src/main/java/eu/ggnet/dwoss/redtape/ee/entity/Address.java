@@ -31,6 +31,7 @@ import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 @Entity
 // Not working in H2/Testdatabase.
 // @Table(uniqueConstraints = @UniqueConstraint(columnNames = "description", name = "unique_address_description"))
+@SuppressWarnings("PersistenceUnitPresent")
 public class Address extends IdentifiableEntity implements Serializable {
 
     @Id

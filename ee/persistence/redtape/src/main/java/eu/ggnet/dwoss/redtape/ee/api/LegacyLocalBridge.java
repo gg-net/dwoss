@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.ee.api;
 
-import java.util.List;
-
 import javax.ejb.Local;
 
 /**
@@ -35,14 +33,6 @@ public interface LegacyLocalBridge {
      * @return the name.
      */
     String localName();
-
-    /**
-     * A full Text Search for Units.
-     * <p>
-     * @param search the full text search string.
-     * @return a unit representation.
-     */
-    List<LegacyUnit> findUnit(String search);
 
     /**
      * Returns true if the supplied identifier does not collied with some unit identifier in the legacy system.

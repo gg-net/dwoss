@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TaxType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -28,18 +24,17 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
 import eu.ggnet.dwoss.util.TwoDigits;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static javax.persistence.CascadeType.*;
 
 /**
@@ -55,21 +50,14 @@ import static javax.persistence.CascadeType.*;
  * @author bastian.venz, oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "Document.activeOpenByTypeDirective", query = "select d from Document d where d.active = TRUE and d.closed = FALSE and d.type = ?1 and d.directive = ?2")
-    ,
-    @NamedQuery(name = "Document.betweenDates", query = "select d from Document d where d.actual between ?1 and ?2 and d.type in (?3) and d.active = true ORDER BY d.identifier ASC")
-    ,
-    @NamedQuery(name = "Document.findActiveAndOpenByCustomerId", query = "SELECT d FROM Document d WHERE d.dossier.customerId = ?2 AND d.type = ?1 AND d.active = TRUE AND d.closed = FALSE ORDER BY d.dossier.id DESC")
-    ,
-    @NamedQuery(name = "Document.findActiveByDirective", query = "SELECT d FROM Document d WHERE d.active = TRUE AND d.directive = ?1")
-    ,
-    @NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true")
-    ,
-    @NamedQuery(name = "Document.productIdAndType", query = "SELECT DISTINCT p.document FROM Position p WHERE p.uniqueUnitProductId = ?1 AND p.document.active = TRUE AND p.document.type = ?2 ORDER BY p.document.actual DESC")
-})
+@NamedQuery(name = "Document.activeOpenByTypeDirective", query = "select d from Document d where d.active = TRUE and d.closed = FALSE and d.type = ?1 and d.directive = ?2")
+@NamedQuery(name = "Document.betweenDates", query = "select d from Document d where d.actual between ?1 and ?2 and d.type in (?3) and d.active = true ORDER BY d.identifier ASC")
+@NamedQuery(name = "Document.findActiveAndOpenByCustomerId", query = "SELECT d FROM Document d WHERE d.dossier.customerId = ?2 AND d.type = ?1 AND d.active = TRUE AND d.closed = FALSE ORDER BY d.dossier.id DESC")
+@NamedQuery(name = "Document.findActiveByDirective", query = "SELECT d FROM Document d WHERE d.active = TRUE AND d.directive = ?1")
+@NamedQuery(name = "Document.byIdentifier", query = "SELECT d FROM Document d WHERE d.identifier like ?1 and d.type = ?2 and d.active = true")
+@NamedQuery(name = "Document.productIdAndType", query = "SELECT DISTINCT p.document FROM Position p WHERE p.uniqueUnitProductId = ?1 AND p.document.active = TRUE AND p.document.type = ?2 ORDER BY p.document.actual DESC")
 @SuppressWarnings("PersistenceUnitPresent")
-public class Document extends IdentifiableEntity implements Serializable, Comparable<Document> {
+public class Document extends BaseEntity implements Serializable, Comparable<Document> {
 
     /**
      * A Condition that can be added to a Document. Conditions are meant only to be added.
@@ -304,17 +292,13 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         }
     }
 
-    @Getter
     @Id
     @GeneratedValue
     private long id;
 
-    @Getter
     @Version
     private short optLock = 0;
 
-    @Getter
-    @Setter
     @Enumerated
     private DocumentType type;
 
@@ -324,23 +308,16 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @Valid
     Map<Integer, Position> positions = new TreeMap<>();
 
-    @Getter
-    @Setter
     private boolean active;
 
-    @Getter
-    @Setter
     @Valid
     @NotNull // May be removed if UI Validation problem
     @Embedded
     private DocumentHistory history;
 
-    @Getter
-    @Setter
     @OneToOne(cascade = {DETACH})
     private Document predecessor;
 
-    @Getter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Dossier dossier;
 
@@ -348,13 +325,9 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Flag> flags = EnumSet.noneOf(Flag.class);
 
-    @Getter
-    @Setter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Address invoiceAddress;
 
-    @Getter
-    @Setter
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
     private Address shippingAddress;
 
@@ -365,8 +338,6 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Settlement> settlements = EnumSet.noneOf(Settlement.class);
 
-    @Getter
-    @Setter
     @Enumerated
     @NotNull
     private Directive directive;
@@ -375,15 +346,11 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      * Represents this document as closed.
      * Only changes in changesAllowed are still possible.
      */
-    @Getter
-    @Setter
     private boolean closed;
 
     /**
      * The identifier, i.e. Invoice.
      */
-    @Getter
-    @Setter
     private String identifier;
 
     /**
@@ -391,8 +358,6 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
      * <p>
      * This Date should be set to the actual value on every new Type of Document.
      */
-    @Getter
-    @Setter
     @NotNull
     @Temporal(TemporalType.DATE)
     private Date actual;
@@ -400,8 +365,6 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
     /**
      * Extra text, that explains the tax values.
      */
-    @Getter
-    @Setter
     @Enumerated
     @NotNull
     private TaxType taxType;
@@ -424,6 +387,119 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
         this.history = history;
         this.directive = directive;
     }
+
+    /**
+     * Constructor to set id, use only in non entity tests.
+     *
+     * @param id the id to simulate
+     */
+    public Document(long id) {
+        LoggerFactory.getLogger(this.getClass()).warn("Document(id={}) created, only usefull in non entity tests.");
+        this.id = id;
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public Directive getDirective() {
+        return directive;
+    }
+
+    public void setDirective(Directive directive) {
+        this.directive = directive;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public Date getActual() {
+        return actual;
+    }
+
+    public void setActual(Date actual) {
+        this.actual = actual;
+    }
+
+    public TaxType getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(TaxType taxType) {
+        this.taxType = taxType;
+    }
+
+    public Address getInvoiceAddress() {
+        return invoiceAddress;
+    }
+
+    public void setInvoiceAddress(Address invoiceAddress) {
+        this.invoiceAddress = invoiceAddress;
+    }
+
+    public Address getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(Address shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public DocumentType getType() {
+        return type;
+    }
+
+    public void setType(DocumentType type) {
+        this.type = type;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public DocumentHistory getHistory() {
+        return history;
+    }
+
+    public void setHistory(DocumentHistory history) {
+        this.history = history;
+    }
+
+    public Document getPredecessor() {
+        return predecessor;
+    }
+
+    public void setPredecessor(Document predecessor) {
+        this.predecessor = predecessor;
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    public short getOptLock() {
+        return optLock;
+    }
+
+    public Dossier getDossier() {
+        return dossier;
+    }
+    //</editor-fold>
 
     /**
      * Returns a partial clone of the Document, without some fields (nearly same goes for {@link Document#equalsContent(Document) }.
@@ -763,7 +839,7 @@ public class Document extends IdentifiableEntity implements Serializable, Compar
 
     /**
      * Returns true if and only if at least one Position is from a given Type.
-     * <p/>
+     * <p>
      * @param type The Type
      * @return true if at least one Position is from a given Type.
      */

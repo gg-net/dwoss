@@ -418,7 +418,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
     public Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException {
         Dossier dos = redTapeEm.find(Dossier.class, disserId);
         if ( dos == null ) return null;
-        if ( dos.isClosed() || dos.isLegacy() ) throw new UserInfoException("Geschlossene oder zu alte Vorgänge sind nich für Garantieänderungen zugelassen.");
+        if ( dos.isClosed()) throw new UserInfoException("Geschlossene sind nicht für Garantieänderungen zugelassen.");
         if ( dos.getCrucialDocument().getType() != ORDER ) throw new UserInfoException("Nur Bestellungen sind für Garantieänderungen zugelassen.");
         if ( dos.getCrucialDocument().getPositions(PositionType.UNIT).isEmpty() )
             throw new UserInfoException("Vorgänge ohne Geräte sind nich für Garantieänderungen zugelassen.");

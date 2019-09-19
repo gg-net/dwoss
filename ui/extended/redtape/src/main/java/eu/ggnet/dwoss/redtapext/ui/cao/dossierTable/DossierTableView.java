@@ -30,8 +30,8 @@ import javax.swing.table.TableRowSorter;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
-import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 
@@ -45,9 +45,10 @@ import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
-import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import lombok.Getter;
@@ -57,7 +58,7 @@ import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.Filt
 
 /**
  * A JPanel for listings of Dossiers
- * <p/>
+ * <p>
  * @author pascal.perau
  */
 public class DossierTableView extends javax.swing.JPanel {
@@ -74,6 +75,7 @@ public class DossierTableView extends javax.swing.JPanel {
         SALES_CLOSED("Verk. geschlossen"),
         ACCOUNTANCY_OPEN("Buchh. offen"),
         ACCOUNTANCY_CLOSED("Buchh. geschlossen"),
+        @Deprecated // Nicht mehr in use
         LEGACY("Legacy");
 
         @Getter
@@ -120,7 +122,7 @@ public class DossierTableView extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 Dossier dos = selectedDossier();
                 new HtmlDialog(SwingUtilities.getWindowAncestor(DossierTableView.this), Dialog.ModalityType.MODELESS)
-                        .setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
+                        .setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
             }
         });
         detailsItem.setText("Details");
@@ -201,17 +203,15 @@ public class DossierTableView extends javax.swing.JPanel {
                 Dossier dos = entry.getModel().getDossier(entry.getIdentifier());
                 switch (type) {
                     case SALES_CLOSED:
-                        return !dos.isLegacy() && dos.getCrucialDirective() == Document.Directive.NONE;
+                        return  dos.getCrucialDirective() == Document.Directive.NONE;
                     case SALES_OPEN:
-                        return !dos.isLegacy() && dos.getId() > 0 && dos.getCrucialDirective() != Document.Directive.NONE;
+                        return  dos.getId() > 0 && dos.getCrucialDirective() != Document.Directive.NONE;
                     case ACCOUNTANCY_CLOSED:
-                        return !dos.isLegacy() && dos.getId() > 0 && dos.isClosed();
+                        return  dos.getId() > 0 && dos.isClosed();
                     case ACCOUNTANCY_OPEN:
-                        return !dos.isLegacy() && dos.getId() > 0 && !dos.isClosed();
+                        return  dos.getId() > 0 && !dos.isClosed();
                     case ALL:
                         return true;
-                    case LEGACY:
-                        return dos.isLegacy();
                     default:
                         return true;
                 }
@@ -405,7 +405,7 @@ public class DossierTableView extends javax.swing.JPanel {
         controller.selectionChanged(selectedDos);
         if ( evt.getClickCount() == 2 && table.getSelectedRow() != -1 && model != null ) {
             Dossier dos = selectedDossier();
-            new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS).setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
+            new HtmlDialog(SwingUtilities.getWindowAncestor(this), Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
         }
         if ( SwingUtilities.isRightMouseButton(evt) ) {
             dossierPopup.show(evt.getComponent(), evt.getX(), evt.getY());

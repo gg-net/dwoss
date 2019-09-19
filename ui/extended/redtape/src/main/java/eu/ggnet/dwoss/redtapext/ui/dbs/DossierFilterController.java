@@ -38,7 +38,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtapext.ui.LegacyBridgeUtil;
+import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
@@ -303,7 +303,7 @@ public class DossierFilterController {
     }
 
     public void showSelectedDossier() {
-        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(LegacyBridgeUtil.toHtmlDetailed(model.getSelected())).setVisible(true);
+        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(model.getSelected().getId())).setVisible(true);
     }
 
     /**
@@ -342,6 +342,6 @@ public class DossierFilterController {
     }
 
     public void openDossierDetailViewer(Dossier dos) {
-        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(LegacyBridgeUtil.toHtmlDetailed(dos)).setVisible(true);
+        new HtmlDialog(view, Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
     }
 }

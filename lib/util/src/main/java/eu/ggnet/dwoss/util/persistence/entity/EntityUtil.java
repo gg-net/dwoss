@@ -16,8 +16,10 @@
  */
 package eu.ggnet.dwoss.util.persistence.entity;
 
+@Deprecated
 public class EntityUtil {
 
+    @Deprecated
     public static boolean equals(Identifiable one, Object two) {
         if ( one == null ) throw new NullPointerException("This Util expects the first element to be not null");
         if ( two == null ) return false;
@@ -27,7 +29,8 @@ public class EntityUtil {
         return one.getId() == other.getId();
     }
 
-    public static int hashCode(Identifiable one,int seed) {
+    @Deprecated
+    public static int hashCode(Identifiable one, int seed) {
         if ( one == null ) throw new NullPointerException("This Util expects the first element to be not null");
         if ( one.getId() == 0 ) throw new IllegalArgumentException("If the Identifieable is not persisted, it must call super.hashCode by himself");
         return seed * 7 + (int)(one.getId() ^ (one.getId() >>> 32));

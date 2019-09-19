@@ -30,8 +30,8 @@ public abstract class BaseEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + (int)(this.getId() ^ (this.getId() >>> 32));
+        int hash = this.getClass().getSimpleName().length();
+        hash = this.getClass().getPackage().getName().length() * hash + (int)(this.getId() ^ (this.getId() >>> 32));
         return hash;
     }
 

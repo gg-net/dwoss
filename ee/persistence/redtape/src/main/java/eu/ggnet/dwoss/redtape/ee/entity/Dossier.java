@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,13 +24,11 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
@@ -57,20 +51,14 @@ import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
  * @author bastian.venz, oliver.guenther, pascal.perau
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "Dossier.byCustomerId", query = "select d from Dossier d where d.customerId = ?1")
-    ,
-    @NamedQuery(name = "Dossier.byCustomerIdAndClosed", query = "select d from Dossier as d where d.customerId = ?1 and d.closed = ?2 ORDER BY d.identifier DESC")
-    ,
-    @NamedQuery(name = "Dossier.byDossierIds", query = "select d from Dossier d where d.id in (?1)")
-    ,
-    @NamedQuery(name = "Dossier.byClosed", query = "select d from Dossier as d where d.closed = ?1")
-    ,
-    @NamedQuery(name = "Dossier.byIdentifier", query = "select d from Dossier d where d.identifier like ?1 ORDER BY d.identifier DESC")
-    ,
-    @NamedQuery(name = "Dossier.allDescending", query = "select d from Dossier d ORDER BY d.id DESC")
-})
-public class Dossier extends IdentifiableEntity implements Serializable, EagerAble {
+@NamedQuery(name = "Dossier.byCustomerId", query = "select d from Dossier d where d.customerId = ?1")
+@NamedQuery(name = "Dossier.byCustomerIdAndClosed", query = "select d from Dossier as d where d.customerId = ?1 and d.closed = ?2 ORDER BY d.identifier DESC")
+@NamedQuery(name = "Dossier.byDossierIds", query = "select d from Dossier d where d.id in (?1)")
+@NamedQuery(name = "Dossier.byClosed", query = "select d from Dossier as d where d.closed = ?1")
+@NamedQuery(name = "Dossier.byIdentifier", query = "select d from Dossier d where d.identifier like ?1 ORDER BY d.identifier DESC")
+@NamedQuery(name = "Dossier.allDescending", query = "select d from Dossier d ORDER BY d.id DESC")
+@SuppressWarnings("PersistenceUnitPresent")
+public class Dossier extends BaseEntity implements Serializable, EagerAble {
 
     /**
      * Comperator for an inverse order using the actual date of the first active document.
@@ -101,8 +89,6 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     @Version
     private Short optLock = 0;
 
-    @Getter
-    @Setter
     @Lob
     @Column(length = 65536)
     private String comment;
@@ -111,21 +97,15 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     @Valid
     Set<Document> documents = new HashSet<>();
 
-    @Getter
-    @Setter
     @Enumerated
     private PaymentMethod paymentMethod;
 
     @Min(1)
-    @Getter
-    @Setter
     private long customerId;
 
     /**
      * Indicates, that this is a dispatch (Versand) dossier.
      */
-    @Getter
-    @Setter
     private boolean dispatch;
 
     /**
@@ -136,31 +116,11 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
     /**
      * This String identifies the Dossier.
      */
-    @Getter
-    @Setter
     private String identifier;
 
-    @Getter
-    @Setter
     @Valid
     @Embedded
     private Reminder reminder;
-
-    /**
-     * A non persisted value to show any external system, that this is not a real but a wrapped legacy instance.
-     */
-    @Transient
-    @Getter
-    @Setter
-    private boolean legacy;
-
-    /**
-     * A non persisted value to set some identifier to be handled by a legacy system.
-     */
-    @Transient
-    @Getter
-    @Setter
-    private String legacyIdentifier;
 
     public Dossier() {
     }
@@ -171,22 +131,76 @@ public class Dossier extends IdentifiableEntity implements Serializable, EagerAb
         this.dispatch = dispatch;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="setter/getter">
     @Override
     public long getId() {
         return id;
     }
-
+    
+    public Short getOptLock() {
+        return optLock;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+    
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+    
+    public long getCustomerId() {
+        return customerId;
+    }
+    
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+    
+    public boolean isDispatch() {
+        return dispatch;
+    }
+    
+    public void setDispatch(boolean dispatch) {
+        this.dispatch = dispatch;
+    }
+    
+    public String getIdentifier() {
+        return identifier;
+    }
+    
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+    
+    public Reminder getReminder() {
+        return reminder;
+    }
+    
+    public void setReminder(Reminder reminder) {
+        this.reminder = reminder;
+    }
+    //</editor-fold>
+    
     /**
-     * Generates a list of all {@link Position#uniqueUnitId}s of {@link PositionType#UNIT} that are relevant to the recent state of the Dossier. <br />
+     * Generates a list of all {@link Position#uniqueUnitId}s of {@link PositionType#UNIT} that are relevant to the recent state of the Dossier. <br>
      * If active Documents of {@link DocumentType#BLOCK}, {@link DocumentType#RETURNS} or {@link DocumentType#CAPITAL_ASSET} exist, all uniqueUniteIds are
-     * taken.<br />
-     * Any of the found positions used in a successor of {@link DocumentType#INVOICE} is subtracted from the list.<br />
+     * taken.<br>
+     * Any of the found positions used in a successor of {@link DocumentType#INVOICE} is subtracted from the list.<br>
      * The following cases will always return an empty list:
      * <ul>
      * <li>The Dossier is closed</li>
      * <li>Only an active {@link Document} of {@link Type#ORDER} exists and is canceled</li>
      * </ul>
-     * <p/>
+     * <p>
      * @return a list of all {@link Position#uniqueUnitId} of {@link Position.Type#UNIT} that are relevant to the recent state of the Dossier.
      */
     public Set<Integer> getRelevantUniqueUnitIds() {

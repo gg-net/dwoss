@@ -18,19 +18,10 @@ package eu.ggnet.dwoss.redtape.ee.entity;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Objects;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQuery;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 
 /**
@@ -40,8 +31,9 @@ import javax.validation.constraints.Min;
  * @author oliver.guenther
  * @author pascal.perau
  */
-@NamedQuery(name = "byUniqueUnitProductId", query = "SELECT s FROM SalesProduct AS s WHERE s.uniqueUnitProductId = ?1")
 @Entity
+@NamedQuery(name = "byUniqueUnitProductId", query = "SELECT s FROM SalesProduct AS s WHERE s.uniqueUnitProductId = ?1")
+@SuppressWarnings("PersistenceUnitPresent")
 public class SalesProduct implements Serializable {
 
     /**
@@ -104,14 +96,15 @@ public class SalesProduct implements Serializable {
         this.description = description;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="setter/getter with propertyChangeSupport">
     public String getPartNo() {
         return partNo;
     }
-
+    
     public void setPartNo(String partNo) {
         this.partNo = partNo;
     }
-
+    
     /**
      * Get the value of description
      *
@@ -120,7 +113,7 @@ public class SalesProduct implements Serializable {
     public String getDescription() {
         return description;
     }
-
+    
     /**
      * Set the value of description
      *
@@ -131,7 +124,7 @@ public class SalesProduct implements Serializable {
         this.description = description;
         propertyChangeSupport.firePropertyChange(PROP_DESCRIPTION, oldDescription, description);
     }
-
+    
     /**
      * Get the value of price
      *
@@ -140,7 +133,7 @@ public class SalesProduct implements Serializable {
     public Double getPrice() {
         return price;
     }
-
+    
     /**
      * Set the value of price
      *
@@ -151,7 +144,7 @@ public class SalesProduct implements Serializable {
         this.price = price;
         propertyChangeSupport.firePropertyChange(PROP_PRICE, oldPrice, price);
     }
-
+    
     /**
      * Get the value of Name
      *
@@ -160,7 +153,7 @@ public class SalesProduct implements Serializable {
     public String getName() {
         return name;
     }
-
+    
     /**
      * Set the value of Name
      *
@@ -171,7 +164,7 @@ public class SalesProduct implements Serializable {
         this.name = Name;
         propertyChangeSupport.firePropertyChange(PROP_NAME, oldName, Name);
     }
-
+    
     /**
      * Get the value of uniqueUnitId
      *
@@ -180,18 +173,18 @@ public class SalesProduct implements Serializable {
     public long getUniqueUnitProductId() {
         return uniqueUnitProductId;
     }
-
+    
     /**
      * Set the value of uniqueUnitId
      *
-     * @param uniqueUnitId new value of uniqueUnitId
+     * @param uniqueUnitProductId new value of uniqueUnitProductId
      */
     public void setUniqueUnitProductId(long uniqueUnitProductId) {
         long oldUniqueUnitId = this.uniqueUnitProductId;
         this.uniqueUnitProductId = uniqueUnitProductId;
         propertyChangeSupport.firePropertyChange(PROP_UNIQUEUNITID, oldUniqueUnitId, uniqueUnitProductId);
     }
-
+    
     /**
      * Add PropertyChangeListener.
      *
@@ -200,7 +193,7 @@ public class SalesProduct implements Serializable {
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
-
+    
     /**
      * Remove PropertyChangeListener.
      *
@@ -209,7 +202,8 @@ public class SalesProduct implements Serializable {
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
-
+    //</editor-fold>
+    
     @Override
     public String toString() {
         return "SalesProduct{" + "partNo=" + partNo + ", name=" + name + ", price=" + price + ", uniqueUnitProductId=" + uniqueUnitProductId + ", description=" + description + '}';
@@ -225,13 +219,14 @@ public class SalesProduct implements Serializable {
         return builder.toString();
     }
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of partNo">
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.partNo);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if ( obj == null ) return false;
@@ -240,6 +235,7 @@ public class SalesProduct implements Serializable {
         if ( !Objects.equals(this.partNo, other.partNo) ) return false;
         return true;
     }
+    //</editor-fold>
 
     private void readObject(ObjectInputStream ois) throws IOException {
         try {

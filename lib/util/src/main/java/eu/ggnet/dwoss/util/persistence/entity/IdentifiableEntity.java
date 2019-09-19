@@ -16,6 +16,13 @@
  */
 package eu.ggnet.dwoss.util.persistence.entity;
 
+/**
+ * 
+ * 
+ * @author oliver.guenther
+ * @deprecated use BaseEntity
+ */
+@Deprecated
 public abstract class IdentifiableEntity implements Identifiable {
 
     @Override

@@ -20,9 +20,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -56,30 +54,33 @@ public class Reminder implements Serializable {
         this.arranger = arranger;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public Date getReminded() {
         return reminded;
     }
-
+    
     public void setReminded(Date reminded) {
         this.reminded = reminded;
     }
-
+    
     public Date getExpiration() {
         return expiration;
     }
-
+    
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
     }
-
+    
     public String getArranger() {
         return arranger;
     }
-
+    
     public void setArranger(String arranger) {
         this.arranger = arranger;
     }
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
     @Override
     public int hashCode() {
         int hash = 7;
@@ -88,7 +89,7 @@ public class Reminder implements Serializable {
         hash = 79 * hash + Objects.hashCode(this.arranger);
         return hash;
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if ( obj == null ) return false;
@@ -99,6 +100,7 @@ public class Reminder implements Serializable {
         if ( !Objects.equals(this.arranger, other.arranger) ) return false;
         return true;
     }
+    //</editor-fold>
     
     @Override
     public String toString() {

@@ -20,6 +20,7 @@ package eu.ggnet.dwoss.util.persistence.entity;
  *
  * @author oliver.guenther
  */
+@Deprecated
 public interface Identifiable {
 
     long getId();

@@ -17,24 +17,21 @@
 package eu.ggnet.dwoss.redtape.ee.sage;
 
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.bind.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
+import eu.ggnet.dwoss.progress.IMonitor;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.sage.xml.Row;
 import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.progress.IMonitor;
-
-import lombok.*;
 
 /**
  * The GsOfficeExporterUtil.
@@ -47,22 +44,50 @@ import lombok.*;
  * p/>
  * @author pascal.perau
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class SageExporterEngine {
 
     private final static Logger L = LoggerFactory.getLogger(SageExporterEngine.class);
 
-    @NonNull
     private OutputStream output;
 
-    @NonNull
     private Map<Document, UiCustomer> customerInvoices;
 
-    @NonNull
     private SageExporterConfig config;
+
+    public SageExporterEngine(OutputStream output, Map<Document, UiCustomer> customerInvoices, SageExporterConfig config) {
+        setOutput(output);
+        setCustomerInvoices(customerInvoices);
+        setConfig(config);
+    }
+
+    public SageExporterEngine() {
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter (NonNull)">
+    public OutputStream getOutput() {
+        return output;
+    }
+    
+    public void setOutput(OutputStream output) {
+        this.output = Objects.requireNonNull(output);
+    }
+    
+    public Map<Document, UiCustomer> getCustomerInvoices() {
+        return customerInvoices;
+    }
+    
+    public void setCustomerInvoices(Map<Document, UiCustomer> customerInvoices) {
+        this.customerInvoices = Objects.requireNonNull(customerInvoices);
+    }
+    
+    public SageExporterConfig getConfig() {
+        return config;
+    }
+    
+    public void setConfig(SageExporterConfig config) {
+        this.config = Objects.requireNonNull(config);
+    }
+    //</editor-fold>
 
     public void execute(IMonitor monitor) {
         SubMonitor m = SubMonitor.convert(monitor, "Create GS-Office XML Data", customerInvoices.size() + 10);

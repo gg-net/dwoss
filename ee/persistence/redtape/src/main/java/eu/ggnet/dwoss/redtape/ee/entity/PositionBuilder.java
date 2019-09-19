@@ -16,17 +16,16 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
-import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.mandator.api.value.Ledger;
 
 /**
- * A builder for {@link Position} entities.
+ * A unsafe builder for {@link Position} entities.
+ * This builder does not contain any form of null or blank validation. This is why no freebuilder conversation is done.
  * For further information in usage see {@link Position}.
- * <p/>
+ * <p>
  * @author pascal.perau
- * @deprecated Use {@link Position#builder() } and add .amount(1) which was default in position builder.
  */
-@Deprecated
 public class PositionBuilder {
 
     private PositionType type;
@@ -99,7 +98,16 @@ public class PositionBuilder {
         return this;
     }
 
-    // build
+    public PositionBuilder serialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+    
+    public PositionBuilder refurbishedId(String refurbishedId) {
+        this.refurbishedId = refurbishedId;
+        return this;
+    }
+    
     public Position build() {
         return new Position(type, name, price, amount, tax, description, bookingAccount, uniqueUnitId, uniqueUnitProductId, refurbishedId, serialNumber);
     }

@@ -17,56 +17,74 @@
 package eu.ggnet.dwoss.redtape.ee.entity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Version;
+import javax.persistence.*;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 /**
  * Holds values to create and re-use identifiers.
- * <p/>
+ * <p>
  * @author pascal.perau
  */
 @Entity
 @IdClass(value = RedTapeCounter.Key.class)
-@EqualsAndHashCode(of = {"type", "prefix"})
-@ToString(exclude = "optLock")
+@SuppressWarnings("PersistenceUnitPresent")
 public class RedTapeCounter implements Serializable {
 
-    @EqualsAndHashCode
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @ToString
     public static class Key implements Serializable {
 
         private DocumentType type;
 
         private String prefix;
+
+        public Key(DocumentType type, String prefix) {
+            this.type = type;
+            this.prefix = prefix;
+        }
+
+        public Key() {
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+        @Override
+        public int hashCode() {
+            int hash = 3;
+            hash = 79 * hash + Objects.hashCode(this.type);
+            hash = 79 * hash + Objects.hashCode(this.prefix);
+            return hash;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final Key other = (Key)obj;
+            if ( !Objects.equals(this.prefix, other.prefix) ) return false;
+            if ( this.type != other.type ) return false;
+            return true;
+        }
+        //</editor-fold>
+        
+        @Override
+        public String toString() {
+            return "Key{" + "type=" + type + ", prefix=" + prefix + '}';
+        }
+                
     }
 
     @Id
-    @Getter
     private DocumentType type;
 
     @Id
     @Column(name = "counterPrefix")
-    @Getter
     private String prefix;
 
     @Column(name = "counterValue")
-    @Getter
-    @Setter
     private long value;
 
     @Version
@@ -79,4 +97,53 @@ public class RedTapeCounter implements Serializable {
         this.prefix = prefixString;
         this.type = idType;
     }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public long getValue() {
+        return value;
+    }
+    
+    public void setValue(long value) {
+        this.value = value;
+    }
+    
+    public DocumentType getType() {
+        return type;
+    }
+    
+    public String getPrefix() {
+        return prefix;
+    }
+    
+    public long getOptLock() {
+        return optLock;
+    }
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of type,prefix">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.type);
+        hash = 17 * hash + Objects.hashCode(this.prefix);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final RedTapeCounter other = (RedTapeCounter)obj;
+        if ( !Objects.equals(this.prefix, other.prefix) ) return false;
+        if ( this.type != other.type ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+    
 }

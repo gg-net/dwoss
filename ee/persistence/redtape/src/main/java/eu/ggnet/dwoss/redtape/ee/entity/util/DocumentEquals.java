@@ -20,9 +20,9 @@ import java.util.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 /**
@@ -36,9 +36,9 @@ public class DocumentEquals {
         ID, TYPE, ACTIVE, ACTUAL, IDENTIFIER, HISTORY, PREDECESSOR, SETTLEMENTS, DOSSIER, SHIPPING_ADDRESS, INVOICE_ADDRESS, DIRECTIVE, FLAGS, CLOSED, CONDITIONS, TAXTYPE
     }
 
-    private Set<Property> properties = EnumSet.allOf(Property.class);
+    private final Set<Property> properties = EnumSet.allOf(Property.class);
 
-    private Set<PositionType> positionTypes = EnumSet.allOf(PositionType.class);
+    private final Set<PositionType> positionTypes = EnumSet.allOf(PositionType.class);
 
     private boolean positionOrder = true;
 
