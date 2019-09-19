@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 GG-Net GmbH
+ * Copyright (C) 2019 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,32 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.ee.entity.projection;
+package eu.ggnet.dwoss.common.ee;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
- * A Pico Customer concept.
- *
+ * Abtract Superclass for Entity classes.
+ * Includes equals and hashCode based on Id.
+ * 
  * @author oliver.guenther
  */
-public class PicoCustomer implements Serializable {
+public abstract class BaseEntity implements Serializable {
+    
+    public abstract long getId();
 
-    /**
-     * id of the customer.
-     */
-    public final long id;
-
-    /**
-     * a short description.
-     */
-    public final String shortDescription;
-
-    public PicoCustomer(long id, String shortDescription) {
-        this.id = id;
-        this.shortDescription = Objects.requireNonNull(shortDescription, "shortDescription must not be null");
-        if (shortDescription.trim().isEmpty()) throw new IllegalArgumentException("shortDescription must not be blank");
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + (int)(this.getId() ^ (this.getId() >>> 32));
+        return hash;
     }
-   
+
+    @Override
+    public boolean equals(Object that) {
+        if ( this == that ) return true;
+        if ( that == null ) return false;
+        if ( getClass() != that.getClass() ) return false;
+        final BaseEntity other = (BaseEntity)that;
+        return this.getId() == other.getId();
+    }
+    
 }

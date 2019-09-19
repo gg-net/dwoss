@@ -321,13 +321,13 @@ public class CustomerAgentStub implements CustomerAgent {
         L.info("create {} form {}", raw, root);
         Object rootElement = null;
 
-        if ( root.getClazz() == Customer.class ) rootElement = customer;
-        else if ( root.getClazz() == Company.class ) {
-            Optional<Company> company = customer.getCompanies().stream().filter(c -> c.getId() == root.getId()).findFirst();
+        if ( root.clazz == Customer.class ) rootElement = customer;
+        else if ( root.clazz == Company.class ) {
+            Optional<Company> company = customer.getCompanies().stream().filter(c -> c.getId() == root.id).findFirst();
             if ( company.isPresent() ) rootElement = company.get();
             else throw new IllegalArgumentException("Company is not on the customer " + customer);
-        } else if ( root.getClazz() == Contact.class ) {
-            Optional<Contact> contact = customer.getContacts().stream().filter(c -> c.getId() == root.getId()).findFirst();
+        } else if ( root.clazz == Contact.class ) {
+            Optional<Contact> contact = customer.getContacts().stream().filter(c -> c.getId() == root.id).findFirst();
             if ( contact.isPresent() ) rootElement = contact.get();
             else throw new IllegalArgumentException("Contact is not on the customer " + customer);
         } else throw new IllegalArgumentException("Root instance is not supported. Root: " + root);
@@ -353,13 +353,13 @@ public class CustomerAgentStub implements CustomerAgent {
         L.info("delete {} form {}", raw, root);
 
         Object rootElement = null;
-        if ( root.getClazz() == Customer.class ) rootElement = customer;
-        else if ( root.getClazz() == Company.class ) {
-            Optional<Company> findAny = customer.getCompanies().stream().filter(c -> (Long)c.getId() == root.getId()).findAny();
+        if ( root.clazz == Customer.class ) rootElement = customer;
+        else if ( root.clazz == Company.class ) {
+            Optional<Company> findAny = customer.getCompanies().stream().filter(c -> (Long)c.getId() == root.id).findAny();
             if ( findAny.isPresent() ) rootElement = findAny.get();
             else throw new IllegalArgumentException("Could not find company to delete from customer " + customer);
-        } else if ( root.getClazz() == Contact.class ) {
-            Optional<Contact> findAny = customer.getContacts().stream().filter(c -> (Long)c.getId() == root.getId()).findAny();
+        } else if ( root.clazz == Contact.class ) {
+            Optional<Contact> findAny = customer.getContacts().stream().filter(c -> (Long)c.getId() == root.id).findAny();
             if ( findAny.isPresent() ) rootElement = findAny.get();
             else throw new IllegalArgumentException("Could not find contact to delete from customer " + customer);
         } else throw new IllegalArgumentException("Root instance is not supported. Root: " + root);

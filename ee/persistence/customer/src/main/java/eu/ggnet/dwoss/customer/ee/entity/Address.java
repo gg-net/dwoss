@@ -22,22 +22,22 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.search.annotations.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 
-import lombok.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 /**
  * Address data.
  * <p>
  * @author pascal.perau
  */
-@Getter
+
 @Entity
-@NoArgsConstructor
-@ToString
-@EqualsAndHashCode(of = {"id"})
 @Indexed
-public class Address implements Serializable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Address extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue
@@ -46,17 +46,14 @@ public class Address implements Serializable {
     @Version
     private short optLock;
 
-    @Setter
     @NotNull
     @Field
     private String street;
 
-    @Setter
     @NotNull
     @Field
     private String city;
 
-    @Setter
     @NotNull
     @Field
     private String zipCode;
@@ -65,11 +62,13 @@ public class Address implements Serializable {
      * The 'ISO 3166 2' country code.
      * As default DE is used.
      */
-    @Setter
     @NotNull
     @Size(min = 2, max = 2)
     @Field
     private String isoCountry = "DE";
+
+    public Address() {
+    }
 
     /**
      * Tryout constructor, do not use in productive.
@@ -80,9 +79,53 @@ public class Address implements Serializable {
         this.id = id;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public String getStreet() {
+        return street;
+    }
+    
+    public void setStreet(String street) {
+        this.street = street;
+    }
+    
+    public String getCity() {
+        return city;
+    }
+    
+    public void setCity(String city) {
+        this.city = city;
+    }
+    
+    public String getZipCode() {
+        return zipCode;
+    }
+    
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+    
+    public String getIsoCountry() {
+        return isoCountry;
+    }
+    
+    public void setIsoCountry(String isoCountry) {
+        this.isoCountry = isoCountry;
+    }
+    //</editor-fold>
+    
     public void setCountry(Country country) {
         if ( country == null ) return;
-        setIsoCountry(country.getIsoCode());
+        setIsoCountry(country.isoCode);
     }
 
     public Country getCountry() {
@@ -119,6 +162,11 @@ public class Address implements Serializable {
         StringBuilder sb = new StringBuilder();
         return sb.append(street).append(" ").append(zipCode)
                 .append(" ").append(city).toString();
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
     
 }

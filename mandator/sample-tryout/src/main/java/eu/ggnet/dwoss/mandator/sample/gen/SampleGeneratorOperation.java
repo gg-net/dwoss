@@ -27,7 +27,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
+import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
@@ -135,10 +135,10 @@ public class SampleGeneratorOperation implements Serializable {
             stockGenerator.makeStocksAndLocations(2);
             m.worked(1, "Generating 300 Customers");
             customerGenerator.makeCustomers(50);
-            customerGenerator.makeCustomers(50, Assure.builder().simple(true).build());
-            customerGenerator.makeCustomers(50, Assure.builder().simple(true).mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
-            customerGenerator.makeCustomers(50, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
-            customerGenerator.makeCustomers(100, Assure.builder().mandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
+            customerGenerator.makeCustomers(50, new Assure.Builder().simple(true).build());
+            customerGenerator.makeCustomers(50, new Assure.Builder().simple(true).addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
+            customerGenerator.makeCustomers(50, new Assure.Builder().addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode())).build());
+            customerGenerator.makeCustomers(100, new Assure.Builder().addAllMandatorMetadataMatchCodes(Arrays.asList(mandator.matchCode(),RandomStringUtils.randomAlphabetic(5).toUpperCase())).build());
             m.worked(1, "Generating 100 Specs");
             receiptGenerator.makeProductSpecs(100, true);
             m.worked(1, "Generating 200 Units");

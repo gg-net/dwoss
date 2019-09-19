@@ -173,7 +173,7 @@ public class CustomerGeneratorOperation {
      * @return the id of the generated customer.
      */
     public long makeCustomer() {
-        return makeCustomer(CustomerGenerator.Assure.builder().build());
+        return makeCustomer(Assure.defaults());
     }
 
     /**
@@ -183,7 +183,7 @@ public class CustomerGeneratorOperation {
      * @return the id of the customer.
      */
     @AutoLogger
-    public long makeCustomer(CustomerGenerator.Assure assure) {
+    public long makeCustomer(Assure assure) {
         Customer customer = CGEN.makeCustomer(assure);
         em.persist(customer);
         em.flush();
@@ -197,7 +197,7 @@ public class CustomerGeneratorOperation {
      * @return the generated ids.
      */
     public List<Long> makeCustomers(int amount) {
-        return makeCustomers(amount, CustomerGenerator.Assure.builder().build());
+        return makeCustomers(amount, Assure.defaults());
     }
 
     /**
@@ -207,7 +207,7 @@ public class CustomerGeneratorOperation {
      * @param assure the conditions
      * @return the generated ids.
      */
-    public List<Long> makeCustomers(int amount, CustomerGenerator.Assure assure) {
+    public List<Long> makeCustomers(int amount, Assure assure) {
         SubMonitor m = monitorFactory.newSubMonitor("Generiere " + amount + " Kunden", amount);
         L.info("Generating {} customers", amount);
         m.start();

@@ -28,32 +28,30 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
+import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
-import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
-import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import com.querydsl.core.types.dsl.*;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.NonNull;
 
-import static eu.ggnet.dwoss.customer.ee.entity.QAddressLabel.*;
-import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.*;
-import static eu.ggnet.dwoss.customer.ee.entity.QContact.*;
-import static eu.ggnet.dwoss.customer.ee.entity.QCompany.*;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
+import static eu.ggnet.dwoss.customer.ee.entity.QAddressLabel.addressLabel;
+import static eu.ggnet.dwoss.customer.ee.entity.QCompany.company;
+import static eu.ggnet.dwoss.customer.ee.entity.QContact.contact;
+import static eu.ggnet.dwoss.customer.ee.entity.QCustomer.customer;
 
 /**
  * implementaion of the CustomerAgent
@@ -215,7 +213,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * @throws IllegalArgumentException if the collection is empty.
      */
     @Override
-    public Customer autostore(@NonNull Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
+    public Customer autostore(Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
+        Objects.requireNonNull(aldtos, "Collection of AddressLabelDtos must not be null");
         if ( aldtos.isEmpty() ) throw new IllegalArgumentException("Empty collection of addresslabels not allowed");
         // TODO: Verify, that all dtos have only one customerid.
         AddressLabelDto first = aldtos.iterator().next();
@@ -258,8 +257,10 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * If the raw object is not supported by this method an IllegalArguemntException gets thrown.
      * Both root and raw are not allowed to be null.
      */
-    public <T> T create(@NonNull Root root, @NonNull T raw) {
-        Object rootElement = findById(root.getClazz(), root.getId());
+    public <T> T create(Root root, T raw) {
+        Objects.requireNonNull(root, "root must not be null");
+        Objects.requireNonNull(raw, "raw must not be null");
+        Object rootElement = findById(root.clazz, root.id);
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
             ((AddressStash)rootElement).getAddresses().add((Address)raw);
@@ -283,9 +284,10 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      *
      * @throws
      */
-    public void delete(@NonNull Root root, @NonNull Object raw) throws LastDeletionExecption, IllegalArgumentException, IllegalStateException {
-
-        Object rootElement = findById(root.getClazz(), root.getId());
+    public void delete(Root root,Object raw) throws LastDeletionExecption, IllegalArgumentException, IllegalStateException {
+      Objects.requireNonNull(root, "root must not be null");
+        Objects.requireNonNull(raw, "raw must not be null");
+        Object rootElement = findById(root.clazz, root.id);
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
         if ( raw instanceof Address && AddressStash.class.isAssignableFrom(rootElement.getClass()) ) {
             Address address = (Address)raw;
@@ -402,7 +404,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     /**
      * Update object t. t is not allowed to be null.
      */
-    public <T> T update(@NonNull T t) {
+    public <T> T update(T t) {
+        Objects.requireNonNull(t);
         return em.merge(t);
     }
 

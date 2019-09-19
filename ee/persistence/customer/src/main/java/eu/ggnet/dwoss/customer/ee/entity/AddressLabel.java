@@ -25,11 +25,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
-
-import lombok.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.common.ee.GlobalConfig;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.EAGER;
@@ -40,11 +38,8 @@ import static javax.persistence.FetchType.EAGER;
  * @author oliver.guenther
  */
 @Entity
-@EqualsAndHashCode(of = {"id"})
-@NoArgsConstructor
-@Getter
 @SuppressWarnings({"PersistenceUnitPresent"})
-public class AddressLabel implements Serializable {
+public class AddressLabel extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue
@@ -56,24 +51,23 @@ public class AddressLabel implements Serializable {
     @ManyToOne(cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Customer customer;
 
-    @Setter
     @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Company company;
 
-    @Setter
     @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Contact contact;
 
-    @Setter
     @NotNull
     @Valid
     @ManyToOne(fetch = EAGER, cascade = {DETACH, MERGE, PERSIST, REFRESH})
     private Address address;
 
-    @Setter
     @Enumerated
     @NotNull
     private AddressType type;
+
+    public AddressLabel() {
+    }
 
     public AddressLabel(Contact contact, Address address, AddressType type) {
         this.contact = contact;
@@ -88,6 +82,53 @@ public class AddressLabel implements Serializable {
         this.type = type;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+    
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+    
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+    
+    public void setType(AddressType type) {
+        this.type = type;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Customer getCustomer() {
+        return customer;
+    }
+    
+    public Company getCompany() {
+        return company;
+    }
+    
+    public Contact getContact() {
+        return contact;
+    }
+    
+    public Address getAddress() {
+        return address;
+    }
+    
+    public AddressType getType() {
+        return type;
+    }
+    //</editor-fold>
+   
     /**
      * Sets the {@link Customer} in consideration of equalancy and bidirectional
      * behaviour.

@@ -16,25 +16,25 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
-import java.util.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.Arrays;
 
 /**
  * Countries as Enum
  *
  * @author oliver.guenther
  */
-@AllArgsConstructor
-@Getter
 public enum Country {
 
     GERMANY("Deutschland","DE"),AUSTRIA("Östreich","AT");
     
-    private final String countryName;
+    public final String countryName;
     
-    private final String isoCode;
+    public final String isoCode;
+
+    private Country(String countryName, String isoCode) {
+        this.countryName = countryName;
+        this.isoCode = isoCode;
+    }
     
     /**
      * Returns a country by iso code or Germany as default.
@@ -45,5 +45,7 @@ public enum Country {
     public static Country ofIsoCode(String code) {
         return Arrays.asList(values()).stream().filter(c -> c.isoCode.equals(code)).findAny().orElse(GERMANY);
     }
+   
+    
     
 }

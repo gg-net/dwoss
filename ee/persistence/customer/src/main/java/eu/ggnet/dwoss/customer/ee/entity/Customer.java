@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
@@ -36,8 +37,6 @@ import eu.ggnet.dwoss.customer.ee.entity.stash.ContactStash;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
-
-import lombok.*;
 
 import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
@@ -57,14 +56,9 @@ import static javax.persistence.FetchType.EAGER;
  * @author pascal.perau
  */
 @Entity
-@ToString(exclude = {"companies", "contacts", "mandatorMetadata"})
-@EqualsAndHashCode(of = {"id"})
-@NoArgsConstructor
 @Indexed
 @SuppressWarnings({"FieldMayBeFinal", "PersistenceUnitPresent"})
-public class Customer implements Serializable, EagerAble, ContactStash {
-
-    private static final long serialVersionUID = 1L;
+public class Customer extends BaseEntity implements Serializable, EagerAble, ContactStash {
 
     /**
      * Fields for detailed Search.
@@ -101,18 +95,15 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     }
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
-    @Getter
     @Version
     private short optLock;
 
     /**
      * A list of {@link Company}<code>s</code> represented by the customer.
      */
-    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -121,7 +112,6 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     /**
      * All contacts association with the customer.
      */
-    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     @IndexedEmbedded
@@ -130,40 +120,28 @@ public class Customer implements Serializable, EagerAble, ContactStash {
     /**
      * Optional Mandator Metadate.
      */
-    @Getter
     @NotNull
     @OneToMany(cascade = ALL)
     private List<MandatorMetadata> mandatorMetadata = new ArrayList<>();
 
-    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<CustomerFlag> flags = new HashSet<>();
 
-    @Getter
-    @Setter
     private Source source;
 
-    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyEnumerated
     private Map<ExternalSystem, String> additionalCustomerIds = new EnumMap<>(ExternalSystem.class);
 
-    @Getter
-    @Setter
     private String keyAccounter;  // Null is ok.
 
     @Lob
     @Column(length = 65535)
-    @Getter
-    @Setter
     @Field
-    @Boost(0.5f)
     private String comment;
 
-    @Getter
-    @Setter
     @OneToOne
     private Communication defaultEmailCommunication;
 
@@ -172,6 +150,74 @@ public class Customer implements Serializable, EagerAble, ContactStash {
      */
     @OneToMany(orphanRemoval = true, cascade = ALL, fetch = EAGER, mappedBy = "customer")
     List<AddressLabel> addressLabels = new ArrayList<>();
+ 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public Source getSource() {
+        return source;
+    }
+    
+    public void setSource(Source source) {
+        this.source = source;
+    }
+    
+    public Map<ExternalSystem, String> getAdditionalCustomerIds() {
+        return additionalCustomerIds;
+    }
+    
+    public void setAdditionalCustomerIds(Map<ExternalSystem, String> additionalCustomerIds) {
+        this.additionalCustomerIds = additionalCustomerIds;
+    }
+    
+    public String getKeyAccounter() {
+        return keyAccounter;
+    }
+    
+    public void setKeyAccounter(String keyAccounter) {
+        this.keyAccounter = keyAccounter;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public Communication getDefaultEmailCommunication() {
+        return defaultEmailCommunication;
+    }
+    
+    public void setDefaultEmailCommunication(Communication defaultEmailCommunication) {
+        this.defaultEmailCommunication = defaultEmailCommunication;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public List<Company> getCompanies() {
+        return companies;
+    }
+    
+    @Override
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+    
+    public List<MandatorMetadata> getMandatorMetadata() {
+        return mandatorMetadata;
+    }
+    
+    public Set<CustomerFlag> getFlags() {
+        return flags;
+    }
+    //</editor-fold>
 
     /**
      * Returns the Metadata based on the matchcode, may return null.
@@ -733,4 +779,11 @@ public class Customer implements Serializable, EagerAble, ContactStash {
             if ( without.contains(next) ) iterator.remove();
         }
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" + "id=" + id + ", optLock=" + optLock + ", flags=" + flags + ", source=" + source + ", additionalCustomerIds=" + additionalCustomerIds
+                + ", keyAccounter=" + keyAccounter + ", comment=" + comment + ", defaultEmailCommunication=" + defaultEmailCommunication + ", addressLabels=" + addressLabels + '}';
+    }
+    
 }

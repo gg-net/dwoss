@@ -29,9 +29,6 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
-import lombok.NonNull;
-import lombok.Value;
-
 /**
  *
  * @author jens.papenhagen
@@ -42,12 +39,22 @@ public interface CustomerAgent extends RemoteAgent {
     /**
      * Idicates a root element for create or delete.
      */
-    @Value
     public static class Root implements Serializable {
 
-        private final Class<?> clazz;
+        public final Class<?> clazz;
 
-        private final long id;
+        public final long id;
+
+        public Root(Class<?> clazz, long id) {
+            this.clazz = Objects.requireNonNull(clazz,"clazz must not be null");
+            this.id = id;
+        }
+        
+        @Override
+        public String toString() {
+            return "Root{" + "clazz=" + clazz + ", id=" + id + '}';
+        }
+        
     }
 
     /**
@@ -107,7 +114,7 @@ public interface CustomerAgent extends RemoteAgent {
      * @return 
      * @throws IllegalArgumentException if the collection is empty.
      */
-    Customer autostore(@NonNull Collection<AddressLabelDto> aldtos) throws IllegalArgumentException;
+    Customer autostore(Collection<AddressLabelDto> aldtos) throws IllegalArgumentException;
     
     /**
      * Returns a html representation of the customer enhanced by the actual active mandator.

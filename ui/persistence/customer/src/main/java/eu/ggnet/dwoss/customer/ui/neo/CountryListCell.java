@@ -30,7 +30,7 @@ public class CountryListCell extends ListCell<Country> {
     protected void updateItem(Country item, boolean empty) {
         super.updateItem(item, empty);
         if ( !empty && item != null ) {
-            setText(item.getCountryName());
+            setText(item.countryName);
         } else {
             setText(null);
         }

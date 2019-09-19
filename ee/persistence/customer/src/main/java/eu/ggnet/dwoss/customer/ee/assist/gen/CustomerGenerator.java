@@ -25,8 +25,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.util.gen.*;
 
-import lombok.*;
-
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
 
@@ -53,27 +51,6 @@ public class CustomerGenerator {
         }
     }
 
-    /**
-     * Flags for the generator instead of a million extra methods.
-     */
-    @Builder
-    @Getter
-    public static class Assure {
-
-        /**
-         * Indicates, that only simple customers must be generated.
-         */
-        @Builder.Default
-        private final boolean simple = false;
-
-        /**
-         * For all supplied strings, metadata will be generated. Null or empty indicates no metadata generation.
-         */
-        @Builder.Default
-        private final List<String> mandatorMetadataMatchCodes = null;
-
-    }
-
     private final NameGenerator GEN = new NameGenerator();
 
     /**
@@ -82,17 +59,16 @@ public class CustomerGenerator {
      * @param assure the assurence
      * @return the new customer
      */
-    public Customer makeCustomer(@NonNull Assure assure) {
+    public Customer makeCustomer(Assure assure) {
+        Objects.requireNonNull(assure, "assure must not be null");
         Customer c = null;
-        if ( assure.isSimple() ) {
+        if ( assure.simple() ) {
             c = R.nextBoolean() ? makeSimpleConsumerCustomer() : makeSimpleBussinesCustomer();
         } else {
             c = makeCustomer();
         }
-        if ( assure.getMandatorMetadataMatchCodes() != null && assure.getMandatorMetadataMatchCodes().size() > 0 ) {
-            for (String mc : assure.getMandatorMetadataMatchCodes()) {
-                c.getMandatorMetadata().add(makeMandatorMetadata(mc));
-            }
+        for (String mc : assure.mandatorMetadataMatchCodes()) {
+            c.getMandatorMetadata().add(makeMandatorMetadata(mc));
         }
         c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
         return c;

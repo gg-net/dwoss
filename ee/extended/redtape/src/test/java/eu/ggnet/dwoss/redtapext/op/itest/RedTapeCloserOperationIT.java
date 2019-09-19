@@ -1,42 +1,40 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-
 import java.util.*;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator.Assure;
+import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
+import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
-import eu.ggnet.dwoss.redtapext.op.itest.support.*;
+import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.redtapext.op.itest.support.RedTapeCloserOpertaionItBean;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 
-import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.CANCELED;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
+import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.CANCELED;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -176,7 +174,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
      * - 1 unit without stockunit blocker -> closeable
      * */
     private List<Long> makeBlockerCustomerAndBlockerDossiers() {
-        long customerId = customerGenerator.makeCustomer(Assure.builder().simple(true).build());
+        long customerId = customerGenerator.makeCustomer(new Assure.Builder().simple(true).build());
         customerService.updateCustomerFlags(customerId, EnumSet.of(CustomerFlag.SYSTEM_CUSTOMER));
 
         // In closable state

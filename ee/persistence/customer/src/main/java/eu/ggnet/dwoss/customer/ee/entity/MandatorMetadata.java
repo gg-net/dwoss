@@ -17,17 +17,17 @@
 package eu.ggnet.dwoss.customer.ee.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import lombok.*;
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
 /**
  * Mandator Specific Metadata.
@@ -35,44 +35,10 @@ import lombok.*;
  * @author oliver.guenther
  */
 @Entity
-@ToString
-@EqualsAndHashCode(of = "id")
-public class MandatorMetadata implements Serializable {
-
-    /**
-     * Helper class to get e View of the metadata, filling all null values with the supplied defaults.
-     */
-    @Value
-    public static class MergedView {
-
-        private final MandatorMetadata metadata;
-
-        private final DefaultCustomerSalesdata defaults;
-
-        public ShippingCondition getShippingCondition() {
-            if ( metadata == null || metadata.getShippingCondition() == null ) return defaults.shippingCondition();
-            return metadata.getShippingCondition();
-        }
-
-        public PaymentCondition getPaymentCondition() {
-            if ( metadata == null || metadata.getPaymentCondition() == null ) return defaults.paymentCondition();
-            return metadata.getPaymentCondition();
-        }
-
-        public PaymentMethod getPaymentMethod() {
-            if ( metadata == null || metadata.getPaymentMethod() == null ) return defaults.paymentMethod();
-            return metadata.getPaymentMethod();
-        }
-
-        public Set<SalesChannel> getAllowedSalesChannels() {
-            if ( metadata == null || metadata.getAllowedSalesChannels().isEmpty() ) return defaults.allowedSalesChannels();
-            return metadata.getAllowedSalesChannels();
-        }
-
-    }
+@SuppressWarnings("PersistenceUnitPresent")
+public class MandatorMetadata extends BaseEntity implements Serializable {
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
@@ -80,35 +46,26 @@ public class MandatorMetadata implements Serializable {
     private short optLock;
 
     @NotNull
-    @Getter
-    @Setter
     private String mandatorMatchcode;
 
     /**
      * The default {@link ShippingCondition} of the customer.
      */
-    @Setter
-    @Getter
     @Enumerated
     private ShippingCondition shippingCondition;
 
     /**
      * The default {@link PaymentCondition} of the customer.
      */
-    @Setter
-    @Getter
     @Enumerated
     private PaymentCondition paymentCondition;
 
     /**
      * The default {@link PaymentMethod} of the customer.
      */
-    @Setter
-    @Getter
     @Enumerated
     private PaymentMethod paymentMethod;
 
-    @Getter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<SalesChannel> allowedSalesChannels = new HashSet<>();
@@ -119,6 +76,53 @@ public class MandatorMetadata implements Serializable {
 
     public MandatorMetadata() {
     }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public String getMandatorMatchcode() {
+        return mandatorMatchcode;
+    }
+    
+    public void setMandatorMatchcode(String mandatorMatchcode) {
+        this.mandatorMatchcode = mandatorMatchcode;
+    }
+    
+    public ShippingCondition getShippingCondition() {
+        return shippingCondition;
+    }
+    
+    public void setShippingCondition(ShippingCondition shippingCondition) {
+        this.shippingCondition = shippingCondition;
+    }
+    
+    public PaymentCondition getPaymentCondition() {
+        return paymentCondition;
+    }
+    
+    public void setPaymentCondition(PaymentCondition paymentCondition) {
+        this.paymentCondition = paymentCondition;
+    }
+    
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+    
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Set<SalesChannel> getAllowedSalesChannels() {
+        return allowedSalesChannels;
+    }
+    //</editor-fold>
 
     /**
      * Returns true if at least on element is set.
@@ -151,7 +155,8 @@ public class MandatorMetadata implements Serializable {
      * @param defaultCsd the defaults
      * @return ture if contents equal or cmd is null.
      */
-    public boolean isSameAs(@NonNull DefaultCustomerSalesdata defaultCsd) {
+    public boolean isSameAs(DefaultCustomerSalesdata defaultCsd) {
+        Objects.requireNonNull(defaultCsd,"DefaultCustomerSalesdata must not be null");
         if ( !defaultCsd.allowedSalesChannels().equals(getAllowedSalesChannels()) ) return false;
         if ( getPaymentCondition() != null && defaultCsd.paymentCondition() != getPaymentCondition() ) return false;
         if ( getPaymentMethod() != null && defaultCsd.paymentMethod() != getPaymentMethod() ) return false;
@@ -164,11 +169,16 @@ public class MandatorMetadata implements Serializable {
      *
      * @param defaultCsd
      */
-    public void normalize(@NonNull DefaultCustomerSalesdata defaultCsd) {
+    public void normalize(DefaultCustomerSalesdata defaultCsd) {
+        Objects.requireNonNull(defaultCsd,"DefaultCustomerSalesdata must not be null");
         if ( defaultCsd.allowedSalesChannels().equals(getAllowedSalesChannels()) ) getAllowedSalesChannels().clear();
         if ( defaultCsd.paymentCondition() == getPaymentCondition() ) setPaymentCondition(null);
         if ( defaultCsd.paymentMethod() == getPaymentMethod() ) setPaymentMethod(null);
         if ( defaultCsd.shippingCondition() == getShippingCondition() ) setShippingCondition(null);
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

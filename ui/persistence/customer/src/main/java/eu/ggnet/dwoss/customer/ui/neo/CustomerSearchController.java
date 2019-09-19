@@ -16,10 +16,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.core.ui.ClosedListener;
-
 import java.net.URL;
 import java.util.*;
 
@@ -117,10 +113,10 @@ public class CustomerSearchController implements Initializable, FxController, Cl
                         setText("");
                         setGraphic(null);
                     } else {
-                        Text id = new Text(item.getId() + " ");
+                        Text id = new Text(item.id + " ");
                         id.setStyle("-fx-font-weight: bold;");
 
-                        Text description = new Text(item.getShortDescription());
+                        Text description = new Text(item.shortDescription);
                         description.setStyle("-fx-font-weight: regular");
                         TextFlow flow = new TextFlow(id, description);
 
@@ -229,7 +225,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer selectedCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
-                Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.getId())), () -> new HtmlPane());
+                Ui.build(statusHbox).title("Kunde mit Mandant").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsMandatorHtml(selectedCustomer.id)), () -> new HtmlPane());
             });
         });
 
@@ -238,7 +234,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer selectedCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
-                Ui.build(statusHbox).title("Kunden Ansicht").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsHtml(selectedCustomer.getId())), () -> new HtmlPane());
+                Ui.build(statusHbox).title("Kunden Ansicht").fx().show(() -> Css.toHtml5WithStyle(AGENT.findCustomerAsHtml(selectedCustomer.id)), () -> new HtmlPane());
             });
         });
 
@@ -246,7 +242,7 @@ public class CustomerSearchController implements Initializable, FxController, Cl
             if ( resultListView.getSelectionModel().getSelectedItem() == null ) return;
             PicoCustomer picoCustomer = resultListView.getSelectionModel().getSelectedItem();
             Ui.exec(() -> {
-                CustomerConnectorFascade.edit(Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.getId())), UiParent.of(resultListView), () -> {
+                CustomerConnectorFascade.edit(Ui.progress().call(() -> AGENT.findByIdEager(Customer.class, picoCustomer.id)), UiParent.of(resultListView), () -> {
                     // TODO: We could reload the picocustomer, which was changed and updaten the search list.
                 });
             });

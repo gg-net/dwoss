@@ -27,11 +27,9 @@ import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-
-import lombok.*;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -46,21 +44,17 @@ import static javax.persistence.CascadeType.ALL;
  * @author oliver.guenther
  */
 @Entity
-@ToString(exclude = {"addresses", "communications", "contacts"})
-@EqualsAndHashCode(of = {"id"})
 @Indexed
-public class Company implements Serializable, AddressStash, ContactStash, CommunicationStash, EagerAble {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Company extends BaseEntity implements Serializable, AddressStash, ContactStash, CommunicationStash, EagerAble {
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
     /**
      * Name of the company.
      */
-    @Getter
-    @Setter
     @NotNull
     @Field
     private String name;
@@ -68,12 +62,8 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     /**
      * The finance ledger of this company.
      */
-    @Getter
-    @Setter
     private int ledger;
 
-    @Getter
-    @Setter
     @Size(max = 255)
     private String taxId;
 
@@ -83,7 +73,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
-    @Getter
     private final List<Contact> contacts = new ArrayList<>();
 
     /**
@@ -92,7 +81,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
-    @Getter
     private final List<Address> addresses = new ArrayList<>();
 
     /**
@@ -101,7 +89,6 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
     @OneToMany(cascade = ALL)
     @NotNull
     @IndexedEmbedded
-    @Getter
     private final List<Communication> communications = new ArrayList<>();
 
     public Company() {
@@ -116,13 +103,58 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
         this.id = id;
     }
 
-    @Builder
     public Company(String name, int ledger, String taxId) {
         this.name = name;
         this.ledger = ledger;
         this.taxId = taxId;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public int getLedger() {
+        return ledger;
+    }
+    
+    public void setLedger(int ledger) {
+        this.ledger = ledger;
+    }
+    
+    public String getTaxId() {
+        return taxId;
+    }
+    
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    @Override
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+    
+    @Override
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+    
+    @Override
+    public List<Communication> getCommunications() {
+        return communications;
+    }    
+    //</editor-fold>
+    
     /**
      * Html representation of the class.
      *
@@ -132,7 +164,7 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
         StringBuilder sb = new StringBuilder();
         sb.append(name);
         if ( taxId != null || ledger > 0 ) sb.append("<br />");
-        if ( taxId != null ) sb.append("TaxId: " + taxId);
+        if ( taxId != null ) sb.append("TaxId: ").append(taxId);
         if ( taxId != null && ledger > 0 ) sb.append(", ");
         if ( ledger > 0 ) sb.append("FiBu-Konto: ").append(ledger);
         if ( taxId != null || ledger > 0 ) sb.append("<br />");
@@ -227,4 +259,10 @@ public class Company implements Serializable, AddressStash, ContactStash, Commun
         communications.size();
         addresses.size();
     }
+
+    @Override
+    public String toString() {
+        return "Company{" + "id=" + id + ", name=" + name + ", ledger=" + ledger + ", taxId=" + taxId + '}';
+    }
+   
 }

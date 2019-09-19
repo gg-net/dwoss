@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.customer.ee.entity.stash.AddressStash;
 import eu.ggnet.dwoss.customer.ee.entity.stash.CommunicationStash;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
@@ -46,7 +47,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 @Indexed
 @SuppressWarnings("PersistenceUnitPresent")
-public class Contact implements Serializable, AddressStash, CommunicationStash, EagerAble {
+public class Contact extends BaseEntity implements Serializable, AddressStash, CommunicationStash, EagerAble {
 
     public enum Sex {
 
@@ -126,7 +127,7 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
         this.lastName = lastName;
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Getter/Setter">
+    // <editor-fold defaultstate="collapsed" desc="getter/setter">
     @Override
     public List<Address> getAddresses() {
         return addresses;
@@ -252,27 +253,9 @@ public class Contact implements Serializable, AddressStash, CommunicationStash, 
         getCommunications().size();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="hashCode/equals/toString">
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( this == obj ) return true;
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final Contact other = (Contact)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
-
     @Override
     public String toString() {
         return "Contact{" + "id=" + id + ", optLock=" + optLock + ", sex=" + sex + ", title=" + title + ", firstName=" + firstName + ", lastName=" + lastName + '}';
     }
-    // </editor-fold>
+
 }

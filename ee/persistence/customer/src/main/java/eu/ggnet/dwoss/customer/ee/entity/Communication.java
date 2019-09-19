@@ -23,10 +23,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
-import lombok.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 /**
  * Specifies a way of communication.
@@ -34,12 +35,9 @@ import lombok.*;
  * @author oliver.guenther
  */
 @Entity
-@Getter
-@ToString
-@EqualsAndHashCode(of = {"id"})
-@NoArgsConstructor
 @Indexed
-public class Communication implements Serializable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Communication extends BaseEntity implements Serializable {
 
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
@@ -85,7 +83,6 @@ public class Communication implements Serializable {
     /**
      * The type of communication.
      */
-    @Setter
     @NotNull
     @Enumerated
     private Type type;
@@ -94,11 +91,13 @@ public class Communication implements Serializable {
      * The value for the {@link Type} of communication.
      * I.e. Phone: 0123 456789, E-Mail: max.mustermann@mustermail.de
      */
-    @Setter
     @NotNull
     @Field
     private String identifier;
 
+    public Communication() {
+    }
+    
     /**
      * Tryout constructor, do not use in productive.
      *
@@ -117,6 +116,33 @@ public class Communication implements Serializable {
         this.identifier = identifier;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Type getType() {
+        return type;
+    }
+    
+    public String getIdentifier() {
+        return identifier;
+    }
+    
+    public void setType(Type type) {
+        this.type = type;
+    }
+    
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+    //</editor-fold>
+    
     /**
      * Html representation of the class.
      *
@@ -147,6 +173,11 @@ public class Communication implements Serializable {
     public String toSingleLineString() {
         String toSingleLine = type.name() + " " + identifier;
         return toSingleLine;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

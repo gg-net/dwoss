@@ -32,8 +32,6 @@ import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 
-import lombok.Getter;
-
 /**
  * This Singleton is to create and recreate the SearchIndex in Memory.
  * <p>
@@ -52,8 +50,12 @@ public class CustomerIndexManagerBean implements CustomerIndexManager {
     @Inject
     private MonitorFactory monitorFactory;
 
-    @Getter
     private boolean active = false;
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
 
     @Schedule(hour = "2",persistent = false)
     @Override
