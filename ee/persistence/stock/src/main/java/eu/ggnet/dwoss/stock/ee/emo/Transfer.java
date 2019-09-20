@@ -16,49 +16,58 @@
  */
 package eu.ggnet.dwoss.stock.ee.emo;
 
-import java.util.*;
+import java.util.List;
 
-import javax.validation.constraints.*;
+import org.inferred.freebuilder.FreeBuilder;
 
-import lombok.Value;
-import lombok.Builder;
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Parameter Class for {@link StockTransactionEmo#prepare(eu.ggnet.dwoss.stock.emo.Transfer, eu.ggnet.saft.api.progress.IMonitor) }.
  * <p>
  * @author oliver.guenther
  */
-@Value
-@Builder
-public class Transfer {
+@FreeBuilder
+public interface Transfer {
 
+    class Builder extends Transfer_Builder {
+        
+        @Override
+        public Transfer build() {
+            checkArgument(stockUnitIds().size() > 0, "stockUnitIds must not be empty");
+            checkArgument(maxTransactionSize() > 0, "maxTransactionSize must be > 0");
+            return super.build();
+        }
+        
+    }
     /**
      * The stockIds to transfer.
+     * @return stockunit ids
      */
-    @NotNull
-    @Size(min = 1)
-    private final List<Integer> stockUnitIds;
+    List<Integer> stockUnitIds();
 
     /**
      * The id of the destination stock.
+     * @return destination stock id
      */
-    private final int destinationStockId;
+    int destinationStockId();
 
     /**
      * A optional arranger.
+     * @return arranger
      */
-    private final String arranger;
+    String arranger();
 
     /**
      * A optional comment.
+     * @return comment
      */
-    private final String comment;
+    String comment();
 
     /**
      * The maximum amount of units a trasaction should hold.
+     * @return the max transcation size
      */
-    @Min(1)
-    @Max(9999)
-    private final int maxTransactionSize;
+    int maxTransactionSize();
 
 }

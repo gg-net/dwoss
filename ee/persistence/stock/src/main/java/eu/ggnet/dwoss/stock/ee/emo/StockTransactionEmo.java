@@ -80,16 +80,16 @@ public class StockTransactionEmo {
      * @throws UserInfoException
      */
     public SortedMap<Integer, String> prepare(Transfer t, IMonitor partialMonitor) throws UserInfoException {
-        SubMonitor m = SubMonitor.convert(partialMonitor, "Preparing Transfer Transaciton", (t.getStockUnitIds().size() * 2) + 15);
+        SubMonitor m = SubMonitor.convert(partialMonitor, "Preparing Transfer Transaciton", (t.stockUnitIds().size() * 2) + 15);
         m.start();
         ValidationUtil.validate(t);
 
-        Stock destination = em.find(Stock.class, t.getDestinationStockId());
+        Stock destination = em.find(Stock.class, t.destinationStockId());
         Stock source = null;
 
         List<StockUnit> unhandledUnits = new ArrayList<>();
 
-        for (int unitId : t.getStockUnitIds()) {
+        for (int unitId : t.stockUnitIds()) {
             m.worked(1, "Loading StockUnit(" + unitId + ")");
             StockUnit stockUnit = em.find(StockUnit.class, unitId);
             if ( stockUnit == null ) throw new UserInfoException("StockUnit " + unitId + " nicht vorhanden.");
@@ -101,18 +101,18 @@ public class StockTransactionEmo {
         L.debug("Unhandeled units {}", unhandledUnits.stream().map(StockUnit::toSimple).collect(Collectors.joining(",")));
 
         SortedMap<Integer, String> result = new TreeMap<>();
-        for (int i = 0; i < unhandledUnits.size(); i += t.getMaxTransactionSize()) {
-            List<StockUnit> subList = unhandledUnits.subList(i, Math.min(unhandledUnits.size(), i + t.getMaxTransactionSize()));
+        for (int i = 0; i < unhandledUnits.size(); i += t.maxTransactionSize()) {
+            List<StockUnit> subList = unhandledUnits.subList(i, Math.min(unhandledUnits.size(), i + t.maxTransactionSize()));
             L.debug("Eplizit Transfer {}", subList.stream().map(StockUnit::toSimple).collect(Collectors.joining(",")));
             result.putAll(
                     prepareExplicitTransfer(
                             subList,
                             destination,
-                            t.getArranger(),
-                            t.getComment()
+                            t.arranger(),
+                            t.comment()
                     ));
 
-            m.worked(t.getMaxTransactionSize());
+            m.worked(t.maxTransactionSize());
         }
         m.message("committing");
         m.finish();

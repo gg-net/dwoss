@@ -172,6 +172,10 @@ public class LogicTransactionEmo {
             else logicTransaction.add(unit);
         }
         L.debug("Adding: Result = {}", logicTransaction);
-        return new EquilibrationResult(adding, removal, logicTransaction);
+        return new EquilibrationResult.Builder()
+                .addAllAdded(adding)
+                .addAllRemoved(removal)
+                .transaction(logicTransaction)
+                .build();
     }
 }

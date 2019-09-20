@@ -94,18 +94,17 @@ public abstract class RedTapeWorkflow {
      * <p>
      * @param document
      * @param remove   if true everything is removed.
-     * @return
      */
     protected void equilibrateOrRemoveLogicTransaction(Document document, boolean remove) {
         LogicTransactionEmo ltEmo = new LogicTransactionEmo(stockEm);
         EquilibrationResult equilibrate = ltEmo.equilibrate(document.getDossier().getId(), remove ? new ArrayList<>() : document.getPositionsUniqueUnitIds());
         if ( equilibrate == null ) return;
         L.debug("Equilibrated Stock LogicTransaction: {}", equilibrate);
-        for (Integer uuid : equilibrate.getAdded()) {
+        for (Integer uuid : equilibrate.added()) {
             uniqueUnitEm.find(UniqueUnit.class, uuid).addHistory(
                     "Added to Dossier " + document.getDossier().getIdentifier() + " of Customer " + document.getDossier().getCustomerId() + " by " + arranger);
         }
-        for (Integer uuid : equilibrate.getRemoved()) {
+        for (Integer uuid : equilibrate.removed()) {
             uniqueUnitEm.find(UniqueUnit.class, uuid).addHistory(
                     "Removed from Dossier " + document.getDossier().getIdentifier() + " of Customer " + document.getDossier().getCustomerId() + " by " + arranger);
         }

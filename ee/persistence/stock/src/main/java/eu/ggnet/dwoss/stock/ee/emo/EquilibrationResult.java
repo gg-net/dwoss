@@ -16,32 +16,37 @@
  */
 package eu.ggnet.dwoss.stock.ee.emo;
 
-import java.util.NavigableSet;
+import java.util.Set;
+
+import org.inferred.freebuilder.FreeBuilder;
 
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-
-import lombok.Value;
 
 /**
  * Result for Equilibration.
  * <p>
  * @author oliver.guenther
  */
-@Value
-public class EquilibrationResult {
+@FreeBuilder
+public interface EquilibrationResult {
 
+    class Builder extends EquilibrationResult_Builder {};
+    
     /**
      * UniqueUnit.ids referencing StockUnits which were actually added.
+     * @return 
      */
-    private final NavigableSet<Integer> added;
+    Set<Integer> added();
 
     /**
      * UniqueUnit.ids referencing StockUnits which were actually removed.
+     * @return 
      */
-    private final NavigableSet<Integer> removed;
+    Set<Integer> removed();
 
     /**
      * The resulting logic transaction.
+     * @return 
      */
-    private final LogicTransaction transaction;
+    LogicTransaction transaction();
 }

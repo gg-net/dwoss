@@ -16,41 +16,29 @@
  */
 package eu.ggnet.dwoss.receipt.ee.reporting;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.stock.ee.assist.StockSupport;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnitSupport;
+import eu.ggnet.dwoss.stock.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.lucidcalc.CBorder;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.STableColumn;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-
 import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
-import static java.awt.Color.*;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 
 /**
  * Operation for Audit Activity of the Stock.
@@ -62,10 +50,12 @@ import static java.awt.Color.*;
 public class AuditReporterOperation implements AuditReporter {
 
     @Inject
-    private UniqueUnitSupport uus;
+    @UniqueUnits
+    private EntityManager uuem;
 
     @Inject
-    private StockSupport stocks;
+    @Stocks
+    private EntityManager sem;
 
     @Inject
     private MonitorFactory monitorFactory;
@@ -80,11 +70,11 @@ public class AuditReporterOperation implements AuditReporter {
         SubMonitor m = monitorFactory.newSubMonitor("AuditReport", 100);
         m.message("loading UniqueUnits");
         m.start();
-        List<StockTransaction> rollInTransactions = new StockTransactionEao(stocks.getEntityManager())
+        List<StockTransaction> rollInTransactions = new StockTransactionEao(sem)
                 .findByTypeAndStatus(StockTransactionType.ROLL_IN, StockTransactionStatusType.PREPARED);
         List<Integer> uuIds = toUniqueUnitIds(rollInTransactions);
 
-        List<UniqueUnit> uniqueUnits = new UniqueUnitEao(uus.getEntityManager()).findByIds(uuIds);
+        List<UniqueUnit> uniqueUnits = new UniqueUnitEao(uuem).findByIds(uuIds);
 
         m.worked(5, "preparing Document");
         List<Object[]> rows = new ArrayList<>();
@@ -132,7 +122,7 @@ public class AuditReporterOperation implements AuditReporter {
         SubMonitor m = monitorFactory.newSubMonitor("AuditReport", 100);
         m.message("loading UniqueUnits");
         m.start();
-        List<UniqueUnit> uniqueUnits = new UniqueUnitEao(uus.getEntityManager()).findBetweenInputDates(start, end);
+        List<UniqueUnit> uniqueUnits = new UniqueUnitEao(uuem).findBetweenInputDates(start, end);
 
         m.worked(5, "preparing Document");
         List<Object[]> rows = new ArrayList<>();

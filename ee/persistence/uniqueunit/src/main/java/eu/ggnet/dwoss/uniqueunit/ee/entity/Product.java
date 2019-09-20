@@ -24,6 +24,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+import org.apache.commons.lang3.builder.ToStringExclude;
+
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.TwoDigits;
@@ -113,6 +115,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     private Set<Flag> flags = EnumSet.noneOf(Flag.class);
 
     // TODO: Add validation, that you cannot remove a Product if it has one or more units
+    @ToStringExclude
     @NotNull
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
     List<UniqueUnit> units = new ArrayList<>();
@@ -130,6 +133,7 @@ public class Product extends BaseEntity implements Serializable, EagerAble, Comp
     @SuppressWarnings("FieldMayBeFinal")
     private Map<PriceType, Double> prices = new EnumMap<>(PriceType.class);
 
+    @ToStringExclude
     @NotNull
     @OneToMany(cascade = ALL)
     @SuppressWarnings("FieldMayBeFinal")

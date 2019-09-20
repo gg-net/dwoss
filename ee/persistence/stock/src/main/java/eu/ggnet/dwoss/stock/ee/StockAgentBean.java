@@ -22,13 +22,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
-import eu.ggnet.dwoss.util.persistence.entity.Identifiable;
 
 /**
  * The StockAgent Implementation.
@@ -126,10 +126,9 @@ public class StockAgentBean extends AbstractAgentBean implements StockAgent {
     @Override
     public <T> void delete(T t) {
         if ( t == null ) throw new RuntimeException("T was Null in delete.");
-        if ( t instanceof Identifiable ) {
-            Identifiable id = (Identifiable)t;
-            Identifiable find = em.find(id.getClass(), id.getId());
-            em.remove(find);
+        if ( t instanceof BaseEntity ) {
+            BaseEntity id = (BaseEntity)t;
+            em.remove(em.find(id.getClass(), id.getId()));
         } else {
             em.remove(t);
         }

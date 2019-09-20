@@ -27,11 +27,6 @@
             <artifactId>slf4j-nop</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 
 </project>

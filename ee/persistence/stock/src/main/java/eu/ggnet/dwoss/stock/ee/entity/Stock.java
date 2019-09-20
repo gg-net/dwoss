@@ -26,22 +26,18 @@ import javax.validation.constraints.Size;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 
-import lombok.*;
-
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 
 /**
  * Represents a physical stock.
- * <p/>
+ * <p>
  * @has n - 1 Stock.ID
  */
 @Entity
-@EqualsAndHashCode(of = "id")
-@ToString(exclude = {"units", "stockLocations"})
+@SuppressWarnings("PersistenceUnitPresent")
 public class Stock implements Serializable {
 
     @Id
-    @Getter
     private int id;
 
     @Version
@@ -49,13 +45,9 @@ public class Stock implements Serializable {
 
     @NotNull
     @Size(min = 5)
-    @Setter
-    @Getter
     private String name;
 
     @NotNull
-    @Setter
-    @Getter
     private SalesChannel primaryChannel = UNKNOWN;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "stock")
@@ -74,6 +66,30 @@ public class Stock implements Serializable {
     public Stock(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SalesChannel getPrimaryChannel() {
+        return primaryChannel;
+    }
+
+    public void setPrimaryChannel(SalesChannel primaryChannel) {
+        this.primaryChannel = primaryChannel;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public short getOptLock() {
+        return optLock;
     }
 
     /**
@@ -135,4 +151,28 @@ public class Stock implements Serializable {
         return new PicoStock(id, name);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of if">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + this.id;
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final Stock other = (Stock)obj;
+        if ( this.id != other.id ) return false;
+        return true;
+    }
+    //</editor-fold>
+
+    @Override
+    public String toString() {
+        return "Stock{" + "id=" + id + ", optLock=" + optLock + ", name=" + name + ", primaryChannel=" + primaryChannel + '}';
+    }
+    
 }

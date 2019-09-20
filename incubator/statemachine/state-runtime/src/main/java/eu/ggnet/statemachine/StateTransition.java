@@ -19,16 +19,12 @@ package eu.ggnet.statemachine;
 import java.io.Serializable;
 import java.util.Objects;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 /**
  * This is a Transition, which changes an Instance.
  *
  * @author oliver.guenther
  */
-@EqualsAndHashCode(of = "name")
-@Getter
 public abstract class StateTransition<T> implements Serializable {
 
     private final String name;
@@ -56,6 +52,37 @@ public abstract class StateTransition<T> implements Serializable {
      */
     public abstract void apply(T instance);
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getToolTip() {
+        return toolTip;
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of name">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final StateTransition<?> other = (StateTransition<?>)obj;
+        if ( !Objects.equals(this.name, other.name) ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
     @Override
     public String toString() {
         return "{" + name + '}';

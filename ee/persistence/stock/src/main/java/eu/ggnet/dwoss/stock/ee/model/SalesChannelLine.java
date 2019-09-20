@@ -16,22 +16,23 @@
  */
 package eu.ggnet.dwoss.stock.ee.model;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 
-import lombok.*;
-import lombok.Builder;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /**
  *
  * @author oliver.guenther
  */
-@Getter
-@Setter
-@ToString
+/*
+TODO: Convert this class to freebuilder or something completely different
+As u can see in the swing Ui components, the some setters are used. So we still need a pojo.
+*/
 public class SalesChannelLine implements Serializable {
 
     // Refactor to stockUnitId;
@@ -57,8 +58,7 @@ public class SalesChannelLine implements Serializable {
 
     private String comment;
 
-    @Builder
-    private SalesChannelLine(int unitId, String refurbishedId, String description, String stockName, double retailerPrice, double customerPrice, SalesChannel originalSalesChannel, SalesChannel salesChannel, int stockId, Stock destinationStock, String comment) {
+    public SalesChannelLine(int unitId, String refurbishedId, String description, String stockName, double retailerPrice, double customerPrice, SalesChannel originalSalesChannel, SalesChannel salesChannel, int stockId, Stock destinationStock, String comment) {
         this.unitId = unitId;
         this.refurbishedId = refurbishedId;
         this.description = description;
@@ -90,4 +90,85 @@ public class SalesChannelLine implements Serializable {
         return originalSalesChannel != salesChannel;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public void setStockName(String stockName) {
+        this.stockName = stockName;
+    }
+
+    public double getRetailerPrice() {
+        return retailerPrice;
+    }
+
+    public void setRetailerPrice(double retailerPrice) {
+        this.retailerPrice = retailerPrice;
+    }
+
+    public double getCustomerPrice() {
+        return customerPrice;
+    }
+
+    public void setCustomerPrice(double customerPrice) {
+        this.customerPrice = customerPrice;
+    }
+
+    public SalesChannel getSalesChannel() {
+        return salesChannel;
+    }
+
+    public void setSalesChannel(SalesChannel salesChannel) {
+        this.salesChannel = salesChannel;
+    }
+
+    public int getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(int stockId) {
+        this.stockId = stockId;
+    }
+
+    public Stock getDestination() {
+        return destination;
+    }
+
+    public void setDestination(Stock destination) {
+        this.destination = destination;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getUnitId() {
+        return unitId;
+    }
+
+    public String getRefurbishedId() {
+        return refurbishedId;
+    }
+
+    public SalesChannel getOriginalSalesChannel() {
+        return originalSalesChannel;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this,SHORT_PREFIX_STYLE);
+    }
+    
 }

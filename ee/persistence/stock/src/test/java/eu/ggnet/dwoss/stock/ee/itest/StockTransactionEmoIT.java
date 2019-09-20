@@ -1,11 +1,5 @@
 package eu.ggnet.dwoss.stock.ee.itest;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionPosition;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +18,7 @@ import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.emo.Transfer;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.Utils;
 
@@ -239,9 +234,9 @@ public class StockTransactionEmoIT extends ArquillianProjectArchive {
         assertEquals("Assert 15 persisted Stockunits", 15, units.size());
 
         //prepare
-        new StockTransactionEmo(em).prepare(Transfer.builder()
+        new StockTransactionEmo(em).prepare(new Transfer.Builder()
                 .destinationStockId(stocks.get(1).getId())
-                .stockUnitIds(units)
+                .addAllStockUnitIds(units)
                 .arranger("UnitTest")
                 .comment("Test prepare")
                 .maxTransactionSize(transactionSize)

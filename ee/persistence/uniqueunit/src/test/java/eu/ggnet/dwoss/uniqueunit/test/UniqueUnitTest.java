@@ -28,10 +28,6 @@ public class UniqueUnitTest {
         assertThat(uu)
                 .returns("54321", UniqueUnit::getRefurbishId)
                 .returns(2, u -> u.getHistory().size());
-
-        System.out.println(uu);        
-        uu.addHistory("Blabla");
-        System.out.println(uu.getHistory());
     }
 
 }

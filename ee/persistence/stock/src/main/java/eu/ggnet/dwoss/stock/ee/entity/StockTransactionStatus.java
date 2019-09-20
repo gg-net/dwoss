@@ -23,11 +23,12 @@ import javax.persistence.*;
 
 /**
  * This is a Status that a {@link StockTransaction} will have.
- * <p/>
+ * <p>
  * @has 1 - n StockTransactionParticipation
  * @has n - 1 StockTransactionStatusType
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockTransactionStatus implements Serializable, Comparable<StockTransactionStatus> {
 
     @Id

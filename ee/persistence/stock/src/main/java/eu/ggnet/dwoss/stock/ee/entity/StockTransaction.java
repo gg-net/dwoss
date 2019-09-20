@@ -25,14 +25,12 @@ import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
-import lombok.*;
-
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
 
 /**
  * This class represents the transaction between stocks or in special cases the in and out of stocks.
  * See {@link StockTransactionType} for more details about the course of events.
- * <p/>
+ * <p>
  * @has 1 - 2 Stock
  * @has 1 - n StockTransactionStatus
  * @has 1 - n StockTransactionPosition
@@ -40,16 +38,11 @@ import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
  */
 //TODO: The StockTransaction must have a validationViolation():String method to check the validity of a transaction
 @Entity
-@EqualsAndHashCode(of = "id")
-@NamedQueries({
-    @NamedQuery(name = "StockTransaction.byTypeAndStatus", query = "select s from StockTransaction s where s.type = ?1 and s.status.type = ?2 ORDER BY s.id DESC")
-    ,
-    @NamedQuery(name = "StockTransaction.bySourceTypesComment", query = "select s from StockTransaction s where s.source.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
-    ,
-    @NamedQuery(name = "StockTransaction.byDestinationTypesComment", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
-    ,
-    @NamedQuery(name = "StockTransaction.byDestinationTypes", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3")
-})
+@NamedQuery(name = "StockTransaction.byTypeAndStatus", query = "select s from StockTransaction s where s.type = ?1 and s.status.type = ?2 ORDER BY s.id DESC")
+@NamedQuery(name = "StockTransaction.bySourceTypesComment", query = "select s from StockTransaction s where s.source.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
+@NamedQuery(name = "StockTransaction.byDestinationTypesComment", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3 and s.comment = ?4")
+@NamedQuery(name = "StockTransaction.byDestinationTypes", query = "select s from StockTransaction s where s.destination.id = ?1 and s.type = ?2 and s.status.type = ?3")
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockTransaction implements Serializable, EagerAble {
 
     private static final List<List<StockTransactionStatusType>> POSSIBLE_STATUS_TYPES = new ArrayList<>();
@@ -99,7 +92,6 @@ public class StockTransaction implements Serializable, EagerAble {
         POSSIBLE_STATUS_TYPES.add(possibleStatusType);
     }
 
-    @Getter
     @Id
     @GeneratedValue
     private int id;
@@ -110,30 +102,22 @@ public class StockTransaction implements Serializable, EagerAble {
     /**
      * The source of the transaction
      */
-    @Getter
-    @Setter
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private Stock source;
 
     /**
      * The destination of the transaction
      */
-    @Getter
-    @Setter
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private Stock destination;
 
     /**
      * The Type of transaction
      */
-    @Getter
-    @Setter
     @NotNull
     @Basic(optional = false)
     private StockTransactionType type;
 
-    @Getter
-    @Setter
     @Lob
     @Column(length = 65536)
     private String comment;
@@ -144,7 +128,6 @@ public class StockTransaction implements Serializable, EagerAble {
     /**
      * the actual/last status
      */
-    @Getter
     @NotNull
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, optional = false)
     private StockTransactionStatus status;
@@ -166,6 +149,52 @@ public class StockTransaction implements Serializable, EagerAble {
         this.type = type;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public Stock getSource() {
+        return source;
+    }
+    
+    public void setSource(Stock source) {
+        this.source = source;
+    }
+    
+    public Stock getDestination() {
+        return destination;
+    }
+    
+    public void setDestination(Stock destination) {
+        this.destination = destination;
+    }
+    
+    public StockTransactionType getType() {
+        return type;
+    }
+    
+    public void setType(StockTransactionType type) {
+        this.type = type;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public StockTransactionStatus getStatus() {
+        return status;
+    }
+    //</editor-fold>
+    
     public void addUnit(StockUnit stockUnit) {
         addPosition(new StockTransactionPosition(stockUnit));
     }
@@ -273,6 +302,25 @@ public class StockTransaction implements Serializable, EagerAble {
         return "TransactionStatusHistory is in invalid. Statuses=" + sortedList + " AllowedTypes=" + POSSIBLE_STATUS_TYPES;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of id">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + this.id;
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final StockTransaction other = (StockTransaction)obj;
+        if ( this.id != other.id ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
     @Override
     public String toString() {
         return "StockTransaction{id=" + id + ",source=" + source

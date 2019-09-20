@@ -17,23 +17,13 @@
 package eu.ggnet.dwoss.stock.ee.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 /**
  * Represents a pool to Block {@link StockUnit}s.
@@ -42,12 +32,11 @@ import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
  * @author oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "LogicTransaction.findByUniqueUnitId", query = "select u.logicTransaction from StockUnit u where u.uniqueUnitId = ?1"),
-    @NamedQuery(name = "LogicTransaction.findByDossierId", query = "select l from LogicTransaction l where l.dossierId = ?1"),
-    @NamedQuery(name = "LogicTransaction.findByDossierIds", query = "select l from LogicTransaction l where l.dossierId in (?1)")
-})
-public class LogicTransaction extends IdentifiableEntity implements Serializable {
+@NamedQuery(name = "LogicTransaction.findByUniqueUnitId", query = "select u.logicTransaction from StockUnit u where u.uniqueUnitId = ?1")
+@NamedQuery(name = "LogicTransaction.findByDossierId", query = "select l from LogicTransaction l where l.dossierId = ?1")
+@NamedQuery(name = "LogicTransaction.findByDossierIds", query = "select l from LogicTransaction l where l.dossierId in (?1)")
+@SuppressWarnings("PersistenceUnitPresent")
+public class LogicTransaction extends BaseEntity implements Serializable {
 
     @GeneratedValue
     @Id

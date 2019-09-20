@@ -100,18 +100,19 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
                         "StockUnit(id=" + stockUnit.getId() + ",uniqueUnitId=" + stockUnit.getUniqueUnitId() + ") has no uniqueUnit");
             if ( uniqueUnit.getProduct() == null ) L.warn("UniqueUnit(id=" + uniqueUnit.getId() + ").product==null");
             lines.add(
-                    SalesChannelLine.builder()
-                            .unitId(stockUnit.getId())
-                            .refurbishedId(uniqueUnit.getRefurbishId())
-                            .description(ProductFormater.toName(uniqueUnit.getProduct()))
-                            .comment((uniqueUnit.getEquipments().contains(Equipment.ORIGINAL_BOXED) ? "Originalkarton, " : "") + (uniqueUnit.getCondition().getNote()))
-                            .retailerPrice(uniqueUnit.getPrice(RETAILER))
-                            .customerPrice(uniqueUnit.getPrice(CUSTOMER))
-                            .stockName(stockUnit.getStock().getName())
-                            .salesChannel(uniqueUnit.getSalesChannel())
-                            .originalSalesChannel(uniqueUnit.getSalesChannel())
-                            .stockId(stockUnit.getStock().getId()).build()
-            );
+                    new SalesChannelLine(
+                            stockUnit.getId(),
+                            uniqueUnit.getRefurbishId(),
+                            ProductFormater.toName(uniqueUnit.getProduct()),
+                            stockUnit.getStock().getName(),
+                            uniqueUnit.getPrice(RETAILER),
+                            uniqueUnit.getPrice(CUSTOMER),
+                            uniqueUnit.getSalesChannel(),
+                            uniqueUnit.getSalesChannel(),
+                            stockUnit.getStock().getId(),
+                            null,
+                            "" + ((uniqueUnit.getEquipments().contains(Equipment.ORIGINAL_BOXED) ? "Originalkarton, " : "") + (uniqueUnit.getCondition().getNote()))
+            ));
             m.worked(1);
         }
         m.finish();
@@ -141,9 +142,9 @@ public class SalesChannelHandlerOperation implements SalesChannelHandler {
 
         SortedMap<Integer, String> histories = new TreeMap<>();
         for (Entry<Stock, List<Integer>> entry : destinationsWithStockUnitIds.entrySet()) {
-            histories.putAll(emo.prepare(Transfer.builder()
+            histories.putAll(emo.prepare(new Transfer.Builder()
                     .destinationStockId(entry.getKey().getId())
-                    .stockUnitIds(entry.getValue())
+                    .addAllStockUnitIds(entry.getValue())
                     .arranger(arranger)
                     .comment(transactionComment)
                     .maxTransactionSize(10)

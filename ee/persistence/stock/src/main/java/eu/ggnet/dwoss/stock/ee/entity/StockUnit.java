@@ -25,8 +25,6 @@ import javax.validation.constraints.Null;
 import eu.ggnet.dwoss.stock.api.PicoStockUnit;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
-import lombok.*;
-
 import static javax.persistence.FetchType.EAGER;
 
 /**
@@ -48,81 +46,55 @@ import static javax.persistence.FetchType.EAGER;
  * @has n - 1 Stock
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "all", query = "Select su from StockUnit su")
-    ,
-    @NamedQuery(name = "StockUnit.byUniqueUnitId", query = "Select p from StockUnit as p where p.uniqueUnitId = ?1")
-    ,
-    @NamedQuery(name = "StockUnit.byRefurbishId", query = "Select p from StockUnit as p where p.refurbishId = ?1")
-    ,
-    @NamedQuery(name = "StockUnit.byRefurbishIds", query = "SELECT p FROM StockUnit AS p WHERE p.refurbishId IN (?1)")
-    ,
-    @NamedQuery(name = "StockUnit.byStockId", query = "Select p from StockUnit as p where p.stock.id = ?1")
-    ,
-    @NamedQuery(name = "StockUnit.countByTypeStatusSource", query = "Select count(su) from StockUnit su where su.position.transaction.type = ?1 "
-                + "and su.position.transaction.status.type = ?2 and su.position.transaction.source.id = ?3 ")
-    ,
-    @NamedQuery(name = "StockUnit.countByStockNoLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NULL")
-    ,
-    @NamedQuery(name = "StockUnit.byNoTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.position IS NULL")
-    ,
-    @NamedQuery(name = "StockUnit.byNoLogicTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL")
-    ,
-    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAndPresentStock", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.stock IS NOT NULL")
-    ,
-    @NamedQuery(name = "StockUnit.byNoLogicTransacitonAsUniqueUnitId", query = "SELECT su.uniqueUnitId FROM StockUnit su WHERE su.logicTransaction IS NULL")
-    ,
-    @NamedQuery(name = "StockUnit.countByStockOnLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NOT NULL")
-    ,
-    @NamedQuery(name = "StockUnit.findByUniqueUnitIds", query = "SELECT u FROM StockUnit u WHERE u.uniqueUnitId IN (?1)")
-})
-@EqualsAndHashCode(of = "id")
+@NamedQuery(name = "all", query = "Select su from StockUnit su")
+@NamedQuery(name = "StockUnit.byUniqueUnitId", query = "Select p from StockUnit as p where p.uniqueUnitId = ?1")
+@NamedQuery(name = "StockUnit.byRefurbishId", query = "Select p from StockUnit as p where p.refurbishId = ?1")
+@NamedQuery(name = "StockUnit.byRefurbishIds", query = "SELECT p FROM StockUnit AS p WHERE p.refurbishId IN (?1)")
+@NamedQuery(name = "StockUnit.byStockId", query = "Select p from StockUnit as p where p.stock.id = ?1")
+@NamedQuery(name = "StockUnit.countByTypeStatusSource", query = "Select count(su) from StockUnit su where su.position.transaction.type = ?1 "
+            + "and su.position.transaction.status.type = ?2 and su.position.transaction.source.id = ?3 ")
+@NamedQuery(name = "StockUnit.countByStockNoLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NULL")
+@NamedQuery(name = "StockUnit.byNoTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.position IS NULL")
+@NamedQuery(name = "StockUnit.byNoLogicTransaciton", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL")
+@NamedQuery(name = "StockUnit.byNoLogicTransacitonAndPresentStock", query = "SELECT su FROM StockUnit su WHERE su.logicTransaction IS NULL AND su.stock IS NOT NULL")
+@NamedQuery(name = "StockUnit.byNoLogicTransacitonAsUniqueUnitId", query = "SELECT su.uniqueUnitId FROM StockUnit su WHERE su.logicTransaction IS NULL")
+@NamedQuery(name = "StockUnit.countByStockOnLogicTransaciton", query = "SELECT COUNT(su) FROM StockUnit su WHERE su.stock.id = ?1 AND su.logicTransaction IS NOT NULL")
+@NamedQuery(name = "StockUnit.findByUniqueUnitIds", query = "SELECT u FROM StockUnit u WHERE u.uniqueUnitId IN (?1)")
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockUnit implements Serializable, EagerAble {
 
-    @Getter
     @Id
     @GeneratedValue
     private int id;
 
-    @Getter
     @Version
     private short optLock;
 
     /**
      * The name of the StockUnit.
      */
-    @Getter
-    @Setter
     private String name;
 
     /**
      * An id which helps to find the unit in reality. At the moment, this is either the SopoNr or the Serial
      */
-    @Getter
-    @Setter
     private String refurbishId;
 
-    @Getter
     @Valid
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
     private Stock stock;
 
-    @Getter
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = EAGER)
     private StockLocation stockLocation;
 
-    @Getter
     @Valid
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "stockUnit", fetch = EAGER)
     StockTransactionPosition position;
 
-    @Getter
     @Valid
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private LogicTransaction logicTransaction;
 
-    @Getter
-    @Setter
     // Todo: convert to long and make it not null.
     private Integer uniqueUnitId;
 
@@ -164,6 +136,56 @@ public class StockUnit implements Serializable, EagerAble {
         this.uniqueUnitId = uniqueUnitId;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getRefurbishId() {
+        return refurbishId;
+    }
+    
+    public void setRefurbishId(String refurbishId) {
+        this.refurbishId = refurbishId;
+    }
+    
+    public Integer getUniqueUnitId() {
+        return uniqueUnitId;
+    }
+    
+    public void setUniqueUnitId(Integer uniqueUnitId) {
+        this.uniqueUnitId = uniqueUnitId;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Stock getStock() {
+        return stock;
+    }
+    
+    public StockLocation getStockLocation() {
+        return stockLocation;
+    }
+    
+    public StockTransactionPosition getPosition() {
+        return position;
+    }
+    
+    public LogicTransaction getLogicTransaction() {
+        return logicTransaction;
+    }
+    //</editor-fold>
+    
     /**
      * Returns null if Instance is valid, otherwise a message describing the problem
      * <p>
@@ -272,6 +294,25 @@ public class StockUnit implements Serializable, EagerAble {
         return new PicoStockUnit(id, uniqueUnitId == null ? 0 : uniqueUnitId, name + " mit refurbishId=" + refurbishId);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of id">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 71 * hash + this.id;
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final StockUnit other = (StockUnit)obj;
+        if ( this.id != other.id ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
     @Override
     public String toString() {
         String location = "unknown";

@@ -24,10 +24,11 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Represents one position on a transaction.
- * <p/>
+ * <p>
  * @has 1 - 1 StockUnit
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockTransactionPosition implements Serializable {
 
     @Id

@@ -27,6 +27,7 @@ import javax.persistence.*;
  * @has n - 1 StockTransactionParticipationType
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockTransactionParticipation implements Serializable {
 
     @Id

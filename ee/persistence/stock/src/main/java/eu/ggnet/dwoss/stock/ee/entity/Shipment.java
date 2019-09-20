@@ -23,14 +23,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.util.persistence.entity.Identifiable;
-
-import lombok.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 @Entity
-@Getter
-@ToString
-public class Shipment implements Serializable, Identifiable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Shipment extends BaseEntity implements Serializable {
 
     public static enum Status {
 
@@ -41,31 +38,24 @@ public class Shipment implements Serializable, Identifiable {
     @GeneratedValue
     private long id;
 
-    @Setter
     private String shipmentId;
 
     @Lob
     @Column(length = 65536)
-    @Setter
     private String comment;
 
     @Temporal(TemporalType.DATE)
-    @Setter
     private Date date;
 
     @NotNull
-    @Setter
     private TradeName contractor;
 
     @NotNull
-    @Setter
     private TradeName defaultManufacturer;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Status status;
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * DefaultConsturctor with status = ANNOUNCED and date = new Date().
@@ -83,6 +73,57 @@ public class Shipment implements Serializable, Identifiable {
         this.status = status;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public String getShipmentId() {
+        return shipmentId;
+    }
+    
+    public void setShipmentId(String shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public Date getDate() {
+        return date;
+    }
+    
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    
+    public TradeName getContractor() {
+        return contractor;
+    }
+    
+    public void setContractor(TradeName contractor) {
+        this.contractor = contractor;
+    }
+    
+    public TradeName getDefaultManufacturer() {
+        return defaultManufacturer;
+    }
+    
+    public void setDefaultManufacturer(TradeName defaultManufacturer) {
+        this.defaultManufacturer = defaultManufacturer;
+    }
+    
+    public Status getStatus() {
+        return status;
+    }
+    //</editor-fold>
+    
     /**
      * Sideeffect, updates Date.
      *

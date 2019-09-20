@@ -24,14 +24,13 @@ import javax.validation.constraints.NotNull;
 /**
  * Represents a location in a stock.
  * e.g. Shelf with number 5, sale item shelf, repair shelf
- * <p/>
+ * <p>
  * @has n - 1 Stock
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "StockLocation.byStockLikeName", query = "SELECT sl FROM StockLocation sl WHERE sl.stock = ?1 AND sl.name LIKE ?2"),
-    @NamedQuery(name = "StockLocation.likeName", query = "SELECT sl FROM StockLocation sl WHERE sl.name LIKE ?1")
-})
+@NamedQuery(name = "StockLocation.byStockLikeName", query = "SELECT sl FROM StockLocation sl WHERE sl.stock = ?1 AND sl.name LIKE ?2")
+@NamedQuery(name = "StockLocation.likeName", query = "SELECT sl FROM StockLocation sl WHERE sl.name LIKE ?1")
+@SuppressWarnings("PersistenceUnitPresent")
 public class StockLocation implements Serializable {
 
     @Id
@@ -94,6 +93,7 @@ public class StockLocation implements Serializable {
         this.stock = stock;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of id and stock">
     @Override
     public boolean equals(Object obj) {
         if ( obj == null ) return false;
@@ -103,7 +103,7 @@ public class StockLocation implements Serializable {
         if ( this.stock != other.stock && (this.stock == null || !this.stock.equals(other.stock)) ) return false;
         return true;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -111,6 +111,7 @@ public class StockLocation implements Serializable {
         hash = 23 * hash + (this.stock != null ? this.stock.hashCode() : 0);
         return hash;
     }
+    //</editor-fold>
 
     @Override
     public String toString() {

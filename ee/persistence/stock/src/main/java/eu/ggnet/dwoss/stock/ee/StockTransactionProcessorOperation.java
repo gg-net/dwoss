@@ -124,9 +124,9 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
     @Override
     public SortedMap<Integer, String> perpareTransfer(List<StockUnit> stockUnits, int destinationStockId, String arranger, String comment) throws UserInfoException {
         if ( stockUnits == null || stockUnits.isEmpty() ) return new TreeMap<>();
-        return new StockTransactionEmo(stockEm).prepare(Transfer.builder()
+        return new StockTransactionEmo(stockEm).prepare(new Transfer.Builder()
                 .destinationStockId(destinationStockId)
-                .stockUnitIds(stockUnits.stream().map(StockUnit::getId).collect(Collectors.toList()))
+                .addAllStockUnitIds(stockUnits.stream().map(StockUnit::getId).collect(Collectors.toList()))
                 .arranger(arranger)
                 .comment(comment)
                 .maxTransactionSize(10)

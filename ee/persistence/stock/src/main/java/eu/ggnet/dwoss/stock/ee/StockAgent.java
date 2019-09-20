@@ -96,6 +96,7 @@ public interface StockAgent extends RemoteAgent {
     /**
      * Delete a T Instance.
      * <p>
+     * @param <T>
      * @param t the instance that will be deleted.
      */
     <T> void delete(T t);

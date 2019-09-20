@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
-import lombok.Getter;
-
 /**
  *
  * @author oliver.guenther
@@ -41,8 +39,11 @@ public class Server implements Serializable {
 
     private final Logger L = LoggerFactory.getLogger(Server.class);
 
-    @Getter
     @Inject
     private Mandator mandator;
 
+    public Mandator getMandator() {
+        return mandator;
+    }    
+    
 }

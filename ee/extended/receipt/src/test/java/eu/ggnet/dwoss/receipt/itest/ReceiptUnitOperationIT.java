@@ -103,7 +103,6 @@ public class ReceiptUnitOperationIT extends ArquillianProjectArchive {
                 }
             }
         }
-        Thread.sleep(3000);
     }
 
     private void asserts(UniqueUnit receiptUnit, StockTransaction stockTransaction, ReceiptOperation receiptOperation, TradeName contractor) {
