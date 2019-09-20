@@ -41,7 +41,7 @@ public class MovementAction extends AbstractAction {
     private final MovementListingProducer.ListType listType;
 
     public MovementAction(MovementListingProducer.ListType listType, Stock stock) {
-        super(listType.getName() + " - " + stock.getName());
+        super(listType.description + " - " + stock.getName());
         this.stock = stock;
         this.listType = listType;
     }

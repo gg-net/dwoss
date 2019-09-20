@@ -16,15 +16,8 @@
  */
 package eu.ggnet.dwoss.misc.ee.movement;
 
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -32,21 +25,27 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
-
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 
 /**
@@ -87,7 +86,7 @@ public class MovementListingProducerOperation implements MovementListingProducer
         m.start();
         LogicTransactionEao ltEao = new LogicTransactionEao(stockEm);
         UniqueUnitEao uniqueUnitEao = new UniqueUnitEao(uuEm);
-        List<Document> documents = new DocumentEao(redTapeEm).findActiveByDirective(listType.getDirective());
+        List<Document> documents = new DocumentEao(redTapeEm).findActiveByDirective(listType.directive);
         m.worked(5);
         m.setWorkRemaining(documents.size() + 2);
         List<MovementLine> lines = new ArrayList<>();
@@ -119,7 +118,7 @@ public class MovementListingProducerOperation implements MovementListingProducer
             }
             lines.add(line);
         }
-        String title = listType.getName() + " - " + stock.getName();
+        String title = listType.description + " - " + stock.getName();
         L.info("generateList {} containing {}", title, dossierids);
         m.message("erzeuge Report");
         Map<String, Object> reportParameter = new HashMap<>();

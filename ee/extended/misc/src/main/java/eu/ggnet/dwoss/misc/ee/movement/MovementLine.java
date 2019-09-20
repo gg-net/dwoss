@@ -16,17 +16,14 @@
  */
 package eu.ggnet.dwoss.misc.ee.movement;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * A line for the movement reports
  */
-@NoArgsConstructor
-@Data
+// TODO: Model used in jasperreports, modify with control.
 public class MovementLine {
 
     public static List<MovementLine> makeSamples() {
@@ -78,6 +75,9 @@ public class MovementLine {
 
     private List<MovementSubline> movementSublines = new ArrayList<>();
 
+    public MovementLine() {
+    }
+    
     /**
      * All Parameter Constructor.
      *
@@ -100,7 +100,112 @@ public class MovementLine {
         this.paymentMethod = paymentMethod;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public long getCustomerId() {
+        return customerId;
+    }
+    
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+    
+    public String getCustomerComment() {
+        return customerComment;
+    }
+    
+    public void setCustomerComment(String customerComment) {
+        this.customerComment = customerComment;
+    }
+    
+    public String getDossierIdentifier() {
+        return dossierIdentifier;
+    }
+    
+    public void setDossierIdentifier(String dossierIdentifier) {
+        this.dossierIdentifier = dossierIdentifier;
+    }
+    
+    public String getInvoiceAddress() {
+        return invoiceAddress;
+    }
+    
+    public void setInvoiceAddress(String invoiceAddress) {
+        this.invoiceAddress = invoiceAddress;
+    }
+    
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+    
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+    
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+    
+    public List<MovementSubline> getMovementSublines() {
+        return movementSublines;
+    }
+    
+    public void setMovementSublines(List<MovementSubline> movementSublines) {
+        this.movementSublines = movementSublines;
+    }
+    //</editor-fold>
+    
     public void addMovementSubline(MovementSubline line) {
         movementSublines.add(line);
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    // TODO: Not sure if needed, only here though lombok removal.
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 17 * hash + (int)(this.customerId ^ (this.customerId >>> 32));
+        hash = 17 * hash + Objects.hashCode(this.customerComment);
+        hash = 17 * hash + Objects.hashCode(this.dossierIdentifier);
+        hash = 17 * hash + Objects.hashCode(this.invoiceAddress);
+        hash = 17 * hash + Objects.hashCode(this.deliveryAddress);
+        hash = 17 * hash + Objects.hashCode(this.comment);
+        hash = 17 * hash + Objects.hashCode(this.paymentMethod);
+        hash = 17 * hash + Objects.hashCode(this.movementSublines);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final MovementLine other = (MovementLine)obj;
+        if ( this.customerId != other.customerId ) return false;
+        if ( !Objects.equals(this.customerComment, other.customerComment) ) return false;
+        if ( !Objects.equals(this.dossierIdentifier, other.dossierIdentifier) ) return false;
+        if ( !Objects.equals(this.invoiceAddress, other.invoiceAddress) ) return false;
+        if ( !Objects.equals(this.deliveryAddress, other.deliveryAddress) ) return false;
+        if ( !Objects.equals(this.comment, other.comment) ) return false;
+        if ( !Objects.equals(this.paymentMethod, other.paymentMethod) ) return false;
+        if ( !Objects.equals(this.movementSublines, other.movementSublines) ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

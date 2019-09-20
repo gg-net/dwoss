@@ -7,8 +7,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.misc.ee.StockTakingOperation.ReaderResult;
 import eu.ggnet.dwoss.util.FileJacket;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -22,7 +21,8 @@ public class StockTakingOperationTest {
         @SuppressWarnings("UseInjectionInsteadOfInstantion")
         StockTakingOperation sto = new StockTakingOperation();
         ReaderResult result = sto.xlsToList(fj);
-        assertArrayEquals(new String[]{"1", "2", "3", "4", "5"}, result.getRefurbisIds().toArray());
-        assertTrue(result.getErrors().isEmpty());
+        
+        assertThat(result.refurbisIds).hasSize(5).contains("1", "2", "3", "4", "5");
+        assertThat(result.errors).isEmpty();
     }
 }

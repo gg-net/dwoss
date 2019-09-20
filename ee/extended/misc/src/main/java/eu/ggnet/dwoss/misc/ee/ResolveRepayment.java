@@ -21,12 +21,11 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.util.UserInfoException;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.util.UserInfoException;
 
 /**
  *
@@ -35,8 +34,7 @@ import lombok.ToString;
 @Remote
 public interface ResolveRepayment {
 
-    @ToString
-    @EqualsAndHashCode
+    // TODO: Another great class of olli. Please become an imutable
     public static class ResolveResult implements Serializable {
 
         public String stockMessage;
@@ -44,6 +42,11 @@ public interface ResolveRepayment {
         public String redTapeMessage;
 
         public String reportMessage;
+        
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
 
     }
 

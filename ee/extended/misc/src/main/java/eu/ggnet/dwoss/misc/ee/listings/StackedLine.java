@@ -17,21 +17,19 @@
 package eu.ggnet.dwoss.misc.ee.listings;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 /**
- *
+ * Stacked Line for the Report.
+ * 
  * @author oliver.guenther
  */
-@Data
-@EqualsAndHashCode
+// TODO: As this Model is used in the Jasperreports, we cannot change it easyly for a Pojo to Imutable or Freebuilder. Do slowly.
 public class StackedLine implements Comparable<StackedLine> {
 
     private boolean used = true;
@@ -58,6 +56,104 @@ public class StackedLine implements Comparable<StackedLine> {
 
     private List<StackedLineUnit> units;
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public boolean isUsed() {
+        return used;
+    }
+    
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public int getAmount() {
+        return amount;
+    }
+    
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+    
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
+    }
+    
+    public String getManufacturerPartNo() {
+        return manufacturerPartNo;
+    }
+    
+    public void setManufacturerPartNo(String manufacturerPartNo) {
+        this.manufacturerPartNo = manufacturerPartNo;
+    }
+    
+    public String getCommodityGroupName() {
+        return commodityGroupName;
+    }
+    
+    public void setCommodityGroupName(String commodityGroupName) {
+        this.commodityGroupName = commodityGroupName;
+    }
+    
+    public ProductGroup getGroup() {
+        return group;
+    }
+    
+    public void setGroup(ProductGroup group) {
+        this.group = group;
+    }
+    
+    public TradeName getBrand() {
+        return brand;
+    }
+    
+    public void setBrand(TradeName brand) {
+        this.brand = brand;
+    }
+    
+    public URL getImageUrl() {
+        return imageUrl;
+    }
+    
+    public void setImageUrl(URL imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    
+    public String getCustomerPriceLabel() {
+        return customerPriceLabel;
+    }
+    
+    public void setCustomerPriceLabel(String customerPriceLabel) {
+        this.customerPriceLabel = customerPriceLabel;
+    }
+    
+    public List<StackedLineUnit> getUnits() {
+        return units;
+    }
+    
+    public void setUnits(List<StackedLineUnit> units) {
+        this.units = units;
+    }
+    //</editor-fold>
+   
     public boolean isNew() {
         return !used;
     }
@@ -82,6 +178,53 @@ public class StackedLine implements Comparable<StackedLine> {
         if ( manufacturerName != null ) manufacturerName = manufacturerName.replaceAll("&", "&amp;");
         if ( manufacturerPartNo != null ) manufacturerPartNo = manufacturerPartNo.replaceAll("&", "&amp;");
         if ( commodityGroupName != null ) commodityGroupName = commodityGroupName.replaceAll("&", "&amp;");
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    // TODO: Not sure if needed.
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + (this.used ? 1 : 0);
+        hash = 53 * hash + Objects.hashCode(this.name);
+        hash = 53 * hash + this.amount;
+        hash = 53 * hash + Objects.hashCode(this.description);
+        hash = 53 * hash + Objects.hashCode(this.manufacturerName);
+        hash = 53 * hash + Objects.hashCode(this.manufacturerPartNo);
+        hash = 53 * hash + Objects.hashCode(this.commodityGroupName);
+        hash = 53 * hash + Objects.hashCode(this.group);
+        hash = 53 * hash + Objects.hashCode(this.brand);
+        hash = 53 * hash + Objects.hashCode(this.imageUrl);
+        hash = 53 * hash + Objects.hashCode(this.customerPriceLabel);
+        hash = 53 * hash + Objects.hashCode(this.units);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final StackedLine other = (StackedLine)obj;
+        if ( this.used != other.used ) return false;
+        if ( this.amount != other.amount ) return false;
+        if ( !Objects.equals(this.name, other.name) ) return false;
+        if ( !Objects.equals(this.description, other.description) ) return false;
+        if ( !Objects.equals(this.manufacturerName, other.manufacturerName) ) return false;
+        if ( !Objects.equals(this.manufacturerPartNo, other.manufacturerPartNo) ) return false;
+        if ( !Objects.equals(this.commodityGroupName, other.commodityGroupName) ) return false;
+        if ( !Objects.equals(this.customerPriceLabel, other.customerPriceLabel) ) return false;
+        if ( this.group != other.group ) return false;
+        if ( this.brand != other.brand ) return false;
+        if ( !Objects.equals(this.imageUrl, other.imageUrl) ) return false;
+        if ( !Objects.equals(this.units, other.units) ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

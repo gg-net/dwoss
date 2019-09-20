@@ -34,7 +34,6 @@ public interface PersistenceValidator {
      * It's validate:
      * - RedTape
      * - UniqueUnit
-     * - Sopo
      * - Stock
      * <p/>
      * @return a Filejacket where a xls from the JExcel api is, that contains all Errors.

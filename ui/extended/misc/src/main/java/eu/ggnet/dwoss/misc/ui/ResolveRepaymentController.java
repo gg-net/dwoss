@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ui;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -35,16 +31,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.core.ui.Title;
+import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.core.ui.AlertType;
 
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -139,7 +134,7 @@ public class ResolveRepaymentController implements Initializable, FxController, 
             try {
                 ResolveResult result = Dl.remote().lookup(ResolveRepayment.class).resolveUnit(sopoField.getText(), contractor, Dl.local().lookup(Guardian.class).getUsername(), commentField.getText());
                 Ui.build(sopoField).alert().title("Repayment resolved")
-                        .message("Gutschrift gegenüber " + contractor.getName() + " aufgelöst")
+                        .message("Gutschrift gegenüber " + contractor.getDescription() + " aufgelöst")
                         .nl("Stock: " + result.stockMessage)
                         .nl("RedTape: " + result.redTapeMessage)
                         .nl("Report: " + result.reportMessage)

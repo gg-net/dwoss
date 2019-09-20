@@ -21,9 +21,8 @@ import javax.ejb.Remote;
 import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
+import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-
-import lombok.*;
 
 /**
  *
@@ -32,16 +31,20 @@ import lombok.*;
 @Remote
 public interface MovementListingProducer {
 
-    @RequiredArgsConstructor
-    @Getter
     public static enum ListType {
 
         SHIPMENT("Versandliste", Document.Directive.PREPARE_SHIPPING),
         PICK_UP("Abholliste", Document.Directive.HAND_OVER_GOODS);
 
-        private final String name;
+        public final String description;
 
-        private final Document.Directive directive;
+        public final Document.Directive directive;
+
+        private ListType(String description, Directive directive) {
+            this.description = description;
+            this.directive = directive;
+        }
+                
     }
 
     JasperPrint generateList(ListType listType, Stock stockId);

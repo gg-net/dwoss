@@ -16,26 +16,6 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.stock.ee.assist.Stocks;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
-import eu.ggnet.lucidcalc.CCalcDocument;
-import eu.ggnet.lucidcalc.LucidCalc;
-import eu.ggnet.lucidcalc.CSheet;
-import eu.ggnet.lucidcalc.STable;
-import eu.ggnet.lucidcalc.CFormat;
-import eu.ggnet.lucidcalc.TempCalcDocument;
-import eu.ggnet.lucidcalc.STableModelList;
-import eu.ggnet.lucidcalc.LucidCalcReader;
-import eu.ggnet.lucidcalc.SUtil;
-import eu.ggnet.lucidcalc.STableColumn;
-
 import java.io.File;
 import java.util.*;
 
@@ -43,22 +23,30 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.slf4j.*;
-
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
+import eu.ggnet.dwoss.progress.MonitorFactory;
+import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
+import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.lucidcalc.*;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.saft.api.Reply;
 
-import lombok.Data;
-
-import static eu.ggnet.lucidcalc.CFormat.FontStyle.*;
-import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
-import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.*;
-import static java.awt.Color.*;
+import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;
+import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
+import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.MIDDLE;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.LIGHT_GRAY;
 
 /**
  *
@@ -68,7 +56,6 @@ import static java.awt.Color.*;
 
 public class ImageIdHandlerOperation implements ImageIdHandler {
 
-    @Data
     public final static class ImageIdLine {
 
         private final String partNo;
@@ -80,6 +67,19 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
         private final String name;
 
         private final Integer imageId;
+
+        public ImageIdLine(String partNo, String group, String brand, String name, Integer imageId) {
+            this.partNo = partNo;
+            this.group = group;
+            this.brand = brand;
+            this.name = name;
+            this.imageId = imageId;
+        }
+        
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
     }
 
     private final static Logger L = LoggerFactory.getLogger(ImageIdHandlerOperation.class);
@@ -94,9 +94,6 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
 
     @Inject
     private MonitorFactory monitorFactory;
-
-    @Inject
-    private Mandator mandator;
 
     @Override
     public Reply<Void> importMissing(FileJacket inFile) {
@@ -118,16 +115,16 @@ public class ImageIdHandlerOperation implements ImageIdHandler {
         m.message("Importing Data");
         m.setWorkRemaining(lines.size());
         for (ImageIdLine line : lines) {
-            m.worked(1, "importing " + line.getPartNo());
-            if ( line.getImageId() == null ) {
-                errors.add("No ImageId for " + line.getPartNo());
+            m.worked(1, "importing " + line.partNo);
+            if ( line.imageId == null ) {
+                errors.add("No ImageId for " + line.partNo);
                 continue;
             }
-            Product p = productEao.findByPartNo(line.getPartNo());
+            Product p = productEao.findByPartNo(line.partNo);
             if ( p != null ) {
-                p.setImageId(line.getImageId());
+                p.setImageId(line.imageId);
             } else {
-                errors.add("No Product for '" + line.getPartNo() + "'");
+                errors.add("No Product for '" + line.imageId + "'");
             }
         }
         m.finish();

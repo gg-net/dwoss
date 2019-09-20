@@ -24,13 +24,13 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.validation.*;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
@@ -43,8 +43,6 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
 import eu.ggnet.lucidcalc.*;
 
-import lombok.*;
-
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static java.awt.Color.*;
@@ -52,21 +50,29 @@ import static java.awt.Color.*;
 @Stateless
 public class PersistenceValidatorOperation implements PersistenceValidator {
 
-    @Data
-    public static class Vm {
+    private static class Vm {
 
-        @RequiredArgsConstructor
         private static enum Level {
 
             ERROR("Fehler"), WARNING("Warnung");
+           
+            private final String description;
 
-            @Getter
-            private final String name;
+            private Level(String name) {
+                this.description = name;
+            }
+            
         }
 
         private final Level level;
 
         private final String message;
+
+        private Vm(Level level, String message) {
+            this.level = level;
+            this.message = message;
+        }
+        
     }
 
     @Inject
@@ -333,7 +339,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
         if ( errors.isEmpty() ) return Optional.empty();
         List<Object[]> rows = new ArrayList<>();
         for (Vm vm : errors) {
-            rows.add(new Object[]{vm.getLevel(), vm.getMessage()});
+            rows.add(new Object[]{vm.level.description, vm.message});
         }
         CSheet sheet = new CSheet("Fehler");
         STable table = new STable();

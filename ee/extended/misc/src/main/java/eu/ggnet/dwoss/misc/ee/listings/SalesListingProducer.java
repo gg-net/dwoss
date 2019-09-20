@@ -16,17 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
-
-import lombok.Data;
 
 /**
  * Remote Connection to all SalesListing Operations.
@@ -42,23 +38,6 @@ public interface SalesListingProducer {
      * @return the next Image Id.
      */
     public int nextImageId();
-
-    /**
-     * Result for a Listing Operation.
-     */
-    @Data
-    public static class ListingResult implements Serializable {
-
-        /**
-         * Collection of Files mapped by TradeName.
-         */
-        private final Map<TradeName, Collection<FileJacket>> listings;
-
-        /**
-         * Collection of Warnings while processing.
-         */
-        private final SortedSet<String> warnings;
-    }
 
     FileJacket generateAllSalesListing();
 

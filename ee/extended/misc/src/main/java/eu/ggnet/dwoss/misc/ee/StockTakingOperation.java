@@ -43,8 +43,6 @@ import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import lombok.Data;
-
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static java.awt.Color.BLACK;
@@ -58,7 +56,6 @@ import static java.awt.Color.WHITE;
 @Stateless
 public class StockTakingOperation implements StockTaking {
 
-    @Data
     static class ReaderResult {
 
         public ReaderResult(List<List<?>> refurbisIds, List<String> errors) {
@@ -71,9 +68,9 @@ public class StockTakingOperation implements StockTaking {
             this.errors = errors;
         }
 
-        private final List<String> refurbisIds;
+        public final List<String> refurbisIds;
 
-        private final List<String> errors;
+        public final List<String> errors;
     }
 
     private static final Logger L = LoggerFactory.getLogger(StockTakingOperation.class);
@@ -110,14 +107,14 @@ public class StockTakingOperation implements StockTaking {
         m.message("Datei einlesen");
         ReaderResult read = xlsToList(inFile);
         m.worked(3);
-        m.setWorkRemaining(read.getRefurbisIds().size() * 2 + 10);
+        m.setWorkRemaining(read.refurbisIds.size() * 2 + 10);
         UniqueUnitEao uniqueUnitEao = new UniqueUnitEao(uuEm);
         StockUnitEao stockUnitEao = new StockUnitEao(stockEm);
         DossierEao dossierEao = new DossierEao(redTapeEm);
         List<Object[]> result = new ArrayList<>();
         Set<StockUnit> found = new HashSet<>();
         String stockTaking = "erfasst";
-        for (String refurbishId : read.getRefurbisIds()) {
+        for (String refurbishId : read.refurbisIds) {
             m.worked(1, "vervollständige " + refurbishId);
             UniqueUnit uu = uniqueUnitEao.findByIdentifier(UniqueUnit.Identifier.REFURBISHED_ID, refurbishId);
             StockUnit stu = (uu == null ? null : stockUnitEao.findByUniqueUnitId(uu.getId()));
@@ -172,7 +169,7 @@ public class StockTakingOperation implements StockTaking {
                     dos.getCustomerId(), dos.getIdentifier(), contractorPartNo, customerService.asUiCustomer(dos.getCustomerId()).toNameCompanyLine()});
             }
         }
-        for (String error : read.getErrors()) {
+        for (String error : read.errors) {
             result.add(new Object[]{"Lesefehler", error, null, null, null, null, null, null, null, null, null, null, null, null});
         }
         m.message("Erzeuge Tabelle");
@@ -200,26 +197,5 @@ public class StockTakingOperation implements StockTaking {
         File f = inFile.toTemporaryFile();
         return new ReaderResult(reader.read(f), reader.getErrors());
     }
-
-    /**
-     * Returns a List of Unit information identified by partNos and filtered by InputDate.
-     * <p/>
-     * @param partNos the partNos
-     * @param start   the start of inputDate
-     * @param end     the end of inputDate
-     * @return a List of Unit information identified by partNos and filtered by InputDate.
-     */
-    @Override
-    public List<UnitLine> units(Collection<String> partNos, Date start, Date end) {
-        SubMonitor m = monitorFactory.newSubMonitor("Unit details", 100);
-        m.start();
-        m.message("lade Units");
-        List<UniqueUnit> uus = new UniqueUnitEao(uuEm).findByProductPartNosInputDate(partNos, start, end);
-        List<UnitLine> uls = new ArrayList<>(uus.size());
-        for (UniqueUnit uu : uus) {
-            uls.add(new UnitLine(uu, null));
-        }
-        m.finish();
-        return uls;
-    }
+    
 }
