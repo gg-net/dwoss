@@ -17,6 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
@@ -30,11 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.AlertType;
-
-import lombok.NonNull;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * Controller class for the editor view of a Communication. Allows the user to
@@ -131,8 +128,8 @@ public class CommunicationUpdateController implements Initializable, FxControlle
     }
 
     @Override
-    public void accept(@NonNull Communication communication) {
-        this.communication = communication;
+    public void accept( Communication communication) {
+        this.communication = Objects.requireNonNull(communication,"communication must not be null");
         communicationTypeBox.getSelectionModel().select(communication.getType());
         communicationTypeBox.setDisable(true);
         if ( communication.getIdentifier() != null ) identifer.setText(communication.getIdentifier());

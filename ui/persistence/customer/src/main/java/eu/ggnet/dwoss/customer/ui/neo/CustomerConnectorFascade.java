@@ -16,22 +16,21 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UiParent;
-
-import lombok.NonNull;
 
 /**
  * Contains all opperations for modification of customer objects in the database.
@@ -206,7 +205,8 @@ public class CustomerConnectorFascade {
      * @param p      a parent for the ui
      * @param change if present will be called with ture on success.
      */
-    public static void edit(@NonNull Customer c, UiParent p, Runnable change) {
+    public static void edit(Customer c, UiParent p, Runnable change) {
+        Objects.requireNonNull(c,"customer must not be null");
         if ( change == null ) change = () -> {
             };
         if ( c.isSimple() ) {

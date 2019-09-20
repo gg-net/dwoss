@@ -19,24 +19,36 @@ package eu.ggnet.dwoss.customer.ui.neo;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 
-import lombok.AllArgsConstructor;
-
 /**
  * A command for continues usage in completable future.
  *
  * @author oliver.guenther
  */
-@AllArgsConstructor
 public class CustomerCommand {
 
-    public SimpleCustomer simpleCustomer;
+    public final SimpleCustomer simpleCustomer;
 
-    public Customer customer;
+    public final Customer customer;
 
-    public boolean simpleStore = false;
+    public final boolean simpleStore;
 
-    public boolean enhance = false;
+    public final boolean enhance;
 
+    /**
+     * Default constructor, either simpleCustomer or customer can be null
+     * 
+     * @param simpleCustomer
+     * @param customer
+     * @param simpleStore
+     * @param enhance 
+     */
+    public CustomerCommand(SimpleCustomer simpleCustomer, Customer customer, boolean simpleStore, boolean enhance) {
+        this.simpleCustomer = simpleCustomer;
+        this.customer = customer;
+        this.simpleStore = simpleStore;
+        this.enhance = enhance;
+    }
+    
     public static CustomerCommand select(Customer cu) {
         return new CustomerCommand(null, cu, false, false);
     }

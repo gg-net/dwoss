@@ -21,19 +21,17 @@ import java.util.*;
 import javafx.application.Platform;
 import javafx.scene.Node;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.saft.api.Authorisation;
 import eu.ggnet.saft.experimental.auth.Accessable;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
  * Class that wrappes multiple nodes to a specific authorisation to control accessability over these nodes.
  *
  * @author pascal.perau
  */
-@EqualsAndHashCode
-@ToString
 public class NodeEnabler implements Accessable {
 
     private final Set<Node> nodes;
@@ -63,6 +61,32 @@ public class NodeEnabler implements Accessable {
     @Override
     public Authorisation getNeededRight() {
         return authorisation;
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.nodes);
+        hash = 59 * hash + Objects.hashCode(this.authorisation);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final NodeEnabler other = (NodeEnabler)obj;
+        if ( !Objects.equals(this.nodes, other.nodes) ) return false;
+        if ( !Objects.equals(this.authorisation, other.authorisation) ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

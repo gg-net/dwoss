@@ -17,8 +17,7 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
-import java.util.EnumSet;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -42,8 +41,6 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.FxController;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.experimental.auth.Guardian;
-
-import lombok.NonNull;
 
 /**
  *
@@ -228,8 +225,8 @@ public class MandatorMetaDataController implements Initializable, FxController, 
     }
 
     @Override
-    public void accept(@NonNull MandatorMetadata consumable) {
-        this.mandatorMetaData = consumable;
+    public void accept(MandatorMetadata consumable) {
+        this.mandatorMetaData = Objects.requireNonNull(consumable,"mandator metadata must not be null");
 
         this.paymentConditionComboBox.getSelectionModel().select(mandatorMetaData.getPaymentCondition());
         this.paymentMethodComboBox.getSelectionModel().select(mandatorMetaData.getPaymentMethod());

@@ -17,11 +17,11 @@
 package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,13 +30,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
-
-import lombok.NonNull;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -213,8 +212,8 @@ public class CompanyContactUpdateController implements Initializable, FxControll
 
     // For now i define, that a contact must be set, may change in the future
     @Override
-    public void accept(@NonNull Contact cont) {
-        setContact(cont);
+    public void accept(Contact cont) {
+        setContact(Objects.requireNonNull(cont,"contact must not be null"));
     }
 
     @Override

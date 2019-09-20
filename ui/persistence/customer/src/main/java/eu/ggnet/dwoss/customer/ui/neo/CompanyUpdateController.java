@@ -18,11 +18,6 @@ package eu.ggnet.dwoss.customer.ui.neo;
 
 import java.net.URL;
 import java.util.*;
-
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxController;
-
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -43,9 +38,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
-
-import lombok.NonNull;
+import eu.ggnet.saft.core.ui.*;
 
 import static javafx.stage.Modality.WINDOW_MODAL;
 
@@ -410,8 +403,8 @@ public class CompanyUpdateController implements Initializable, FxController, Con
     }
 
     @Override
-    public void accept(@NonNull Company company) {
-        setCompany(company);
+    public void accept(Company company) {
+        setCompany(Objects.requireNonNull(company,"company must not be null"));
     }
 
     @Override

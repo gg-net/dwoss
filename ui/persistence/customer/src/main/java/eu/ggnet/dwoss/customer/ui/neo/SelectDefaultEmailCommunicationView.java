@@ -28,8 +28,6 @@ import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Select
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
-import lombok.Value;
-
 /**
  * Ui to sellect the default email address.
  *
@@ -40,7 +38,6 @@ public class SelectDefaultEmailCommunicationView extends BorderPane implements C
     /**
      * Used for result an accept.
      */
-    @Value
     public static class Selection {
 
         public Selection(List<Communication> allEmailCommunications, Communication defaultEmailCommunication) {
@@ -55,7 +52,9 @@ public class SelectDefaultEmailCommunicationView extends BorderPane implements C
 
         private final List<Communication> allEmailCommunications;
 
-        private final Communication defaultEmailCommunication;
+        public final Communication defaultEmailCommunication;
+        
+        
     }
 
     private VBox radioButtons;

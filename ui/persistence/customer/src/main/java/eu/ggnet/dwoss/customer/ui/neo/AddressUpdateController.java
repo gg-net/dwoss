@@ -16,28 +16,21 @@ package eu.ggnet.dwoss.customer.ui.neo;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxController;
-
 import java.net.URL;
-import java.util.*;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
 
 import eu.ggnet.dwoss.customer.ee.entity.Address;
 import eu.ggnet.dwoss.customer.ee.entity.Country;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.ui.AlertType;
-
-import lombok.NonNull;
+import eu.ggnet.saft.core.ui.*;
 
 /**
  * Controller class for the editor view of a Address. Allows the user to
@@ -113,7 +106,7 @@ public class AddressUpdateController implements Initializable, FxController, Con
             updateAddress();
             //only get valid object out
             if ( address.getViolationMessage() != null ) {
-                    Ui.build().alert().message("Adresse ist invalid: " + address.getViolationMessage()).show(AlertType.WARNING);
+                Ui.build().alert().message("Adresse ist invalid: " + address.getViolationMessage()).show(AlertType.WARNING);
                 return;
             }
             isCanceled = false;
@@ -123,13 +116,13 @@ public class AddressUpdateController implements Initializable, FxController, Con
     }
 
     @Override
-    public void accept(@NonNull Address address) {
-        setAddress(address);
+    public void accept(Address address) {
+        setAddress(Objects.requireNonNull(address, "address must not be null"));
     }
 
     @Override
     public Address getResult() {
-        if (isCanceled) return null;
+        if ( isCanceled ) return null;
         return address;
     }
 
@@ -141,9 +134,9 @@ public class AddressUpdateController implements Initializable, FxController, Con
     private void setAddress(Address address) {
         this.address = address;
         countryComboBox.getSelectionModel().select(address.getCountry());
-        if (address.getCity() != null) city.setText(address.getCity());
-        if (address.getZipCode() != null) zipcode.setText(address.getZipCode());
-        if (address.getStreet() != null) street.setText(address.getStreet());
+        if ( address.getCity() != null ) city.setText(address.getCity());
+        if ( address.getZipCode() != null ) zipcode.setText(address.getZipCode());
+        if ( address.getStreet() != null ) street.setText(address.getStreet());
     }
 
     /**

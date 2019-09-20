@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.saft.core.ui.FxController;
-
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -29,8 +25,9 @@ import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
-import javafx.collections.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -43,18 +40,18 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ui.neo.SelectDefaultEmailCommunicationView.Selection;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.saft.core.*;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
-
-import lombok.*;
 
 import static eu.ggnet.dwoss.common.api.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
@@ -137,7 +134,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     @FXML
     private void clickDefaultEmailButton(ActionEvent event) {
         Ui.build(commentTextArea).fx().eval(() -> new Selection(customer.getAllCommunications(EMAIL), customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
-                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.getDefaultEmailCommunication()))
+                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.defaultEmailCommunication))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
     }
@@ -242,7 +239,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         flagLabel.setStyle("-fx-font-weight: bold");
 
                         Label customerIdLabel = new Label();
-                        customerIdLabel.textProperty().bind(item.valueProperty());
+                        customerIdLabel.textProperty().bind(item.valueProperty);
 
                         flagbox.getChildren().addAll(flagLabel, customerIdLabel);
                         flagbox.setSpacing(2.0);
@@ -304,11 +301,11 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             c.next();
             if ( c.wasAdded() ) {
                 for (AdditionalCustomerId additionalCustomerId : c.getAddedSubList()) {
-                    this.customer.getAdditionalCustomerIds().putIfAbsent(additionalCustomerId.getType(), additionalCustomerId.getValue());
+                    this.customer.getAdditionalCustomerIds().putIfAbsent(additionalCustomerId.type, additionalCustomerId.valueProperty.get());
                 }
             } else if ( c.wasRemoved() ) {
                 for (AdditionalCustomerId additionalCustomerId : c.getRemoved()) {
-                    this.customer.getAdditionalCustomerIds().remove(additionalCustomerId.getType());
+                    this.customer.getAdditionalCustomerIds().remove(additionalCustomerId.type);
                 }
             }
         });
@@ -364,9 +361,10 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      * @param customer must not be null by definition.
      */
     @Override
-    public void accept(@NonNull Customer customer) {
+    public void accept(Customer customer) {
+        Objects.requireNonNull(customer,"customer must not be null");
         if ( !customer.isValid() ) {
-            new Alert(WARNING, "Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").showAndWait();
+            Ui.build(flagPane).alert().message("Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").show(eu.ggnet.saft.core.ui.AlertType.WARNING);
         }
         isBusinessCustomer = customer.isBusiness();
         setCustomer(customer);
@@ -594,32 +592,18 @@ public class CustomerEnhanceController implements Initializable, FxController, C
 
     class AdditionalCustomerId {
 
-        @Getter
-        @Setter
-        private ExternalSystem type;
+        public final ExternalSystem type;
 
-        private StringProperty valueProperty = new SimpleStringProperty(this, "value");
+        public final StringProperty valueProperty = new SimpleStringProperty(this, "value");
 
         public AdditionalCustomerId(ExternalSystem type, String value) {
             this.type = type;
             this.valueProperty.set(value);
         }
 
-        public final String getValue() {
-            return valueProperty.get();
-        }
-
-        public final void setValue(String value) {
-            valueProperty.set(value);
-        }
-
-        public StringProperty valueProperty() {
-            return valueProperty;
-        }
-
         @Override
         public String toString() {
-            return "System: " + type + " Kundennummer: " + valueProperty.get();
+            return "AdditionalCustomerId{" + "type=" + type + ", valueProperty=" + valueProperty + '}';
         }
 
     }
@@ -669,7 +653,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
             TextField customerId = new TextField();
             customerId.setPromptText("Kundennummer");
-            customerId.setText(selectionModel == null ? "" : selectionModel.getSelectedItem().getValue());
+            customerId.setText(selectionModel == null ? "" : selectionModel.getSelectedItem().valueProperty.get());
 
             ChoiceBox externalSystemChoiceBox;
             if ( selectionModel != null ) {
@@ -716,7 +700,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
                         if ( selectionModel == null ) {
                             additionalCustomerIds.add(aid);
                         } else {
-                            selectionModel.getSelectedItem().setValue(aid.getValue());
+                            selectionModel.getSelectedItem().valueProperty.set(aid.valueProperty.get());
                         }
                     }, Platform::runLater)
                     .handle(Ui.handler());

@@ -19,9 +19,6 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.saft.core.Dl;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Task to obtain all Customers from the database with partial results.
  *
@@ -29,22 +26,26 @@ import lombok.Setter;
  */
 public class CustomerTaskService extends Service<ObservableList<PicoCustomer>> {
 
-    @Getter
-    @Setter
     private Set<SearchField> customerFields;
 
-    @Getter
-    @Setter
     private String searchsting;
 
     private final int batch = 5;
 
     private final CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
 
-    private ObservableList<PicoCustomer> partialResults = FXCollections.observableArrayList();
+    private final ObservableList<PicoCustomer> partialResults = FXCollections.observableArrayList();
 
     public ObservableList<PicoCustomer> getPartialResults() {
         return partialResults;
+    }
+
+    public void setCustomerFields(Set<SearchField> customerFields) {
+        this.customerFields = customerFields;
+    }
+
+    public void setSearchsting(String searchsting) {
+        this.searchsting = searchsting;
     }
 
     @Override
