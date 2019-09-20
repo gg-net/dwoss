@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.stock.ui;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -37,27 +33,23 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  *
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public class StockTransactionManagerController {
 
-    @Setter
     private StockTransactionManagerModel model;
 
-    @Setter
     private StockTransactionManagerView view;
 
     private final StockAgent stockAgent;
 
-    private final StockTransactionProcessor stockRotationOperation;
+    private final StockTransactionProcessor stp;
 
     private SwingWorker<Object, List<StockTransaction>> loader;
 
@@ -65,6 +57,19 @@ public class StockTransactionManagerController {
 
     public StockTransactionManagerController() {
         this(Dl.remote().lookup(StockAgent.class), Dl.remote().lookup(StockTransactionProcessor.class));
+    }
+
+    public StockTransactionManagerController(StockAgent stockAgent, StockTransactionProcessor stp) {
+        this.stockAgent = stockAgent;
+        this.stp = stp;
+    }
+
+    public void setModel(StockTransactionManagerModel model) {
+        this.model = model;
+    }
+
+    public void setView(StockTransactionManagerView view) {
+        this.view = view;
     }
 
     public void reload() {
@@ -121,7 +126,7 @@ public class StockTransactionManagerController {
         String comment = JOptionPane.showInputDialog(view, "Grund für Transaktionsabbruch:", "Transaktionsabbruch", JOptionPane.QUESTION_MESSAGE);
         if ( comment == null || comment.trim().equals("") ) return;
         try {
-            stockRotationOperation.cancel(transaction, Lookup.getDefault().lookup(Guardian.class).getUsername(), comment);
+            stp.cancel(transaction, Lookup.getDefault().lookup(Guardian.class).getUsername(), comment);
             JOptionPane.showMessageDialog(UiCore.getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
             model.remove(transaction);
         } catch (Exception ex) {

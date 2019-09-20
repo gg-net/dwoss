@@ -21,25 +21,32 @@ import java.util.List;
 
 import javax.swing.AbstractListModel;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-
-import lombok.Getter;
-import lombok.Setter;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 
 public class StockTransactionManagerModel extends AbstractListModel {
 
-    @Getter
-    @Setter
     private StockTransactionStatusType statusType = StockTransactionStatusType.PREPARED;
 
-    @Getter
-    @Setter
     private StockTransactionType transactionType = StockTransactionType.TRANSFER;
     
     private List<StockTransaction> transactions = new ArrayList<>();
 
+    public StockTransactionStatusType getStatusType() {
+        return statusType;
+    }
+
+    public void setStatusType(StockTransactionStatusType statusType) {
+        this.statusType = statusType;
+    }
+
+    public StockTransactionType getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(StockTransactionType transactionType) {
+        this.transactionType = transactionType;
+    }
+    
     @Override
     public int getSize() {
         return transactions.size();

@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.stock.ui;
 
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
-import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
-import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
-import eu.ggnet.dwoss.stock.ee.StockAgent;
-
 import java.awt.EventQueue;
 import java.util.concurrent.ExecutionException;
 
@@ -29,43 +23,57 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
+import eu.ggnet.dwoss.stock.ee.StockAgent;
+import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
+import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
 
 /**
  *
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public class CommissioningManagerController {
 
     private final StockAgent stockAgent;
 
-    private final StockTransactionProcessor stockRotation;
+    private final StockTransactionProcessor stp;
 
     private final Authentication authentication;
 
-    @Setter
     private CommissioningManagerModel model;
 
-    @Setter
     private CommissioningManagerView view;
+
+    public CommissioningManagerController(StockAgent stockAgent, StockTransactionProcessor stp, Authentication authentication) {
+        this.stockAgent = stockAgent;
+        this.stp = stp;
+        this.authentication = authentication;
+    }
 
     public CommissioningManagerController() {
         this(Dl.remote().lookup(StockAgent.class), Dl.remote().lookup(StockTransactionProcessor.class), Dl.remote().lookup(Authentication.class));
     }
 
+    
+    
+    public void setModel(CommissioningManagerModel model) {
+        this.model = model;
+    }
+
+    public void setView(CommissioningManagerView view) {
+        this.view = view;
+    }
+
+    
+    
     public boolean executeTransmutation() {
         if ( !model.isCompleteAble() ) return false;
         if ( model.getStockTransactions().get(0).getStatus().getType() == StockTransactionStatusType.PREPARED ) {
-            stockRotation.commission(model.getStockTransactions(), model.getParticipantOneName(), model.getParticipantTwoName());
+            stp.commission(model.getStockTransactions(), model.getParticipantOneName(), model.getParticipantTwoName());
         } else if ( model.getStockTransactions().get(0).getStatus().getType() == StockTransactionStatusType.IN_TRANSFER ) {
-            stockRotation.receive(model.getStockTransactions(), model.getParticipantOneName(), model.getParticipantTwoName());
+            stp.receive(model.getStockTransactions(), model.getParticipantOneName(), model.getParticipantTwoName());
         } else {
             throw new RuntimeException("Status of first Transaction does not make sense : " + model.getStockTransactions().get(0).getStatus().getType());
         }
