@@ -27,14 +27,14 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
+import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.MetaValue;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink.Result;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
@@ -43,9 +43,6 @@ import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.IN_SALE;
 import static javax.swing.JOptionPane.*;
@@ -106,13 +103,9 @@ public class UnitController {
 
     private static final Logger L = LoggerFactory.getLogger(UnitController.class);
 
-    @Getter
-    @Setter
     private UnitView view;
 
     // TODO: Add in the usage actions. for now its ok.
-    @Getter
-    @Setter
     private UnitModel model;
 
     private ReentrantLock lock = new ReentrantLock();
@@ -120,7 +113,7 @@ public class UnitController {
     /**
      * Init the controller, call after setting view an model.
      */
-    public void init() {
+    public void init() { 
         Objects.requireNonNull(model, "Model is null");
         Objects.requireNonNull(view, "View is null");
         Objects.requireNonNull(view.getController(), "View has no controller");
@@ -144,6 +137,22 @@ public class UnitController {
                 .stream().forEach(r -> addClosingAction(new OperationAction(r)));
     }
 
+    public UnitView getView() {
+        return view;
+    }
+
+    public void setView(UnitView view) {
+        this.view = view;
+    }
+
+    public UnitModel getModel() {
+        return model;
+    }
+
+    public void setModel(UnitModel model) {
+        this.model = model;
+    }
+    
     public void createOrEditPart(String partNo) throws UserInfoException {
         UiProductSupport.createOrEditPart(model.getMode(), partNo, view);
         validatePartNoAndLoadDetails();
@@ -286,21 +295,21 @@ public class UnitController {
             L.debug("After Chain (optionals={}, metaunit.partno.isSet={}, metaunit.mfgDate.isSet={}) : {}",
                     result.hasOptionals(), model.getMetaUnit().getPartNo().isSet(), model.getMetaUnit().getMfgDate().isSet(), result);
 
-            if ( result.hasOptionals() && result.getOptional().getPartNo() != null && !model.getMetaUnit().getPartNo().isSet() ) {
-                model.getMetaUnit().getPartNo().setValue(result.getOptional().getPartNo());
+            if ( result.hasOptionals() && result.optional.partNo != null && !model.getMetaUnit().getPartNo().isSet() ) {
+                model.getMetaUnit().getPartNo().setValue(result.optional.partNo);
                 validatePartNoAndLoadDetails();
             }
 
-            if ( result.hasOptionals() && result.getOptional().getMfgDate() != null && !model.getMetaUnit().getMfgDate().isSet() ) {
-                model.getMetaUnit().getMfgDate().setValue(result.getOptional().getMfgDate());
+            if ( result.hasOptionals() && result.optional.mfgDate != null && !model.getMetaUnit().getMfgDate().isSet() ) {
+                model.getMetaUnit().getMfgDate().setValue(result.optional.mfgDate);
                 validateMfgDate();
             }
 
-            validationStatus.setStatus(result.getValid(), result.getMessage());
+            validationStatus.setStatus(result.valid, result.message);
             view.updateValidationStatus();
 
             updateActions();
-            return result.getValue();
+            return result.value;
         } finally {
             lock.unlock();
         }

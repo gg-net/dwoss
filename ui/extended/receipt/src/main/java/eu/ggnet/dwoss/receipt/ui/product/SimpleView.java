@@ -34,15 +34,12 @@ import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
-
-import lombok.Getter;
 
 public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
 
-    @Getter
     private final TradeName manufacturer;
 
     private final NamedComparator INAMED_COMPARATOR = new NamedComparator();
@@ -126,6 +123,10 @@ public class SimpleView extends javax.swing.JPanel implements IPreClose, IView {
         modelBox.setSelectedItem(spec.getModel().getName());
         enableAddButtons();
         htmlInfoPane.setText(SpecFormater.toHtml(spec));
+    }
+
+    public TradeName getManufacturer() {
+        return manufacturer;
     }
 
     /**

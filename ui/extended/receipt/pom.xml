@@ -11,11 +11,6 @@
     <name>DwOss • Ui • Extended • Receipt</name>
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
         </dependency>

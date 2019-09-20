@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +28,10 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 
-import lombok.ToString;
-
 public class ShipmentModel extends PojoTableModel<Shipment> {
 
     private final static Logger L = LoggerFactory.getLogger(ShipmentModel.class);
 
-    @ToString
     private class ShipmentFilter implements PojoFilter<Shipment> {
 
         private boolean isShipmentId;
@@ -54,6 +52,11 @@ public class ShipmentModel extends PojoTableModel<Shipment> {
             boolean o = !isOwner || t.getContractor() == owner;
             boolean st = !isStatus || t.getStatus() == status;
             return s && o && st;
+        }
+        
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
         }
 
     }

@@ -16,22 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
-import eu.ggnet.dwoss.common.api.values.Warranty;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-
 import java.util.*;
 
 import javax.swing.Action;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
-import lombok.*;
 
 /**
  * The Unit Model.
@@ -47,11 +43,17 @@ public class UnitModel {
      */
     public static class Survey {
 
-        @Getter
         private String message = "";
 
-        @Getter
         private ValidationStatus status = ValidationStatus.OK;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public ValidationStatus getStatus() {
+            return status;
+        }
 
         public void setStatus(ValidationStatus status, String message) {
             this.status = status;
@@ -95,7 +97,6 @@ public class UnitModel {
         }
     }
 
-    @Data
     public static class MetaUnit {
 
         private final MetaValue<String> refurbishId = new MetaValue<>();
@@ -109,6 +110,38 @@ public class UnitModel {
         private Date warrentyTill;
 
         private boolean warrentyTillSetted = false;
+
+        public MetaValue<String> getRefurbishId() {
+            return refurbishId;
+        }
+
+        public MetaValue<String> getSerial() {
+            return serial;
+        }
+
+        public MetaValue<String> getPartNo() {
+            return partNo;
+        }
+
+        public MetaValue<Date> getMfgDate() {
+            return mfgDate;
+        }
+
+        public Date getWarrentyTill() {
+            return warrentyTill;
+        }
+
+        public boolean isWarrentyTillSetted() {
+            return warrentyTillSetted;
+        }
+
+        public void setWarrentyTill(Date warrentyTill) {
+            this.warrentyTill = warrentyTill;
+        }
+
+        public void setWarrentyTillSetted(boolean warrentyTillSetted) {
+            this.warrentyTillSetted = warrentyTillSetted;
+        }
 
         /**
          * Load Values refurbishId, serial, partNo and mfgDate from a UniqueUnit.
@@ -156,7 +189,6 @@ public class UnitModel {
         }
     }
 
-    @Data
     public static class MetaValue<T> {
 
         private T value;
@@ -165,60 +197,126 @@ public class UnitModel {
 
         private final Survey survey = new Survey();
 
+        public T getValue() {
+            return value;
+        }
+
+        public void setValue(T value) {
+            this.value = value;
+        }
+
+        public List<ChainLink<T>> getChain() {
+            return chain;
+        }
+
+        public void setChain(List<ChainLink<T>> chain) {
+            this.chain = chain;
+        }
+
+        public Survey getSurvey() {
+            return survey;
+        }
+
         public boolean isSet() {
             if ( value == null ) return false;
             if ( value instanceof String ) return !StringUtils.isBlank(((String)value));
             return true;
         }
     }
+
     private final Set<Action> actions = new HashSet<>();
 
     @NotNull(message = "contractor not set")
-    @Getter
-    @Setter
     private TradeName contractor;
 
-    //@Getter
-    @Setter
     private ReceiptOperation operation;
 
-    public ReceiptOperation getOperation() {
-        return operation;
-    }
-
-    @Getter
-    @Setter
     private String operationComment;
 
-    @Setter
-    @Getter
     private Product product;
 
-    @Getter
-    @Setter
     private String productSpecDescription;
 
-    @Getter
     private final MetaUnit metaUnit = new MetaUnit();
 
     /**
      * Represents the mode of support (validation, auto update of values) in the ui.
      * <p/>
      */
-    @Getter
-    @Setter
     private TradeName mode;
 
-    @Getter
-    @Setter
     private boolean editMode;
+
+    public ReceiptOperation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(ReceiptOperation operation) {
+        this.operation = operation;
+    }
+
+    public MetaUnit getMetaUnit() {
+        return metaUnit;
+    }
+
+    public TradeName getContractor() {
+        return contractor;
+    }
+
+    public void setContractor(TradeName contractor) {
+        this.contractor = contractor;
+    }
+
+    public String getOperationComment() {
+        return operationComment;
+    }
+
+    public void setOperationComment(String operationComment) {
+        this.operationComment = operationComment;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public String getProductSpecDescription() {
+        return productSpecDescription;
+    }
+
+    public void setProductSpecDescription(String productSpecDescription) {
+        this.productSpecDescription = productSpecDescription;
+    }
+
+    public TradeName getMode() {
+        return mode;
+    }
+
+    public void setMode(TradeName mode) {
+        this.mode = mode;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
+    }
 
     public Set<Action> getActions() {
         return Collections.unmodifiableSet(actions);
     }
 
-    public void addAction(Action action){
+    public void addAction(Action action) {
         actions.add(action);
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

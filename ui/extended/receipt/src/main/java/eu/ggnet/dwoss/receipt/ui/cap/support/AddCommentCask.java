@@ -16,10 +16,8 @@
  */
 package eu.ggnet.dwoss.receipt.ui.cap.support;
 
-import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.dwoss.receipt.ui.cap.support.AddCommentCask.Comment;
-
-import lombok.AllArgsConstructor;
+import eu.ggnet.saft.core.ui.ResultProducer;
 
 /**
  *
@@ -27,12 +25,16 @@ import lombok.AllArgsConstructor;
  */
 public class AddCommentCask extends javax.swing.JPanel implements ResultProducer<Comment> {
 
-    @AllArgsConstructor
     public static class Comment {
 
         public String Comment;
 
         public String RefurbishId;
+
+        public Comment(String Comment, String RefurbishId) {
+            this.Comment = Comment;
+            this.RefurbishId = RefurbishId;
+        }
 
     }
 

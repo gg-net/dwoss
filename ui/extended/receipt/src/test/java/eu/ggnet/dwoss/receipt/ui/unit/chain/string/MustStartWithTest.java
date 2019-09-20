@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.receipt.ui.unit.chain.string;
 
-import eu.ggnet.dwoss.receipt.ui.unit.chain.string.MustStartWith;
-
 import org.junit.Test;
 
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
@@ -20,7 +18,7 @@ public class MustStartWithTest {
     @Test
     public void testExecute() {
         MustStartWith r = new MustStartWith("S");
-        assertEquals(ValidationStatus.OK, r.execute("SABC").getValid());
-        assertEquals(ValidationStatus.ERROR, r.execute("ABC").getValid());
+        assertEquals(ValidationStatus.OK, r.execute("SABC").valid);
+        assertEquals(ValidationStatus.ERROR, r.execute("ABC").valid);
     }
 }

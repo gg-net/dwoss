@@ -19,12 +19,10 @@ package eu.ggnet.dwoss.receipt.ui.cap.support;
 import java.util.List;
 import java.util.function.Consumer;
 
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
 import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
-
-import lombok.Getter;
 
 /**
  *
@@ -32,7 +30,6 @@ import lombok.Getter;
  */
 public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implements Consumer<List<StockTransaction>>, ResultProducer<List<StockTransaction>>, VetoableOnOk {
 
-    @Getter
     private List<StockTransaction> stockTransactions;
 
     /** Creates new form HtmlPanel */
@@ -40,6 +37,10 @@ public class RollInPreparedTransactionViewCask extends javax.swing.JPanel implem
         initComponents();
     }
 
+    public List<StockTransaction> getStockTransactions() {
+        return stockTransactions;
+    }
+    
     @Override
     public void accept(List<StockTransaction> sts) {
         this.stockTransactions = sts;

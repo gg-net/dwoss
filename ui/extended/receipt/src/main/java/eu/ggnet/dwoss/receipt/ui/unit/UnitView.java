@@ -41,9 +41,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.UserPreferences;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.SERIAL;
 
@@ -65,12 +62,8 @@ public class UnitView extends javax.swing.JDialog {
 
     private UniqueUnit unit;
 
-    @Getter
-    @Setter
     private UnitModel model;
 
-    @Getter
-    @Setter
     private UnitController controller;
 
     private boolean cancel = true;
@@ -146,6 +139,22 @@ public class UnitView extends javax.swing.JDialog {
         contractorBox.setModel(new DefaultComboBoxModel(TradeName.getManufacturers().toArray()));
     }
 
+    public UnitModel getModel() {
+        return model;
+    }
+
+    public void setModel(UnitModel model) {
+        this.model = model;
+    }
+
+    public UnitController getController() {
+        return controller;
+    }
+
+    public void setController(UnitController controller) {
+        this.controller = controller;
+    }
+    
     public void setShipment(Shipment shipment) {
         unitShipField.setText(shipment.getShipmentId());
         unitOwnerField.setText(shipment.getContractor().toString());
@@ -235,7 +244,7 @@ public class UnitView extends javax.swing.JDialog {
     private void updateValidationStatus(JComponent component, Survey vs, StringBuilder sb) {
         EventQueue.invokeLater(() -> {
             component.setToolTipText(vs.getMessage());
-            component.setForeground(vs.getStatus().getColor());
+            component.setForeground(vs.getStatus().color);
         });
         sb.append("- ").append(component.getName()).append(": ").append(vs.getStatus()).append(" : ").append(vs.getMessage()).append("\n");
     }

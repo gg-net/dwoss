@@ -37,8 +37,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import lombok.Value;
-
 /**
  * Ui support for the unit Operations.
  * <p/>
@@ -46,12 +44,22 @@ import lombok.Value;
  */
 public class UiUnitSupport {
 
-    @Value
     private final static class UnitAndModel {
 
         private final UnitModel unitModel;
 
         private final UniqueUnit uniqueUnit;
+
+        public UnitAndModel(UnitModel unitModel, UniqueUnit uniqueUnit) {
+            this.unitModel = unitModel;
+            this.uniqueUnit = uniqueUnit;
+        }
+
+        @Override
+        public String toString() {
+            return "UnitAndModel{" + "unitModel=" + unitModel + ", uniqueUnit=" + uniqueUnit + '}';
+        }
+        
     }
 
     public class StockCellRenderer extends DefaultListCellRenderer {
@@ -84,12 +92,12 @@ public class UiUnitSupport {
         if ( result == null ) return;
 
         unitProcessor.receipt(
-                result.getUniqueUnit(),
-                result.getUnitModel().getProduct(),
+                result.uniqueUnit,
+                result.unitModel.getProduct(),
                 productShipment,
                 stockTransaction,
-                result.getUnitModel().getOperation(),
-                result.getUnitModel().getOperationComment(),
+                result.unitModel.getOperation(),
+                result.unitModel.getOperationComment(),
                 Dl.local().lookup(Guardian.class).getUsername()
         );
     }
@@ -119,10 +127,10 @@ public class UiUnitSupport {
         if ( result == null ) return;
 
         unitProcessor.update(
-                result.getUniqueUnit(),
-                result.getUnitModel().getProduct(),
-                result.getUnitModel().getOperation(),
-                result.getUnitModel().getOperationComment(),
+                result.uniqueUnit,
+                result.unitModel.getProduct(),
+                result.unitModel.getOperation(),
+                result.unitModel.getOperationComment(),
                 Dl.local().lookup(Guardian.class).getUsername()
         );
     }

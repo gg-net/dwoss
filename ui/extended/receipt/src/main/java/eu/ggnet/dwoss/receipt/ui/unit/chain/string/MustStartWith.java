@@ -19,17 +19,18 @@ package eu.ggnet.dwoss.receipt.ui.unit.chain.string;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * A Link that ensures that the value starts with start.
  * <p/>
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public class MustStartWith implements ChainLink<String> {
 
     private final String start;
+
+    public MustStartWith(String start) {
+        this.start = start;
+    }
 
     @Override
     public Result<String> execute(String value) {

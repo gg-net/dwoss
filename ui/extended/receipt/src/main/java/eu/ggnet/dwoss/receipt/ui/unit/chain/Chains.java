@@ -18,11 +18,9 @@ package eu.ggnet.dwoss.receipt.ui.unit.chain;
 
 import java.util.*;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
-
-import eu.ggnet.dwoss.common.api.values.TradeName;
-
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 
 /**
@@ -63,8 +61,8 @@ public abstract class Chains {
         ChainLink.Result<T> result = new ChainLink.Result<>(value, ValidationStatus.ERROR, "Validation Chain is empty");
         ChainLink.Optional optional = new ChainLink.Optional(null, null);
         for (ChainLink<T> link : chain) {
-            result = link.execute(result.getValue());
-            optional = optional.merge(result.getOptional());
+            result = link.execute(result.value);
+            optional = optional.merge(result.optional);
             if ( !result.isValid() ) return result.withOptional(optional);
         }
         return result.withOptional(optional);

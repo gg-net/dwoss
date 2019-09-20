@@ -26,8 +26,8 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.IPreClose;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
+import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.Chains;
@@ -39,8 +39,6 @@ import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-
-import lombok.Getter;
 
 /**
  * Ui for the Desktop Bundle.
@@ -69,7 +67,6 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
 
     private final ProductGroup mustGroup2;
 
-    @Getter
     private DesktopBundle spec;
 
     public DesktopBundleView(TradeName mode,
@@ -109,14 +106,19 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
         }
     }
 
+    @Override
+    public DesktopBundle getSpec() {
+        return spec;
+    }
+    
     private void updateActions() {
         // TODO: Disable/Enable the OK Button based on the Validation.
     }
 
     private void updateValidationStatus() {
-        desktopPartNoField.setForeground(partNo1.getSurvey().getStatus().getColor());
+        desktopPartNoField.setForeground(partNo1.getSurvey().getStatus().color);
         desktopPartNoField.setToolTipText(partNo1.getSurvey().getMessage());
-        monitorPartNoField.setForeground(partNo2.getSurvey().getStatus().getColor());
+        monitorPartNoField.setForeground(partNo2.getSurvey().getStatus().color);
         monitorPartNoField.setToolTipText(partNo2.getSurvey().getMessage());
     }
 
@@ -148,10 +150,10 @@ public class DesktopBundleView extends AbstractView<DesktopBundle> implements IP
         ChainLink.Result<String> result = Chains.execute(partNo.getChain(), partNo.getValue());
 
         L.debug("After Chain : {}", result);
-        partNo.getSurvey().setStatus(result.getValid(), result.getMessage());
+        partNo.getSurvey().setStatus(result.valid, result.message);
         updateValidationStatus();
 
-        partNo.setValue(result.getValue());
+        partNo.setValue(result.value);
         L.debug("After Chain2 : {}", result);
 
         ProductSpec spec = null;

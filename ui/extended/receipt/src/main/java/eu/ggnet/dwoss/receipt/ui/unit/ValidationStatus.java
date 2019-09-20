@@ -18,15 +18,11 @@ package eu.ggnet.dwoss.receipt.ui.unit;
 
 import java.awt.Color;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Status of a Validation, contains a color to be used in the ui.
  * <p/>
  * @author oliver.guenther
  */
-@RequiredArgsConstructor
 public enum ValidationStatus {
 
     /**
@@ -49,7 +45,10 @@ public enum ValidationStatus {
     /**
      * A color representing the status.
      */
-    @Getter
-    private final Color color;
+    public final Color color;
 
+    private ValidationStatus(Color color) {
+        this.color = color;
+    }
+    
 }

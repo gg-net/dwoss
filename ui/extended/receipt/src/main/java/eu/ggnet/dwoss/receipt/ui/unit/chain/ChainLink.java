@@ -20,22 +20,23 @@ import java.util.Date;
 
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 
-import lombok.Data;
-import lombok.experimental.Wither;
-
 /**
  *
  * @author oliver.guenther
  */
 public interface ChainLink<T> {
 
-    @Data
     public static class Optional {
 
-        private final String partNo;
+        public final String partNo;
 
-        private final Date mfgDate;
+        public final Date mfgDate;
 
+        public Optional(String partNo, Date mfgDate) {
+            this.partNo = partNo;
+            this.mfgDate = mfgDate;
+        }
+        
         /**
          * Merges this and other into a new instance using all values of this and only non null values of other.
          * <p/>
@@ -62,29 +63,27 @@ public interface ChainLink<T> {
      * - veränderung des Chainmodes. ? ( Das könnte ich extra machen )
      *
      */
-    @Data
     public static class Result<T> {
 
         /**
          * The value under observation.
          */
-        private final T value;
+        public final T value;
 
         /**
          * Is the result of the execution valid meaning the chain contiues.
          */
-        private final ValidationStatus valid;
+        public final ValidationStatus valid;
 
         /**
          * A message, describing what happend.
          */
-        private final String message;
+        public final String message;
 
         /**
          * Optional values, which may be created as hint.
          */
-        @Wither
-        private final Optional optional;
+        public final Optional optional;
 
         public Result(T value, ValidationStatus valid, String message, Optional optional) {
             this.value = value;
@@ -107,6 +106,10 @@ public interface ChainLink<T> {
 
         public Result(T value, Optional optional) {
             this(value, ValidationStatus.OK, "Eingabe ist zulässig", optional);
+        }
+        
+        public Result withOptional(Optional o) {
+            return new Result(value, valid, message, o);
         }
 
         public boolean isValid() {

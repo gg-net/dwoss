@@ -1,10 +1,8 @@
 package eu.ggnet.dwoss.receipt.ui.unit.chain.string;
 
-import eu.ggnet.dwoss.receipt.ui.unit.chain.string.RemoveIfStartsWith;
-
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -18,7 +16,7 @@ public class RemoveIfStartsWithTest {
     @Test
     public void testExecute() {
         RemoveIfStartsWith r = new RemoveIfStartsWith("S");
-        assertEquals("ABC", r.execute("SABC").getValue());
-        assertEquals("ABC", r.execute("ABC").getValue());
+        assertEquals("ABC", r.execute("SABC").value);
+        assertEquals("ABC", r.execute("ABC").value);
     }
 }
