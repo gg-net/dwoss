@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +37,7 @@ public class ProgressArqIT {
                         MonitorFactory.class, ProgressProducerForTests.class, SubMonitor.class, NullMonitor.class, RuntimeEx.class, RuntimeExImpl.class)
                 .addPackages(true, "org.assertj")
                 .addPackages(true, "org.slf4j")
-                .addPackages(true, "org.apache.log4j")
                 .addAsResource("jboss-deployment-structure.xml")
-                .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsManifestResource("beans.xml");
     }
 

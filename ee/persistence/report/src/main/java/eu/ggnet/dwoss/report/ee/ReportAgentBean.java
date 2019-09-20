@@ -16,9 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ee;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -31,6 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil.PrepareReportPartition;
@@ -43,11 +42,11 @@ import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.*;
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.ee.assist.ReportUtil.*;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  *
@@ -109,9 +108,9 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
     @AutoLogger
     public Report store(Report report, Collection<ReportLine.Storeable> storables) {
         for (ReportLine.Storeable storable : storables) {
-            ReportLine line = reportEm.find(ReportLine.class, storable.getId());
-            line.setMarginPercentage(storable.getMarginPercentage());
-            line.setPurchasePrice(storable.getPurchasePrice());
+            ReportLine line = reportEm.find(ReportLine.class, storable.id);
+            line.setMarginPercentage(storable.marginPercentage);
+            line.setPurchasePrice(storable.purchasePrice);
             report.add(line);
             L.debug("Report Line {} was anded to report. ", line);
         }
@@ -144,9 +143,9 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
         // TODO: Build a better result with error messages.
         if ( key == null ) return Reply.failure("Key is null");
         if ( name == null ) return Reply.failure("Name is null");
-        Report find = reportEm.find(Report.class, key.getId());
-        if ( find == null ) return Reply.failure("No Report found with id " + key.getId());
-        if ( find.getOptLock() != key.getOptLock() ) return Reply.failure("OptLock missmatsch. Bitte Fenster schließen und neu öffnen");
+        Report find = reportEm.find(Report.class, key.id);
+        if ( find == null ) return Reply.failure("No Report found with id " + key.id);
+        if ( find.getOptLock() != key.optLock ) return Reply.failure("OptLock missmatsch. Bitte Fenster schließen und neu öffnen");
         find.setName(name);
         return Reply.success(name);
     }
@@ -248,26 +247,26 @@ public class ReportAgentBean extends AbstractAgentBean implements ReportAgent {
     @Override
     @AutoLogger
     public ViewReportResult prepareReport(ReportParameter p, boolean loadUnreported) {
-        attachDanglingComplaints(p.getContractor(), p.getEnd());
-        List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(p.getContractor(), (loadUnreported) ? null : p.getStart(), p.getEnd());
+        attachDanglingComplaints(p.contractor(), p.end());
+        List<ReportLine> findUnreportedUnits = reportLineEao.findUnreportedUnits(p.contractor(), (loadUnreported) ? null : p.start(), p.end());
         EnumMap<ViewReportResult.Type, NavigableSet<ReportLine>> lines = new EnumMap<>(ViewReportResult.Type.class);
 
-        PrepareReportPartition unitPartition = partition(findUnreportedUnits, p.getContractor());
+        PrepareReportPartition unitPartition = partition(findUnreportedUnits, p.contractor());
 
         lines.put(ACTIVE_INFO, unitPartition.getActiveInfo());
         lines.put(REPORT_INFO, filterReportInfo(unitPartition.getReportAble()));
         lines.put(REPAYMENTS, filterRepayed(unitPartition.getReportAble()));
 
-        switch (p.getViewMode()) {
+        switch (p.viewMode()) {
             case DEFAULT:
                 lines.put(INVOICED, filterInvoiced(unitPartition.getReportAble()));
                 break;
             case YEARSPLITT_AND_WARRANTIES:
-                YearSplit filterInvoicedSplit = filterInvoicedSplit(unitPartition.getReportAble(), p.getStart());
-                lines.put(PAST_ONE_YEAR, filterInvoicedSplit.getAfter());
-                lines.put(UNDER_ONE_YEAR, filterInvoicedSplit.getBefore());
+                YearSplit filterInvoicedSplit = filterInvoicedSplit(unitPartition.getReportAble(), p.start());
+                lines.put(PAST_ONE_YEAR, filterInvoicedSplit.after);
+                lines.put(UNDER_ONE_YEAR, filterInvoicedSplit.before);
                 PrepareReportPartition warrantyPartition = partition(filterWarrenty(
-                        reportLineEao.findUnreportedWarrentys(), unitPartition.getReportAble()), p.getContractor());
+                        reportLineEao.findUnreportedWarrentys(), unitPartition.getReportAble()), p.contractor());
                 lines.put(WARRENTY, filterInvoiced(warrantyPartition.getReportAble()));
                 lines.get(ACTIVE_INFO).addAll(warrantyPartition.getActiveInfo());
                 lines.get(REPAYMENTS).addAll(filterRepayed(warrantyPartition.getReportAble()));

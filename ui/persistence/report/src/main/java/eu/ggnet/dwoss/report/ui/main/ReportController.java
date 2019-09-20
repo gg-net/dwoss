@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ui.main;
 
-import eu.ggnet.saft.core.ui.Frame;
-import eu.ggnet.saft.core.ui.FxController;
-import eu.ggnet.saft.core.ui.Title;
-import eu.ggnet.saft.core.ui.StoreLocation;
-import eu.ggnet.saft.api.IdSupplier;
-
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -46,13 +40,16 @@ import javafx.scene.layout.*;
 import javafx.util.Callback;
 
 import eu.ggnet.dwoss.report.ee.ReportAgent;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.api.ReportExporter;
+import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.saft.api.IdSupplier;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
+import eu.ggnet.saft.core.ui.*;
 
 import lombok.Getter;
 import lombok.Value;
@@ -85,7 +82,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
         @Override
         public String id() {
-            return reportResult.getParameter().getReportName();
+            return reportResult.getParameter().reportName();
         }
 
     }
@@ -105,9 +102,9 @@ public class ReportController implements Initializable, FxController, Consumer<R
         @Override
         public void accept(ViewReportResult reportResult) {
             this.reportResult = reportResult;
-            String infoLine = "Name: " + reportResult.getParameter().getReportName();
-            infoLine += "\nStart: " + ISO.format(reportResult.getParameter().getStart());
-            infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().getEnd());
+            String infoLine = "Name: " + reportResult.getParameter().reportName();
+            infoLine += "\nStart: " + ISO.format(reportResult.getParameter().start());
+            infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().end());
             setContentText(infoLine);
         }
 
@@ -231,7 +228,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
                         toCurrencyColumn("Marge", cell -> new ReadOnlyDoubleWrapper(cell.getValue().getPrice() - cell.getValue().getPurchasePrice()).getReadOnlyProperty()),
                         toTableLineColumn("Rechnungsaddresse", cell -> new ReadOnlyStringWrapper(cell.getValue().getInvoiceAddress()).getReadOnlyProperty()),
                         toTableLineColumn("DocumentType", cell -> new ReadOnlyStringWrapper(
-                        cell.getValue().getDocumentTypeName() + cell.getValue().getWorkflowStatus().getSign()).getReadOnlyProperty()),
+                        cell.getValue().getDocumentTypeName() + cell.getValue().getWorkflowStatus().sign).getReadOnlyProperty()),
                         toTableLineColumn("Lieferanten ArtikelNr.", cell -> new ReadOnlyStringWrapper(cell.getValue().getContractorPartNo()).getReadOnlyProperty())
                 ));
         return columns;
@@ -349,9 +346,9 @@ public class ReportController implements Initializable, FxController, Consumer<R
         exportButton.setDisable(!Dl.remote().contains(ReportExporter.class));
 
         this.reportResult = reportResult;
-        nameLabel.setText(reportResult.getParameter().getReportName());
-        fromDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().getStart()));
-        toDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().getEnd()));
+        nameLabel.setText(reportResult.getParameter().reportName());
+        fromDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().start()));
+        toDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().end()));
 
         reportResult.getLines().keySet().stream().map((Type type) -> {
             for (ReportLine reportLine : reportResult.getLines().get(type)) {
@@ -411,7 +408,7 @@ public class ReportController implements Initializable, FxController, Consumer<R
                     .opt()
                     .ifPresent(r -> Ui.progress().call(() -> {
                 Dl.remote().lookup(ReportAgent.class).store(
-                        r.getParameter().toNewReport(),
+                        new Report(r.getParameter().reportName(), r.getParameter().contractor(), r.getParameter().start(),r.getParameter().end(), r.getParameter().viewMode()),
                         r.getRelevantLines().values().stream().flatMap(Collection::stream).map(ReportLine::toStorable).collect(Collectors.toList()));
                 Platform.runLater(() -> viewmode.set(true));
                 return null;

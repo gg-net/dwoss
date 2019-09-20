@@ -16,23 +16,19 @@
  */
 package eu.ggnet.dwoss.report.ee.op;
 
-import eu.ggnet.dwoss.common.ee.Step;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.util.Map.Entry;
 import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.report.ee.RevenueReportSum;
-import eu.ggnet.dwoss.report.ee.eao.*;
+import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
+import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.eao.Revenue.Key;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.*;
@@ -63,39 +59,6 @@ public class RevenueReporterOperation implements RevenueReporter {
 
     @Inject
     private Contractors contractors;
-
-    /**
-     * <p>
-     * @param pTypes position types to be included
-     * @param start  start date
-     * @param end    end date
-     * @return Daily seperated {@link RevenueReportSum} containing the aggregated information.
-     */
-    @Override
-    public Set<RevenueReportSum> aggregateDailyRevenue(List<PositionType> pTypes, Date start, Date end) {
-        List<Set<DailyRevenue>> reportSets = eao.findRevenueDataByPositionTypesAndDate(pTypes, start, end);
-        Set<RevenueReportSum> reportData = new HashSet();
-        for (Set<DailyRevenue> set : reportSets) {
-            RevenueReportSum sum = new RevenueReportSum();
-            for (DailyRevenue rpc : set) {
-                if ( rpc.getDocumentTypeName().equals(DocumentType.ANNULATION_INVOICE.getName()) ) {
-                    sum.addSumByDocumentType(DocumentType.ANNULATION_INVOICE, rpc.getDailySum());
-                } else {
-                    if ( rpc.getSalesChannelName() != null && rpc.getSalesChannelName().equals(SalesChannel.CUSTOMER.getName()) ) {
-                        sum.addSalesChannelSum(SalesChannel.CUSTOMER, rpc.getDailySum());
-                    } else if ( rpc.getSalesChannelName() != null && rpc.getSalesChannelName().equals(SalesChannel.RETAILER.getName()) ) {
-                        sum.addSalesChannelSum(SalesChannel.RETAILER, rpc.getDailySum());
-                    } else {
-                        sum.addSalesChannelSum(SalesChannel.UNKNOWN, rpc.getDailySum());
-                    }
-                    sum.addSumByDocumentType(DocumentType.INVOICE, rpc.getDailySum());
-                }
-                sum.setReportingDate(rpc.getReportingDate());
-            }
-            reportData.add(sum);
-        }
-        return reportData;
-    }
 
     @Override
     public FileJacket toXls(Date start, Date end, Step step, boolean extraReported) {

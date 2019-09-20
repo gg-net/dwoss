@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.report.ee.entity.Report;
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.report.ee.entity.Report;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
 import static org.junit.Assert.assertFalse;
@@ -21,7 +21,7 @@ public class ReportLineTest {
     public void testRepayment() {
         Report report = new Report("TestReport", ONESELF, NOW, NOW);
 
-        ReportLine line1 = ReportLine.builder()
+        ReportLine line1 = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
@@ -30,7 +30,7 @@ public class ReportLineTest {
 
         assertFalse(line1.isPartialRepayed());
         // Creditmemo unitAnnex.
-        ReportLine line2 = ReportLine.builder()
+        ReportLine line2 = ReportLine.builder().id(2)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
@@ -44,7 +44,7 @@ public class ReportLineTest {
         assertTrue(line1.isPartialRepayed());
 
         // Now add A Unit.
-        ReportLine line3 = ReportLine.builder()
+        ReportLine line3 = ReportLine.builder().id(3)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();

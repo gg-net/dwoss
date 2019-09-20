@@ -18,34 +18,18 @@ package eu.ggnet.dwoss.report.ee;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.ejb.Remote;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.report.ee.assist.ReportUtil;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
-import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
-import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.util.persistence.RemoteAgent;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 
-import lombok.*;
-
-import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.*;
-import static eu.ggnet.dwoss.report.ee.assist.ReportUtil.*;
-import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
-import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.YEARSPLITT_AND_WARRANTIES;
-import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 
 /**
  *
@@ -54,158 +38,27 @@ import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 @Remote
 public interface ReportAgent extends RemoteAgent {
 
-    @Value
-    public static class ReportParameter implements Serializable {
-
-        public ReportParameter(Report report) {
-            this(report.getType(), report.getViewMode(), report.getName(), report.getStartingDate(), report.getEndingDate());
-        }
-
-        @Builder
-        public ReportParameter(TradeName contractor, ViewMode viewMode, String reportName, Date start, Date end) {
-            this.contractor = contractor;
-            this.viewMode = (viewMode == null ? DEFAULT : viewMode);
-            this.reportName = reportName;
-            this.start = start;
-            this.end = end;
-            ValidationUtil.validate(this);
-        }
-
-        @NotNull
-        private final TradeName contractor;
-
-        @NotNull
-        private final Report.ViewMode viewMode;
-
-        @NotNull
-        @Size(min = 1)
-        private final String reportName;
-
-        @NotNull
-        private final Date start;
-
-        @NotNull
-        private final Date end;
-
-        /**
-         * Creates a new Report Instance based on the Parameter.
-         * <p>
-         * @return a new report.
-         */
-        public Report toNewReport() {
-            return new Report(reportName, contractor, start, end, viewMode);
-        }
-
-    }
-
-    /**
-     * Kill that name as soon as Possible (old ReportResult is gone)
-     */
-    @Value
-    public static class ViewReportResult implements Serializable {
-
-        /**
-         * Type of the result, each type is intended for a different table.
-         */
-        public enum Type {
-
-            /**
-             * Lines which should not be stored in the report, as future lines have an implaced here. e.g. a open complaint.
-             */
-            ACTIVE_INFO,
-            /**
-             * Lines which represent repayents.
-             */
-            REPAYMENTS,
-            /**
-             * Invoice Units with a MFG Date between report date and report date - 1 year.
-             */
-            UNDER_ONE_YEAR,
-            /**
-             * Invoice Units with a MFG Date older than report date - 1 year.
-             */
-            PAST_ONE_YEAR,
-            /**
-             * Lines which in sum result into zero.
-             */
-            REPORT_INFO,
-            /**
-             * Warrenty lines.
-             */
-            WARRENTY,
-            /**
-             * Invoiced elements.
-             */
-            INVOICED;
-
-            /**
-             * Retruns all Reportable.
-             * <p>
-             * @return all Reortable.
-             */
-            public static EnumSet<Type> allReportable() {
-                return EnumSet.complementOf(EnumSet.of(ACTIVE_INFO));
-            }
-        }
-
-        private final EnumMap<Type, NavigableSet<ReportLine>> lines;
-
-        private final ReportParameter parameter;
-
-        public NavigableSet<ReportLine> getAllLines() {
-            return lines.values().stream().flatMap(x -> x.stream()).collect(Collectors.toCollection(() -> new TreeSet<>()));
-        }
-
-        /**
-         * Returns a copy of all relevant report lines.
-         * A ReportLine is relevant if {@link ReportLine#addedToReportProperty} isd true.
-         * <p>
-         * @return a copy of all relevant report lines.
-         */
-        public EnumMap<Type, NavigableSet<ReportLine>> getRelevantLines() {
-            EnumMap<Type, NavigableSet<ReportLine>> copy = new EnumMap<>(Type.class);
-            for (Type keySet : Type.allReportable()) {
-                if ( this.getLines().get(keySet) == null ) continue;
-                copy.put(keySet, this.getLines().get(keySet).stream().filter((t) -> t.isAddedToReport()).collect(Collectors.toCollection(() -> new TreeSet<>())));
-            }
-            return copy;
-        }
-
-        public static ViewReportResult fromReport(Report report) {
-            Set<ReportLine> warranties = report.getLines().stream()
-                    // This collects all warranties.
-                    .filter(line -> line.getPositionType() == PRODUCT_BATCH && line.getReference(SingleReferenceType.WARRANTY) != null)
-                    .collect(Collectors.toCollection(() -> new TreeSet<>()));
-            Set<ReportLine> units = report.getLines();
-            units.removeAll(warranties);
-
-            EnumMap<ViewReportResult.Type, NavigableSet<ReportLine>> lines = new EnumMap<>(ViewReportResult.Type.class);
-            lines.put(REPAYMENTS, ReportUtil.filterRepayed(units));
-            lines.put(REPORT_INFO, ReportUtil.filterReportInfo(units));
-            if ( report.getViewMode() == YEARSPLITT_AND_WARRANTIES ) {
-                YearSplit split = ReportUtil.filterInvoicedSplit(units, report.getStartingDate());
-                lines.put(UNDER_ONE_YEAR, split.getBefore());
-                lines.put(PAST_ONE_YEAR, split.getAfter());
-                lines.put(WARRENTY, filterInvoiced(warranties));
-                lines.get(REPAYMENTS).addAll(filterRepayed(warranties));
-                lines.get(REPORT_INFO).addAll(filterReportInfo(warranties));
-            } else {
-                lines.put(INVOICED, ReportUtil.filterInvoiced(units));
-            }
-            return new ViewReportResult(lines, new ReportParameter(report));
-        }
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class SearchParameter implements Serializable {
 
-        private String refurbishId;
+        private final String refurbishId;
 
+        public SearchParameter(String refurbishId) {
+            this.refurbishId = refurbishId;
+        }
+
+        public String getRefurbishId() {
+            return refurbishId;
+        }
+        
         public boolean isEmpty() {
             return StringUtils.isBlank(refurbishId);
         }
+
+        @Override
+        public String toString() {
+            return "SearchParameter{" + "refurbishId=" + refurbishId + '}';
+        }
+        
     }
 
     public List<SimpleReportLine> findSimple(SearchParameter search, int firstResult, int maxResults);

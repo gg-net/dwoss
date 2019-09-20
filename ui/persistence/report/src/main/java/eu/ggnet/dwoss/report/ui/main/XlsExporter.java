@@ -20,9 +20,9 @@ import java.awt.Color;
 import java.io.File;
 import java.util.*;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.lucidcalc.*;
 
@@ -83,14 +83,14 @@ public class XlsExporter {
 
         ReportParameter parameter = report.getParameter();
 
-        CSheet sheet = new CSheet(parameter.getReportName());
+        CSheet sheet = new CSheet(parameter.reportName());
 
         for (Type type : report.getLines().keySet()) {
             sheet.addBelow(new SBlock(type.name(), new CFormat(BOLD), true));
             STable table = new STable(template);
             table.setModel(new STableModelList<>(toLucidModel(report.getLines().get(type))));
             sheet.addBelow(table);
-            SResult summary = createSummary(table, parameter.getStart(), parameter.getEnd());
+            SResult summary = createSummary(table, parameter.start(), parameter.end());
             sheet.addBelow(4, 1, summary.block);
         }
 
@@ -107,7 +107,7 @@ public class XlsExporter {
 //                new SFormula(newSummary.sum3, "+", oldSummary.sum3), EURO,
 //                new SFormula(newSummary.sum4, "+", oldSummary.sum4), EURO);
 //
-        CCalcDocument doc = new TempCalcDocument(parameter.getReportName() + "_");
+        CCalcDocument doc = new TempCalcDocument(parameter.reportName() + "_");
         doc.add(sheet);
         LucidCalcWriter writer = LucidCalc.createWriter(LucidCalc.Backend.XLS);
         return writer.write(doc);

@@ -1,10 +1,5 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
-import eu.ggnet.dwoss.common.ee.Step;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Map.Entry;
@@ -19,6 +14,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
@@ -35,8 +32,8 @@ import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
-import static eu.ggnet.dwoss.common.ee.Step.DAY;
 import static eu.ggnet.dwoss.common.api.values.TradeName.*;
+import static eu.ggnet.dwoss.common.ee.Step.DAY;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -82,6 +79,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void testFindAllSimple() throws Exception {
         utx.begin();
@@ -102,6 +100,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void testFindProductIdMissingContractorPartNo() throws Exception {
         utx.begin();
@@ -136,6 +135,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void testFindLastReported() throws Exception {
         utx.begin();
@@ -182,22 +182,23 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void findByUniqueUnitId() throws Exception {
         String ISO = "yyyy-MM-dd";
         Date d1 = DateUtils.parseDate("2010-01-01", ISO);
 
-        ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line1 = ReportLineBuilder.create("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line1.setReportingDate(DateUtils.parseDate("2009-01-01", ISO));
         line1.setUniqueUnitId(10);
 
-        ReportLine line2 = new ReportLine("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
+        ReportLine line2 = ReportLineBuilder.create("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setReportingDate(DateUtils.parseDate("2009-07-10", ISO));
         line2.setUniqueUnitId(10);
 
-        ReportLine line3 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
+        ReportLine line3 = ReportLineBuilder.create("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setReportingDate(d1);
 
@@ -219,6 +220,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void findUnreported() throws Exception {
         utx.begin();
@@ -265,6 +267,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.commit();
     }
 
+    @Ignore
     @Test
     public void findUnreportedUnit() throws Exception {
         utx.begin();
@@ -310,28 +313,29 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
 
     }
 
+    @Ignore
     @Test
     public void findFromTillUnreportedUnit() throws Exception {
         String ISO = "yyyy-MM-dd";
 
-        ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line1 = ReportLineBuilder.create("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line1.setReportingDate(DateUtils.parseDate("2009-01-01", ISO));
         line1.setUniqueUnitId(10);
         line1.setContractor(TradeName.DELL);
 
-        ReportLine line2 = new ReportLine("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
+        ReportLine line2 = ReportLineBuilder.create("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setReportingDate(DateUtils.parseDate("2010-01-01", ISO));
         line2.setUniqueUnitId(10);
         line2.setContractor(TradeName.DELL);
 
-        ReportLine line3 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
+        ReportLine line3 = ReportLineBuilder.create("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setReportingDate(DateUtils.parseDate("2011-01-01", ISO));
         line3.setContractor(TradeName.DELL);
 
-        ReportLine line4 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
+        ReportLine line4 = ReportLineBuilder.create("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line4.setReportingDate(DateUtils.parseDate("2012-01-01", ISO));
         line4.setContractor(TradeName.OTTO);
@@ -361,6 +365,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
     @Test
     public void differentRevenueByPositionTypesAndDateRanges() throws Exception {
         ReportLineEao reportLineEao = new ReportLineEao(em);
+        System.out.println("Z");
 
         utx.begin();
         em.joinTransaction();
@@ -372,23 +377,30 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         em.persist(make(LocalDate.of(2010, 6, 5), INVOICE, UNIT, 100));
 
         em.persist(make(LocalDate.of(2010, 7, 5), INVOICE, UNIT, 100));
+        System.out.println("X");
+
         utx.commit();
 
         // Month and count
         utx.begin();
         em.joinTransaction();
+        System.out.println("A1");
         NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 6, 5)), DAY, true);
+        System.out.println("A2");
         for (Entry<Date, Revenue> e : result.entrySet()) {
             assertEquals(100.0, e.getValue().sumBy(INVOICE), 0.0001);
         }
-        
-        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT),Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 6, 5)), Step.MONTH, true);
+        System.out.println("A");
+        result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 6, 5)), Step.MONTH, true);
+        System.out.println("B");
         assertEquals(1, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
         assertEquals(450.0, result.firstEntry().getValue().sum(), 0.0001);
+        System.out.println("C");
 
         result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 6, 1)), Utils.toDate(LocalDate.of(2010, 7, 30)), Step.MONTH, true);
+        System.out.println("D");
         assertEquals(2, result.size());
         assertEquals(500.0, result.firstEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(-50.0, result.firstEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
@@ -396,10 +408,12 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         assertEquals(100.0, result.lastEntry().getValue().sumBy(INVOICE), 0.0001);
         assertEquals(0.0, result.lastEntry().getValue().sumBy(ANNULATION_INVOICE), 0.0001);
         assertEquals(100.0, result.lastEntry().getValue().sum(), 0.0001);
-        
+        System.out.println("E");
+
         utx.commit();
     }
-    @Test 
+
+    @Test
     @Ignore // Not really a test, but something with output. Enable if needed.
     public void showRevenueByPositionTypesAndDate() throws Exception {
         System.out.println("showRevenueByPositionTypesAndDate() - start");
@@ -420,11 +434,11 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         // Month and count
         utx.begin();
         em.joinTransaction();
- 
+
         for (Step step : Step.values()) {
             // Shortcut to show all steps.
             System.out.println("-----");
-            System.out.println("Step: " +  step);
+            System.out.println("Step: " + step);
             System.out.println("-----");
             NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 1, 1)), Utils.toDate(LocalDate.of(2010, 12, 31)), step, true);
             for (Entry<Date, Revenue> e : result.entrySet()) {
@@ -436,7 +450,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         System.out.println("showRevenueByPositionTypesAndDate() - end");
     }
 
-        private ReportLine make(LocalDate ldate, DocumentType docType, PositionType posType, double price) throws ParseException {
+    private ReportLine make(LocalDate ldate, DocumentType docType, PositionType posType, double price) throws ParseException {
         Date date = Utils.toDate(ldate);
 
         ReportLine line = ReportLine.builder()
@@ -460,7 +474,6 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         return line;
     }
 
-    
     private ReportLine make(TradeName contractor, long productId, String contractorPartNo) {
         ReportLine line = generator.makeReportLine();
         line.setPositionType(PositionType.UNIT);

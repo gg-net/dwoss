@@ -11,12 +11,11 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.report.ee.assist.Reports;
-import eu.ggnet.dwoss.report.ee.entity.Report;
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.report.ee.assist.Reports;
+import eu.ggnet.dwoss.report.ee.entity.*;
+import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
 
@@ -32,13 +31,13 @@ public class PersistenceIT extends ArquillianProjectArchive {
 
     @Test
     public void testPersistence() throws Exception {
-        ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line1 = ReportLineBuilder.create("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
-        ReportLine line2 = new ReportLine("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
+        ReportLine line2 = ReportLineBuilder.create("PersName2", "This is a TestDescription2", 1337, "DW0013", 3, "RE001", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
-        ReportLine line3 = new ReportLine("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
+        ReportLine line3 = ReportLineBuilder.create("PersName3", "This is a TestDescription3", 13, "DW1337", 3, "RE0003", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
         Report report = new Report("TestReport", ONESELF,

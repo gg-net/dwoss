@@ -100,7 +100,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
             if ( mandator.applyDefaultChannelOnRollIn() ) {
                 SalesChannel channel = stockUnit.getStock().getPrimaryChannel();
                 channelChanger.fire(new SalesChannelChange.Builder().uniqueUnitId(stockUnit.getUniqueUnitId()).newChannel(channel).build());
-                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName() + " with " + channel.decription, arranger));
+                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName() + " with " + channel.description, arranger));
             } else {
                 history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Rolled in " + stockUnit.getStock().getName(), arranger));
             }

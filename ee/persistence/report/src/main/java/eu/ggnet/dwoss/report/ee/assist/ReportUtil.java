@@ -16,24 +16,23 @@
  */
 package eu.ggnet.dwoss.report.ee.assist;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
-import lombok.Value;
-
+import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
+import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 
 /**
  *
@@ -192,13 +191,30 @@ public class ReportUtil {
         return new PrepareReportPartition(reportAble, activeInfo);
     }
 
-    @Value
     public static class PrepareReportPartition {
 
         private final NavigableSet<ReportLine> reportAble;
 
         private final NavigableSet<ReportLine> activeInfo;
 
+        public PrepareReportPartition(NavigableSet<ReportLine> reportAble, NavigableSet<ReportLine> activeInfo) {
+            this.reportAble = reportAble;
+            this.activeInfo = activeInfo;
+        }
+
+        public NavigableSet<ReportLine> getReportAble() {
+            return reportAble;
+        }
+
+        public NavigableSet<ReportLine> getActiveInfo() {
+            return activeInfo;
+        }
+
+        @Override
+        public String toString() {
+            return "PrepareReportPartition{" + "reportAble=" + reportAble + ", activeInfo=" + activeInfo + '}';
+        }
+        
     }
 
     /**

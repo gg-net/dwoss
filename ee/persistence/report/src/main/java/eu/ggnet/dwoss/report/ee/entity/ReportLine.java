@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,12 +28,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
-import lombok.*;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.*;
@@ -72,40 +67,25 @@ import static eu.ggnet.dwoss.common.api.values.PositionType.*;
  * @author bastian.venz, oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "ReportLine.allReverse", query = "SELECT r FROM ReportLine r ORDER BY r.reportingDate DESC, r.refurbishId ASC")
-    ,
-    @NamedQuery(name = "ReportLine.byUniqueUnitId", query = "SELECT r FROM ReportLine r WHERE r.uniqueUnitId = ?1")
-    ,
-    @NamedQuery(name = "ReportLine.byProductIdMissingContractorPartNo", query = "SELECT r FROM ReportLine r WHERE r.productId = ?1 and r.contractor = ?2 and r.contractorPartNo is null")
-    ,
-    @NamedQuery(name = "ReportLine.byRefurbishId", query = "SELECT r FROM ReportLine r WHERE r.refurbishId = ?1")
-    ,
-    @NamedQuery(name = "ReportLine.bySerialAndPositionTypeAndDossierId", query = "SELECT r FROM ReportLine r WHERE r.serial = ?1 AND r.positionType = ?2 AND r.dossierId = ?3")
-    ,
-    @NamedQuery(name = "ReportLine.lastReported", query = "SELECT MAX(r.reportingDate) FROM ReportLine r")
-    ,
-    @NamedQuery(name = "ReportLine.betweenDates", query = "SELECT r FROM ReportLine r WHERE r.reportingDate BETWEEN ?1 AND ?2")
-    ,
-    @NamedQuery(name = "ReportLine.unreported", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
-    ,
-    @NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
-    ,
-    @NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
-    ,
-    @NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
-    ,
-    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.ee.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
-                + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
-                + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")  // Purchase price is indentifier, that it has been reported.
-    ,
-    @NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.ee.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
-                + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
-                + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
-
-})
-@NoArgsConstructor
-public class ReportLine extends IdentifiableEntity implements Serializable, EagerAble, Comparable<ReportLine> {
+@NamedQuery(name = "ReportLine.allReverse", query = "SELECT r FROM ReportLine r ORDER BY r.reportingDate DESC, r.refurbishId ASC")
+@NamedQuery(name = "ReportLine.byUniqueUnitId", query = "SELECT r FROM ReportLine r WHERE r.uniqueUnitId = ?1")
+@NamedQuery(name = "ReportLine.byProductIdMissingContractorPartNo", query = "SELECT r FROM ReportLine r WHERE r.productId = ?1 and r.contractor = ?2 and r.contractorPartNo is null")
+@NamedQuery(name = "ReportLine.byRefurbishId", query = "SELECT r FROM ReportLine r WHERE r.refurbishId = ?1")
+@NamedQuery(name = "ReportLine.bySerialAndPositionTypeAndDossierId", query = "SELECT r FROM ReportLine r WHERE r.serial = ?1 AND r.positionType = ?2 AND r.dossierId = ?3")
+@NamedQuery(name = "ReportLine.lastReported", query = "SELECT MAX(r.reportingDate) FROM ReportLine r")
+@NamedQuery(name = "ReportLine.betweenDates", query = "SELECT r FROM ReportLine r WHERE r.reportingDate BETWEEN ?1 AND ?2")
+@NamedQuery(name = "ReportLine.unreported", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+@NamedQuery(name = "ReportLine.unreportedbyContractors", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+@NamedQuery(name = "ReportLine.unreportedbyPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+@NamedQuery(name = "ReportLine.unreportedbyContractorsPositionTypes", query = "SELECT r FROM ReportLine r WHERE r.reportingDate >= :from AND r.reportingDate <= :till AND r.contractor IN (:contractors) AND r.positionType IN (:positionTypes) AND r.id NOT IN (SELECT pl.id FROM Report p JOIN p.lines pl WHERE p.type = :type)")
+@NamedQuery(name = "ReportLine.revenueByPositionTypesAndDateReported", query = "SELECT new eu.ggnet.dwoss.report.ee.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), sum(rl.purchasePrice))"
+            + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start and rl.reportingDate <= :end and rl.documentType in(1,3) "
+            + " and rl.purchasePrice != 0 GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")  // Purchase price is indentifier, that it has been reported.
+@NamedQuery(name = "ReportLine.revenueByPositionTypesAndDate", query = "SELECT new eu.ggnet.dwoss.report.ee.eao.RevenueHolder(rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor, sum(rl.price), 0.)"
+            + " FROM ReportLine rl WHERE rl.positionType in(:positions) and rl.reportingDate >= :start"
+            + " and rl.reportingDate <= :end and rl.documentType in(1,3) GROUP BY rl.reportingDate, rl.documentType, rl.salesChannel, rl.contractor")
+@SuppressWarnings("PersistenceUnitPresent")
+public class ReportLine extends BaseEntity implements Serializable, EagerAble, Comparable<ReportLine> {
 
     /**
      * Types for single line references.
@@ -119,14 +99,23 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
 
     }
 
-    @Value
     public static class Storeable implements Serializable {
 
-        private final long id;
+        public final long id;
 
-        private final double marginPercentage;
+        public final double marginPercentage;
 
-        private final double purchasePrice;
+        public final double purchasePrice;
+
+        public Storeable(long id, double marginPercentage, double purchasePrice) {
+            this.id = id;
+            this.marginPercentage = marginPercentage;
+            this.purchasePrice = purchasePrice;
+        }
+        
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
 
     }
 
@@ -169,8 +158,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * </ul>
      * <p>
      */
-    @AllArgsConstructor
-    @Getter
     public static enum WorkflowStatus {
 
         /**
@@ -196,8 +183,12 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         /**
          * A simple sign reprensentation of the Workflow (o), (-) or (+).
          */
-        private final String sign;
+        public final String sign;
 
+        private WorkflowStatus(String sign) {
+            this.sign = sign;
+        }
+        
     }
 
     public static Set<ReportLine.Storeable> toStorables(Collection<ReportLine> lines) {
@@ -209,7 +200,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     }
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
@@ -217,7 +207,6 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * Integer value for optimistic locking.
      */
     @Version
-    @Getter
     private int optLock;
 
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
@@ -227,82 +216,60 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * The date when this {@link ReportLine} was reported.
      */
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date reportingDate;
 
     /**
      * The dossier id of the {@link ReportLine} where the referendet position exist.
      */
     @NotNull
-    @Getter
-    @Setter
     private long dossierId;
 
     /**
      * The Identifier of the referended Dossier.
      */
-    @Getter
-    @Setter
     private String dossierIdentifier;
 
     /**
      * The id of the document where the refended position of this {@link ReportLine} exist.
      */
     @NotNull
-    @Getter
-    @Setter
     private long documentId;
 
     /**
      * The Identifier of the referended Document.
      */
-    @Getter
-    @Setter
     private String documentIdentifier;
 
     /**
      * The type of the document that referend the {@link ReportLine}.
      */
     @NotNull
-    @Getter
     private DocumentType documentType;
 
-    @Getter
     private String documentTypeName;
 
     /**
      * The date when the newest Document was created.
      */
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date actual;
 
-    @Getter
-    @Setter
     @NotNull
     private WorkflowStatus workflowStatus = WorkflowStatus.DEFAULT;
 
     //PositionData
-    @Getter
-    @Setter
     private double amount;
 
     /**
      * Name of the RedTape Position.
      */
     @NotNull
-    @Getter
-    @Setter
     private String name;
 
     /**
      * The description of the Position.
      */
     @Lob
-    @Getter
-    @Setter
     @Column(length = 65536)
     private String description;
 
@@ -310,56 +277,41 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
      * The type of the position that referend the {@link ReportLine}.
      */
     @NotNull
-    @Getter
     private PositionType positionType;
 
     /**
      * The type of the position that referend the {@link ReportLine}.
      */
-    @Getter
     private String positionTypeName;
 
     /**
      * The price without tax of this position, normally the sales price of a unit.
      */
-    @Getter
     private double price;
 
     @Transient
     private transient DoubleProperty priceProperty;
 
-    @Getter
-    @Setter
     private double tax;
 
-    @Getter
-    @Setter
     private int bookingAccount;
 
     /**
      * The id of the Customer wiche has the dossier.
      */
     @Min(0)
-    @Getter
-    @Setter
     private long customerId;
 
     /**
      * This String contains a escaped String with the Invoice Adress.
      */
-    @Getter
-    @Setter
     @Size(max = 255)
     private String customerName;
 
-    @Getter
-    @Setter
     @Size(max = 255)
     private String customerCompany;
 
     @Lob
-    @Getter
-    @Setter
     @Column(length = 65536)
     private String invoiceAddress;
 
@@ -367,48 +319,39 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     /**
      * This is a referenz to the ProductGroup of the Product, if this ReportLine represent a Unit oder Product.
      */
-    @Getter
     private ProductGroup productGroup;
 
     /**
      * This is a String representation of the ProductGroup.
      * This String exist because the possibility that a Product Group will change his name or will be deleted.
      */
-    @Getter
     private String productGroupName;
 
     /**
      * This is a referenz to the ProductBrand of the Product, if this ReportLine represent a Unit oder Product.
      */
-    @Getter
     private TradeName productBrand;
 
     /**
      * This is a String representation of the Product Brand.
      * This String exist because the possibility that a Product Brand will change his name or will be deleted.
      */
-    @Getter
     private String productBrandName;
 
     /**
      * This is a String representation of the Product Name.
      */
-    @Setter
-    @Getter
     private String productName;
 
     /**
      * The part no of the product.
      */
-    @Getter
-    @Setter
     private String partNo;
 
     /**
      * This double is the manufacturer cost price.
      * It is possible and very common that we have access to this, AFTER we created the Report.
      */
-    @Getter
     private double manufacturerCostPrice;
 
     @Transient
@@ -417,44 +360,33 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     /**
      * The id of the product. If the id is 0, than there is no Product.
      */
-    @Getter
-    @Setter
     private long productId;
 
     // -- Unit
     /**
      * The refurbish id of the {@link ReportLine}, when it exist.
      */
-    @Getter
-    @Setter
     private String refurbishId;
 
     /**
      * The serial number of the unit.
      */
-    @Getter
-    @Setter
     private String serial;
 
     /**
      * The manufacture date.
      */
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date mfgDate;
 
     /**
      * The id of the unique unit.
      */
-    @Getter
-    @Setter
     private long uniqueUnitId;
 
     /**
      * The percentage of the marge of this Line.
      */
-    @Getter
     private double marginPercentage;
 
     @Transient
@@ -463,51 +395,42 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     /**
      * The Price with this unit was buyed.
      */
-    @Getter
     private double purchasePrice;
 
     @Transient
     private transient DoubleProperty purchasePriceProperty;
 
-    @Getter
     private SalesChannel salesChannel;
 
-    @Getter
     private String salesChannelName;
 
     /**
      * This is a referenz to the contractor of the Product, if this ReportLine represent a Unit oder Product.
      */
-    @Getter
     private TradeName contractor;
 
     /**
      * This is a String representation of the contractor name.
      * This String exist because the possibility that a contractor name will change his name or will be deleted.
      */
-    @Getter
     private String contractorName;
 
     /**
      * This String is a Partnumber that we will be given from the specific contractor.
      * It is possible and very common that we have access to this, AFTER we created the Report.
-     */
-    @Getter
-    @Setter
+     */ 
     private String contractorPartNo;
 
     /**
      * This double is the reference price for the specific contractor.
      * It is possible and very common that we have access to this, AFTER we created the Report.
      */
-    @Getter
     private double contractorReferencePrice;
 
     @Transient
     private transient DoubleProperty contractorReferencePriceProperty;
 
-    @Getter
-    @Setter
+ 
     private String customerEmail;
 
     /**
@@ -526,44 +449,322 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     @Transient
     private transient BooleanProperty addedToReportProperty;
 
-    @Getter
-    @Setter
     @Column(length = 65536)
     @Lob
     private String comment;
 
-    @Getter
-    @Setter
     private long gtin;
 
-    @Builder
-    @SuppressWarnings("OverridableMethodCallInConstructor")
-    public ReportLine(String name, String description, long dossierId, String dossierIdentifier, long documentId, String documentIdentifier,
-                      PositionType positionType, DocumentType documentType, long customerId, double amount, double tax, double price,
-                      int bookingAccount, String invoiceAddress, String refurbishId, long uniqueUnitId, String serial, Date mfgDate, long productId,
-                      String partNo, String customerEmail) {
-        this.name = name;
-        this.description = description;
+    public ReportLine() {
+    }
+    
+    /**
+     * Offline Constructor, use only in test to simulate ids.
+     * 
+     * @param id the id, normaly autogenerated
+     */
+    public ReportLine(long id) {
+        LoggerFactory.getLogger(this.getClass()).warn("ReportLine(id={}) called, creating intance with id. Use only in tests",id);
+        this.id = id;
+    }
+
+    public static ReportLineBuilder builder() {
+        return new ReportLineBuilder();
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public Date getReportingDate() {
+        return reportingDate;
+    }
+    
+    public void setReportingDate(Date reportingDate) {
+        this.reportingDate = reportingDate;
+    }
+    
+    public long getDossierId() {
+        return dossierId;
+    }
+    
+    public void setDossierId(long dossierId) {
         this.dossierId = dossierId;
+    }
+    
+    public String getDossierIdentifier() {
+        return dossierIdentifier;
+    }
+    
+    public void setDossierIdentifier(String dossierIdentifier) {
         this.dossierIdentifier = dossierIdentifier;
+    }
+    
+    public long getDocumentId() {
+        return documentId;
+    }
+    
+    public void setDocumentId(long documentId) {
         this.documentId = documentId;
+    }
+    
+    public String getDocumentIdentifier() {
+        return documentIdentifier;
+    }
+    
+    public void setDocumentIdentifier(String documentIdentifier) {
         this.documentIdentifier = documentIdentifier;
-        this.setPositionType(positionType);
-        this.setDocumentType(documentType);
-        this.customerId = customerId;
+    }
+    
+    public Date getActual() {
+        return actual;
+    }
+    
+    public void setActual(Date actual) {
+        this.actual = actual;
+    }
+    
+    public WorkflowStatus getWorkflowStatus() {
+        return workflowStatus;
+    }
+    
+    public void setWorkflowStatus(WorkflowStatus workflowStatus) {
+        this.workflowStatus = workflowStatus;
+    }
+    
+    public double getAmount() {
+        return amount;
+    }
+    
+    public void setAmount(double amount) {
         this.amount = amount;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public double getTax() {
+        return tax;
+    }
+    
+    public void setTax(double tax) {
         this.tax = tax;
-        this.price = price;
+    }
+    
+    public int getBookingAccount() {
+        return bookingAccount;
+    }
+    
+    public void setBookingAccount(int bookingAccount) {
         this.bookingAccount = bookingAccount;
+    }
+    
+    public long getCustomerId() {
+        return customerId;
+    }
+    
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+    
+    public String getCustomerName() {
+        return customerName;
+    }
+    
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+    
+    public String getCustomerCompany() {
+        return customerCompany;
+    }
+    
+    public void setCustomerCompany(String customerCompany) {
+        this.customerCompany = customerCompany;
+    }
+    
+    public String getInvoiceAddress() {
+        return invoiceAddress;
+    }
+    
+    public void setInvoiceAddress(String invoiceAddress) {
         this.invoiceAddress = invoiceAddress;
-        this.refurbishId = refurbishId;
-        this.uniqueUnitId = uniqueUnitId;
-        this.serial = serial;
-        this.mfgDate = mfgDate;
-        this.productId = productId;
+    }
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public String getPartNo() {
+        return partNo;
+    }
+    
+    public void setPartNo(String partNo) {
         this.partNo = partNo;
+    }
+    
+    public long getProductId() {
+        return productId;
+    }
+    
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+    
+    public String getRefurbishId() {
+        return refurbishId;
+    }
+    
+    public void setRefurbishId(String refurbishId) {
+        this.refurbishId = refurbishId;
+    }
+    
+    public String getSerial() {
+        return serial;
+    }
+    
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
+    
+    public Date getMfgDate() {
+        return mfgDate;
+    }
+    
+    public void setMfgDate(Date mfgDate) {
+        this.mfgDate = mfgDate;
+    }
+    
+    public long getUniqueUnitId() {
+        return uniqueUnitId;
+    }
+    
+    public void setUniqueUnitId(long uniqueUnitId) {
+        this.uniqueUnitId = uniqueUnitId;
+    }
+    
+    public String getContractorPartNo() {
+        return contractorPartNo;
+    }
+    
+    public void setContractorPartNo(String contractorPartNo) {
+        this.contractorPartNo = contractorPartNo;
+    }
+    
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+    
+    public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
     }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public long getGtin() {
+        return gtin;
+    }
+    
+    public void setGtin(long gtin) {
+        this.gtin = gtin;
+    }
+    
+    public long getId() {
+        return id;
+    }
+    
+    public int getOptLock() {
+        return optLock;
+    }
+    
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+    
+    public String getDocumentTypeName() {
+        return documentTypeName;
+    }
+    
+    public PositionType getPositionType() {
+        return positionType;
+    }
+    
+    public String getPositionTypeName() {
+        return positionTypeName;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    public double getManufacturerCostPrice() {
+        return manufacturerCostPrice;
+    }
+    
+    public double getMarginPercentage() {
+        return marginPercentage;
+    }
+    
+    public TradeName getContractor() {
+        return contractor;
+    }
+    
+    public String getContractorName() {
+        return contractorName;
+    }
+    
+    public double getContractorReferencePrice() {
+        return contractorReferencePrice;
+    }
+    
+    public ProductGroup getProductGroup() {
+        return productGroup;
+    }
+    
+    public String getProductGroupName() {
+        return productGroupName;
+    }
+    
+    public TradeName getProductBrand() {
+        return productBrand;
+    }
+    
+    public String getProductBrandName() {
+        return productBrandName;
+    }
+    
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+    
+    public SalesChannel getSalesChannel() {
+        return salesChannel;
+    }
+    
+    public String getSalesChannelName() {
+        return salesChannelName;
+    }
+    //</editor-fold>
 
     public ReportLine getReference(SingleReferenceType type) {
         return singleReferences.get(type);
@@ -687,7 +888,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     public void setProductBrand(TradeName productBrand) {
         this.productBrand = productBrand;
         if ( productBrand != null ) {
-            this.productBrandName = productBrand.getName();
+            this.productBrandName = productBrand.getDescription();
         } else this.productBrandName = null;
     }
 
@@ -699,7 +900,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     public void setContractor(TradeName contractor) {
         this.contractor = contractor;
         if ( contractor != null ) {
-            this.contractorName = contractor.getName();
+            this.contractorName = contractor.getDescription();
         } else this.contractorName = null;
     }
 
@@ -711,18 +912,18 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
     public void setSalesChannel(SalesChannel salesChannel) {
         this.salesChannel = salesChannel;
         if ( salesChannel != null ) {
-            this.salesChannelName = salesChannel.getName();
+            this.salesChannelName = salesChannel.description;
         } else this.salesChannelName = null;
     }
 
     public void setDocumentType(DocumentType documentType) {
         this.documentType = documentType;
-        this.documentTypeName = documentType.getName();
+        this.documentTypeName = documentType.description;
     }
 
     public void setPositionType(PositionType positionType) {
         this.positionType = positionType;
-        this.positionTypeName = positionType.getName();
+        this.positionTypeName = positionType.description;
     }
 
     public void addAll(Collection<ReportLine> lines) {
@@ -1076,7 +1277,7 @@ public class ReportLine extends IdentifiableEntity implements Serializable, Eage
         sb.append("<br>");
 
         sb.append("<b>WorkflowStatus: </b>");
-        sb.append(workflowStatus.getSign());
+        sb.append(workflowStatus.sign);
         sb.append("</div>");
 
         //postition

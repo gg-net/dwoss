@@ -17,25 +17,61 @@
 package eu.ggnet.dwoss.report.ee.eao;
 
 import java.util.Date;
+import java.util.Objects;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Value holder for revenue reporting.
  * <p>
  * @author pascal.perau
  */
-@Data
-@AllArgsConstructor
 public class DailyRevenue {
 
-    private Date reportingDate;
+    public final Date reportingDate;
 
-    private String documentTypeName;
+    public final String documentTypeName;
 
-    private double dailySum;
+    public final double dailySum;
 
-    private String salesChannelName;
+    public final String salesChannelName;
 
+    public DailyRevenue(Date reportingDate, String documentTypeName, double dailySum, String salesChannelName) {
+        this.reportingDate = Objects.requireNonNull(reportingDate,"reportingDate must not be null");
+        this.documentTypeName = Objects.requireNonNull(documentTypeName,"documentTypeName must not be null");;
+        this.dailySum = dailySum;
+        this.salesChannelName = salesChannelName;
+    }
+
+    // TODO: In the migration away from lombok, I wasn't sure I need that. So for now it's in. Verify, if needed. 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.reportingDate);
+        hash = 97 * hash + Objects.hashCode(this.documentTypeName);
+        hash = 97 * hash + (int)(Double.doubleToLongBits(this.dailySum) ^ (Double.doubleToLongBits(this.dailySum) >>> 32));
+        hash = 97 * hash + Objects.hashCode(this.salesChannelName);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final DailyRevenue other = (DailyRevenue)obj;
+        if ( Double.doubleToLongBits(this.dailySum) != Double.doubleToLongBits(other.dailySum) ) return false;
+        if ( !Objects.equals(this.documentTypeName, other.documentTypeName) ) return false;
+        if ( !Objects.equals(this.salesChannelName, other.salesChannelName) ) return false;
+        if ( !Objects.equals(this.reportingDate, other.reportingDate) ) return false;
+        return true;
+    }
+    //</editor-fold>
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+    
 }

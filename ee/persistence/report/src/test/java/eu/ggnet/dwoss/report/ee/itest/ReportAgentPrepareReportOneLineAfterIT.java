@@ -1,8 +1,5 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
-import eu.ggnet.dwoss.report.ee.itest.support.ReportLineItHelper;
-import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-
 import java.util.Date;
 
 import javax.ejb.EJB;
@@ -13,9 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.report.ee.ReportAgent;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.report.ee.itest.support.ReportLineItHelper;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
@@ -52,7 +51,7 @@ public class ReportAgentPrepareReportOneLineAfterIT extends ArquillianProjectArc
         ReportLine line1 = helper.makeReportLine(D1, ONESELF, INVOICE, UNIT, ID_ONE);
         // Add a line, that is before.
         ReportLine line2 = helper.makeReportLine(D2, ONESELF, INVOICE, UNIT, ID_ONE);
-        ReportParameter.ReportParameterBuilder reportBuilder = ReportParameter.builder()
+        ReportParameter.Builder reportBuilder = new ReportParameter.Builder()
                 .reportName("Report3")
                 .contractor(ONESELF)
                 .start(D_BEFORE_1)

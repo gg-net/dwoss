@@ -28,10 +28,10 @@ public enum SalesChannel {
     /**
      * A short (german) description.
      */
-    public final String decription;
+    public final String description;
 
     private SalesChannel(String decription) {
-        this.decription = decription;
+        this.description = decription;
     }
 
     /**
@@ -42,7 +42,7 @@ public enum SalesChannel {
      */
     @Deprecated
     public String getName() {
-        return decription;
+        return description;
     }
 
 }

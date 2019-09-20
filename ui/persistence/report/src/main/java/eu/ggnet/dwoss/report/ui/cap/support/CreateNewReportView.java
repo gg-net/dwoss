@@ -23,14 +23,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.NamedEnumCellRenderer;
+import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
 
 /**
  * View to create new sales report based on mandator contractors.
@@ -88,7 +88,7 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
     }
 
     public ReportParameter getParameter() {
-        return ReportParameter.builder()
+        return new ReportParameter.Builder()
                 .contractor((TradeName)contractorComboBox.getSelectedItem())
                 .viewMode((ViewMode)viewModeComboBox.getSelectedItem())
                 .reportName(nameTextField.getText())

@@ -16,25 +16,22 @@
  */
 package eu.ggnet.dwoss.report.ee.entity.partial;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
-import lombok.*;
-import lombok.Builder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 
 /**
  *
@@ -42,32 +39,10 @@ import lombok.Builder;
  */
 @Entity
 @Table(name = "ReportLine")
-@ToString
-@EqualsAndHashCode(of = "id")
-public class SimpleReportLine implements Serializable {
-
-    public SimpleReportLine() {
-    }
-
-    @Builder
-    public SimpleReportLine(Date reportingDate, String refurbishId, long uniqueUnitId, TradeName contractor, String partNo, String productName, double amount,
-                            double price, double purchasePrice, double contractorReferencePrice, DocumentType documentType, PositionType positionType, String serial) {
-        this.reportingDate = reportingDate;
-        this.refurbishId = refurbishId;
-        this.uniqueUnitId = uniqueUnitId;
-        this.contractor = contractor;
-        this.partNo = partNo;
-        this.productName = productName;
-        this.amount = amount;
-        this.price = price;
-        this.purchasePrice = purchasePrice;
-        this.contractorReferencePrice = contractorReferencePrice;
-        this.documentType = documentType;
-        this.positionType = positionType;
-    }
+@SuppressWarnings("PersistenceUnitPresent")
+public class SimpleReportLine extends BaseEntity implements Serializable {
 
     @Id
-    @Getter
     @GeneratedValue
     private long id;
 
@@ -75,81 +50,173 @@ public class SimpleReportLine implements Serializable {
      * Integer value for optimistic locking.
      */
     @Version
-    @Getter
     private int optLock;
 
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date reportingDate;
 
-    @Getter
-    @Setter
     private String refurbishId;
 
-    @Getter
-    @Setter
     private long uniqueUnitId;
 
-    @Getter
-    @Setter
     private TradeName contractor;
 
-    @Getter
-    @Setter
     private String partNo;
 
-    @Getter
-    @Setter
     private String serial;
 
-    @Setter
-    @Getter
     private String productName;
 
-    @Getter
-    @Setter
     private double amount;
 
-    @Getter
-    @Setter
     private double price;
 
     @Transient
     private transient DoubleProperty priceProperty;
 
-    @Getter
-    @Setter
     private double purchasePrice;
 
     @Transient
     private transient DoubleProperty purchasePriceProperty;
 
-    @Getter
-    @Setter
     private double contractorReferencePrice;
 
     @Transient
     private transient DoubleProperty contractorReferencePriceProperty;
 
     @NotNull
-    @Getter
     private DocumentType documentType;
 
     @NotNull
-    @Getter
-    @Setter
     private PositionType positionType;
 
-    @Getter
-    @Setter
     private String comment;
 
-    @Getter
-    @Setter
     @NotNull
     private WorkflowStatus workflowStatus = WorkflowStatus.DEFAULT;
+    
+    public SimpleReportLine() {
+    }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public void setReportingDate(Date reportingDate) {
+        this.reportingDate = reportingDate;
+    }
+    
+    public void setRefurbishId(String refurbishId) {
+        this.refurbishId = refurbishId;
+    }
+    
+    public void setUniqueUnitId(long uniqueUnitId) {
+        this.uniqueUnitId = uniqueUnitId;
+    }
+    
+    public void setContractor(TradeName contractor) {
+        this.contractor = contractor;
+    }
+    
+    public void setPartNo(String partNo) {
+        this.partNo = partNo;
+    }
+    
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+    
+    public void setPositionType(PositionType positionType) {
+        this.positionType = positionType;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public void setWorkflowStatus(WorkflowStatus workflowStatus) {
+        this.workflowStatus = workflowStatus;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public int getOptLock() {
+        return optLock;
+    }
+    
+    public Date getReportingDate() {
+        return reportingDate;
+    }
+    
+    public String getRefurbishId() {
+        return refurbishId;
+    }
+    
+    public long getUniqueUnitId() {
+        return uniqueUnitId;
+    }
+    
+    public TradeName getContractor() {
+        return contractor;
+    }
+    
+    public String getPartNo() {
+        return partNo;
+    }
+    
+    public String getSerial() {
+        return serial;
+    }
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public double getAmount() {
+        return amount;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+    
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+    
+    public double getContractorReferencePrice() {
+        return contractorReferencePrice;
+    }
+    
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+    
+    public PositionType getPositionType() {
+        return positionType;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public WorkflowStatus getWorkflowStatus() {
+        return workflowStatus;
+    }
+    //</editor-fold>
+    
     public void setPrice(double price) {
         if ( priceProperty != null ) priceProperty.set(price);
         else this.price = price;
@@ -207,4 +274,8 @@ public class SimpleReportLine implements Serializable {
         return contractorReferencePriceProperty;
     }
 
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

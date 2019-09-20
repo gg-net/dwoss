@@ -51,7 +51,6 @@ public class ArquillianProjectArchive {
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-ee-extended-receipt", RUNTIME, false)) // Using Receipt for unit generation
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-ee-extended-redtape", RUNTIME, false)) // Using Receipt for unit generation
-                .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "receipt-persistence-test.war")
@@ -61,7 +60,6 @@ public class ArquillianProjectArchive {
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(ResolveRepaymentBeanITHelper.class)
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
-                .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);

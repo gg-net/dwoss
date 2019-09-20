@@ -1,17 +1,13 @@
 package eu.ggnet.dwoss.report.ee.test;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang3.time.DateUtils;
-
-import static eu.ggnet.dwoss.common.api.values.TradeName.HP;
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
@@ -19,7 +15,10 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.common.api.values.TradeName.HP;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -31,6 +30,8 @@ public class ReportUtilTest {
 
     private final Date now = new Date();
 
+    private final static AtomicLong COUNT = new AtomicLong(1);
+    
     @Test
     public void testFilterInvoiceSplit() {
         List<ReportLine> lines = new ArrayList<>();
@@ -42,9 +43,9 @@ public class ReportUtilTest {
         // Test if the year split is working correctly
         YearSplit split = ReportUtil.filterInvoicedSplit(lines, now);
 
-        assertThat(split.getBefore(), hasItem(lines.get(0)));
-        assertTrue("Expect DW0002 to be present but was: " + out(split.getBefore()), split.getBefore().contains(lines.get(0)));
-        assertTrue("Expect DW0001 to be present but was: " + out(split.getAfter()), split.getAfter().contains(lines.get(1)));
+        assertThat(split.before, hasItem(lines.get(0)));
+        assertTrue("Expect DW0002 to be present but was: " + out(split.before), split.before.contains(lines.get(0)));
+        assertTrue("Expect DW0001 to be present but was: " + out(split.after), split.after.contains(lines.get(1)));
     }
 
     @Test
@@ -199,6 +200,7 @@ public class ReportUtilTest {
     private ReportLine makeUnitReportLine(Date mfgDate, long lastDossierId, DocumentType dType) {
         ReportLine build = ReportLine
                 .builder()
+                .id(COUNT.getAndAdd(1))
                 .mfgDate(mfgDate)
                 .dossierId(lastDossierId + 1)
                 .dossierIdentifier("DW" + format.format(lastDossierId + 1))

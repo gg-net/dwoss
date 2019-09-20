@@ -16,12 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee.op;
 
-import java.util.*;
+import java.util.Date;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.report.ee.RevenueReportSum;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.util.FileJacket;
 
@@ -32,15 +30,6 @@ import eu.ggnet.dwoss.util.FileJacket;
  */
 @Remote
 public interface RevenueReporter {
-
-    /**
-     * <p>
-     * @param pTypes position types to be included
-     * @param start  start date
-     * @param end    end date
-     * @return Daily seperated {@link RevenueReportSum} containing the aggregated information.
-     */
-    Set<RevenueReportSum> aggregateDailyRevenue(List<PositionType> pTypes, Date start, Date end);
 
     /**
      * Returns a FileJecket containing an XLS with the step revenue for the range.

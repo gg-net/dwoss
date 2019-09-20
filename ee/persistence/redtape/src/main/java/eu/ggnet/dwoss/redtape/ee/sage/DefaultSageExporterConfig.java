@@ -30,17 +30,13 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
  */
 public class DefaultSageExporterConfig implements SageExporterConfig, Serializable {
 
-    private int defaultDebitorLedger;
+    private final int defaultDebitorLedger;
 
-    private boolean customerLedgersDisabled;
+    private final boolean customerLedgersDisabled;
 
     public DefaultSageExporterConfig(int defaultDebitorLedger, boolean customerLedgersDisabled) {
         this.defaultDebitorLedger = defaultDebitorLedger;
         this.customerLedgersDisabled = customerLedgersDisabled;
-    }
-
-    public DefaultSageExporterConfig() {
-        this(0,false);
     }
 
     @Override
@@ -62,12 +58,12 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String buchText(Document doc, UiCustomer customer) {
-        String buchungsText = customer.getCompany();
+        String buchungsText = customer.company;
         if ( StringUtils.isBlank(buchungsText) ) {
-            buchungsText = customer.getLastName();
+            buchungsText = customer.lastName;
         }
         if ( StringUtils.isBlank(buchungsText) ) {
-            buchungsText = "Kundenummer=" + customer.getId();
+            buchungsText = "Kundenummer=" + customer.id;
         }
         buchungsText = buchungsText.replaceAll("-", "_");
         buchungsText += " - " + doc.getIdentifier();
@@ -76,12 +72,12 @@ public class DefaultSageExporterConfig implements SageExporterConfig, Serializab
 
     @Override
     public String wawiBeleg(Document doc, UiCustomer customer) {
-        return "K" + customer.getId() + "/" + doc.getIdentifier();
+        return "K" + customer.id + "/" + doc.getIdentifier();
     }
 
     @Override
     public String stCode(Document doc) {
-        return doc.getTaxType().getTaxCode();
+        return doc.getTaxType().taxCode;
     }
 
 }

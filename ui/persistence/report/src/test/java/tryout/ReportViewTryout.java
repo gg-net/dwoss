@@ -1,23 +1,20 @@
 package tryout;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-
 import java.util.*;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ui.main.ReportController;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
-import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.INVOICED;
-import static eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult.Type.REPAYMENTS;
+import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.INVOICED;
+import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.REPAYMENTS;
 
 /**
  *
@@ -53,7 +50,7 @@ public class ReportViewTryout {
         lines.put(INVOICED, invoicedLines);
         lines.put(REPAYMENTS, repayedLinesLines);
         ViewReportResult result = new ViewReportResult(lines,
-                ReportParameter.builder()
+                new ReportParameter.Builder()
                         .reportName("JUnit " + tradeName + " Report")
                         .contractor(tradeName)
                         .start(new Date())

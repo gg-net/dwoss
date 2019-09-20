@@ -20,7 +20,6 @@ import java.io.File;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.Coordinate;
@@ -46,7 +45,6 @@ public class ArquillianProjectArchive {
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
                 .importRuntimeDependencies()
-                .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "misc-core-test.war")
@@ -55,7 +53,6 @@ public class ArquillianProjectArchive {
                 .addClass(ArquillianProjectArchive.class) // The local deployer configuration
                 .addClass(CustomerSearchProviderStub.class)
                 .addClass(UniqueUnitSearchProviderStub.class)
-                .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);

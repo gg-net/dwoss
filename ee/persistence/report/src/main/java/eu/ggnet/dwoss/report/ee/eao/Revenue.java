@@ -16,25 +16,20 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
-import java.util.*;
 import java.util.Map.Entry;
+import java.util.*;
 
-import lombok.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.api.values.*;
 
 /**
  * Container to handle a Revenue Result.
  * <p>
  * @author oliver.guenther
  */
-@Value
 public class Revenue {
 
-    @ToString
-    @EqualsAndHashCode
     public static class RevenueMargin {
 
         public double revenue;
@@ -43,17 +38,50 @@ public class Revenue {
 
         public double reportedPurchacePrice;
 
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
+
     }
 
-    @Value
     public static class Key {
 
-        private final SalesChannel channel;
+        public final SalesChannel channel;
 
-        private final DocumentType type;
+        public final DocumentType type;
 
-        private final TradeName contractor;
+        public final TradeName contractor;
 
+        private Key(SalesChannel channel, DocumentType type, TradeName contractor) {
+            this.channel = Objects.requireNonNull(channel,"channel must not be null");
+            this.type = Objects.requireNonNull(type,"type must not be null");
+            this.contractor = Objects.requireNonNull(contractor,"contractor must not be null");
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 79 * hash + Objects.hashCode(this.channel);
+            hash = 79 * hash + Objects.hashCode(this.type);
+            hash = 79 * hash + Objects.hashCode(this.contractor);
+            return hash;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final Key other = (Key)obj;
+            if ( this.channel != other.channel ) return false;
+            if ( this.type != other.type ) return false;
+            if ( this.contractor != other.contractor ) return false;
+            return true;
+        }
+        //</editor-fold>
+        
         /**
          * Creates or reuses an Instance of Key.
          * <p>
@@ -62,27 +90,31 @@ public class Revenue {
          * @param contractor the contractor
          * @return a instance of Key and caches the instance.
          */
+        //INFO: Beispiel, wo Olli overengeniert hat.
         public static Key valueOf(SalesChannel c, DocumentType t, TradeName contractor) {
-            // TODO: Implent Cache :-)
             return new Key(c, t, contractor);
-        }
-
+        }     
+        
     }
 
     private final Map<Key, RevenueMargin> details = new HashMap<>();
 
-    {
+    public Revenue() {
         for (SalesChannel channel : SalesChannel.values()) {
             for (DocumentType type : DocumentType.values()) {
                 for (TradeName contractor : TradeName.values()) {
-                    details.put(new Key(channel, type, contractor), new RevenueMargin());
+                    details.put(Key.valueOf(channel, type, contractor), new RevenueMargin());
                 }
             }
         }
     }
 
+    public Map<Key, RevenueMargin> getDetails() {
+        return details;
+    }
+    
     public void addTo(SalesChannel channel, DocumentType type, TradeName contractor, double revenue, double reportedPrice, double purchacePrice) {
-        Key k = new Key(channel, type, contractor);
+        Key k = Key.valueOf(channel, type, contractor);
         RevenueMargin rm = details.get(k);
         rm.revenue += revenue;
         rm.reportedRevenue += reportedPrice;
@@ -98,7 +130,7 @@ public class Revenue {
     public double sumBy(DocumentType type) {
         double sum = 0;
         for (Entry<Key, RevenueMargin> entry : details.entrySet()) {
-            if ( entry.getKey().getType() == type ) sum += entry.getValue().revenue;
+            if ( entry.getKey().type == type ) sum += entry.getValue().revenue;
         }
         return sum;
     }
@@ -106,21 +138,21 @@ public class Revenue {
     public double sumBy(DocumentType type, TradeName contractor) {
         double sum = 0;
         for (Entry<Key, RevenueMargin> entry : details.entrySet()) {
-            if ( entry.getKey().getType() == type && entry.getKey().getContractor() == contractor ) sum += entry.getValue().revenue;
+            if ( entry.getKey().type == type && entry.getKey().contractor == contractor ) sum += entry.getValue().revenue;
         }
         return sum;
     }
 
     public double sumBy(SalesChannel channel, DocumentType type) {
         return details.entrySet().stream()
-                .filter(e -> e.getKey().getChannel() == channel && e.getKey().getType() == type)
+                .filter(e -> e.getKey().channel == channel && e.getKey().type == type)
                 .mapToDouble(e -> e.getValue().revenue)
                 .sum();
     }
 
     public double sumBy(TradeName contractor) {
         return details.entrySet().stream()
-                .filter(e -> e.getKey().getContractor() == contractor)
+                .filter(e -> e.getKey().contractor == contractor)
                 .mapToDouble(e -> e.getValue().revenue)
                 .sum();
     }
@@ -131,7 +163,7 @@ public class Revenue {
 
     public double sumReportedRevenueBy(TradeName contractor) {
         return details.entrySet().stream()
-                .filter(e -> e.getKey().getContractor() == contractor)
+                .filter(e -> e.getKey().contractor == contractor)
                 .mapToDouble(e -> e.getValue().reportedRevenue)
                 .sum();
     }
@@ -142,7 +174,7 @@ public class Revenue {
 
     public double sumReportedPurchasePriceBy(TradeName contractor) {
         return details.entrySet().stream()
-                .filter(e -> e.getKey().getContractor() == contractor)
+                .filter(e -> e.getKey().contractor == contractor)
                 .mapToDouble(e -> e.getValue().reportedPurchacePrice)
                 .sum();
     }

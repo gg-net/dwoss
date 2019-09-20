@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
-import eu.ggnet.dwoss.common.ee.Step;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +28,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
@@ -41,10 +38,10 @@ import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
+import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 import static eu.ggnet.dwoss.report.ee.entity.QReportLine.reportLine;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.report.ee.entity.partial.QSimpleReportLine.simpleReportLine;
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
 
 /**
  * Entity Access Object for ReportLine.
@@ -283,7 +280,7 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
 
             Map<Date, Set<DailyRevenue>> revReports = new HashMap<>();
             for (DailyRevenue revenueReportCarrier : reportData) {
-                Date d = DateUtils.truncate(revenueReportCarrier.getReportingDate(), Calendar.DATE);
+                Date d = DateUtils.truncate(revenueReportCarrier.reportingDate, Calendar.DATE);
                 Set<DailyRevenue> neededSet = revReports.get(d);
                 if ( neededSet == null ) {
                     neededSet = new HashSet<>();
@@ -314,38 +311,41 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
      * @return the Revenue by Date in the stepsize.
      */
     public NavigableMap<Date, Revenue> revenueByPositionTypesAndDate(List<PositionType> posTypes, Date start, Date end, Step step, boolean extraReported) {
-        L.debug("Attempt to find revenue report data with posType={}, start={}, end={}, {}", posTypes, start, end, step);
+        L.debug("revenueByPositionTypesAndDate(posType={}, start={}, end={},step={},extraReported={})", posTypes, start, end, step, extraReported);
         TypedQuery<RevenueHolder> q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDate", RevenueHolder.class);
         q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
-
+        L.debug("revenueByPositionTypesAndDate() prepared named query ReportLine.revenueByPositionTypesAndDate");
+        List<RevenueHolder> resultList = q.getResultList();
+        L.debug("revenueByPositionTypesAndDate() named query ReportLine.revenueByPositionTypesAndDate completed with result.size()={}", resultList.size());
         NavigableMap<Date, Revenue> result = prepare(start, end, step);
-        for (RevenueHolder holder : q.getResultList()) {
-            Revenue revenueStep = result.get(step.truncate(holder.getReportingDate()));
+        L.debug("revenueByPositionTypesAndDate() prepared result map");
+        for (RevenueHolder holder : resultList) {
+            Revenue revenueStep = result.get(step.truncate(holder.reportingDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
-                        + ":reportingDate=" + DateFormats.ISO.format(holder.getReportingDate())
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
+                        + ":reportingDate=" + DateFormats.ISO.format(holder.reportingDate)
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.reportingDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
-            L.debug("revenueByPositionTypesAndDate() first call to Revenue.add({},{},{},{},0,0)",holder.getSalesChannel(),holder.getDocumentType(), holder.getContractor(),holder.getPrice());
-            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), holder.getPrice(), 0., 0.);
+            L.debug("revenueByPositionTypesAndDate() first call to Revenue.add({},{},{},{},0,0)", holder.salesChannel, holder.documentType, holder.contractor, holder.price);
+            revenueStep.addTo(holder.salesChannel, holder.documentType, holder.contractor, holder.price, 0., 0.);
         }
         if ( !extraReported ) return result;
         q = em.createNamedQuery("ReportLine.revenueByPositionTypesAndDateReported", RevenueHolder.class);
         q.setParameter("positions", posTypes).setParameter("start", start).setParameter("end", end);
-        List<RevenueHolder> resultList = q.getResultList();
+        resultList = q.getResultList();
         L.debug("Second run size:" + resultList.size());
         for (RevenueHolder holder : resultList) {
             L.debug("Second run: " + holder);
-            Revenue revenueStep = result.get(step.truncate(holder.getReportingDate()));
+            Revenue revenueStep = result.get(step.truncate(holder.reportingDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
-                        + ":reportingDate=" + DateFormats.ISO.format(holder.getReportingDate())
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getReportingDate()))
+                        + ":reportingDate=" + DateFormats.ISO.format(holder.reportingDate)
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.reportingDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
-            L.debug("revenueByPositionTypesAndDate() second call to Revenue.add({},{},{},0,{},{})",holder.getSalesChannel(),holder.getDocumentType(), holder.getContractor(),holder.getPrice(), holder.getPurchasePrice());
-            revenueStep.addTo(holder.getSalesChannel(), holder.getDocumentType(), holder.getContractor(), 0., holder.getPrice(), holder.getPurchasePrice());
+            L.debug("revenueByPositionTypesAndDate() second call to Revenue.add({},{},{},0,{},{})", holder.salesChannel, holder.documentType, holder.contractor, holder.price, holder.purchasePrice);
+            revenueStep.addTo(holder.salesChannel, holder.documentType, holder.contractor, 0., holder.price, holder.purchasePrice);
         }
         return result;
     }

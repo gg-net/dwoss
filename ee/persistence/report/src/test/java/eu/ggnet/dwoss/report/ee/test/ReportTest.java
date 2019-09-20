@@ -5,10 +5,9 @@ import java.util.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.report.ee.entity.Report;
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
@@ -42,13 +41,13 @@ public class ReportTest {
     public void testSplitterResult() {
         Report report = new Report("TestReport", ALSO, _2011_10_01, _2011_10_07);
 
-        ReportLine unitAfter = ReportLine.builder()
+        ReportLine unitAfter = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1)
                 .price(100).tax(0.19).mfgDate(_2009_01_01)
                 .build();
 
-        ReportLine unitBefore = ReportLine.builder()
+        ReportLine unitBefore = ReportLine.builder().id(2)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("124").amount(1)
                 .price(100).tax(0.19).mfgDate(_2011_09_01)
@@ -58,14 +57,14 @@ public class ReportTest {
         report.add(unitAfter);
 
         Report.YearSplit result = report.filterInvoicedSplit();
-        assertThat(result.getAfter())
-                .describedAs("Report.after : Split at " + result.getSplitter())
+        assertThat(result.after)
+                .describedAs("Report.after : Split at " + result.splitter)
                 .isNotEmpty()
                 .hasSize(1);
-        assertFalse("Before should not be empty, splitting at " + result.getSplitter(), result.getBefore().isEmpty());
-        assertEquals("Before should be exactly one, splitting at " + result.getSplitter(), 1, result.getBefore().size());
-        assertEquals(unitAfter, result.getAfter().first());
-        assertEquals(unitBefore, result.getBefore().first());
+        assertFalse("Before should not be empty, splitting at " + result.splitter, result.before.isEmpty());
+        assertEquals("Before should be exactly one, splitting at " + result.splitter, 1, result.before.size());
+        assertEquals(unitAfter, result.after.first());
+        assertEquals(unitBefore, result.before.first());
     }
 
     @Test
@@ -73,7 +72,7 @@ public class ReportTest {
         Report report = new Report("TestReport", ALSO,
                 new Date(Calendar.getInstance().getTimeInMillis() - 100000), new Date());
 
-        ReportLine line1 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line1 = ReportLineBuilder.create(1,"PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.INVOICE, 2, 1, 0.19, 100, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
 
         report.add(line1);
@@ -82,14 +81,14 @@ public class ReportTest {
         assertTrue(report.filterRepayed().isEmpty());
         assertTrue(report.filterInfos().isEmpty());
 
-        ReportLine line2 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line2 = ReportLineBuilder.create(2,"PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.COMPLAINT, 2, 1, 0.19, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line2.setWorkflowStatus(ReportLine.WorkflowStatus.UNDER_PROGRESS);
 
         line1.add(line2);
         report.add(line2);
 
-        ReportLine line3 = new ReportLine("PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
+        ReportLine line3 = ReportLineBuilder.create(3,"PersName1", "This is a TestDescription1", 137, "DW0037", 3, "RE0008", PositionType.UNIT,
                 DocumentType.COMPLAINT, 2, 1, 0.19, 0, 37, "This is the Invoice Address", "123", 2, "SERIALNUMBER", new Date(), 3, "PArtNo", "test@gg-net.de");
         line3.setWorkflowStatus(ReportLine.WorkflowStatus.DISCHARGED);
 
@@ -107,7 +106,7 @@ public class ReportTest {
     public void testRepaymentOneReport() {
         Report report = new Report("TestReport", ALSO, NOW, NOW);
 
-        ReportLine line1 = ReportLine.builder()
+        ReportLine line1 = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
@@ -115,7 +114,7 @@ public class ReportTest {
         report.add(line1);
 
         // Creditmemo unitAnnex.
-        ReportLine line2 = ReportLine.builder()
+        ReportLine line2 = ReportLine.builder().id(2)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
@@ -129,7 +128,7 @@ public class ReportTest {
                 report.filterInvoiced().contains(line2));
 
         // Now add A Unit.
-        ReportLine line3 = ReportLine.builder()
+        ReportLine line3 = ReportLine.builder().id(3)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
@@ -156,7 +155,7 @@ public class ReportTest {
         Report report1 = new Report("TestReport 1", ALSO, NOW, NOW);
         Report report2 = new Report("TestReport 2", ALSO, NOW, NOW);
 
-        ReportLine line1 = ReportLine.builder()
+        ReportLine line1 = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
@@ -164,7 +163,7 @@ public class ReportTest {
         report1.add(line1);
 
         // Creditmemo unitAnnex.
-        ReportLine line2 = ReportLine.builder()
+        ReportLine line2 = ReportLine.builder().id(2)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
@@ -178,7 +177,7 @@ public class ReportTest {
                 report2.filterRepayed().contains(line2));
 
         // Now add A Unit.
-        ReportLine line3 = ReportLine.builder()
+        ReportLine line3 = ReportLine.builder().id(3)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
@@ -202,7 +201,7 @@ public class ReportTest {
         Report report2 = new Report("TestReport 2", ALSO, NOW, NOW);
         Report report3 = new Report("TestReport 3", ALSO, NOW, NOW);
 
-        ReportLine line1 = ReportLine.builder()
+        ReportLine line1 = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
@@ -210,7 +209,7 @@ public class ReportTest {
         report1.add(line1);
 
         // Creditmemo unitAnnex.
-        ReportLine line2 = ReportLine.builder()
+        ReportLine line2 = ReportLine.builder().id(2)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
@@ -219,7 +218,7 @@ public class ReportTest {
         report2.add(line2);
 
         // Now add A Unit.
-        ReportLine line3 = ReportLine.builder()
+        ReportLine line3 = ReportLine.builder().id(3)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();
@@ -262,7 +261,7 @@ public class ReportTest {
         Report report1 = new Report("TestReport 1", ALSO, NOW, NOW);
         Report report2 = new Report("TestReport 2", ALSO, NOW, NOW);
 
-        ReportLine line1 = ReportLine.builder()
+        ReportLine line1 = ReportLine.builder().id(1)
                 .documentType(DocumentType.INVOICE).documentId(1).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(100).tax(0.19)
                 .build();
@@ -270,7 +269,7 @@ public class ReportTest {
         report1.add(line1);
 
         // Creditmemo unitAnnex.
-        ReportLine line2 = ReportLine.builder()
+        ReportLine line2 = ReportLine.builder().id(2)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(2).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT_ANNEX).name("Unit-123").refurbishId("123").amount(1).price(-10).tax(0.19)
                 .build();
@@ -279,7 +278,7 @@ public class ReportTest {
         report1.add(line2);
 
         // Now add A Unit.
-        ReportLine line3 = ReportLine.builder()
+        ReportLine line3 = ReportLine.builder().id(3)
                 .documentType(DocumentType.ANNULATION_INVOICE).documentId(3).dossierId(1).customerId(1)
                 .positionType(PositionType.UNIT).name("Unit-123").refurbishId("123").amount(1).price(-90).tax(0.19)
                 .build();

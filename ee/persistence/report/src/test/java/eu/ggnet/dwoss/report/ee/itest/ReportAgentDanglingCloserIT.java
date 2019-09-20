@@ -1,7 +1,5 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
-import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-
 import java.text.ParseException;
 import java.util.*;
 
@@ -15,10 +13,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.report.ee.ReportAgent;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.util.DateFormats;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
@@ -99,7 +99,7 @@ public class ReportAgentDanglingCloserIT extends ArquillianProjectArchive {
         assertEquals("Unexpected ReportLine.id of dangling complaint", idDangling, attached.iterator().next().getId());
 
         Set<ReportLine> unreported2 = agent.prepareReport(
-                ReportAgent.ReportParameter.builder().contractor(LENOVO).start(D0).end(D2).reportName("A Report").build(),
+                new ReportParameter.Builder().contractor(LENOVO).start(D0).end(D2).reportName("A Report").build(),
                 true).getAllLines();
         assertNull("The unreported lines does still contain the dangling complaint", filter(unreported2, idDangling));
 

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.report.ee.api;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.util.FileJacket;
 
 /**

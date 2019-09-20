@@ -26,9 +26,9 @@ import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
 import eu.ggnet.dwoss.report.ee.ReportAgent;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;

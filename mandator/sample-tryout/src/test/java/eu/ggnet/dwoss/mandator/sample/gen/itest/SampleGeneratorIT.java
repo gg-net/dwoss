@@ -52,7 +52,6 @@ public class SampleGeneratorIT {
         File[] libs = Maven.resolver()
                 .loadPomFromFile("pom.xml")
                 .importRuntimeDependencies()
-                .addDependency(MavenDependencies.createDependency("org.slf4j:slf4j-log4j12", RUNTIME, false)) // Log4J API
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // AssertJ Fluent Assertions
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "sample-persistence-test.war")
@@ -61,7 +60,6 @@ public class SampleGeneratorIT {
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 // Testresources.
                 .addAsResource(new ClassLoaderAsset("META-INF/persistence.xml"), "META-INF/persistence.xml")
-                .addAsResource(new ClassLoaderAsset("log4j.properties"), "log4j.properties")
                 .addAsWebInfResource("jboss-deployment-structure.xml") // Needed for jboss/wildfly h2 enablement
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsLibraries(libs);

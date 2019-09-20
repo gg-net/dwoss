@@ -16,14 +16,11 @@
  */
 package eu.ggnet.dwoss.report.ee.eao;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.api.values.*;
 
 /**
  * Value holder for revenue reporting.
@@ -31,20 +28,32 @@ import lombok.Data;
  * <p>
  * @author oliver.guenther
  */
-@Data
-@AllArgsConstructor
 public class RevenueHolder {
 
-    private Date reportingDate;
+    public final Date reportingDate;
 
-    private DocumentType documentType;
+    public final DocumentType documentType;
 
-    private SalesChannel salesChannel;
+    public final SalesChannel salesChannel;
 
-    private TradeName contractor;
+    public final TradeName contractor;
 
-    private double price;
+    public final double price;
 
-    private double purchasePrice;
+    public final double purchasePrice;
+
+    public RevenueHolder(Date reportingDate, DocumentType documentType, SalesChannel salesChannel, TradeName contractor, double price, double purchasePrice) {
+        this.reportingDate = reportingDate;
+        this.documentType = documentType;
+        this.salesChannel = salesChannel;
+        this.contractor = contractor;
+        this.price = price;
+        this.purchasePrice = purchasePrice;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 
 }

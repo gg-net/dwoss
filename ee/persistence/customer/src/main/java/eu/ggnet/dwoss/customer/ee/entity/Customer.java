@@ -640,8 +640,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
                 .append("</li>");
         sb.append("<li>Verkaufskanäle: ")
                 .append(customerExtras.getAllowedSalesChannels().isEmpty()
-                        ? defaults.allowedSalesChannels().stream().map(s -> s.decription).collect(Collectors.toList()) + " <i>(Standard)</i>"
-                        : customerExtras.getAllowedSalesChannels().stream().map(s -> s.decription).collect(Collectors.toList()))
+                        ? defaults.allowedSalesChannels().stream().map(s -> s.description).collect(Collectors.toList()) + " <i>(Standard)</i>"
+                        : customerExtras.getAllowedSalesChannels().stream().map(s -> s.description).collect(Collectors.toList()))
                 .append("</li>");
 
         sb.append("</ul>");

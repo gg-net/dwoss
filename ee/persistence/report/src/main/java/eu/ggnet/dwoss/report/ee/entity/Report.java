@@ -22,15 +22,14 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.time.DateUtils;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
-import lombok.*;
 
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
 
@@ -41,15 +40,27 @@ import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
  * @has 1 - n ReportLine
  */
 @Entity
-@NoArgsConstructor
-public class Report extends IdentifiableEntity implements Serializable, EagerAble {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Report extends BaseEntity implements Serializable, EagerAble {
 
-    @Value
+    /**
+     * Wrapper for updates containing id and optlock.
+     */
     public final static class OptimisticKey implements Serializable {
 
-        private final long id;
+        public final long id;
 
-        private final int optLock;
+        public final int optLock;
+
+        public OptimisticKey(long id, int optLock) {
+            this.id = id;
+            this.optLock = optLock;
+        }
+
+        @Override
+        public String toString() {
+            return "OptimisticKey{" + "id=" + id + ", optLock=" + optLock + '}';
+        }
 
     }
 
@@ -70,42 +81,51 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
         YEARSPLITT_AND_WARRANTIES
     }
 
-    @Value
+    /**
+     * Wrapper for a collection of reportlines to be split between a date.
+     * Usage only as wrapper result.
+     */
     public static class YearSplit implements Serializable {
 
-        private final Date splitter;
+        public final Date splitter;
 
         /**
          * Contains lines from splitter till today.
          */
-        private final NavigableSet<ReportLine> before;
+        public final NavigableSet<ReportLine> before;
 
         /**
          * Contains lines from 1970 till splitter.
          */
-        private final NavigableSet<ReportLine> after;
+        public final NavigableSet<ReportLine> after;
 
+        public YearSplit(Date splitter, NavigableSet<ReportLine> before, NavigableSet<ReportLine> after) {
+            this.splitter = Objects.requireNonNull(splitter,"splitter must not be null");
+            this.before = Objects.requireNonNull(before,"before must not be null");
+            this.after = Objects.requireNonNull(after,"after must not be null");
+        }
+
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
+        
     }
 
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     @Version
-    @Getter
     private int optLock;
 
     @NotNull
-    @Getter
-    @Setter
     private String name;
 
     /**
      * This is the type of report.
      * This value should never be changed afterwards.
      */
-    @Getter
     @NotNull
     private TradeName type;
 
@@ -113,7 +133,6 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
      * This String is a representation the contractor for who the report was generated.
      * If this is null its represent the AllReport.
      */
-    @Getter
     private String typeName;
 
     /**
@@ -121,8 +140,6 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
      */
     @NotNull
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date startingDate;
 
     /**
@@ -130,17 +147,12 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
      */
     @NotNull
     @Temporal(javax.persistence.TemporalType.DATE)
-    @Getter
-    @Setter
     private Date endingDate;
 
     @Lob
-    @Getter
-    @Setter
     @Column(length = 65536)
     private String comment;
 
-    @Getter
     @NotNull
     private ViewMode viewMode = DEFAULT;
 
@@ -150,6 +162,9 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
     @ManyToMany
     private Set<ReportLine> lines = new HashSet<>();
 
+    public Report() {
+    }
+    
     public Report(String name, TradeName type, Date startingDate, Date endingDate, ViewMode viewMode) {
         this(name, type, startingDate, endingDate);
         this.viewMode = viewMode;
@@ -163,6 +178,61 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
         this.endingDate = endingDate;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Date getStartingDate() {
+        return startingDate;
+    }
+    
+    public void setStartingDate(Date startingDate) {
+        this.startingDate = startingDate;
+    }
+    
+    public Date getEndingDate() {
+        return endingDate;
+    }
+    
+    public void setEndingDate(Date endingDate) {
+        this.endingDate = endingDate;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public int getOptLock() {
+        return optLock;
+    }
+    
+    public TradeName getType() {
+        return type;
+    }
+    
+    public String getTypeName() {
+        return typeName;
+    }
+    
+    public ViewMode getViewMode() {
+        return viewMode;
+    }
+    //</editor-fold>
+    
     /**
      * Add a ReportLine to the Set of ReportLines.
      * <p/>
@@ -350,7 +420,7 @@ public class Report extends IdentifiableEntity implements Serializable, EagerAbl
 
         sb.append("<tr>");
         sb.append("<td><b>Type:</b>");
-        sb.append(type.getName());
+        sb.append(type.getDescription());
         sb.append("<td>&nbsp;</td>");
         sb.append("</td></tr>");
 

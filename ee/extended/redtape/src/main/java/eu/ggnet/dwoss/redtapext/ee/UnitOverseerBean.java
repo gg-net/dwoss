@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.common.ee.log.AutoLogger;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -46,7 +47,6 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
-import eu.ggnet.dwoss.common.ee.Css;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
@@ -210,7 +210,7 @@ public class UnitOverseerBean implements UnitOverseer {
                         l.getCustomerId(),
                         l.getRefurbishId(),
                         l.getPositionType() == PRODUCT_BATCH && l.getReference(WARRANTY) != null ? "Garantieerweiterung" : l.getPositionType().getName(),
-                        l.getDossierIdentifier() + ", " + l.getDocumentType().getName() + l.getWorkflowStatus().getSign() + (l.getDocumentIdentifier() == null ? "" : ", " + l.getDocumentIdentifier()),
+                        l.getDossierIdentifier() + ", " + l.getDocumentType().getName() + l.getWorkflowStatus().sign + (l.getDocumentIdentifier() == null ? "" : ", " + l.getDocumentIdentifier()),
                         l.getReports().stream().map(Report::getName).collect(Collectors.joining(","))
                 );
             }

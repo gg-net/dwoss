@@ -1,76 +1,61 @@
 package tryout;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-
 import java.util.*;
 
 import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.report.ee.ReportAgent;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ReportParameter;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
-import eu.ggnet.dwoss.report.ee.ReportAgent.ViewReportResult;
+import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.Storeable;
+import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ui.RawReportView;
 import eu.ggnet.saft.api.Reply;
+import eu.ggnet.saft.core.*;
 
 /**
  *
  * @author oliver.guenther
  */
 public class SimpleReportLineTryout {
+    
+    public static SimpleReportLine makeSimpleReportLine(double amount, TradeName contractor,double contractorReferencePrice, DocumentType documentType, PositionType positionType, double price, String productName,
+    double purchasePrice, String refurbishId, String partNo, long uniqueUnitId, Date reportingDate) {
+        SimpleReportLine l = new SimpleReportLine();
+        l.setAmount(amount);
+        l.setContractor(contractor);
+        l.setContractorReferencePrice(contractorReferencePrice);
+        l.setDocumentType(documentType);
+        l.setPositionType(positionType);
+        l.setPrice(price);
+        l.setProductName(productName);
+        l.setPurchasePrice(purchasePrice);
+        l.setRefurbishId(refurbishId);
+        l.setPartNo(partNo);
+        l.setUniqueUnitId(uniqueUnitId);
+        l.setReportingDate(reportingDate);
+        return l;
+    }
 
     public static void main(String[] args) {
         ReportAgent rastub = new ReportAgent() {
-
             List<eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine> all
-                    = Arrays.asList(eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ACER).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                            .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                            .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.DELL).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(10).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.HP).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(23).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.EMACHINES).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ONESELF).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.LENOVO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567").partNo("AA.BBBBB.CC").uniqueUnitId(1000)
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.FUJITSU).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.SAMSUNG).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.AMAZON).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                                    .reportingDate(new Date()).build(),
-                            eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine.builder().amount(1).contractor(TradeName.ALSO).contractorReferencePrice(100).documentType(DocumentType.INVOICE)
-                                    .positionType(PositionType.UNIT).price(50).productName("ABCDEFG").purchasePrice(40).refurbishId("1234567")
-                                    .reportingDate(new Date()).build()
+                    = Arrays.asList(makeSimpleReportLine(1,TradeName.ACER,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.DELL,100,DocumentType.INVOICE,PositionType.UNIT,10,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.HP,100,DocumentType.INVOICE,PositionType.UNIT,23,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.AMAZON,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.EMACHINES,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.FUJITSU,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.ONESELF,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.LENOVO,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.ACER,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.FUJITSU,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.SAMSUNG,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.SAMSUNG,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date()),
+                            makeSimpleReportLine(1,TradeName.ALSO,100,DocumentType.INVOICE,PositionType.UNIT,50,"ABCDEFG",40,"1234567","AA.BBBBB.CC",1000,new Date())
                     );
 
             @Override
@@ -192,7 +177,7 @@ public class SimpleReportLineTryout {
 
             Ui.build().fx().show(() -> {
                 RawReportView srl = new RawReportView();
-                srl.load(new SearchParameter());
+                srl.load(new SearchParameter(""));
                 return srl;
             });
         });
