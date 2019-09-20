@@ -34,6 +34,7 @@ public interface AuthenticationService {
      * @param username the username of the user.
      * @param password the password
      * @return true if the authentication was successful.
+     * @throws eu.ggnet.dwoss.util.UserInfoException if the user did something wrong.
      */
     boolean authenticate(String username, char[] password) throws UserInfoException;
 }

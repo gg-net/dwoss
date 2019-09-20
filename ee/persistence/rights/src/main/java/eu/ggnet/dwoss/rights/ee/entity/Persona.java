@@ -22,32 +22,28 @@ import java.util.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import lombok.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.rights.api.AtomicRight;
+import eu.ggnet.dwoss.util.persistence.EagerAble;
 
 /**
  * This Class represent a Persona
  * <p>
  * @author Bastian Venz
  */
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@ToString
-public class Persona extends IdentifiableEntity implements Serializable, Comparable<Persona>, EagerAble {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Persona extends BaseEntity implements Serializable, Comparable<Persona>, EagerAble {
 
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     /**
@@ -57,8 +53,6 @@ public class Persona extends IdentifiableEntity implements Serializable, Compara
     private int optLock;
 
     @NotNull
-    @Getter
-    @Setter
     private String name;
 
     @ElementCollection
@@ -74,10 +68,29 @@ public class Persona extends IdentifiableEntity implements Serializable, Compara
     @Transient
     private transient ObjectProperty<ObservableList<AtomicRight>> personaRightsProperty;
 
+    public Persona() {
+    }
+
     public Persona(String name) {
         this.name = name;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public int getOptLock() {
+        return optLock;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public ReadOnlyLongProperty idProperty() {
         if ( idProperty == null ) {
             idProperty = new ReadOnlyLongWrapper(id);
@@ -88,11 +101,8 @@ public class Persona extends IdentifiableEntity implements Serializable, Compara
     public StringProperty nameProperty() {
         if ( nameProperty == null ) {
             nameProperty = new SimpleStringProperty(name);
-            nameProperty.addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                    name = newValue;
-                }
+            nameProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
+                name = newValue;
             });
         }
         return nameProperty;
@@ -147,6 +157,11 @@ public class Persona extends IdentifiableEntity implements Serializable, Compara
     @Override
     public void fetchEager() {
         personaRights.size();
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 
 }

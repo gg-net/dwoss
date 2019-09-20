@@ -23,17 +23,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
-import lombok.*;
 
 import static javax.persistence.FetchType.EAGER;
 
@@ -43,25 +39,19 @@ import static javax.persistence.FetchType.EAGER;
  * @author Bastian Venz
  */
 @Entity
-@NoArgsConstructor
-@ToString(exclude = "personas")
-@NamedQueries({
-    @NamedQuery(name = "Operator.byUsername", query = "Select i from Operator as i where i.username = ?1")
-    ,
-    @NamedQuery(name = "Operator.byUsernameAndPasswordAndSalt", query = "Select i from Operator as i where i.username = ?1 AND i.password = ?2 AND i.salt = ?3")})
-public class Operator extends IdentifiableEntity implements Serializable, EagerAble {
+@NamedQuery(name = "Operator.byUsername", query = "Select i from Operator as i where i.username = ?1")
+@NamedQuery(name = "Operator.byUsernameAndPasswordAndSalt", query = "Select i from Operator as i where i.username = ?1 AND i.password = ?2 AND i.salt = ?3")
+@SuppressWarnings("PersistenceUnitPresent")
+public class Operator extends BaseEntity implements Serializable, EagerAble {
 
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     /**
      * Integer value for optimistic locking.
      */
     @Version
-    @Getter
-    @Setter
     private int optLock;
 
     private int quickLoginKey;
@@ -77,15 +67,12 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
      * The byte[] which holds the salt of the Password.
      * Can be null if no Password is required.
      */
-    @Getter
-    @Setter
     private byte[] salt;
 
     /**
      * The byte[] which holds the Password.
      * Can be null if no Password is required.
      */
-    @Getter
     private byte[] password;
 
     @ManyToMany(fetch = EAGER)
@@ -128,22 +115,48 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
         this.username = username;
     }
 
+    public Operator() {
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">    
+    public byte[] getSalt() {
+        return salt;
+    }
+    
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
+    
+    public int getOptLock() {
+        return optLock;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public byte[] getPassword() {
+        return password;
+    }
+    
     public int getQuickLoginKey() {
         return quickLoginKey;
     }
-
+    
     public void setQuickLoginKey(int quickLoginKey) {
         this.quickLoginKey = quickLoginKey;
     }
-
+    
     public String getUsername() {
         return username;
     }
-
+    
     public void setUsername(String username) {
         this.username = username;
     }
-
+    //</editor-fold>
+    
     public ReadOnlyLongProperty idProperty() {
         if ( idProperty == null ) {
             idProperty = new ReadOnlyLongWrapper(id);
@@ -154,12 +167,7 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     public StringProperty usernameProperty() {
         if ( usernameProperty == null ) {
             usernameProperty = new SimpleStringProperty(username);
-            usernameProperty.addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                    username = newValue;
-                }
-            });
+            usernameProperty.addListener((ov, o, newValue) -> username = newValue);
         }
         return usernameProperty;
     }
@@ -167,11 +175,8 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     public IntegerProperty quickLoginKeyProperty() {
         if ( quickLoginKeyProperty == null ) {
             quickLoginKeyProperty = new SimpleIntegerProperty(quickLoginKey);
-            quickLoginKeyProperty.addListener(new ChangeListener<Number>() {
-                @Override
-                public void changed(ObservableValue<? extends Number> ov, Number oldValue, Number newValue) {
-                    quickLoginKey = newValue.intValue();
-                }
+            quickLoginKeyProperty.addListener((ObservableValue<? extends Number> ov, Number oldValue, Number newValue) -> {
+                quickLoginKey = newValue.intValue();
             });
         }
         return quickLoginKeyProperty;
@@ -180,21 +185,17 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     public ListProperty<AtomicRight> rightsProperty() {
         if ( rightsProperty == null ) {
             rightsProperty = new SimpleListProperty<>(FXCollections.observableList(rights));
-            rightsProperty.get().addListener(new ListChangeListener<AtomicRight>() {
-
-                @Override
-                public void onChanged(Change<? extends AtomicRight> change) {
-                    while (change.next()) {
-                        if ( !change.wasAdded() ) continue;
-                        for (AtomicRight addedRight : change.getAddedSubList()) {
-                            for (Persona persona : personas) {
-                                if ( persona.getPersonaRights().contains(addedRight) ) {
-                                    change.getList().remove(addedRight);
-                                }
-                            }
-                            if ( containsMoreThanOnce(rights, addedRight) ) {
+            rightsProperty.get().addListener((Change<? extends AtomicRight> change) -> {
+                while (change.next()) {
+                    if ( !change.wasAdded() ) continue;
+                    for (AtomicRight addedRight : change.getAddedSubList()) {
+                        for (Persona persona : personas) {
+                            if ( persona.getPersonaRights().contains(addedRight) ) {
                                 change.getList().remove(addedRight);
                             }
+                        }
+                        if ( containsMoreThanOnce(rights, addedRight) ) {
+                            change.getList().remove(addedRight);
                         }
                     }
                 }
@@ -214,22 +215,18 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
     public ListProperty<Persona> personasProperty() {
         if ( personasProperty == null ) {
             personasProperty = new SimpleListProperty<>(FXCollections.observableList(personas));
-            personasProperty.get().addListener(new ListChangeListener<Persona>() {
-
-                @Override
-                public void onChanged(Change<? extends Persona> change) {
-                    while (change.next()) {
-                        if ( change.wasAdded() ) {
-                            for (Persona persona : change.getAddedSubList()) {
-                                // Remove local duplicates
-                                for (AtomicRight personaRight : persona.getPersonaRights()) {
-                                    if ( getRights().contains(personaRight) ) {
-                                        remove(personaRight);
-                                    }
+            personasProperty.get().addListener((Change<? extends Persona> change) -> {
+                while (change.next()) {
+                    if ( change.wasAdded() ) {
+                        for (Persona persona : change.getAddedSubList()) {
+                            // Remove local duplicates
+                            for (AtomicRight personaRight : persona.getPersonaRights()) {
+                                if ( getRights().contains(personaRight) ) {
+                                    remove(personaRight);
                                 }
                             }
-
                         }
+                        
                     }
                 }
             });
@@ -241,11 +238,8 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
         if ( saltProperty == null ) {
             String saltString = (salt != null) ? new String(salt) : "";
             saltProperty = new SimpleStringProperty(saltString);
-            saltProperty.addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                    salt = newValue.getBytes();
-                }
+            saltProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
+                salt = newValue.getBytes();
             });
         }
         return saltProperty;
@@ -255,11 +249,8 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
         if ( passwordProperty == null ) {
             String pw = (password != null) ? new String(password) : "";
             passwordProperty = new SimpleStringProperty(pw);
-            passwordProperty.addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> ov, String oldValue, String newValue) {
-                    password = newValue.getBytes();
-                }
+            passwordProperty.addListener((ObservableValue<? extends String> ov, String oldValue, String newValue) -> {
+                password = newValue.getBytes();
             });
         }
         return passwordProperty;
@@ -400,4 +391,9 @@ public class Operator extends IdentifiableEntity implements Serializable, EagerA
         else return personas;
     }
 
+    @Override
+    public String toString() {
+        return "Operator{" + "id=" + id + ", optLock=" + optLock + ", quickLoginKey=" + quickLoginKey + ", rights=" + rights + ", username=" + username + ", salt=" + salt + ", password=" + password + '}';
+    }
+    
 }
