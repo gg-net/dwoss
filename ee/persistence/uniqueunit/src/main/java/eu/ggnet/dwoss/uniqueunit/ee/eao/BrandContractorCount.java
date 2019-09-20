@@ -16,11 +16,9 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.eao;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
-
 import java.util.*;
 
-import lombok.Value;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 /**
  * Aggregate Result of a Count be Brand an Contractor.
@@ -29,12 +27,48 @@ import lombok.Value;
  */
 public class BrandContractorCount {
 
-    @Value
     public static class Key {
 
         private final TradeName brand;
 
         private final TradeName contractor;
+
+        public Key(TradeName brand, TradeName contractor) {
+            this.brand = brand;
+            this.contractor = contractor;
+        }
+
+        public TradeName getBrand() {
+            return brand;
+        }
+
+        public TradeName getContractor() {
+            return contractor;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 89 * hash + Objects.hashCode(this.brand);
+            hash = 89 * hash + Objects.hashCode(this.contractor);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final Key other = (Key)obj;
+            if ( this.brand != other.brand ) return false;
+            if ( this.contractor != other.contractor ) return false;
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "Key{" + "brand=" + brand + ", contractor=" + contractor + '}';
+        }
 
         /**
          * Creates or reuses an Instance of Key.

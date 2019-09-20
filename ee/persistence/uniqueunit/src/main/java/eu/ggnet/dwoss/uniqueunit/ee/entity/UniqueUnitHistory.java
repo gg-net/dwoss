@@ -21,41 +21,35 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
-
-import lombok.*;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringExclude;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a history element for a {@link UniqueUnit}.
- * <p/>
+ * <p>
  * @has 1 - 1 Type
  * @author pascal.perau
  */
 @Entity
-@NoArgsConstructor
-@ToString(exclude = "uniqueUnit")
-public class UniqueUnitHistory extends IdentifiableEntity implements Serializable, Comparable<UniqueUnitHistory> {
+@SuppressWarnings("PersistenceUnitPresent")
+public class UniqueUnitHistory implements Serializable, Comparable<UniqueUnitHistory> {
 
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     @Basic
     @Lob
-    @Getter
-    @Setter
     @Column(length = 65536)
     private String comment;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
-    @Getter
-    @Setter
     private Date occurence;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, optional = false)
-    @Getter
+    @ToStringExclude
     UniqueUnit uniqueUnit;
 
     /**
@@ -66,6 +60,7 @@ public class UniqueUnitHistory extends IdentifiableEntity implements Serializabl
      * @param comment
      */
     public UniqueUnitHistory(int id, Date occurence, String comment) {
+        LoggerFactory.getLogger(UniqueUnitHistory.class).warn("Creating UniqueUnitHistory with id={}, use only in tests.",id);
         this.id = id;
         this.comment = comment;
         this.occurence = occurence;
@@ -81,10 +76,42 @@ public class UniqueUnitHistory extends IdentifiableEntity implements Serializabl
         this.occurence = occurence;
     }
 
+    public UniqueUnitHistory() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public UniqueUnit getUniqueUnit() {
+        return uniqueUnit;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public Date getOccurence() {
+        return occurence;
+    }
+
+    public void setOccurence(Date occurence) {
+        this.occurence = occurence;
+    }
+    
     @Override
     public int compareTo(UniqueUnitHistory o) {
         if ( this.equals(o) ) return 0;
         if ( this.occurence.equals(o.occurence) ) return (this.hashCode() - o.hashCode()) > 0 ? -1 : 1;
         return this.occurence.compareTo(o.occurence);
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

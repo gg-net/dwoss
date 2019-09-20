@@ -28,10 +28,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
 
@@ -284,14 +285,14 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
 
         NavigableMap<Date, BrandContractorCount> result = prepare(start, end, step);
         for (CountHolder holder : q.getResultList()) {
-            BrandContractorCount count = result.get(step.truncate(holder.getInputDate()));
+            BrandContractorCount count = result.get(step.truncate(holder.inputDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( count == null ) throw new RuntimeException("No prepared BrandContractorCount found for " + step.name()
-                        + ":inputDate=" + DateFormats.ISO.format(holder.getInputDate())
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.getInputDate()))
+                        + ":inputDate=" + DateFormats.ISO.format(holder.inputDate)
+                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.inputDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
-            count.addTo(holder.getBrand(), holder.getContractor(), holder.getCount());
+            count.addTo(holder.brand, holder.contractor, holder.count);
         }
         return result;
     }

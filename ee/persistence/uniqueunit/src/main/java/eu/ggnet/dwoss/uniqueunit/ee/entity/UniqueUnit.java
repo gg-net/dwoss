@@ -33,8 +33,6 @@ import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
 
-import lombok.*;
-
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static javax.persistence.CascadeType.*;
@@ -54,29 +52,17 @@ import static javax.persistence.CascadeType.*;
  * @has n - m Flag
  */
 @Entity
-@NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
-@NamedQueries({
-    // HINT: Netbeans Warinig is wrong. 2. HINT: Hibernate builds defective Query.
-    @NamedQuery(name = "UnqiueUnit.findByIdenfiersTypeValue", query = "SELECT u FROM UniqueUnit u join u.identifiers i WHERE KEY(i) = ?1 and VALUE(i) IN (?2)")
-    ,
-    @NamedQuery(name = "UnqiueUnit.betweenInputDates", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2")
-    ,
-    @NamedQuery(name = "UnqiueUnit.betweenInputDatesAndContractor", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2 and u.contractor = ?3")
-    ,
-    @NamedQuery(name = "UniqueUnit.findByIds", query = "SELECT u FROM UniqueUnit u WHERE u.id IN (:idList)")
-    ,
-    @NamedQuery(name = "UniqueUnit.byProductPartNo", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo = ?1")
-    ,
-    @NamedQuery(name = "UniqueUnit.byProductPartNosInputDate", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo in (?1) AND u.inputDate >= ?2 AND u.inputDate <= ?3")
-    ,
-    @NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1")
-    ,
-    @NamedQuery(name = "UniqueUnit.countByInputDateContractor",
-                query = "select new eu.ggnet.dwoss.uniqueunit.ee.eao.CountHolder(u.inputDate, u.product.tradeName, u.contractor, count(u.id)) "
-                + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
-})
-@SuppressWarnings("PersistenceUnitPresent")
+@NamedQuery(name = "UnqiueUnit.findByIdenfiersTypeValue", query = "SELECT u FROM UniqueUnit u join u.identifiers i WHERE KEY(i) = ?1 and VALUE(i) IN (?2)")
+@NamedQuery(name = "UnqiueUnit.betweenInputDates", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2")
+@NamedQuery(name = "UnqiueUnit.betweenInputDatesAndContractor", query = "SELECT u FROM UniqueUnit u WHERE u.inputDate >= ?1 AND u.inputDate <= ?2 and u.contractor = ?3")
+@NamedQuery(name = "UniqueUnit.findByIds", query = "SELECT u FROM UniqueUnit u WHERE u.id IN (:idList)")
+@NamedQuery(name = "UniqueUnit.byProductPartNo", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo = ?1")
+@NamedQuery(name = "UniqueUnit.byProductPartNosInputDate", query = "SELECT u FROM UniqueUnit u WHERE u.product.partNo in (?1) AND u.inputDate >= ?2 AND u.inputDate <= ?3")
+@NamedQuery(name = "UnqiueUnit.byContractor", query = "SELECT u FROM UniqueUnit u WHERE u.contractor = ?1")
+@NamedQuery(name = "UniqueUnit.countByInputDateContractor",
+            query = "select new eu.ggnet.dwoss.uniqueunit.ee.eao.CountHolder(u.inputDate, u.product.tradeName, u.contractor, count(u.id)) "
+            + "from UniqueUnit u where u.inputDate >= :start and u.inputDate <= :end GROUP BY u.contractor, u.product.tradeName, cast(u.inputDate as date)")
+@SuppressWarnings({"PersistenceUnitPresent", "JPQLValidation"})     // HINT: Netbeans Warinig is wrong. 2. HINT: Hibernate builds defective Query.
 public class UniqueUnit implements Serializable, EagerAble {
 
     public static NavigableMap<String, UniqueUnit> asMapByRefurbishId(Collection<UniqueUnit> uus) {
@@ -88,8 +74,6 @@ public class UniqueUnit implements Serializable, EagerAble {
     /**
      * The equipment parts a UniqueUnit may have.
      */
-    @RequiredArgsConstructor
-    @Getter
     public static enum Equipment implements INoteModel {
 
         POWER_CABLE("Stromkabel"),
@@ -149,13 +133,22 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
+        private Equipment(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+        
         public static Set<Equipment> getEquipments() {
             return getEquipments(null);
         }
 
         /**
          * Returns a Set of Equipment filtered by the {@link ProductGroup}.
-         * <p/>
+         * <p>
          * @param group the {@link ProductGroup}
          * @return a Set of Equipment filtered by the {@link ProductGroup}.
          */
@@ -202,8 +195,6 @@ public class UniqueUnit implements Serializable, EagerAble {
     /**
      * Most common standart notes that a unit may have.
      */
-    @RequiredArgsConstructor
-    @Getter
     public static enum StaticComment implements INoteModel {
 
         FRONT_COVER_MISSING("Untere Fronklappe fehlt"),
@@ -263,13 +254,20 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
+        private StaticComment(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+        
     }
 
     /**
      * Most common internal notes that a unit may have.
      */
-    @RequiredArgsConstructor
-    @Getter
     public static enum StaticInternalComment implements INoteModel {
 
         /**
@@ -288,13 +286,20 @@ public class UniqueUnit implements Serializable, EagerAble {
 
         private final String note;
 
+        private StaticInternalComment(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+
     }
 
     /**
      * Possible states every unit is categorized in.
      */
-    @RequiredArgsConstructor
-    @Getter
     public enum Condition implements INoteModel {
 
         AS_NEW("neuwertig"),
@@ -302,6 +307,16 @@ public class UniqueUnit implements Serializable, EagerAble {
         USED("gebraucht");
 
         private final String note;
+
+        private Condition(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+                
     }
 
     /**
@@ -317,12 +332,10 @@ public class UniqueUnit implements Serializable, EagerAble {
         PRICE_FIXED
     }
 
-    @Getter
     @Id
     @GeneratedValue
     private int id;
 
-    @Getter
     @Version
     private short optLock;
 
@@ -334,13 +347,10 @@ public class UniqueUnit implements Serializable, EagerAble {
     private Map<Identifier, String> identifiers = new EnumMap<>(Identifier.class);
 
     // No Merge, Product may change while a UniqueUnit is detached.
-    @Getter
     @NotNull
     @ManyToOne(cascade = {PERSIST, REFRESH, DETACH}, fetch = FetchType.EAGER)
     private Product product;
 
-    @Getter
-    @Setter
     @ElementCollection
     private Set<Equipment> equipments = EnumSet.noneOf(Equipment.class);
 
@@ -349,72 +359,47 @@ public class UniqueUnit implements Serializable, EagerAble {
      * idea, than creating multiple boolean values.
      */
     //TODO: There is only one flag so a single boolean would be okay - PP
-    @Getter
-    @Setter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Flag> flags = EnumSet.noneOf(Flag.class);
 
-    @Getter
-    @Setter
     @ElementCollection
     private Set<StaticComment> comments = EnumSet.noneOf(StaticComment.class);
 
-    @Getter
-    @Setter
     @ElementCollection
     private Set<StaticInternalComment> internalComments = EnumSet.noneOf(StaticInternalComment.class);
 
-    @Getter
-    @Setter
     @NotNull
     @Column(name = "uniqueUnitCondition")
     private Condition condition;
 
-    @Getter
-    @Setter
     @NotNull
     private TradeName contractor;
 
-    @Getter
-    @Setter
     @Temporal(TemporalType.DATE)
     private Date mfgDate;
 
-    @Getter
-    @Setter
     @Basic
     @Lob
     @Column(length = 65536)
     private String comment;
 
-    @Getter
-    @Setter
     @Basic
     @Lob
     @Column(length = 65536)
     private String internalComment;
 
-    @Getter
-    @Setter
     private long shipmentId;
 
-    @Getter
     private String shipmentLabel;
 
-    @Getter
-    @Setter
     @Temporal(TemporalType.TIMESTAMP)
     @Column(columnDefinition = "DATETIME")
     private Date inputDate;
 
-    @Getter
-    @Setter
     @NotNull
     private Warranty warranty = Warranty.ONE_YEAR_CARRY_IN;
 
-    @Getter
-    @Setter
     @Temporal(TemporalType.DATE)
     private Date warrentyValid;
 
@@ -429,12 +414,143 @@ public class UniqueUnit implements Serializable, EagerAble {
     @SuppressWarnings("FieldMayBeFinal")
     private List<PriceHistory> priceHistories = new ArrayList<>();
 
-    @Getter
-    @Setter
     @NotNull
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
 
+    public UniqueUnit() {
+    }    
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    public int getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Date getInputDate() {
+        return inputDate;
+    }
+    
+    public void setInputDate(Date inputDate) {
+        this.inputDate = inputDate;
+    }
+    
+    public Warranty getWarranty() {
+        return warranty;
+    }
+    
+    public void setWarranty(Warranty warranty) {
+        this.warranty = warranty;
+    }
+    
+    public Date getWarrentyValid() {
+        return warrentyValid;
+    }
+    
+    public void setWarrentyValid(Date warrentyValid) {
+        this.warrentyValid = warrentyValid;
+    }
+    
+    public SalesChannel getSalesChannel() {
+        return salesChannel;
+    }
+    
+    public void setSalesChannel(SalesChannel salesChannel) {
+        this.salesChannel = salesChannel;
+    }
+    
+    public Condition getCondition() {
+        return condition;
+    }
+    
+    public void setCondition(Condition condition) {
+        this.condition = condition;
+    }
+    
+    public TradeName getContractor() {
+        return contractor;
+    }
+    
+    public void setContractor(TradeName contractor) {
+        this.contractor = contractor;
+    }
+    
+    public Date getMfgDate() {
+        return mfgDate;
+    }
+    
+    public void setMfgDate(Date mfgDate) {
+        this.mfgDate = mfgDate;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public String getInternalComment() {
+        return internalComment;
+    }
+    
+    public void setInternalComment(String internalComment) {
+        this.internalComment = internalComment;
+    }
+    
+    public long getShipmentId() {
+        return shipmentId;
+    }
+    
+    public void setShipmentId(long shipmentId) {
+        this.shipmentId = shipmentId;
+    }
+    
+    public Set<Equipment> getEquipments() {
+        return equipments;
+    }
+    
+    public void setEquipments(Set<Equipment> equipments) {
+        this.equipments = equipments;
+    }
+    
+    public Set<Flag> getFlags() {
+        return flags;
+    }
+    
+    public void setFlags(Set<Flag> flags) {
+        this.flags = flags;
+    }
+    
+    public Set<StaticComment> getComments() {
+        return comments;
+    }
+    
+    public void setComments(Set<StaticComment> comments) {
+        this.comments = comments;
+    }
+    
+    public Set<StaticInternalComment> getInternalComments() {
+        return internalComments;
+    }
+    
+    public void setInternalComments(Set<StaticInternalComment> internalComments) {
+        this.internalComments = internalComments;
+    }
+    
+    public Product getProduct() {
+        return product;
+    }
+    
+    public String getShipmentLabel() {
+        return shipmentLabel;
+    }
+    //</editor-fold>
+    
     public void setPrice(PriceType type, double price, String comment) {
         price = TwoDigits.round(price);
         if ( TwoDigits.equals(getPrice(type), price) ) {
@@ -589,12 +705,30 @@ public class UniqueUnit implements Serializable, EagerAble {
         if ( inputDate != null ) {
             formatedInputDate = MEDIUM.format(inputDate);
         }
-        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString 
+        return "UniqueUnit{" + "id=" + id + ", identifiers=" + identifiers + ", product=" + productString
                 + ", prices=" + getPrices() + ", equipments=" + equipments + ", flags=" + flags + ", comments=" + comments + ", internalComments=" + internalComments
                 + ", condition=" + condition
                 + ", contractor=" + contractor + ", mfgDate=" + formatedMfgDate + ", shipmentId=" + shipmentId + ", shipmentLabel=" + shipmentLabel
                 + ", salesChannel=" + getPrices() + ", inputDate=" + formatedInputDate + ", warranty=" + warranty + ", comment=" + comment
                 + ", internalComment=" + internalComment + '}';
+    }
+
+    // TODO: Remove and extend BaseEntity if DWOSS-323 is solved
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final UniqueUnit other = (UniqueUnit)obj;
+        if ( this.id != other.id ) return false;
+        return true;
     }
 
     /**

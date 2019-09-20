@@ -18,26 +18,35 @@ package eu.ggnet.dwoss.uniqueunit.ee.eao;
 
 import java.util.Date;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import eu.ggnet.dwoss.common.api.values.TradeName;
 
 /**
  * Holder for Count results.
  * <p>
  * @author oliver.guenther
  */
-@Data
-@AllArgsConstructor
 public class CountHolder {
 
-    private Date inputDate;
+    public final Date inputDate;
 
-    private TradeName brand;
+    public final TradeName brand;
 
-    private TradeName contractor;
+    public final TradeName contractor;
 
-    private long count;
+    public final long count;
 
+    public CountHolder(Date inputDate, TradeName brand, TradeName contractor, long count) {
+        this.inputDate = inputDate;
+        this.brand = brand;
+        this.contractor = contractor;
+        this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+    
 }

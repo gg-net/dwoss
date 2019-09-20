@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
 
 /**
  * The Implementation of the UniqueUnitAgent
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Stateless

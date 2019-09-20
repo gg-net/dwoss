@@ -18,6 +18,8 @@ package eu.ggnet.dwoss.common.ee;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * Abtract Superclass for Entity classes.
  * Includes equals and hashCode based on Id.
@@ -42,6 +44,11 @@ public abstract class BaseEntity implements Serializable {
         if ( getClass() != that.getClass() ) return false;
         final BaseEntity other = (BaseEntity)that;
         return this.getId() == other.getId();
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
     
 }

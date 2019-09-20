@@ -29,11 +29,11 @@ import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.time.DateUtils;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.common.ee.Step;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
@@ -42,8 +42,6 @@ import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
-
-import lombok.Data;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
@@ -57,7 +55,6 @@ import static java.awt.Color.*;
 @Stateless
 public class UniqueUnitReporterOperation implements UniqueUnitReporter {
 
-    @Data
     private class UnitQualityContainer {
 
         private int asNew;
@@ -77,6 +74,19 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
         public void incrementUsed() {
             used++;
         }
+
+        public int getAsNew() {
+            return asNew;
+        }
+
+        public int getAlmostNew() {
+            return almostNew;
+        }
+
+        public int getUsed() {
+            return used;
+        }
+                
     }
 
     private static final DateFormat YEAR_MONTH = new SimpleDateFormat("yyyy-MM");

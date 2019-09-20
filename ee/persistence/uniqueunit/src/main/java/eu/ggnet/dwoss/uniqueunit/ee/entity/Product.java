@@ -16,11 +16,6 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
-import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,10 +24,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-
-import lombok.*;
+import eu.ggnet.dwoss.util.persistence.entity.AbstractBidirectionalListWrapper;
 
 import static javax.persistence.CascadeType.*;
 
@@ -49,10 +45,9 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
-@EqualsAndHashCode(of = "id", callSuper = false)
 @NamedQuery(name = "Product.byContractor", query = "SELECT DISTINCT p FROM Product p JOIN p.units u WHERE u.contractor = ?1")
 @SuppressWarnings("PersistenceUnitPresent")
-public class Product implements Serializable, EagerAble, Comparable<Product> {
+public class Product extends BaseEntity implements Serializable, EagerAble, Comparable<Product> {
 
     public static NavigableMap<String, Product> asMapByPartNos(Collection<Product> products) {
         return new TreeMap<>(products.stream().collect(Collectors.toMap(p -> p.getPartNo(), p -> p)));
@@ -63,12 +58,10 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         PRICE_FIXED
     }
 
-    @Getter
     @Id
     @GeneratedValue
     private long id;
 
-    @Getter
     @Version
     private short optLock;
 
@@ -77,13 +70,9 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
      * <p>
      * It sounds weird but, it can happen, that a Spec overwrites the value
      */
-    @Getter
-    @Setter
     @Basic(optional = false)
     private String name;
 
-    @Getter
-    @Setter
     @Basic
     @Column(length = 65536)
     @Lob
@@ -93,13 +82,9 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
      * Represents the trade name of the Product.
      * Normally this is the manufacturer, oder the company responsible, but may also be a brand or else.
      */
-    @Getter
-    @Setter
     @Basic(optional = false)
     private TradeName tradeName;
 
-    @Getter
-    @Setter
     @Basic(optional = false)
     @Column(name = "productGroup")
     private ProductGroup group;
@@ -107,13 +92,9 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     /**
      * This is the primary PartNo of the Product. It should be the PartNo of the TradeName
      */
-    @Getter
-    @Setter
     @Basic(optional = false)
     private String partNo;
 
-    @Getter
-    @Setter
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date eol;
 
@@ -127,8 +108,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
      * Represents Flags the user can set for this element.
      * This is a better aproacht, than creating multiple boolean falues.
      */
-    @Getter
-    @Setter
     @NotNull
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Flag> flags = EnumSet.noneOf(Flag.class);
@@ -138,15 +117,11 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @OneToMany(cascade = {MERGE, REFRESH, PERSIST, DETACH}, mappedBy = "product")
     List<UniqueUnit> units = new ArrayList<>();
 
-    @Setter
-    @Getter
     private int imageId;
 
     /**
      * Global Trade Item Number, was EAN.
      */
-    @Setter
-    @Getter
     private long gtin;
 
     @NotNull
@@ -160,8 +135,6 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
     @SuppressWarnings("FieldMayBeFinal")
     private List<PriceHistory> priceHistories = new ArrayList<>();
 
-    @Getter
-    @Setter
     @NotNull
     @Basic(optional = false)
     private SalesChannel salesChannel = SalesChannel.UNKNOWN;
@@ -175,6 +148,97 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         this.partNo = partNo;
         this.name = name;
     }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public Set<Flag> getFlags() {
+        return flags;
+    }
+    
+    public void setFlags(Set<Flag> flags) {
+        this.flags = flags;
+    }
+    
+    public int getImageId() {
+        return imageId;
+    }
+    
+    public void setImageId(int imageId) {
+        this.imageId = imageId;
+    }
+    
+    public long getGtin() {
+        return gtin;
+    }
+    
+    public void setGtin(long gtin) {
+        this.gtin = gtin;
+    }
+    
+    public SalesChannel getSalesChannel() {
+        return salesChannel;
+    }
+    
+    public void setSalesChannel(SalesChannel salesChannel) {
+        this.salesChannel = salesChannel;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public TradeName getTradeName() {
+        return tradeName;
+    }
+    
+    public void setTradeName(TradeName tradeName) {
+        this.tradeName = tradeName;
+    }
+    
+    public ProductGroup getGroup() {
+        return group;
+    }
+    
+    public void setGroup(ProductGroup group) {
+        this.group = group;
+    }
+    
+    public String getPartNo() {
+        return partNo;
+    }
+    
+    public void setPartNo(String partNo) {
+        this.partNo = partNo;
+    }
+    
+    public Date getEol() {
+        return eol;
+    }
+    
+    public void setEol(Date eol) {
+        this.eol = eol;
+    }
+    //</editor-fold>
 
     public void setPrice(PriceType type, double price, String comment) {
         price = TwoDigits.round(price);
@@ -268,10 +332,4 @@ public class Product implements Serializable, EagerAble, Comparable<Product> {
         priceHistories.size();
     }
 
-    @Override
-    public String toString() {
-        return "Product{" + "id=" + id + ", partNo=" + partNo + ", group=" + group + ", tradeName=" + tradeName + ", name=" + name
-                + ", eol=" + eol + ", gtin=" + gtin + ", description=" + description + ", additionalPartNo=" + additionalPartNo
-                + ", prices=" + getPrices() + ", flags=" + flags + ", imageId=" + imageId + '}';
-    }
 }
