@@ -22,11 +22,8 @@ import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
-import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-
-import lombok.Getter;
-import lombok.Setter;
+import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                  //
@@ -37,27 +34,54 @@ public abstract class ReturnsReportTableModel extends AbstractTableModel {
 
     private final Object[][] columns;
 
-    @Getter
-    @Setter
     private String reportName;
 
-    @Getter
-    @Setter
     private TradeName reportType;
 
-    @Getter
-    @Setter
     private Date reportStart;
 
-    @Getter
-    @Setter
     private Date reportEnd;
 
-    @Getter
     protected final List<TableLine> lines = new ArrayList<>();
 
     public ReturnsReportTableModel(Object[][] columns) {
         this.columns = columns;
+    }
+
+    public String getReportName() {
+        return reportName;
+    }
+
+    public void setReportName(String reportName) {
+        this.reportName = reportName;
+    }
+
+    public TradeName getReportType() {
+        return reportType;
+    }
+
+    public void setReportType(TradeName reportType) {
+        this.reportType = reportType;
+    }
+
+    public Date getReportStart() {
+        return reportStart;
+    }
+
+    public void setReportStart(Date reportStart) {
+        this.reportStart = reportStart;
+    }
+
+    public Date getReportEnd() {
+        return reportEnd;
+    }
+
+    public void setReportEnd(Date reportEnd) {
+        this.reportEnd = reportEnd;
+    }
+
+    public List<TableLine> getLines() {
+        return lines;
     }
 
     @Override

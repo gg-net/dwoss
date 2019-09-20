@@ -16,18 +16,15 @@
  */
 package eu.ggnet.dwoss.report.ui.returns;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
-import javafx.beans.property.*;
-
-import lombok.*;
-
-@ToString
-@EqualsAndHashCode
 public class TableLine {
 
-    @Getter
-    @Setter
     private ReportLine reportLine;
 
     private final BooleanProperty shouldReportedProperty = new SimpleBooleanProperty(true);
@@ -36,6 +33,14 @@ public class TableLine {
         this.reportLine = reportLine;
     }
 
+    public ReportLine getReportLine() {
+        return reportLine;
+    }
+
+    public void setReportLine(ReportLine reportLine) {
+        this.reportLine = reportLine;
+    }
+    
     public double getCpPercentage() {
         if ( reportLine.getContractorReferencePrice() == 0 ) return 0;
         return reportLine.getPrice() / reportLine.getContractorReferencePrice();
@@ -55,5 +60,10 @@ public class TableLine {
 
     public boolean isShouldReported() {
         return shouldReportedProperty.get();
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

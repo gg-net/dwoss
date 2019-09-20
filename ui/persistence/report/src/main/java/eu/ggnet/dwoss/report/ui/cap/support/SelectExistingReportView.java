@@ -33,16 +33,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.*;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.Report;
+import eu.ggnet.dwoss.report.ee.entity.Report.OptimisticKey;
 import eu.ggnet.dwoss.report.ui.main.ReportListCell;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.Title;
-
-import lombok.Value;
 
 import static java.time.ZoneId.systemDefault;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
@@ -54,21 +53,40 @@ import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 @Title("Report zur Ansicht auswählen")
 public class SelectExistingReportView extends BorderPane implements Consumer<List<Report>>, ResultProducer<Long> {
 
-    @Value
     private final static class EditResult {
 
         private final Report.OptimisticKey key;
 
         private final String text;
 
+        public EditResult(OptimisticKey key, String text) {
+            this.key = key;
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return "EditResult{" + "key=" + key + ", text=" + text + '}';
+        }
+        
     }
 
-    @Value
     private final static class UpdateResult {
 
         private final boolean successful;
 
         private final String text;
+
+        public UpdateResult(boolean successful, String text) {
+            this.successful = successful;
+            this.text = text;
+        }
+
+        @Override
+        public String toString() {
+            return "UpdateResult{" + "successful=" + successful + ", text=" + text + '}';
+        }
+                
     }
 
     private final ListView<Report> reportListView;
@@ -177,7 +195,7 @@ public class SelectExistingReportView extends BorderPane implements Consumer<Lis
         Ui.exec(() -> {
             Ui.build().parent(this).dialog().eval(() -> dialog)
                     .opt()
-                    .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.getKey(), r.getText()))
+                    .map(r -> Dl.remote().lookup(ReportAgent.class).updateReportName(r.key, r.text))
                     .filter(Ui.failure().parent(this)::handle)
                     .ifPresent(r -> {
                         reportListView.getSelectionModel().getSelectedItem().setName(r.getPayload());

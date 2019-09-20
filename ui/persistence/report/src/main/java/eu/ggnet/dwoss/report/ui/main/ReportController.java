@@ -51,9 +51,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
-import lombok.Getter;
-import lombok.Value;
-
 import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
@@ -73,12 +70,16 @@ public class ReportController implements Initializable, FxController, Consumer<R
         initReportData(in.reportResult, in.viewmode);
     }
 
-    @Value
     public static class In implements IdSupplier {
 
         private final ViewReportResult reportResult;
 
         private final boolean viewmode;
+
+        public In(ViewReportResult reportResult, boolean viewmode) {
+            this.reportResult = reportResult;
+            this.viewmode = viewmode;
+        }
 
         @Override
         public String id() {
@@ -189,7 +190,6 @@ public class ReportController implements Initializable, FxController, Consumer<R
     @FXML
     Button fullExportButton;
 
-    @Getter
     private ViewReportResult reportResult;
 
     private final Map<TableView<ReportLine>, TableSummary> tableSummarys = new HashMap<>();
@@ -199,6 +199,10 @@ public class ReportController implements Initializable, FxController, Consumer<R
     public ReportController() {
     }
 
+    public Button getFullExportButton() {
+        return fullExportButton;
+    }
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         nameLabel.setText("NO REPORT RESULT !! result =" + reportResult);
