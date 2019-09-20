@@ -24,7 +24,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Series.*;
 
@@ -34,7 +37,8 @@ import static eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Series.*;
  */
 @Entity
 @NamedQuery(name = "Gpu.bySeriesModel", query = "select d from Gpu d where d.series = ?1 and d.model = ?2")
-public class Gpu implements Serializable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Gpu extends BaseEntity implements Serializable {
 
     /**
      * A enum class with the names of the factory of the graphics card.
@@ -205,70 +209,64 @@ public class Gpu implements Serializable {
         this.types = EnumSet.of(type);
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
     public long getId() {
         return id;
     }
-
+    
     public Manufacturer getManufacturer() {
         return series.getManufacturer();
     }
-
+    
     public String getModel() {
         return model;
     }
-
+    
     public void setModel(String model) {
         this.model = model;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
+    
     public Series getSeries() {
         return series;
     }
-
+    
     public void setSeries(Series series) {
         this.series = series;
     }
-
+    
     public void addType(Type type) {
         types.add(type);
     }
-
+    
     public void removeType(Type type) {
         types.remove(type);
     }
-
+    
     public Set<Type> getTypes() {
         return types;
     }
-
+    
     public void setTypes(Set<Type> types) {
         this.types = types;
     }
-
+    
     public Double getEconomicValue() {
         return economicValue;
     }
-
+    
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final Gpu other = (Gpu)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
+    //</editor-fold>
 
     public boolean equalsContent(Gpu other) {
         if ( other == null ) return false;
@@ -280,14 +278,7 @@ public class Gpu implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 29 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
-    }
-
-    @Override
     public String toString() {
-        return "Gpu{" + "id=" + id + ", model=" + model + ", name=" + name + ", types=" + types + ", series=" + series + ", economicValue=" + economicValue + '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -34,6 +34,7 @@ import static javax.persistence.CascadeType.*;
  * @author pascal.perau
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class Monitor extends BasicSpec implements DisplayAble {
 
     @NotNull

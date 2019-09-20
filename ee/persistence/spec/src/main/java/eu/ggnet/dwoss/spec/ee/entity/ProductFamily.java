@@ -27,6 +27,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ee.BaseEntity;
+
 import static javax.persistence.CascadeType.*;
 
 /**
@@ -34,11 +36,10 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "ProductFamily.byName", query = "select s from ProductFamily s where s.name = ?1"),
-    @NamedQuery(name = "ProductFamily.byNameSeries", query = "select s from ProductFamily s where s.name = ?4 and s.series.brand = ?1 and s.series.group = ?2 and s.series.name = ?3")
-})
-public class ProductFamily implements Serializable, INamed {
+@NamedQuery(name = "ProductFamily.byName", query = "select s from ProductFamily s where s.name = ?1")
+@NamedQuery(name = "ProductFamily.byNameSeries", query = "select s from ProductFamily s where s.name = ?4 and s.series.brand = ?1 and s.series.group = ?2 and s.series.name = ?3")
+@SuppressWarnings("PersistenceUnitPresent")
+public class ProductFamily extends BaseEntity implements Serializable, INamed {
 
     @XmlTransient
     @Id
@@ -89,6 +90,7 @@ public class ProductFamily implements Serializable, INamed {
         setSeries(series);
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -134,22 +136,6 @@ public class ProductFamily implements Serializable, INamed {
 
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final ProductFamily other = (ProductFamily)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 37 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
     }
 
     @Override

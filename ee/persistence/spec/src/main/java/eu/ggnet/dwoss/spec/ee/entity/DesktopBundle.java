@@ -30,6 +30,7 @@ import static javax.persistence.CascadeType.*;
 // TODO: Ensure that the Specs are only the Considered Details -- Still in consideration? - PP
 // Persistence Hint: Not in Spec
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class DesktopBundle extends ProductSpec {
         
     @XmlElement(type = Desktop.class)

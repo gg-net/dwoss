@@ -31,6 +31,7 @@ import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
  * @author oliver.guenther
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class Tablet extends DisplayAbleDesktop {
 
     public Tablet() {

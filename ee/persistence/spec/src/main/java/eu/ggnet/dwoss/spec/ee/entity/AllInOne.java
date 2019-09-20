@@ -30,6 +30,7 @@ import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
  * @author pascal.perau
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class AllInOne extends DisplayAbleDesktop {
 
     public AllInOne() {

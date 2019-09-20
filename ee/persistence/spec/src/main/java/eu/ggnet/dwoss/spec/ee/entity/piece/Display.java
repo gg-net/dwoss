@@ -26,18 +26,19 @@ import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.INoteModel;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution.*;
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Size.*;
 
 @Entity
 @NamedQuery(name = "Display.bySizeResolutionTypeRation", query = "select d from Display d where d.size = ?1 and d.resolution = ?2 and d.type = ?3 and d.ration = ?4")
-public class Display implements Serializable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Display extends BaseEntity implements Serializable {
 
     static {
         Map<ProductGroup, List<Size>> m = new EnumMap<>(ProductGroup.class);
@@ -45,76 +46,80 @@ public class Display implements Serializable {
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_15));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_15));
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_7_9, _9_7, _15));
-        _4_3 = m;
+        R_4_3 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, Arrays.asList(_19, _22, _24));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_12_1, _13_3, _14, _15_4, _17, _17_3));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_17_3));
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5, _5, _10_1, _12, _12_1));
-        _16_10 = m;
+        R_16_10 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, Arrays.asList(_17, _18_5, _20_1, _21_5, _23, _23_6, _24, _26, _27, _28, _32, _37, _42, _10_1, _4, _4_7, _12_9, _35, _4_5, _12_5, _23_8));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_8_9, _10_1, _11_6, _13_3, _14, _14_1, _15_6, _16, _17, _17_3, _18_4, _12, _4, _4_7, _27, _12_9, _35, _4_5, _12_5));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_18_5, _19_5, _20_1, _21_5, _23, _24, _27, _28, _10_1, _4_7, _12_9, _35, _4, _4_5, _12_5, _23_8, _17_3));
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_4, _5, _5_5, _5_7, _6, _7, _7_9, _8, _10_1, _11_6, _12, _4_7, _27, _12_9, _35, _4_5, _12_5));
-        _16_9 = m;
+        R_16_9 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, new ArrayList<>());
         m.put(ProductGroup.NOTEBOOK, new ArrayList<>());
         m.put(ProductGroup.ALL_IN_ONE, new ArrayList<>());
         m.put(ProductGroup.TABLET_SMARTPHONE, Arrays.asList(_3_5));
-        _3_2 = m;
+        R_3_2 = m;
         m = new EnumMap<>(ProductGroup.class);
         m.put(ProductGroup.MONITOR, Arrays.asList(_25, _29, _34));
         m.put(ProductGroup.NOTEBOOK, Arrays.asList(_25, _29));
         m.put(ProductGroup.ALL_IN_ONE, Arrays.asList(_25, _29));
         m.put(ProductGroup.TABLET_SMARTPHONE, new ArrayList<>());
-        _21_9 = m;
+        R_21_9 = m;
     }
 
-    private final static Map<ProductGroup, List<Size>> _4_3;
+    private final static Map<ProductGroup, List<Size>> R_4_3;
 
-    private final static Map<ProductGroup, List<Size>> _16_10;
+    private final static Map<ProductGroup, List<Size>> R_16_10;
 
-    private final static Map<ProductGroup, List<Size>> _16_9;
+    private final static Map<ProductGroup, List<Size>> R_16_9;
 
-    private final static Map<ProductGroup, List<Size>> _3_2;
+    private final static Map<ProductGroup, List<Size>> R_3_2;
 
-    private final static Map<ProductGroup, List<Size>> _21_9;
+    private final static Map<ProductGroup, List<Size>> R_21_9;
 
     /**
      * The Ration of a Display.
      */
-    @AllArgsConstructor
     public static enum Ration implements INoteModel {
 
         FOUR_TO_THREE(
                 "4:3",
-                _4_3,
+                R_4_3,
                 EnumSet.of(VGA, SVGA, XGA, SXGA, SXGA_PLUS, UXGA, QXGA)),
         SIXTEEN_TO_TEN(
                 "16:10",
-                _16_10,
+                R_16_10,
                 EnumSet.of(RETINA_4, WSVGA, WXGA, WXGA_PLUS, WSXGA, WSXGA_PLUS, WUXGA, WQXGA, RETINA_PRO15, RETINA_DISPLAY, WVGA, QHD_1440P)),
         SIXTEEN_TO_NINE(
                 "16:9",
-                _16_9,
-                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, HD_720P, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6, IPAD_PRO, WVGA, QHD_1440P, _4K)),
+                R_16_9,
+                EnumSet.of(WSVGA, RETINA_5SC, WXGA, HD, WSXGA, HD_720P, FULL_HD, QWXGA, WQHD, RETINA_DISPLAY, UHD, APPLE_5K, WUXGA, IPHONE_6, IPAD_PRO, WVGA, QHD_1440P, FOUR_K)),
         THREE_TO_TWO(
                 "3:2",
-                _3_2,
+                R_3_2,
                 EnumSet.of(RETINA_4)),
         TWENTY_ONE_TO_NINE(
                 "21:9",
-                _21_9,
+                R_21_9,
                 EnumSet.of(UWHD, UWQHD));
 
-        @Getter
         private final String note;
 
         private final Map<ProductGroup, List<Size>> sizes;
 
         private final EnumSet<Resolution> resolutions;
+
+        private Ration(String note, Map<ProductGroup, List<Size>> sizes, EnumSet<Resolution> resolutions) {
+            this.note = note;
+            this.sizes = sizes;
+            this.resolutions = resolutions;
+        }
 
         public static Set<Ration> getRelevantRations(ProductGroup pg) {
             Set<Ration> relevantRations = EnumSet.noneOf(Ration.class);
@@ -125,6 +130,11 @@ public class Display implements Serializable {
             return relevantRations;
         }
 
+        @Override
+        public String getNote() {
+            return note;
+        }
+        
         /**
          * Returns all possible sizes.
          * <p>
@@ -170,8 +180,6 @@ public class Display implements Serializable {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
     public static enum Type implements INoteModel {
 
         CRYSTAL_BRIGHT("Crystal Bright"),
@@ -179,10 +187,17 @@ public class Display implements Serializable {
 
         private final String note;
 
+        private Type(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+        
     }
 
-    @AllArgsConstructor
-    @Getter
     public static enum Resolution implements INoteModel {
 
         VGA("VGA (640x480)"),
@@ -217,16 +232,24 @@ public class Display implements Serializable {
         IPAD_PRO("2732 x 2048"),
         WVGA("854 x 480"),
         QHD_1440P("QHD (2160 x 1440)"),
-        _4K("Real 4K (4096 x 2306)");
+        FOUR_K("Real 4K (4096 x 2306)");
 
         private final String note;
+
+        private Resolution(String note) {
+            this.note = note;
+        }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
 
     }
 
     /**
      * The sizes of Displays.
      */
-    @AllArgsConstructor
     public static enum Size implements INoteModel {
 
         _10_1(10.1, WUXGA),
@@ -279,14 +302,22 @@ public class Display implements Serializable {
         _12_5(12.5, FULL_HD),
         _23_8(23.8, FULL_HD),
         _6(6, FULL_HD),
-        _55(55, _4K);
+        _55(55, FOUR_K);
 
         private final double size;
 
-        @Getter
         private final Resolution maxResolution;
 
         private final static DecimalFormat DF = new DecimalFormat("0.00");
+
+        private Size(double size, Resolution maxResolution) {
+            this.size = size;
+            this.maxResolution = maxResolution;
+        }
+
+        public Resolution getMaxResolution() {
+            return maxResolution;
+        }
 
         public double getValue() {
             return size;
@@ -342,66 +373,60 @@ public class Display implements Serializable {
         this.ration = displayRation;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
     public long getId() {
         return id;
     }
-
+    
     public Double getEconomicValue() {
         return economicValue;
     }
-
+    
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-
+    
     public Size getSize() {
         return size;
     }
-
+    
     public void setSize(Size displaySize) {
         this.size = displaySize;
     }
-
+    
     public Resolution getResolution() {
         return resolution;
     }
-
+    
     public void setResolution(Resolution resolutionType) {
         this.resolution = resolutionType;
     }
-
+    
     public Type getType() {
         return type;
     }
-
+    
     public void setType(Type displayType) {
         this.type = displayType;
     }
-
+    
     public Ration getRation() {
         return ration;
     }
-
+    
     public void setRation(Ration displayRation) {
         this.ration = displayRation;
     }
-
+    
     public boolean isLed() {
         return led;
     }
-
+    
     public void setLed(boolean led) {
         this.led = led;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final Display other = (Display)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
+    //</editor-fold>
 
     public boolean equalsContent(Display other) {
         if ( other == null ) return false;
@@ -414,15 +439,8 @@ public class Display implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
-    }
-
-    @Override
     public String toString() {
-        return "Display{" + "id=" + id + ", led=" + led + ", size=" + size + ", resolution=" + resolution + ", type=" + type + ", ration=" + ration + ", economicValue=" + economicValue + '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 
     @Null(message = "ViolationMessage is not null, but '${validatedValue}'")

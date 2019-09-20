@@ -23,10 +23,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.*;
 
+import eu.ggnet.dwoss.common.api.INoteModel;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.common.api.INoteModel;
 
 import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
 import static javax.persistence.CascadeType.*;
@@ -41,6 +41,7 @@ import static javax.persistence.CascadeType.*;
  * @has 1 - n Desktop.Os
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class Desktop extends BasicSpec {
 
     /**

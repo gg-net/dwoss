@@ -34,6 +34,7 @@ import eu.ggnet.dwoss.common.api.INoteModel;
  * @has 0..n - 0..n ProductSpec.Extra
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class BasicSpec extends ProductSpec {
 
     /**

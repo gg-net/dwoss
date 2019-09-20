@@ -27,9 +27,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-
-import lombok.*;
 
 import static javax.persistence.CascadeType.*;
 
@@ -39,19 +38,16 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "ProductModel.byName", query = "select m from ProductModel m where m.name = ?1"),
-    @NamedQuery(name = "ProductModel.byNameFamilySeries",
-                query = "select m from ProductModel m where m.name = ?5 and m.family.name = ?4 "
-                + "and m.family.series.brand = ?1 and m.family.series.group = ?2 and m.family.series.name = ?3")
-})
-@EqualsAndHashCode(of = "id")
-public class ProductModel implements Serializable, INamed, EagerAble {
+@NamedQuery(name = "ProductModel.byName", query = "select m from ProductModel m where m.name = ?1")
+@NamedQuery(name = "ProductModel.byNameFamilySeries",
+            query = "select m from ProductModel m where m.name = ?5 and m.family.name = ?4 "
+            + "and m.family.series.brand = ?1 and m.family.series.group = ?2 and m.family.series.name = ?3")
+@SuppressWarnings("PersistenceUnitPresent")
+public class ProductModel extends BaseEntity implements Serializable, INamed, EagerAble {
 
     @XmlTransient
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     @XmlTransient
@@ -60,14 +56,11 @@ public class ProductModel implements Serializable, INamed, EagerAble {
 
     @XmlAttribute
     @Basic(optional = false)
-    @Getter
-    @Setter
     private String name;
 
     @NotNull
     @Valid
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH, PERSIST}, optional = false)
-    @Getter
     private ProductFamily family;
 
     @NotNull
@@ -77,8 +70,6 @@ public class ProductModel implements Serializable, INamed, EagerAble {
 
     @Column(columnDefinition = "DECIMAL(7,2)")
     @XmlAttribute
-    @Getter
-    @Setter
     private Double economicValue;
 
     public ProductModel() {
@@ -97,6 +88,38 @@ public class ProductModel implements Serializable, INamed, EagerAble {
         this.name = name;
         setFamily(family);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public Double getEconomicValue() {
+        return economicValue;
+    }
+    
+    public void setEconomicValue(Double economicValue) {
+        this.economicValue = economicValue;
+    }
+    
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public short getOptLock() {
+        return optLock;
+    }
+    
+    public ProductFamily getFamily() {
+        return family;
+    }
+    //</editor-fold>
 
     public void setFamily(ProductFamily family) {
         if ( family == null && this.family == null ) return;

@@ -31,6 +31,7 @@ import static eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra.*;
  * @author pascal.perau
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public class Notebook extends DisplayAbleDesktop {
 
     public Notebook() {

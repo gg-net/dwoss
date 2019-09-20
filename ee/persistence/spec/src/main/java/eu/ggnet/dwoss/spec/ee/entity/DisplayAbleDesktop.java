@@ -34,6 +34,7 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
+@SuppressWarnings("PersistenceUnitPresent")
 public abstract class DisplayAbleDesktop extends Desktop implements DisplayAble {
 
     public DisplayAbleDesktop() {

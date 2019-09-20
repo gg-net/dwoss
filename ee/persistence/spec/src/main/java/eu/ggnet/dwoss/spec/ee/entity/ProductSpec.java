@@ -27,13 +27,13 @@ import javax.validation.constraints.Null;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.util.persistence.EagerAble;
-
-import lombok.*;
 
 import static javax.persistence.CascadeType.*;
 
@@ -47,18 +47,12 @@ import static javax.persistence.CascadeType.*;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries({
-    @NamedQuery(name = "ProductSpec.byPartNo", query = "select s from ProductSpec s where s.partNo = ?1")
-    ,
-    @NamedQuery(name = "ProductSpec.byProductId", query = "select s from ProductSpec s where s.productId = ?1")
-    ,
-    @NamedQuery(name = "ProductSpec.byProductIds", query = "SELECT s FROM ProductSpec s WHERE s.productId IN (?1)")
-})
-@EqualsAndHashCode(of = "id")
-@ToString
-public abstract class ProductSpec implements Serializable, EagerAble {
+@NamedQuery(name = "ProductSpec.byPartNo", query = "select s from ProductSpec s where s.partNo = ?1")
+@NamedQuery(name = "ProductSpec.byProductId", query = "select s from ProductSpec s where s.productId = ?1")
+@NamedQuery(name = "ProductSpec.byProductIds", query = "SELECT s FROM ProductSpec s WHERE s.productId IN (?1)")
+@SuppressWarnings("PersistenceUnitPresent")
+public abstract class ProductSpec extends BaseEntity implements Serializable, EagerAble {
 
-    @RequiredArgsConstructor
     public static enum Extra implements INoteModel {
 
         USB_3("USB 3"),
@@ -102,15 +96,28 @@ public abstract class ProductSpec implements Serializable, EagerAble {
         REALSENSE_3D_CAM("RealSense 3D Kamera"),
         ITEGATED_SIM("Integrierte Sim");
 
-        @Getter
         private final String note;
 
-        @Getter
         private final double economicValue;
 
+        private Extra(String note, double economicValue) {
+            this.note = note;
+            this.economicValue = economicValue;
+        }        
+        
         private Extra(String note) {
             this(note, 0);
         }
+
+        @Override
+        public String getNote() {
+            return note;
+        }
+
+        public double getEconomicValue() {
+            return economicValue;
+        }
+                
     }
 
     public static ProductSpec newInstance(ProductGroup group) {
@@ -142,7 +149,6 @@ public abstract class ProductSpec implements Serializable, EagerAble {
     @XmlTransient
     @Id
     @GeneratedValue
-    @Getter
     private long id;
 
     @XmlTransient
@@ -151,7 +157,6 @@ public abstract class ProductSpec implements Serializable, EagerAble {
 
     @Valid
     @ManyToOne(cascade = {DETACH, MERGE, REFRESH}, optional = false)
-    @Getter
     private ProductModel model;
 
     /**
@@ -161,8 +166,6 @@ public abstract class ProductSpec implements Serializable, EagerAble {
     @Basic(optional = false)
     @NotNull
     @XmlAttribute
-    @Getter
-    @Setter
     private String partNo;
 
     /**
@@ -170,14 +173,10 @@ public abstract class ProductSpec implements Serializable, EagerAble {
      * <p>
      * This is the weak reference to unqiueunit.Product
      */
-    @Getter
-    @Setter
     @XmlTransient
     @Column(unique = true)
     private Long productId;
 
-    @Getter
-    @Setter
     @XmlAttribute
     @Column(columnDefinition = "DECIMAL(7,2)")
     private Double economicValue;
@@ -203,6 +202,41 @@ public abstract class ProductSpec implements Serializable, EagerAble {
     public Set<Extra> getDefaultExtras() {
         return EnumSet.allOf(Extra.class);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
+    @Override
+    public long getId() {
+        return id;
+    }
+    
+    public ProductModel getModel() {
+        return model;
+    }
+    
+    public String getPartNo() {
+        return partNo;
+    }
+    
+    public Long getProductId() {
+        return productId;
+    }
+    
+    public Double getEconomicValue() {
+        return economicValue;
+    }
+    
+    public void setPartNo(String partNo) {
+        this.partNo = partNo;
+    }
+    
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+    
+    public void setEconomicValue(Double economicValue) {
+        this.economicValue = economicValue;
+    }
+    //</editor-fold>
 
     public void setModel(ProductModel model) {
         if ( model == null && this.model == null ) return;
@@ -238,5 +272,10 @@ public abstract class ProductSpec implements Serializable, EagerAble {
     @PreUpdate
     private void prePersitValidate() {
         if ( model == null ) throw new RuntimeException("Model is null");
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

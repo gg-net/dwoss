@@ -25,7 +25,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Cpu.Series.*;
 
@@ -36,7 +39,8 @@ import static eu.ggnet.dwoss.spec.ee.entity.piece.Cpu.Series.*;
  */
 @Entity
 @NamedQuery(name = "Cpu.bySeriesModel", query = "select d from Cpu d where d.series = ?1 and d.model = ?2")
-public class Cpu implements Serializable {
+@SuppressWarnings("PersistenceUnitPresent")
+public class Cpu extends BaseEntity implements Serializable {
 
     /**
      * The Manufacturer of the CPU.
@@ -217,95 +221,88 @@ public class Cpu implements Serializable {
         this.cores = cores;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public long getId() {
         return id;
     }
-
+    
     public Double getEconomicValue() {
         return economicValue;
     }
-
+    
     public void setEconomicValue(Double economicValue) {
         this.economicValue = economicValue;
     }
-
+    
     public String getModel() {
         return model;
     }
-
+    
     public void setModel(String model) {
         this.model = model;
     }
-
+    
     public Double getFrequency() {
         return frequency;
     }
-
+    
     public void setFrequency(Double frequency) {
         this.frequency = frequency;
     }
-
+    
     public Manufacturer getManufacturer() {
         return series.getManufacturer();
     }
-
+    
     public Set<Type> getTypes() {
         return types;
     }
-
+    
     public void addType(Type type) {
         types.add(type);
     }
-
+    
     public void removeType(Type type) {
         types.remove(type);
     }
-
+    
     public void setTypes(Set<Type> types) {
         this.types = types;
     }
-
+    
     public void setSeries(Series series) {
         this.series = series;
     }
-
+    
     public Series getSeries() {
         return series;
     }
-
+    
     public Integer getCores() {
         return cores;
     }
-
+    
     public void setCores(Integer cores) {
         this.cores = cores;
     }
-
+    
     public Gpu getEmbeddedGpu() {
         return embeddedGpu;
     }
-
+    
     public void setEmbeddedGpu(Gpu embeddedGpu) {
         this.embeddedGpu = embeddedGpu;
     }
-
+    
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final Cpu other = (Cpu)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
-
+    //</editor-fold>
+    
     public boolean equalsContent(Cpu other) {
         if ( other == null ) return false;
         if ( (this.model == null) ? (other.model != null) : !this.model.equals(other.model) ) return false;
@@ -318,14 +315,7 @@ public class Cpu implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 83 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
-    }
-
-    @Override
     public String toString() {
-        return "Cpu{" + "id=" + id + ", model=" + model + ", name=" + name + ", frequency=" + frequency + ", types=" + types + ", series=" + series + ", cores=" + cores + ", embeddedGpu=" + embeddedGpu + ", economicValue=" + economicValue + '}';
+        return ToStringBuilder.reflectionToString(this);
     }
 }

@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 import static javax.persistence.CascadeType.*;
 
@@ -38,10 +39,9 @@ import static javax.persistence.CascadeType.*;
  * @author oliver.guenther
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = "ProductSeries.byBrandGroupName", query = "select s from ProductSeries s where s.brand = ?1 and s.group = ?2 and s.name = ?3")
-})
-public class ProductSeries implements Serializable, INamed {
+@NamedQuery(name = "ProductSeries.byBrandGroupName", query = "select s from ProductSeries s where s.brand = ?1 and s.group = ?2 and s.name = ?3")
+@SuppressWarnings("PersistenceUnitPresent")
+public class ProductSeries extends BaseEntity implements Serializable, INamed {
 
     @XmlTransient
     @Id
@@ -95,6 +95,7 @@ public class ProductSeries implements Serializable, INamed {
         this.name = name;
     }
 
+    @Override
     public long getId() {
         return id;
     }
@@ -155,22 +156,6 @@ public class ProductSeries implements Serializable, INamed {
     public String getViolationMessage() {
         if ( brand != null && !brand.isBrand() ) return brand.getName() + " is not a Brand";
         return null;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if ( obj == null ) return false;
-        if ( getClass() != obj.getClass() ) return false;
-        final ProductSeries other = (ProductSeries)obj;
-        if ( this.id != other.id ) return false;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 89 * hash + (int)(this.id ^ (this.id >>> 32));
-        return hash;
     }
 
     @Override
