@@ -22,32 +22,39 @@ import java.util.List;
 import javax.ejb.Remote;
 import javax.enterprise.event.Observes;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.util.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
-import lombok.Value;
-
 /**
  * RedTapeWorker.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Remote
 public interface RedTapeWorker {
 
-    @Value
     public static class Addresses implements Serializable {
 
-        private final Address invoice;
+        public final Address invoice;
 
-        private final Address shipping;
+        public final Address shipping;
+
+        public Addresses(Address invoice, Address shipping) {
+            this.invoice = invoice;
+            this.shipping = shipping;
+        }
+
+        @Override
+        public String toString() {
+            return "Addresses{" + "invoice=" + invoice + ", shipping=" + shipping + '}';
+        }
 
     }
 

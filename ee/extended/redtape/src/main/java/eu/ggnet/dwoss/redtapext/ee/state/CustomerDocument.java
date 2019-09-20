@@ -16,16 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.state;
 
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-
 import java.io.Serializable;
 import java.util.*;
 
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
-import lombok.Data;
 
 /**
  * Basic input Object for the RedTapeStateCharacteristikFactory, uses some filters.
@@ -37,16 +32,16 @@ import lombok.Data;
  * <p>
  * @author oliver.guenther
  */
-@Data
+// TODO: Freebuilder me please.
 public class CustomerDocument implements Serializable {
 
     private final Set<CustomerFlag> customerFlags;
 
     private final Document document;
 
-    private ShippingCondition shippingCondition;
+    private final ShippingCondition shippingCondition;
 
-    private PaymentMethod paymentMethod;
+    private final PaymentMethod paymentMethod;
 
     public CustomerDocument(Set<CustomerFlag> customerFlags, Document document, ShippingCondition shippingCondition, PaymentMethod paymentMethod) {
         this.customerFlags = EnumSet.noneOf(CustomerFlag.class);
@@ -58,6 +53,47 @@ public class CustomerDocument implements Serializable {
         this.paymentMethod = Objects.requireNonNull(paymentMethod, "PaymentMethod must not be null");
     }
 
+    public Set<CustomerFlag> getCustomerFlags() {
+        return customerFlags;
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public ShippingCondition getShippingCondition() {
+        return shippingCondition;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.customerFlags);
+        hash = 19 * hash + Objects.hashCode(this.document);
+        hash = 19 * hash + Objects.hashCode(this.shippingCondition);
+        hash = 19 * hash + Objects.hashCode(this.paymentMethod);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final CustomerDocument other = (CustomerDocument)obj;
+        if ( !Objects.equals(this.customerFlags, other.customerFlags) ) return false;
+        if ( !Objects.equals(this.document, other.document) ) return false;
+        if ( this.shippingCondition != other.shippingCondition ) return false;
+        if ( this.paymentMethod != other.paymentMethod ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
     @Override
     public String toString() {
         return "CustomerDocument with " + new RedTapeStateCharacteristic(document.getType(), document.getDossier().getPaymentMethod(), document.getConditions(), document.getDirective(), customerFlags, document.getDossier().isDispatch()).toString();

@@ -207,7 +207,7 @@ public class DocumentSupporterFlagIT extends ArquillianProjectArchive {
         cgo.scrambleAddress(customerId, AddressType.INVOICE);
 
         Addresses addresses = redTapeWorker.requestAdressesByCustomer(customerId);
-        doc.setInvoiceAddress(addresses.getInvoice());
+        doc.setInvoiceAddress(addresses.invoice);
     }
 
     private void assertOnlyBriefed(Document doc) {

@@ -21,6 +21,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
@@ -31,14 +34,11 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
 /**
  *
@@ -75,8 +75,8 @@ public class DossierCreateAction extends AbstractAction {
             Document doc = dos.getDocuments().iterator().next();  // This is safe, as a create will return exactly one document.
 
             Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(customer.id());
-            doc.setInvoiceAddress(addresses.getInvoice());
-            doc.setShippingAddress(addresses.getShipping());
+            doc.setInvoiceAddress(addresses.invoice);
+            doc.setShippingAddress(addresses.shipping);
             Ui.exec(() -> {
                 Ui.build().parent(controller.getView()).swing().eval(() -> {
                     DocumentUpdateView docView = new DocumentUpdateView(doc);

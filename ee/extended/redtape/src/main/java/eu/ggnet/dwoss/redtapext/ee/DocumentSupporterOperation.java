@@ -59,8 +59,6 @@ import eu.ggnet.dwoss.util.*;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
-import lombok.Setter;
-
 import static eu.ggnet.dwoss.redtapext.ee.DocumentSupporterOperation.TemplateParameter.*;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.ITALIC;
@@ -143,7 +141,6 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     @UniqueUnits
     private EntityManager uuEm;
 
-    @Setter // Only here for the tryout.
     @Inject
     private Mandator mandator;
 
@@ -161,6 +158,10 @@ public class DocumentSupporterOperation implements DocumentSupporter {
         return jasper(document, viewType);
     }
 
+    public void setMandator(Mandator mandator) {
+        this.mandator = mandator;
+    }
+    
     /**
      * This method send document to the e-Mail address that is in the customer set.
      * <p/>

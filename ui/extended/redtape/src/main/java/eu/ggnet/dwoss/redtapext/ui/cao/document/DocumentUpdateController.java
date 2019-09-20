@@ -198,8 +198,8 @@ public class DocumentUpdateController {
             return;
         }
         Addresses addresses = Dl.remote().lookup(RedTapeWorker.class).requestAdressesByCustomer(view.getCustomerId());
-        document.setInvoiceAddress(addresses.getInvoice());
-        document.setShippingAddress(addresses.getShipping());
+        document.setInvoiceAddress(addresses.invoice);
+        document.setShippingAddress(addresses.shipping);
         view.refreshAddressArea();
     }
 

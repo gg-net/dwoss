@@ -7,14 +7,14 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,17 +46,17 @@ public class RedTapeAddressOperationIT extends ArquillianProjectArchive {
         doc = redTapeWorker.update(doc, null, arranger);
 
         //start assertion
-        assertEquals(doc.getInvoiceAddress(), redTapeWorker.requestAdressesByCustomer(customerId).getInvoice());
+        assertEquals(doc.getInvoiceAddress(), redTapeWorker.requestAdressesByCustomer(customerId).invoice);
 
         //change adress and assert the changes
         //TODO CONVERTERUTIL AAAAAHHHHHH
         cgo.scrambleAddress(customerId, AddressType.INVOICE);
-        assertFalse(doc.getInvoiceAddress().equals(redTapeWorker.requestAdressesByCustomer(customerId).getInvoice()));
+        assertFalse(doc.getInvoiceAddress().equals(redTapeWorker.requestAdressesByCustomer(customerId).invoice));
 
         //update adresses to all document adresses and assert changes
         redTapeWorker.updateAllDocumentAdresses(new AddressChange(customerId, "Test", AddressType.INVOICE, "", ""));
         doc = redTapeAgent.findByIdEager(Dossier.class, dos.getId()).getActiveDocuments().get(0);
-        assertEquals(doc.getInvoiceAddress(), redTapeWorker.requestAdressesByCustomer(customerId).getInvoice());
+        assertEquals(doc.getInvoiceAddress(), redTapeWorker.requestAdressesByCustomer(customerId).invoice);
     }
 
     private void addRandomPositions(Document doc) {
