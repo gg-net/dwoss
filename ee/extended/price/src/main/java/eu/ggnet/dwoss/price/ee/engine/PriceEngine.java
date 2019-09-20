@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.price.ee.engine;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
 import java.util.Objects;
 
 import javax.enterprise.inject.Instance;
@@ -28,13 +24,14 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.price.ee.EngineTracer;
 import eu.ggnet.dwoss.price.ee.Estimator;
 import eu.ggnet.dwoss.price.ee.Estimator.Result;
 import eu.ggnet.dwoss.price.ee.engine.support.TraceCollector;
-import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 
 import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.SET;
 
@@ -90,7 +87,7 @@ public class PriceEngine {
                 per.setSpecial("FIX UNIT");
                 et.info("UnitFixPrice");
             } else {
-                L.debug("refurbishId:{} has PartPriceFixed", uu.getRefurbishId());
+                L.debug("refurbishId:{} has PartPriceFixed", uu.getRefurbishId()); 
                 per.setCustomerPrice(p.getPrice(PriceType.CUSTOMER));
                 per.setRetailerPrice(p.getPrice(PriceType.RETAILER));
                 per.setManufacturerPartPriceFixed(SET);

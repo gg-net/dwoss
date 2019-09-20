@@ -18,10 +18,10 @@ package eu.ggnet.dwoss.price.ee;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
-import lombok.Value;
 
 /**
  * Interface to supply your one rules for price estimation of units.
@@ -30,7 +30,6 @@ import lombok.Value;
  */
 public interface Estimator {
 
-    @Value
     public static class Result implements Serializable {
 
         /**
@@ -46,6 +45,39 @@ public interface Estimator {
         private final double customerPrice;
 
         private final double retailerToCustomerPricePercentage;
+
+        public Result(String tag, EngineTracer tracer, double retailerPrice, double customerPrice, double retailerToCustomerPricePercentage) {
+            this.tag = tag;
+            this.tracer = tracer;
+            this.retailerPrice = retailerPrice;
+            this.customerPrice = customerPrice;
+            this.retailerToCustomerPricePercentage = retailerToCustomerPricePercentage;
+        }
+
+        public String getTag() {
+            return tag;
+        }
+
+        public EngineTracer getTracer() {
+            return tracer;
+        }
+
+        public double getRetailerPrice() {
+            return retailerPrice;
+        }
+
+        public double getCustomerPrice() {
+            return customerPrice;
+        }
+
+        public double getRetailerToCustomerPricePercentage() {
+            return retailerToCustomerPricePercentage;
+        }
+        
+        @Override
+        public String toString() {
+            return ToStringBuilder.reflectionToString(this);
+        }
 
     }
 

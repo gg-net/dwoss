@@ -16,28 +16,25 @@
  */
 package eu.ggnet.dwoss.price.ee.engine;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceHistory;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
 import java.io.Serializable;
 import java.util.*;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import eu.ggnet.dwoss.price.ee.engine.support.TraceCollector;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 
-import lombok.Data;
-
-import static eu.ggnet.dwoss.price.ee.EngineTracer.Status.*;
+import static eu.ggnet.dwoss.price.ee.EngineTracer.Status.ERROR;
+import static eu.ggnet.dwoss.price.ee.EngineTracer.Status.WARNING;
 
 /**
  * ValueObject for Import and Export of PriceEngine and the Database
  *
  * @author oliver.guenther
  */
-@Data
+// TODO: This is just a bad bad class. Do not optimize, the price engine will probably be dropt in the future.
 public class PriceEngineResult implements Comparable<PriceEngineResult>, Serializable {
 
     public static enum Change {
@@ -239,14 +236,15 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
         if ( collector.getStatus() == ERROR ) error = true;
     }
 
+    //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public double getTax() {
         return tax;
     }
-
+    
     public void setTax(double tax) {
         this.tax = tax;
     }
-
+    
     /** m
      * Get the value of dateFirstPriced
      *
@@ -255,15 +253,15 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
     public Date getDateFirstPriced() {
         return dateFirstPriced;
     }
-
+    
     public double getRetailerToCustomerPricePercentage() {
         return retailerToCustomerPricePercentage;
     }
-
+    
     public void setRetailerToCustomerPricePercentage(double retailerToCustomerPricePercentage) {
         this.retailerToCustomerPricePercentage = retailerToCustomerPricePercentage;
     }
-
+    
     /**
      * Set the value of dateFirstPriced
      *
@@ -272,39 +270,311 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
     public void setDateFirstPriced(Date dateFirstPriced) {
         this.dateFirstPriced = dateFirstPriced;
     }
-
+    
     public Change getManufacturerPartPriceFixed() {
         return manufacturerPartPriceFixed;
     }
-
+    
     public void setManufacturerPartPriceFixed(Change manufacturerPartPriceFixed) {
         this.manufacturerPartPriceFixed = manufacturerPartPriceFixed;
     }
-
+    
     public double getCostPrice() {
         return roundTo2Decimals(costPrice);
     }
-
+    
     public double getCustomerPrice() {
         return roundTo2Decimals(customerPrice);
     }
-
+    
     public double getContractorReferencePrice() {
         return roundTo2Decimals(contractorReferencePrice);
     }
-
+    
     public double getReferencePrice() {
         return roundTo2Decimals(referencePrice);
     }
-
+    
     public double getRetailerPrice() {
         return roundTo2Decimals(retailerPrice);
     }
-
+    
     public String getRulesLog() {
         return rulesLog;
     }
+    
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
+    }
+    
+    public void setContractorReferencePrice(double contractorReferencePrice) {
+        this.contractorReferencePrice = contractorReferencePrice;
+    }
+    
+    public void setReferencePrice(double referencePrice) {
+        this.referencePrice = referencePrice;
+    }
+    
+    public void setRetailerPrice(double retailerPrice) {
+        this.retailerPrice = retailerPrice;
+    }
+    
+    public void setCustomerPrice(double customerPrice) {
+        this.customerPrice = customerPrice;
+    }
+    
+    public void setRulesLog(String rulesLog) {
+        this.rulesLog = rulesLog;
+    }
+    
+    public String getRefurbishedId() {
+        return refurbishedId;
+    }
+    
+    public void setRefurbishedId(String refurbishedId) {
+        this.refurbishedId = refurbishedId;
+    }
+    
+    public String getCommodityGroup() {
+        return commodityGroup;
+    }
+    
+    public void setCommodityGroup(String commodityGroup) {
+        this.commodityGroup = commodityGroup;
+    }
+    
+    public String getManufacturerPartNo() {
+        return manufacturerPartNo;
+    }
+    
+    public void setManufacturerPartNo(String manufacturerPartNo) {
+        this.manufacturerPartNo = manufacturerPartNo;
+    }
+    
+    public String getProductName() {
+        return productName;
+    }
+    
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+    
+    public String getProductDescription() {
+        return productDescription;
+    }
+    
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+    
+    public String getComment() {
+        return comment;
+    }
+    
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+    
+    public String getInternalComment() {
+        return internalComment;
+    }
+    
+    public void setInternalComment(String internalComment) {
+        this.internalComment = internalComment;
+    }
+    
+    public int getWarrantyId() {
+        return warrantyId;
+    }
+    
+    public void setWarrantyId(int warrantyId) {
+        this.warrantyId = warrantyId;
+    }
+    
+    public Date getMfgDate() {
+        return mfgDate;
+    }
+    
+    public void setMfgDate(Date mfgDate) {
+        this.mfgDate = mfgDate;
+    }
+    
+    public Date getInputDate() {
+        return inputDate;
+    }
+    
+    public void setInputDate(Date inputDate) {
+        this.inputDate = inputDate;
+    }
+    
+    public Date getEol() {
+        return eol;
+    }
+    
+    public void setEol(Date eol) {
+        this.eol = eol;
+    }
+    
+    public String getConditionLevel() {
+        return conditionLevel;
+    }
+    
+    public void setConditionLevel(String conditionLevel) {
+        this.conditionLevel = conditionLevel;
+    }
+    
+    public boolean isError() {
+        return error;
+    }
+    
+    public void setError(boolean error) {
+        this.error = error;
+    }
+    
+    public boolean isWarning() {
+        return warning;
+    }
+    
+    public void setWarning(boolean warning) {
+        this.warning = warning;
+    }
+    
+    public Change getUnitPriceFixed() {
+        return unitPriceFixed;
+    }
+    
+    public void setUnitPriceFixed(Change unitPriceFixed) {
+        this.unitPriceFixed = unitPriceFixed;
+    }
+    
+    public String getSpecial() {
+        return special;
+    }
+    
+    public void setSpecial(String special) {
+        this.special = special;
+    }
+    
+    public String getSalesChannel() {
+        return salesChannel;
+    }
+    
+    public void setSalesChannel(String salesChannel) {
+        this.salesChannel = salesChannel;
+    }
+    
+    public double getLastRetailerPrice() {
+        return lastRetailerPrice;
+    }
+    
+    public void setLastRetailerPrice(double lastRetailerPrice) {
+        this.lastRetailerPrice = lastRetailerPrice;
+    }
+    
+    public double getLastCustomerPrice() {
+        return lastCustomerPrice;
+    }
+    
+    public void setLastCustomerPrice(double lastCustomerPrice) {
+        this.lastCustomerPrice = lastCustomerPrice;
+    }
+    
+    public Date getWarrentyValid() {
+        return warrentyValid;
+    }
+    
+    public void setWarrentyValid(Date warrentyValid) {
+        this.warrentyValid = warrentyValid;
+    }
+    
+    public String getStock() {
+        return stock;
+    }
+    
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
+    //</editor-fold>
 
+    //<editor-fold defaultstate="collapsed" desc="equals and hashCode of all">
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 83 * hash + Objects.hashCode(this.refurbishedId);
+        hash = 83 * hash + Objects.hashCode(this.commodityGroup);
+        hash = 83 * hash + Objects.hashCode(this.manufacturerPartNo);
+        hash = 83 * hash + Objects.hashCode(this.productName);
+        hash = 83 * hash + Objects.hashCode(this.productDescription);
+        hash = 83 * hash + Objects.hashCode(this.comment);
+        hash = 83 * hash + Objects.hashCode(this.internalComment);
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.costPrice) ^ (Double.doubleToLongBits(this.costPrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.contractorReferencePrice) ^ (Double.doubleToLongBits(this.contractorReferencePrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.referencePrice) ^ (Double.doubleToLongBits(this.referencePrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.retailerPrice) ^ (Double.doubleToLongBits(this.retailerPrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.customerPrice) ^ (Double.doubleToLongBits(this.customerPrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.retailerToCustomerPricePercentage) ^ (Double.doubleToLongBits(this.retailerToCustomerPricePercentage) >>> 32));
+        hash = 83 * hash + this.warrantyId;
+        hash = 83 * hash + Objects.hashCode(this.mfgDate);
+        hash = 83 * hash + Objects.hashCode(this.inputDate);
+        hash = 83 * hash + Objects.hashCode(this.eol);
+        hash = 83 * hash + Objects.hashCode(this.conditionLevel);
+        hash = 83 * hash + Objects.hashCode(this.rulesLog);
+        hash = 83 * hash + (this.error ? 1 : 0);
+        hash = 83 * hash + (this.warning ? 1 : 0);
+        hash = 83 * hash + Objects.hashCode(this.manufacturerPartPriceFixed);
+        hash = 83 * hash + Objects.hashCode(this.unitPriceFixed);
+        hash = 83 * hash + Objects.hashCode(this.dateFirstPriced);
+        hash = 83 * hash + Objects.hashCode(this.special);
+        hash = 83 * hash + Objects.hashCode(this.salesChannel);
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.tax) ^ (Double.doubleToLongBits(this.tax) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.lastRetailerPrice) ^ (Double.doubleToLongBits(this.lastRetailerPrice) >>> 32));
+        hash = 83 * hash + (int)(Double.doubleToLongBits(this.lastCustomerPrice) ^ (Double.doubleToLongBits(this.lastCustomerPrice) >>> 32));
+        hash = 83 * hash + Objects.hashCode(this.warrentyValid);
+        hash = 83 * hash + Objects.hashCode(this.stock);
+        return hash;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( this == obj ) return true;
+        if ( obj == null ) return false;
+        if ( getClass() != obj.getClass() ) return false;
+        final PriceEngineResult other = (PriceEngineResult)obj;
+        if ( Double.doubleToLongBits(this.costPrice) != Double.doubleToLongBits(other.costPrice) ) return false;
+        if ( Double.doubleToLongBits(this.contractorReferencePrice) != Double.doubleToLongBits(other.contractorReferencePrice) ) return false;
+        if ( Double.doubleToLongBits(this.referencePrice) != Double.doubleToLongBits(other.referencePrice) ) return false;
+        if ( Double.doubleToLongBits(this.retailerPrice) != Double.doubleToLongBits(other.retailerPrice) ) return false;
+        if ( Double.doubleToLongBits(this.customerPrice) != Double.doubleToLongBits(other.customerPrice) ) return false;
+        if ( Double.doubleToLongBits(this.retailerToCustomerPricePercentage) != Double.doubleToLongBits(other.retailerToCustomerPricePercentage) ) return false;
+        if ( this.warrantyId != other.warrantyId ) return false;
+        if ( this.error != other.error ) return false;
+        if ( this.warning != other.warning ) return false;
+        if ( Double.doubleToLongBits(this.tax) != Double.doubleToLongBits(other.tax) ) return false;
+        if ( Double.doubleToLongBits(this.lastRetailerPrice) != Double.doubleToLongBits(other.lastRetailerPrice) ) return false;
+        if ( Double.doubleToLongBits(this.lastCustomerPrice) != Double.doubleToLongBits(other.lastCustomerPrice) ) return false;
+        if ( !Objects.equals(this.refurbishedId, other.refurbishedId) ) return false;
+        if ( !Objects.equals(this.commodityGroup, other.commodityGroup) ) return false;
+        if ( !Objects.equals(this.manufacturerPartNo, other.manufacturerPartNo) ) return false;
+        if ( !Objects.equals(this.productName, other.productName) ) return false;
+        if ( !Objects.equals(this.productDescription, other.productDescription) ) return false;
+        if ( !Objects.equals(this.comment, other.comment) ) return false;
+        if ( !Objects.equals(this.internalComment, other.internalComment) ) return false;
+        if ( !Objects.equals(this.conditionLevel, other.conditionLevel) ) return false;
+        if ( !Objects.equals(this.rulesLog, other.rulesLog) ) return false;
+        if ( !Objects.equals(this.special, other.special) ) return false;
+        if ( !Objects.equals(this.salesChannel, other.salesChannel) ) return false;
+        if ( !Objects.equals(this.stock, other.stock) ) return false;
+        if ( !Objects.equals(this.mfgDate, other.mfgDate) ) return false;
+        if ( !Objects.equals(this.inputDate, other.inputDate) ) return false;
+        if ( !Objects.equals(this.eol, other.eol) ) return false;
+        if ( this.manufacturerPartPriceFixed != other.manufacturerPartPriceFixed ) return false;
+        if ( this.unitPriceFixed != other.unitPriceFixed ) return false;
+        if ( !Objects.equals(this.dateFirstPriced, other.dateFirstPriced) ) return false;
+        if ( !Objects.equals(this.warrentyValid, other.warrentyValid) ) return false;
+        return true;
+    }
+    //</editor-fold>
+    
     @Override
     public int compareTo(PriceEngineResult o) {
         if ( o == null ) return 1;
@@ -345,5 +615,9 @@ public class PriceEngineResult implements Comparable<PriceEngineResult>, Seriali
             result.add(per.getManufacturerPartNo());
         }
         return result;
+    }
+    
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

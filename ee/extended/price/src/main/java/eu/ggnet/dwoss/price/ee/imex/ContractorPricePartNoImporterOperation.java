@@ -30,14 +30,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.api.values.AcerRules;
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.common.api.values.partno.PartNoSupport;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.common.api.values.AcerRules;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.partno.PartNoSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -48,8 +48,6 @@ import eu.ggnet.dwoss.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.saft.api.Reply;
-
-import lombok.Value;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.OTTO;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
@@ -64,7 +62,6 @@ import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 public class ContractorPricePartNoImporterOperation implements ContractorPricePartNoImporter {
 
     // Must be Public for JExcelReader
-    @Value
     public static class ManufacturerImport implements Serializable {
 
         private final String partNo;
@@ -76,10 +73,15 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
             return costPrice;
         }
 
+        public ManufacturerImport(String partNo, Double costPrice) {
+            this.partNo = partNo;
+            this.costPrice = costPrice;
+        }
+        
+
     }
 
     // Must be Public for JExcelReader
-    @Value
     public static class ContractorImport implements Serializable {
 
         private final String manufacturerPartNo;
@@ -92,6 +94,14 @@ public class ContractorPricePartNoImporterOperation implements ContractorPricePa
 
         private final String contractorPartNo;
 
+        public ContractorImport(String manufacturerPartNo, String gtin, String name, Double referencePrice, String contractorPartNo) {
+            this.manufacturerPartNo = manufacturerPartNo;
+            this.gtin = gtin;
+            this.name = name;
+            this.referencePrice = referencePrice;
+            this.contractorPartNo = contractorPartNo;
+        }
+        
         public double getReferencePrice() {
             if ( referencePrice == null ) return 0;
             return referencePrice;

@@ -16,10 +16,6 @@
  */
 package eu.ggnet.dwoss.price.ee;
 
-import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-
 import java.util.Map.Entry;
 import java.util.*;
 
@@ -31,11 +27,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
+import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngine;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
+import eu.ggnet.dwoss.progress.IMonitor;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
@@ -45,9 +41,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
-import eu.ggnet.dwoss.progress.IMonitor;
-
-import lombok.Data;
+import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 
 import static eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -60,14 +54,6 @@ import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBIS
  */
 @Stateless
 public class PriceCoreOperation {
-
-    @Data
-    private static class SuperProduct {
-
-        private final Product product;
-
-        private ProductSpec spec;
-    }
 
     @Inject
     @UniqueUnits
@@ -83,9 +69,6 @@ public class PriceCoreOperation {
 
     @Inject
     private PriceEngine priceEngine;
-
-    @Inject
-    private Mandator mandator;
 
     private final Logger L = LoggerFactory.getLogger(PriceCoreOperation.class);
 

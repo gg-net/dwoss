@@ -23,20 +23,14 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.lucidcalc.LucidCalcReader;
-import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
-
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.lucidcalc.LucidCalcReader;
+import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.saft.api.Reply;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 /**
  * The ImportLogic for PriceManagement Files
@@ -44,8 +38,6 @@ import lombok.NoArgsConstructor;
  * @author oliver.guenther
  */
 @Stateless
-@NoArgsConstructor
-@AllArgsConstructor
 public class ImporterOperation implements Importer {
 
     @Inject
@@ -54,6 +46,14 @@ public class ImporterOperation implements Importer {
     @Inject
     private MonitorFactory monitorFactory;
 
+    public ImporterOperation() {
+    }
+
+    public ImporterOperation(PriceCoreOperation core, MonitorFactory monitorFactory) {
+        this.core = core;
+        this.monitorFactory = monitorFactory;
+    }
+    
     /**
      * Imports the Pricemanagement from an XLS file with a defined form.
      * The Form is as follows
