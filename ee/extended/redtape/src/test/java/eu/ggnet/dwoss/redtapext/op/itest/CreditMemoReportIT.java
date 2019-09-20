@@ -10,6 +10,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -18,7 +19,6 @@ import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtapext.op.itest.support.SupportBean;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
@@ -27,12 +27,9 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.util.FileJacket;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import lombok.AllArgsConstructor;
-import lombok.ToString;
-
-import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.common.api.values.PositionType.SHIPPING_COST;
+import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -44,8 +41,6 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class CreditMemoReportIT extends ArquillianProjectArchive {
 
-    @AllArgsConstructor
-    @ToString
     public static class LoadContainer {
 
         private final String sopoNr;
@@ -61,6 +56,20 @@ public class CreditMemoReportIT extends ArquillianProjectArchive {
         private final Double netto;
 
         private final Double brutto;
+
+        public LoadContainer(String sopoNr, String serial, String name, String contractor, String type, Double netto, Double brutto) {
+            this.sopoNr = sopoNr;
+            this.serial = serial;
+            this.name = name;
+            this.contractor = contractor;
+            this.type = type;
+            this.netto = netto;
+            this.brutto = brutto;
+        }
+        
+        
+        
+        
 
     }
 

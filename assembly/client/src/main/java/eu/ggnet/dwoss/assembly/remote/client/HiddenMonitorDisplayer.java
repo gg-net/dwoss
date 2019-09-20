@@ -22,24 +22,25 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Dl;
 import eu.ggnet.dwoss.progress.ProgressObserver;
-
-import lombok.Data;
+import eu.ggnet.saft.core.Dl;
 
 /**
- * HiddenMonitorDisplayer, considered for usage in a {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)
- * } with periodic call.
+ * HiddenMonitorDisplayer, considered for usage in a 
+ * {@link ScheduledExecutorService#scheduleAtFixedRate(java.lang.Runnable, long, long, java.util.concurrent.TimeUnit)} with periodic call.
  * <p/>
  * @author oliver.guenther
  */
-@Data
 public class HiddenMonitorDisplayer implements Runnable {
 
     private final SortedSet<Integer> localKeys = new ConcurrentSkipListSet<>();
 
     private final ClientView view;
 
+    public HiddenMonitorDisplayer(ClientView view) {
+        this.view = view;
+    }
+    
     @Override
     public void run() {
         try {

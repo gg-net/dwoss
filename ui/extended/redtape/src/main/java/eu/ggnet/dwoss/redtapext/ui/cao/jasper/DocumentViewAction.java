@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import javax.swing.AbstractAction;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openide.util.Lookup;
 
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;

@@ -30,8 +30,6 @@ import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
-import lombok.*;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,14 +39,48 @@ import static java.util.Objects.requireNonNull;
  */
 public class WildflyLookup implements RemoteLookup {
 
-    @RequiredArgsConstructor
-    @Getter
-    @EqualsAndHashCode(of = "key")
     private static class KeyEquals {
 
         private final String key;
 
         private final String value;
+
+        public KeyEquals(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="equals and hashCode of key">
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 53 * hash + Objects.hashCode(this.key);
+            return hash;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if ( this == obj ) return true;
+            if ( obj == null ) return false;
+            if ( getClass() != obj.getClass() ) return false;
+            final KeyEquals other = (KeyEquals)obj;
+            if ( !Objects.equals(this.key, other.key) ) return false;
+            return true;
+        }
+        //</editor-fold>
+        
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return "KeyEquals{" + "key=" + key + ", value=" + value + '}';
+        }
 
     }
 

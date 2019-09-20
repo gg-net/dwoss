@@ -25,18 +25,16 @@ import javax.swing.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateController;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.DocumentUpdateView;
 import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
-
-import lombok.AllArgsConstructor;
 
 import static eu.ggnet.saft.core.ui.AlertType.ERROR;
 
@@ -44,7 +42,6 @@ import static eu.ggnet.saft.core.ui.AlertType.ERROR;
  *
  * @author pascal.perau
  */
-@AllArgsConstructor
 public class DossierUpdateAction extends AbstractAction {
 
     private static final Logger L = LoggerFactory.getLogger(DossierUpdateAction.class.getName());
@@ -57,7 +54,11 @@ public class DossierUpdateAction extends AbstractAction {
 
     private Document doc;
 
-    {
+    public DossierUpdateAction(Window parent, RedTapeController redTapeController, long id, Document doc) {
+        this.parent = parent;
+        this.redTapeController = redTapeController;
+        this.id = id;
+        this.doc = doc;
         putValue(Action.NAME, "Dokument bearbeiten");
     }
 

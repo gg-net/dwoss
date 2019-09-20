@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.ee.listings;
 import java.net.URL;
 import java.util.*;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;

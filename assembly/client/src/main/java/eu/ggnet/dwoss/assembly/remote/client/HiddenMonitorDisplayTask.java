@@ -25,21 +25,29 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Dl;
+import eu.ggnet.dwoss.assembly.remote.client.HiddenMonitorDisplayTask.Progress;
 import eu.ggnet.dwoss.progress.HiddenMonitor;
 import eu.ggnet.dwoss.progress.ProgressObserver;
-import eu.ggnet.dwoss.assembly.remote.client.HiddenMonitorDisplayTask.Progress;
-
-import lombok.Data;
+import eu.ggnet.saft.core.Dl;
 
 public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDisplayTask.Progress> {
 
-    @Data
     public static class Progress {
 
-        private final int progress;
+        public final int progress;
 
-        private final String message;
+        public final String message;
+
+        public Progress(int progress, String message) {
+            this.progress = progress;
+            this.message = message;
+        }
+
+        @Override
+        public String toString() {
+            return "Progress{" + "progress=" + progress + ", message=" + message + '}';
+        }
+        
     }
 
     private final int key;
@@ -88,9 +96,9 @@ public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDis
     protected void process(List<Progress> chunks) {
         Progress last = chunks.get(chunks.size() - 1);
         if ( !progressBar.isVisible() ) progressBar.setVisible(true);
-        if ( last.getProgress() > 0 && progressBar.isIndeterminate() ) progressBar.setIndeterminate(false);
-        messageBar.setText(last.getMessage());
-        progressBar.setValue(last.getProgress());
+        if ( last.progress > 0 && progressBar.isIndeterminate() ) progressBar.setIndeterminate(false);
+        messageBar.setText(last.message);
+        progressBar.setValue(last.progress);
     }
 
     @Override

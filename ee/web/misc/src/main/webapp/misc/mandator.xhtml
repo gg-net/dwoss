@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
     <f:view contentType="text/html">
         <h:head>
-            <title>Mandator - #{mandatorController.mandator.company.name}</title>
+            <title>Mandator - #{mandatorController.mandator.company().name()}</title>
             <style>
                 table, th, td {
                     border: 1px solid black;
@@ -16,7 +16,7 @@
         </h:head>
 
         <h:body>
-            <h1>Mandator - #{mandatorController.mandator.company.name}</h1>
+            <h1>Mandator - #{mandatorController.mandator.company().name()}</h1>
             <h:outputText escape="false" value="#{mandatorController.mandator.toHtml()}" />
 
             <h1>Zusätzliche Mandanten Informationen</h1>

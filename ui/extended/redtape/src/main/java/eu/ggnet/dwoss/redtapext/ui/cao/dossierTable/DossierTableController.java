@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
 
 import javax.swing.SwingWorker;
 
@@ -38,9 +37,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController.IMAGE_NAME.*;
 
 /**
@@ -51,8 +47,6 @@ public class DossierTableController {
 
     private final static Logger L = LoggerFactory.getLogger(DossierTableController.class);
 
-    @Getter
-    @RequiredArgsConstructor
     static enum IMAGE_NAME {
 
         CLOSED_ICON("closed_icon.png"),
@@ -71,7 +65,13 @@ public class DossierTableController {
         HELP_FILTER_ACC_CLOSED("filter_acc_closed.png"),
         HELP_CHANGE_COLUMNS("change_columns.png");
 
-        private final String fileName;
+        public final String fileName;
+
+        private IMAGE_NAME(String fileName) {
+            this.fileName = fileName;
+        }
+        
+        
     }
 
     private final static Dossier[] T = new Dossier[0];
@@ -298,7 +298,7 @@ public class DossierTableController {
     }
 
     static URL load(IMAGE_NAME image) {
-        return DossierIconPanelRenderer.class.getResource(image.getFileName());
+        return DossierIconPanelRenderer.class.getResource(image.fileName);
     }
 
 }

@@ -16,23 +16,39 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.common.api.values.TaxType;
+import java.util.Objects;
 
-import lombok.NonNull;
-import lombok.Value;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**
  *
  * @author oliver.guenther
  */
-@Value
 public class PositionAndTaxType {
 
-    @NonNull
-    private final Position position;
+    public final Position position;
 
-    @NonNull
-    private final TaxType taxType;
+    public final TaxType taxType;
+
+    public PositionAndTaxType(Position position, TaxType taxType) {
+        this.position = Objects.requireNonNull(position);
+        this.taxType = Objects.requireNonNull(taxType);
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public TaxType getTaxType() {
+        return taxType;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 
 }

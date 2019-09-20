@@ -56,8 +56,6 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import lombok.Getter;
-
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CHANGE_TAX;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRICE_INVOICES;
 
@@ -93,7 +91,6 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
 
     private final static Logger L = LoggerFactory.getLogger(DocumentUpdateView.class);
 
-    @Getter
     private long customerId;
 
     private DocumentUpdateController controller;
@@ -138,6 +135,10 @@ public class DocumentUpdateView extends javax.swing.JPanel implements VetoableOn
             disableComponents(addProductBatchButton, addServiceButton, shippingCostButton);
     }
 
+    public long getCustomerId() {
+        return customerId;
+    }
+    
     private void initFxComponents() {
         final JFXPanel jfxp = new JFXPanel();
         positionPanelFx.add(jfxp, BorderLayout.CENTER);

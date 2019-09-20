@@ -28,8 +28,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import net.sf.jasperreports.engine.JasperPrint;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +44,6 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.redtapext.ee.DocumentSupporter;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
@@ -54,7 +51,6 @@ import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.StringAreaView;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentViewAction;
-import eu.ggnet.dwoss.redtapext.ui.cao.jasper.JRViewerCask;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.util.UserInfoException;
@@ -65,8 +61,6 @@ import eu.ggnet.saft.core.ui.UiParent;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
-import lombok.Getter;
-
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
 
 /**
@@ -76,13 +70,10 @@ import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
  */
 public class RedTapeController implements IDossierSelectionHandler {
 
-    @Getter
     private RedTapeModel model;
 
-    @Getter
     private RedTapeView view;
 
-    @Getter
     private final DossierTableController dossierTableController;
 
     private Set<Action> accessDependentActions;
@@ -105,6 +96,18 @@ public class RedTapeController implements IDossierSelectionHandler {
         return viewOnlyCustomerIds;
     }
 
+    public RedTapeModel getModel() {
+        return model;
+    }
+
+    public RedTapeView getView() {
+        return view;
+    }
+
+    public DossierTableController getDossierTableController() {
+        return dossierTableController;
+    }    
+    
     private final PropertyChangeListener redTapeViewListener = new PropertyChangeListener() {
 
         @Override
@@ -371,34 +374,12 @@ public class RedTapeController implements IDossierSelectionHandler {
     }
 
     /**
-     * This method is called if a chosen Document will be printed and/or sent per E-Mail.
-     * This Method become a Document and will open a JasperViewer that contains also a Send Button for sending E-Mail
-     * <p/>
-     * @param document
-     */
-    public void openDocument(Document document, boolean printAsReservation) {
-        JasperPrint print = Dl.remote().lookup(DocumentSupporter.class).render(document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT));
-        JDialog d = new JDialog(parent(), "Dokument drucken/versenden");
-        d.setSize(800, 1000);
-        d.setModalityType(Dialog.ModalityType.DOCUMENT_MODAL);
-        d.setLocationRelativeTo(view);
-        d.getContentPane().setLayout(new BorderLayout());
-        boolean canEmaild = Optional.ofNullable(Dl.remote().lookup(CustomerService.class).defaultEmailCommunication(model.getPurchaseCustomer().id())).isPresent();
-        JRViewerCask jrViewerCask = new JRViewerCask(print, document, (printAsReservation ? DocumentViewType.RESERVATION : DocumentViewType.DEFAULT), canEmaild);
-        d.getContentPane().add(jrViewerCask, BorderLayout.CENTER);
-        d.setVisible(true);
-        if ( jrViewerCask.isCorrectlyBriefed() ) {
-            reloadSelectionOnStateChange(Dl.remote().lookup(DocumentSupporter.class).briefed(document, Dl.local().lookup(Guardian.class).getUsername()));
-        }
-    }
-
-    /**
      * Opens a dialog with detailed information of a {@link Dossier}.
      * <p/>
      * @param dos the {@link Dossier} entity.
      */
     public void openDossierDetailViewer(Dossier dos) {
-        new HtmlDialog(parent(), Dialog.ModalityType.MODELESS).setText(Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId())).setVisible(true);
+        Ui.build(view).fx().show(()-> Dl.remote().lookup(RedTapeWorker.class).toDetailedHtml(dos.getId()), () -> new HtmlPane());
     }
 
     /**

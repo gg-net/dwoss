@@ -29,8 +29,6 @@ import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableModel;
 
-import lombok.Getter;
-
 /**
  * The RedTape main component model containing all selection and list information needed.
  * <p>
@@ -52,12 +50,10 @@ public class RedTapeModel {
 
     private List<UiCustomer> searchResult;
 
-    @Getter
     private CustomerMetaData purchaseCustomer;
 
     private long selectedSearchResult;
 
-    @Getter
     private DossierTableModel dossierTableModel;
 
     public static final String PROP_DIRECTIVE_BUTTON_ACTIONS = "directiveButtonActions";
@@ -86,6 +82,14 @@ public class RedTapeModel {
         this.dossierTableModel = new DossierTableModel();
     }
 
+    public CustomerMetaData getPurchaseCustomer() {
+        return purchaseCustomer;
+    }
+
+    public DossierTableModel getDossierTableModel() {
+        return dossierTableModel;
+    }    
+    
     /**
      * Get the value of searchResult
      *

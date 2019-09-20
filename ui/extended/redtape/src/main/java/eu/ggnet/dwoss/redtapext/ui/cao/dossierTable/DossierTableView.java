@@ -51,9 +51,6 @@ import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import static eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableView.FilterType.LEGACY;
 
 /**
@@ -67,7 +64,6 @@ public class DossierTableView extends javax.swing.JPanel {
 
     private static final FilterType INIT_FILTER = FilterType.ACCOUNTANCY_OPEN;
 
-    @RequiredArgsConstructor
     public static enum FilterType {
 
         ALL("Alle Vorgänge"),
@@ -78,8 +74,12 @@ public class DossierTableView extends javax.swing.JPanel {
         @Deprecated // Nicht mehr in use
         LEGACY("Legacy");
 
-        @Getter
-        private final String name;
+        public final String description;
+
+        private FilterType(String name) {
+            this.description = name;
+        }
+        
     }
 
     private DossierTableModel model;
@@ -267,10 +267,7 @@ public class DossierTableView extends javax.swing.JPanel {
                     filterPopup.setVisible(false);
                 }
             });
-            String label = filterType.getName();
-            if ( filterType == LEGACY ) {
-                label = filterType.getName() + " (" + Dl.remote().lookup(LegacyRemoteBridge.class).remoteName() + ")";
-            }
+            String label = filterType.description;
             button.setName(label);
             button.setText(label);
             filterGroup.add(button);
@@ -283,7 +280,7 @@ public class DossierTableView extends javax.swing.JPanel {
         controller.resetLoader();
         if ( model.getRowCount() > 0 ) model.clear();
         for (JRadioButton filterButton : filterButtonList) {
-            if ( filterButton.getName().equals(INIT_FILTER.getName()) ) {
+            if ( filterButton.getName().equals(INIT_FILTER.description) ) {
                 filterButton.setSelected(true);
                 this.customerId = customerId;
                 type = INIT_FILTER;
