@@ -25,7 +25,6 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.api.UnitPositionHook;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
@@ -35,6 +34,8 @@ import eu.ggnet.dwoss.util.interactiveresult.Result;
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 
 /**
  *
@@ -77,7 +78,7 @@ public class RedTapeCloserOperationOfWarrantyIT extends ArquillianProjectArchive
     private ReceiptGeneratorOperation receiptGenerator;
     
     @EJB
-    private RedTapeCloser redTapeCloser;
+    private RedTapeCloserManual redTapeCloser;
 
     @EJB
     private RedTapeWorker redTapeWorker;

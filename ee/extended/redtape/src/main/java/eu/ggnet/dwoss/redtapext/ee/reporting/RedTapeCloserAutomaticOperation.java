@@ -78,11 +78,11 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
  * @author oliver.guenther
  */
 @Singleton
-public class RedTapeCloserOperation implements RedTapeCloser {
+public class RedTapeCloserAutomaticOperation  {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private final static Logger L = LoggerFactory.getLogger(RedTapeCloserOperation.class);
+    private final static Logger L = LoggerFactory.getLogger(RedTapeCloserAutomaticOperation.class);
 
     @Inject
     @RedTapes
@@ -124,23 +124,11 @@ public class RedTapeCloserOperation implements RedTapeCloser {
     private ReceiptCustomers receiptCustomers;
 
     /**
-     * Executes the closing manual.
-     * See {@link #closeing(java.lang.String, boolean) } for details.
-     * <p>
-     * @param arranger the arranger
-     */
-    @Override
-    public void executeManual(String arranger) {
-        closeing(arranger, true);
-    }
-
-    /**
      * Exectues the closing automatic.
      * See {@link #closeing(java.lang.String, boolean) } for details.
      * <p>
      */
     @Schedule(hour = "22",persistent = false) // This kicks in exaclty once a day
-    @Override
     public void executeAutomatic() {
         closeing("scheduler (automatic)", false);
     }
@@ -164,7 +152,7 @@ public class RedTapeCloserOperation implements RedTapeCloser {
      * @param arranger the arranger
      * @param manual   is this called manual or automatic
      */
-    private void closeing(String arranger, boolean manual) {
+    public void closeing(String arranger, boolean manual) {
         Date now = new Date();
         String msg = (manual ? "Manueller" : "Automatischer") + " (Tages)abschluss vom " + DateFormats.ISO.format(now) + " ausgeführt durch " + arranger;
         L.info("closing:{}", msg);

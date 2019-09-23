@@ -455,6 +455,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
                     configs.add(new ListingConfiguration.Builder()
                             .filePrefix("Geräteliste ")
                             .name(brand.getDescription() + " " + value.description)
+                            .logoLeft(mandator.company().logo().toURL())
                             .brand(brand)
                             .addAllGroups(EnumSet.of(value))
                             .addAllSupplementBrands(EnumSet.noneOf(TradeName.class))

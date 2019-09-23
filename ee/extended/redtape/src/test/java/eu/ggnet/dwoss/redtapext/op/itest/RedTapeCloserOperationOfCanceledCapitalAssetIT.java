@@ -18,7 +18,6 @@ import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
@@ -28,6 +27,8 @@ import eu.ggnet.dwoss.util.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 
 /**
  *
@@ -40,7 +41,7 @@ public class RedTapeCloserOperationOfCanceledCapitalAssetIT extends ArquillianPr
     private ReceiptGeneratorOperation receiptGenerator;
 
     @EJB
-    private RedTapeCloser redTapeCloser;
+    private RedTapeCloserManual redTapeCloser;
 
     @EJB
     private ReportAgent reportAgent;

@@ -42,7 +42,6 @@ import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
 import eu.ggnet.dwoss.misc.ee.ResolveRepaymentBean;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.Report;
@@ -59,6 +58,8 @@ import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 
 @RunWith(Arquillian.class)
 public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
@@ -94,7 +95,7 @@ public class ResolveRepaymentBeanIT extends ArquillianProjectArchive {
     private RedTapeWorker redTapeWorker;
 
     @EJB
-    private RedTapeCloser redTapeCloser;
+    private RedTapeCloserManual redTapeCloser;
 
     @Inject
     private RepaymentCustomers repaymentCustomers;

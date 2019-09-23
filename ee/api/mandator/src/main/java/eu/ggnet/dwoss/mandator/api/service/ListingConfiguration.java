@@ -36,11 +36,11 @@ public abstract class ListingConfiguration implements Serializable {
 
     public abstract Optional<String> jasperTempleteUnitsFile();
 
-    public abstract URL logoLeft();
+    public abstract Optional<URL> logoLeft();
 
-    public abstract URL logoRight();
+    public abstract Optional<URL> logoRight();
 
-    public abstract String orderLink();
+    public abstract Optional<String> orderLink();
 
     public abstract String filePrefix();
 
@@ -82,10 +82,10 @@ public abstract class ListingConfiguration implements Serializable {
         Map<String, Object> reportParameter = new HashMap<>();
         reportParameter.put("SUB_REPORT", jasperTempleteUnitsFile().orElseThrow(
                 () -> new NullPointerException("JasperTemplateUnitsFile not set in toReportParameters. Unsing " + this)));
-        reportParameter.put("BRAND_LOGO", logoLeft());
-        reportParameter.put("COMPANY_LOGO", logoRight());
+        logoLeft().ifPresent(l -> reportParameter.put("BRAND_LOGO", l));
+        logoRight().ifPresent(l -> reportParameter.put("COMPANY_LOGO", l));
+        orderLink().ifPresent(o -> reportParameter.put("ORDERLINK", o));
         reportParameter.put("TITLE", name());
-        reportParameter.put("ORDERLINK", orderLink());
         reportParameter.put("REPORT_LOCALE", Locale.GERMANY);
         reportParameter.put("HEAD_LEFT", headLeft());
         reportParameter.put("HEAD_CENTER", headCenter());

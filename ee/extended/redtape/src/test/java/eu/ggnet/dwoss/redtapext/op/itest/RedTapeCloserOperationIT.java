@@ -20,7 +20,6 @@ import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
-import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloser;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtapext.op.itest.support.RedTapeCloserOpertaionItBean;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
@@ -38,6 +37,8 @@ import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.CANCELED;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+
+import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
 
 /**
  *
@@ -58,7 +59,7 @@ public class RedTapeCloserOperationIT extends ArquillianProjectArchive {
     private RedTapeGeneratorOperation redTapeGenerator;
 
     @EJB
-    private RedTapeCloser redTapeCloser;
+    private RedTapeCloserManual redTapeCloser;
 
     @EJB
     private ReportAgent reportAgent;

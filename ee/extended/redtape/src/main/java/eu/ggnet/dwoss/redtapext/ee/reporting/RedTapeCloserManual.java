@@ -23,11 +23,8 @@ import javax.ejb.Remote;
  * @author oliver.guenther
  */
 @Remote
-public interface RedTapeCloser {
+public interface RedTapeCloserManual {
 
-    public void executeManual(String arranger);
-
-    // called by scheduler.
-    public void executeAutomatic();
+    void executeManual(String arranger);
 
 }
