@@ -58,7 +58,7 @@ public class CustomerSimpleTryout {
         contact.getCommunications().clear();
 
         contact.getAddresses().add(address);
-        contact.getCommunications().add(new Communication(Type.MOBILE, "040123456789"));
+        contact.getCommunications().add(new Communication(Type.MOBILE, "+49 172 123456789"));
 
         customer.getContacts().add(contact);
 
