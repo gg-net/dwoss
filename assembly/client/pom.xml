@@ -11,6 +11,10 @@
     <artifactId>dwoss-client</artifactId>
     <name>DwOss • Assembly • Client</name>
 
+    <!--
+        JDK 11 info https://stackoverflow.com/questions/52653836/maven-shade-javafx-runtime-components-are-missing/52654791#52654791 
+        If we want a cross platform jar.
+    -->
     <build>
         <defaultGoal>install</defaultGoal>
         <finalName>client</finalName>

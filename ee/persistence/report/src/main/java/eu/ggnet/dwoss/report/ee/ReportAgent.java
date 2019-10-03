@@ -78,7 +78,7 @@ public interface ReportAgent extends RemoteAgent {
 
     /**
      * Returns all ReportLines, which have the given document type id from to till the given Dates
-     * <p/>
+     * <p>
      * @param type the document type
      * @param till the date as upper border
      * @param from the date as lower border
@@ -88,7 +88,7 @@ public interface ReportAgent extends RemoteAgent {
 
     /**
      * Stores a new report, persisting the report and merging the lines.
-     * <p/>
+     * <p>
      * @param report     the report to persist.
      * @param storeables the lines to merge.
      * @return the persisted report.
