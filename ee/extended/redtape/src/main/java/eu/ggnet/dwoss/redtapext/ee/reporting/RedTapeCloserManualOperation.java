@@ -42,7 +42,7 @@ public class RedTapeCloserManualOperation implements RedTapeCloserManual {
      */
     @Override
     public void executeManual(String arranger) {
-        L.debug("Huhu !!!+");
+        L.debug("{} called manual closing operation", arranger);
         op.closeing(arranger, true);
     }
 

@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import javafx.scene.control.Alert;
 
 import org.openide.util.Lookup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.saft.core.*;
@@ -38,15 +40,25 @@ import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;
  */
 public class LastWeekCloseAction extends AccessableAction {
 
+    private final static Logger L = LoggerFactory.getLogger(LastWeekCloseAction.class);
+
     public LastWeekCloseAction() {
         super(EXECUTE_MANUAL_CLOSING);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
+        Ui.build()
+                .dialog()
+                .eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
                 .cf().
-                thenAcceptAsync(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())), UiCore.getExecutor())
+                thenAcceptAsync(
+                        f -> Ui.progress().title("Manueller Tagesabschluss").call(() -> {
+                                    Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername());
+                                    return null;
+                                }),
+                        UiCore.getExecutor()
+                )
                 .handle(Ui.handler());
     }
 }
