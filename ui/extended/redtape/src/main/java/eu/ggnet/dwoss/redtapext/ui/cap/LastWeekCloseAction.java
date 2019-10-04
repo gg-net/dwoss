@@ -48,17 +48,9 @@ public class LastWeekCloseAction extends AccessableAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.build()
-                .dialog()
-                .eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
+        Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
                 .cf().
-                thenAcceptAsync(
-                        f -> Ui.progress().title("Manueller Tagesabschluss").call(() -> {
-                                    Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername());
-                                    return null;
-                                }),
-                        UiCore.getExecutor()
-                )
+                thenAcceptAsync(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())).run(), UiCore.getExecutor())
                 .handle(Ui.handler());
     }
 }
