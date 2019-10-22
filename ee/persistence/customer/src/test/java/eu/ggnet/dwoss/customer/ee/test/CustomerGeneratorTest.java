@@ -29,26 +29,34 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author oliver.guenther
  */
 public class CustomerGeneratorTest {
-    
+
     private final static CustomerGenerator GEN = new CustomerGenerator();
-   
+
     @Test
     public void makeSimpleConsumerCustomers() {
         for (int i = 0; i < 500; i++) {
             Customer c = StaticCustomerMaker.makeValidSimpleConsumer();
             assertThat(c.isSimple()).as("SimpleViolations:" + c.getSimpleViolationMessage()).isTrue();
-            assertThat(c.isConsumer()).isTrue();            
+            assertThat(c.isConsumer()).isTrue();
         }
-    
+
     }
-    
+
     @Test
     public void makeSimpleBussinesCustomers() {
         for (int i = 0; i < 500; i++) {
             Customer c = StaticCustomerMaker.makeValidSimpleBusiness();
             assertThat(c.isSimple()).as("SimpleViolations:" + c.getSimpleViolationMessage()).isTrue();
-            assertThat(c.isBusiness()).isTrue();            
+            assertThat(c.isBusiness()).isTrue();
         }
-    
+
+    }
+
+    @Test
+    public void makeCustomers() {
+        for (int i = 0; i < 500; i++) {
+            Customer c = CustomerGenerator.makeCustomer();
+            assertThat(c.getViolationMessage()).as("Generated Customers must be valid").isNull();
+        }
     }
 }

@@ -100,41 +100,6 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return customerEao.countFind(search, customerFields);
     }
 
-    private <T> T request(List<T> in, Supplier<T> producer) {
-        if ( in.isEmpty() ) {
-            T t = producer.get();
-            in.add(t);
-            return t;
-        }
-        return in.get(0);
-    }
-
-    private void update(Customer customer, List<Communication> communications, Communication.Type type, String identifier) {
-        if ( StringUtils.isBlank(identifier) ) {
-            communications.stream()
-                    .filter(co -> co.getType() == type)
-                    .findFirst().ifPresent(comm -> {
-                        communications.remove(comm);
-                        if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(null);
-                        em.remove(comm);
-                    });
-        } else {
-            Optional<Communication> optComm = communications.stream()
-                    .filter(co -> co.getType() == type)
-                    .findFirst();
-            optComm.ifPresent(email -> {
-                email.setIdentifier(identifier);
-            });
-            if ( !optComm.isPresent() ) {
-                Communication comm = new Communication();
-                communications.add(comm);
-                comm.setType(type);
-                comm.setIdentifier(identifier);
-                if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(comm);
-            }
-        }
-    }
-
     @Override
     public Reply<Customer> store(SimpleCustomer simpleCustomer) {
         L.info("store({})", simpleCustomer);
@@ -179,7 +144,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         a.setStreet(simpleCustomer.getStreet());
         a.setZipCode(simpleCustomer.getZipCode());
 
-        update(customer, cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail());
+        update(customer, cont.getCommunications(), Type.EMAIL, simpleCustomer.getEmail(), simpleCustomer.isUseEmailForResellerList());
         update(customer, cont.getCommunications(), Type.PHONE, simpleCustomer.getLandlinePhone());
         update(customer, cont.getCommunications(), Type.MOBILE, simpleCustomer.getMobilePhone());
 
@@ -284,8 +249,8 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      *
      * @throws
      */
-    public void delete(Root root,Object raw) throws LastDeletionExecption, IllegalArgumentException, IllegalStateException {
-      Objects.requireNonNull(root, "root must not be null");
+    public void delete(Root root, Object raw) throws LastDeletionExecption, IllegalArgumentException, IllegalStateException {
+        Objects.requireNonNull(root, "root must not be null");
         Objects.requireNonNull(raw, "raw must not be null");
         Object rootElement = findById(root.clazz, root.id);
         if ( rootElement == null ) throw new IllegalArgumentException("Root instance could not be found Root:" + root);
@@ -339,6 +304,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             ((CommunicationStash)rootElement).getCommunications().remove(comm);
             if ( comm.getType() == EMAIL ) {
                 Optional.ofNullable(customerEao.findByDefaultEmailCommunication(comm)).ifPresent(c -> c.setDefaultEmailCommunication(null));
+                Optional.ofNullable(customerEao.findByResellerListEmailCommunication(comm)).ifPresent(c -> c.setResellerListEmailCommunication(null));
             }
         } else throw new IllegalArgumentException("Root and Raw instance are not supported. Root: " + root + ", Instance: " + raw);
 
@@ -433,6 +399,23 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return c;
     }
 
+    @AutoLogger
+    @Override
+    public Customer clearResellerListEmailCommunication(long customerId) {
+        Customer c = findByIdEager(Customer.class, customerId);
+        c.setResellerListEmailCommunication(null);
+        return c;
+    }
+
+    @AutoLogger
+    @Override
+    public Customer setResellerListEmailCommunication(long customerId, long communicationId) {
+        Customer c = findByIdEager(Customer.class, customerId);
+        Communication com = em.find(Communication.class, communicationId);
+        c.setResellerListEmailCommunication(com);
+        return c;
+    }
+
     @Override
     public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
         Customer customer = findByIdEager(Customer.class, customerId);
@@ -461,7 +444,55 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
         return customer;
     }
 
-    private Exception IllegalArgumentException(String empty_collection_of_addresslabels_not_all) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private <T> T request(List<T> in, Supplier<T> producer) {
+        if ( in.isEmpty() ) {
+            T t = producer.get();
+            in.add(t);
+            return t;
+        }
+        return in.get(0);
+    }
+
+    private void update(Customer customer, List<Communication> communications, Communication.Type type, String identifier) {
+        update(customer, communications, type, identifier, false);
+    }
+
+    /**
+     * Updates the customer with the supplied communications with the new or updated type and identifier.
+     *
+     * @param customer                      the customer to be updated, impact on defaultEmailCommunication
+     * @param communications                the relevant list of communications of the customer (different on consumer and business)
+     * @param type                          the type of the communication to update
+     * @param identifier                    the identifier, blank means removal
+     * @param useEmailAsResellerMailingList if true and type is email, the resellerListMailCommunication will be updated
+     */
+    private void update(Customer customer, List<Communication> communications, Communication.Type type, String identifier, boolean useEmailAsResellerMailingList) {
+        if ( StringUtils.isBlank(identifier) ) {
+            communications.stream()
+                    .filter(co -> co.getType() == type)
+                    .findFirst().ifPresent(comm -> {
+                        communications.remove(comm);
+                        if ( comm.getType() == EMAIL ) {
+                            customer.setDefaultEmailCommunication(null);
+                            customer.setResellerListEmailCommunication(null);
+                        }
+                        em.remove(comm);
+                    });
+        } else {
+            Optional<Communication> optComm = communications.stream()
+                    .filter(co -> co.getType() == type)
+                    .findFirst();
+            optComm.ifPresent(email -> {
+                email.setIdentifier(identifier);
+            });
+            if ( !optComm.isPresent() ) {
+                Communication comm = new Communication();
+                communications.add(comm);
+                comm.setType(type);
+                comm.setIdentifier(identifier);
+                if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(comm);
+                if ( comm.getType() == EMAIL && useEmailAsResellerMailingList ) customer.setResellerListEmailCommunication(comm);
+            }
+        }
     }
 }

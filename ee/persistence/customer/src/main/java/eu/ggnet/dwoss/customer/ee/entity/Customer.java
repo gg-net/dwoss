@@ -146,74 +146,88 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     private Communication defaultEmailCommunication;
 
     /**
+     * The supplied value is used to send out a newsletter called Händlerliste, may be null.
+     */
+    @OneToOne
+    private Communication resellerListEmailCommunication;
+
+    /**
      * maximum of size2, consisting of
      */
     @OneToMany(orphanRemoval = true, cascade = ALL, fetch = EAGER, mappedBy = "customer")
     List<AddressLabel> addressLabels = new ArrayList<>();
- 
+
     //<editor-fold defaultstate="collapsed" desc="getter/setter">
     public Source getSource() {
         return source;
     }
-    
+
     public void setSource(Source source) {
         this.source = source;
     }
-    
+
     public Map<ExternalSystem, String> getAdditionalCustomerIds() {
         return additionalCustomerIds;
     }
-    
+
     public void setAdditionalCustomerIds(Map<ExternalSystem, String> additionalCustomerIds) {
         this.additionalCustomerIds = additionalCustomerIds;
     }
-    
+
     public String getKeyAccounter() {
         return keyAccounter;
     }
-    
+
     public void setKeyAccounter(String keyAccounter) {
         this.keyAccounter = keyAccounter;
     }
-    
+
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public Communication getDefaultEmailCommunication() {
         return defaultEmailCommunication;
     }
-    
+
     public void setDefaultEmailCommunication(Communication defaultEmailCommunication) {
         this.defaultEmailCommunication = defaultEmailCommunication;
     }
-    
+
+    public Optional<Communication> getResellerListEmailCommunication() {
+        return Optional.ofNullable(resellerListEmailCommunication);
+    }
+
+    public void setResellerListEmailCommunication(Communication resellerListEmailCommunication) {
+        this.resellerListEmailCommunication = resellerListEmailCommunication;
+    }
+
     @Override
     public long getId() {
         return id;
     }
-    
+
     public short getOptLock() {
         return optLock;
     }
-    
+
     public List<Company> getCompanies() {
         return companies;
     }
-    
+
     @Override
     public List<Contact> getContacts() {
         return contacts;
     }
-    
+
     public List<MandatorMetadata> getMandatorMetadata() {
         return mandatorMetadata;
     }
-    
+
     public Set<CustomerFlag> getFlags() {
         return flags;
     }
@@ -379,6 +393,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
             sc.setSex(contacts.get(0).getSex());
             sc.setSource(source);
             sc.setComment(comment);
+            // Hint: Cause this is a simple customer, if default it must be the one and only email communication.
+            getResellerListEmailCommunication().ifPresent(c -> sc.setUseEmailForResellerList(true));
 
             return Optional.of(sc);
         }
@@ -425,11 +441,13 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
             sc.setComment(comment);
             sc.setCompanyName(companies.get(0).getName());
             sc.setTaxId(companies.get(0).getTaxId());
+            // Hint: Cause this is a simple customer, if default it must be the one and only email communication.
+            getResellerListEmailCommunication().ifPresent(c -> sc.setUseEmailForResellerList(true));
 
             return Optional.of(sc);
         }
 
-        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invaid");
+        throw new RuntimeException("is Simple, but neither consumer nor bussiness. Invalid and impossible");
     }
 
     /**
@@ -560,6 +578,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
      * <li>Contains only Contacts or Companies</li>
      * <li>One AddressLabel of Type Invoice</li>
      * <li>Only 2 AddressLabels</li>
+     * <li>Default eMail Communication, if not null must be of type email</li>
+     * <li>Reseller eMail Communication, if not null must be of type email</li>
      * </ul>
      * <p>
      * Consumer Customer Rules are:
@@ -585,6 +605,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
         if ( companies.stream().anyMatch(a -> a.getViolationMessage() != null) )
             return "Companies: " + companies.stream().filter(a -> a.getViolationMessage() != null).map(a -> a.getViolationMessage()).reduce((t, u) -> t + ", " + u).get();
         if ( defaultEmailCommunication != null && defaultEmailCommunication.getType() != EMAIL ) return "Default email communication is not of type email";
+        if ( resellerListEmailCommunication != null && resellerListEmailCommunication.getType() != EMAIL )
+            return "Reseller email communication is not of type email";
 
         if ( isConsumer() ) {
             if ( !contacts.stream().flatMap(c -> c.getAddresses().stream()).findAny().isPresent() )
@@ -701,6 +723,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
 
         sb.append("<td valign=top rowspan=").append(rowSpan).append(" >");
         sb.append("<b>Standard eMail</b>:<ul><li>").append(defaultEmailCommunication == null ? "Keine!" : defaultEmailCommunication.getIdentifier()).append("</li></ul>");
+        getResellerListEmailCommunication().ifPresent(c -> sb.append("<b>eMail für Händlerliste:</b>:").append(c.getIdentifier()).append("<br />"));
         sb.append(companies.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Firmen(n)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append(contacts.stream().map(c -> "<li>" + c.toHtml() + "</li>").reduce((t, u) -> t + u).map(s -> "<b>Kontakt(e)</b>:<ul>" + s + "</ul>").orElse(""));
         sb.append("</td>");
@@ -772,6 +795,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
 
     @PostLoad
     public final void postLoad() {
+        //TODO: Das hat Olli vergessen zu dokumentieren. Ich glaube es war ein duplikateworkarround.
         for (Iterator<AddressLabel> iterator = addressLabels.iterator(); iterator.hasNext();) {
             AddressLabel next = iterator.next();
             List<AddressLabel> without = new ArrayList<>(addressLabels);
@@ -783,7 +807,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
     @Override
     public String toString() {
         return "Customer{" + "id=" + id + ", optLock=" + optLock + ", flags=" + flags + ", source=" + source + ", additionalCustomerIds=" + additionalCustomerIds
-                + ", keyAccounter=" + keyAccounter + ", comment=" + comment + ", defaultEmailCommunication=" + defaultEmailCommunication + ", addressLabels=" + addressLabels + '}';
+                + ", keyAccounter=" + keyAccounter + ", comment=" + comment + ", defaultEmailCommunication=" + defaultEmailCommunication
+                + ", resellerListEmailCommunication=" + resellerListEmailCommunication + ", addressLabels=" + addressLabels + '}';
     }
-    
+
 }

@@ -27,34 +27,69 @@ import org.inferred.freebuilder.FreeBuilder;
 public interface Assure {
 
     class Builder extends Assure_Builder {
-      
+
+        @SuppressWarnings("OverridableMethodCallInConstructor")
         public Builder() {
             simple(false);
+            business(false);
+            consumer(false);
+            useResellerListEmailCommunication(false);
+            emailDomain("example.local");
         }
-        
+
     };
-    
+
     /**
      * Shortcut for new Builder().build();
-     * 
-     * @return defaults. 
+     *
+     * @return defaults.
      */
     static Assure defaults() {
         return new Builder().build();
     }
-    
+
     /**
      * Indicates, that only simple customers must be generated, defaults to false.
-     * 
-     * @return simple 
+     *
+     * @return simple
      */
     boolean simple();
 
     /**
+     * Indicates, that only business customers must be generated, defaults to false.
+     *
+     * @return business
+     */
+    boolean business();
+
+    /**
+     * Indicates, that only consumer customers must be generated, defaults to false.
+     *
+     * @return consumer
+     */
+    boolean consumer();
+
+    /**
+     * Indicates, that all customers generated have a reseller list email communication set, default to false.
+     * False does not mean, there will never be a reseller list email communication set, but only, that there might be.
+     *
+     * @return useResellerListEmailCommunication
+     */
+    boolean useResellerListEmailCommunication();
+
+    /**
+     * All generated emails will be of the supplied string as domain, defaults to example.local.
+     * This is useful if you can configure a domain with a catch all to test all mailing live.
+     *
+     * @return the emailDoamin
+     */
+    String emailDomain();
+
+    /**
      * For all supplied strings, metadata will be generated. Null or empty indicates no metadata generation.
-     * 
-     * @return mandator metadata matchcodes 
+     *
+     * @return mandator metadata matchcodes
      */
     List<String> mandatorMetadataMatchCodes();
-    
+
 }

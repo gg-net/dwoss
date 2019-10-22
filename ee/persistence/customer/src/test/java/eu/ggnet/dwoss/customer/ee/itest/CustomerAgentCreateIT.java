@@ -16,8 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
-
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Inject;
@@ -25,17 +23,18 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.*;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
+import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
+import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,10 +53,10 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     private EntityManager em;
 
     @Inject
-    UserTransaction utx;
+    private CustomerGeneratorOperation cgo;
 
     @Inject
-    private CustomerGenerator GEN;
+    UserTransaction utx;
 
     @Before
     public void teardown() throws Exception {
@@ -77,12 +76,12 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact
-        Contact contact = GEN.makeContact();
+        Contact contact = CustomerGenerator.makeContact();
         em.persist(contact);
 
         utx.commit();
 
-        Address address = GEN.makeAddress();
+        Address address = CustomerGenerator.makeAddress();
 
         //create the address in the contact and check if it got added
         agent.create(new Root(Contact.class, 1l), address);
@@ -107,7 +106,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
      */
     public void testCreateOnContactNegative() {
 
-        Address address = GEN.makeAddress();
+        Address address = CustomerGenerator.makeAddress();
 
         try {
             agent.create(new Root(Contact.class, 1l), address);
@@ -128,7 +127,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact
-        Contact contact = GEN.makeContact();
+        Contact contact = CustomerGenerator.makeContact();
         em.persist(contact);
 
         utx.commit();
@@ -147,46 +146,26 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
     }
 
     @Test
-    /**
-     * Test create for all supported entities on a customer.
-     */
     public void testCreateOnCustomer() throws Exception {
+        long cid = cgo.makeCustomer();
 
-        utx.begin();
-        em.joinTransaction();
+        Customer customer = agent.findByIdEager(Customer.class, cid);
+        assertThat(customer).isNotNull();
+        int amountBeforAdd = customer.getContacts().size();
 
-        //create a customer with a contact and one mandatorMetadata
-        Contact contact = GEN.makeContact();
-        MandatorMetadata mm = GEN.makeMandatorMetadata();
-
-        Customer customer = GEN.makeCustomer();
-        customer.getMandatorMetadata().add(mm);
-        em.persist(customer);
-
-        utx.commit();
-
-        //create the contact on the customer and check if it got added
-        Customer found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getContacts().size()).as("The customer should habe no contacts").isLessThanOrEqualTo(5);
-        agent.create(new Root(Customer.class, 1l), contact);
-        found = agent.findByIdEager(Customer.class, 1l);
-        assertThat(found.getContacts().size()).as("Not the correct amount of contact on the Customer").isGreaterThan(1);
+        Contact contact = CustomerGenerator.makeContact();
+        agent.create(new Root(Customer.class, 1l), contact); // creates a contact on the customer
+        customer = agent.findByIdEager(Customer.class, 1l);
+        assertThat(customer.getContacts().size()).as("Size of contacts must be " + amountBeforAdd + "+1 after add").isEqualTo(amountBeforAdd + 1);
     }
 
     @Test
-    /**
-     * Test create for all supported entities on a company.
-     */
+    @Ignore
+    // TODO: Test ist falsch, da er fehlerhafte Annahmen über make Customer trift. Außerdem wird blind 1 als db id angenommen.
     public void testCreateOnCompany() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Customer customer = GEN.makeCustomer();
-        customer.getContacts().clear();
-
-        Company company = GEN.makeCompany();
-        em.persist(company);
-        customer.getCompanies().add(company);
-
+        Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
         em.persist(customer);
         utx.commit();
 
@@ -227,6 +206,5 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         assertThat(companyFromDb.getContacts().size()).as("Not the correct amount of contacts on the Customer").isGreaterThanOrEqualTo(1);
 
     }
-
 
 }

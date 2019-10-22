@@ -181,10 +181,22 @@ public class CustomerEao extends AbstractEao<Customer> {
     }
 
     /**
+     * Finds a customer, which has the supplied communication set as reseller list email communication.
+     *
+     * @param comm the communication
+     * @return a customer or null if non found
+     * @thorws NonUniqueResultException {@link AbstractJPAQuery#fetchOne() }.
+     */
+    public Customer findByResellerListEmailCommunication(Communication comm) throws NonUniqueResultException {
+        if ( comm == null || comm.getType() != EMAIL ) return null;
+        return new JPAQuery<Customer>(em).from(customer).where(customer.resellerListEmailCommunication.eq(comm)).fetchOne();
+    }
+
+    /**
      * This Method search for a Customer by his Id or, Company or Firstname or Lastname.
      * First it searchs for the CustomerId via sql. Second an index search using the fields company, firsname, lastname is executed.
      * The combiened result is returned.
-     * <p/>
+     * <p>
      * @param search      the search parameter
      * @param searchField pre filter
      * @return the result of the search

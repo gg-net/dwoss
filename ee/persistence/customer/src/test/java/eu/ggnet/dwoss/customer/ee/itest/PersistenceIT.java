@@ -1,11 +1,5 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import eu.ggnet.dwoss.customer.ee.entity.Contact;
-import eu.ggnet.dwoss.customer.ee.entity.Communication;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
-import eu.ggnet.dwoss.customer.ee.entity.Company;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaQuery;
@@ -31,8 +25,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Arquillian.class)
 public class PersistenceIT extends ArquillianProjectArchive {
 
-    private final static CustomerGenerator GEN = new CustomerGenerator();
-
     private final static Logger L = LoggerFactory.getLogger(PersistenceIT.class);
 
     @Inject
@@ -46,16 +38,16 @@ public class PersistenceIT extends ArquillianProjectArchive {
     public void testPersistence() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Customer c = GEN.makeCustomer();
+        Customer c = CustomerGenerator.makeCustomer();
         em.persist(c);
         utx.commit();
 
         utx.begin();
         em.joinTransaction();
 
-        CriteriaQuery<Customer> customerQ = em.getCriteriaBuilder().createQuery(Customer.class);
+        CriteriaQuery<Customer> q = em.getCriteriaBuilder().createQuery(Customer.class);
 
-        c = em.createQuery(customerQ.select(customerQ.from(Customer.class))).getSingleResult();
+        c = em.createQuery(q.select(q.from(Customer.class))).getSingleResult();
 
         assertThat(c.getContacts()).describedAs("customer.getContacts()").isNotEmpty();
 
@@ -87,7 +79,7 @@ public class PersistenceIT extends ArquillianProjectArchive {
         for (AddressLabel al : c.getAddressLabels()) {
             L.info(al.toString());
         }
-        
+
         utx.commit();
     }
 

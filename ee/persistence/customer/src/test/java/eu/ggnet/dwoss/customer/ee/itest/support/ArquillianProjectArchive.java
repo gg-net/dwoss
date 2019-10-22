@@ -31,6 +31,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 import eu.ggnet.dwoss.customer.ee.itest.PersistenceIT;
 import eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker;
 import eu.ggnet.dwoss.customer.ee.test.CustomerTest;
+import eu.ggnet.dwoss.customer.ee.tryout.CustomerHtmlTryout;
 import eu.ggnet.dwoss.mandator.sample.datasource.SampleDataSourceDefinition;
 
 import static org.jboss.shrinkwrap.resolver.api.maven.ScopeType.RUNTIME;
@@ -52,9 +53,11 @@ public class ArquillianProjectArchive {
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "customer-persistence-test.war")
                 .addPackages(true,
-                        Filters.exclude(PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.customer.itest"
-                                CustomerTest.class.getPackage()), // Compile safe package "eu.ggnet.dwoss.customer.test"
-                        "eu.ggnet.dwoss.customer")
+                        Filters.exclude(
+                                PersistenceIT.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.customer.itest"
+                                CustomerTest.class.getPackage(), // Compile safe package "eu.ggnet.dwoss.customer.test"
+                                CustomerHtmlTryout.class.getPackage() // Compile sage package "tryout"
+                        ), "eu.ggnet.dwoss.customer")
                 .addClass(MandatorSupportProducer.class) // The Datasource Configuration and the Static Producers
                 .addClass(SampleDataSourceDefinition.class) // Alle Datasources. More than we need.
                 .addClass(Coordinate.class) // Need this cause of the maven resolver is part of the deployment

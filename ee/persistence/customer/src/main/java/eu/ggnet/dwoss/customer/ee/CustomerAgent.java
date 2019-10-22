@@ -46,15 +46,15 @@ public interface CustomerAgent extends RemoteAgent {
         public final long id;
 
         public Root(Class<?> clazz, long id) {
-            this.clazz = Objects.requireNonNull(clazz,"clazz must not be null");
+            this.clazz = Objects.requireNonNull(clazz, "clazz must not be null");
             this.id = id;
         }
-        
+
         @Override
         public String toString() {
             return "Root{" + "clazz=" + clazz + ", id=" + id + '}';
         }
-        
+
     }
 
     /**
@@ -79,16 +79,16 @@ public interface CustomerAgent extends RemoteAgent {
 
     /**
      * More detailed search.
-     * 
-     * @param company the company field
-     * @param firstName the firstname
-     * @param lastName the lastname
-     * @param email a email
+     *
+     * @param company        the company field
+     * @param firstName      the firstname
+     * @param lastName       the lastname
+     * @param email          a email
      * @param appendWildcard append a wildcard to all strings
      * @return a list of customers found by the search
      */
     List<Customer> search(String company, String firstName, String lastName, String email, boolean appendWildcard);
-    
+
     /**
      * Count the result of the search.
      *
@@ -106,16 +106,16 @@ public interface CustomerAgent extends RemoteAgent {
      */
     Reply<Customer> store(SimpleCustomer simpleCustomer);
 
-     /**
+    /**
      * Stores the addresslabels on the customer, all addresslabels must be from one customer.
      * Creating all labels with an id == 0. updateing all with an id <> 0. Deleting all that are missing.
-     * 
+     *
      * @param aldtos
-     * @return 
+     * @return
      * @throws IllegalArgumentException if the collection is empty.
      */
     Customer autostore(Collection<AddressLabelDto> aldtos) throws IllegalArgumentException;
-    
+
     /**
      * Returns a html representation of the customer enhanced by the actual active mandator.
      *
@@ -135,34 +135,33 @@ public interface CustomerAgent extends RemoteAgent {
     /**
      * Create a new entity on the root element.
      *
-     * @param <T> 
+     * @param <T>
      * @param root
      * @param t
      * @return the stored object
      */
-     <T> T create(Root root, T t);
+    <T> T create(Root root, T t);
 
     /**
      * Update an enitiy
      *
-     * @param <T> 
+     * @param <T>
      * @param t
      * @return the stored object
      */
     <T> T update(T t);
 
-    
     /**
      * Create, Update or even delete MandatorMetadata based on the difference between the mandator defaults.
      * If the MandatorMetadata is equal to the defaults, it will not be stored and if it exists, it will be deleted.
      * If the it differs it becomes normalized and than stored.
-     * 
+     *
      * @param customerId the customer of this metadata
-     * @param mm the mandator metadata.
+     * @param mm         the mandator metadata.
      * @return the updated customer.
      */
     Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm);
-            
+
     /**
      * Delete an entity on the root element
      *
@@ -170,22 +169,38 @@ public interface CustomerAgent extends RemoteAgent {
      * @param t
      */
     void delete(Root root, Object t);
-    
+
     /**
      * Set {@link Customer#defaultEmailCommunication } to null.
-     * 
+     *
      * @param customerid the customer to be manipulated
      * @return returns the updated customer
      */
     Customer clearDefaultEmailCommunication(long customerid);
-    
+
     /**
      * Set {@link Customer#defaultEmailCommunication } to the supplied communication.
-     * 
-     * @param customerId the customer to be manipulated
+     *
+     * @param customerId      the customer to be manipulated
      * @param communicationId the communication, that should be set. Must be on the same customer and of type email.
      * @return the updated customer
      */
     Customer setDefaultEmailCommunication(long customerId, long communicationId);
-    
+
+    /**
+     * Removes the default reseller list email communication.
+     *
+     * @param customerId the customer id.
+     * @return the updated customer.
+     */
+    public Customer clearResellerListEmailCommunication(long customerId);
+
+    /**
+     * Updates the reseller list email communication with id.
+     *
+     * @param customerId      the customer id.
+     * @param communicationId the id of the communication to use.
+     * @return the updated customer
+     */
+    public Customer setResellerListEmailCommunication(long customerId, long communicationId);
 }

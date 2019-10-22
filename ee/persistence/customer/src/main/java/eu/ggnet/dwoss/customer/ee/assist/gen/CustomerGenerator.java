@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.util.gen.*;
 
+import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.MALE;
 
@@ -36,9 +37,9 @@ public class CustomerGenerator {
 
     private final static EnumSet<CustomerFlag> ALLOWED_FLAGS = EnumSet.complementOf(EnumSet.of(CustomerFlag.SYSTEM_CUSTOMER));
 
-    private final Random R = new Random();
+    private final static Random R = new Random();
 
-    private class RandomEnum<T extends Enum> {
+    private static class RandomEnum<T extends Enum> {
 
         private final T[] values;
 
@@ -51,31 +52,109 @@ public class CustomerGenerator {
         }
     }
 
-    private final NameGenerator GEN = new NameGenerator();
+    private static final NameGenerator GEN = new NameGenerator();
 
-    /**
-     * Generates a new customer assureing the supplied restrictions, never a Systemcustomer.
-     *
-     * @param assure the assurence
-     * @return the new customer
-     */
-    public Customer makeCustomer(Assure assure) {
-        Objects.requireNonNull(assure, "assure must not be null");
-        Customer c = null;
-        if ( assure.simple() ) {
-            c = R.nextBoolean() ? makeSimpleConsumerCustomer() : makeSimpleBussinesCustomer();
-        } else {
-            c = makeCustomer();
-        }
-        for (String mc : assure.mandatorMetadataMatchCodes()) {
-            c.getMandatorMetadata().add(makeMandatorMetadata(mc));
-        }
-        c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
-        return c;
+    public static Company makeCompany() {
+        return makeCompany(new Company());
+    }
+
+    public static Company makeCompanyWithId(long companyId) {
+        return makeCompany(new Company(companyId));
+
     }
 
     /**
-     * Generates a {@link Customer}.
+     * Generates a {@link Contact} without address.
+     * {@link Contact#prefered} is never set.
+     * <p>
+     * @return a generated {@link Contact}.
+     */
+    public static Contact makeBusinessContact() {
+        return makeContact(new Contact(), null, makeCommunication());
+    }
+
+    /**
+     * Generates a {@link Contact}.
+     * {@link Contact#prefered} is never set.
+     * <p>
+     * @return a generated {@link Contact}.
+     */
+    public static Contact makeContact() {
+        return makeContact(new Contact(), makeAddress(), makeCommunication());
+    }
+
+    public static Contact makeContactWithId(long contactId, long addressId, long communicationId) {
+        return makeContact(new Contact(contactId), makeAddressWithId(addressId), makeCommunicationWithId(communicationId));
+    }
+
+    /**
+     * Generates a {@link Address}.
+     * {@link Address#preferedType} is never set.
+     * <p>
+     * @return a generated {@link Contact}.
+     */
+    public static Address makeAddress() {
+        return makeAddress(new Address());
+    }
+
+    public static Address makeAddressWithId(long id) {
+        return makeAddress(new Address(id));
+    }
+
+    /**
+     * Generates a non persisted {@link Communication}.
+     * {@link Communication#prefered} is never set.
+     * <p>
+     * @return a generated {@link Communication}.
+     */
+    public static Communication makeCommunication() {
+        return makeCommunication(new Communication());
+    }
+
+    /**
+     * Generates a non persisted valid {@link Communication} of the supplied type.
+     *
+     * @param type the type to be generated
+     * @return a new communication
+     */
+    public static Communication makeCommunication(Type type) {
+        return makeCommunication(new Communication(), type, Assure.defaults().emailDomain());
+    }
+
+    public static Communication makeCommunicationWithId(long id) {
+        return makeCommunication(new Communication(id));
+    }
+
+    /**
+     * Generates a non persisted {@link MandatorMetadata}.
+     * <p>
+     * @return a generated {@link MandatorMetadata}.
+     */
+    public static MandatorMetadata makeMandatorMetadata() {
+        return makeMandatorMetadata(RandomStringUtils.randomAlphanumeric(4));
+    }
+
+    /**
+     * Generates a random cusomter, which is a consumer and simple.
+     *
+     * @return a random simple customer.
+     */
+    public static Customer makeSimpleConsumerCustomer() {
+        return makeCustomer(new Assure.Builder().simple(true).consumer(true).build());
+    }
+
+    /**
+     * Generates a random customer, which is bussines and simple.
+     *
+     * @return a random simple bussines.
+     */
+    public static Customer makeSimpleBussinesCustomer() {
+        return makeCustomer(new Assure.Builder().simple(true).business(true).build());
+    }
+
+    /**
+     * Generates a random {@link Customer}, simple or complex, business or consumer, never a systemcustomer.
+     * <p>
      * This customer will contain randomly generated collections for:<ul>
      * <li>{@link Customer#contacts}</li>
      * <li>{@link Customer#mandatorMetadata}</li>
@@ -84,35 +163,73 @@ public class CustomerGenerator {
      * <p>
      * @return a generated {@link Customer}.
      */
-    public Customer makeCustomer() {
+    public static Customer makeCustomer() {
+        return makeCustomer(Assure.defaults());
+    }
+
+    /**
+     * Generates a new customer assuring the supplied restrictions, never a Systemcustomer.
+     *
+     * @param assure the assurence
+     * @return the new customer
+     */
+    public static Customer makeCustomer(Assure assure) {
+        Objects.requireNonNull(assure, "assure must not be null");
+        Customer c;
+        if ( assure.simple() && assure.business() ) {
+            c = internalMakeSimpleBussinesCustomer(assure);
+        } else if ( assure.simple() && assure.consumer() ) {
+            c = internalMakeSimpleConsumerCustomer(assure);
+        } else if ( assure.simple() ) {
+            c = (R.nextBoolean() ? internalMakeSimpleConsumerCustomer(assure) : internalMakeSimpleBussinesCustomer(assure));
+        } else {
+            // Still a 30% chance of a simple customer.
+            c = R.nextDouble() > 0.3 ? internalMakeConsumerCustomer(assure)
+                    : (R.nextBoolean() ? internalMakeSimpleConsumerCustomer(assure) : internalMakeSimpleBussinesCustomer(assure));
+        }
+        assure.mandatorMetadataMatchCodes().forEach((mc) -> {
+            c.getMandatorMetadata().add(makeMandatorMetadata(mc));
+        });
+        c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
+        return c;
+    }
+
+    private static Customer internalMakeConsumerCustomer(Assure assure) {
         Customer customer = new Customer();
         int r = R.nextInt(5) + 1;
-        for (int i = 0; i < r; i++) {
-            Contact con = makeContact();
+        for (int i = 0, mail = 0; i < r || mail == 0; i++) { // mail, make sure that at least one contact with email exists
+            Contact con = makeContact(new Contact(), makeAddress(),
+                    makeCommunication(new Communication(), new RandomEnum<>(Communication.Type.class).random(), assure.emailDomain()));
+            if ( con.getCommunications().get(0).getType() == EMAIL ) mail = 1;
             customer.getContacts().add(con);
         }
+
+        // vial the mail = 1 it is ensured, that at least one email exsists. So we can take the first one.
+        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 )
+            customer.setResellerListEmailCommunication(customer.getAllCommunications(EMAIL).get(0));
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
         if ( R.nextDouble() < 0.4 ) {
             customer.getFlags().add(CustomerFlag.CONFIRMED_CASH_ON_DELIVERY);
         }
         customer.setComment("Das ist ein Kommentar zum Kunden");
+
+        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) {
+
+        }
+
         if ( !customer.isValid() ) throw new RuntimeException("Generated a invalid customer, repair generator: " + customer.getViolationMessage());
         return customer;
     }
 
-    /**
-     * Generates a random cusomter, which is a consumer and simple.
-     *
-     * @return a random simple customer.
-     */
-    public Customer makeSimpleConsumerCustomer() {
+    private static Customer internalMakeSimpleConsumerCustomer(Assure assure) {
         Customer customer = new Customer();
 
         Contact con = makeContact(new Contact(), makeAddress(), makeCommunication(Type.PHONE));
-        Communication email = makeCommunication(Type.EMAIL);
+        Communication email = makeCommunication(new Communication(), Type.EMAIL, assure.emailDomain());
         con.getCommunications().add(email);
         customer.setDefaultEmailCommunication(email);
+        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) customer.setResellerListEmailCommunication(email);
         customer.getContacts().add(con);
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
@@ -125,18 +242,15 @@ public class CustomerGenerator {
         return customer;
     }
 
-    /**
-     * Generates a random customer, which is bussines and simple.
-     *
-     * @return a random simple bussines.
-     */
-    public Customer makeSimpleBussinesCustomer() {
+    private static Customer internalMakeSimpleBussinesCustomer(Assure assure) {
         Customer customer = new Customer();
 
         Contact contact = makeContact(new Contact(), null, makeCommunication(Type.PHONE));
-        Communication email = makeCommunication(Type.EMAIL);
+        Communication email = makeCommunication(new Communication(), Type.EMAIL, assure.emailDomain());
         contact.getCommunications().add(email);
         customer.setDefaultEmailCommunication(email);
+
+        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) customer.setResellerListEmailCommunication(email);
 
         Company company = new Company(GEN.makeCompanyName(), 1000 + R.nextInt(800), "DE " + RandomStringUtils.randomNumeric(8));
         company.getContacts().add(contact);
@@ -155,91 +269,11 @@ public class CustomerGenerator {
         return customer;
     }
 
-    public Company makeCompany() {
-        return makeCompany(new Company());
+    private static Communication makeCommunication(Communication c) {
+        return makeCommunication(c, new RandomEnum<>(Communication.Type.class).random(), "example.local");
     }
 
-    public Company makeCompanyWithId(long companyId) {
-        return makeCompany(new Company(companyId));
-
-    }
-
-    /**
-     * Generates a {@link Contact} without address.
-     * {@link Contact#prefered} is never set.
-     * <p>
-     * @return a generated {@link Contact}.
-     */
-    public Contact makeBusinessContact() {
-        return makeContact(new Contact(), null, makeCommunication());
-    }
-
-    /**
-     * Generates a {@link Contact}.
-     * {@link Contact#prefered} is never set.
-     * <p>
-     * @return a generated {@link Contact}.
-     */
-    public Contact makeContact() {
-        return makeContact(new Contact(), makeAddress(), makeCommunication());
-    }
-
-    public Contact makeContactWithId(long contactId, long addressId, long communicationId) {
-        return makeContact(new Contact(contactId), makeAddressWithId(addressId), makeCommunicationWithId(communicationId));
-    }
-
-    /**
-     * Generates a {@link Address}.
-     * {@link Address#preferedType} is never set.
-     * <p>
-     * @return a generated {@link Contact}.
-     */
-    public Address makeAddress() {
-        return makeAddress(new Address());
-    }
-
-    public Address makeAddressWithId(long id) {
-        return makeAddress(new Address(id));
-    }
-
-    /**
-     * Generates a non persisted {@link Communication}.
-     * {@link Communication#prefered} is never set.
-     * <p>
-     * @return a generated {@link Communication}.
-     */
-    public Communication makeCommunication() {
-        return makeCommunication(new Communication());
-    }
-
-    /**
-     * Generates a non persisted valid {@link Communication} of the supplied type.
-     *
-     * @param type the type to be generated
-     * @return a new communication
-     */
-    public Communication makeCommunication(Type type) {
-        return makeCommunication(new Communication(), type);
-    }
-
-    public Communication makeCommunicationWithId(long id) {
-        return makeCommunication(new Communication(id));
-    }
-
-    /**
-     * Generates a non persisted {@link MandatorMetadata}.
-     * <p>
-     * @return a generated {@link MandatorMetadata}.
-     */
-    public MandatorMetadata makeMandatorMetadata() {
-        return makeMandatorMetadata(RandomStringUtils.randomAlphanumeric(4));
-    }
-
-    private Communication makeCommunication(Communication c) {
-        return makeCommunication(c, new RandomEnum<>(Communication.Type.class).random());
-    }
-
-    private Communication makeCommunication(Communication c, Type type) {
+    private static Communication makeCommunication(Communication c, Type type, String domain) {
         c.setType(type);
         switch (c.getType()) {
             case PHONE:
@@ -252,7 +286,7 @@ public class CustomerGenerator {
                 );
                 break;
             case EMAIL:
-                c.setIdentifier(RandomStringUtils.randomAlphabetic(10) + "@" + RandomStringUtils.randomAlphabetic(8) + ".com");
+                c.setIdentifier(RandomStringUtils.randomAlphabetic(10) + "@" + domain);
                 break;
             default:
                 c.setIdentifier(RandomStringUtils.randomAlphanumeric(10));
@@ -261,7 +295,7 @@ public class CustomerGenerator {
         return c;
     }
 
-    private MandatorMetadata makeMandatorMetadata(String matchcode) {
+    private static MandatorMetadata makeMandatorMetadata(String matchcode) {
         MandatorMetadata m = new MandatorMetadata();
         m.setMandatorMatchcode(matchcode);
         m.setPaymentCondition(new RandomEnum<>(PaymentCondition.class).random());
@@ -277,7 +311,7 @@ public class CustomerGenerator {
      * <p>
      * @return a generated {@link Company}.
      */
-    private Company makeCompany(Company company) {
+    private static Company makeCompany(Company company) {
         company.setLedger(R.nextInt(1000) + 1);
         company.setName(GEN.makeCompanyName());
         Contact contact = makeContact();
@@ -292,7 +326,7 @@ public class CustomerGenerator {
         return company;
     }
 
-    private Contact makeContact(Contact contact, Address address, Communication communication) {
+    private static Contact makeContact(Contact contact, Address address, Communication communication) {
         Name name = GEN.makeName();
         contact.setFirstName(name.getFirst());
         contact.setLastName(name.getLast());
@@ -303,7 +337,7 @@ public class CustomerGenerator {
         return contact;
     }
 
-    private Address makeAddress(Address address) {
+    private static Address makeAddress(Address address) {
         GeneratedAddress genereratedAddress = GEN.makeAddress();
         address.setCity(genereratedAddress.getTown());
         address.setStreet(genereratedAddress.getStreet());

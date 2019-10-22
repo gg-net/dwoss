@@ -56,9 +56,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     private EntityManager em;
 
     @Inject
-    UserTransaction utx;
-
-    private CustomerGenerator GEN = new CustomerGenerator();
+    private UserTransaction utx;
 
     @Inject
     private CustomerEao eao;
@@ -80,9 +78,10 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @Test
     public void testSearchWithCustomerFields() throws Exception {
+
         utx.begin();
         em.joinTransaction();
-        Customer customer = GEN.makeCustomer();
+        Customer customer = CustomerGenerator.makeSimpleConsumerCustomer();
         String firstName = customer.getContacts().get(0).getFirstName();
 
         em.persist(customer);
@@ -100,7 +99,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     public void testSearch() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Customer customer = GEN.makeCustomer();
+        Customer customer = CustomerGenerator.makeSimpleConsumerCustomer();
         String firstName = customer.getContacts().get(0).getFirstName();
 
         em.persist(customer);
@@ -118,7 +117,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
     public void testCountSearch() throws Exception {
         utx.begin();
         em.joinTransaction();
-        Customer customer = GEN.makeCustomer();
+        Customer customer = CustomerGenerator.makeSimpleConsumerCustomer();
         String firstName = customer.getContacts().get(0).getFirstName();
 
         em.persist(customer);
@@ -129,7 +128,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
         Set<SearchField> customerFields = new HashSet<>();
         customerFields.add(SearchField.FIRSTNAME);
         // Searchcount is not 100% correct.
-        assertThat(agent.countSearch(firstName, customerFields)).as("can not find the City of Customer").isBetween(1, 2);
+        assertThat(agent.countSearch(firstName, customerFields)).as("can not find the firstname of customer").isBetween(1, 2);
     }
 
     @Test
@@ -141,9 +140,9 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
     @Test
     public void testStoreSimpleCustomer() {
-        Reply<Customer> reply = agent.store(GEN.makeSimpleConsumerCustomer().toSimple().get());
+        Reply<Customer> reply = agent.store(CustomerGenerator.makeSimpleConsumerCustomer().toSimple().get());
         assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
-        reply = agent.store(GEN.makeSimpleBussinesCustomer().toSimple().get());
+        reply = agent.store(CustomerGenerator.makeSimpleBussinesCustomer().toSimple().get());
         assertThat(reply.hasSucceded()).as("Reply not successful: " + reply.getSummary()).isTrue();
 
         assertThat(agent.count(Customer.class)).as("There should only be two customers in the db").isEqualTo(2);

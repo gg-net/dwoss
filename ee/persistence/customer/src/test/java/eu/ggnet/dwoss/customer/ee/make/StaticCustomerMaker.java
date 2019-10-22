@@ -122,6 +122,7 @@ public class StaticCustomerMaker {
     }
 
     /**
+     * Makes a valid SimpleBusinessCustomer with Communication of Type EMAIL on it's Companies' Contact
      *
      * @return Valid SimpleBusinessCustomer with Communication of Type EMAIL on it's Companies' Contact
      */

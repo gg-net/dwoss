@@ -47,10 +47,8 @@ public class CustomerGeneratorOperation {
 
     private final Logger L = LoggerFactory.getLogger(CustomerGeneratorOperation.class);
 
-    private final CustomerGenerator CGEN = new CustomerGenerator();
-
     @Inject
-    @Customers 
+    @Customers
     private EntityManager em;
 
     @Inject
@@ -69,7 +67,7 @@ public class CustomerGeneratorOperation {
             L.info("try to create consumer and busines customer for TradeName " + contractor);
             for (ReceiptOperation operation : ReceiptOperation.valuesBackedByCustomer()) {
                 L.info("creating customer for " + operation);
-                Customer customer = CGEN.makeSimpleBussinesCustomer();
+                Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
                 customer.getCompanies().get(0).setName("Receipt Customer " + contractor);
                 customer.setComment("Generatered Receipt Customer: " + contractor + "," + operation);
                 customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -93,7 +91,7 @@ public class CustomerGeneratorOperation {
         CustomersBuilder repaymentCustomersBuilder = new CustomersBuilder();
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
             customer.getCompanies().get(0).setName("Repayment Customer " + contractor);
             customer.setComment("Generatered Repayment Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -115,7 +113,7 @@ public class CustomerGeneratorOperation {
 
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
             customer.getCompanies().get(0).setName("Scrap Customer " + contractor);
             customer.setComment("Generatered Scrap Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -136,7 +134,7 @@ public class CustomerGeneratorOperation {
         CustomersBuilder deleteCustomersBuilder = new CustomersBuilder();
         for (TradeName contractor : contractors) {
             L.info("TradeName " + contractor);
-            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
             customer.getCompanies().get(0).setName("Delete Customer " + contractor);
             customer.setComment("Generatered Delete Customer: " + contractor);
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -147,7 +145,7 @@ public class CustomerGeneratorOperation {
     }
 
     /**
-     * Generates Customers which of type system customer.
+     * Generates Customers of type system customer.
      *
      * @param types the special document types.
      * @return the generateded contaioner of contractors with customer ids.
@@ -157,7 +155,7 @@ public class CustomerGeneratorOperation {
         if ( types == null || types.length == 0 ) return new SpecialSystemCustomers(specialCustomers);
         for (DocumentType type : types) {
             L.info("DocumentType " + type);
-            Customer customer = CGEN.makeSimpleBussinesCustomer();
+            Customer customer = CustomerGenerator.makeSimpleBussinesCustomer();
             customer.getCompanies().get(0).setName(type.getName() + " Special Customer");
             customer.setComment("Generatered " + type.getName() + "");
             customer.getFlags().add(CustomerFlag.SYSTEM_CUSTOMER);
@@ -168,7 +166,7 @@ public class CustomerGeneratorOperation {
     }
 
     /**
-     * Generates one randome customer.
+     * Generates and persists a random customer, see {@link CustomerGenerator#makeCustomer() }.
      *
      * @return the id of the generated customer.
      */
@@ -177,21 +175,21 @@ public class CustomerGeneratorOperation {
     }
 
     /**
-     * Generates and persitst a new customer assureing the supplied rules.
+     * Generates and persists a random customer, see {@link CustomerGenerator#makeCustomer(eu.ggnet.dwoss.customer.ee.assist.gen.Assure) }.
      *
      * @param assure the rules
      * @return the id of the customer.
      */
     @AutoLogger
     public long makeCustomer(Assure assure) {
-        Customer customer = CGEN.makeCustomer(assure);
+        Customer customer = CustomerGenerator.makeCustomer(assure);
         em.persist(customer);
         em.flush();
         return customer.getId();
     }
 
     /**
-     * Generates and persists a predefined Amount of random Customers.
+     * Generates and persists an amount of random customers, see {@link CustomerGenerator#makeCustomer() }.
      *
      * @param amount the amount
      * @return the generated ids.
@@ -201,7 +199,7 @@ public class CustomerGeneratorOperation {
     }
 
     /**
-     * Generates and persists a predefined Amount of Customers, assuring the supplied conditions.
+     * Generates and persists an amount of random customers, see {@link CustomerGenerator#makeCustomer(eu.ggnet.dwoss.customer.ee.assist.gen.Assure) }.
      *
      * @param amount the amount
      * @param assure the conditions
@@ -213,7 +211,7 @@ public class CustomerGeneratorOperation {
         m.start();
         List<Long> ids = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            Customer customer = CGEN.makeCustomer(assure);
+            Customer customer = CustomerGenerator.makeCustomer(assure);
             if ( customer.getFlags().contains(CustomerFlag.SYSTEM_CUSTOMER) )
                 L.error("Generated Customer with flag SystemCustomer, which defentifly should not be. {}", customer);
             em.persist(customer);
@@ -233,8 +231,8 @@ public class CustomerGeneratorOperation {
      */
     public void scrambleAddress(long customerId, AddressType type) {
         Customer customer = Objects.requireNonNull(em.find(Customer.class, customerId), "No Customer found of id " + customerId);
-        Address newAddress = CGEN.makeAddress();
-        Contact newContact = CGEN.makeContact();
+        Address newAddress = CustomerGenerator.makeAddress();
+        Contact newContact = CustomerGenerator.makeContact();
 
         if ( customer.isBusiness() ) {
             customer.getCompanies().get(0).getAddresses().add(newAddress);

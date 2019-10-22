@@ -67,9 +67,9 @@ public class CustomerHtmlTryout extends Application {
 
         WebView view = new WebView();
         view.getEngine().loadContent(Css.toHtml5WithStyle(
-                "<hr /><h1>makeCustmer : Customer.toHtml(MATCHCODE,defaults)</h1>"
+                "<hr /><h1>makeCustomer : Customer.toHtml(MATCHCODE,defaults)</h1>"
                 + c1.toHtml(c1mcode, defaults)
-                + "<hr /><h1>makeCustmer : Customer.toHtml()</h1>"
+                + "<hr /><h1>makeCustomer : Customer.toHtml()</h1>"
                 + c1.toHtml()
                 + "<hr /><h1>makeSimpleConsumerCustomer : Customer.toHtml(MATCHCODE,defaults)</h1>"
                 + c2.toHtml(c2mcode, defaults)

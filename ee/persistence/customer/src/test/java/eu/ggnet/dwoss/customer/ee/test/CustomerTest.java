@@ -3,6 +3,7 @@ package eu.ggnet.dwoss.customer.ee.test;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 
@@ -16,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author oliver.guenther
  */
 public class CustomerTest {
-
-    private final CustomerGenerator GEN = new CustomerGenerator();
 
     @Test
     public void vaildConsumerCustomer() {
@@ -112,7 +111,7 @@ public class CustomerTest {
      */
     @Test
     public void validationOfDefaultEmailCommunication() {
-        Customer consumer = GEN.makeSimpleConsumerCustomer();
+        Customer consumer = CustomerGenerator.makeSimpleConsumerCustomer();
         Contact contact = consumer.getContacts().get(0); // This is by definition correct.
         if ( contact.getCommunications().stream().anyMatch(c -> c.getType() == EMAIL) ) {
             // Make sure, there is one email communication.
@@ -128,6 +127,20 @@ public class CustomerTest {
 
         consumer.setDefaultEmailCommunication(new Communication(PHONE, "123123123"));
         assertThat(consumer.getViolationMessage()).as("Should be a invalid customer with an invalid default email communication, type is wrong").isNotNull();
+    }
+
+    @Test
+    public void validationOfResellerListEmailCommunication() {
+        Customer customer = CustomerGenerator.makeCustomer(new Assure.Builder().useResellerListEmailCommunication(true).build());
+
+        assertThat(customer.getResellerListEmailCommunication()).as("resellerListEmailCommunication should be set").isNotEmpty();
+        assertThat(customer.getViolationMessage()).as("Should be a valid customer with a resellerListEmailCommunication").isNull();
+
+        customer.setDefaultEmailCommunication(null);
+        assertThat(customer.getViolationMessage()).as("Should be a valid customer with a 'null' resellerListEmailCommunication").isNull();
+
+        customer.setDefaultEmailCommunication(new Communication(PHONE, "123123123"));
+        assertThat(customer.getViolationMessage()).as("Should be a invalid customer with an invalid resellerListEmailCommunication, type is wrong").isNotNull();
     }
 
 }

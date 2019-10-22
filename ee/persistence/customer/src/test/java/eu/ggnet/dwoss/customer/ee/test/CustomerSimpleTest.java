@@ -18,13 +18,15 @@ package eu.ggnet.dwoss.customer.ee.test;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 
-import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
-
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidCommunication;
+import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.makeValidCompanyContact;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -35,11 +37,13 @@ public class CustomerSimpleTest {
 
     @Test
     public void testToSimpleConsumer() {
-        Customer validSimpleConsumer = makeValidSimpleConsumer();
+        Customer validSimpleConsumer = CustomerGenerator.makeCustomer(new Assure.Builder().simple(true).consumer(true).build());
         validSimpleConsumer.getContacts().get(0).getCommunications().clear();
-        validSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de"));
+        Communication email = makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de");
+        validSimpleConsumer.getContacts().get(0).getCommunications().add(email);
         validSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunication(Type.MOBILE, "0174 123456789"));
         validSimpleConsumer.getContacts().get(0).getCommunications().add(makeValidCommunication(Type.PHONE, "040 123456789"));
+        validSimpleConsumer.setResellerListEmailCommunication(email);
         assertThat(validSimpleConsumer.isSimple()).as("still simplecustomer").isTrue();
 
         SimpleCustomer simpleConsumerCustomer = validSimpleConsumer.toSimple().get();
@@ -61,18 +65,20 @@ public class CustomerSimpleTest {
 
         assertThat(simpleConsumerCustomer.getCompanyName()).as("companyName").isEqualTo(null);
         assertThat(simpleConsumerCustomer.getTaxId()).as("taxId").isEqualTo(null);
+        assertThat(simpleConsumerCustomer.isUseEmailForResellerList()).as("useEmailForResellerList").isTrue();
 
     }
 
     @Test
     public void testToSimpleBusiness() {
-        Customer validBusinessCustomer = makeValidSimpleBusiness();
+        Customer validBusinessCustomer = CustomerGenerator.makeCustomer(new Assure.Builder().simple(true).business(true).build());
         validBusinessCustomer.getCompanies().get(0).getCommunications().clear();
         assertThat(validBusinessCustomer.isSimple()).as("still simplecustomer").isTrue();
 
         Contact makeValidContact = makeValidCompanyContact();
         makeValidContact.getCommunications().clear();
-        makeValidContact.getCommunications().add(makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de"));
+        Communication email = makeValidCommunication(Type.EMAIL, "Max.mustermann@mustermail.de");
+        makeValidContact.getCommunications().add(email);
         makeValidContact.getCommunications().add(makeValidCommunication(Type.MOBILE, "0174 123456789"));
         makeValidContact.getCommunications().add(makeValidCommunication(Type.PHONE, "040 123456789"));
         assertThat(makeValidContact.getViolationMessage()).as("valid contact").isNull();
@@ -83,6 +89,8 @@ public class CustomerSimpleTest {
         assertThat(validBusinessCustomer.isSimple()).as("still simplecustomer").isTrue();
 
         assertThat(validBusinessCustomer.toSimple().isPresent()).as("to simple").isTrue();
+        validBusinessCustomer.setResellerListEmailCommunication(email);
+
         SimpleCustomer simpleBusinessCustomer = validBusinessCustomer.toSimple().get();
 
         assertThat(simpleBusinessCustomer.getTitle()).as("title").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getTitle());
@@ -92,7 +100,6 @@ public class CustomerSimpleTest {
         assertThat(simpleBusinessCustomer.getSex()).as("sex").isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getSex());
 
         //address tests no longer needed as company contcts can not have any adresses due to getViolationMessage
-        
         assertThat(simpleBusinessCustomer.getMobilePhone()).as("mobilePhone")
                 .isEqualTo(validBusinessCustomer.getCompanies().get(0).getContacts().get(0).getCommunications().stream().filter(c -> c.getType() == MOBILE).map(Communication::getIdentifier).findFirst().get());
         assertThat(simpleBusinessCustomer.getLandlinePhone()).as("landlinePhone")
@@ -107,6 +114,7 @@ public class CustomerSimpleTest {
         assertThat(simpleBusinessCustomer.getTaxId()).as("taxId").isEqualTo(validBusinessCustomer.getCompanies().get(0).getTaxId());
 
         assertThat(validBusinessCustomer.isSimple()).as("still simplecustomer").isTrue();
+        assertThat(simpleBusinessCustomer.isUseEmailForResellerList()).as("useEmailForResellerList").isTrue();
     }
 
 }
