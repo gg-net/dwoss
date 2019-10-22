@@ -11,6 +11,10 @@
     <name>DwOss • EE • Persistence • Customer</name>
     <packaging>ejb</packaging>
 
+    <properties>
+        <ddl-gen.packages>eu.ggnet.dwoss.customer.ee.entity</ddl-gen.packages>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.inferred</groupId>
