@@ -424,7 +424,7 @@ public class CustomerAgentStub implements CustomerAgent {
                         customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
                 customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
                 filter(c -> c.getId() == communicationId).findAny().get();
-        System.out.println(comm);
+
         customer.setDefaultEmailCommunication(comm);
         return customer;
     }
@@ -433,8 +433,8 @@ public class CustomerAgentStub implements CustomerAgent {
     public Customer normalizedStoreMandatorMetadata(long customerId, MandatorMetadata mm) {
         MandatorsStub ms = new MandatorsStub();
         DefaultCustomerSalesdata defaultCsd = ms.loadSalesdata();
-        if (customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null && mm.isSameAs(defaultCsd)) return customer;
-        if (customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null) customer.getMandatorMetadata().add(mm);
+        if ( customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null && mm.isSameAs(defaultCsd) ) return customer;
+        if ( customer.getMandatorMetadata(ms.loadMandator().matchCode()) == null ) customer.getMandatorMetadata().add(mm);
         mm.normalize(defaultCsd);
         return customer;
     }
@@ -442,6 +442,25 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public Customer autostore(Collection<AddressLabelDto> aldtos) throws IllegalArgumentException {
         // TODO: In einem anderen leben.
+        return customer;
+    }
+
+    @Override
+    public Customer clearResellerListEmailCommunication(long customerId) {
+        customer.setResellerListEmailCommunication(null);
+        return customer;
+    }
+
+    @Override
+    public Customer setResellerListEmailCommunication(long customerId, long communicationId) {
+        Communication comm = Stream.concat(
+                Stream.concat(
+                        customer.getContacts().stream().flatMap((con) -> con.getCommunications().stream()),
+                        customer.getCompanies().stream().flatMap((con) -> con.getCommunications().stream())),
+                customer.getCompanies().stream().flatMap((con) -> con.getContacts().stream()).flatMap((con) -> con.getCommunications().stream())).
+                filter(c -> c.getId() == communicationId).findAny().get();
+
+        customer.setResellerListEmailCommunication(comm);
         return customer;
     }
 
