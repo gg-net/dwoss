@@ -14,14 +14,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-util-lookup</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-api-annotations-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.lucidcalc</groupId>
             <artifactId>lucidcalc</artifactId>
         </dependency>

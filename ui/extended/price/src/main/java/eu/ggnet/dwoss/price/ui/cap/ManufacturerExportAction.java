@@ -16,13 +16,12 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoExporter;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
@@ -35,7 +34,7 @@ public class ManufacturerExportAction extends AbstractAction {
     private final TradeName contractor;
 
     public ManufacturerExportAction(TradeName manufacturer) {
-        super("Export fehlende " + manufacturer.getName() + " Daten (Hersteller)");
+        super("Export fehlende " + manufacturer.getDescription() + " Daten (Hersteller)");
         this.contractor = manufacturer;
     }
 

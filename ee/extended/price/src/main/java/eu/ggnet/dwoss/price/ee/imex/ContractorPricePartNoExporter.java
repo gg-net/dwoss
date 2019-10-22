@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.util.FileJacket;
 
 /**
  * The Contractor Exporter.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Remote

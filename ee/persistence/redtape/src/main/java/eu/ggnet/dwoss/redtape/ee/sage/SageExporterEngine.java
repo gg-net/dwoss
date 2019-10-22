@@ -35,11 +35,11 @@ import eu.ggnet.dwoss.redtape.ee.sage.xml.RowData;
 
 /**
  * The GsOfficeExporterUtil.
- * <p/>
+ * <p>
  * Defined:
  * - Beleg: AR/K"Customerid""DossierIdentifier"/"DocumenteIdentifier first letters numbers" (e.g. AR/K123DW32412/RS12)
  * - WawiBeleg: K"CustomerId"/"DocumentIdentifier" (e.g. K1234/RS12_00001)
- * <p/>
+ * <p>
  * <
  * p/>
  * @author pascal.perau
@@ -68,7 +68,7 @@ public class SageExporterEngine {
         return output;
     }
     
-    public void setOutput(OutputStream output) {
+    public final void setOutput(OutputStream output) {
         this.output = Objects.requireNonNull(output);
     }
     
@@ -76,7 +76,7 @@ public class SageExporterEngine {
         return customerInvoices;
     }
     
-    public void setCustomerInvoices(Map<Document, UiCustomer> customerInvoices) {
+    public final void setCustomerInvoices(Map<Document, UiCustomer> customerInvoices) {
         this.customerInvoices = Objects.requireNonNull(customerInvoices);
     }
     
@@ -84,7 +84,7 @@ public class SageExporterEngine {
         return config;
     }
     
-    public void setConfig(SageExporterConfig config) {
+    public final void setConfig(SageExporterConfig config) {
         this.config = Objects.requireNonNull(config);
     }
     //</editor-fold>

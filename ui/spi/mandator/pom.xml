@@ -10,6 +10,10 @@
     <name>DwOss • Ui • Spi • Mandator</name>
     <dependencies>
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-mandator</artifactId>
             <version>${project.version}</version>

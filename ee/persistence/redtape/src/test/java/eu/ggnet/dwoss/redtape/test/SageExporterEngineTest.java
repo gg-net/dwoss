@@ -23,14 +23,14 @@ import java.util.*;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.common.api.values.TaxType;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.TaxType;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.common.api.values.PositionType.SHIPPING_COST;
@@ -113,13 +113,7 @@ public class SageExporterEngineTest {
         doc2.append(unit(doc2.getTaxType(), new Ledger(1234, "Demo2")));
 
         // Comparator is needed for the resulting rowlines. In productive, this is not important, but for an exact string match.
-        Map<Document, UiCustomer> content = new TreeMap<>(new Comparator<Document>() {
-            @Override
-            public int compare(Document t0, Document t1) {
-                return t0.getIdentifier().compareTo(t1.getIdentifier());
-            }
-
-        });
+        Map<Document, UiCustomer> content = new TreeMap<>((t0, t1) -> t0.getIdentifier().compareTo(t1.getIdentifier()));
         content.put(doc, cus);
         content.put(doc2, cus);
 
@@ -147,7 +141,7 @@ public class SageExporterEngineTest {
                 .uniqueUnitId(1)
                 .uniqueUnitProductId(1)
                 .price(200)
-                .tax(taxType.getTax())
+                .tax(taxType.tax)
                 .name("Gerät id 1")
                 .description("Ein Gerät")
                 .build();

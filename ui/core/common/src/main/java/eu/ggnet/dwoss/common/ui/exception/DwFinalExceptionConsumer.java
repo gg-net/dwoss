@@ -18,13 +18,14 @@ package eu.ggnet.dwoss.common.ui.exception;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.DetailDialog;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.SwingCore;
 import eu.ggnet.saft.core.ui.SwingSaft;
@@ -43,7 +44,8 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
     private final static Logger L = LoggerFactory.getLogger(DwFinalExceptionConsumer.class);
 
     @Override
-    public void accept(Throwable b) {
+    public void accept(Throwable throwable) {
+        Throwable b = Objects.requireNonNull(throwable, "Throwable must not be null");
         if ( b instanceof UiWorkflowBreak || b.getCause() instanceof UiWorkflowBreak ) {
             L.debug("FinalExceptionConsumer catches UiWorkflowBreak, which is ignored by default");
             return;
@@ -75,11 +77,7 @@ public class DwFinalExceptionConsumer implements Consumer<Throwable> {
             host += "/" + localHost.getHostName();
         } catch (UnknownHostException ex) {
         }
-        String workspaceUser = "Konnte User nicht auslesen.";
-        try {
-            workspaceUser = Lookup.getDefault().lookup(Guardian.class).getUsername();
-        } catch (Exception exception) {
-        }
+        String workspaceUser = Dl.local().optional(Guardian.class).map(Guardian::getUsername).orElse("Konnte User nicht auslesen");
         StringBuilder sb = new StringBuilder();
         sb.append("Beim Nutzer \"").append(workspaceUser).append("\" ist ein Fehler Aufgetreten!\n")
                 .append("Windows Daten: User=").append(windowsUser).append(" Hostname=").append(host);

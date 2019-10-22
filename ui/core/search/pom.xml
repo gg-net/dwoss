@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-search</artifactId>
             <version>${project.version}</version>
