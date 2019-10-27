@@ -16,8 +16,7 @@
  */
 package tryout.neo;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import javafx.application.Application;
 import javafx.scene.control.Button;
@@ -43,11 +42,11 @@ public class SelectDefaultEmailCommunicationTryout extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Communication def = c("info@demo.com");
-        List<Communication> comms = Arrays.asList(c("demo@demo.com"), c("mega@demo.com"),def);
+        List<Communication> comms = Arrays.asList(c("demo@demo.com"), c("mega@demo.com"), def);
 
         UiCore.startJavaFx(primaryStage, () -> {
             Button b = new Button("Open Select Email");
-            b.setOnAction(e -> Ui.build().fx().eval(() -> new Selection(comms, def), () -> new SelectDefaultEmailCommunicationView())
+            b.setOnAction(e -> Ui.build().fx().eval(() -> new Selection(comms, Optional.ofNullable(def)), () -> new SelectDefaultEmailCommunicationView())
                     .cf().thenAccept(System.out::println).handle(Ui.handler()));
             return new FlowPane(b);
         });

@@ -131,6 +131,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
 
     private ObservableList<Customer> quickSearchList;
 
+    @FXML
+    private CheckBox resellerListCommunicationCheckBox;
+
     private Timer timer = new Timer();
 
     private final ExecutorService ES = Executors.newSingleThreadExecutor();
@@ -375,6 +378,9 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         if ( simpleCustomer.getSource() != null ) {
             sourceChoiseBox.getSelectionModel().select(simpleCustomer.getSource());
         }
+
+        resellerListCommunicationCheckBox.setSelected(simpleCustomer.isUseEmailForResellerList());
+
         if ( simpleCustomer.getId() > 0 ) changeUIButton.setDisable(true); // Disable UI Change on allready pesistend Customer.
     }
 
@@ -423,6 +429,7 @@ public class CustomerSimpleController implements Initializable, FxController, Co
         sc.setTaxId(ustIdTextField.getText());
 
         sc.setComment(commentTextArea.getText());
+        sc.setUseEmailForResellerList(resellerListCommunicationCheckBox.isSelected());
 
         return sc;
     }

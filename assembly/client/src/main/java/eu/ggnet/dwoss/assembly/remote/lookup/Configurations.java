@@ -43,7 +43,7 @@ public class Configurations {
                 .app("dwoss-server")
                 .build());
 
-        Optional.ofNullable(Dl.local().lookup(EjbConnectionConfigurationProvider.class)).ifPresent(p -> conf.putAll(p.getConfigurations()));
+        Dl.local().optional(EjbConnectionConfigurationProvider.class).ifPresent(p -> conf.putAll(p.getConfigurations()));
     }
 
     public static boolean containsConfig(String key) {

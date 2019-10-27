@@ -19,15 +19,15 @@ package tryout.neo;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
-import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
-import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
-import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.common.api.values.AddressType;
 import eu.ggnet.dwoss.common.api.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
+import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
+import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
+import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
 import eu.ggnet.dwoss.mandator.ee.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
@@ -58,21 +58,19 @@ public class CustomerEnhanceTryout {
         Dl.remote().add(Mandators.class, new MandatorsStub());
         Dl.local().add(Guardian.class, new GuardianStub());
 
-        CustomerGenerator gen = new CustomerGenerator();
-
         JButton close = new JButton("Schliessen");
         close.addActionListener(e -> Ui.closeWindowOf(close));
 
         JButton firmenKundenButton = new JButton("Lade FirmenKunde");
 
         firmenKundenButton.addActionListener(ev -> {
-            Customer customer = gen.makeCustomer();
+            Customer customer = CustomerGenerator.makeCustomer();
             customer.getContacts().clear();
 
-            customer.getCompanies().add(gen.makeCompanyWithId(220l));
-            customer.getCompanies().add(gen.makeCompanyWithId(221l));
-            customer.getCompanies().add(gen.makeCompanyWithId(222l));
-            customer.getCompanies().add(gen.makeCompanyWithId(223l));
+            customer.getCompanies().add(CustomerGenerator.makeCompanyWithId(220l));
+            customer.getCompanies().add(CustomerGenerator.makeCompanyWithId(221l));
+            customer.getCompanies().add(CustomerGenerator.makeCompanyWithId(222l));
+            customer.getCompanies().add(CustomerGenerator.makeCompanyWithId(223l));
 
             customer.setSource(Source.ONEADO);
             customer.setKeyAccounter("Herr Meier");
@@ -88,7 +86,7 @@ public class CustomerEnhanceTryout {
                 return;
             }
 
-            customer.getAddressLabels().add(new AddressLabel(gen.makeCompany(), null, gen.makeAddress(), AddressType.SHIPPING));
+            customer.getAddressLabels().add(new AddressLabel(CustomerGenerator.makeCompany(), null, CustomerGenerator.makeAddress(), AddressType.SHIPPING));
 
             Dl.remote().add(CustomerAgent.class, new CustomerAgentStub(customer));
             Ui.exec(() -> {
@@ -99,14 +97,14 @@ public class CustomerEnhanceTryout {
         JButton endKundenButton = new JButton("Lade Endkunde");
 
         endKundenButton.addActionListener(ev -> {
-            Customer customer = gen.makeCustomer();
+            Customer customer = CustomerGenerator.makeCustomer();
             customer.getContacts().clear();
             customer.getCompanies().clear();
 
-            customer.getContacts().add(gen.makeContactWithId(1, 11, 21));
-            customer.getContacts().add(gen.makeContactWithId(2, 12, 22));
-            customer.getContacts().add(gen.makeContactWithId(3, 13, 23));
-            customer.getContacts().add(gen.makeContactWithId(4, 14, 24));
+            customer.getContacts().add(CustomerGenerator.makeContactWithId(1, 11, 21));
+            customer.getContacts().add(CustomerGenerator.makeContactWithId(2, 12, 22));
+            customer.getContacts().add(CustomerGenerator.makeContactWithId(3, 13, 23));
+            customer.getContacts().add(CustomerGenerator.makeContactWithId(4, 14, 24));
 
             customer.setSource(Source.ONEADO);
             customer.getFlags().add(CustomerFlag.ITC_CUSTOMER);

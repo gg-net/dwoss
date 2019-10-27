@@ -190,8 +190,8 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
         this.comment = comment;
     }
 
-    public Communication getDefaultEmailCommunication() {
-        return defaultEmailCommunication;
+    public Optional<Communication> getDefaultEmailCommunication() {
+        return Optional.ofNullable(defaultEmailCommunication);
     }
 
     public void setDefaultEmailCommunication(Communication defaultEmailCommunication) {
@@ -769,7 +769,7 @@ public class Customer extends BaseEntity implements Serializable, EagerAble, Con
                 preferedContact().map(Contact::getLastName).orElse(""),
                 preferedCompany().map(Company::getName).orElse(null),
                 toName(),
-                Optional.ofNullable(getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null),
+                getDefaultEmailCommunication().map(Communication::getIdentifier).orElse(null),
                 preferedCompany().map(Company::getLedger).orElse(0));
     }
 

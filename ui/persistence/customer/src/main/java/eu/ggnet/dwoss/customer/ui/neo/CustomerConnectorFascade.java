@@ -16,8 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
@@ -41,16 +40,31 @@ import eu.ggnet.saft.core.ui.UiParent;
 public class CustomerConnectorFascade {
 
     /**
+     * Sets the supplied communication as reseller list communication on the customer identified by id.
+     *
+     * @param customerId the customer to update
+     * @param comm       the communication to set, empty means a clear.
+     * @return the updated customer.
+     */
+    public static Customer updateResellerListEmailCommunicaiton(long customerId, Optional<Communication> comm) {
+        Objects.requireNonNull(comm, "Communication must not be null");
+        CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
+        if ( !comm.isPresent() ) return agent.clearResellerListEmailCommunication(customerId);
+        return agent.setResellerListEmailCommunication(customerId, comm.get().getId());
+    }
+
+    /**
      * Sets the supplied communication on the customer as default, may be null.
      *
      * @param customerId the customerid
      * @param comm       the communication to be set or null to reset.
      * @return the new customer.
      */
-    public static Customer updateDefaultEmailCommunicaiton(long customerId, Communication comm) {
+    public static Customer updateDefaultEmailCommunicaiton(long customerId, Optional<Communication> comm) {
+        Objects.requireNonNull(comm, "Communication must not be null");
         CustomerAgent agent = Dl.remote().lookup(CustomerAgent.class);
-        if ( comm == null ) return agent.clearDefaultEmailCommunication(customerId);
-        return agent.setDefaultEmailCommunication(customerId, comm.getId());
+        if ( !comm.isPresent() ) return agent.clearDefaultEmailCommunication(customerId);
+        return agent.setDefaultEmailCommunication(customerId, comm.get().getId());
     }
 
     public static Customer updateAddressLabels(Collection<AddressLabelDto> dtos) {
@@ -206,7 +220,7 @@ public class CustomerConnectorFascade {
      * @param change if present will be called with ture on success.
      */
     public static void edit(Customer c, UiParent p, Runnable change) {
-        Objects.requireNonNull(c,"customer must not be null");
+        Objects.requireNonNull(c, "customer must not be null");
         if ( change == null ) change = () -> {
             };
         if ( c.isSimple() ) {

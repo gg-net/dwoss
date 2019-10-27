@@ -132,9 +132,17 @@ public class CustomerEnhanceController implements Initializable, FxController, C
     private boolean isCanceled = true;
 
     @FXML
+    void clickresellerListEmailButton(ActionEvent event) {
+        Ui.build(commentTextArea).fx().eval(() -> new Selection(customer.getAllCommunications(EMAIL), customer.getResellerListEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
+                .thenApply(selection -> CustomerConnectorFascade.updateResellerListEmailCommunicaiton(customer.getId(), selection))
+                .thenAcceptAsync(c -> accept(c), Platform::runLater)
+                .handle(Ui.handler());
+    }
+
+    @FXML
     private void clickDefaultEmailButton(ActionEvent event) {
         Ui.build(commentTextArea).fx().eval(() -> new Selection(customer.getAllCommunications(EMAIL), customer.getDefaultEmailCommunication()), () -> new SelectDefaultEmailCommunicationView()).cf()
-                .thenApply(s -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), s.defaultEmailCommunication))
+                .thenApply(selection -> CustomerConnectorFascade.updateDefaultEmailCommunicaiton(customer.getId(), selection))
                 .thenAcceptAsync(c -> accept(c), Platform::runLater)
                 .handle(Ui.handler());
     }
@@ -287,7 +295,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
             deletedditionalCustomerIdButton.setDisable(newValue.intValue() < 0);
         });
 
-        //prepare key accounter combobox        
+        //prepare key accounter combobox
         keyAccounterChoice.setItems(FXCollections.observableArrayList(Dl.local().lookup(Guardian.class).getAllUsernames()));
         keyAccounterChoice.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if ( !newValue ) this.customer.setKeyAccounter(keyAccounterChoice.getValue());
@@ -362,7 +370,7 @@ public class CustomerEnhanceController implements Initializable, FxController, C
      */
     @Override
     public void accept(Customer customer) {
-        Objects.requireNonNull(customer,"customer must not be null");
+        Objects.requireNonNull(customer, "customer must not be null");
         if ( !customer.isValid() ) {
             Ui.build(flagPane).alert().message("Invalider Kundeneintrag: \n" + customer.getViolationMessage() + "\nohne Korrektur ist kein Speichern möglich.").show(eu.ggnet.saft.core.ui.AlertType.WARNING);
         }

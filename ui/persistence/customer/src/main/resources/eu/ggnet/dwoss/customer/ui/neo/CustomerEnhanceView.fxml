@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="752.0" prefWidth="592.0" stylesheets="@CustomerEnhanceView.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
+<BorderPane minHeight="550.0" minWidth="450.0" prefHeight="752.0" prefWidth="592.0" stylesheets="@CustomerEnhanceView.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController">
     <center>
         <VBox prefHeight="898.0" prefWidth="740.0" spacing="3.0" BorderPane.alignment="CENTER">
             <children>
@@ -53,14 +53,17 @@
                               <Label fx:id="customerNameLabel" maxWidth="1.7976931348623157E308" styleClass="valueLabel" text="firmennname" HBox.hgrow="ALWAYS" />
                           </children>
                       </HBox>
-                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <HBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
                      <children>
-                              <Label prefWidth="125.0" styleClass="identifierLabel" text="Ansprechpartner:" />
-                        <ComboBox fx:id="keyAccounterChoice" editable="true" prefHeight="25.0" prefWidth="175.0" promptText="Ansprechpartner wählen..." />
+                              <Label styleClass="identifierLabel" text="Ansprechpartner:" />
+                        <ComboBox fx:id="keyAccounterChoice" editable="true" maxWidth="1.7976931348623157E308" promptText="Ansprechpartner wählen..." HBox.hgrow="ALWAYS" />
                      </children>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
                   </HBox>
                         <Label fx:id="contactOrCompanyLabel" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="75.0" styleClass="identifierLabel" text="Kontakte:" GridPane.rowIndex="2" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <HBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
                                   <Label styleClass="identifierLabel" text="Datensatzquelle:" />
                                   <ChoiceBox fx:id="sourceChoiceBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
@@ -84,8 +87,9 @@
                         <VBox maxWidth="1.7976931348623157E308" spacing="5.0" HBox.hgrow="ALWAYS">
                             <children>
                                 <Button fx:id="mandatorMetaDataButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickMandatorMetaDataButton" text="Mandantenspezifische Kundendaten ( Versand, Zahlungskonditionen, Verkaufskanäle... ) auswählen" wrapText="true" />
-                              <Button mnemonicParsing="false" onAction="#clickSelectPreferedAddressLabelsButton" text="Rechnungs- und Lieferadresse auswählen" wrapText="true" />
-                        <Button mnemonicParsing="false" onAction="#clickDefaultEmailButton" text="Benachrichtigungsemail auswählen" />
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickSelectPreferedAddressLabelsButton" text="Rechnungs- und Lieferadresse auswählen" wrapText="true" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickDefaultEmailButton" text="Benachrichtigungsemail auswählen" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clickresellerListEmailButton" text="eMail für Händlerliste auswählen" VBox.vgrow="ALWAYS" />
                         <Label styleClass="identifierLabel" text="Zusätzliche Kundennummern" />
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" VBox.vgrow="ALWAYS">
                            <children>

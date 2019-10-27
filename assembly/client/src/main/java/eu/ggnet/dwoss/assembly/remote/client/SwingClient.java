@@ -16,16 +16,6 @@
  */
 package eu.ggnet.dwoss.assembly.remote.client;
 
-import eu.ggnet.saft.core.Dl;
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.experimental.auth.UserChangeListener;
-import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.experimental.ops.ActionFactory;
-import eu.ggnet.saft.experimental.Ops;
-import eu.ggnet.dwoss.common.ui.ToolbarComponent;
-import eu.ggnet.dwoss.common.ui.MainComponent;
-import eu.ggnet.dwoss.login.AutoLoginLogout;
-
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -42,9 +32,17 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.experimental.auth.Accessable;
-import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
+import eu.ggnet.dwoss.common.ui.MainComponent;
+import eu.ggnet.dwoss.common.ui.ToolbarComponent;
+import eu.ggnet.dwoss.login.AutoLoginLogout;
+import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.core.ui.UserPreferences;
+import eu.ggnet.saft.core.ui.UserPreferencesJdk;
+import eu.ggnet.saft.experimental.Ops;
+import eu.ggnet.saft.experimental.auth.*;
+import eu.ggnet.saft.experimental.ops.ActionFactory;
+import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
 
 public class SwingClient {
 
@@ -131,6 +129,8 @@ public class SwingClient {
     }
 
     public void init() {
+        // INFO: Workaround, this would be done on the UiCore.continue.... but we are useing it befor.
+        Dl.local().add(UserPreferences.class, new UserPreferencesJdk());
         try {
             UIManager.setLookAndFeel(Dl.local().lookup(UserPreferences.class).loadLaf());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {

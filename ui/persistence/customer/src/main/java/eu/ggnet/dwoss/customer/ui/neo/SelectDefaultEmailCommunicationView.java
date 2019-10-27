@@ -33,28 +33,27 @@ import eu.ggnet.saft.core.ui.ResultProducer;
  *
  * @author oliver.guenther
  */
-public class SelectDefaultEmailCommunicationView extends BorderPane implements Consumer<Selection>, ResultProducer<Selection> {
+public class SelectDefaultEmailCommunicationView extends BorderPane implements Consumer<Selection>, ResultProducer<Optional<Communication>> {
 
     /**
-     * Used for result an accept.
+     * Used for input of accept.
+     * Ui needs all communications and the selected one. An empty optional means no selection.
      */
     public static class Selection {
 
-        public Selection(List<Communication> allEmailCommunications, Communication defaultEmailCommunication) {
-            this.allEmailCommunications = allEmailCommunications;
-            this.defaultEmailCommunication = defaultEmailCommunication;
+        public Selection(List<Communication> allEmailCommunications, Optional<Communication> defaultEmailCommunication) {
+            this.allEmailCommunications = Objects.requireNonNull(allEmailCommunications, "allEmailCommunications must not be null");
+            this.defaultEmailCommunication = Objects.requireNonNull(defaultEmailCommunication, "defaultEmailCommunication must not be null");
         }
 
-        public Selection(Communication defaultEmailCommunication) {
-            this.allEmailCommunications = Collections.emptyList();
-            this.defaultEmailCommunication = defaultEmailCommunication;
+        public static Selection empty() {
+            return new Selection(new ArrayList<>(), Optional.empty());
         }
 
         private final List<Communication> allEmailCommunications;
 
-        public final Communication defaultEmailCommunication;
-        
-        
+        public final Optional<Communication> defaultEmailCommunication;
+
     }
 
     private VBox radioButtons;
@@ -65,7 +64,7 @@ public class SelectDefaultEmailCommunicationView extends BorderPane implements C
 
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public SelectDefaultEmailCommunicationView() {
-        accept(new Selection(null));
+        accept(Selection.empty());
         Button okButton = new Button("Speichern");
         okButton.setOnAction(e -> {
             ok = true;
@@ -107,8 +106,8 @@ public class SelectDefaultEmailCommunicationView extends BorderPane implements C
     }
 
     @Override
-    public Selection getResult() {
-        if ( ok ) return new Selection((Communication)toggleGroup.getSelectedToggle().getUserData());
+    public Optional<Communication> getResult() {
+        if ( ok ) return Optional.ofNullable((Communication)toggleGroup.getSelectedToggle().getUserData());
         return null;
     }
 

@@ -126,6 +126,6 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public String defaultEmailCommunication(long customerId) {
-        return Optional.ofNullable(customerEao.findById(customerId).getDefaultEmailCommunication()).map(Communication::getIdentifier).orElse(null);
+        return customerEao.findById(customerId).getDefaultEmailCommunication().map(Communication::getIdentifier).orElse(null);
     }
 }

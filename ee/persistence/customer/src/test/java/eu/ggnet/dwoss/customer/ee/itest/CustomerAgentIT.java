@@ -147,7 +147,7 @@ public class CustomerAgentIT extends ArquillianProjectArchive {
 
         assertThat(agent.count(Customer.class)).as("There should only be two customers in the db").isEqualTo(2);
 
-        agent.findAllEager(Customer.class).forEach(c -> assertThat(c.getDefaultEmailCommunication()).as("A default email should be set, but isn't : " + c).isNotNull());
+        agent.findAllEager(Customer.class).forEach(c -> assertThat(c.getDefaultEmailCommunication()).as("A default email should be set, but isn't : " + c).isNotEmpty());
     }
 
 }

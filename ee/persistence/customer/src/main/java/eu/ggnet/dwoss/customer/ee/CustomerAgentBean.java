@@ -479,19 +479,22 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
                         em.remove(comm);
                     });
         } else {
-            Optional<Communication> optComm = communications.stream()
-                    .filter(co -> co.getType() == type)
-                    .findFirst();
-            optComm.ifPresent(email -> {
-                email.setIdentifier(identifier);
-            });
-            if ( !optComm.isPresent() ) {
-                Communication comm = new Communication();
-                communications.add(comm);
-                comm.setType(type);
-                comm.setIdentifier(identifier);
-                if ( comm.getType() == EMAIL ) customer.setDefaultEmailCommunication(comm);
-                if ( comm.getType() == EMAIL && useEmailAsResellerMailingList ) customer.setResellerListEmailCommunication(comm);
+            Communication comm = communications.stream()
+                    .filter(c -> c.getType() == type)
+                    .findFirst()
+                    .orElseGet(() -> {
+                        Communication c = new Communication();
+                        communications.add(c);
+                        c.setType(type);
+                        c.setIdentifier(identifier);
+                        return c;
+                    });
+
+            comm.setIdentifier(identifier);
+            if ( comm.getType() == EMAIL ) {
+                customer.setDefaultEmailCommunication(comm);
+                if ( useEmailAsResellerMailingList ) customer.setResellerListEmailCommunication(comm);
+                else customer.setResellerListEmailCommunication(null);
             }
         }
     }

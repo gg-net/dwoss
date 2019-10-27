@@ -44,14 +44,13 @@ public class CustomerHtmlTryout extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CustomerGenerator gen = new CustomerGenerator();
 
-        Customer c1 = gen.makeCustomer();
-        Customer c2 = gen.makeSimpleConsumerCustomer();
-        Customer c3 = gen.makeSimpleBussinesCustomer();
+        Customer c1 = CustomerGenerator.makeCustomer();
+        Customer c2 = CustomerGenerator.makeSimpleConsumerCustomer();
+        Customer c3 = CustomerGenerator.makeSimpleBussinesCustomer();
 
         //make wthout invoice adress
-        Customer c4 = gen.makeSimpleConsumerCustomer();
+        Customer c4 = CustomerGenerator.makeSimpleConsumerCustomer();
         c4.getAddressLabels().clear();
 
         DefaultCustomerSalesdata defaults = new DefaultCustomerSalesdata.Builder()

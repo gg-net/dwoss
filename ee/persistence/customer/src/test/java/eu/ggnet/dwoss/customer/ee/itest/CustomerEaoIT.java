@@ -100,9 +100,9 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
 
         utx.commit();
 
-        assertThat(c0.getDefaultEmailCommunication()).as("default email communication should not be null on generator").isNotNull();
+        assertThat(c0.getDefaultEmailCommunication()).as("default email communication should not be null on generator").isNotEmpty();
 
-        Customer c1 = eao.findByDefaultEmailCommunication(c0.getDefaultEmailCommunication());
+        Customer c1 = eao.findByDefaultEmailCommunication(c0.getDefaultEmailCommunication().get());
 
         assertThat(c1).isEqualTo(c0);
     }
