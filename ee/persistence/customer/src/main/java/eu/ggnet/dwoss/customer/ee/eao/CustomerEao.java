@@ -193,6 +193,15 @@ public class CustomerEao extends AbstractEao<Customer> {
     }
 
     /**
+     * Returns all Customers with resellerListEmail set.
+     *
+     * @return all Customers with resellerListEmail set.
+     */
+    public List<Customer> findAllWithResellerListEmailCommunication() {
+        return new JPAQuery<Customer>(em).from(customer).where(customer.resellerListEmailCommunication.isNotNull()).fetch();
+    }
+
+    /**
      * This Method search for a Customer by his Id or, Company or Firstname or Lastname.
      * First it searchs for the CustomerId via sql. Second an index search using the fields company, firsname, lastname is executed.
      * The combiened result is returned.
