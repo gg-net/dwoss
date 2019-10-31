@@ -23,10 +23,9 @@ import java.util.stream.Collectors;
 import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 
-
 /**
  * Contains SystemCustomers which are used for the receipt operations based on the Contractor.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 public class ReceiptCustomers implements Serializable {
@@ -46,8 +45,17 @@ public class ReceiptCustomers implements Serializable {
             // TODO: if lazy, implement some cache.
             return new Key(contractor, operation);
         }
-        
-        //<editor-fold defaultstate="collapsed" desc="equals and hashcode of contractor,operation">        
+
+        // Getter used in the web
+        public TradeName getContractor() {
+            return contractor;
+        }
+
+        public ReceiptOperation getOperation() {
+            return operation;
+        }
+
+        //<editor-fold defaultstate="collapsed" desc="equals and hashcode of contractor,operation">
         @Override
         public int hashCode() {
             int hash = 7;
@@ -55,7 +63,7 @@ public class ReceiptCustomers implements Serializable {
             hash = 43 * hash + Objects.hashCode(this.operation);
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if ( this == obj ) return true;
@@ -72,7 +80,7 @@ public class ReceiptCustomers implements Serializable {
         public String toString() {
             return "Key{" + "contractor=" + contractor + ", operation=" + operation + '}';
         }
-      
+
     }
 
     public static class Builder {
@@ -106,8 +114,8 @@ public class ReceiptCustomers implements Serializable {
 
     public Map<Key, Long> getReceiptCustomers() {
         return Collections.unmodifiableMap(receiptCustomers);
-    }    
-    
+    }
+
     /**
      * Returns the customer id for the contractor and the operation
      * <p>

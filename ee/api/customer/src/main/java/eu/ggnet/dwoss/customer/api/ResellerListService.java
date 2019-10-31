@@ -18,10 +18,13 @@ package eu.ggnet.dwoss.customer.api;
 
 import java.util.List;
 
+import javax.ejb.Remote;
+
 /**
  *
  * @author oliver.guenther
  */
+@Remote
 public interface ResellerListService {
 
     /**

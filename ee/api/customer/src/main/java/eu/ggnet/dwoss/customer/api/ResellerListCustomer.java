@@ -16,6 +16,8 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
+import java.io.Serializable;
+
 import org.inferred.freebuilder.FreeBuilder;
 
 /**
@@ -24,7 +26,7 @@ import org.inferred.freebuilder.FreeBuilder;
  * @author oliver.guenther
  */
 @FreeBuilder
-public interface ResellerListCustomer {
+public interface ResellerListCustomer extends Serializable {
 
     long id();
 

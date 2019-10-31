@@ -40,7 +40,8 @@ public class CustomerActionFactory implements ActionFactory {
                 new MetaAction(MENU_NAME, "Datenbank", new RecreateSearchIndex()),
                 new MetaAction("Geschäftsführung", new ExportAllCustomers()),
                 new MetaAction("Kunden und Aufträge", new CustomerSearchAction()),
-                new MetaAction("Kunden und Aufträge", new AddCustomerAction())
+                new MetaAction("Kunden und Aufträge", new AddCustomerAction()),
+                new MetaAction("Kunden und Aufträge", new ShowResellerMailCustomers())
         );
     }
 
