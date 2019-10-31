@@ -161,7 +161,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
     public void setMandator(Mandator mandator) {
         this.mandator = mandator;
     }
-    
+
     /**
      * This method send document to the e-Mail address that is in the customer set.
      * <p/>

@@ -187,13 +187,25 @@ public class CustomerGenerator {
             c = R.nextDouble() > 0.3 ? internalMakeConsumerCustomer(assure)
                     : (R.nextBoolean() ? internalMakeSimpleConsumerCustomer(assure) : internalMakeSimpleBussinesCustomer(assure));
         }
+        // Customer will have at least one email.
+        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) c.setResellerListEmailCommunication(c.getAllCommunications(EMAIL).get(0));
+        // Valid simple customer has that by default.
+        if ( assure.defaultEmailCommunication() || R.nextDouble() >= 0.7 ) c.setDefaultEmailCommunication(c.getAllCommunications(EMAIL).get(0));
+
         assure.mandatorMetadataMatchCodes().forEach((mc) -> {
             c.getMandatorMetadata().add(makeMandatorMetadata(mc));
         });
         c.getFlags().remove(CustomerFlag.SYSTEM_CUSTOMER); // Never generate a Systemcustomer here.
+        if ( !c.isValid() ) throw new RuntimeException("Generated Customer is invalid, should never happen: " + c.getViolationMessage());
         return c;
     }
 
+    /**
+     * Allways creates an email.
+     *
+     * @param assure
+     * @return
+     */
     private static Customer internalMakeConsumerCustomer(Assure assure) {
         Customer customer = new Customer();
         int r = R.nextInt(5) + 1;
@@ -214,14 +226,16 @@ public class CustomerGenerator {
         }
         customer.setComment("Das ist ein Kommentar zum Kunden");
 
-        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) {
-
-        }
-
         if ( !customer.isValid() ) throw new RuntimeException("Generated a invalid customer, repair generator: " + customer.getViolationMessage());
         return customer;
     }
 
+    /**
+     * Allways creates an email.
+     *
+     * @param assure
+     * @return
+     */
     private static Customer internalMakeSimpleConsumerCustomer(Assure assure) {
         Customer customer = new Customer();
 
@@ -229,7 +243,6 @@ public class CustomerGenerator {
         Communication email = makeCommunication(new Communication(), Type.EMAIL, assure.emailDomain());
         con.getCommunications().add(email);
         customer.setDefaultEmailCommunication(email);
-        if ( assure.useResellerListEmailCommunication() || R.nextDouble() >= 0.7 ) customer.setResellerListEmailCommunication(email);
         customer.getContacts().add(con);
 
         customer.getAddressLabels().add(new AddressLabel(customer.getContacts().get(0), customer.getContacts().get(0).getAddresses().get(0), AddressType.INVOICE));
@@ -242,6 +255,12 @@ public class CustomerGenerator {
         return customer;
     }
 
+    /**
+     * Allways creates an email.
+     *
+     * @param assure
+     * @return
+     */
     private static Customer internalMakeSimpleBussinesCustomer(Assure assure) {
         Customer customer = new Customer();
 

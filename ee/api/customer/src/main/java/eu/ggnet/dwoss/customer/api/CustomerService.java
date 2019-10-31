@@ -122,4 +122,5 @@ public interface CustomerService {
      * @return all Customer Ids, which have the Flag SystemCustomer.
      */
     List<Long> allSystemCustomerIds();
+
 }

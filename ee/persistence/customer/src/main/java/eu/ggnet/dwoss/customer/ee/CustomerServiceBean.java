@@ -98,12 +98,7 @@ public class CustomerServiceBean implements CustomerService {
 
     @Override
     public List<CustomerMetaData> allAsCustomerMetaData() {
-        List<CustomerMetaData> customers = new ArrayList<>();
-        for (Customer customer : customerEao.findAll()) {
-            customers.add(asCustomerMetaData(customer));
-        }
-
-        return customers;
+        return customerEao.findAll().stream().map((customer) -> asCustomerMetaData(customer)).collect(Collectors.toList());
     }
 
     private CustomerMetaData asCustomerMetaData(Customer customer) {
@@ -128,4 +123,5 @@ public class CustomerServiceBean implements CustomerService {
     public String defaultEmailCommunication(long customerId) {
         return customerEao.findById(customerId).getDefaultEmailCommunication().map(Communication::getIdentifier).orElse(null);
     }
+
 }

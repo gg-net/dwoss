@@ -21,31 +21,31 @@ import java.io.Serializable;
 /**
  * A concise representation of a customer.
  * Every field can be null.
- * 
+ * <p>
  * <p>
  * @author pascal.perau
  */
 // TODO: As every field of this class can be null, keep it like this.
 public class UiCustomer implements Serializable {
 
-    public long id;
+    public final long id;
 
-    public String title;
+    public final String title;
 
-    public String firstName;
+    public final String firstName;
 
-    public String lastName;
+    public final String lastName;
 
-    public String company;
+    public final String company;
 
-    public String simpleHtml;
+    public final String simpleHtml;
 
-    public String email;
+    public final String email;
 
     /**
      * Ledger of the FiBu, if 0 not used.
      */
-    private int ledger;
+    public int ledger;
 
     public UiCustomer(long id, String title, String firstName, String lastName, String company, String simpleHtml, String email, int ledger) {
         this.id = id;
@@ -60,7 +60,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -71,7 +71,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -82,7 +82,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -93,7 +93,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -104,7 +104,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -115,7 +115,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -126,7 +126,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -137,7 +137,7 @@ public class UiCustomer implements Serializable {
 
     /**
      * Returns id.
-     * 
+     *
      * @return
      * @deprecated use public field
      */
@@ -145,7 +145,7 @@ public class UiCustomer implements Serializable {
     public int getLedger() {
         return ledger;
     }
-    
+
     public String toNameCompanyLine() {
         StringBuilder sb = new StringBuilder();
         if ( company != null ) sb.append(company).append(" - ");

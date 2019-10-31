@@ -1,8 +1,8 @@
 package eu.ggnet.dwoss.customer.ee.itest;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
@@ -12,10 +12,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
-import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
+import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
+import eu.ggnet.dwoss.customer.ee.entity.Communication;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
@@ -44,6 +46,9 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
     @Inject
     private CustomerGeneratorOperation cgo;
 
+    @EJB
+    private CustomerAgent agent;
+
     @Before
     public void teardown() throws Exception {
         utx.begin();
@@ -53,7 +58,7 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testPersistence() throws Exception {
+    public void testPersistence() {
 
         cgo.makeCustomer();
         assertThat(eao.findAllSystemCustomerIds().isEmpty()).as("There should not be any system customer").isTrue();
@@ -63,16 +68,10 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void findAndCount() throws Exception {
+    public void findAndCount() {
 
-        utx.begin();
-        em.joinTransaction();
-
-        Customer customer = CustomerGenerator.makeSimpleConsumerCustomer();
-        String firstName = customer.getContacts().get(0).getFirstName();
-        em.persist(customer);
-
-        utx.commit();
+        long cid = cgo.makeCustomer(new Assure.Builder().simple(true).consumer(true).build());
+        String firstName = agent.findByIdEager(Customer.class, cid).getContacts().get(0).getFirstName();
 
         Set<SearchField> customerFields = new HashSet<>();
         customerFields.add(SearchField.FIRSTNAME);
@@ -86,24 +85,31 @@ public class CustomerEaoIT extends ArquillianProjectArchive {
     }
 
     @Test
-    public void testFindByDefaultEmailCommunication() throws Exception {
-        utx.begin();
-        em.joinTransaction();
+    public void testFindByDefaultEmailCommunication() {
+        cgo.makeCustomers(4); // Fill the Database
+        long cid = cgo.makeCustomer(new Assure.Builder().simple(true).consumer(true).defaultEmailCommunication(true).build());
+        cgo.makeCustomers(4); // Fill the Database more
 
-        Customer c0 = CustomerGenerator.makeSimpleConsumerCustomer();
-        em.persist(c0);
+        Communication email = agent.findByIdEager(Customer.class, cid).getDefaultEmailCommunication().get(); // never not set.
 
-        // Make 3 extra
-        em.persist(CustomerGenerator.makeSimpleConsumerCustomer());
-        em.persist(CustomerGenerator.makeSimpleConsumerCustomer());
-        em.persist(CustomerGenerator.makeSimpleBussinesCustomer());
+        Customer c1 = eao.findByDefaultEmailCommunication(email);
 
-        utx.commit();
+        assertThat(c1.getId()).as("Customer ids should be equal").isEqualTo(cid);
+    }
 
-        assertThat(c0.getDefaultEmailCommunication()).as("default email communication should not be null on generator").isNotEmpty();
+    @Test
+    public void findAllResellerListCommunication() {
+        cgo.makeCustomers(20); // Fill the Database
+        cgo.makeCustomers(5, new Assure.Builder().simple(true).consumer(true).useResellerListEmailCommunication(true).build());
 
-        Customer c1 = eao.findByDefaultEmailCommunication(c0.getDefaultEmailCommunication().get());
+        long countedResellerListCustomers = agent
+                .findAll(Customer.class)
+                .stream()
+                .filter(c -> c.getResellerListEmailCommunication().isPresent())
+                .count();
 
-        assertThat(c1).isEqualTo(c0);
+        long countedViaEao = eao.findAllWithResellerListEmailCommunication().size();
+
+        assertThat(countedResellerListCustomers).isEqualTo(countedViaEao);
     }
 }

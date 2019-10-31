@@ -34,6 +34,7 @@ public interface Assure {
             business(false);
             consumer(false);
             useResellerListEmailCommunication(false);
+            defaultEmailCommunication(false);
             emailDomain("example.local");
         }
 
@@ -76,6 +77,15 @@ public interface Assure {
      * @return useResellerListEmailCommunication
      */
     boolean useResellerListEmailCommunication();
+
+    /**
+     * Indicates,that all customers generated have at least one communication email and it is set as default email communication,
+     * defaults to false.
+     * False does not mean, there will never be a default email communication set, but only, that there might be one.
+     *
+     * @return
+     */
+    boolean defaultEmailCommunication();
 
     /**
      * All generated emails will be of the supplied string as domain, defaults to example.local.
