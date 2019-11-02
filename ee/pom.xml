@@ -66,6 +66,7 @@
     </dependencies>
 
     <modules>
+        <module>mail</module>
         <module>api</module>
         <module>web</module>
         <module>core</module>

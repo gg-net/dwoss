@@ -20,6 +20,7 @@
         <module>redtape</module>
         <module>customer</module>
         <module>mandator</module>
+        <module>misc</module>
     </modules>
 
 </project>

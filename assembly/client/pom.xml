@@ -334,7 +334,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-extended-misc</artifactId>
+            <artifactId>dwoss-misc-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

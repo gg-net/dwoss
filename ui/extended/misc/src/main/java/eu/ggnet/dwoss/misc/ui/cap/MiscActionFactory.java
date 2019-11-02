@@ -48,13 +48,13 @@ public class MiscActionFactory implements ActionFactory {
 
         String s = "Listings";
         actions.add(new MetaAction(s, new AllSalesListingAction()));
+        actions.add(new MetaAction(s, null));  // Separator
 
         if ( Dl.remote().contains(ListingActionService.class) ) {
             Map<ListingActionConfiguration.Location, List<ListingActionConfiguration>> actionConfigs = Dl.remote().lookup(ListingActionService.class).listingActionConfigurations().stream()
                     .collect(Collectors.groupingBy(conf -> conf.location));
             if ( actionConfigs != null && !actionConfigs.isEmpty() ) {
                 for (List<ListingActionConfiguration> listingActionConfigurations : actionConfigs.values()) {
-                    actions.add(new MetaAction(s, null));
                     for (ListingActionConfiguration listingActionConfiguration : listingActionConfigurations) {
                         actions.add(new MetaAction(s, new SalesListingCreateAction(listingActionConfiguration)));
                     }

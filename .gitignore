@@ -100,3 +100,9 @@ hs_err_pid*
 /incubator/saft/test-javafx/target/
 /incubator/saft/test-swing/target/
 /ee/persistence/customer/nbproject/
+/ee/api/misc/target/
+/basic/mail-apir/target/
+/ui/mail/target/
+/ee/mail/target/
+/basic/mail-cc/target/
+/basic/mail-demand/target/

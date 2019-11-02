@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 GG-Net GmbH
+ * Copyright (C) 2019 GG-Net GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,35 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.api;
+package eu.ggnet.dwoss.mail.ee;
 
-import java.util.List;
-
-import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
+import javax.ejb.Remote;
 
 /**
- * Entwurf.
- *
+ * Mailing service for sales listings, needs an implementation of the misc-api
+ * 
  * @author oliver.guenther
  */
-public interface StockApi {
-
-    List<PicoStockUnit> findAll();
-
-    /**
-     * Returns only the picounits which have a correspondig stockunit.
-     *
-     * @param units
-     * @return
-     */
-    List<PicoUnit> filterAvailable(List<PicoUnit> units);
-
-    /**
-     * Returns true if available.
-     *
-     * @param unit the unit.
-     * @return true if available
-     */
-    boolean isAvailable(PicoUnit unit);
-
+@Remote
+public interface MailSalesListingService {
+    
+    public void generateResellerXlsAndSendToSubscribedCustomers();
+    
 }

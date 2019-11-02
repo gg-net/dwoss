@@ -8,8 +8,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dwoss-ee-extended-misc</artifactId>
-    <name>DwOss • EE • Extended • Misc</name>
+    <artifactId>dwoss-misc-ee</artifactId>
+    <name>DwOss • Misc • EE (hb)</name>
+    <description>Misc Components, which are to small to give them there one porject. Architecture status: hard bound.</description>
     <packaging>ejb</packaging>
 
     <dependencies>
@@ -80,6 +81,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-api-customer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-misc-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

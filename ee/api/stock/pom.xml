@@ -11,12 +11,6 @@
     <artifactId>dwoss-ee-api-stock</artifactId>
     <packaging>ejb</packaging>
     <name>DwOss • EE • Api • Stock</name>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-uniqueunit</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+
 </project>
 

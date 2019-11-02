@@ -3,46 +3,23 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ui-extended</artifactId>
+        <artifactId>dwoss-ui</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources/</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-misc-ui</artifactId>
-    <name>DwOss • Misc • Ui</name>
+    <artifactId>dwoss-mail-ui</artifactId>
+    <name>DwOss • Mail • Ui</name>
 
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-search</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-misc</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.toedter</groupId>
-            <artifactId>jcalendar</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jdesktop</groupId>
-            <artifactId>beansbinding</artifactId>
         </dependency>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
@@ -52,6 +29,16 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-uniqueunit</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-mail-ee</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -25,7 +25,6 @@ import java.util.Properties;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.spec.api.SpecApi;
-import eu.ggnet.dwoss.stock.api.StockApi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
@@ -58,7 +57,6 @@ public class AboutDialog extends JDialog {
                     + "Version: app.version" + "\n"
                     + "System: project.version" + "\n\n"
                     + "Aktive Api Module: \n"
-                    + " - Stock: " + Dl.remote().optional(StockApi.class).map(s -> "Aktiv").orElse("Nicht vorhanden") + "\n"
                     + " - Spec: " + Dl.remote().optional(SpecApi.class).map(s -> "Aktiv").orElse("Nicht vorhanden");
 
             for (Object key : prop.keySet()) {

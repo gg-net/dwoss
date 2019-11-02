@@ -21,7 +21,8 @@ import java.util.List;
 import javax.ejb.Remote;
 
 /**
- *
+ * Service implementation for the Reseller List.
+ * 
  * @author oliver.guenther
  */
 @Remote

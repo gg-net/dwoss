@@ -884,6 +884,7 @@
 
     <modules>
         <module>assembly</module>
+        <module>basic</module>
         <module>ee</module>
         <module>incubator</module>
         <module>lib</module>

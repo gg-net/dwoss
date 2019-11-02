@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -40,10 +41,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
 import eu.ggnet.dwoss.mandator.api.service.*;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
+import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
@@ -64,11 +67,11 @@ import static eu.ggnet.lucidcalc.CFormat.VerticalAlignment.TOP;
 
 /**
  * Operation for all Saleslistings.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Stateless
-public class SalesListingProducerOperation implements SalesListingProducer {
+public class SalesListingProducerOperation implements SalesListingProducer, SalesListingService {
 
     public static class UniqueUnitComparator implements Comparator<UniqueUnit> {
 
@@ -114,6 +117,9 @@ public class SalesListingProducerOperation implements SalesListingProducer {
 
     @Inject
     private Instance<ListingConfigurationService> listingService;
+
+    @EJB // Is here ok, otherwise we would need a local service. And bevor doing that, we would cleanup misc.
+    private ResellerListService rls;
 
     @Override
     public FileJacket generateAllSalesListing() {
@@ -278,6 +284,16 @@ public class SalesListingProducerOperation implements SalesListingProducer {
         return Collections.emptyList();
     }
 
+    @Override
+    public List<FileJacket> generatePdfs(SalesChannel channel) {
+        return generatePdfListings(channel).values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FileJacket> generateXlses(SalesChannel channel) {
+        return generateXlsListings(channel).values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
     /**
      * Generates XLS files for units in a specific sales channel.
      * The lists are seperated by brand.
@@ -365,7 +381,7 @@ public class SalesListingProducerOperation implements SalesListingProducer {
      * @param channel the saleschannel
      * @return PDF files for units in a specific sales channel.
      */
-    private Map<TradeName, Collection<FileJacket>> generatePdfListings(SalesChannel channel) throws UserInfoException {
+    private Map<TradeName, Collection<FileJacket>> generatePdfListings(SalesChannel channel) {
         SubMonitor m = monitorFactory.newSubMonitor("Endkundenlisten erstellen", 10);
         m.message("lade Gerätedaten");
         m.start();

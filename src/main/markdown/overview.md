@@ -11,6 +11,93 @@ The software is a classic client server application. The server part is based on
 the Java EE 7 Specs and uses multiple data sources. The client is a fat Swing and
 JavaFx Client. The connection is made through remote ejb invocations.
 
+Project root package: "eu.ggnet.dwoss"
+Project: dwoss
+
+Architecture
+------------
+- Must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time.
+- Everything, that is not testable, should be defined as guidelines, good style. But it may be violated.
+- Must make sense. splitting modules int artifacts without a technical or functional requirement is not usefull 
+    - e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. If not, expose it in the public api.
+
+### Module
+[Wikipedia Modul|https://de.wikipedia.org/wiki/Modul_(Software)]
+
+#### Components
+
+A module can consist of the following layered components. The layered order describes the allowed usage. Only for the top to the bottom, may
+dependencies exist.
+- root package: "project-root"."module"."component"
+- maven artifactid: "project"-"module"-"component"
+
+A module comes in two forms of assemblys:
+- server: deployed on an jakarta ee server, for now only wildfly is tested.
+- client: deployed as desktop (swing and javafx) desktop client.
+
+Each assambly may dependen on the common subcomponent and has it's own components only used in that form of assembly. 
+
+1. Common components (may be used by both assemblies) 
+    1. api - public api. This is, what other modules may depend on
+        - should only contain: interfaces or serializable value objects. Interfaces may be annotated with @Remote oder @Local
+        - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
+        - must not depend on any other module, even apis. 
+    2. demand - revers form of the pulic api. Things that the module wants but not implements.
+        - should only contain: interfaces or serializable value objects.
+        - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
+        - must not depend on any other module, even apis.         
+    3. ee - enterprise engine, the working code. 
+        - should only contain: ejbs and supplementary implemented code.
+        - should be: tested heaviliy
+        - may only define: entity or other persistence like classes or code.
+        - may contain @Remote Interfaces for (Desktop) remote client usage
+        - may contain Serialzable Value objects for (Desktop) remote client usage or web client usage.
+        - must not contain: web or desktop ui code.
+        - must not depend on other modules expect public apis.
+4. Assembly server
+    1. web - web ui, primefaces.
+        - should contain: jsf and primefaces xhtml and controller code
+        - must not contain: desktop ui code.
+        - must not depend on other modules expect public apis.
+5. Assembly client
+    1. spi - Ui Service Api, allows the usage of other ui components (See the customer spi for an idea)
+        - must not depend on other modules or public apis
+        - must not expose the ee component.
+        - must only contail: Interfaces and value objects.
+    2. ui - Ui componenten
+        - should contail javafx or swing desktop client code.
+        - must not depend on other modules expect public apis and spis.
+
+#### Module dependencies
+
+There are three modes of dependence between modules.
+1. _Optional_: A module "A" depends optionally on module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml)
+   but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of 
+   the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example) 
+   It is encouraged to write an comment <!-- depends optional --> in the pom.xml.
+
+2. _Required_: A module "A" requires a module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml) and will 
+   fail at runtime if no implementation is available. (TODO: How to test this via unittesting)
+
+3. _Bound_ (do not use anymore): A module "A" binds a module "B" if it violates the rules of component dependencies such as "A" depends and 
+    uses classes defined in "B".ee. This is forbided in future implementations and is only discribed as there are still such dependencies in place.
+
+### The Core Components.
+
+The Core Components have special rules. 
+1. common - contains constants and interfaces
+    - may be requiered by apis
+2. ee - contains interceptors, beans and libraries (tba)
+    - may be bound by ee
+3. ui - contains ui components, global handlers (tba)
+    - may be bound by ui
+
+Todo: 
+- Reactor Architectur
+- DwPro Architectur
+- Sample Mandator und reale Mandators
+
+
 Architecture
 ------------
 
@@ -137,13 +224,9 @@ Things we know, but haven't written down yet.
  - Choice of multiple data sources
  - JDBC Exception on MySQL DBs but not on HSQLDBs
  - toString, xxxFormater and getName
- - Sample Client Zip with launch4j and win32 jre8
  - New Persistence Concept (one persistence.xml for every project and final server-app)
- - Fadeout of Local and Sample Client
- - Transition to tomee 7 and wildfly
  - http://stackoverflow.com/questions/40818396/unable-to-build-hibernate-sessionfactory-exception-from-nowhere
  - http://stackoverflow.com/questions/39410183/hibernate-5-2-2-no-persistence-provider-for-entitymanager
- - In Hiberante 5.2 the hibernate-entitymanager is obsolete. everything is in core
  - TransactionAttribute(Requires New) on every generator.
  - Wildfly Remote needs ApplicationRealm User https://www.schoenberg-solutions.de/roller/arndtsBlog/entry/remote-zugriff-wildfly-10-teil4
  - persistenc.xml -> <property name="hibernate.id.new_generator_mappings" value="false" /> , since 5.x hibernate uses other default key generator.

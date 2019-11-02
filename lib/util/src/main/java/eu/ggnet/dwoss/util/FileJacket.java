@@ -121,4 +121,11 @@ public class FileJacket implements Serializable {
     public String getSuffix() {
         return suffix;
     }
+
+    @Override
+    public String toString() {
+        return "FileJacket{" + ", head=" + head + ", suffix=" + suffix +  "content.length=" + content.length + '}';
+    }
+    
+    
 }
