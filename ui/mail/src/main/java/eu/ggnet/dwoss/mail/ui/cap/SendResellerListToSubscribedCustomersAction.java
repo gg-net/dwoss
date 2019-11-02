@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.mail.ui.cap;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 
 import eu.ggnet.dwoss.mail.ee.MailSalesListingService;
 import eu.ggnet.saft.core.Dl;
@@ -32,10 +33,14 @@ public class SendResellerListToSubscribedCustomersAction extends AbstractAction 
 
     public SendResellerListToSubscribedCustomersAction() {
         super("Händlerliste versenden (neu)");
+        if ( !Dl.remote().optional(MailSalesListingService.class).isPresent() ) { // Just for the ELUS Case.
+            setEnabled(false);
+            putValue(Action.SHORT_DESCRIPTION, "No MailSalesListingService found, disabling action");
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Ui.exec(Ui.progress().wrap(()-> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()));
+        Ui.exec(Ui.progress().wrap(() -> Dl.remote().lookup(MailSalesListingService.class).generateResellerXlsAndSendToSubscribedCustomers()));
     }
 }

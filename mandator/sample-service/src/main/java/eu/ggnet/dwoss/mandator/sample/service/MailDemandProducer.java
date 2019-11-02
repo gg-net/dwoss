@@ -14,25 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.api;
+package eu.ggnet.dwoss.mandator.sample.service;
 
-import java.util.List;
+import javax.enterprise.inject.Produces;
 
-import javax.ejb.Local;
+import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
+import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
 
 /**
- * Service implementation for the Reseller List.
  *
  * @author oliver.guenther
  */
-@Local
-public interface ResellerListService {
+public class MailDemandProducer {
 
-    /**
-     * Returns a list of customers which are allowed to receive the reseller list.
-     *
-     * @return a list of customers which are allowed to receive the reseller list.
-     */
-    List<ResellerListCustomer> allResellerListCustomers();
+    @Produces
+    public final static ResellerListSendSubscriptionConfiguration CONFIGURATION
+            = new ResellerListSendSubscriptionConfiguration("company@example.local", "Company", "company@example.local", "Händlerliste", "Hier ist die Händlerliste");
+
+    @Produces
+    public final static SmtpConfiguration SMTP_CONFIGURATION
+            = new SmtpConfiguration("localhost", "user", "user", "UTF-8", false);
 
 }

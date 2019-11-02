@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>dwoss-misc-ee</artifactId>
-    <name>DwOss • Misc • EE (hb)</name>
+    <name>DwOss • Misc • EE</name>
     <description>Misc Components, which are to small to give them there one porject. Architecture status: hard bound.</description>
     <packaging>ejb</packaging>
 

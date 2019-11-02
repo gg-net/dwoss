@@ -22,7 +22,7 @@ Architecture
     - e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. If not, expose it in the public api.
 
 ### Module
-[Wikipedia Modul|https://de.wikipedia.org/wiki/Modul_(Software)]
+[Wikipedia: Modul](https://de.wikipedia.org/wiki/Modul_(Software))
 
 #### Components
 
@@ -37,16 +37,16 @@ A module comes in two forms of assemblys:
 
 Each assambly may dependen on the common subcomponent and has it's own components only used in that form of assembly. 
 
-1. Common components (may be used by both assemblies) 
-    1. api - public api. This is, what other modules may depend on
+1. **Common components** (may be used by both assemblies) 
+    1. **api** - public api. This is, what other modules may depend on
         - should only contain: interfaces or serializable value objects. Interfaces may be annotated with @Remote oder @Local
         - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
         - must not depend on any other module, even apis. 
-    2. demand - revers form of the pulic api. Things that the module wants but not implements.
+    2. **demand** - revers form of the pulic api. Things that the module wants but not implements.
         - should only contain: interfaces or serializable value objects.
         - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
         - must not depend on any other module, even apis.         
-    3. ee - enterprise engine, the working code. 
+    3. **ee** - enterprise engine, the working code. 
         - should only contain: ejbs and supplementary implemented code.
         - should be: tested heaviliy
         - may only define: entity or other persistence like classes or code.
@@ -54,23 +54,24 @@ Each assambly may dependen on the common subcomponent and has it's own component
         - may contain Serialzable Value objects for (Desktop) remote client usage or web client usage.
         - must not contain: web or desktop ui code.
         - must not depend on other modules expect public apis.
-4. Assembly server
-    1. web - web ui, primefaces.
+4. **Assembly server**
+    1. **web** - web ui, primefaces.
         - should contain: jsf and primefaces xhtml and controller code
         - must not contain: desktop ui code.
         - must not depend on other modules expect public apis.
-5. Assembly client
-    1. spi - Ui Service Api, allows the usage of other ui components (See the customer spi for an idea)
+5. **Assembly client**
+    1. **spi** - Ui Service Api, allows the usage of other ui components (See the customer spi for an idea)
         - must not depend on other modules or public apis
         - must not expose the ee component.
         - must only contail: Interfaces and value objects.
-    2. ui - Ui componenten
+    2. **ui** - Ui componenten
         - should contail javafx or swing desktop client code.
         - must not depend on other modules expect public apis and spis.
 
 #### Module dependencies
 
 There are three modes of dependence between modules.
+
 1. _Optional_: A module "A" depends optionally on module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml)
    but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of 
    the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example) 

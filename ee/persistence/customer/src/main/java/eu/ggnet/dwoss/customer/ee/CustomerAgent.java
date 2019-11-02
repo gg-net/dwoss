@@ -203,4 +203,11 @@ public interface CustomerAgent extends RemoteAgent {
      * @return the updated customer
      */
     public Customer setResellerListEmailCommunication(long customerId, long communicationId);
+
+    /**
+     * Returns all customers which have a resellerlistcommunication set.
+     *
+     * @return customers
+     */
+    public List<Customer> findAllResellerListCustomersEager();
 }

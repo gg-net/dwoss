@@ -26,35 +26,34 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 
-import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
+import eu.ggnet.dwoss.customer.ee.entity.Customer;
 
 /**
  *
  * @author oliver.guenther
  */
-public class ResellerListView extends BorderPane implements Consumer<List<ResellerListCustomer>> {
+public class ResellerListView extends BorderPane implements Consumer<List<Customer>> {
 
-    private final TableView<ResellerListCustomer> table;
+    private final TableView<Customer> table;
 
     public ResellerListView() {
         table = new TableView<>();
-        TableColumn<ResellerListCustomer, Number> tcKid = new TableColumn<>("Kid");
-        TableColumn<ResellerListCustomer, String> tcName = new TableColumn<>("Name");
-        TableColumn<ResellerListCustomer, String> tcMail = new TableColumn<>("Email für Händlerliste");
+        TableColumn<Customer, Number> tcKid = new TableColumn<>("Kid");
+        TableColumn<Customer, String> tcName = new TableColumn<>("Name");
+        TableColumn<Customer, String> tcMail = new TableColumn<>("Email für Händlerliste");
 
-        tcKid.setCellValueFactory((cdf) -> new ReadOnlyLongWrapper(cdf.getValue().id()).getReadOnlyProperty());
-        tcName.setCellValueFactory((cdf) -> new ReadOnlyStringWrapper(cdf.getValue().name()).getReadOnlyProperty());
-        tcMail.setCellValueFactory((cdf) -> new ReadOnlyStringWrapper(cdf.getValue().email()).getReadOnlyProperty());
+        tcKid.setCellValueFactory((cdf) -> new ReadOnlyLongWrapper(cdf.getValue().getId()).getReadOnlyProperty());
+        tcName.setCellValueFactory((cdf) -> new ReadOnlyStringWrapper(cdf.getValue().toName()).getReadOnlyProperty());
+        tcMail.setCellValueFactory((cdf) -> new ReadOnlyStringWrapper(cdf.getValue().getResellerListEmailCommunication().get().getIdentifier()).getReadOnlyProperty());
 
         table.getColumns().addAll(tcKid, tcName, tcMail);
 
         setCenter(table);
         setPrefWidth(500);
-
     }
 
     @Override
-    public void accept(List<ResellerListCustomer> in) {
+    public void accept(List<Customer> in) {
         table.setItems(FXCollections.observableArrayList(in));
     }
 

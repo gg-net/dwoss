@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.customer.api.ResellerListService;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.ResellerListView;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
@@ -43,7 +43,7 @@ public class ShowResellerMailCustomers extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        Ui.build().fx().show(() -> Dl.remote().lookup(ResellerListService.class).allResellerListCustomers(),
+        Ui.build().fx().show(() -> Dl.remote().lookup(CustomerAgent.class).findAllResellerListCustomersEager(),
                 () -> new ResellerListView());
     }
 

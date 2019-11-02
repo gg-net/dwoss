@@ -53,32 +53,28 @@ public class CustomerAgentStub implements CustomerAgent {
 
     private final Logger L = LoggerFactory.getLogger(CustomerAgentStub.class);
 
-    private final CustomerGenerator CGEN = new CustomerGenerator();
-
     private final List<Customer> CUSTOMERS;
 
-    private Customer customer;
-
-    public CustomerAgentStub(Customer customer) {
-        this.customer = customer;
-    }
+    private final Customer customer;
 
     public CustomerAgentStub() {
+        this(null);
     }
 
-    {
+    public CustomerAgentStub(Customer customer) {
         CUSTOMERS = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            Customer customer = CGEN.makeCustomer();
-            customer.getMandatorMetadata().add(CGEN.makeMandatorMetadata());
-            CUSTOMERS.add(customer);
+            Customer c = CustomerGenerator.makeCustomer();
+            c.getMandatorMetadata().add(CustomerGenerator.makeMandatorMetadata());
+            CUSTOMERS.add(c);
         }
         for (int i = 0; i < 20; i++) {
-            CUSTOMERS.add(CGEN.makeSimpleConsumerCustomer());
+            CUSTOMERS.add(CustomerGenerator.makeSimpleConsumerCustomer());
         }
         for (int i = 0; i < 20; i++) {
-            CUSTOMERS.add(CGEN.makeSimpleBussinesCustomer());
+            CUSTOMERS.add(CustomerGenerator.makeSimpleBussinesCustomer());
         }
+        this.customer = (customer == null ? CUSTOMERS.get(0) : customer);
     }
 
     @Override
@@ -129,8 +125,7 @@ public class CustomerAgentStub implements CustomerAgent {
     @Override
     public <T> T findByIdEager(Class< T> entityClass, Object id) {
         if ( entityClass.equals(Customer.class) ) {
-            if ( customer != null ) return (T)customer;
-            else return (T)CGEN.makeCustomer();
+            return (T)customer;
         }
         if ( entityClass.equals(Company.class) && customer != null ) {
             Optional<Company> company = customer.getCompanies().stream().filter(c -> Objects.equals((Long)c.getId(), (Long)id)).findFirst();
@@ -149,7 +144,7 @@ public class CustomerAgentStub implements CustomerAgent {
     public List<PicoCustomer> search(String search, Set<SearchField> customerFields) {
         List<PicoCustomer> list = new ArrayList<>();
         for (int i = 0; i < AMOUNT; i++) {
-            list.add(CGEN.makeCustomer().toPico());
+            list.add(CustomerGenerator.makeCustomer().toPico());
         }
 
         L.info("Returning {}", list);
@@ -462,6 +457,11 @@ public class CustomerAgentStub implements CustomerAgent {
 
         customer.setResellerListEmailCommunication(comm);
         return customer;
+    }
+
+    @Override
+    public List<Customer> findAllResellerListCustomersEager() {
+        return CUSTOMERS.stream().filter(c -> c.getResellerListEmailCommunication().isPresent()).collect(Collectors.toList());
     }
 
 }

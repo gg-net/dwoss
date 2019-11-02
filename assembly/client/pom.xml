@@ -12,7 +12,7 @@
     <name>DwOss • Assembly • Client</name>
 
     <!--
-        JDK 11 info https://stackoverflow.com/questions/52653836/maven-shade-javafx-runtime-components-are-missing/52654791#52654791 
+        JDK 11 info https://stackoverflow.com/questions/52653836/maven-shade-javafx-runtime-components-are-missing/52654791#52654791
         If we want a cross platform jar.
     -->
     <build>
@@ -75,7 +75,7 @@
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
-                        <configuration>               
+                        <configuration>
                             <headerType>gui</headerType>
                             <jar>target/client.jar</jar>
                             <outfile>target/dw-ggnet.exe</outfile>
@@ -111,7 +111,7 @@
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
-                        <configuration>                  
+                        <configuration>
                             <headerType>gui</headerType>
                             <jar>target/client.jar</jar>
                             <outfile>target/dw-elus.exe</outfile>
@@ -382,6 +382,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-core-search</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-mail-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

@@ -16,14 +16,14 @@
  */
 package tryout.neo;
 
-import java.util.Arrays;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
+import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ui.neo.ResellerListView;
+
+import tryout.stub.CustomerAgentStub;
 
 /**
  *
@@ -33,16 +33,14 @@ public class ResellerListViewTryout {
 
     public static class InnerApplication extends Application {
 
+        CustomerAgent agent = new CustomerAgentStub();
+
         @Override
         public void start(Stage s) throws Exception {
             ResellerListView view = new ResellerListView();
             s.setScene(new Scene(view));
 
-            view.accept(Arrays.asList(
-                    new ResellerListCustomer.Builder().id(0).name("Max Musterman").email("max@gmail.com").build(),
-                    new ResellerListCustomer.Builder().id(0).name("Firma Musterman").email("musterman@gmail.com").build(),
-                    new ResellerListCustomer.Builder().id(0).name("Hans Wurst").email("wurst@hans.com").build()
-            ));
+            view.accept(agent.findAllResellerListCustomersEager());
 
             s.show();
         }

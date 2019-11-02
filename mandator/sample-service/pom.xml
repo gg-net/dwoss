@@ -32,5 +32,10 @@
             <artifactId>dwoss-ee-persistence-report</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-mail-demand</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

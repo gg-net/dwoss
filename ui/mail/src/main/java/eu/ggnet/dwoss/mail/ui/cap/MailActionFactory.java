@@ -14,25 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.api;
+package eu.ggnet.dwoss.mail.ui.cap;
 
+import java.util.Arrays;
 import java.util.List;
 
-import javax.ejb.Local;
+import org.openide.util.lookup.ServiceProvider;
+
+import eu.ggnet.saft.experimental.ops.ActionFactory;
+import eu.ggnet.saft.experimental.ops.ActionFactory.MetaAction;
 
 /**
- * Service implementation for the Reseller List.
  *
  * @author oliver.guenther
  */
-@Local
-public interface ResellerListService {
+@ServiceProvider(service = ActionFactory.class)
+public class MailActionFactory implements ActionFactory {
 
-    /**
-     * Returns a list of customers which are allowed to receive the reseller list.
-     *
-     * @return a list of customers which are allowed to receive the reseller list.
-     */
-    List<ResellerListCustomer> allResellerListCustomers();
+    @Override
+    public List<MetaAction> createMetaActions() {
+        return Arrays.asList(new MetaAction("Kunden und Aufträge", new SendResellerListToSubscribedCustomersAction()));
+    }
 
 }

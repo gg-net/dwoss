@@ -19,6 +19,7 @@ package eu.ggnet.dwoss.mail.ee;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import org.apache.commons.mail.EmailException;
@@ -26,11 +27,11 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.demand.ResellerListSendSubscriptionConfiguration;
-import eu.ggnet.dwoss.demand.SmtpConfiguration;
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
+import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
+import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
@@ -40,6 +41,7 @@ import eu.ggnet.dwoss.util.FileJacket;
  *
  * @author oliver.guenther
  */
+@Stateless
 public class MailSalesListingServiceBean implements MailSalesListingService {
 
     private final static Logger L = LoggerFactory.getLogger(MailSalesListingServiceBean.class);
@@ -47,10 +49,10 @@ public class MailSalesListingServiceBean implements MailSalesListingService {
     @Inject
     private MonitorFactory monitorFactory;
 
-    @Inject // API-R
+    @Inject
     private SmtpConfiguration smtpConfiguration;
 
-    @Inject // API-R
+    @Inject
     private ResellerListSendSubscriptionConfiguration sendConfiguration;
 
     @Inject

@@ -498,4 +498,11 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
             }
         }
     }
+
+    @Override
+    public List<Customer> findAllResellerListCustomersEager() {
+        List<Customer> resellerLists = customerEao.findAllWithResellerListEmailCommunication();
+        resellerLists.forEach(Customer::fetchEager);
+        return resellerLists;
+    }
 }
