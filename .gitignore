@@ -120,3 +120,15 @@ hs_err_pid*
 /spi/target/
 /api/target/
 /web/target/
+/ui/common/target/
+/ui/search/target/
+/ui/customer/target/
+/ui/report/target/
+/ui/price/target/
+/ui/stock/target/
+/ui/receipt/target/
+/ui/redtapext/target/
+/ui/misc/target/
+/ui/login/target/
+/ui/rights/target/
+/ui/uniqueunit/target/

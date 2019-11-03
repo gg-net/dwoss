@@ -21,13 +21,26 @@
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <modules>
-        <module>core</module>
-        <module>persistence</module>
-        <module>extended</module>
-        <module>spi</module>
+        <module>common</module>
+        <module>search</module>
+        <module>customer</module>
+        <module>report</module>
+        <module>rights</module>
+        <module>stock</module>
+        <module>uniqueunit</module>
+        <module>login</module>
+        <module>misc</module>
+        <module>price</module>
+        <module>receipt</module>
+        <module>redtapext</module>
         <module>mail</module>
         <module>mandator</module>
     </modules>

@@ -6,8 +6,8 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-xractor-web</artifactId>
+    <artifactId>dwoss-xreactor-web</artifactId>
     <packaging>pom</packaging>
-    <name>DwOss • XRactor • Web</name>
-    
+    <name>DwOss • XReactor • Web</name>
+
 </project>

@@ -6,10 +6,10 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-xractor-demand</artifactId>
+    <artifactId>dwoss-xreactor-demand</artifactId>
     <packaging>pom</packaging>
-    <name>DwOss • XRactor • Demand</name>
-    
+    <name>DwOss • XReactor • Demand</name>
+
     <dependencies>
         <dependency>
             <groupId>${javaee.groupId}</groupId>

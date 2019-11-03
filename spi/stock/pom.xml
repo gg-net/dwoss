@@ -2,20 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>dwoss</artifactId>
+        <artifactId>dwoss-xreactor-spi</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-xreactor-api</artifactId>
-    <packaging>pom</packaging>
-    <name>DwOss • XReactor • Api</name>
+    <artifactId>dwoss-ui-spi-stock</artifactId>
+    <name>DwOss • Ui • Spi • Stock</name>
 
     <dependencies>
         <dependency>
-            <groupId>${javaee.groupId}</groupId>
-            <artifactId>${javaee.artifactId}</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-stock</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

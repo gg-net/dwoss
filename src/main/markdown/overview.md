@@ -106,6 +106,12 @@ ArtifactId: dwoss-xreactor-"group"
 
 Most of the projects are grouped by the their component "layer" (e.g.: dwoss-xreactor-api)
 
+Architectur implemation
+-----------------------
+
+If something new is developed the following architecture questions must be answerd:
+
+
 
 Todo: 
 - DwPro Architectur
