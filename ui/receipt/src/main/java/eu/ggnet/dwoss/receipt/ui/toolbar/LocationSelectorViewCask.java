@@ -31,9 +31,9 @@ import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.dwoss.core.widget.ToolbarComponent;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
  *
@@ -72,7 +72,7 @@ public class LocationSelectorViewCask extends javax.swing.JPanel implements Tool
 
         }
         locationBox.setSelectedItem(stock);
-        Dl.local().lookup(StockUpi.class).setActiveStock(stock.toPicoStock());
+        Dl.local().lookup(ActiveStock.class).setActiveStock(stock.toPicoStock());
     }
 
     @SuppressWarnings("unchecked")
@@ -114,7 +114,7 @@ public class LocationSelectorViewCask extends javax.swing.JPanel implements Tool
     }// </editor-fold>//GEN-END:initComponents
 
     private void locationBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationBoxActionPerformed
-        Dl.local().lookup(StockUpi.class).setActiveStock(((Stock)locationBox.getSelectedItem()).toPicoStock());
+        Dl.local().lookup(ActiveStock.class).setActiveStock(((Stock)locationBox.getSelectedItem()).toPicoStock());
     }//GEN-LAST:event_locationBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;

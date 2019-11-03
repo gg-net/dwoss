@@ -44,7 +44,7 @@ import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.api.WarrantyHook;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;

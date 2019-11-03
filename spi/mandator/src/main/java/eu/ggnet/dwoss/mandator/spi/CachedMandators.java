@@ -14,20 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.upi;
+package eu.ggnet.dwoss.mandator.spi;
 
-import eu.ggnet.dwoss.stock.api.PicoStock;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 
 /**
- * Stock Ui Api.
+ * Interface for the a cached local implementation of Mandators.
  *
  * @author oliver.guenther
  */
-public interface StockUpi {
-
-    // Todo: It would be much more apropriated, than there exists a method to open a new selection ui. Or I could push it to core.
-    void setActiveStock(PicoStock stock);
-
-    PicoStock getActiveStock();
+public interface CachedMandators extends Mandators {
 
 }

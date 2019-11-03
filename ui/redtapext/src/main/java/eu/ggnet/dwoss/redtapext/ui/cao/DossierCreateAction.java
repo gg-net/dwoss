@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;

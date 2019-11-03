@@ -13,11 +13,11 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
  *
@@ -25,7 +25,7 @@ import eu.ggnet.saft.experimental.auth.Guardian;
  */
 public class ShipmentDialogTryout {
 
-    public static class StockUpiImpl implements StockUpi {
+    public static class StockUpiImpl implements ActiveStock {
 
         private PicoStock activeStock;
 
@@ -58,7 +58,7 @@ public class ShipmentDialogTryout {
 
         StockUpiImpl su = new StockUpiImpl();
         su.setActiveStock(new PicoStock(0, "Demostock"));
-        Dl.local().add(StockUpi.class, su);
+        Dl.local().add(ActiveStock.class, su);
         Dl.remote().add(StockAgent.class, new StockAgentStub());
 
         ShipmentController controller = new ShipmentController();

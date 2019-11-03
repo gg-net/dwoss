@@ -30,12 +30,12 @@ import eu.ggnet.dwoss.receipt.ui.unit.*;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;
 import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
  * Ui support for the unit Operations.
@@ -121,7 +121,7 @@ public class UiUnitSupport {
 
         UniqueUnit uu = eu.uniqueUnit;
         if ( eu.stockUnit != null )
-            uu = optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(StockUpi.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
+            uu = optionalChangeStock(eu.uniqueUnit, eu.stockUnit, Dl.local().lookup(ActiveStock.class).getActiveStock(), parent, Dl.local().lookup(Guardian.class).getUsername());
 
         UnitAndModel result = createEditUnit(parent, uu, eu.operation, eu.partNo, null);
         if ( result == null ) return;

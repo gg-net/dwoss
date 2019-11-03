@@ -25,9 +25,9 @@ import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.auth.Guardian;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 public class ShipmentController extends AbstractController {
 
@@ -71,8 +71,7 @@ public class ShipmentController extends AbstractController {
     public void inclusion() {
         Shipment shipment = model.getSelected();
         if ( shipment == null ) return;
-        StockTransaction stockTransaction = stockAgent.findOrCreateRollInTransaction(
-                Dl.local().lookup(StockUpi.class).getActiveStock().id,
+        StockTransaction stockTransaction = stockAgent.findOrCreateRollInTransaction(Dl.local().lookup(ActiveStock.class).getActiveStock().id,
                 Dl.local().lookup(Guardian.class).getUsername(),
                 "Roll in through Inclusion");
         ShipmentInclusionViewCask sip = new ShipmentInclusionViewCask(view, shipment, stockTransaction);

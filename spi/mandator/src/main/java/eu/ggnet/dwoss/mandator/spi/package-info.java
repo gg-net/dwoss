@@ -14,15 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.mandator.upi;
-
-import eu.ggnet.dwoss.mandator.api.Mandators;
-
 /**
- * Interface for the a cached local implementation of Mandators.
- *
- * @author oliver.guenther
+ * Ui Spi of Mandator.
  */
-public interface CachedMandators extends Mandators {
-
-}
+package eu.ggnet.dwoss.mandator.spi;

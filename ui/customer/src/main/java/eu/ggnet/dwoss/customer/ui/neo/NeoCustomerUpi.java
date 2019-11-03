@@ -24,16 +24,16 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.UiParent;
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 
 /**
  *
  * @author pascal.perau
  */
-@ServiceProvider(service = CustomerUpi.class)
-public class NeoCustomerUpi implements CustomerUpi {
+@ServiceProvider(service = CustomerUiModifier.class)
+public class NeoCustomerUpi implements CustomerUiModifier {
 
     private static final Logger L = LoggerFactory.getLogger(NeoCustomerUpi.class);
 

@@ -21,7 +21,7 @@ import java.util.SortedMap;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.values.PositionType;

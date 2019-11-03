@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.mandator.api.Mandators;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel;

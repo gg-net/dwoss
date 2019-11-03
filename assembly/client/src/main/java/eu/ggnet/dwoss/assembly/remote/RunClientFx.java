@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
 import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.*;

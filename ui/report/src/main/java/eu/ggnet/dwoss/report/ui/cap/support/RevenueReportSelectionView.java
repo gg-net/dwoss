@@ -28,7 +28,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.saft.core.Dl;

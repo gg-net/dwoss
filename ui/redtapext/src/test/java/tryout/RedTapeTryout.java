@@ -15,7 +15,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 
 import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
@@ -42,6 +41,8 @@ import tryout.stub.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 
 /**
  *
@@ -110,7 +111,7 @@ public class RedTapeTryout {
 
         Dl.remote().add(Mandators.class, mandatorSupporterMock);
 
-        Dl.local().add(CustomerUpi.class, new CustomerUpi() {
+        Dl.local().add(CustomerUiModifier.class, new CustomerUiModifier() {
             @Override
             public void createCustomer(UiParent parent, Consumer<Long> id) {
             }

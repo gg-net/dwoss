@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.customer.upi;
+package eu.ggnet.dwoss.customer.spi;
 
 import java.util.function.Consumer;
 
@@ -22,14 +22,14 @@ import eu.ggnet.saft.core.ui.UiParent;
 
 /**
  * This interface shall provide the possibility to create or modify Customers.
- * <p/>
+ * <p>
  * @author pascal.perau
  */
-public interface CustomerUpi {
+public interface CustomerUiModifier {
 
     /**
      * Method for Customer creation.
-     * <p/>
+     * <p>
      * @param parent optional parent
      * @param id
      */
@@ -37,10 +37,10 @@ public interface CustomerUpi {
 
     /**
      * Method for Customer modification.
-     * <p/>
+     * <p>
      * @param parent     optional parent
      * @param customerId the SopoCustomer to be modified
-     * @param change change consumer, will be called with true, if customer was changed.
+     * @param change     change consumer, will be called with true, if customer was changed.
      */
     void updateCustomer(UiParent parent, long customerId, Runnable change);
 }

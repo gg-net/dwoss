@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.MetaValue;

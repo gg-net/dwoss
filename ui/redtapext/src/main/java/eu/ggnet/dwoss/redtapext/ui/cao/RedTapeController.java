@@ -40,10 +40,9 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.service.ShippingCostService;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
@@ -67,6 +66,8 @@ import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.statemachine.StateTransition;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ANNULATION_INVOICE;
+
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 
 /**
  * The RedTape main component controller handling all in/output as well as update actions provided by the {@link RedTapeView}.
@@ -325,7 +326,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * Opens a dialog to create a Customer.
      */
     public void openCreateCustomer() {
-        Dl.local().lookup(CustomerUpi.class).createCustomer(UiParent.of(view), (custId) -> {
+        Dl.local().lookup(CustomerUiModifier.class).createCustomer(UiParent.of(view), (custId) -> {
 
             if ( custId == 0 ) {
                 Ui.exec(() -> {
@@ -346,7 +347,7 @@ public class RedTapeController implements IDossierSelectionHandler {
      * @param recentCustomerId The customer that shall be edited
      */
     public void openUpdateCustomer(long recentCustomerId) {
-        Dl.local().lookup(CustomerUpi.class).updateCustomer(UiParent.of(view), recentCustomerId, () -> {
+        Dl.local().lookup(CustomerUiModifier.class).updateCustomer(UiParent.of(view), recentCustomerId, () -> {
             model.setSearch(String.valueOf(recentCustomerId));
             view.searchResultList.setSelectedIndex(0);
             reloadSelectionOnCustomerChange();

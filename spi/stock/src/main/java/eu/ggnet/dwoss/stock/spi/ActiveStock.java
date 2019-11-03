@@ -14,30 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.ggnet.dwoss.stock.ui;
-
-import org.openide.util.lookup.ServiceProvider;
+package eu.ggnet.dwoss.stock.spi;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
-import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
+ * Stock Ui Api.
  *
  * @author oliver.guenther
  */
-@ServiceProvider(service = ActiveStock.class)
-public class StockUpiImpl implements ActiveStock {
+public interface ActiveStock {
 
-    private PicoStock activeStock;
+    // Todo: It would be much more apropriated, than there exists a method to open a new selection ui. Or I could push it to core.
+    void setActiveStock(PicoStock stock);
 
-    @Override
-    public PicoStock getActiveStock() {
-        return activeStock;
-    }
-
-    @Override
-    public void setActiveStock(PicoStock activeStock) {
-        this.activeStock = activeStock;
-    }
+    PicoStock getActiveStock();
 
 }

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
 import eu.ggnet.dwoss.core.system.util.ValidationUtil;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.SwingSaft;
 

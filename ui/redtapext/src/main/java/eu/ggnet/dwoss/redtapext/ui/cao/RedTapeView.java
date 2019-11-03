@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.customer.api.*;
-import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ee.state.*;
@@ -60,6 +59,8 @@ import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
 import eu.ggnet.saft.experimental.ops.Selector;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+
+import eu.ggnet.dwoss.customer.spi.CustomerUiModifier;
 
 /**
  * The main UI for using RedTape components.
@@ -130,7 +131,7 @@ public class RedTapeView extends JPanel implements ClosedListener {
         dossierButtonPanel.setComponentPopupMenu(builtStateInfoPopup());
         documentPopup = new JPopupMenu();
 
-        newCustomerButton.setEnabled(Dl.local().lookup(CustomerUpi.class) != null);
+        newCustomerButton.setEnabled(Dl.local().lookup(CustomerUiModifier.class) != null);
     }
 
     private void initFxComponents() {

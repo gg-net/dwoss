@@ -28,7 +28,6 @@ import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.core.widget.MainComponent;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
-import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
 import eu.ggnet.saft.core.Dl;
@@ -37,6 +36,7 @@ import eu.ggnet.saft.experimental.Ops;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.experimental.ops.SelectionEnhancer;
 import eu.ggnet.saft.experimental.ops.Selector;
+import eu.ggnet.dwoss.stock.spi.ActiveStock;
 
 /**
  * View that is used to quickly check availability.
@@ -69,8 +69,8 @@ public class UnitAvailabilityViewCask extends javax.swing.JPanel implements Main
             if ( us.getAvailable() == null ) return Color.YELLOW;
             if ( us.getAvailable() == false ) return Color.RED;
             // now we are available
-            return Dl.local().optional(StockUpi.class)
-                    .map(StockUpi::getActiveStock)
+            return Dl.local().optional(ActiveStock.class)
+                    .map(ActiveStock::getActiveStock)
                     .map(ps -> Objects.equals(ps.id, us.getStockId()) ? Color.GREEN : Color.CYAN)
                     .orElse(Color.CYAN);
         }

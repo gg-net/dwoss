@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.AccessableAction;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.*;

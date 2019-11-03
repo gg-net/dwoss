@@ -36,7 +36,7 @@ import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.saft.core.Dl;

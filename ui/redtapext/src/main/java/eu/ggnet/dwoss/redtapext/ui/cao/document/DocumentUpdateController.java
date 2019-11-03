@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;

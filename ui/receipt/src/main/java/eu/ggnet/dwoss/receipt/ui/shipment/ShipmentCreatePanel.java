@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.widget.swing.CloseType;
 import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
-import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
