@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.sample.service;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.service.ClientLocation;
 import eu.ggnet.dwoss.mandator.api.service.MandatorService;
 

@@ -26,8 +26,8 @@ import javax.swing.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.common.ui.table.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.Survey;

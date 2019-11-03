@@ -26,8 +26,8 @@ import javax.xml.bind.annotation.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.common.INoteModel;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Gpu.Series.*;
 
@@ -92,7 +92,7 @@ public class Gpu extends BaseEntity implements Serializable {
     }
 
     @XmlType(name = "GpuSeries")
-    public enum Series implements eu.ggnet.dwoss.common.api.INoteModel {
+    public enum Series implements eu.ggnet.dwoss.core.common.INoteModel {
 
         GEFORCE_100("GeForce 100 Series"),
         GEFORCE_200("GeForce 200 Series"),

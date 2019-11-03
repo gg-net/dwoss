@@ -31,8 +31,8 @@ import javax.swing.border.SoftBevelBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;

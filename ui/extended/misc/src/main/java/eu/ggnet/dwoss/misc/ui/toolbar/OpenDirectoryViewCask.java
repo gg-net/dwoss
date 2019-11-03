@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.common.ui.ToolbarComponent;
 

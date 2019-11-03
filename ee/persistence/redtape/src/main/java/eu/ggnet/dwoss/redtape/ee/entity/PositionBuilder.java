@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 
 /**

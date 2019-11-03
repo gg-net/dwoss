@@ -30,11 +30,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.AcerRules;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.partno.PartNoSupport;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.common.values.AcerRules;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.PartNoSupport;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
@@ -44,12 +44,12 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.core.common.FileJacket;
-import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.lucidcalc.LucidCalcReader;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.OTTO;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.OTTO;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
 

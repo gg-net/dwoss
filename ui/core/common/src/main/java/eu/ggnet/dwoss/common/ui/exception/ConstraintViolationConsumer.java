@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ui.DetailDialog;
-import eu.ggnet.dwoss.core.system.ValidationUtil;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.saft.core.ui.SwingSaft;
 
 import static eu.ggnet.saft.core.ui.exception.ExceptionUtil.toStackStrace;

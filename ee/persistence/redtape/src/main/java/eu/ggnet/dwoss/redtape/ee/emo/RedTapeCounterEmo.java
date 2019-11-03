@@ -21,7 +21,7 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.redtape.ee.eao.RedTapeCounterEao;
 import eu.ggnet.dwoss.redtape.ee.entity.RedTapeCounter;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 
 /**
  * Emo for RedTapeCounter.

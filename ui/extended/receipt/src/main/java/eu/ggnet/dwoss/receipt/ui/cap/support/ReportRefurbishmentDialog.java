@@ -21,7 +21,7 @@ import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  *

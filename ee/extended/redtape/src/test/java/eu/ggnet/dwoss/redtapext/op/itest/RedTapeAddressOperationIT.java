@@ -7,10 +7,10 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
+import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;

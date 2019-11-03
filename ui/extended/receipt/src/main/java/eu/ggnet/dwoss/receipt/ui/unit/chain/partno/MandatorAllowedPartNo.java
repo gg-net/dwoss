@@ -21,7 +21,7 @@ import java.util.Set;
 
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

@@ -27,7 +27,7 @@ import javafx.scene.web.WebView;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtape.ee.format.PositionFormater;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.format.StockUnitFormater;

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.report.ui;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.saft.core.ui.Once;
 import eu.ggnet.saft.core.ui.Frame;
 import eu.ggnet.saft.core.ui.Title;
@@ -42,7 +45,6 @@ import javafx.scene.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.report.ee.ReportAgent;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;

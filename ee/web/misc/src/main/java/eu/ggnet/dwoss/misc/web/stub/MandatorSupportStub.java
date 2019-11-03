@@ -24,13 +24,13 @@ import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
 import javax.annotation.ManagedBean;
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.core.system.MapBuilder;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.system.util.MapBuilder;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
-import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.*;
-import static eu.ggnet.dwoss.common.api.values.TaxType.*;
-import static eu.ggnet.dwoss.common.api.values.TradeName.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.*;
+import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.*;
+import static eu.ggnet.dwoss.core.common.values.TaxType.*;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *

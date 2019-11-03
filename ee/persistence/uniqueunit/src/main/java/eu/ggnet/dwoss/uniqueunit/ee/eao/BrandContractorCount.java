@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.ee.eao;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  * Aggregate Result of a Count be Brand an Contractor.

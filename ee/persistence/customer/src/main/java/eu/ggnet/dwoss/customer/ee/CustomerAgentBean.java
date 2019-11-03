@@ -24,12 +24,13 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
@@ -41,7 +42,6 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
 import com.querydsl.core.types.dsl.NumberPath;
@@ -104,7 +104,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
     public Reply<Customer> store(SimpleCustomer simpleCustomer) {
         L.info("store({})", simpleCustomer);
         boolean exists = (simpleCustomer.getId() > 0);
-        boolean bussines = !StringUtils.isBlank(simpleCustomer.getCompanyName());
+        boolean bussines = !Utils.isBlank(simpleCustomer.getCompanyName());
 
         Customer customer;
         if ( exists ) {
@@ -467,7 +467,7 @@ public class CustomerAgentBean extends AbstractAgentBean implements CustomerAgen
      * @param useEmailAsResellerMailingList if true and type is email, the resellerListMailCommunication will be updated
      */
     private void update(Customer customer, List<Communication> communications, Communication.Type type, String identifier, boolean useEmailAsResellerMailingList) {
-        if ( StringUtils.isBlank(identifier) ) {
+        if ( Utils.isBlank(identifier) ) {
             communications.stream()
                     .filter(co -> co.getType() == type)
                     .findFirst().ifPresent(comm -> {

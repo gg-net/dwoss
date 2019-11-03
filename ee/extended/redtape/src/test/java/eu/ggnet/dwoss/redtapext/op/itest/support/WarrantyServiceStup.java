@@ -17,9 +17,9 @@
 package eu.ggnet.dwoss.redtapext.op.itest.support;
 
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;
 
 /**
  *

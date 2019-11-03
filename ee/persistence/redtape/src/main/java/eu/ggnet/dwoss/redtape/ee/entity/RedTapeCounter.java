@@ -23,7 +23,7 @@ import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 
 /**
  * Holds values to create and re-use identifiers.

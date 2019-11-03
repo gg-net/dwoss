@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.unit.chain.serial;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 
-import eu.ggnet.dwoss.common.api.values.AcerRules;
+import eu.ggnet.dwoss.core.common.values.AcerRules;
 
 /**
  * Validates the Serial by Acer norms, may produce Errors.

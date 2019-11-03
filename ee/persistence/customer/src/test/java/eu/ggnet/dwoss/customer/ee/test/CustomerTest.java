@@ -2,7 +2,7 @@ package eu.ggnet.dwoss.customer.ee.test;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.Assure;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;

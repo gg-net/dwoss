@@ -16,13 +16,16 @@
  */
 package eu.ggnet.dwoss.report.ee.assist.gen;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.core.system.generator.*;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 

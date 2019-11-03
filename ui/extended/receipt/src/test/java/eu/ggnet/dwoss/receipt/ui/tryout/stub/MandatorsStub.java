@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 
 import java.util.EnumSet;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 

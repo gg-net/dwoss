@@ -35,13 +35,13 @@ import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 
 import eu.ggnet.dwoss.core.common.FileJacket;
 

@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  * Contains SystemCustomers which are used for the receipt operations based on the Contractor.

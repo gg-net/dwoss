@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout.stub;
 import javax.enterprise.inject.Alternative;
 
 import eu.ggnet.dwoss.receipt.ee.UnitProcessor;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;

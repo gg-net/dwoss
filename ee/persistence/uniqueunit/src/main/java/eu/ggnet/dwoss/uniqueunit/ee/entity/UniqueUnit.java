@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.*;
@@ -25,12 +30,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.core.common.INoteModel;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.core.system.TwoDigits;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment.*;

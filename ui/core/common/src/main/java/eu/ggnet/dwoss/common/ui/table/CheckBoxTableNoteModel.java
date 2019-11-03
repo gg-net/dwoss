@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.TableRowSorter;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.core.common.INoteModel;
 
 /**
  * A generic model for a multiselect of enums.

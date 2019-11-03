@@ -4,8 +4,8 @@ package tryout.support;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import eu.ggnet.dwoss.progress.HiddenMonitor;
-import eu.ggnet.dwoss.progress.ProgressObserver;
+import eu.ggnet.dwoss.core.system.progress.HiddenMonitor;
+import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 
 /*
  * Copyright (C) 2014 GG-Net GmbH

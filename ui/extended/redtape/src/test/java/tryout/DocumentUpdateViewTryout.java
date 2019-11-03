@@ -1,12 +1,16 @@
 package tryout;
 
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+
 import java.awt.Font;
 import java.util.Arrays;
 
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
@@ -28,8 +32,8 @@ import eu.ggnet.saft.experimental.auth.Guardian;
 import tryout.stub.CustomerServiceStub;
 import tryout.stub.RedTapeWorkerStub;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
-import static eu.ggnet.dwoss.common.api.values.TaxType.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.*;
+import static eu.ggnet.dwoss.core.common.values.TaxType.*;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.SEND_ORDER;
 
 /**

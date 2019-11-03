@@ -27,8 +27,8 @@ import java.util.Map;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.common.ui.ComboBoxController;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;

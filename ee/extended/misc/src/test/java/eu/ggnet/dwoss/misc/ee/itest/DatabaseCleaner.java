@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 /**
  *

@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.search.annotations.*;
 
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.customer.ee.entity.stash.AddressStash;
 import eu.ggnet.dwoss.customer.ee.entity.stash.CommunicationStash;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;

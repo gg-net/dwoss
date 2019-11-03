@@ -23,7 +23,7 @@ import javax.ejb.Remote;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 

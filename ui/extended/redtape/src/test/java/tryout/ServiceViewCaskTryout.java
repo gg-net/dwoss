@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.document.position.ServiceViewCask;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 
-import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
 /**
  *

@@ -17,6 +17,10 @@
 package tryout;
 
 
+import eu.ggnet.dwoss.core.common.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
@@ -24,7 +28,6 @@ import javax.swing.JFrame;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.swing.JRViewer;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.sample.impl.Sample;
 import eu.ggnet.dwoss.redtape.ee.entity.*;

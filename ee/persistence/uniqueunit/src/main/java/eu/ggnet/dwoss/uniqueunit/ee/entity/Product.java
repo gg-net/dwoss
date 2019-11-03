@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,9 +30,8 @@ import javax.validation.constraints.Null;
 
 import org.apache.commons.lang3.builder.ToStringExclude;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
-import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 import eu.ggnet.dwoss.core.system.persistence.AbstractBidirectionalListWrapper;
 

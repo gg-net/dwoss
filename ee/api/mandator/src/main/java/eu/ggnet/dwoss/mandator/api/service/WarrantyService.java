@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.api.service;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  * A optional Service to allow the mandator to handle warranties with units.

@@ -33,12 +33,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-progress</artifactId>
+            <artifactId>dwoss-ee-api-customer</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-customer</artifactId>
+            <artifactId>dwoss-core-system</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

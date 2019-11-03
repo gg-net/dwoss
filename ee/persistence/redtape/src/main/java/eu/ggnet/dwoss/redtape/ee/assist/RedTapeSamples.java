@@ -16,9 +16,12 @@
  */
 package eu.ggnet.dwoss.redtape.ee.assist;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.util.Collection;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 /**

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.ui;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
@@ -31,7 +35,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;

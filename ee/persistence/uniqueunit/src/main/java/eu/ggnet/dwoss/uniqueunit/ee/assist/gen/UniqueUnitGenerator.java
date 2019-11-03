@@ -21,14 +21,14 @@ import java.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.system.MapBuilder;
+import eu.ggnet.dwoss.core.system.util.MapBuilder;
 
-import static eu.ggnet.dwoss.common.api.values.ProductGroup.DESKTOP;
-import static eu.ggnet.dwoss.common.api.values.Warranty.WARRANTY_TILL_DATE;
+import static eu.ggnet.dwoss.core.common.values.ProductGroup.DESKTOP;
+import static eu.ggnet.dwoss.core.common.values.Warranty.WARRANTY_TILL_DATE;
 
 /**
  * Generator for UniqueUnits.

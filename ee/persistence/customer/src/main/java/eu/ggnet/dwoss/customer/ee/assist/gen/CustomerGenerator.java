@@ -16,11 +16,17 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.core.system.generator.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;

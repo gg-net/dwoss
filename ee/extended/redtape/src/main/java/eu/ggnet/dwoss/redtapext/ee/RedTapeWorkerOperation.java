@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -25,11 +31,10 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
+import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
@@ -51,7 +56,7 @@ import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
 
 /**
  * This class handles every operation between RedTape, UniqueUnit and Stock.

@@ -26,8 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.assembly.remote.client.HiddenMonitorDisplayTask.Progress;
-import eu.ggnet.dwoss.progress.HiddenMonitor;
-import eu.ggnet.dwoss.progress.ProgressObserver;
+import eu.ggnet.dwoss.core.system.progress.HiddenMonitor;
+import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.saft.core.Dl;
 
 public class HiddenMonitorDisplayTask extends SwingWorker<Void, HiddenMonitorDisplayTask.Progress> {

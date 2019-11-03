@@ -24,8 +24,8 @@ import javax.swing.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.common.ui.CloseType;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;

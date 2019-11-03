@@ -1,11 +1,14 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+
 import org.junit.*;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 
-import static eu.ggnet.dwoss.common.api.values.TaxType.UNTAXED;
+import static eu.ggnet.dwoss.core.common.values.TaxType.UNTAXED;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

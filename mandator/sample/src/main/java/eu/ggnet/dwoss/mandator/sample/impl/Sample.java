@@ -16,19 +16,24 @@
  */
 package eu.ggnet.dwoss.mandator.sample.impl;
 
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
 
 import javax.enterprise.inject.Produces;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.core.system.ImageFinder;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.*;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
 
 /**
  *

@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtape.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -26,14 +30,13 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
-import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
+import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
+import static eu.ggnet.dwoss.core.common.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 import static eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals.Property.*;
 import static javax.persistence.CascadeType.*;
 

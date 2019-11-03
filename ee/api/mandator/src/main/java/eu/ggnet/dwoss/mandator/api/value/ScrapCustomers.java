@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 
 /**

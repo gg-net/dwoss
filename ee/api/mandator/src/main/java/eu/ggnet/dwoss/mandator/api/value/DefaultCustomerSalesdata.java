@@ -16,13 +16,17 @@
  */
 package eu.ggnet.dwoss.mandator.api.value;
 
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+
 import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import eu.ggnet.dwoss.common.api.values.*;
 
 /**
  * Mandator Specific Metadata.

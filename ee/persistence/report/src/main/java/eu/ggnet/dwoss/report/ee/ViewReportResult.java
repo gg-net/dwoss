@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil;
 import eu.ggnet.dwoss.report.ee.entity.Report;

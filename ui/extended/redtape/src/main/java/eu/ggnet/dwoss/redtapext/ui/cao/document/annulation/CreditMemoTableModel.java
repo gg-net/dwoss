@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
 import java.util.List;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 

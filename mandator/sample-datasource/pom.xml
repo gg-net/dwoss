@@ -12,12 +12,4 @@
 
     <name>DwOss • Mandator • Sample Datasource</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

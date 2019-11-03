@@ -9,7 +9,6 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-ee-api-rights</artifactId>
-    <packaging>ejb</packaging>
     <name>DwOss • EE • Api • Rights</name>
     <dependencies>
         <dependency>

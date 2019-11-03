@@ -26,8 +26,8 @@ import javax.persistence.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
@@ -35,8 +35,8 @@ import com.querydsl.jpa.impl.JPAQuery;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.QDocument.document;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.CREDIT_MEMO;
 
 /**
  *

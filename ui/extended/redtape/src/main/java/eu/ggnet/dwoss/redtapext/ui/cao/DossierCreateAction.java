@@ -21,8 +21,8 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.api.CustomerService;

@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;

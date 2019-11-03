@@ -23,7 +23,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 /**
  * Represents a pool to Block {@link StockUnit}s.

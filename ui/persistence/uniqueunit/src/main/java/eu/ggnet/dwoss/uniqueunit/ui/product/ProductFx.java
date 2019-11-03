@@ -5,13 +5,16 @@
  */
 package eu.ggnet.dwoss.uniqueunit.ui.product;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+
 import java.time.LocalDate;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 
 /**

@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.report.ee.entity;
 
 import java.util.Date;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 
 /**
  * Unsafe Builder, was the best way in the removal of lombok to do it this way.

@@ -21,7 +21,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.ReplyUtil;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;

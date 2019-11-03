@@ -1,5 +1,9 @@
 package eu.ggnet.dwoss.report.ee.itest;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Map.Entry;
@@ -14,8 +18,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.*;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.Step;
+import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
@@ -23,16 +26,16 @@ import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 import com.querydsl.jpa.impl.JPADeleteClause;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
-import static eu.ggnet.dwoss.common.api.values.TradeName.*;
-import static eu.ggnet.dwoss.common.ee.Step.DAY;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.*;
+import static eu.ggnet.dwoss.core.system.util.Step.DAY;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.util.*;
 
 import javax.ejb.EJB;
@@ -26,7 +29,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -36,7 +38,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
-import static eu.ggnet.dwoss.common.api.values.Warranty.NO_B2B_WARRANTY;
+import static eu.ggnet.dwoss.core.common.values.Warranty.NO_B2B_WARRANTY;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 

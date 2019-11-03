@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wildfly.security.auth.client.*;
 
-import eu.ggnet.dwoss.common.api.IsStateful;
+import eu.ggnet.dwoss.core.common.IsStateful;
 import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.dl.RemoteLookup;

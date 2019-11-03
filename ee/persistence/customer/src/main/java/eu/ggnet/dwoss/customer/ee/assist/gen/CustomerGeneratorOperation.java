@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -26,13 +32,12 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 

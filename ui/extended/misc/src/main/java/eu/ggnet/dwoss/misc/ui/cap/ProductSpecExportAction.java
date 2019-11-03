@@ -24,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.spec.ee.SpecExporter;
 import eu.ggnet.dwoss.common.ui.AccessableAction;
 

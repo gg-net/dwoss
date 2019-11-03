@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 
 import eu.ggnet.dwoss.misc.ee.ImageIdHandler;
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 

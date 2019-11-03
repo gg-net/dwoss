@@ -16,17 +16,20 @@
  */
 package eu.ggnet.dwoss.report.ee.op;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+
 import java.util.Map.Entry;
 import java.util.*;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.Step;
+import eu.ggnet.dwoss.core.system.util.Step;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.eao.Revenue.Key;
@@ -34,9 +37,9 @@ import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT_ANNEX;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT_ANNEX;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.CENTER;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;

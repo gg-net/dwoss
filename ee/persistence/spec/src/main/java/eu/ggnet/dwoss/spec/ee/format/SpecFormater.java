@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.spec.ee.entity.Desktop.Os;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec.Extra;
 import eu.ggnet.dwoss.spec.ee.entity.piece.*;
-import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.core.common.INoteModel;
 
 /**
  *

@@ -26,9 +26,9 @@ import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransition.Hint;
 import eu.ggnet.statemachine.State.Type;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 
 import static java.util.EnumSet.*;
 

@@ -20,7 +20,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 

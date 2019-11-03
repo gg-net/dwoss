@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.mandator.api.service;
 import java.io.Serializable;
 import java.util.Objects;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 
 /**
  * Class used as a valueholder for listing actions.

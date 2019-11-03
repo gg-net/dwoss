@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.uniqueunit.api.event;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 
 /**
  * Informs about a SalesChannelChange

@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.receipt.ee;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TaxType;
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatus;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType;

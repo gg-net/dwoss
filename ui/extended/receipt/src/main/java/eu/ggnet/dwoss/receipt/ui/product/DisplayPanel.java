@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display.Ration;

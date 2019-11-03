@@ -27,14 +27,14 @@ import org.apache.commons.mail.MultiPartEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.customer.api.ResellerListCustomer;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mail.demand.ResellerListSendSubscriptionConfiguration;
 import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**

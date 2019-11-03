@@ -16,9 +16,9 @@ import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.report.ee.itest.support.ReportLineItHelper;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
-import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 

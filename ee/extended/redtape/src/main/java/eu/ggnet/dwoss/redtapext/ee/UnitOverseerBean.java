@@ -28,9 +28,9 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
@@ -61,10 +61,10 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
 

@@ -9,7 +9,7 @@ import javax.persistence.LockModeType;
 import javafx.embed.swing.JFXPanel;
 
 import eu.ggnet.dwoss.assembly.remote.client.SwingClient;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.rights.api.AtomicRight;

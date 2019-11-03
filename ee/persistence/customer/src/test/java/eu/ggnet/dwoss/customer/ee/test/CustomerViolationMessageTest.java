@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
 
 import org.junit.Test;
 

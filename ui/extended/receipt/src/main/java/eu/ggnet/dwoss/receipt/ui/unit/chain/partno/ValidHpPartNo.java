@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.unit.chain.partno;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.HP;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.HP;
 
 /**
  *

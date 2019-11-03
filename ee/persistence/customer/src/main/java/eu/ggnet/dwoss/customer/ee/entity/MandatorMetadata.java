@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ee.entity;
 
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,8 +30,7 @@ import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
 /**

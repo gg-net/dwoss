@@ -12,6 +12,10 @@
     <name>DwOss • Core • Widget</name>
     <dependencies>
         <dependency>
+            <groupId>eu.ggnet.saft</groupId>
+            <artifactId>saft-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-core-system</artifactId>
             <version>${project.version}</version>

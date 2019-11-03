@@ -20,14 +20,14 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 
-import static eu.ggnet.dwoss.common.api.values.AddressType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.AddressType.SHIPPING;
+import static eu.ggnet.dwoss.core.common.values.AddressType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.AddressType.SHIPPING;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.*;
 import static eu.ggnet.dwoss.customer.ee.make.StaticCustomerMaker.*;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**

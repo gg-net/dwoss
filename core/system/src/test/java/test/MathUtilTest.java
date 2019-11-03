@@ -1,6 +1,6 @@
 package test;
 
-import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.system.util.TwoDigits;
 
 import org.junit.Test;
 

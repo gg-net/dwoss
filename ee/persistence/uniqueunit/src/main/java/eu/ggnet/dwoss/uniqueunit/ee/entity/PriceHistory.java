@@ -21,7 +21,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 /**
  * A history to keep track of price changes in {@link UniqueUnit}s and {@link Product}s

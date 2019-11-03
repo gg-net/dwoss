@@ -10,7 +10,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.core.system.ValidationUtil;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -5,12 +5,12 @@ import java.util.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.report.ee.entity.*;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ALSO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 

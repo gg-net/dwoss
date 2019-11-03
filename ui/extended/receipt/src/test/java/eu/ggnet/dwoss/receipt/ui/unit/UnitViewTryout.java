@@ -23,14 +23,14 @@ import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.assist.gen.SpecGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.saft.core.Dl;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.ACER;
-import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ACER;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;
 
 /**
  * Tryout Test for Unit View.

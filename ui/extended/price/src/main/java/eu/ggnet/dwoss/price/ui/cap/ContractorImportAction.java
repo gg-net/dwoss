@@ -25,7 +25,7 @@ import java.io.File;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.common.ui.DetailDialog;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;

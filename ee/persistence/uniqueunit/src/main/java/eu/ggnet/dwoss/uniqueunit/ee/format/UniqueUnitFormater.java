@@ -20,14 +20,14 @@ import java.text.*;
 import java.util.Map.Entry;
 import java.util.*;
 
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
-import eu.ggnet.dwoss.common.api.values.Warranty;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
+import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.common.INoteModel;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.UNKNOWN;
 import static java.util.Locale.GERMANY;
 
 /**

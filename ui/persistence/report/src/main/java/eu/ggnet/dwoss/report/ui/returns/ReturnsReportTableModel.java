@@ -22,7 +22,7 @@ import java.util.*;
 
 import javax.swing.table.AbstractTableModel;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////

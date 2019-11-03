@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;

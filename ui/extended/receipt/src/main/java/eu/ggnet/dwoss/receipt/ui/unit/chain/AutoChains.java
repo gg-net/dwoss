@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.receipt.ui.unit.chain.refurbishId.RefurbishIdNotExist;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.serial.SerialAvailable;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.string.NotEmpty;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 

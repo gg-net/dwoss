@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ee.tryout;
 
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.EnumSet;
 
@@ -25,8 +30,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.Css;
+import eu.ggnet.dwoss.core.common.Css;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;

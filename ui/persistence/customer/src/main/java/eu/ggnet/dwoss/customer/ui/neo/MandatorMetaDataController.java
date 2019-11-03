@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ui.neo;
 
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+
 import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
@@ -31,7 +36,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.StringConverter;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;

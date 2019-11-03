@@ -9,7 +9,6 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-ee-api-mandator</artifactId>
-    <packaging>ejb</packaging>
     <name>DwOss • EE • Api • Mandator</name>
     <dependencies>
         <dependency>
@@ -20,11 +19,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -16,14 +16,14 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.state.RedTapeStateTransitions;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 
-import static eu.ggnet.dwoss.common.api.values.PaymentMethod.ADVANCE_PAYMENT;
+import static eu.ggnet.dwoss.core.common.values.PaymentMethod.ADVANCE_PAYMENT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static eu.ggnet.dwoss.common.api.values.ShippingCondition.SIX_MIN_TEN;
+import static eu.ggnet.dwoss.core.common.values.ShippingCondition.SIX_MIN_TEN;
 
 /**
  *

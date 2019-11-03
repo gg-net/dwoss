@@ -24,7 +24,7 @@ import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ee.UnitDestroyer;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;

@@ -28,9 +28,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.ee.log.AutoLogger;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
 import eu.ggnet.dwoss.report.ee.api.MarginCalculator;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil.PrepareReportPartition;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
@@ -42,7 +42,7 @@ import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.*;
 import static eu.ggnet.dwoss.report.ee.ViewReportResult.Type.*;
 import static eu.ggnet.dwoss.report.ee.assist.ReportUtil.*;
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;

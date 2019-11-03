@@ -1,8 +1,8 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
 import java.util.*;
@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.CAPITAL_ASSET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import eu.ggnet.dwoss.redtapext.ee.reporting.RedTapeCloserManual;

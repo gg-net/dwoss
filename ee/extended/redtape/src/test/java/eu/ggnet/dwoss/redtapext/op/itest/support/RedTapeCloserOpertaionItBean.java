@@ -16,9 +16,9 @@
  */
 package eu.ggnet.dwoss.redtapext.op.itest.support;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -11,13 +11,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
 
-import static eu.ggnet.dwoss.common.api.values.TradeName.ONESELF;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.ONESELF;
 
 @RunWith(Arquillian.class)
 public class PersistenceIT extends ArquillianProjectArchive {

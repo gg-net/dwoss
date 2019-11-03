@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.mandator.api.value;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  *

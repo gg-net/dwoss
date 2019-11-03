@@ -25,10 +25,10 @@ import javax.inject.Inject;
 
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.customer.ee.eao.CustomerEao;
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
+import eu.ggnet.dwoss.customer.api.AddressChange;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
 import eu.ggnet.dwoss.customer.ee.entity.AddressLabel;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 

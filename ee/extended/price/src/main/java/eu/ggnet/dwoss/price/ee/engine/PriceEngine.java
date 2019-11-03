@@ -24,8 +24,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.Warranty;
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.price.ee.EngineTracer;
 import eu.ggnet.dwoss.price.ee.Estimator;
 import eu.ggnet.dwoss.price.ee.Estimator.Result;

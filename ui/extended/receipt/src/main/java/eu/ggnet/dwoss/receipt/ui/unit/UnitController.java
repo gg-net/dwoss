@@ -27,7 +27,7 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
@@ -40,11 +40,11 @@ import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.core.system.ValidationUtil;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
-import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.IN_SALE;
+import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.IN_SALE;
 import static javax.swing.JOptionPane.*;
 
 public class UnitController {

@@ -24,8 +24,8 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.lucidcalc.LucidCalcReader;

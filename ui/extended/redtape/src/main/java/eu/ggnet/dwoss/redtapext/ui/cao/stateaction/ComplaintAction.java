@@ -22,8 +22,8 @@ import java.util.*;
 
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.common.ui.CloseType;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;

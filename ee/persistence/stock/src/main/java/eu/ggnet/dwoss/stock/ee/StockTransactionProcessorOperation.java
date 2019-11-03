@@ -29,11 +29,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.progress.MonitorFactory;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.stock.ee.emo.*;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
 import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
-import eu.ggnet.dwoss.core.system.ValidationUtil;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType.*;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;

@@ -1,9 +1,9 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 

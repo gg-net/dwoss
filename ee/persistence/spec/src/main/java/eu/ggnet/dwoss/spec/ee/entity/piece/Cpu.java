@@ -27,8 +27,8 @@ import javax.xml.bind.annotation.*;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.common.INoteModel;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Cpu.Series.*;
 
@@ -85,7 +85,7 @@ public class Cpu extends BaseEntity implements Serializable {
      * The Series of the CPU.
      */
     @XmlType(name = "CpuSeries")
-    public static enum Series implements eu.ggnet.dwoss.common.api.INoteModel {
+    public static enum Series implements eu.ggnet.dwoss.core.common.INoteModel {
 
         ATOM("Atom"),
         CELERON("Celeron"),

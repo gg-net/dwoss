@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.redtapext.ui.dbs;
 import java.util.ArrayList;
 import java.util.Date;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.common.ui.table.PojoColumn;
 import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;

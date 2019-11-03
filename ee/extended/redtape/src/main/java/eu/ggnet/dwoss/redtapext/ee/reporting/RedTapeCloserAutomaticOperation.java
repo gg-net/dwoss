@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.reporting;
 
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.IMonitor;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.util.Map.Entry;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,13 +39,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.progress.*;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
@@ -58,13 +62,13 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.statemachine.State.Type;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
-import static eu.ggnet.dwoss.common.api.values.PaymentMethod.*;
-import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.BLOCK;
+import static eu.ggnet.dwoss.core.common.values.PaymentMethod.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.COMMENT;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.*;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;

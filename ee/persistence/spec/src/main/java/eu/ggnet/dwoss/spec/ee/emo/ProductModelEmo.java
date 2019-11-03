@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.spec.ee.emo;
 
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.spec.ee.eao.*;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 

@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.misc.web.stub;
 
-import eu.ggnet.dwoss.progress.ProgressObserver;
-import eu.ggnet.dwoss.progress.HiddenMonitor;
+import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
+import eu.ggnet.dwoss.core.system.progress.HiddenMonitor;
 
 import java.util.*;
 

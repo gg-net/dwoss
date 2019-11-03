@@ -9,17 +9,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-ee-api-uniqueunit</artifactId>
-    <packaging>ejb</packaging>
     <name>DwOss • EE • Api • UniqueUnit</name>
     <dependencies>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.inferred</groupId>

@@ -16,11 +16,10 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 
 /**
  *

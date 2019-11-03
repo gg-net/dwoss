@@ -22,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.progress.ProgressObserver;
+import eu.ggnet.dwoss.core.system.progress.ProgressObserver;
 import eu.ggnet.saft.core.Dl;
 
 /**

@@ -23,8 +23,8 @@ import java.util.*;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
@@ -32,10 +32,10 @@ import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.sage.DefaultSageExporterConfig;
 import eu.ggnet.dwoss.redtape.ee.sage.SageExporterEngine;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
-import static eu.ggnet.dwoss.common.api.values.PositionType.SHIPPING_COST;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
-import static eu.ggnet.dwoss.common.api.values.TaxType.REVERSE_CHARGE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.PositionType.SHIPPING_COST;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.TaxType.REVERSE_CHARGE;
 import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 

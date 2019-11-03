@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.unit.chain.partno;
 import eu.ggnet.dwoss.receipt.ui.unit.ValidationStatus;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 
-import eu.ggnet.dwoss.common.api.values.AppleRules;
+import eu.ggnet.dwoss.core.common.values.AppleRules;
 
 /**
  * Validates the PartNo by Bean Validations of the Property.

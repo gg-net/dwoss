@@ -22,8 +22,8 @@ import java.util.Set;
 
 import javax.validation.*;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
@@ -34,7 +34,7 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.core.system.ValidationUtil;
+import eu.ggnet.dwoss.core.system.util.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 
 /**

@@ -1,11 +1,14 @@
 package tryout;
 
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+
 import java.util.*;
 
 import javax.persistence.LockModeType;
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.report.ee.ReportAgent.SearchParameter;
 import eu.ggnet.dwoss.report.ee.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;

@@ -22,7 +22,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import eu.ggnet.dwoss.common.api.values.TaxType;
+import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.ResultProducer;
 import eu.ggnet.saft.core.ui.Title;

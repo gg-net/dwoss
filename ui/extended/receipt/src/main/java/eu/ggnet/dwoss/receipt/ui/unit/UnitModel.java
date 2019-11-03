@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.util.*;
 
 import javax.swing.Action;
@@ -24,7 +28,6 @@ import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.receipt.ui.unit.chain.ChainLink;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;

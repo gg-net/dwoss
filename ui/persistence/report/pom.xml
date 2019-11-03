@@ -71,11 +71,6 @@
             <artifactId>dwoss-core-widget</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>  <!-- remove later -->
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-progress</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-core-common</artifactId>

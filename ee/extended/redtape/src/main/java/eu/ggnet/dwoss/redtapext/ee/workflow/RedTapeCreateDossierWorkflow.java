@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ee.workflow;
 
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Set;
@@ -27,7 +32,6 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.api.CustomerMetaData;
 import eu.ggnet.dwoss.customer.ee.AddressServiceBean;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
@@ -39,8 +43,8 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 
-import static eu.ggnet.dwoss.common.api.values.CustomerFlag.*;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
+import static eu.ggnet.dwoss.core.common.values.CustomerFlag.*;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.BLOCK;
 
 /**
  * Workflow to create a Dossier with one document of the selected Type.

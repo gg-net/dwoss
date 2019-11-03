@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.emo.DossierEmo;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
@@ -48,7 +48,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.UNKNOWN;
 
 /**
  * Allows Scraping of Units.

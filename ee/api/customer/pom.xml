@@ -9,23 +9,12 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-ee-api-customer</artifactId>
-    <packaging>ejb</packaging>
     <name>DwOss • EE • Api • Customer</name>
     <dependencies>
         <dependency>
             <groupId>org.inferred</groupId>
             <artifactId>freebuilder</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-redtape</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

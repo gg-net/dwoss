@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.ee;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +32,6 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.RepaymentCustomers;
 import eu.ggnet.dwoss.redtape.ee.eao.DossierEao;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -45,9 +48,9 @@ import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.CREDIT_MEMO;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.ANNULATION_INVOICE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.CREDIT_MEMO;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 import static java.time.ZoneId.systemDefault;
 
 /**

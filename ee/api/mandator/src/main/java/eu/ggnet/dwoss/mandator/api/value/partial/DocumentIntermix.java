@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.Map.Entry;
 import java.util.*;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;
 import eu.ggnet.dwoss.mandator.api.FreeDocumentTemplateParameter;
 

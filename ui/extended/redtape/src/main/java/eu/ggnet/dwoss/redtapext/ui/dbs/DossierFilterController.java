@@ -28,8 +28,8 @@ import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 import eu.ggnet.dwoss.common.ui.HtmlDialog;
 import eu.ggnet.dwoss.common.ui.table.PojoFilter;
 import eu.ggnet.dwoss.customer.api.CustomerService;

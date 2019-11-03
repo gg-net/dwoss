@@ -22,8 +22,8 @@ import javafx.scene.control.TextInputDialog;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.core.common.Css;
+import eu.ggnet.dwoss.core.widget.ReplyUtil;
 import eu.ggnet.dwoss.common.ui.HtmlPane;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;

@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 /**
  *

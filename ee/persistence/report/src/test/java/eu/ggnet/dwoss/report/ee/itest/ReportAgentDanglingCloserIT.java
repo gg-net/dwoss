@@ -19,11 +19,11 @@ import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
-import static eu.ggnet.dwoss.common.api.values.TradeName.LENOVO;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.LENOVO;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 

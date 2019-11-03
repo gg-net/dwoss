@@ -10,12 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dwoss-misc-api</artifactId>
     <name>DwOss • Misc • Api</name>
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+
 </project>
 

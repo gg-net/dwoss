@@ -23,8 +23,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.common.ui.CloseType;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
@@ -42,8 +42,8 @@ import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
-import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
+import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.core.common.values.PositionType.UNIT;
 
 /**
  *

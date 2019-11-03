@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 import eu.ggnet.dwoss.common.ui.CloseType;
 import eu.ggnet.dwoss.common.ui.IPreClose;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;

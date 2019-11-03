@@ -11,7 +11,7 @@ import java.util.*;
 import javax.persistence.LockModeType;
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.misc.ui.cap.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
@@ -21,8 +21,8 @@ import eu.ggnet.saft.api.Authorisation;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.*;
 
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.CUSTOMER;
-import static eu.ggnet.dwoss.common.api.values.SalesChannel.RETAILER;
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.CUSTOMER;
+import static eu.ggnet.dwoss.core.common.values.SalesChannel.RETAILER;
 
 /**
  *

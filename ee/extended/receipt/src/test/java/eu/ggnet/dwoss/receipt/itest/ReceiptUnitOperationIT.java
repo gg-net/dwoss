@@ -1,5 +1,10 @@
 package eu.ggnet.dwoss.receipt.itest;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+
 import java.util.*;
 
 import javax.ejb.EJB;
@@ -9,7 +14,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.mandator.api.value.Contractors;
 import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
@@ -29,7 +33,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 
-import static eu.ggnet.dwoss.common.api.values.ReceiptOperation.*;
+import static eu.ggnet.dwoss.core.common.values.ReceiptOperation.*;
 import static org.junit.Assert.*;
 
 /**

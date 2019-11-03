@@ -1,11 +1,14 @@
 package eu.ggnet.dwoss.redtape.test;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PositionType;
+
 import java.util.Arrays;
 import java.util.Objects;
 
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 

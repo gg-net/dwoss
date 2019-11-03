@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.ui.saleschannel;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;

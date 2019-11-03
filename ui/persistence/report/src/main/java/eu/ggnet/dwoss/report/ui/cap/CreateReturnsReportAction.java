@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.report.ui.returns.ReturnsReportView;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.RETURNS;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.RETURNS;
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_RETUNRS_REPORT;
 
 /**

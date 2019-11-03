@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.report.ee.entity.partial;
 
+import eu.ggnet.dwoss.core.common.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,8 +33,7 @@ import javafx.beans.value.ObservableValue;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.values.*;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 
 /**

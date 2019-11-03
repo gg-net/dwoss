@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.ConnectionConfig;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
-import eu.ggnet.dwoss.progress.IMonitor;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.IMonitor;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 
 /**
  * Plain Logic for file transfer operations.

@@ -23,10 +23,10 @@ import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static eu.ggnet.dwoss.redtape.ee.format.DocumentFormater.toConditions;
 

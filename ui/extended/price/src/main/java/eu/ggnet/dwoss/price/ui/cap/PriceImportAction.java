@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.ee.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.ReplyUtil;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.core.common.FileJacket;

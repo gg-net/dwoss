@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.customer.ee.make;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.api.values.AddressType;
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.AddressType;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.*;

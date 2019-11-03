@@ -34,7 +34,7 @@ import javafx.util.Callback;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.saft.core.Dl;

@@ -23,15 +23,15 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.WorkflowStatus;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.CAPITAL_ASSET;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
 
 /**

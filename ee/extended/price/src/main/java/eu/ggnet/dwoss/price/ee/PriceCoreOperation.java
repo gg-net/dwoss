@@ -27,11 +27,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.Warranty;
+import eu.ggnet.dwoss.core.common.values.Warranty;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngine;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-import eu.ggnet.dwoss.progress.IMonitor;
-import eu.ggnet.dwoss.progress.SubMonitor;
+import eu.ggnet.dwoss.core.system.progress.IMonitor;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

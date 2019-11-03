@@ -9,10 +9,10 @@ import org.junit.Test;
 import eu.ggnet.dwoss.price.ee.ImporterOperation;
 import eu.ggnet.dwoss.price.ee.PriceCoreOperation;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-import eu.ggnet.dwoss.progress.ProgressProducerForTests;
+import eu.ggnet.dwoss.core.system.progress.ProgressProducerForTests;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.core.common.UserInfoException;
-import eu.ggnet.dwoss.progress.IMonitor;
+import eu.ggnet.dwoss.core.system.progress.IMonitor;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;

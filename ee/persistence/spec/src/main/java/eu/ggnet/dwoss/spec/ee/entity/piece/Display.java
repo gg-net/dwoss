@@ -28,9 +28,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.ggnet.dwoss.common.api.INoteModel;
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.common.INoteModel;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Resolution.*;
 import static eu.ggnet.dwoss.spec.ee.entity.piece.Display.Size.*;

@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer.SearchField;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.INVOICE;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.INVOICE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

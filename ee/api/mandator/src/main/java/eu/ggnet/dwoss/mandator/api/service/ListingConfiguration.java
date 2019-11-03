@@ -22,8 +22,8 @@ import java.util.*;
 
 import org.inferred.freebuilder.FreeBuilder;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  *

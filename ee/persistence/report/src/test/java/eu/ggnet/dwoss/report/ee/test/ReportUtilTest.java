@@ -7,15 +7,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.report.ee.assist.ReportUtil;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;
 
-import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
-import static eu.ggnet.dwoss.common.api.values.PositionType.*;
-import static eu.ggnet.dwoss.common.api.values.TradeName.HP;
+import static eu.ggnet.dwoss.core.common.values.DocumentType.*;
+import static eu.ggnet.dwoss.core.common.values.PositionType.*;
+import static eu.ggnet.dwoss.core.common.values.tradename.TradeName.HP;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

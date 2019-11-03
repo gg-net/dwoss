@@ -4,7 +4,7 @@ import java.util.*;
 
 import javax.swing.JLabel;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;

@@ -20,7 +20,7 @@ import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.emo.Transfer;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.COMPLETED;
 import static org.junit.Assert.*;

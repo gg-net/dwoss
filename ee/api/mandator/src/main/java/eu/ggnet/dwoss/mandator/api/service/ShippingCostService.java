@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
 
 /**
  * Service for Shipping Costs, optional.

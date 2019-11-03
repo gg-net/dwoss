@@ -21,7 +21,7 @@ import java.util.*;
 import javax.ejb.Local;
 
 import eu.ggnet.dwoss.mandator.api.value.partial.ListingMailConfiguration;
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**

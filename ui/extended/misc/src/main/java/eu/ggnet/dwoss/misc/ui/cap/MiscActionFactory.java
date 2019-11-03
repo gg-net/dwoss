@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Location;
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration.Type;

@@ -16,6 +16,9 @@
  */
 package eu.ggnet.dwoss.report.ee;
 
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -23,7 +26,6 @@ import javax.ejb.Remote;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.mandator.api.value;
 import java.io.Serializable;
 import java.util.Set;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  * Contains TradeNames, which we do business with.

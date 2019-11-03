@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import javax.ejb.Local;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
 
 /**
  *

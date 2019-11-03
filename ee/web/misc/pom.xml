@@ -31,11 +31,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-rights</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -47,11 +42,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-mandator</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-progress</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

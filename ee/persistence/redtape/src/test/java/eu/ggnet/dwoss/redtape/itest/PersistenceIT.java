@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.PositionEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PositionType;
 
 /**
  *

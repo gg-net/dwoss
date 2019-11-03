@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.mandator.api.service;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 
 /**
  *

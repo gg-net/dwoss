@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
@@ -38,12 +38,12 @@ import eu.ggnet.dwoss.customer.ee.itest.support.Utils;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 
-import static eu.ggnet.dwoss.common.api.values.PaymentCondition.CUSTOMER;
-import static eu.ggnet.dwoss.common.api.values.PaymentCondition.EMPLOYEE;
-import static eu.ggnet.dwoss.common.api.values.PaymentMethod.ADVANCE_PAYMENT;
-import static eu.ggnet.dwoss.common.api.values.PaymentMethod.DIRECT_DEBIT;
-import static eu.ggnet.dwoss.common.api.values.ShippingCondition.FIVE;
-import static eu.ggnet.dwoss.common.api.values.ShippingCondition.FIVE_EIGHTY;
+import static eu.ggnet.dwoss.core.common.values.PaymentCondition.CUSTOMER;
+import static eu.ggnet.dwoss.core.common.values.PaymentCondition.EMPLOYEE;
+import static eu.ggnet.dwoss.core.common.values.PaymentMethod.ADVANCE_PAYMENT;
+import static eu.ggnet.dwoss.core.common.values.PaymentMethod.DIRECT_DEBIT;
+import static eu.ggnet.dwoss.core.common.values.ShippingCondition.FIVE;
+import static eu.ggnet.dwoss.core.common.values.ShippingCondition.FIVE_EIGHTY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

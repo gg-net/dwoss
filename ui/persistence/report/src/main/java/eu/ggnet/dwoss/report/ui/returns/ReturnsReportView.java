@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.util.Utils;
 import eu.ggnet.saft.core.Ui;
 
 /**

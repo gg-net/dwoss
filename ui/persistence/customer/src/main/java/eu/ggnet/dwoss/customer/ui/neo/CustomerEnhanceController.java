@@ -40,7 +40,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
 
-import eu.ggnet.dwoss.common.api.values.CustomerFlag;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.customer.ee.entity.Contact.Sex;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
@@ -53,7 +53,7 @@ import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
-import static eu.ggnet.dwoss.common.api.values.CustomerFlag.SYSTEM_CUSTOMER;
+import static eu.ggnet.dwoss.core.common.values.CustomerFlag.SYSTEM_CUSTOMER;
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.stage.Modality.WINDOW_MODAL;

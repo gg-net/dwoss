@@ -16,16 +16,20 @@
  */
 package eu.ggnet.dwoss.customer.ee.test;
 
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+
 import java.util.EnumSet;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 
-import static eu.ggnet.dwoss.common.api.values.PaymentCondition.DEALER_2_PERCENT_DISCOUNT;
+import static eu.ggnet.dwoss.core.common.values.PaymentCondition.DEALER_2_PERCENT_DISCOUNT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**

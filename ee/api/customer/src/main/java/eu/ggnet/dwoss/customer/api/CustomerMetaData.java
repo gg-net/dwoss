@@ -16,10 +16,15 @@
  */
 package eu.ggnet.dwoss.customer.api;
 
+import eu.ggnet.dwoss.core.common.values.PaymentMethod;
+import eu.ggnet.dwoss.core.common.values.PaymentCondition;
+import eu.ggnet.dwoss.core.common.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.values.ShippingCondition;
+import eu.ggnet.dwoss.core.common.values.CustomerFlag;
+
 import java.io.Serializable;
 import java.util.*;
 
-import eu.ggnet.dwoss.common.api.values.*;
 
 /**
  * Wrapper class for purchase information from a customer.

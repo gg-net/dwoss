@@ -10,7 +10,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
+import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
@@ -27,8 +27,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
-import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
-import static eu.ggnet.dwoss.common.api.values.PositionType.SHIPPING_COST;
+import static eu.ggnet.dwoss.core.common.values.PositionType.PRODUCT_BATCH;
+import static eu.ggnet.dwoss.core.common.values.PositionType.SHIPPING_COST;
 import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.common.ee.BaseEntity;
+import eu.ggnet.dwoss.core.common.values.ProductGroup;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.system.persistence.BaseEntity;
 
 import static javax.persistence.CascadeType.*;
 
