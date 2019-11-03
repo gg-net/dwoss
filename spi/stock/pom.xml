@@ -6,8 +6,8 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui-spi-stock</artifactId>
-    <name>DwOss • Ui • Spi • Stock</name>
+    <artifactId>dwoss-stock-spi</artifactId>
+    <name>DwOss • Stock • Spi</name>
 
     <dependencies>
         <dependency>
@@ -16,7 +16,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-stock</artifactId>
+            <artifactId>dwoss-stock-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

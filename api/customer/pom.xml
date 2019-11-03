@@ -8,8 +8,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-customer</artifactId>
-    <name>DwOss • EE • Api • Customer</name>
+    <artifactId>dwoss-customer-api</artifactId>
+    <name>DwOss • Customer • Api</name>
     <dependencies>
         <dependency>
             <groupId>org.inferred</groupId>

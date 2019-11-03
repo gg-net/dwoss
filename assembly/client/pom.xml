@@ -309,27 +309,27 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-extended-price</artifactId>
+            <artifactId>dwoss-price-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-persistence-report</artifactId>
+            <artifactId>dwoss-report-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-persistence-stock</artifactId>
+            <artifactId>dwoss-stock-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-extended-receipt</artifactId>
+            <artifactId>dwoss-receipt-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-extended-redtape</artifactId>
+            <artifactId>dwoss-redtapext-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -339,22 +339,22 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-extended-login</artifactId>
+            <artifactId>dwoss-login-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-persistence-rights</artifactId>
+            <artifactId>dwoss-rights-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-persistence-customer</artifactId>
+            <artifactId>dwoss-customer-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-persistence-uniqueunit</artifactId>
+            <artifactId>dwoss-uniqueunit-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -371,12 +371,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-discovery</artifactId>
+            <artifactId>dwoss-discovery-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-search</artifactId>
+            <artifactId>dwoss-search-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

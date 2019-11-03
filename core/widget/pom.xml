@@ -22,7 +22,7 @@
         </dependency>
         <dependency> <!-- TODO: Verify if there is no other way than a core component depends on an api -->
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-rights</artifactId>
+            <artifactId>dwoss-rights-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

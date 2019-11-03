@@ -8,8 +8,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-search</artifactId>
-    <name>DwOss • EE • Api • Search</name>
+    <artifactId>dwoss-search-api</artifactId>
+    <name>DwOss • Search • Api</name>
 
 </project>
 

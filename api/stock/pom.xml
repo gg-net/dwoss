@@ -8,8 +8,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-stock</artifactId>
-    <name>DwOss • EE • Api • Stock</name>
+    <artifactId>dwoss-stock-api</artifactId>
+    <name>DwOss • Stock • Api</name>
 
 </project>
 

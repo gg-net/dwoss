@@ -6,9 +6,9 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui</artifactId>
+    <artifactId>dwoss-xreactor-ui</artifactId>
     <packaging>pom</packaging>
-    <name>DwOss • Ui</name>
+    <name>DwOss • XReactor • Ui</name>
 
     <dependencies>
         <dependency>
@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-spi-mandator</artifactId>
+            <artifactId>dwoss-mandator-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

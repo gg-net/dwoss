@@ -6,9 +6,9 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-incubator</artifactId>
+    <artifactId>dwoss-yncubator</artifactId>
     <packaging>pom</packaging>
-    <name>DwOss • Incubator</name>
+    <name>DwOss • Yncubator</name>
     <description>Incubator projects, which might be release as separate projects if stable.</description>
     <modules>
         <module>statemachine</module>

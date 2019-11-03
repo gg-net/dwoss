@@ -3,39 +3,40 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ee-extended</artifactId>
+        <artifactId>dwoss-xreactor-ee-extended</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-extended-price</artifactId>
-    <name>DwOss • EE • Extended • Price</name>
+    <artifactId>dwoss-price-ee</artifactId>
+    <name>DwOss • Price • EE (bound)</name>
     <packaging>ejb</packaging>
+    <description>Binds: nearly everything. TODO: Splitt</description>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-uniqueunit</artifactId>
+            <artifactId>dwoss-uniqueunit-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-stock</artifactId>
+            <artifactId>dwoss-stock-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-spec</artifactId>
+            <artifactId>dwoss-spec-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-redtape</artifactId>
+            <artifactId>dwoss-redtape-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-report</artifactId>
+            <artifactId>dwoss-report-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -49,7 +50,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-receipt</artifactId>
+            <artifactId>dwoss-receipt-ee</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ui</artifactId>
+        <artifactId>dwoss-xreactor-ui</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui-extended-receipt</artifactId>
-    <name>DwOss • Ui • Extended • Receipt</name>
+    <artifactId>dwoss-receipt-ui</artifactId>
+    <name>DwOss • Receipt • Ui</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-receipt</artifactId>
+            <artifactId>dwoss-receipt-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -40,7 +40,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-spi-stock</artifactId>
+            <artifactId>dwoss-stock-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

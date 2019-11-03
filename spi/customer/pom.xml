@@ -6,8 +6,8 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui-spi-customer</artifactId>
-    <name>DwOss • Ui • Spi • Customer</name>
+    <artifactId>dwoss-customer-spi</artifactId>
+    <name>DwOss • Customer • Spi</name>
     <dependencies>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>

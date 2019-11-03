@@ -6,9 +6,9 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-mandator</artifactId>
+    <artifactId>dwoss-xreactor-mandator-sample</artifactId>
     <packaging>pom</packaging>
-    <name>DwOss • Mandator</name>
+    <name>DwOss • XReactor • Mandator-Sample</name>
 
     <properties>
         <org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>1.6</org-netbeans-modules-maven-j2ee.netbeans_2e_hint_2e_j2eeVersion>

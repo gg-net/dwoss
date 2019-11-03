@@ -890,7 +890,7 @@
         <module>web</module>
         <module>demand</module>
         <module>ee</module>
-        <module>incubator</module>
+        <module>yncubator</module>
         <module>mandator</module>
         <module>ui</module>
     </modules>

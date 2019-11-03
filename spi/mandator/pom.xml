@@ -6,12 +6,12 @@
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui-spi-mandator</artifactId>
-    <name>DwOss • Ui • Spi • Mandator</name>
+    <artifactId>dwoss-mandator-spi</artifactId>
+    <name>DwOss • Mandator • Spi</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-mandator</artifactId>
+            <artifactId>dwoss-mandator-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

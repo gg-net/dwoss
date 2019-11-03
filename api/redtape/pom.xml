@@ -8,8 +8,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-redtape</artifactId>
-    <name>DwOss • EE • Api • RedTape</name>
+    <artifactId>dwoss-redtape-api</artifactId>
+    <name>DwOss • RedTape • Api</name>
 
 </project>
 

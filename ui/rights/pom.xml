@@ -4,18 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>dwoss-ui</artifactId>
+        <artifactId>dwoss-xreactor-ui</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dwoss-ui-persistence-rights</artifactId>
-    <name>DwOss • Ui • Persistence • Rights</name>
+    <artifactId>dwoss-rights-ui</artifactId>
+    <name>DwOss • Rights • Ui</name>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-rights</artifactId>
+            <artifactId>dwoss-rights-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

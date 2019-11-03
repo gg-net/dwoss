@@ -40,27 +40,27 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-price</artifactId>
+            <artifactId>dwoss-price-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-redtape</artifactId>
+            <artifactId>dwoss-redtape-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-receipt</artifactId>
+            <artifactId>dwoss-receipt-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-rights</artifactId>
+            <artifactId>dwoss-rights-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-redtape</artifactId>
+            <artifactId>dwoss-redtapext-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -76,18 +76,18 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-web-search</artifactId>
+            <artifactId>dwoss-search-web</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-discovery</artifactId>
+            <artifactId>dwoss-discovery-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-mandator</artifactId>
+            <artifactId>dwoss-mandator-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

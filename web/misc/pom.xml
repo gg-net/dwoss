@@ -17,17 +17,17 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-rights</artifactId>
+            <artifactId>dwoss-rights-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-rights</artifactId>
+            <artifactId>dwoss-rights-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-mandator</artifactId>
+            <artifactId>dwoss-mandator-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

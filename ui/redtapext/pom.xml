@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ui</artifactId>
+        <artifactId>dwoss-xreactor-ui</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ui-extended-redtape</artifactId>
-    <name>DwOss • Ui • Extended • RedTape</name>
+    <artifactId>dwoss-redtapext-ui</artifactId>
+    <name>DwOss • RedTapeXt • Ui</name>
 
     <dependencies>
 
@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-redtape</artifactId>
+            <artifactId>dwoss-redtapext-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -49,12 +49,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-spi-stock</artifactId>
+            <artifactId>dwoss-stock-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-spi-customer</artifactId>
+            <artifactId>dwoss-customer-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

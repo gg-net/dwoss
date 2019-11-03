@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>dwoss-mandator</artifactId>
+        <artifactId>dwoss-xreactor-mandator-sample</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -37,17 +37,17 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-receipt</artifactId>
+            <artifactId>dwoss-receipt-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-redtape</artifactId>
+            <artifactId>dwoss-redtapext-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-customer</artifactId>
+            <artifactId>dwoss-customer-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -78,7 +78,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-rights</artifactId>
+            <artifactId>dwoss-rights-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

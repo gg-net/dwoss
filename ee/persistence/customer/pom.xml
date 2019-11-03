@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ee-persistence</artifactId>
+        <artifactId>dwoss-xreactor-ee-persistence</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>dwoss-ee-persistence-customer</artifactId>
-    <name>DwOss • EE • Persistence • Customer</name>
+    <artifactId>dwoss-customer-ee</artifactId>
+    <name>DwOss • Customer • EE (persistence)</name>
     <packaging>ejb</packaging>
 
     <properties>
@@ -36,22 +36,22 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-search</artifactId>
+            <artifactId>dwoss-search-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-redtape</artifactId>
+            <artifactId>dwoss-redtape-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-customer</artifactId>
+            <artifactId>dwoss-customer-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-api-mandator</artifactId>
+            <artifactId>dwoss-mandator-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

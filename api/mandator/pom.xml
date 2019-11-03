@@ -8,8 +8,8 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-mandator</artifactId>
-    <name>DwOss • EE • Api • Mandator</name>
+    <artifactId>dwoss-mandator-api</artifactId>
+    <name>DwOss • Mandator • Api</name>
     <dependencies>
         <dependency>
             <groupId>org.inferred</groupId>

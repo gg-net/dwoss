@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>statemachine-runtime</artifactId>
-    <name>DwOss • Incubator • Statemachine • Runtime</name>
+    <name>DwOss • Yncubator • Statemachine • Runtime</name>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -4,11 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ui</artifactId>
+        <artifactId>dwoss-xreactor-ui</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>dwoss-ui-persistence-stock</artifactId>
-    <name>DwOss • Ui • Persistence • Stock</name>
+    <artifactId>dwoss-stock-ui</artifactId>
+    <name>DwOss • Stock • Ui (bound)</name>
+    <description>Binds: rights.ee TODO: Verify why</description>
     <dependencies>
         <dependency>
             <groupId>com.toedter</groupId>
@@ -16,12 +17,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-stock</artifactId>
+            <artifactId>dwoss-stock-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-persistence-rights</artifactId>
+            <artifactId>dwoss-rights-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -36,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-spi-stock</artifactId>
+            <artifactId>dwoss-stock-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
