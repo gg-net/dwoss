@@ -42,7 +42,7 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.customer.api.*;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;

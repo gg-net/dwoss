@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.unit;
 
+import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
+import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
+
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,8 +32,7 @@ import org.apache.commons.lang3.SystemUtils;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.common.ui.*;
-import eu.ggnet.dwoss.common.ui.table.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.receipt.ui.unit.UnitModel.Survey;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;

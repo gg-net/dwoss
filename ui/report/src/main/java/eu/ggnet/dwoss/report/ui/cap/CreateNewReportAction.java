@@ -27,8 +27,8 @@ import eu.ggnet.dwoss.report.ui.main.ReportController.In;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_SALES_REPORT;
 

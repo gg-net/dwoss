@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.receipt.ui.tryout;
 
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.receipt.ui.product.CpuListController;
 import eu.ggnet.dwoss.receipt.ui.product.CpuListPanel;

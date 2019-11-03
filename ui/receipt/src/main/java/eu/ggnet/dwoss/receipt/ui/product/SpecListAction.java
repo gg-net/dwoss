@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.saft.core.UiCore;
 
 /**

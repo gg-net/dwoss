@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.common.ui.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentController;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentDialog;

@@ -21,7 +21,7 @@ import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.core.widget.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_TRANSACTION_FOR_SINGLE_UNIT;

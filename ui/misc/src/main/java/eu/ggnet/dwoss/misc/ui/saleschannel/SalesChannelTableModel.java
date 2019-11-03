@@ -16,10 +16,13 @@
  */
 package eu.ggnet.dwoss.misc.ui.saleschannel;
 
+import eu.ggnet.dwoss.core.widget.swing.SimpleTableModel;
+import eu.ggnet.dwoss.core.widget.swing.Column;
+import eu.ggnet.dwoss.core.widget.swing.IColumnGetSetAction;
+
 import java.util.*;
 
 import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
 

@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao;
 
+import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
@@ -33,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.CustomerFlag;
 import eu.ggnet.dwoss.core.common.values.DocumentType;
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;

@@ -24,10 +24,10 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.common.ui.HtmlDialog;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.dwoss.common.ui.table.PojoColumn;
-import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
+import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;

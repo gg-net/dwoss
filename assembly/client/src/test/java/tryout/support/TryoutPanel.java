@@ -2,7 +2,7 @@ package tryout.support;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.common.ui.ToolbarComponent;
+import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 
 /**
  *

@@ -28,11 +28,13 @@ import org.slf4j.LoggerFactory;
  */
 @Interceptor
 @AutoLogger
+//@Priority()
 public class AutoLoggerInterceptor {
 
     @AroundInvoke
     @AroundTimeout
     public Object manageTransaction(InvocationContext ctx) throws Exception {
+
         Class<?> clazz = ctx.getMethod().getDeclaringClass();
         String method = ctx.getMethod().getName();
         Logger log = LoggerFactory.getLogger(clazz);

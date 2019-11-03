@@ -19,7 +19,7 @@ package tryout;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.annulation.CreditMemoView;

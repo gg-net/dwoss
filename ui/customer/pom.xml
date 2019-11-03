@@ -21,10 +21,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-experimental</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
@@ -47,16 +43,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-spi-customer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-core-widget</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>  <!-- remove later -->
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

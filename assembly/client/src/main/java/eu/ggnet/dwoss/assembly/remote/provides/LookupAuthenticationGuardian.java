@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.common.ui.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.cap.support;
 import java.util.List;
 import java.util.function.Consumer;
 
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.format.StockTransactionFormater;
 import eu.ggnet.saft.core.ui.ResultProducer;

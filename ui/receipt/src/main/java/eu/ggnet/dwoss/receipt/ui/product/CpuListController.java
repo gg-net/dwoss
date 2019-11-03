@@ -16,15 +16,18 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
+import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
+import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
+import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
+
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.dwoss.common.ui.table.*;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;

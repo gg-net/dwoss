@@ -11,8 +11,8 @@ import java.util.Arrays;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.*;
 
-import eu.ggnet.dwoss.common.ui.AbstractGuardian;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.Mandators;

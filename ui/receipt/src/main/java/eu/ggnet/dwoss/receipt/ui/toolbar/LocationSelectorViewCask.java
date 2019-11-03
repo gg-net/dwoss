@@ -33,7 +33,7 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.saft.core.Dl;
-import eu.ggnet.dwoss.common.ui.ToolbarComponent;
+import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 
 /**
  *

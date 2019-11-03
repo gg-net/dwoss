@@ -16,8 +16,8 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.common;
 
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 
 /**
  * A simple JPanel containing a Textarea.

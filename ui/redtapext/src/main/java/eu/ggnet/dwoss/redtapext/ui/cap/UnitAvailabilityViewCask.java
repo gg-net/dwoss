@@ -25,8 +25,8 @@ import javax.swing.border.EtchedBorder;
 import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.core.common.Css;
-import eu.ggnet.dwoss.common.ui.HtmlPane;
-import eu.ggnet.dwoss.common.ui.MainComponent;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
+import eu.ggnet.dwoss.core.widget.MainComponent;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.stock.upi.StockUpi;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;

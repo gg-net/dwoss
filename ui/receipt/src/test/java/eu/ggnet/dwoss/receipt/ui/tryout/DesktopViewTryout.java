@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.tryout;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.receipt.ui.product.DesktopView;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;

@@ -32,8 +32,8 @@ import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.ui.MainComponent;
-import eu.ggnet.dwoss.common.ui.ToolbarComponent;
+import eu.ggnet.dwoss.core.widget.MainComponent;
+import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 import eu.ggnet.dwoss.login.AutoLoginLogout;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.UiCore;

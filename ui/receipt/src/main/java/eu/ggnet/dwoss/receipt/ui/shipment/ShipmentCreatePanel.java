@@ -21,8 +21,8 @@ import java.util.Date;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.mandator.api.service.ShipmentLabelValidator;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;

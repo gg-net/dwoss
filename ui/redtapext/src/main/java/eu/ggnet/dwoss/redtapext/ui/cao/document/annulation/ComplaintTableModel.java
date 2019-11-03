@@ -16,9 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.annulation;
 
+import eu.ggnet.dwoss.core.widget.swing.SimpleTableModel;
+import eu.ggnet.dwoss.core.widget.swing.IColumnGetAction;
+import eu.ggnet.dwoss.core.widget.swing.IColumnGetSetAction;
+import eu.ggnet.dwoss.core.widget.swing.Column;
+
 import java.util.List;
 
-import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 
 /**

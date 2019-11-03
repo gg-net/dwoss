@@ -21,9 +21,9 @@ import java.util.Optional;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.core.widget.ReplyUtil;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
-import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.Importer;
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult.Change;

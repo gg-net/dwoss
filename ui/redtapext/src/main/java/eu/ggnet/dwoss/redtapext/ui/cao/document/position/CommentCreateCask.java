@@ -16,13 +16,16 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 
 /**

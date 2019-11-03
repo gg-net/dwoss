@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 
 /**

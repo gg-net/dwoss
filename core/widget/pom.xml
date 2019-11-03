@@ -13,12 +13,21 @@
     <dependencies>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-api</artifactId>
+            <artifactId>saft-experimental</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-core-system</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency> <!-- TODO: Verify if there is no other way than a core component depends on an api -->
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-api-rights</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -23,8 +23,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoicePosition;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.AfterInvoiceTablePanel;

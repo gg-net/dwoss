@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.misc.ui.cap;
 
 import java.awt.event.ActionEvent;
 
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerData;
 import eu.ggnet.dwoss.misc.ui.saleschannel.SalesChannelManagerView;

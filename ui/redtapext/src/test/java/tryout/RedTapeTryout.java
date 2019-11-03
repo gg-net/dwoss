@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
-import eu.ggnet.dwoss.common.ui.AbstractGuardian;
+import eu.ggnet.dwoss.core.widget.AbstractGuardian;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.customer.upi.CustomerUpi;
 import eu.ggnet.dwoss.mandator.api.DocumentViewType;

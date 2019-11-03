@@ -16,12 +16,16 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
+
 import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
 import eu.ggnet.saft.core.Dl;

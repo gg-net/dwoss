@@ -16,6 +16,12 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -25,7 +31,6 @@ import java.util.*;
 import javax.swing.*;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop;
 import eu.ggnet.dwoss.spec.ee.entity.Desktop.Hdd;

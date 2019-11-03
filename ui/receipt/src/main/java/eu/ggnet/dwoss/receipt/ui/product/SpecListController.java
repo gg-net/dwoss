@@ -16,12 +16,15 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
+import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
+import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
+import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.receipt.ui.AbstractController;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;

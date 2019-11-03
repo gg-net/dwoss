@@ -23,8 +23,8 @@ import javax.swing.AbstractAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.core.widget.ReplyUtil;
-import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
 import eu.ggnet.dwoss.redtapext.ee.reporting.CreditMemoReporter;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;

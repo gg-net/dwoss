@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.price.ui;
 
+import eu.ggnet.dwoss.core.widget.saft.OkCancelWrap;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
+import eu.ggnet.dwoss.core.widget.saft.OkCancelVetoResult;
+
 import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
@@ -23,8 +27,7 @@ import javax.swing.JOptionPane;
 import org.jdesktop.beansbinding.Converter;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
-import eu.ggnet.dwoss.common.ui.saftwrap.*;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.price.ui.PriceBlockerViewCask.Prices;
 import eu.ggnet.saft.core.ui.ResultProducer;
 

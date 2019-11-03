@@ -28,10 +28,6 @@
             <artifactId>beansbinding</artifactId>
         </dependency>
         <dependency>
-            <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-experimental</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <scope>test</scope>
@@ -71,16 +67,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-core-widget</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency> <!-- remove later -->
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -23,9 +23,9 @@ import javax.swing.DefaultComboBoxModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import eu.ggnet.dwoss.common.ui.NamedEnumCellRenderer;
-import eu.ggnet.dwoss.common.ui.SwingTraversalUtil;
-import eu.ggnet.dwoss.common.ui.table.CheckBoxTableNoteModel;
+import eu.ggnet.dwoss.core.widget.swing.NamedEnumCellRenderer;
+import eu.ggnet.dwoss.receipt.ui.SwingTraversalUtil;
+import eu.ggnet.dwoss.receipt.ui.CheckBoxTableNoteModel;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.Color;
 import eu.ggnet.dwoss.spec.ee.entity.BasicSpec.VideoPort;

@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.core.common.values.TaxType;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ResultProducer;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 
 import static eu.ggnet.dwoss.core.common.values.PositionType.SERVICE;
 

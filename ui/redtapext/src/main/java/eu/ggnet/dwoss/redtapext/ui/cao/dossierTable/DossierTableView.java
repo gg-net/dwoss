@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.Warranty;
-import eu.ggnet.dwoss.common.ui.HtmlDialog;
-import eu.ggnet.dwoss.common.ui.table.TableColumnChooserPopup;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.swing.TableColumnChooserPopup;
 import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;

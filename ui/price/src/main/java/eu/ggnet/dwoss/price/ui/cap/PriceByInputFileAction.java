@@ -20,13 +20,13 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.common.ui.TikaUtil;
+import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_PRICE_BY_XLS;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;

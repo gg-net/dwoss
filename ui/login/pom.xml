@@ -9,20 +9,5 @@
     </parent>
     <artifactId>dwoss-ui-extended-login</artifactId>
     <name>DwOss • Ui • Extended • Login</name>
-    <dependencies>
-        <dependency>
-            <groupId>eu.ggnet.saft</groupId>
-            <artifactId>saft-experimental</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-core-widget</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency> <!-- remove later -->
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+
 </project>

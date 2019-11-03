@@ -26,7 +26,7 @@ import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.dwoss.spec.ee.SpecExporter;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.READ_PRODUCT_SPEC_FOR_XML_EXPORT;
 

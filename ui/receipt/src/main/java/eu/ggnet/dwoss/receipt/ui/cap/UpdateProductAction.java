@@ -24,11 +24,11 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.TextInputDialog;
 
-import eu.ggnet.dwoss.core.widget.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
 import eu.ggnet.dwoss.receipt.ui.UiProductSupport;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_PRODUCT;
 

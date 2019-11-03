@@ -23,14 +23,14 @@ import javafx.scene.control.TextInputDialog;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.ggnet.dwoss.core.common.Css;
-import eu.ggnet.dwoss.core.widget.ReplyUtil;
-import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.core.widget.saft.ReplyUtil;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.price.ee.Exporter;
 import eu.ggnet.dwoss.price.ee.engine.support.PriceEngineResultFormater;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.CREATE_ONE_PRICE;
 import static javafx.stage.Modality.WINDOW_MODAL;

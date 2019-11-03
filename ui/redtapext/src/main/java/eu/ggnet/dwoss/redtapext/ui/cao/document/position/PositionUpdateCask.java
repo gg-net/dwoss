@@ -33,7 +33,7 @@ import org.jdesktop.beansbinding.*;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PositionType;
-import eu.ggnet.dwoss.common.ui.saftwrap.VetoableOnOk;
+import eu.ggnet.dwoss.core.widget.saft.VetoableOnOk;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.mandator.api.value.PostLedger;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;

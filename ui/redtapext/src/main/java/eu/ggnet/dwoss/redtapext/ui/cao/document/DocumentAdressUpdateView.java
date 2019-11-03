@@ -16,10 +16,13 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document;
 
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+
 import javax.swing.JOptionPane;
 
 import eu.ggnet.dwoss.core.common.values.AddressType;
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.customer.api.AddressService;
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.saft.core.Dl;

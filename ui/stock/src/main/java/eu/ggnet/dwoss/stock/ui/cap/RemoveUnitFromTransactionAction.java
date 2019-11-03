@@ -22,7 +22,7 @@ import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ui.transactions.RemoveQuestionView;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.core.ui.AlertType;
 

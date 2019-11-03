@@ -20,12 +20,12 @@ import java.awt.event.ActionEvent;
 
 import javafx.application.Platform;
 
-import eu.ggnet.dwoss.common.ui.OkCancelStage;
+import eu.ggnet.dwoss.misc.ui.cap.support.OkCancelStage;
 import eu.ggnet.dwoss.misc.ui.cap.support.InputReportSelectorPane;
 import eu.ggnet.dwoss.uniqueunit.ee.op.UniqueUnitReporter;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.EXPORT_INPUT_REPORT;
 

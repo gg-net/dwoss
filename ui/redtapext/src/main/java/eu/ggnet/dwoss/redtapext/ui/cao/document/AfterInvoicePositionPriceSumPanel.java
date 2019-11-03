@@ -21,7 +21,7 @@ import java.text.NumberFormat;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import eu.ggnet.dwoss.common.ui.table.SimpleTableModel;
+import eu.ggnet.dwoss.core.widget.swing.SimpleTableModel;
 
 /**
  * The AfterInvoicePositionPriceSumPanel summarizes prices and after tax prices from a {@link SimpleTableModel} with {@link AfterInvoicePosition}

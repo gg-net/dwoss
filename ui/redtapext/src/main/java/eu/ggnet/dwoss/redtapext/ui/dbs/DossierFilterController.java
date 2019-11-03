@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.common.ui.HtmlDialog;
-import eu.ggnet.dwoss.common.ui.table.PojoFilter;
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;

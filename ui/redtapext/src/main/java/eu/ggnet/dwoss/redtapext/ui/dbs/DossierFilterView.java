@@ -29,8 +29,8 @@ import javax.swing.*;
 
 import eu.ggnet.dwoss.core.common.values.DocumentType;
 import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-import eu.ggnet.dwoss.common.ui.ComboBoxController;
-import eu.ggnet.dwoss.common.ui.HtmlPane;
+import eu.ggnet.dwoss.core.widget.swing.ComboBoxController;
+import eu.ggnet.dwoss.core.widget.HtmlPane;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.redtape.ee.format.DossierFormater;
 import eu.ggnet.saft.core.ui.UserPreferences;

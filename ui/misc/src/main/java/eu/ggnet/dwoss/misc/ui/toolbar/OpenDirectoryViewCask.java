@@ -27,7 +27,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.core.system.GlobalConfig;
 import eu.ggnet.saft.core.Ui;
-import eu.ggnet.dwoss.common.ui.ToolbarComponent;
+import eu.ggnet.dwoss.core.widget.ToolbarComponent;
 
 /**
  *

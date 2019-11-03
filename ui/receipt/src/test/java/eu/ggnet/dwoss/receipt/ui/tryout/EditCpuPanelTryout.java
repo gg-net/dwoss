@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.common.ui.CloseType;
-import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.receipt.ui.product.EditCpuPanel;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;

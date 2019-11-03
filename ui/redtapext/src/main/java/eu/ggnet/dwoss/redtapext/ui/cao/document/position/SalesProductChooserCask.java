@@ -16,6 +16,11 @@
  */
 package eu.ggnet.dwoss.redtapext.ui.cao.document.position;
 
+import eu.ggnet.dwoss.redtapext.ui.HtmlDialog;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.OkCancelDialog;
+
 import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +28,11 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import eu.ggnet.dwoss.common.ui.*;
-import eu.ggnet.dwoss.common.ui.table.PojoColumn;
-import eu.ggnet.dwoss.common.ui.table.PojoTableModel;
+import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
+import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 
-import static eu.ggnet.dwoss.common.ui.CloseType.OK;
+import static eu.ggnet.dwoss.core.widget.swing.CloseType.OK;
 
 /**
  *

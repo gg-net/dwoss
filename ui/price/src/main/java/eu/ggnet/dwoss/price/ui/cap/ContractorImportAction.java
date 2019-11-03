@@ -16,22 +16,20 @@
  */
 package eu.ggnet.dwoss.price.ui.cap;
 
-import eu.ggnet.saft.core.UiCore;
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.Dl;
-
 import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javafx.scene.control.Alert;
 
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.common.ui.DetailDialog;
-import eu.ggnet.dwoss.common.ui.TikaUtil;
-import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
+import eu.ggnet.dwoss.core.widget.swing.DetailDialog;
+import eu.ggnet.dwoss.core.widget.TikaUtil;
 import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
+import eu.ggnet.dwoss.core.widget.AccessableAction;
+import eu.ggnet.dwoss.mandator.upi.CachedMandators;
+import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
 import eu.ggnet.saft.api.Reply;
-import eu.ggnet.dwoss.common.ui.AccessableAction;
+import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.IMPORT_MISSING_CONTRACTOR_PRICES_DATA;
@@ -73,7 +71,8 @@ public class ContractorImportAction extends AccessableAction {
                                             -> Dl.remote().lookup(ContractorPricePartNoImporter.class).fromContractorXls(contractor, new FileJacket("in", ".xls", f), Dl.local().lookup(Guardian.class).getUsername()));
                                 })
                                 .ifPresent(re -> DetailDialog.show(UiCore.getMainFrame(), re.hasSucceded() ? "Import erfolgreich" : "Import fehlerhaft",
-                                "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen", re.getSummary(), re.getDetailDescription()));
+                                "Import " + contractor.getName() + " Daten (Lieferant" + (contractor.isManufacturer() ? "+Hersteller" : "") + ")" + (re.hasSucceded() ? " " : " fehlerhaft ") + "abgeschlossen",
+                                re.getSummary(), re.getDetailDescription(), Dl.local().lookup(CachedMandators.class).loadMandator().bugMail()));
                     });
         });
     }

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import eu.ggnet.dwoss.common.ui.DateRangeChooserView;
+import eu.ggnet.dwoss.core.widget.DateRangeChooserView;
 import eu.ggnet.dwoss.receipt.ee.reporting.AuditReporter;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;

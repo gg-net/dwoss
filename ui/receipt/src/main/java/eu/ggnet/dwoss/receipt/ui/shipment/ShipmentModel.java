@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.shipment;
 
+import eu.ggnet.dwoss.core.widget.swing.PojoFilter;
+import eu.ggnet.dwoss.core.widget.swing.PojoTableModel;
+import eu.ggnet.dwoss.core.widget.swing.PojoColumn;
+
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -25,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.common.ui.table.*;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 
 public class ShipmentModel extends PojoTableModel<Shipment> {

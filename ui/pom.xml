@@ -26,10 +26,14 @@
             <artifactId>dwoss-core-widget</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ui-spi-mandator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <modules>
-        <module>common</module>
         <module>search</module>
         <module>customer</module>
         <module>report</module>

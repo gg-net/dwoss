@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.receipt.ui.product;
 
+import eu.ggnet.dwoss.core.widget.swing.IView;
+import eu.ggnet.dwoss.core.widget.swing.CloseType;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
+
 import java.awt.Window;
 import java.util.Set;
 
@@ -25,7 +29,6 @@ import javax.validation.Validation;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
 import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.common.ui.*;
 import eu.ggnet.dwoss.spec.ee.entity.*;
 
 /**

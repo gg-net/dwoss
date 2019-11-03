@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.receipt.ui.product;
 
 import java.awt.Window;
 
-import eu.ggnet.dwoss.common.ui.IView;
+import eu.ggnet.dwoss.core.widget.swing.IView;
 
 /**
  *

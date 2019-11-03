@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import org.openide.util.lookup.ServiceProvider;
 
-import eu.ggnet.dwoss.common.ui.MainComponent;
+import eu.ggnet.dwoss.core.widget.MainComponent;
 
 /**
  *

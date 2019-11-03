@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ui.product;
 import java.awt.BorderLayout;
 
 import eu.ggnet.dwoss.core.common.values.ProductGroup;
-import eu.ggnet.dwoss.common.ui.IPreClose;
+import eu.ggnet.dwoss.core.widget.swing.IPreClose;
 import eu.ggnet.dwoss.spec.ee.entity.Monitor;
 
 public class MonitorView extends AbstractView<Monitor> implements IPreClose {

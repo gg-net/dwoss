@@ -16,8 +16,6 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.itest.support.ArquillianProjectArchive;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  *
  * @author pascal.perau, oliver.guenther
@@ -48,8 +46,6 @@ public class PersistenceIT extends ArquillianProjectArchive {
         CriteriaQuery<Customer> q = em.getCriteriaBuilder().createQuery(Customer.class);
 
         c = em.createQuery(q.select(q.from(Customer.class))).getSingleResult();
-
-        assertThat(c.getContacts()).describedAs("customer.getContacts()").isNotEmpty();
 
         L.info("{}", c);
         L.info("===== Contacts");

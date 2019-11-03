@@ -11,6 +11,7 @@
     <packaging>ejb</packaging>
 
     <name>DwOss • Mandator • Sample Service</name>
+    <description>Produces: mail.demand</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
