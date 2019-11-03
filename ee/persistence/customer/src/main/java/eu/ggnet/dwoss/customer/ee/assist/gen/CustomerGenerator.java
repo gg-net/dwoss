@@ -21,9 +21,9 @@ import java.util.*;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.core.system.generator.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
-import eu.ggnet.dwoss.util.gen.*;
 
 import static eu.ggnet.dwoss.customer.ee.entity.Communication.Type.EMAIL;
 import static eu.ggnet.dwoss.customer.ee.entity.Contact.Sex.FEMALE;

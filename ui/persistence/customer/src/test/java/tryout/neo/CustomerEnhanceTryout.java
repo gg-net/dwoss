@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.ExternalSystem;
 import eu.ggnet.dwoss.customer.ee.entity.Customer.Source;
 import eu.ggnet.dwoss.customer.ui.neo.CustomerEnhanceController;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.Guardian;

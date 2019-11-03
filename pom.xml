@@ -884,10 +884,13 @@
 
     <modules>
         <module>assembly</module>
-        <module>basic</module>
+        <module>api</module>
+        <module>core</module>
+        <module>spi</module>
+        <module>web</module>
+        <module>demand</module>
         <module>ee</module>
         <module>incubator</module>
-        <module>lib</module>
         <module>mandator</module>
         <module>ui</module>
     </modules>

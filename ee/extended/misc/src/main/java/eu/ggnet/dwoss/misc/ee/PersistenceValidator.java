@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  *

@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 

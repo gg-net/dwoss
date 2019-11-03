@@ -29,7 +29,6 @@ import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.dwoss.rights.ee.op.AuthenticationBean;
 import eu.ggnet.dwoss.rights.ee.op.PasswordUtil;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;

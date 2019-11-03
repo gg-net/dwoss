@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
@@ -40,8 +41,7 @@ import eu.ggnet.dwoss.stock.ee.emo.*;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.api.event.SalesChannelChange;
 import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipationType.*;
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
@@ -154,7 +154,7 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
         StockTransactionPosition position = stockUnit.getPosition();
         stockEm.remove(position);
         transaction.setComment(transaction.getComment() + ", Unit " + stockUnit.getRefurbishId() + " removed by " + arranger + ", cause=" + comment);
-        history.fire( UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") " + transaction.getSource().getName()
+        history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), "Unit returned to Stock(" + transaction.getSource().getId() + ") " + transaction.getSource().getName()
                 + ", removed from Transaction, cause: " + comment, arranger));
         L.info("{} removed from {}", stockUnit, transaction);
     }
@@ -200,13 +200,13 @@ public class StockTransactionProcessorOperation implements StockTransactionProce
             L.info("Commissioning {}", transaction);
             Set<ConstraintViolation<StockTransaction>> violations = VALIDATOR.validate(transaction);
             if ( !violations.isEmpty() )
-                throw new RuntimeException("Invalid StockTransaction in PRE-Validate: " + ConstraintViolationFormater.toSingleLine(violations));
+                throw new RuntimeException("Invalid StockTransaction in PRE-Validate: " + ValidationUtil.formatToSingleLine(violations));
             transaction = stockEm.find(StockTransaction.class, transaction.getId());
             Date before = transaction.addStatus(COMMISSIONED, PICKER, picker, DELIVERER, deliverer);
             transaction.addStatus(DateUtils.addSeconds(before, 1), IN_TRANSFER, DELIVERER, deliverer);
             violations = VALIDATOR.validate(transaction);
             if ( !violations.isEmpty() )
-                throw new RuntimeException("Invalid StockTransaction in POST-Validate: " + ConstraintViolationFormater.toSingleLine(violations));
+                throw new RuntimeException("Invalid StockTransaction in POST-Validate: " + ValidationUtil.formatToSingleLine(violations));
             for (StockUnit stockUnit : transaction.getUnits()) {
                 stockUnit.setStock(null);
             }

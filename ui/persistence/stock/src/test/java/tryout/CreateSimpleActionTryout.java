@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.StockTransactionProcessor;
 import eu.ggnet.dwoss.stock.ui.cap.CreateSimpleAction;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static org.mockito.BDDMockito.given;

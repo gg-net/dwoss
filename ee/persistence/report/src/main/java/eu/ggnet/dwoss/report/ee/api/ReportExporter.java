@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.report.ee.api;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.report.ee.ViewReportResult;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Optional Service to Export a Report to a special XLS.

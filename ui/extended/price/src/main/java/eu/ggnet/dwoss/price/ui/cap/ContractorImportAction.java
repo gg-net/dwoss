@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.DetailDialog;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.price.ee.imex.ContractorPricePartNoImporter;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.dwoss.common.ui.AccessableAction;
 import eu.ggnet.saft.experimental.auth.Guardian;

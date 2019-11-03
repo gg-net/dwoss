@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import javax.persistence.LockModeType;
 import javax.swing.UIManager;
 
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ee.UnitSupporter;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;

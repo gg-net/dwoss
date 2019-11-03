@@ -22,11 +22,6 @@
             <artifactId>commons-email</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-lib-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
         </dependency>
@@ -48,6 +43,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-api-mandator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-system</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

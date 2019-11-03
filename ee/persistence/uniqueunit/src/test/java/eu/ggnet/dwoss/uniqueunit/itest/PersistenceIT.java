@@ -1,7 +1,6 @@
 package eu.ggnet.dwoss.uniqueunit.itest;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;

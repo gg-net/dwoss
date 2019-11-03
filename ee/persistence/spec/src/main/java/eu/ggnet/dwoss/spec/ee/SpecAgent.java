@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.spec.ee;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * The SpecAgent.

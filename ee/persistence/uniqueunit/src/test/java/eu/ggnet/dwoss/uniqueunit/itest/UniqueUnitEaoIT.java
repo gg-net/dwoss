@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.Utils;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.ee.Step.WEEK;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;

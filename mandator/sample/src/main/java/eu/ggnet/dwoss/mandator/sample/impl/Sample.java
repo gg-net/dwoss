@@ -22,13 +22,11 @@ import java.util.*;
 
 import javax.enterprise.inject.Produces;
 
-import org.apache.commons.io.FileUtils;
-
 import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.core.system.ImageFinder;
 import eu.ggnet.dwoss.mandator.api.value.*;
 import eu.ggnet.dwoss.mandator.api.value.partial.DocumentIdentifierGeneratorConfiguration.PrefixType;
 import eu.ggnet.dwoss.mandator.api.value.partial.*;
-import eu.ggnet.dwoss.util.ImageFinder;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.*;
 
@@ -96,7 +94,7 @@ public class Sample {
     public final static Contractors CONTRACTORS = new Contractors(EnumSet.of(ONESELF, ACER, HP, DELL), EnumSet.of(ACER, PACKARD_BELL, HP, DELL));
 
     @Produces
-    public final static ImageFinder IMAGE_FINDER = new ImageFinder(FileUtils.getTempDirectoryPath());
+    public final static ImageFinder IMAGE_FINDER = new ImageFinder(System.getProperty("java.io.tmpdir"));
 
     static URL loadMailDocument() {
         return Sample.class.getResource("mailDocument.txt");

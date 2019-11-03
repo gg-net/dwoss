@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ui.product.DesktopBundleView;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.ProductProcessorStub;
 import eu.ggnet.dwoss.spec.ee.SpecAgent;

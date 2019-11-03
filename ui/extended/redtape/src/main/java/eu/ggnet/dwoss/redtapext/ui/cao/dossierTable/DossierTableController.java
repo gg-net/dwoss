@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.redtape.ee.api.LegacyRemoteBridge;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.IDossierSelectionHandler;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.experimental.auth.Guardian;

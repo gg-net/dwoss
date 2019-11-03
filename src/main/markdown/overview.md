@@ -16,10 +16,14 @@ Project: dwoss
 
 Architecture
 ------------
-- Must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time.
-- Everything, that is not testable, should be defined as guidelines, good style. But it may be violated.
-- Must make sense. splitting modules int artifacts without a technical or functional requirement is not usefull 
-    - e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. If not, expose it in the public api.
+
+An architecture must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time. 
+Everything, that is not testable, should be defined as guidelines, good style. But it _may_ be violated.
+And above all an architecture must make sense. Splitting modules int artifacts without a technical or functional requirement 
+is not usefull and must be avoided. 
+(e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. An extra layer which only contains 
+remote interfaces and entites, but not the implemation of the ejbs, even if it isn't used on the client side, doesn't make sense.
+If only a small amount of information should be exposed, design a public api)
 
 ### Module
 [Wikipedia: Modul](https://de.wikipedia.org/wiki/Modul_(Software))
@@ -71,7 +75,6 @@ Each assambly may dependen on the common subcomponent and has it's own component
 #### Module dependencies
 
 There are three modes of dependence between modules.
-
 1. _Optional_: A module "A" depends optionally on module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml)
    but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of 
    the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example) 
@@ -88,13 +91,23 @@ There are three modes of dependence between modules.
 The Core Components have special rules. 
 1. common - contains constants and interfaces
     - may be requiered by apis
-2. ee - contains interceptors, beans and libraries (tba)
+2. system - contains interceptors, beans and libraries, very thin
     - may be bound by ee
-3. ui - contains ui components, global handlers (tba)
+3. widget - contains ui components, global handlers (tba)
     - may be bound by ui
 
+
+### X-Reactor Components
+
+All X-Reactor Components are only maven pom projects which collect module components and dependencies
+
+GroupId: eu.ggnet.dwoss
+ArtifactId: dwoss-xreactor-"group"
+
+Most of the projects are grouped by the their component "layer" (e.g.: dwoss-xreactor-api)
+
+
 Todo: 
-- Reactor Architectur
 - DwPro Architectur
 - Sample Mandator und reale Mandators
 

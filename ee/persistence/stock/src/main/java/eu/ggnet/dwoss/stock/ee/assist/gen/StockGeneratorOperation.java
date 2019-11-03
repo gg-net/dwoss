@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.stock.ee.entity.StockLocation;
-import eu.ggnet.dwoss.util.gen.NameGenerator;
+import eu.ggnet.dwoss.core.system.generator.NameGenerator;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 

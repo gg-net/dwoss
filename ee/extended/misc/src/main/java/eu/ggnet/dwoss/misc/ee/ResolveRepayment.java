@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  *

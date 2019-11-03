@@ -45,13 +45,12 @@ import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.api.ReportExporter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.saft.api.IdSupplier;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
-import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static javafx.scene.control.ButtonBar.ButtonData.OK_DONE;
 import static javafx.scene.control.SelectionMode.MULTIPLE;
 
@@ -104,8 +103,8 @@ public class ReportController implements Initializable, FxController, Consumer<R
         public void accept(ViewReportResult reportResult) {
             this.reportResult = reportResult;
             String infoLine = "Name: " + reportResult.getParameter().reportName();
-            infoLine += "\nStart: " + ISO.format(reportResult.getParameter().start());
-            infoLine += "\nEnde: " + ISO.format(reportResult.getParameter().end());
+            infoLine += "\nStart: " + Utils.ISO_DATE.format(reportResult.getParameter().start());
+            infoLine += "\nEnde: " + Utils.ISO_DATE.format(reportResult.getParameter().end());
             setContentText(infoLine);
         }
 
@@ -217,14 +216,12 @@ public class ReportController implements Initializable, FxController, Consumer<R
         });
         column.setCellFactory(p -> new CheckBoxTableCell<>());
         columns.add(column);
-        columns.addAll(
-                Arrays.asList(
-                        toTableLineColumn("Datum", cell -> new ReadOnlyStringWrapper(DateFormats.ISO.format(cell.getValue().getReportingDate())).getReadOnlyProperty()),
+        columns.addAll(Arrays.asList(toTableLineColumn("Datum", cell -> new ReadOnlyStringWrapper(Utils.ISO_DATE.format(cell.getValue().getReportingDate())).getReadOnlyProperty()),
                         toTableLineColumn("SopoNr.", cell -> new ReadOnlyStringWrapper(cell.getValue().getRefurbishId()).getReadOnlyProperty()),
                         toTableLineColumn("ArtikelNr.", cell -> new ReadOnlyStringWrapper(cell.getValue().getPartNo()).getReadOnlyProperty()),
                         toTableLineColumn("Bezeichnung", cell -> new ReadOnlyStringWrapper(cell.getValue().getName()).getReadOnlyProperty()),
                         toTableLineColumn("Seriennummer", cell -> new ReadOnlyStringWrapper(cell.getValue().getSerial()).getReadOnlyProperty()),
-                        toTableLineColumn("MFGDate", cell -> new ReadOnlyStringWrapper(cell.getValue().getMfgDate() == null ? "" : DateFormats.ISO.format(cell.getValue().getMfgDate())).getReadOnlyProperty()),
+                        toTableLineColumn("MFGDate", cell -> new ReadOnlyStringWrapper(cell.getValue().getMfgDate() == null ? "" : Utils.ISO_DATE.format(cell.getValue().getMfgDate())).getReadOnlyProperty()),
                         toCurrencyColumn("Manufacturer CP", cell -> cell.getValue().manufacturerCostPriceProperty()),
                         toCurrencyColumn("Contractor RP", cell -> cell.getValue().contractorReferencePriceProperty()),
                         toCurrencyColumn("VK", cell -> cell.getValue().priceProperty()),
@@ -351,8 +348,8 @@ public class ReportController implements Initializable, FxController, Consumer<R
 
         this.reportResult = reportResult;
         nameLabel.setText(reportResult.getParameter().reportName());
-        fromDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().start()));
-        toDateLabel.setText(DateFormats.ISO.format(reportResult.getParameter().end()));
+        fromDateLabel.setText(Utils.ISO_DATE.format(reportResult.getParameter().start()));
+        toDateLabel.setText(Utils.ISO_DATE.format(reportResult.getParameter().end()));
 
         reportResult.getLines().keySet().stream().map((Type type) -> {
             for (ReportLine reportLine : reportResult.getLines().get(type)) {

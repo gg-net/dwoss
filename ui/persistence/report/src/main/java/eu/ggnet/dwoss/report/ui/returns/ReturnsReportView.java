@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.saft.core.Ui;
 
 /**
@@ -49,7 +49,7 @@ public class ReturnsReportView extends javax.swing.JPanel implements Consumer<Li
                 case 0:
                     return lines.get(rowIndex).getReportLine().getDossierIdentifier();
                 case 1:
-                    return DateFormats.ISO.format(lines.get(rowIndex).getReportLine().getActual());
+                    return Utils.ISO_DATE.format(lines.get(rowIndex).getReportLine().getActual());
                 case 2:
                     return lines.get(rowIndex).getReportLine().getRefurbishId();
                 case 3:
@@ -59,9 +59,9 @@ public class ReturnsReportView extends javax.swing.JPanel implements Consumer<Li
                 case 5:
                     return lines.get(rowIndex).getReportLine().getSerial();
                 case 6:
-                    return DateFormats.ISO.format(lines.get(rowIndex).getReportLine().getMfgDate());
+                    return Utils.ISO_DATE.format(lines.get(rowIndex).getReportLine().getMfgDate());
                 case 7:
-                    return DateFormats.ISO.format(lines.get(rowIndex).getReportLine().getReportingDate());
+                    return Utils.ISO_DATE.format(lines.get(rowIndex).getReportLine().getReportingDate());
                 case 8:
                     return lines.get(rowIndex).isShouldReported();
             }

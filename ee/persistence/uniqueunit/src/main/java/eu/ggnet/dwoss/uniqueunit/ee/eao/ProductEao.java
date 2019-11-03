@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 

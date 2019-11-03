@@ -11,7 +11,7 @@ import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.common.ui.saftwrap.OkCancelWrap;
 import eu.ggnet.dwoss.customer.api.CustomerService;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.redtape.ee.RedTapeAgent;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;

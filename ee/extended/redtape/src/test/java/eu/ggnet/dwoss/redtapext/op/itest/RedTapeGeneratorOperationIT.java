@@ -10,7 +10,7 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGeneratorOperation;
 import eu.ggnet.dwoss.receipt.ee.gen.ReceiptGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.ee.gen.RedTapeGeneratorOperation;
 import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static org.junit.Assert.assertFalse;
 

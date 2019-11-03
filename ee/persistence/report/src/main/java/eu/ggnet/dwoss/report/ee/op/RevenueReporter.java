@@ -21,7 +21,7 @@ import java.util.Date;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.common.ee.Step;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Reporter for aggregated Revenues.

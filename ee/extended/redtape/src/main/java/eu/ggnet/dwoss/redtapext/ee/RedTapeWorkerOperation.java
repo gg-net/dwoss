@@ -47,7 +47,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
@@ -411,7 +411,7 @@ public class RedTapeWorkerOperation implements RedTapeWorker {
      * @param warranty the warranty to wich the dossier position are changed
      * @param username
      * @return the updated dossier
-     * @throws eu.ggnet.dwoss.util.UserInfoException if the dossiers crucial document is not an order,
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException if the dossiers crucial document is not an order,
      *                                               the dosser is closed or in legacy state, there are no unit type positions
      */
     @Override

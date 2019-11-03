@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.eao.Revenue.Key;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 

@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentUpdateStage;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.MandatorsStub;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;

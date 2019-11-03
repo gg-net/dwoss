@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionModel;
 import eu.ggnet.dwoss.stock.ui.transactions.CreateQuestionView;
 import eu.ggnet.dwoss.stock.ui.transactions.CreateSelectionController;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.dwoss.common.ui.AccessableAction;

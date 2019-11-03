@@ -33,8 +33,8 @@ import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -288,8 +288,8 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
             BrandContractorCount count = result.get(step.truncate(holder.inputDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( count == null ) throw new RuntimeException("No prepared BrandContractorCount found for " + step.name()
-                        + ":inputDate=" + DateFormats.ISO.format(holder.inputDate)
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.inputDate))
+                        + ":inputDate=" + Utils.ISO_DATE.format(holder.inputDate)
+                        + ",truncated=" + Utils.ISO_DATE.format(step.truncate(holder.inputDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
             count.addTo(holder.brand, holder.contractor, holder.count);
@@ -311,7 +311,7 @@ public class UniqueUnitEao extends AbstractEao<UniqueUnit> {
     private List<String> nice(Set<Date> dates, Step step) {
         List<String> result = new ArrayList<>();
         for (Date date : dates) {
-            result.add(step.format(date) + "(" + DateFormats.ISO.format(date) + ")");
+            result.add(step.format(date) + "(" + Utils.ISO_DATE.format(date) + ")");
         }
         return result;
     }

@@ -63,6 +63,11 @@
             <scope>test</scope>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <modules>

@@ -24,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JFrame;
 
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.util.MailTo;
 import eu.ggnet.saft.core.Dl;
 
 /**

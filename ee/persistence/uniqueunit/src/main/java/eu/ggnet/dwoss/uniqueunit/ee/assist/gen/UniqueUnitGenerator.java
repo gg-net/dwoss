@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.MapBuilder;
+import eu.ggnet.dwoss.core.system.MapBuilder;
 
 import static eu.ggnet.dwoss.common.api.values.ProductGroup.DESKTOP;
 import static eu.ggnet.dwoss.common.api.values.Warranty.WARRANTY_TILL_DATE;

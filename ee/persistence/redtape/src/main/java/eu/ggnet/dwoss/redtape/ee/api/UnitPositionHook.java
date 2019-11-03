@@ -21,8 +21,8 @@ import java.util.List;
 import javax.ejb.Local;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 /**
  * Interfaces to provide position template generators.

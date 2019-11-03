@@ -26,7 +26,6 @@ import java.util.*;
 import javax.ejb.Stateful;
 
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
-import eu.ggnet.dwoss.search.api.*;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
 

@@ -23,7 +23,6 @@ import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.Contact;
 import eu.ggnet.dwoss.customer.ee.entity.Customer;
 import eu.ggnet.dwoss.customer.ui.neo.ContactUpdateController;
-import eu.ggnet.dwoss.customer.ui.neo.CustomerConnectorFascade;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.UiCore;
 

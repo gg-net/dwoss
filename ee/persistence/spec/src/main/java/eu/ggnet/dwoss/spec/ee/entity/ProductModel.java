@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.ee.BaseEntity;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static javax.persistence.CascadeType.*;
 

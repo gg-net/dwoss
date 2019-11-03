@@ -8,7 +8,7 @@ import org.junit.Test;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.report.ee.entity.*;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,10 +28,10 @@ public class ReportTest {
 
     static {
         try {
-            _2009_01_01 = DateFormats.ISO.parse("2009-01-01");
-            _2011_09_01 = DateFormats.ISO.parse("2011-09-01");
-            _2011_10_01 = DateFormats.ISO.parse("2011-10-01");
-            _2011_10_07 = DateFormats.ISO.parse("2011-10-07");
+            _2009_01_01 = Utils.ISO_DATE.parse("2009-01-01");
+            _2011_09_01 = Utils.ISO_DATE.parse("2011-09-01");
+            _2011_10_01 = Utils.ISO_DATE.parse("2011-10-01");
+            _2011_10_07 = Utils.ISO_DATE.parse("2011-10-07");
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
         }

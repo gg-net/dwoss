@@ -13,7 +13,7 @@
     <packaging>ejb</packaging>
 
     <dependencies>
-         <dependency>
+        <dependency>
             <groupId>org.inferred</groupId>
             <artifactId>freebuilder</artifactId>
             <optional>true</optional>
@@ -21,11 +21,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-lib-util</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

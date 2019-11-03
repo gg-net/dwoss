@@ -30,8 +30,8 @@ import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.discovery.Discovery;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 
 /**
  *

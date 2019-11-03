@@ -24,9 +24,9 @@ import eu.ggnet.dwoss.report.ee.ViewReportResult;
 import eu.ggnet.dwoss.report.ee.ViewReportResult.Type;
 import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.lucidcalc.*;
 
-import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;
 import static eu.ggnet.lucidcalc.CFormat.Representation.*;
@@ -130,7 +130,7 @@ public class XlsExporter {
         r.sum2 = new SCell(new SFormula("SUMME(", table.getCellFirstRow(6), ":", table.getCellLastRow(6), ")"), EURO);
         r.sum3 = new SCell(new SFormula("SUMME(", table.getCellFirstRow(8), ":", table.getCellLastRow(8), ")"), EURO);
         r.sum4 = new SCell(new SFormula("SUMME(", table.getCellFirstRow(9), ":", table.getCellLastRow(9), ")"), EURO);
-        r.block.add("Vom " + ISO.format(startingDate) + " bis " + ISO.format(endingDate),
+        r.block.add("Vom " + Utils.ISO_DATE.format(startingDate) + " bis " + Utils.ISO_DATE.format(endingDate),
                 new CFormat(Color.BLUE, Color.WHITE, LEFT), r.sum1, r.sum2, new SFormula(r.sum2, "/", r.sum1), new CFormat(PERCENT_FLOAT), r.sum3, r.sum4);
         return r;
     }

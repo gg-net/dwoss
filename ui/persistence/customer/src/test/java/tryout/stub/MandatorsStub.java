@@ -20,7 +20,7 @@ import java.util.EnumSet;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 
 /**
  *

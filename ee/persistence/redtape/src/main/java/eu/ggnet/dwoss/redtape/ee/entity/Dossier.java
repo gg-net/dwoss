@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Condition;
 import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 

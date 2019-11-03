@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.mail.demand.SmtpConfiguration;
 import eu.ggnet.dwoss.misc.api.SalesListingService;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  *

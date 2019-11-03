@@ -28,8 +28,8 @@ import eu.ggnet.dwoss.rights.ee.assist.Rights;
 import eu.ggnet.dwoss.rights.ee.eao.OperatorEao;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.entity.Persona;
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * This is the {@link RemoteAgent} for Rights.

@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 
 /**
  * The StockAgent Implementation.

@@ -1,15 +1,9 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.PositionBuilder;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.DocumentHistory;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import org.junit.*;
+
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 import static eu.ggnet.dwoss.common.api.values.TaxType.UNTAXED;
 import static org.junit.Assert.assertFalse;
@@ -91,14 +85,14 @@ public class DocumentExactlyBriefedTest {
     @Test
     public void testInvoiceAddressChange() {
         assertTrue("Documents difference must not invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
-        doc1.setInvoiceAddress(new Address("MuhBlub"));
+        doc1.setInvoiceAddress(new Address(1, "MuhBlub"));
         assertFalse("Invoice Address change must invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
     }
 
     @Test
     public void testShippingAddressChange() {
         assertTrue("Documents difference must not invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
-        doc1.setShippingAddress(new Address("MuhBlub"));
+        doc1.setShippingAddress(new Address(1, "MuhBlub"));
         assertFalse("Shipping Address change must invalidate exactly briefed:\n" + doc1 + "\n" + doc2, doc1.isStillExactlyBriefed(doc2));
     }
 

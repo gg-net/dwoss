@@ -22,7 +22,7 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  *

@@ -42,7 +42,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.RETAILER;

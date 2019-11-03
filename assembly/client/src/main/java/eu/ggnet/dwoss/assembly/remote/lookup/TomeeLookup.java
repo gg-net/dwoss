@@ -23,7 +23,7 @@ import javax.naming.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
+import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 
 import static java.util.Objects.requireNonNull;

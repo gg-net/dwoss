@@ -30,9 +30,9 @@ import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.StockTransactionEao;
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 import eu.ggnet.dwoss.progress.IMonitor;
 
 @Stateless

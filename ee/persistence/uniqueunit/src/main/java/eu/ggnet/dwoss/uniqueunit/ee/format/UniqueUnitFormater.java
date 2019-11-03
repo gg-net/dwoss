@@ -24,8 +24,8 @@ import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.common.api.values.Warranty;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
-import eu.ggnet.dwoss.util.DateFormats;
 import eu.ggnet.dwoss.common.api.INoteModel;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.api.values.SalesChannel.UNKNOWN;
 import static java.util.Locale.GERMANY;
@@ -87,7 +87,7 @@ public abstract class UniqueUnitFormater {
                 histories.stream()
                         .filter(ph -> ph.getType() == type)
                         .sorted(Comparator.comparing(PriceHistory::getDate))
-                        .forEach(ph -> sb.append("<li>").append(DateFormats.ISO.format(ph.getDate())).append(" - ").append(CUR.format(ph.getPrice())).append(" - ").append(ph.getComment()).append("</li>"));
+                        .forEach(ph -> sb.append("<li>").append(Utils.ISO_DATE.format(ph.getDate())).append(" - ").append(CUR.format(ph.getPrice())).append(" - ").append(ph.getComment()).append("</li>"));
                 sb.append("</ul></td>");
             }
         }
@@ -206,7 +206,7 @@ public abstract class UniqueUnitFormater {
         elems.addAll(unit.getComments());
         elems.add(unit.getComment());
         if ( unit.getWarranty().equals(Warranty.WARRANTY_TILL_DATE) )
-            elems.add("Garantie bis: " + DateFormats.ISO.format(unit.getWarrentyValid()));
+            elems.add("Garantie bis: " + Utils.ISO_DATE.format(unit.getWarrentyValid()));
         return collectionToString(null, elems);
     }
 

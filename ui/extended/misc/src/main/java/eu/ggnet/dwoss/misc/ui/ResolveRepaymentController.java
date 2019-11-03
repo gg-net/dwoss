@@ -35,7 +35,7 @@ import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment;
 import eu.ggnet.dwoss.misc.ee.ResolveRepayment.ResolveResult;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;

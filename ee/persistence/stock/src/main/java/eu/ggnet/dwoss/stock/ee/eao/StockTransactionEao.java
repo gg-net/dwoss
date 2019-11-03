@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionParticipation;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 public class StockTransactionEao extends AbstractEao<StockTransaction> {
 

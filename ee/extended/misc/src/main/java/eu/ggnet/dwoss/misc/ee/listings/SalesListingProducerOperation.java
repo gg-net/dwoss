@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.misc.ee.listings;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.TwoDigits;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.system.ImageFinder;
 import eu.ggnet.dwoss.customer.api.ResellerListService;
 import eu.ggnet.dwoss.mandator.api.service.FtpConfiguration.UploadCommand;
 import eu.ggnet.dwoss.mandator.api.service.*;
@@ -56,7 +62,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.*;
 import eu.ggnet.lucidcalc.CFormat.Representation;
 import eu.ggnet.lucidcalc.*;
 
@@ -245,7 +250,7 @@ public class SalesListingProducerOperation implements SalesListingProducer, Sale
      */
     private String compileReportToTempFile(final String name) {
         // Optimize, only do it on updates.
-        String reportFile = TempUtil.getDirectory("jasper") + "/" + name + ".jasper";
+        String reportFile = Utils.getTempDirectory("jasper") + "/" + name + ".jasper";
         URL url = Objects.requireNonNull(getClass().getResource(name + ".jrxml"), "The Resource " + getClass().getPackage() + "/" + name + ".jrxml not found.");
         try (InputStream is = url.openStream()) {
             JRSaver.saveObject(JasperCompileManager.compileReport(is), reportFile);

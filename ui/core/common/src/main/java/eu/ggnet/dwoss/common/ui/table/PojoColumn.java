@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.common.ui.table;
 
-import eu.ggnet.dwoss.util.PojoUtil;
+import eu.ggnet.dwoss.common.ui.PojoUtil;
 
 public class PojoColumn<T> {
 

@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.ee.entity.DesktopBundle;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.entity.xml.SpecsRoot;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Operation to allow the XML Export of multiple ProductSpecs.

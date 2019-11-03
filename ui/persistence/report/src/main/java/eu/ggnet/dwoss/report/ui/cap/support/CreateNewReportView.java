@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.mandator.upi.CachedMandators;
 import eu.ggnet.dwoss.report.ee.ReportParameter;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.ViewMode;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.ui.ResultProducer;
 
@@ -78,8 +78,8 @@ public class CreateNewReportView extends javax.swing.JPanel implements VetoableO
                 || startDateChooser.getDate() == null
                 || contractorComboBox.getSelectedItem() == null ) return;
         String text = ((TradeName)contractorComboBox.getSelectedItem()).getName() + " Report";
-        text += " - " + DateFormats.ISO.format(startDateChooser.getDate());
-        text += " bis " + DateFormats.ISO.format(endDateChooser.getDate());
+        text += " - " + Utils.ISO_DATE.format(startDateChooser.getDate());
+        text += " bis " + Utils.ISO_DATE.format(endDateChooser.getDate());
         nameTextField.setText(text);
     }
 

@@ -31,11 +31,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-lib-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.lucidcalc</groupId>
             <artifactId>lucidcalc</artifactId>
         </dependency>

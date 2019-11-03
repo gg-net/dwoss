@@ -106,3 +106,17 @@ hs_err_pid*
 /ee/mail/target/
 /basic/mail-cc/target/
 /basic/mail-demand/target/
+/demand/mail-demand/target/
+/demand/mail/target/
+/core/common/target/
+/core/widget/target/
+/core/system/target/
+/spi/widget/target/
+/spi/remote/target/
+/ui/widget/target/
+/ui/mandator/target/
+/core/target/
+/demand/target/
+/spi/target/
+/api/target/
+/web/target/

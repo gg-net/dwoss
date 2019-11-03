@@ -23,11 +23,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 /**
  * Abtract Superclass for Entity classes.
  * Includes equals and hashCode based on Id.
- * 
+ *
  * @author oliver.guenther
  */
 public abstract class BaseEntity implements Serializable {
-    
+
     public abstract long getId();
 
     @Override
@@ -45,10 +45,30 @@ public abstract class BaseEntity implements Serializable {
         final BaseEntity other = (BaseEntity)that;
         return this.getId() == other.getId();
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
+    /*
+    // Alternative implementation: If Persisted uses id otherwise object identity.
+
+    @Override
+    public final int hashCode() {
+        if (getId() == 0) return super.hashCode(); // Not persisted.
+        return this.getClass().hashCode() * 7 + (int)(this.getId() ^ (this.getId() >>> 32));
+    }
+
+    @Deprecated
+    public boolean equals(Object two) {
+        Object one = this;
+        if ( two == null ) return false;
+        if ( one.getClass() != two.getClass() ) return false;
+        final BaseEntity other = (BaseEntity)two;
+        if ( one.getId() == 0 && other.getId() == 0 ) return one == other; // Not persisted use object identity
+        return one.getId() == other.getId();
+    }
+
+     */
 }

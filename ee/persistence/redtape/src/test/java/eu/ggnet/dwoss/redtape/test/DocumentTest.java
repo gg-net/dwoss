@@ -1,17 +1,12 @@
 package eu.ggnet.dwoss.redtape.test;
 
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.common.api.values.TaxType;
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.redtape.ee.entity.Address;
-import eu.ggnet.dwoss.redtape.ee.entity.Position;
-import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
-import eu.ggnet.dwoss.redtape.ee.entity.Document;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
+
+import eu.ggnet.dwoss.common.api.values.*;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
 
 import static org.junit.Assert.*;
 
@@ -67,10 +62,10 @@ public class DocumentTest {
 
         Dossier dos = new Dossier();
 
-        Address a1 = new Address("ShippingAddress");
-        Address a2 = new Address("InvoiceAddress");
-        Address a3 = new Address("Another ShippingAddress");
-        Address a4 = new Address("Another InvoiceAddress");
+        Address a1 = new Address(1, "ShippingAddress");
+        Address a2 = new Address(2, "InvoiceAddress");
+        Address a3 = new Address(3, "Another ShippingAddress");
+        Address a4 = new Address(4, "Another InvoiceAddress");
 
         Document doc1 = new Document();
         doc1.setShippingAddress(a1);
@@ -89,7 +84,7 @@ public class DocumentTest {
         //add and remove positions with equality test
         Position p1 = doc2.append(Position.builder().amount(1).type(PositionType.UNIT).build());
         Position p2 = doc2.append(Position.builder().amount(1).type(PositionType.UNIT).build());
-        assertFalse("Should not be equals, but is.\n- " + doc1 + "\n- " + doc2,doc1.equalsContent(doc2));
+        assertFalse("Should not be equals, but is.\n- " + doc1 + "\n- " + doc2, doc1.equalsContent(doc2));
 
         doc2.remove(p1);
         doc2.remove(p2);

@@ -23,7 +23,7 @@ import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ui.ProductTask;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.*;
 
@@ -174,7 +174,7 @@ public class ProductListController implements Initializable, FxController, Close
         productGtin.setCellValueFactory(new PropertyValueFactory<>("gtin"));
         productEol.setCellValueFactory(p -> {
             SimpleStringProperty property = new SimpleStringProperty();
-            if ( p.getValue().getEol() != null ) property.setValue(DateFormats.ISO.format(p.getValue().getEol()));
+            if ( p.getValue().getEol() != null ) property.setValue(Utils.ISO_DATE.format(p.getValue().getEol()));
             return property;
         });
 

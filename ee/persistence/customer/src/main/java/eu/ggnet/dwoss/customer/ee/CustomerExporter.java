@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.customer.ee;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Exporter for customers

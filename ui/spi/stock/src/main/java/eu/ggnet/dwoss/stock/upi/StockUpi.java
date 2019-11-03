@@ -25,6 +25,7 @@ import eu.ggnet.dwoss.stock.api.PicoStock;
  */
 public interface StockUpi {
 
+    // Todo: It would be much more apropriated, than there exists a method to open a new selection ui. Or I could push it to core.
     void setActiveStock(PicoStock stock);
 
     PicoStock getActiveStock();

@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.assist.gen.RightsGeneratorOperation;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

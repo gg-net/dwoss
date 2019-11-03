@@ -17,7 +17,7 @@ import eu.ggnet.dwoss.redtapext.op.itest.support.ArquillianProjectArchive;
 import eu.ggnet.dwoss.redtapext.op.itest.support.DatabaseCleaner;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static org.junit.Assert.assertTrue;
 

@@ -28,7 +28,7 @@ import javafx.scene.control.Alert;
 import eu.ggnet.dwoss.common.ui.TikaUtil;
 import eu.ggnet.dwoss.misc.ee.StockTaking;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.api.Reply;

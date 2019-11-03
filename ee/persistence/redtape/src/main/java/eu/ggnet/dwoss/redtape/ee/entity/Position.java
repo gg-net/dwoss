@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.Key;
-import eu.ggnet.dwoss.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.TwoDigits;
 
 import static javax.persistence.CascadeType.*;
 

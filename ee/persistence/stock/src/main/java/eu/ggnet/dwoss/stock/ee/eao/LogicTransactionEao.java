@@ -24,7 +24,7 @@ import javax.persistence.*;
 
 import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 /**
  * The LogicTransaction Entity Access Object.

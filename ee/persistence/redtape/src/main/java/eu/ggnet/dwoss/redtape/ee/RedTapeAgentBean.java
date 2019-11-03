@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.redtape.ee.eao.SalesProductEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
 
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 
 /**
  * The RedTapeAgent implementation.

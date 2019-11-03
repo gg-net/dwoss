@@ -25,7 +25,7 @@ import javax.persistence.TypedQuery;
 
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 /**
  * Entity Access Object for the ProductSpec.

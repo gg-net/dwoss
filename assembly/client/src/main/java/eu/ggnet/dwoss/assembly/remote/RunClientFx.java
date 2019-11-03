@@ -33,8 +33,8 @@ import eu.ggnet.dwoss.assembly.remote.lookup.Configurations;
 import eu.ggnet.dwoss.assembly.remote.lookup.WildflyLookup;
 import eu.ggnet.dwoss.common.ui.exception.*;
 import eu.ggnet.dwoss.mandator.upi.CachedMandators;
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 

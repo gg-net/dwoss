@@ -29,7 +29,7 @@ import javafx.collections.ListChangeListener.Change;
 
 import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static javax.persistence.FetchType.EAGER;
 

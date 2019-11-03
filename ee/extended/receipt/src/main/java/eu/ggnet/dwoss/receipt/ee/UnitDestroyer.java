@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.receipt.ee;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * Remote Interface for UnitDestroyerOperation.

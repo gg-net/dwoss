@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 
 import eu.ggnet.dwoss.misc.ee.StockTakingOperation.ReaderResult;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

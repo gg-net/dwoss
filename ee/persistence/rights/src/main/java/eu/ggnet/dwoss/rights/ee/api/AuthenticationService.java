@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.rights.ee.api;
 
 import javax.ejb.Local;
 
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * This Service can be implemented to create a alternative authentication of users.
@@ -34,7 +34,7 @@ public interface AuthenticationService {
      * @param username the username of the user.
      * @param password the password
      * @return true if the authentication was successful.
-     * @throws eu.ggnet.dwoss.util.UserInfoException if the user did something wrong.
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException if the user did something wrong.
      */
     boolean authenticate(String username, char[] password) throws UserInfoException;
 }

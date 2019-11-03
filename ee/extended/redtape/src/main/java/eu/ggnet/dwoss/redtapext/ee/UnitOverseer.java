@@ -22,8 +22,8 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Position;
 import eu.ggnet.dwoss.uniqueunit.api.UnitShard;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 /**
  * UnitOverseer, knows correctly about the status of a unit.

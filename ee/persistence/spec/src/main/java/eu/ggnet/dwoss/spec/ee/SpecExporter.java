@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.spec.ee;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Operation to allow the XML Export of multiple ProductSpecs.

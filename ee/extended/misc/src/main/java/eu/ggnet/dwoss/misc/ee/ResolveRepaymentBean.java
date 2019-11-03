@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.stock.ee.eao.StockUnitEao;
 import eu.ggnet.dwoss.stock.ee.emo.StockTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.uniqueunit.api.event.UnitHistory;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.ANNULATION_INVOICE;
 import static eu.ggnet.dwoss.common.api.values.DocumentType.CREDIT_MEMO;

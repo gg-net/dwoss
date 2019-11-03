@@ -19,7 +19,7 @@ import eu.ggnet.dwoss.report.ee.assist.gen.ReportLineGenerator;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
@@ -117,7 +117,7 @@ public class ReportAgentDanglingCloserIT extends ArquillianProjectArchive {
 
     private static Date parse(String dateString) {
         try {
-            return DateFormats.ISO.parse(dateString);
+            return Utils.ISO_DATE.parse(dateString);
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
         }

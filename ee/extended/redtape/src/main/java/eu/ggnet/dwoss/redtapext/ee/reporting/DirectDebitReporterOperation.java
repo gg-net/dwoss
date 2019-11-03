@@ -31,7 +31,7 @@ import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
 import eu.ggnet.dwoss.redtape.ee.eao.DocumentEao;
 import eu.ggnet.dwoss.redtape.ee.entity.Document;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.dwoss.common.api.values.PaymentMethod.DIRECT_DEBIT;

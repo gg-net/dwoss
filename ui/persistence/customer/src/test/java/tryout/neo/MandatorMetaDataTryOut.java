@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import eu.ggnet.dwoss.customer.ee.assist.gen.CustomerGenerator;
 import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ui.neo.MandatorMetaDataController;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.Guardian;

@@ -39,8 +39,8 @@ import eu.ggnet.dwoss.spec.ee.SpecAgent;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 

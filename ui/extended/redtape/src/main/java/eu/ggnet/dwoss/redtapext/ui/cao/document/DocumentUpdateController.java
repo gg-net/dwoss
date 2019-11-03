@@ -37,7 +37,7 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker.Addresses;
 import eu.ggnet.dwoss.redtapext.ee.UnitOverseer;
 import eu.ggnet.dwoss.redtapext.ui.cao.common.ShippingCostHelper;
 import eu.ggnet.dwoss.redtapext.ui.cao.document.position.*;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
@@ -72,7 +72,7 @@ public class DocumentUpdateController {
      * @param refurbishId the refurbishId if a type is unit.
      * @param forceAdd    passed to the unit creation to force conditioned behaviour
      *                    ({@link DocumentUpdateController#createUnitPostion(long, java.lang.String, boolean force)})
-     * @throws eu.ggnet.dwoss.util.UserInfoException
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException
      */
     public void addPosition(long dossierId, PositionType type, String refurbishId, boolean forceAdd) throws UserInfoException {
         switch (type) {

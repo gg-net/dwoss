@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;

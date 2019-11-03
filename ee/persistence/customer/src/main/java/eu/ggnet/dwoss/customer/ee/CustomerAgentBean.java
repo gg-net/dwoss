@@ -41,7 +41,7 @@ import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.stash.*;
 import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
 import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
 import com.querydsl.core.types.dsl.NumberPath;

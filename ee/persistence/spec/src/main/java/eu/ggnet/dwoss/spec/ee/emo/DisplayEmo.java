@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.spec.ee.emo;
 
 import javax.persistence.EntityManager;
 
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.spec.ee.eao.DisplayEao;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 

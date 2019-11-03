@@ -28,7 +28,7 @@ import eu.ggnet.dwoss.redtape.api.event.AddressChange;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtapext.ee.state.CustomerDocument;
 import eu.ggnet.dwoss.redtapext.ee.workflow.RedTapeCreateDossierWorkflow;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.statemachine.StateTransition;
 
@@ -203,7 +203,7 @@ public interface RedTapeWorker {
      * @param warranty the warranty to wich the dossier position are changed
      * @param username
      * @return the updated dossier
-     * @throws eu.ggnet.dwoss.util.UserInfoException
+     * @throws eu.ggnet.dwoss.core.common.UserInfoException
      */
     Dossier updateWarranty(long disserId, Warranty warranty, String username) throws UserInfoException;
 }

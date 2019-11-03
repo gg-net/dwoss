@@ -51,7 +51,7 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.*;
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;

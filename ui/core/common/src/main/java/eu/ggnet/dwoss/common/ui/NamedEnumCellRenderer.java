@@ -16,7 +16,6 @@
  */
 package eu.ggnet.dwoss.common.ui;
 
-import eu.ggnet.dwoss.util.PojoUtil;
 
 import java.awt.Component;
 

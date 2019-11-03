@@ -60,9 +60,9 @@ import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnitHistory;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType.WARRANTY;
@@ -206,7 +206,7 @@ public class UnitOverseerBean implements UnitOverseer {
                 re += "<tr>";
                 re += wrap("<td>", "</td>",
                         l.getId(),
-                        DateFormats.ISO.format(l.getReportingDate()),
+                        Utils.ISO_DATE.format(l.getReportingDate()),
                         l.getCustomerId(),
                         l.getRefurbishId(),
                         l.getPositionType() == PRODUCT_BATCH && l.getReference(WARRANTY) != null ? "Garantieerweiterung" : l.getPositionType().getName(),

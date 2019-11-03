@@ -25,7 +25,6 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.common.api.IsStateful;
-import eu.ggnet.dwoss.search.api.*;
 
 /**
  * A statfull searcher for all connected modules.

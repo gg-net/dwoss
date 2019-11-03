@@ -23,8 +23,7 @@ import eu.ggnet.dwoss.report.ee.eao.Revenue;
 import eu.ggnet.dwoss.report.ee.entity.*;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
 import eu.ggnet.dwoss.report.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.Utils;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import com.querydsl.jpa.impl.JPADeleteClause;
 
@@ -62,9 +61,9 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
 
     static {
         try {
-            startEarly = DateFormats.ISO.parse("2012-01-01");
-            startMid = DateFormats.ISO.parse("2012-01-14");
-            startFuture = DateFormats.ISO.parse("20-01-28");
+            startEarly = Utils.ISO_DATE.parse("2012-01-01");
+            startMid = Utils.ISO_DATE.parse("2012-01-14");
+            startFuture = Utils.ISO_DATE.parse("20-01-28");
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
         }
@@ -172,7 +171,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
             em.persist(r);
         }
         utx.commit();
-        Date max = DateFormats.ISO.parse("2012-01-20");
+        Date max = Utils.ISO_DATE.parse("2012-01-20");
 
         utx.begin();
         em.joinTransaction();
@@ -260,9 +259,9 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         utx.begin();
         em.joinTransaction();
 
-        List<ReportLine> rls = new ReportLineEao(em).findUnreported(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"));
+        List<ReportLine> rls = new ReportLineEao(em).findUnreported(DELL, Utils.ISO_DATE.parse("2012-01-14"), Utils.ISO_DATE.parse("2012-01-27"));
         assertEquals(600, rls.size());// Units, Comments, ShipmentCost
-        rls = new ReportLineEao(em).findUnreported(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"), PositionType.UNIT, PositionType.UNIT_ANNEX);
+        rls = new ReportLineEao(em).findUnreported(DELL, Utils.ISO_DATE.parse("2012-01-14"), Utils.ISO_DATE.parse("2012-01-27"), PositionType.UNIT, PositionType.UNIT_ANNEX);
         assertEquals(300, rls.size());
         utx.commit();
     }
@@ -307,7 +306,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
         ReportLineEao reportLineEao = new ReportLineEao(em);
         utx.begin();
         em.joinTransaction();
-        List<ReportLine> rls = reportLineEao.findUnreportedUnits(DELL, DateFormats.ISO.parse("2012-01-14"), DateFormats.ISO.parse("2012-01-27"));
+        List<ReportLine> rls = reportLineEao.findUnreportedUnits(DELL, Utils.ISO_DATE.parse("2012-01-14"), Utils.ISO_DATE.parse("2012-01-27"));
         assertEquals(300, rls.size());
         utx.commit();
 
@@ -442,7 +441,7 @@ public class ReportLineEaoIT extends ArquillianProjectArchive {
             System.out.println("-----");
             NavigableMap<Date, Revenue> result = reportLineEao.revenueByPositionTypesAndDate(Arrays.asList(UNIT), Utils.toDate(LocalDate.of(2010, 1, 1)), Utils.toDate(LocalDate.of(2010, 12, 31)), step, true);
             for (Entry<Date, Revenue> e : result.entrySet()) {
-                System.out.println(step.format(e.getKey()) + "|" + DateFormats.ISO.format(e.getKey()) + " - " + e.getValue());
+                System.out.println(step.format(e.getKey()) + "|" + Utils.ISO_DATE.format(e.getKey()) + " - " + e.getValue());
             }
         }
 

@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.common.ui.AbstractGuardian;
 import eu.ggnet.dwoss.rights.ee.RightsAgent;
 import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;

@@ -52,7 +52,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.RIGHT;
 import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;

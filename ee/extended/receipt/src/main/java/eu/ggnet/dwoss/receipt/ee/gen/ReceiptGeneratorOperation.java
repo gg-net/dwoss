@@ -50,7 +50,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.gen.UniqueUnitGenerator;
 import eu.ggnet.dwoss.uniqueunit.ee.op.ProductOperation;
-import eu.ggnet.dwoss.util.persistence.eao.DefaultEao;
+import eu.ggnet.dwoss.core.system.persistence.DefaultEao;
 
 import static eu.ggnet.dwoss.common.api.values.ProductGroup.COMMENTARY;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;

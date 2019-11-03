@@ -20,7 +20,7 @@ import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;

@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.misc.ee;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.saft.api.Reply;
 
 /**

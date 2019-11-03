@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Condition.CANCELED;

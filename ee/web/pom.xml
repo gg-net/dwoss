@@ -12,7 +12,15 @@
 
     <modules>
         <module>search</module>
-	<module>misc</module>
+        <module>misc</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-system</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

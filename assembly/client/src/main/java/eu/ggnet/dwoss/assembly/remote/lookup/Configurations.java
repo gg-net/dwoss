@@ -18,8 +18,8 @@ package eu.ggnet.dwoss.assembly.remote.lookup;
 
 import java.util.*;
 
-import eu.ggnet.dwoss.util.EjbConnectionConfiguration;
-import eu.ggnet.dwoss.util.EjbConnectionConfigurationProvider;
+import eu.ggnet.dwoss.remote.spi.EjbConnectionConfiguration;
+import eu.ggnet.dwoss.remote.spi.EjbConnectionConfigurationProvider;
 import eu.ggnet.saft.core.Dl;
 
 /**

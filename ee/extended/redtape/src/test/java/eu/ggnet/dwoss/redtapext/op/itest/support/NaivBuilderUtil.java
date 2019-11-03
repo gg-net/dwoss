@@ -8,7 +8,7 @@ import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.api.values.TaxType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.TwoDigits;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.UNIT;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;

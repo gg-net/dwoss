@@ -33,8 +33,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.dwoss.common.api.values.DocumentType;
-import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.customer.api.UiCustomer;
 import eu.ggnet.dwoss.customer.ee.CustomerServiceBean;
 import eu.ggnet.dwoss.mandator.api.service.WarrantyService;
@@ -59,7 +58,7 @@ import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.statemachine.State.Type;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.BLOCK;
@@ -78,7 +77,7 @@ import static org.apache.commons.lang3.StringUtils.normalizeSpace;
  * @author oliver.guenther
  */
 @Singleton
-public class RedTapeCloserAutomaticOperation  {
+public class RedTapeCloserAutomaticOperation {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -128,7 +127,7 @@ public class RedTapeCloserAutomaticOperation  {
      * See {@link #closeing(java.lang.String, boolean) } for details.
      * <p>
      */
-    @Schedule(hour = "22",persistent = false) // This kicks in exaclty once a day
+    @Schedule(hour = "22", persistent = false) // This kicks in exaclty once a day
     public void executeAutomatic() {
         closeing("scheduler (automatic)", false);
     }
@@ -154,7 +153,7 @@ public class RedTapeCloserAutomaticOperation  {
      */
     public void closeing(String arranger, boolean manual) {
         Date now = new Date();
-        String msg = (manual ? "Manueller" : "Automatischer") + " (Tages)abschluss vom " + DateFormats.ISO.format(now) + " ausgeführt durch " + arranger;
+        String msg = (manual ? "Manueller" : "Automatischer") + " (Tages)abschluss vom " + Utils.ISO_DATE.format(now) + " ausgeführt durch " + arranger;
         L.info("closing:{}", msg);
         SubMonitor m = monitorFactory.newSubMonitor((manual ? "Manueller" : "Automatischer") + " (Tages)abschluss", 100);
         m.start();
@@ -178,7 +177,7 @@ public class RedTapeCloserAutomaticOperation  {
                 .map(Document::getDossier)
                 .map(Dossier::getId)
                 .collect(Collectors.toSet()),
-                "Rollout by " + (manual ? "manuel" : "automatic") + " closing on " + DateFormats.ISO.format(now), arranger, m);
+                "Rollout by " + (manual ? "manuel" : "automatic") + " closing on " + Utils.ISO_DATE.format(now), arranger, m);
         L.info("closed:stock");
 
         m.finish();
@@ -233,7 +232,7 @@ public class RedTapeCloserAutomaticOperation  {
             for (StockUnit stockUnit : entry.getValue()) {
                 m.worked(1, h + "verbuche (refurbishId=" + stockUnit.getRefurbishId() + ",uniqueUnitId=" + stockUnit.getUniqueUnitId() + ")");
                 st.addUnit(stockUnit);
-                history.fire( UnitHistory.create(stockUnit.getUniqueUnitId(), msg, arranger));
+                history.fire(UnitHistory.create(stockUnit.getUniqueUnitId(), msg, arranger));
             }
             stockTransactions.add(st);
 
@@ -379,7 +378,7 @@ public class RedTapeCloserAutomaticOperation  {
             if ( dossier.getActiveDocuments().size() == 1 && dossier.getActiveDocuments(DocumentType.ORDER).size() == 1 ) {
                 Document doc = dossier.getActiveDocuments(DocumentType.ORDER).get(0);
                 if ( doc.getConditions().contains(CANCELED) ) closeable.add(doc);
-                L.debug("Filtered not reportable {}, cause: canceled order", doc.getDossier().getIdentifier());               
+                L.debug("Filtered not reportable {}, cause: canceled order", doc.getDossier().getIdentifier());
                 continue; // Shortcut
             }
             // Canceled CAPITAL_ASSET
@@ -454,7 +453,7 @@ public class RedTapeCloserAutomaticOperation  {
     }
 
     /**
-     * Returns all Blocker Documents, which are in a closeable state. 
+     * Returns all Blocker Documents, which are in a closeable state.
      * Blocker Documents are in closing state if:
      * <ul>
      * <li>The customer is not a member of {@link ReceiptCustomers}</li>
@@ -462,7 +461,7 @@ public class RedTapeCloserAutomaticOperation  {
      * <li>The blocker document has unit positions, but no stockunit exists (deleted or scraped)</li>
      * </ul>
      * Todo: What about other position types, like service or product batch.
-     * 
+     *
      * @return all Documents of type Blocker, which are in a closable state.
      */
     private Set<Document> findCloseableBlocker() {

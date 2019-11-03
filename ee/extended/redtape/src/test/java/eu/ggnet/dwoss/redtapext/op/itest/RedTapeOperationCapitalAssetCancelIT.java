@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 import static eu.ggnet.dwoss.common.api.values.DocumentType.CAPITAL_ASSET;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CUSTOMER;

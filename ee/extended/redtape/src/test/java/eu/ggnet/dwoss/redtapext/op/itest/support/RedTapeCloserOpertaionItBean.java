@@ -19,7 +19,6 @@ package eu.ggnet.dwoss.redtapext.op.itest.support;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
-import eu.ggnet.dwoss.redtapext.op.itest.RedTapeCloserOperationIT;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +29,6 @@ import javax.persistence.EntityManager;
 
 import org.junit.Assert;
 
-import eu.ggnet.dwoss.redtapext.op.itest.RedTapeCloserOperationOfWarrantyIT;
 import eu.ggnet.dwoss.report.ee.eao.ReportLineEao;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine.SingleReferenceType;

@@ -11,14 +11,12 @@ import java.util.*;
 import javax.persistence.LockModeType;
 import javax.swing.*;
 
-import org.junit.Test;
-
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
 import eu.ggnet.dwoss.misc.ee.SalesChannelHandler;
 import eu.ggnet.dwoss.misc.ui.cap.OpenSalesChannelManagerAction;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.model.SalesChannelLine;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Authorisation;
 import eu.ggnet.saft.core.*;
 import eu.ggnet.saft.experimental.auth.*;

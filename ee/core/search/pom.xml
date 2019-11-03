@@ -18,11 +18,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-lib-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
         </dependency>

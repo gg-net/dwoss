@@ -27,7 +27,7 @@ import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
 

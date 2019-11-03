@@ -53,7 +53,7 @@ import eu.ggnet.dwoss.redtapext.ui.cao.dossierTable.DossierTableController;
 import eu.ggnet.dwoss.redtapext.ui.cao.jasper.DocumentViewAction;
 import eu.ggnet.dwoss.redtapext.ui.cao.stateaction.*;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;
 import eu.ggnet.saft.core.ui.SwingCore;

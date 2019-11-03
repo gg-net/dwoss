@@ -23,7 +23,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.stock.ee.entity.StockTransactionStatusType.*;
 

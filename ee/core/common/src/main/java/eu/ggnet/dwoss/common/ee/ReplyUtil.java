@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.common.ee;
 
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 
 /**

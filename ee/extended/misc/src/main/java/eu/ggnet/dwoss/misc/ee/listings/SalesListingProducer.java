@@ -21,8 +21,8 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.mandator.api.service.ListingActionConfiguration;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  * Remote Connection to all SalesListing Operations.

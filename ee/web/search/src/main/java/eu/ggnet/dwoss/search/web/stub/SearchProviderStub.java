@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.search.api.GlobalKey.Component;
-import eu.ggnet.dwoss.search.api.*;
 
 import static eu.ggnet.dwoss.search.api.GlobalKey.Component.CUSTOMER;
 

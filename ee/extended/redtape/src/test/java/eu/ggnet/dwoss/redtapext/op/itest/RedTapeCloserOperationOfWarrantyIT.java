@@ -28,8 +28,8 @@ import eu.ggnet.dwoss.redtapext.ee.RedTapeWorker;
 import eu.ggnet.dwoss.redtapext.op.itest.support.*;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.interactiveresult.Result;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.Result;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;
 import static org.assertj.core.api.Assertions.assertThat;

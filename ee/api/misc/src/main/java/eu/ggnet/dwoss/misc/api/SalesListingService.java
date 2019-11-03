@@ -21,7 +21,7 @@ import java.util.List;
 import javax.ejb.Local;
 
 import eu.ggnet.dwoss.common.api.values.SalesChannel;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  * Generates predefined Sales Listings.

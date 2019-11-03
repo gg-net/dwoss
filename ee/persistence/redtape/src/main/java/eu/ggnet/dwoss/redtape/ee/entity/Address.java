@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
+import eu.ggnet.dwoss.common.ee.BaseEntity;
 
 /**
  *
@@ -32,7 +32,7 @@ import eu.ggnet.dwoss.util.persistence.entity.IdentifiableEntity;
 // Not working in H2/Testdatabase.
 // @Table(uniqueConstraints = @UniqueConstraint(columnNames = "description", name = "unique_address_description"))
 @SuppressWarnings("PersistenceUnitPresent")
-public class Address extends IdentifiableEntity implements Serializable {
+public class Address extends BaseEntity implements Serializable {
 
     @Id
     @GeneratedValue
@@ -49,6 +49,12 @@ public class Address extends IdentifiableEntity implements Serializable {
     private transient final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
     public Address() {
+    }
+
+    // Only for tests.
+    public Address(long id, String description) {
+        this.id = id;
+        this.description = description;
     }
 
     public Address(String description) {

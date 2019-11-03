@@ -39,17 +39,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-progress</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-report</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -75,6 +65,21 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>  <!-- remove later -->
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-core-progress</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ui-core-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

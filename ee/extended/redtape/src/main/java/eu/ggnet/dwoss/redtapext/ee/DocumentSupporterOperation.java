@@ -16,6 +16,10 @@
  */
 package eu.ggnet.dwoss.redtapext.ee;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.common.FileJacket;
+
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -55,7 +59,6 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.*;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
@@ -256,7 +259,7 @@ public class DocumentSupporterOperation implements DocumentSupporter {
                             pos.getName(),
                             pos.getPrice(),
                             pos.toAfterTaxPrice(),
-                            DateFormats.ISO.format(uu.getMfgDate()),
+                            Utils.ISO_DATE.format(uu.getMfgDate()),
                             uu.getProduct().getPrice(PriceType.MANUFACTURER_COST)
                         });
                     } else {

@@ -6,14 +6,13 @@ import javax.validation.*;
 
 import org.junit.Test;
 
+import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.ee.GlobalConfig;
 import eu.ggnet.dwoss.mandator.api.value.Ledger;
-import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.DefaultUi;
 import eu.ggnet.dwoss.redtape.ee.entity.Position.Returns;
-import eu.ggnet.dwoss.redtape.ee.entity.PositionModifier;
-import eu.ggnet.dwoss.common.api.values.PositionType;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.dwoss.redtape.ee.entity.*;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -140,7 +139,7 @@ public class PositionTest {
         p.setName("Name");
         assertFalse("Position must be invalid.", V.validate(p).isEmpty());
         p.setDescription("Blub");
-        assertTrue("Position must be valid! " + ConstraintViolationFormater.toSingleLine(V.validate(p)), V.validate(p).isEmpty());
+        assertTrue("Position must be valid! " + ValidationUtil.formatToSingleLine(V.validate(p)), V.validate(p).isEmpty());
     }
 
     //<editor-fold defaultstate="collapsed" desc="Test Positions with Validation Group DefaultUi">
@@ -149,7 +148,7 @@ public class PositionTest {
         Position p = makeValidDefaultUiUnit();
         Set<ConstraintViolation<Position>> violations = V.validate(p, DefaultUi.class);
         assertTrue("Position must be valid for group " + DefaultUi.class + ", but is not. "
-                + ConstraintViolationFormater.toSingleLine(violations), violations.isEmpty());
+                + ValidationUtil.formatToSingleLine(violations), violations.isEmpty());
         violations = V.validate(p);
         assertFalse("Position must be invalid for group default, but is valid.", violations.isEmpty());
     }
@@ -159,7 +158,7 @@ public class PositionTest {
         Position p = makeValidDefaultUiService();
         Set<ConstraintViolation<Position>> violations = V.validate(p, DefaultUi.class);
         assertTrue("Position must be valid for group " + DefaultUi.class + ", but is not. "
-                + ConstraintViolationFormater.toSingleLine(violations), violations.isEmpty());
+                + ValidationUtil.formatToSingleLine(violations), violations.isEmpty());
         violations = V.validate(p);
         assertFalse("Position must be invalid for group default, but is valid.", violations.isEmpty());
     }
@@ -227,7 +226,7 @@ public class PositionTest {
         Position p = makeValidReturnsUnit();
         Set<ConstraintViolation<Position>> violations = V.validate(p, Returns.class);
         assertTrue("Position must be valid for group " + Returns.class + ", but is not. "
-                + ConstraintViolationFormater.toSingleLine(violations), violations.isEmpty());
+                + ValidationUtil.formatToSingleLine(violations), violations.isEmpty());
         violations = V.validate(p);
         assertFalse("Position must be invalid for group default, but is valid.", violations.isEmpty());
     }
@@ -237,7 +236,7 @@ public class PositionTest {
         Position p = makeValidReturnsService();
         Set<ConstraintViolation<Position>> violations = V.validate(p, Returns.class);
         assertTrue("Position must be valid for group " + Returns.class + ", but is not. "
-                + ConstraintViolationFormater.toSingleLine(violations), violations.isEmpty());
+                + ValidationUtil.formatToSingleLine(violations), violations.isEmpty());
         violations = V.validate(p);
         assertFalse("Position must be invalid for group default, but is valid.", violations.isEmpty());
     }

@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Null;
 
 import eu.ggnet.dwoss.stock.api.PicoStockUnit;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static javax.persistence.FetchType.EAGER;
 

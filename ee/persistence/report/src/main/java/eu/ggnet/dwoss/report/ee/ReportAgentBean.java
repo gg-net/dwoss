@@ -39,7 +39,7 @@ import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.report.ee.entity.Report.YearSplit;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 import eu.ggnet.saft.api.Reply;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.*;

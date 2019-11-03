@@ -31,7 +31,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.rights.api.AtomicRight;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 /**
  * This Class represent a Persona

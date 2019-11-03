@@ -30,7 +30,7 @@ import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.common.ee.BaseEntity;
 import eu.ggnet.dwoss.redtape.ee.entity.util.DocumentEquals;
 import eu.ggnet.dwoss.redtape.ee.format.DocumentFormater;
-import eu.ggnet.dwoss.util.TwoDigits;
+import eu.ggnet.dwoss.core.system.TwoDigits;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.COMMENT;
 import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;

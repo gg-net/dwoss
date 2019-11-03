@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import eu.ggnet.dwoss.report.ee.entity.Report;
 import eu.ggnet.dwoss.common.ee.Css;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.api.values.TradeName.ALSO;
 
@@ -51,8 +51,8 @@ public class ReportHtmlTryout {
 
     static {
         try {
-            _2011_10_01 = DateFormats.ISO.parse("2011-10-01");
-            _2011_10_07 = DateFormats.ISO.parse("2011-10-07");
+            _2011_10_01 = Utils.ISO_DATE.parse("2011-10-01");
+            _2011_10_07 = Utils.ISO_DATE.parse("2011-10-07");
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
         }

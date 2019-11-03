@@ -22,7 +22,7 @@ import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Dossier;
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * The ReadTape Agent.

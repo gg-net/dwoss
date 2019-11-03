@@ -25,6 +25,7 @@ import javax.validation.*;
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ui.OkCancelDialog;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.dwoss.receipt.ee.ProductProcessor;
 import eu.ggnet.dwoss.receipt.ui.product.AbstractView;
 import eu.ggnet.dwoss.receipt.ui.product.SimpleView;
@@ -33,8 +34,7 @@ import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
 import eu.ggnet.dwoss.spec.ee.format.SpecFormater;
 import eu.ggnet.dwoss.uniqueunit.ee.UniqueUnitAgent;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 import eu.ggnet.saft.core.Dl;
 
 /**
@@ -102,7 +102,7 @@ public class UiProductSupport {
 
     private static void validate(Object o) throws UserInfoException {
         Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(o);
-        if ( !validate.isEmpty() ) throw new UserInfoException(ConstraintViolationFormater.toMultiLine(new ArrayList<>(validate), true));
+        if ( !validate.isEmpty() ) throw new UserInfoException(ValidationUtil.formatToMultiLine(new ArrayList<>(validate), true));
     }
 
     public static void validatePartNo(TradeName manufacturer, String partNo) throws UserInfoException {

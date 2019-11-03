@@ -20,7 +20,7 @@ import java.util.*;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
-import eu.ggnet.dwoss.util.DateFormats;
+import eu.ggnet.dwoss.core.system.Utils;
 
 /**
  *
@@ -65,7 +65,7 @@ public class DocumentFormater {
     public static String toHtmlSimple(Document doc) {
         String res = (doc.getType() == null) ? "<b>Dokumenttyp unbekannt</b>" : "<b>" + doc.getType().getName() + "</b>";
         res += (doc.getIdentifier() == null) ? "" : " <i>" + doc.getIdentifier() + "</i>";
-        res += " von " + ((doc.getActual() != null) ? DateFormats.ISO.format(doc.getActual()) : "Kein Actual gesetzt") + "<br />";
+        res += " von " + ((doc.getActual() != null) ? Utils.ISO_DATE.format(doc.getActual()) : "Kein Actual gesetzt") + "<br />";
         res += "Steuertyp: " + doc.getTaxType().getName() + "<br />";
         res += (doc.getConditions().isEmpty() ? "" : toConditions(doc) + "<br />");
         if ( doc.getFlags().contains(Document.Flag.CUSTOMER_EXACTLY_BRIEFED) ) {

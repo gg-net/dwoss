@@ -16,11 +16,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ui-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-stock</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -42,6 +37,21 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ui-spi-stock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency> <!-- remove later -->
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ui-core-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

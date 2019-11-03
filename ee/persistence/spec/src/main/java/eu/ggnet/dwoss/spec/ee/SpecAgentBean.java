@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
 import eu.ggnet.dwoss.spec.ee.assist.Specs;
 import eu.ggnet.dwoss.spec.ee.eao.ProductSpecEao;
 import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.persistence.AbstractAgentBean;
+import eu.ggnet.dwoss.core.system.persistence.AbstractAgentBean;
 
 /**
  * The Implementation of the SpecAgent

@@ -18,7 +18,7 @@ package eu.ggnet.dwoss.redtapext.ee.reporting;
 
 import javax.ejb.Remote;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 /**
  *

@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-extended-misc</artifactId>
+            <artifactId>dwoss-misc-ee</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

@@ -21,7 +21,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import eu.ggnet.dwoss.redtape.ee.entity.SalesProduct;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 /**
  * @author bastian.venz

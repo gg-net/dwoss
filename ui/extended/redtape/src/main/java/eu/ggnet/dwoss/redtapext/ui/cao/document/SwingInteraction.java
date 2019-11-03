@@ -20,12 +20,12 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import eu.ggnet.dwoss.util.UserInfoException;
-import eu.ggnet.dwoss.util.UserInfoException.Type;
-import eu.ggnet.dwoss.util.interactiveresult.InteractionListener;
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.common.UserInfoException.Type;
+import eu.ggnet.dwoss.redtape.ee.interactiveresult.InteractionListener;
 
-import static eu.ggnet.dwoss.util.UserInfoException.Type.*;
-import static eu.ggnet.dwoss.util.interactiveresult.InteractionListener.TrueFalseCancel.CANCEL;
+import static eu.ggnet.dwoss.core.common.UserInfoException.Type.*;
+import static eu.ggnet.dwoss.redtape.ee.interactiveresult.InteractionListener.TrueFalseCancel.CANCEL;
 
 /**
  * Swing Implementation of the InteractionListener

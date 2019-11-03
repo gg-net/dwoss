@@ -16,21 +16,16 @@
  */
 package eu.ggnet.dwoss.mandator.ee;
 
-import eu.ggnet.dwoss.mandator.api.value.PostLedger;
-import eu.ggnet.dwoss.mandator.api.value.ReceiptCustomers;
-import eu.ggnet.dwoss.mandator.api.value.DefaultCustomerSalesdata;
-import eu.ggnet.dwoss.mandator.api.value.Contractors;
-import eu.ggnet.dwoss.mandator.api.value.Mandator;
-import eu.ggnet.dwoss.mandator.api.value.SpecialSystemCustomers;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import eu.ggnet.dwoss.mandator.api.Mandators;
+import eu.ggnet.dwoss.mandator.api.value.*;
 
 /**
  * Support for the Mandator.
- * <p/>
+ * <p>
  * @author oliver.guenther
  */
 @Named

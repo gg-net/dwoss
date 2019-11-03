@@ -26,7 +26,7 @@ import eu.ggnet.dwoss.customer.ee.entity.MandatorMetadata;
 import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
 import eu.ggnet.dwoss.customer.ee.entity.dto.SimpleCustomer;
 import eu.ggnet.dwoss.customer.ee.entity.projection.PicoCustomer;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 import eu.ggnet.saft.api.Reply;
 
 /**

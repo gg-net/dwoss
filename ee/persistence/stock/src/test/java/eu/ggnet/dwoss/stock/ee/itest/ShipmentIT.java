@@ -15,7 +15,7 @@ import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.ShipmentEao;
 import eu.ggnet.dwoss.stock.ee.entity.Shipment;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.Utils;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static org.junit.Assert.*;
 

@@ -29,7 +29,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document.Directive;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 

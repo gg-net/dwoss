@@ -26,6 +26,7 @@ import javax.validation.*;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.PositionType;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
 import eu.ggnet.dwoss.redtape.ee.assist.RedTapes;
@@ -39,8 +40,7 @@ import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 import eu.ggnet.lucidcalc.*;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
@@ -55,13 +55,13 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
         private static enum Level {
 
             ERROR("Fehler"), WARNING("Warnung");
-           
+
             private final String description;
 
             private Level(String name) {
                 this.description = name;
             }
-            
+
         }
 
         private final Level level;
@@ -72,7 +72,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
             this.level = level;
             this.message = message;
         }
-        
+
     }
 
     @Inject
@@ -161,7 +161,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
 
             Set<ConstraintViolation<Dossier>> validateError = validator.validate(dossier);
             if ( !validateError.isEmpty() ) {
-                error(vms, ConstraintViolationFormater.toSingleLine(validateError));
+                error(vms, ValidationUtil.formatToSingleLine(validateError));
                 continue;
             }
             for (DocumentType type : DocumentType.values()) {
@@ -207,7 +207,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
             m.worked(1, "Validate: UniqueUnit:" + uniqueUnit.getId());
             Set<ConstraintViolation<UniqueUnit>> validateError = validator.validate(uniqueUnit);
             if ( !validateError.isEmpty() ) {
-                error(vms, ConstraintViolationFormater.toSingleLine(validateError));
+                error(vms, ValidationUtil.formatToSingleLine(validateError));
             }
             if ( uniqueUnit.getProduct() == null ) {
                 warn(vms, "UniqueUnit(id=" + uniqueUnit.getId() + ",refurbishId=" + uniqueUnit.getRefurbishId() + ").product == null");
@@ -259,7 +259,7 @@ public class PersistenceValidatorOperation implements PersistenceValidator {
             for (StockUnit stockUnit : logicTransaction.getUnits()) {
                 Set<ConstraintViolation<StockUnit>> validateError = validator.validate(stockUnit);
                 if ( !validateError.isEmpty() ) {
-                    error(vms, ConstraintViolationFormater.toSingleLine(validateError));
+                    error(vms, ValidationUtil.formatToSingleLine(validateError));
                 }
             }
         }

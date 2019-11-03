@@ -19,7 +19,7 @@ package eu.ggnet.dwoss.spec.ee.eao;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
 
 /**

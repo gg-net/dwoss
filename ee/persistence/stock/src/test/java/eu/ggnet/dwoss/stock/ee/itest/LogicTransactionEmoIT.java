@@ -21,7 +21,7 @@ import eu.ggnet.dwoss.stock.ee.assist.Stocks;
 import eu.ggnet.dwoss.stock.ee.eao.LogicTransactionEao;
 import eu.ggnet.dwoss.stock.ee.emo.LogicTransactionEmo;
 import eu.ggnet.dwoss.stock.ee.itest.support.ArquillianProjectArchive;
-import eu.ggnet.dwoss.util.Utils;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

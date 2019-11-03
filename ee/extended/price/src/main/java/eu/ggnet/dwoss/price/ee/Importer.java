@@ -21,8 +21,8 @@ import java.io.File;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.price.ee.engine.PriceEngineResult;
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.api.Reply;
 
 @Remote

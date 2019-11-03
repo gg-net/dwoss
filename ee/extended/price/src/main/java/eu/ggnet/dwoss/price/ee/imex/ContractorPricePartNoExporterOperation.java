@@ -23,18 +23,18 @@ import java.util.stream.Collectors;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import eu.ggnet.dwoss.common.api.values.TradeName;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.progress.MonitorFactory;
 import eu.ggnet.dwoss.progress.SubMonitor;
-import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.ProductEao;
 import eu.ggnet.dwoss.uniqueunit.ee.format.ProductFormater;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.CONTRACTOR_REFERENCE;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.PriceType.MANUFACTURER_COST;
-import static eu.ggnet.dwoss.util.DateFormats.ISO;
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.Representation.CURRENCY_EURO;
 import static java.awt.Color.BLACK;
@@ -75,7 +75,7 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
         CCalcDocument cdoc = new TempCalcDocument();
         cdoc.add(new CSheet("Kostpreise", table));
 
-        FileJacket result = new FileJacket("Fehlende " + contractorManufacturer.getName() + " Kostpreise vom " + ISO.format(new Date()), ".xls",
+        FileJacket result = new FileJacket("Fehlende " + contractorManufacturer.getName() + " Kostpreise vom " + Utils.ISO_DATE.format(new Date()), ".xls",
                 new JExcelLucidCalcWriter().write(cdoc));
         m.finish();
         return result;
@@ -113,7 +113,7 @@ public class ContractorPricePartNoExporterOperation implements ContractorPricePa
         CCalcDocument cdoc = new TempCalcDocument();
         cdoc.add(new CSheet(contractor.getName(), table));
 
-        FileJacket result = new FileJacket((missing ? "Fehlende " : "Alle ") + contractor.getName() + " Preise und Artikelnummern vom " + ISO.format(new Date()), ".xls",
+        FileJacket result = new FileJacket((missing ? "Fehlende " : "Alle ") + contractor.getName() + " Preise und Artikelnummern vom " + Utils.ISO_DATE.format(new Date()), ".xls",
                 new JExcelLucidCalcWriter().write(cdoc));
         m.finish();
         return result;

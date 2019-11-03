@@ -25,7 +25,7 @@ import eu.ggnet.dwoss.customer.ee.CustomerAgent;
 import eu.ggnet.dwoss.customer.ee.CustomerAgent.Root;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.customer.ee.entity.dto.AddressLabelDto;
-import eu.ggnet.dwoss.util.validation.ValidationUtil;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 import eu.ggnet.saft.api.Reply;
 import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.core.Ui;

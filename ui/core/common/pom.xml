@@ -18,11 +18,6 @@
             <artifactId>lucidcalc</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dwoss-ee-core-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-experimental</artifactId>
         </dependency>
@@ -35,6 +30,20 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ui-spi-mandator</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-widget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-ee-core-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
         </dependency>
     </dependencies>
 

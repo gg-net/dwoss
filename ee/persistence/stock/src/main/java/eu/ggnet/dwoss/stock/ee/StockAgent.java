@@ -21,7 +21,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import eu.ggnet.dwoss.stock.ee.entity.*;
-import eu.ggnet.dwoss.util.persistence.RemoteAgent;
+import eu.ggnet.dwoss.core.system.persistence.RemoteAgent;
 
 /**
  * The Stock Agent

@@ -24,7 +24,7 @@ import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcReader;
 
 import static eu.ggnet.dwoss.common.api.values.PositionType.PRODUCT_BATCH;

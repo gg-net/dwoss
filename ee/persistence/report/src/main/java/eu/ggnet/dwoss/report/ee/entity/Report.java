@@ -28,8 +28,8 @@ import org.apache.commons.lang3.time.DateUtils;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.TradeName;
 import eu.ggnet.dwoss.common.ee.BaseEntity;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.report.ee.entity.Report.ViewMode.DEFAULT;
 
@@ -369,8 +369,8 @@ public class Report extends BaseEntity implements Serializable, EagerAble {
         if ( showSplit ) {
             YearSplit splitresult = filterInvoicedSplit();
 
-            result += buildFilter("Invoiced Before " + DateFormats.ISO.format(splitresult.splitter), splitresult.before);
-            result += buildFilter("Invoiced After " + DateFormats.ISO.format(splitresult.splitter), splitresult.after);
+            result += buildFilter("Invoiced Before " + Utils.ISO_DATE.format(splitresult.splitter), splitresult.before);
+            result += buildFilter("Invoiced After " + Utils.ISO_DATE.format(splitresult.splitter), splitresult.after);
         } else {
             result += buildFilter("Invoiced", filterInvoiced());
 
@@ -390,7 +390,7 @@ public class Report extends BaseEntity implements Serializable, EagerAble {
                     .append(line.getDocumentTypeName()).append("|")
                     .append(line.getPositionTypeName()).append("|")
                     .append(line.getPrice()).append("|")
-                    .append(line.getMfgDate() == null ? "no mfgDate" : DateFormats.ISO.format(line.getMfgDate())).append("\n");
+                    .append(line.getMfgDate() == null ? "no mfgDate" : Utils.ISO_DATE.format(line.getMfgDate())).append("\n");
         }
         sb.append("-----\n");
         return sb.toString();

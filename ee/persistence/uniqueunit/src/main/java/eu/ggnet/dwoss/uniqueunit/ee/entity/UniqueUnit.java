@@ -29,9 +29,9 @@ import eu.ggnet.dwoss.common.api.INoteModel;
 import eu.ggnet.dwoss.common.api.values.*;
 import eu.ggnet.dwoss.uniqueunit.api.PicoUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.format.UniqueUnitFormater;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.TwoDigits;
-import eu.ggnet.dwoss.util.persistence.EagerAble;
+import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.persistence.EagerAble;
 
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Equipment.*;
 import static eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit.Identifier.REFURBISHED_ID;
@@ -700,7 +700,7 @@ public class UniqueUnit implements Serializable, EagerAble {
             productString = "[" + product.getPartNo() + "]" + product.getTradeName() + " " + product.getName();
         }
         if ( mfgDate != null ) {
-            formatedMfgDate = DateFormats.ISO.format(mfgDate);
+            formatedMfgDate = Utils.ISO_DATE.format(mfgDate);
         }
         if ( inputDate != null ) {
             formatedInputDate = MEDIUM.format(inputDate);

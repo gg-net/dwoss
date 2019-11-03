@@ -34,9 +34,9 @@ import eu.ggnet.lucidcalc.STableColumn;
 import eu.ggnet.lucidcalc.STableModelList;
 import eu.ggnet.lucidcalc.TempCalcDocument;
 
-import eu.ggnet.dwoss.util.FileJacket;
-import eu.ggnet.dwoss.util.PojoUtil;
-import eu.ggnet.dwoss.util.UserInfoException;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.common.ui.PojoUtil;
+import eu.ggnet.dwoss.core.common.UserInfoException;
 
 /**
  *

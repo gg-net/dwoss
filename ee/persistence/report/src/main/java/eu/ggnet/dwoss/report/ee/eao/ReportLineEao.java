@@ -33,8 +33,8 @@ import eu.ggnet.dwoss.common.ee.Step;
 import eu.ggnet.dwoss.report.ee.assist.Reports;
 import eu.ggnet.dwoss.report.ee.entity.ReportLine;
 import eu.ggnet.dwoss.report.ee.entity.partial.SimpleReportLine;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.Utils;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 
@@ -323,8 +323,8 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
             Revenue revenueStep = result.get(step.truncate(holder.reportingDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
-                        + ":reportingDate=" + DateFormats.ISO.format(holder.reportingDate)
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.reportingDate))
+                        + ":reportingDate=" + Utils.ISO_DATE.format(holder.reportingDate)
+                        + ",truncated=" + Utils.ISO_DATE.format(step.truncate(holder.reportingDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
             L.debug("revenueByPositionTypesAndDate() first call to Revenue.add({},{},{},{},0,0)", holder.salesChannel, holder.documentType, holder.contractor, holder.price);
@@ -340,8 +340,8 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
             Revenue revenueStep = result.get(step.truncate(holder.reportingDate));
             // Highly unlikely case, but if it happens a detail message might help.
             if ( revenueStep == null ) throw new RuntimeException("No prepared RevenueStep found for " + step.name()
-                        + ":reportingDate=" + DateFormats.ISO.format(holder.reportingDate)
-                        + ",truncated=" + DateFormats.ISO.format(step.truncate(holder.reportingDate))
+                        + ":reportingDate=" + Utils.ISO_DATE.format(holder.reportingDate)
+                        + ",truncated=" + Utils.ISO_DATE.format(step.truncate(holder.reportingDate))
                         + ",keys=" + nice(result.keySet(), step)
                 );
             L.debug("revenueByPositionTypesAndDate() second call to Revenue.add({},{},{},0,{},{})", holder.salesChannel, holder.documentType, holder.contractor, holder.price, holder.purchasePrice);
@@ -383,7 +383,7 @@ public class ReportLineEao extends AbstractEao<ReportLine> {
     private List<String> nice(Set<Date> dates, Step step) {
         List<String> result = new ArrayList<>();
         for (Date date : dates) {
-            result.add(step.format(date) + "(" + DateFormats.ISO.format(date) + ")");
+            result.add(step.format(date) + "(" + Utils.ISO_DATE.format(date) + ")");
         }
         return result;
     }

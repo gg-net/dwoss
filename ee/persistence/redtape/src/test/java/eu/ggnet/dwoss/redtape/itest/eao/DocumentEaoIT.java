@@ -18,7 +18,7 @@ import eu.ggnet.dwoss.redtape.ee.emo.AddressEmo;
 import eu.ggnet.dwoss.redtape.ee.entity.*;
 import eu.ggnet.dwoss.redtape.itest.ArquillianProjectArchive;
 import eu.ggnet.dwoss.common.api.values.PaymentMethod;
-import eu.ggnet.dwoss.util.Utils;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.BALANCE_REPAYMENT;
 import static eu.ggnet.dwoss.redtape.ee.entity.Document.Directive.NONE;

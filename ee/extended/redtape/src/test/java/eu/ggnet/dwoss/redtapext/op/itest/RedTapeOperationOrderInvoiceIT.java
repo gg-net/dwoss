@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.common.api.values.PositionType;
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 import eu.ggnet.dwoss.common.api.values.AddressType;
@@ -31,7 +34,6 @@ import eu.ggnet.dwoss.stock.ee.entity.LogicTransaction;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;

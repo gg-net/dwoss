@@ -17,7 +17,7 @@
 package eu.ggnet.dwoss.common.ee;
 
 import eu.ggnet.dwoss.common.api.values.TaxType;
-import eu.ggnet.dwoss.util.TempUtil;
+import eu.ggnet.dwoss.core.system.Utils;
 
 import static eu.ggnet.dwoss.common.api.values.TaxType.GENERAL_SALES_TAX_DE_SINCE_2007;
 
@@ -31,7 +31,7 @@ public final class GlobalConfig {
     /**
      * A central place there the client can put exports.
      */
-    public static final String APPLICATION_PATH_OUTPUT = TempUtil.getDirectory("output") + "/";
+    public static final String APPLICATION_PATH_OUTPUT = Utils.getTempDirectory("output") + "/";
 
     /**
      * The actual tax.

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.swing.UIManager;
 
 import eu.ggnet.dwoss.common.ui.AbstractGuardian;
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentController;
 import eu.ggnet.dwoss.receipt.ui.shipment.ShipmentDialog;
 import eu.ggnet.dwoss.receipt.ui.tryout.stub.*;
@@ -14,17 +14,32 @@ import eu.ggnet.dwoss.rights.api.Operator;
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.upi.StockUpi;
-import eu.ggnet.dwoss.stock.upi.impl.StockUpiImpl;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.RemoteLookup;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
-import eu.ggnet.saft.core.dl.RemoteLookup;
 
 /**
  *
  * @author oliver.guenther
  */
 public class ShipmentDialogTryout {
+
+    public static class StockUpiImpl implements StockUpi {
+
+        private PicoStock activeStock;
+
+        @Override
+        public PicoStock getActiveStock() {
+            return activeStock;
+        }
+
+        @Override
+        public void setActiveStock(PicoStock activeStock) {
+            this.activeStock = activeStock;
+        }
+
+    }
 
     public static void main(String[] args) throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

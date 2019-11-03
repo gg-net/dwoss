@@ -1,5 +1,8 @@
 package eu.ggnet.dwoss.redtapext.op.itest;
 
+import eu.ggnet.dwoss.core.common.UserInfoException;
+import eu.ggnet.dwoss.core.system.TwoDigits;
+import eu.ggnet.dwoss.core.common.FileJacket;
 import eu.ggnet.dwoss.stock.ee.entity.StockUnit;
 import eu.ggnet.dwoss.stock.ee.entity.StockTransactionType;
 import eu.ggnet.dwoss.stock.ee.entity.Stock;
@@ -34,7 +37,6 @@ import eu.ggnet.dwoss.stock.ee.StockAgent;
 import eu.ggnet.dwoss.stock.ee.assist.gen.StockGeneratorOperation;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.Product;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.*;
 
 import static eu.ggnet.dwoss.redtapext.op.itest.support.NaivBuilderUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;

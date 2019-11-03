@@ -20,7 +20,7 @@ import javax.persistence.EntityManager;
 
 import eu.ggnet.dwoss.redtape.ee.entity.Address;
 import eu.ggnet.dwoss.redtape.ee.entity.QAddress;
-import eu.ggnet.dwoss.util.persistence.eao.AbstractEao;
+import eu.ggnet.dwoss.core.system.persistence.AbstractEao;
 
 import com.querydsl.jpa.impl.JPAQuery;
 

@@ -1,28 +1,18 @@
 package eu.ggnet.dwoss.spec.test;
 
-import eu.ggnet.dwoss.spec.ee.entity.piece.Display;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Gpu;
-import eu.ggnet.dwoss.spec.ee.entity.piece.Cpu;
-
 import java.util.EnumSet;
 import java.util.Set;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import org.junit.*;
+import org.junit.Test;
 
 import eu.ggnet.dwoss.common.api.values.ProductGroup;
 import eu.ggnet.dwoss.common.api.values.TradeName;
-import eu.ggnet.dwoss.spec.ee.entity.BasicSpec;
-import eu.ggnet.dwoss.spec.ee.entity.Desktop;
-import eu.ggnet.dwoss.spec.ee.entity.Monitor;
-import eu.ggnet.dwoss.spec.ee.entity.Notebook;
-import eu.ggnet.dwoss.spec.ee.entity.ProductFamily;
-import eu.ggnet.dwoss.spec.ee.entity.ProductModel;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSeries;
-import eu.ggnet.dwoss.spec.ee.entity.ProductSpec;
-import eu.ggnet.dwoss.util.validation.ConstraintViolationFormater;
+import eu.ggnet.dwoss.spec.ee.entity.*;
+import eu.ggnet.dwoss.spec.ee.entity.piece.*;
+import eu.ggnet.dwoss.core.system.ValidationUtil;
 
 import static org.junit.Assert.assertTrue;
 
@@ -82,12 +72,12 @@ public class SpecTest {
      */
     @Test
     public void testBasicSpecs() {
-        assertTrue("ViolationException: BasicSpec look like this: " + basicSpec.toString() + "\nViolations: " + ConstraintViolationFormater.toSingleLine(validator.validate(basicSpec)), validator.validate(basicSpec).isEmpty());
+        assertTrue("ViolationException: BasicSpec look like this: " + basicSpec.toString() + "\nViolations: " + ValidationUtil.formatToSingleLine(validator.validate(basicSpec)), validator.validate(basicSpec).isEmpty());
     }
 
     @Test
     public void testDesktop() {
-        assertTrue("ViolationException: Desktop look like this: " + desktop.toString() + "\nViolations: " + ConstraintViolationFormater.toSingleLine(validator.validate(desktop)), validator.validate(desktop).isEmpty());
+        assertTrue("ViolationException: Desktop look like this: " + desktop.toString() + "\nViolations: " + ValidationUtil.formatToSingleLine(validator.validate(desktop)), validator.validate(desktop).isEmpty());
     }
 
     @Test
@@ -101,7 +91,7 @@ public class SpecTest {
         monitor.setComment("TestBasicMonitor");
         monitor.setExtras(ProductSpec.Extra.KAMERA, ProductSpec.Extra.CONVERTABLE);
 
-        assertTrue("ViolationException: Monitor look like this: " + monitor.toString() + "\nViolations: " + ConstraintViolationFormater.toSingleLine(validator.validate(monitor)), validator.validate(monitor).isEmpty());
+        assertTrue("ViolationException: Monitor look like this: " + monitor.toString() + "\nViolations: " + ValidationUtil.formatToSingleLine(validator.validate(monitor)), validator.validate(monitor).isEmpty());
     }
 
     @Test
@@ -126,6 +116,6 @@ public class SpecTest {
         extras.add(ProductSpec.Extra.UMTS);
         notebook.setExtras(extras);
 
-        assertTrue("ViolationException: Notebook look like this: " + notebook.toString() + "\nViolations: " + ConstraintViolationFormater.toSingleLine(validator.validate(notebook)), validator.validate(notebook).isEmpty());
+        assertTrue("ViolationException: Notebook look like this: " + notebook.toString() + "\nViolations: " + ValidationUtil.formatToSingleLine(validator.validate(notebook)), validator.validate(notebook).isEmpty());
     }
 }

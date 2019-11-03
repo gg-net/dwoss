@@ -43,7 +43,7 @@ import eu.ggnet.dwoss.redtape.ee.entity.Document;
 
 import eu.ggnet.dwoss.common.api.values.DocumentType;
 
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
 
 import static eu.ggnet.lucidcalc.CFormat.FontStyle.BOLD_ITALIC;
 import static eu.ggnet.lucidcalc.CFormat.HorizontalAlignment.*;

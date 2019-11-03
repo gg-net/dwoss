@@ -16,7 +16,7 @@
  */
 package eu.ggnet.dwoss.mandator.upi;
 
-import eu.ggnet.dwoss.mandator.ee.Mandators;
+import eu.ggnet.dwoss.mandator.api.Mandators;
 
 /**
  * Interface for the a cached local implementation of Mandators.

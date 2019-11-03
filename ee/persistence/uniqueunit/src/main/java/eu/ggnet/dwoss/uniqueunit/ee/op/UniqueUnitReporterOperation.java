@@ -38,8 +38,8 @@ import eu.ggnet.dwoss.uniqueunit.ee.assist.UniqueUnits;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.BrandContractorCount;
 import eu.ggnet.dwoss.uniqueunit.ee.eao.UniqueUnitEao;
 import eu.ggnet.dwoss.uniqueunit.ee.entity.UniqueUnit;
-import eu.ggnet.dwoss.util.DateFormats;
-import eu.ggnet.dwoss.util.FileJacket;
+import eu.ggnet.dwoss.core.common.FileJacket;
+import eu.ggnet.dwoss.core.system.Utils;
 import eu.ggnet.lucidcalc.*;
 import eu.ggnet.lucidcalc.jexcel.JExcelLucidCalcWriter;
 
@@ -168,7 +168,7 @@ public class UniqueUnitReporterOperation implements UniqueUnitReporter {
 
         File file = LucidCalc.createWriter(LucidCalc.Backend.XLS).write(cdoc);
         m.finish();
-        return new FileJacket("Aufnahme_nach_Qualität_" + contractor + "_" + DateFormats.ISO.format(start) + "_" + DateFormats.ISO.format(end), ".xls", file);
+        return new FileJacket("Aufnahme_nach_Qualität_" + contractor + "_" + Utils.ISO_DATE.format(start) + "_" + Utils.ISO_DATE.format(end), ".xls", file);
     }
 
     @Override
