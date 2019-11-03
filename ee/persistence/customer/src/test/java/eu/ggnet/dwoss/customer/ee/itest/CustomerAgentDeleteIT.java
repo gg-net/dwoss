@@ -129,7 +129,7 @@ public class CustomerAgentDeleteIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact
-        Contact contact = CustomerGenerator.makeContact();
+        Contact contact = CustomerGenerator.makeFullContact();
         em.persist(contact);
 
         AddressLabel label = new AddressLabel(contact, contact.getAddresses().get(0), AddressType.INVOICE);

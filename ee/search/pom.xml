@@ -12,6 +12,11 @@
     <packaging>ejb</packaging>
     <name>DwOss • Search • EE</name>
 
+    <properties>
+        <global-resources-path>..</global-resources-path>
+    </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

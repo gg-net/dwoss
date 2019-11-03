@@ -76,7 +76,7 @@ public class Utils {
      * @throws RuntimeException if somthing goes wrong.
      */
     public static File getTempDirectory(String name) throws RuntimeException {
-        L.info("getDirectory(name={})", name);
+        L.debug("getTempDirectory(name={})", name);
         File outputPath = null;
         if ( System.getProperty(JAVA_IO_TMPDIR) != null )
             outputPath = tryPath(new File(System.getProperty(JAVA_IO_TMPDIR)), name);

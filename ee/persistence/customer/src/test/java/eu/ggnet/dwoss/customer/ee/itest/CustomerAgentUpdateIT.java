@@ -77,7 +77,7 @@ public class CustomerAgentUpdateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact with an address and a communication
-        Contact contact = CustomerGenerator.makeContact();
+        Contact contact = CustomerGenerator.makeFullContact();
         em.persist(contact);
 
         utx.commit();

@@ -76,7 +76,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact
-        Contact contact = CustomerGenerator.makeContact();
+        Contact contact = CustomerGenerator.makeFullContact();
         em.persist(contact);
 
         utx.commit();
@@ -127,7 +127,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         em.joinTransaction();
 
         //create a contact
-        Contact contact = CustomerGenerator.makeContact();
+        Contact contact = CustomerGenerator.makeFullContact();
         em.persist(contact);
 
         utx.commit();
@@ -153,7 +153,7 @@ public class CustomerAgentCreateIT extends ArquillianProjectArchive {
         assertThat(customer).isNotNull();
         int amountBeforAdd = customer.getContacts().size();
 
-        Contact contact = CustomerGenerator.makeContact();
+        Contact contact = CustomerGenerator.makeFullContact();
         agent.create(new Root(Customer.class, 1l), contact); // creates a contact on the customer
         customer = agent.findByIdEager(Customer.class, 1l);
         assertThat(customer.getContacts().size()).as("Size of contacts must be " + amountBeforAdd + "+1 after add").isEqualTo(amountBeforAdd + 1);

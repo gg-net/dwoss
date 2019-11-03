@@ -148,3 +148,5 @@ hs_err_pid*
 /ee/discovery/target/
 /yncubator/statemachine/state-grapher/target/
 /yncubator/statemachine/state-runtime/target/
+/yncubator/target/
+/yncubator/statemachine/target/

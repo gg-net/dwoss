@@ -16,12 +16,6 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
-import eu.ggnet.dwoss.core.common.values.AddressType;
-import eu.ggnet.dwoss.core.common.values.ReceiptOperation;
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
-import eu.ggnet.dwoss.core.common.values.DocumentType;
-
 import java.util.*;
 
 import javax.ejb.Stateless;
@@ -32,12 +26,14 @@ import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.ggnet.dwoss.core.common.values.*;
+import eu.ggnet.dwoss.core.common.values.tradename.TradeName;
 import eu.ggnet.dwoss.core.system.autolog.AutoLogger;
+import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
+import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 import eu.ggnet.dwoss.customer.ee.assist.Customers;
 import eu.ggnet.dwoss.customer.ee.entity.*;
 import eu.ggnet.dwoss.mandator.api.value.*;
-import eu.ggnet.dwoss.core.system.progress.MonitorFactory;
-import eu.ggnet.dwoss.core.system.progress.SubMonitor;
 
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 
@@ -237,7 +233,7 @@ public class CustomerGeneratorOperation {
     public void scrambleAddress(long customerId, AddressType type) {
         Customer customer = Objects.requireNonNull(em.find(Customer.class, customerId), "No Customer found of id " + customerId);
         Address newAddress = CustomerGenerator.makeAddress();
-        Contact newContact = CustomerGenerator.makeContact();
+        Contact newContact = CustomerGenerator.makeEmptyContact();
 
         if ( customer.isBusiness() ) {
             customer.getCompanies().get(0).getAddresses().add(newAddress);
@@ -261,6 +257,7 @@ public class CustomerGeneratorOperation {
                     return t;
                 });
         L.info("scrambleAddress(customerId={},addressType={}) generated {}", customerId, type, al);
+
         em.persist(newAddress);
         em.persist(newContact);
     }

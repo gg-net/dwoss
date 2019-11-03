@@ -16,17 +16,11 @@
  */
 package eu.ggnet.dwoss.customer.ee.assist.gen;
 
-import eu.ggnet.dwoss.core.common.values.SalesChannel;
-import eu.ggnet.dwoss.core.common.values.ShippingCondition;
-import eu.ggnet.dwoss.core.common.values.AddressType;
-import eu.ggnet.dwoss.core.common.values.CustomerFlag;
-import eu.ggnet.dwoss.core.common.values.PaymentCondition;
-import eu.ggnet.dwoss.core.common.values.PaymentMethod;
-
 import java.util.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import eu.ggnet.dwoss.core.common.values.*;
 import eu.ggnet.dwoss.core.system.generator.*;
 import eu.ggnet.dwoss.customer.ee.entity.Communication.Type;
 import eu.ggnet.dwoss.customer.ee.entity.*;
@@ -80,13 +74,22 @@ public class CustomerGenerator {
     }
 
     /**
-     * Generates a {@link Contact}.
+     * Generates a full {@link Contact}, including an address and one communication.
      * {@link Contact#prefered} is never set.
      * <p>
      * @return a generated {@link Contact}.
      */
-    public static Contact makeContact() {
+    public static Contact makeFullContact() {
         return makeContact(new Contact(), makeAddress(), makeCommunication());
+    }
+
+    /**
+     * Generates a contact without communication or address.
+     *
+     * @return a generated contact
+     */
+    public static Contact makeEmptyContact() {
+        return makeContact(new Contact(), null, null);
     }
 
     public static Contact makeContactWithId(long contactId, long addressId, long communicationId) {
@@ -339,7 +342,7 @@ public class CustomerGenerator {
     private static Company makeCompany(Company company) {
         company.setLedger(R.nextInt(1000) + 1);
         company.setName(GEN.makeCompanyName());
-        Contact contact = makeContact();
+        Contact contact = makeFullContact();
         contact.getAddresses().clear();
         contact.getCommunications().clear();
 

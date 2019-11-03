@@ -52,8 +52,8 @@ public class PreferedAddressLabelsTryOut {
         JButton endKundenButton = new JButton("Lade Endkunde");
         endKundenButton.addActionListener(ev -> {
             Customer customer = GEN.makeCustomer();
-            customer.getContacts().add(GEN.makeContact());
-            customer.getContacts().add(GEN.makeContact());
+            customer.getContacts().add(GEN.makeFullContact());
+            customer.getContacts().add(GEN.makeFullContact());
 
             if ( !customer.isValid() ) {
                 Ui.exec(() -> {

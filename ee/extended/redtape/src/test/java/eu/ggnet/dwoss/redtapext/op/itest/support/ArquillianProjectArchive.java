@@ -49,7 +49,7 @@ public class ArquillianProjectArchive {
                 .importRuntimeDependencies()
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample", RUNTIME, false)) // The Sample Mandator
                 .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-mandator-sample-service", RUNTIME, false)) // The Sample Mandator Services
-                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-ee-extended-receipt", RUNTIME, false)) // Using Receipt for unit generation
+                .addDependency(MavenDependencies.createDependency("eu.ggnet.dwoss:dwoss-receipt-ee", RUNTIME, false)) // Using Receipt for unit generation
                 .addDependency(MavenDependencies.createDependency("org.assertj:assertj-core", RUNTIME, false)) // Assertj assertion
                 .resolve().withTransitivity().asFile();
         WebArchive war = ShrinkWrap.create(WebArchive.class, "redtape-persistence-test.war")

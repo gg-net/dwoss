@@ -40,7 +40,7 @@ public class ContactTest {
 
     @Before
     public void executeBeforeEach() {
-        contact = GEN.makeContact();
+        contact = GEN.makeFullContact();
     }
 
     @Test
