@@ -3,17 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ee-api</artifactId>
+        <artifactId>dwoss-xreactor-api</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-rights</artifactId>
-    <name>DwOss • EE • Api • Rights</name>
+    <artifactId>dwoss-ee-api-uniqueunit</artifactId>
+    <name>DwOss • EE • Api • UniqueUnit</name>
     <dependencies>
         <dependency>
             <groupId>eu.ggnet.saft</groupId>
             <artifactId>saft-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.inferred</groupId>
+            <artifactId>freebuilder</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

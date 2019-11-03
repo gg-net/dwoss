@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>dwoss-ee-web</artifactId>
+        <artifactId>dwoss-xreactor-web</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -12,25 +12,7 @@
 
     <name>DwOss • EE • Web • Search</name>
 
-    <build>
-        <finalName>${project.artifactId}</finalName>
-    </build>
-
     <dependencies>
-        <dependency>
-            <groupId>${javaee.groupId}</groupId>
-            <artifactId>${javaee.artifactId}</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>primefaces-extensions</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-core-search</artifactId>

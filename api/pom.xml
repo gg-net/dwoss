@@ -17,6 +17,23 @@
             <version>${javaee.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dwoss-core-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+
+    <modules>
+        <module>customer</module>
+        <module>mandator</module>
+        <module>misc</module>
+        <module>redtape</module>
+        <module>rights</module>
+        <module>search</module>
+        <module>spec</module>
+        <module>stock</module>
+        <module>uniqueunit</module>
+    </modules>
 
 </project>

@@ -10,6 +10,6 @@
     <artifactId>dwoss-mandator-sample-datasource</artifactId>
     <packaging>ejb</packaging>
 
-    <name>DwOss • Mandator • Sample Datasource</name>
+    <name>DwOss • Mandator-Sample (Datasource)</name>
 
 </project>

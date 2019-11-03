@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>dwoss-ee-web</artifactId>
+        <artifactId>dwoss-xreactor-web</artifactId>
         <groupId>eu.ggnet.dwoss</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -10,25 +10,11 @@
     <artifactId>dwoss-misc-web</artifactId>
     <packaging>war</packaging>
 
-    <name>DwOss • Misc • Web </name>
+    <name>DwOss • Misc • Web (bound)</name>
 
-    <description>Misc Web Komponents. Everything that has no home, starts here.</description>
+    <description>Misc Web Komponents. Everything that has no home, starts here. Binds: rights.ee, mandator.ee</description>
 
     <dependencies>
-        <dependency>
-            <groupId>${javaee.groupId}</groupId>
-            <artifactId>${javaee.artifactId}</artifactId>
-            <version>${javaee.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>primefaces-extensions</artifactId>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>dwoss-ee-persistence-rights</artifactId>

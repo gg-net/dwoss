@@ -3,19 +3,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>eu.ggnet.dwoss</groupId>
-        <artifactId>dwoss-ee-api</artifactId>
+        <artifactId>dwoss-ee</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>dwoss-ee-api-customer</artifactId>
-    <name>DwOss • EE • Api • Customer</name>
-    <dependencies>
-        <dependency>
-            <groupId>org.inferred</groupId>
-            <artifactId>freebuilder</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
+    <artifactId>dwoss-ee-core-discovery</artifactId>
+    <packaging>ejb</packaging>
+    <name>DwOss • EE • Core • Discovery</name>
+
 </project>
 

@@ -10,7 +10,7 @@
     <artifactId>dwoss-mandator-sample-startupgenerator</artifactId>
     <packaging>ejb</packaging>
 
-    <name>DwOss • Mandator • Sample Startup Generator</name>
+    <name>DwOss • Mandator-Sample (Startup Generator)</name>
     <description>Contains classes and config files for usage in a tryout scenario. Including database generators.</description>
 
     <build>

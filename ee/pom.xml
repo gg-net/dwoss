@@ -71,10 +71,11 @@
     </dependencies>
 
     <modules>
+        <module>discovery</module>
+        <module>mandator</module>
+        <module>search</module>
         <module>mail</module>
-        <module>api</module>
-        <module>web</module>
-        <module>core</module>
+        <!-- sub reactors -->
         <module>persistence</module>
         <module>extended</module>
     </modules>
