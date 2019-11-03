@@ -402,12 +402,12 @@
                 </dependency>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ui-persistence-repair</artifactId>
+                    <artifactId>dw-repair-ui</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ui-pro-price</artifactId>
+                    <artifactId>dw-price-ui</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
             </dependencies>

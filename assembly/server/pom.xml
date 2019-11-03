@@ -115,12 +115,12 @@
                 </dependency>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ee-pro-price</artifactId>
+                    <artifactId>dw-price-ee</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
                 <dependency>
                     <groupId>eu.ggnet.dw</groupId>
-                    <artifactId>dw-ee-persistence-repair</artifactId>
+                    <artifactId>dw-repair-ee</artifactId>
                     <version>${dw.version}</version>
                 </dependency>
             </dependencies>

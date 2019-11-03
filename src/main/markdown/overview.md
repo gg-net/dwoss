@@ -17,11 +17,11 @@ Project: dwoss
 Architecture
 ------------
 
-An architecture must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time. 
+An architecture must be testable (e.g. Archunit/Mavenresolver). Even if no test is written, but it is possible and may happen any time.
 Everything, that is not testable, should be defined as guidelines, good style. But it _may_ be violated.
-And above all an architecture must make sense. Splitting modules int artifacts without a technical or functional requirement 
-is not usefull and must be avoided. 
-(e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. An extra layer which only contains 
+And above all an architecture must make sense. Splitting modules int artifacts without a technical or functional requirement
+is not usefull and must be avoided.
+(e.g. the remote interfaces for EJB clients. If entites are exposed, expose the hole ejb to the client. An extra layer which only contains
 remote interfaces and entites, but not the implemation of the ejbs, even if it isn't used on the client side, doesn't make sense.
 If only a small amount of information should be exposed, design a public api)
 
@@ -39,18 +39,18 @@ A module comes in two forms of assemblys:
 - server: deployed on an jakarta ee server, for now only wildfly is tested.
 - client: deployed as desktop (swing and javafx) desktop client.
 
-Each assambly may dependen on the common subcomponent and has it's own components only used in that form of assembly. 
+Each assambly may dependen on the common subcomponent and has it's own components only used in that form of assembly.
 
-1. **Common components** (may be used by both assemblies) 
+1. **Common components** (may be used by both assemblies)
     1. **api** - public api. This is, what other modules may depend on
         - should only contain: interfaces or serializable value objects. Interfaces may be annotated with @Remote oder @Local
         - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
-        - must not depend on any other module, even apis. 
+        - must not depend on any other module, even apis.
     2. **demand** - revers form of the pulic api. Things that the module wants but not implements.
         - should only contain: interfaces or serializable value objects.
         - must not contail: EJBs, Webbeans, Javafx or Swing (Desktop Ui) code.
-        - must not depend on any other module, even apis.         
-    3. **ee** - enterprise engine, the working code. 
+        - must not depend on any other module, even apis.
+    3. **ee** - enterprise engine, the working code.
         - should only contain: ejbs and supplementary implemented code.
         - should be: tested heaviliy
         - may only define: entity or other persistence like classes or code.
@@ -76,19 +76,20 @@ Each assambly may dependen on the common subcomponent and has it's own component
 
 There are three modes of dependence between modules.
 1. _Optional_: A module "A" depends optionally on module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml)
-   but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of 
-   the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example) 
+   but does not need an implementation at runtime. (e.g. user can print or mail a document. mailing is only available if an implemation of
+   the public mail api is supplied at runtime. If not, the module would disable the mail button. TODO: Linkt to an example)
    It is encouraged to write an comment <!-- depends optional --> in the pom.xml.
 
-2. _Required_: A module "A" requires a module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml) and will 
+2. _Required_: A module "A" requires a module "B" if it declares the public api or spi of "B" as a dependency (in the maven pom.xml) and will
    fail at runtime if no implementation is available. (TODO: How to test this via unittesting)
 
-3. _Bound_ (do not use anymore): A module "A" binds a module "B" if it violates the rules of component dependencies such as "A" depends and 
+3. _Bound_ (do not use anymore): A module "A" binds a module "B" if it violates the rules of component dependencies such as "A" depends and
     uses classes defined in "B".ee. This is forbided in future implementations and is only discribed as there are still such dependencies in place.
+    Also all the mandator implementations violate this restriction.
 
 ### The Core Components.
 
-The Core Components have special rules. 
+The Core Components have special rules.
 1. common - contains constants and interfaces
     - may be requiered by apis
 2. system - contains interceptors, beans and libraries, very thin
@@ -113,7 +114,7 @@ If something new is developed the following architecture questions must be answe
 
 
 
-Todo: 
+Todo:
 - DwPro Architectur
 - Sample Mandator und reale Mandators
 
@@ -124,14 +125,14 @@ Architecture
 In the core the application has a simple layer model.
 
 1. Library
-2. API 
-    - Only plain java projects. No Enitys or EJBs. Supplies Interfaces,Annotations and Values 
+2. API
+    - Only plain java projects. No Enitys or EJBs. Supplies Interfaces,Annotations and Values
       for data exchange between projects.
     - Projects may depend on other API projects. Make sure no cycles happen.
 3. EE (for the Server), UI (for the Client) -> layer
 	1. Core -> sublayer
 		- Non Persistence Projects, APIs.
-                - This layer is a little bit grubby. Some project depend on other projects in 
+                - This layer is a little bit grubby. Some project depend on other projects in
                   this layer. This may be cleaned up in the future.
 	2. Persistence
 		- Projects, that supply JPA Entities, or other persistence data.
