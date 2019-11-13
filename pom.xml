@@ -630,7 +630,7 @@
             <dependency> <!-- For Indexer connection - keep in sync with wildfly, w10 = 5.5.4 , w12 = 5.5.8.Final, w15 = 5.10.3.Final -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-search-orm</artifactId>
-                <version>5.10.3.Final</version>
+                <version>5.10.7.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>org.hibernate.javax.persistence</groupId>
@@ -745,7 +745,7 @@
             <dependency> <!-- Clientside for the collections, w15 = 5.3.7 -->
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>5.3.7.Final</version>
+                <version>5.3.12.Final</version>
                 <exclusions> <!-- Is in the JDK-->
                     <exclusion>
                         <groupId>xml-apis</groupId>
@@ -824,7 +824,7 @@
             <dependency>
                 <groupId>org.hibernate.validator</groupId> <!-- W15 = 6.0.13 -->
                 <artifactId>hibernate-validator</artifactId>
-                <version>6.0.13.Final</version>
+                <version>6.0.17.Final</version>
             </dependency>
             <dependency> <!-- Expresion factory for hibernate validator -->
                 <groupId>org.glassfish</groupId>

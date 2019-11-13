@@ -70,7 +70,7 @@ public class CustomerAndGsOfficeProvider {
                     .positionTypes(UNIT)
                     .taxTypes(GENERAL_SALES_TAX_DE_SINCE_2007)
                     .primaryLedger(1000, "Standard Gerät")
-                    .alternativeLedger(1001, "Behindertes Geräte"),
+                    .alternativeLedger(1001, "Nicht Standard Geräte"),
             PostLedger.add()
                     .positionTypes(UNIT, SERVICE, PRODUCT_BATCH, SHIPPING_COST, UNIT_ANNEX)
                     .taxTypes(UNTAXED)
