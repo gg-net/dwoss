@@ -334,7 +334,7 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <!--creates the mdsat sql script for the entire schema in mariadb as well as mysql with the GOAL: hibernate53-ddl:gen-ddl-->
+                    <!--creates the mdsat sql script for the entire schema in mariadb as well as mysql with the GOAL: hibernate54-ddl:gen-ddl-->
                     <groupId>de.jpdigital</groupId>
                     <artifactId>hibernate54-ddl-maven-plugin</artifactId>
                     <version>2.3.0</version>
