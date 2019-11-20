@@ -111,7 +111,7 @@ public class DocumentViewAction extends AbstractAction {
             for (RedTapeStateTransition.Hint hint : redTapeStateTransition.getHints()) {
                 if ( hint == RedTapeStateTransition.Hint.SENDED_INFORMATION ) {
                     this.document = Optional.of(Dl.remote().lookup(RedTapeWorker.class)
-                            .stateChange(customerDocument, redTapeStateTransition, Lookup.getDefault().lookup(Guardian.class).getUsername()))
+                            .stateChange(customerDocument, redTapeStateTransition, Dl.local().lookup(Guardian.class).getUsername()))
                             .filter(Ui.failure()::handle)
                             .map(Reply::getPayload).orElse(document);
                 }

@@ -172,8 +172,11 @@ public class SwingClient {
         SortedMap<Integer, Component> tccs = new TreeMap<>();
         for (ToolbarComponent tc : tcs) {
             if ( tc instanceof Component ) tccs.put(tc.getOrder(), (Component)tc);
-            if ( (tc instanceof UserChangeListener) && Lookup.getDefault().lookup(Guardian.class) != null )
+            if ( (tc instanceof UserChangeListener) && Dl.local().lookup(Guardian.class) != null ) {
+                L.debug("adding {} as UserChangeListner", tc);
                 Dl.local().lookup(Guardian.class).addUserChangeListener((UserChangeListener)tc);
+            }
+
         }
         for (Component tc : tccs.values()) {
             view.toolBar.add(tc);
@@ -183,8 +186,10 @@ public class SwingClient {
         Collection<? extends MainComponent> mcs = Lookup.getDefault().lookupAll(MainComponent.class);
         for (MainComponent mc : mcs) {
             if ( mc instanceof Component ) view.mainPanel.add((Component)mc, mc.getLayoutHint());
-            if ( (mc instanceof UserChangeListener) && Lookup.getDefault().lookup(Guardian.class) != null )
+            if ( (mc instanceof UserChangeListener) && Dl.local().lookup(Guardian.class) != null ) {
+                L.debug("adding {} as UserChangeListner", mc);
                 Dl.local().lookup(Guardian.class).addUserChangeListener((UserChangeListener)mc);
+            }
         }
 
         enableAccessRestrictions(metaActions);
@@ -270,7 +275,7 @@ public class SwingClient {
     }
 
     private void enableAccessRestrictions(Collection<MetaAction> metaActions) {
-        Guardian accessCos = Lookup.getDefault().lookup(Guardian.class);
+        Guardian accessCos = Dl.local().lookup(Guardian.class);
         if ( accessCos != null ) {
             for (ActionFactory.MetaAction metaAction : metaActions) {
                 if ( metaAction.getAction() instanceof Accessable ) {

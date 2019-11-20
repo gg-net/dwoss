@@ -24,12 +24,10 @@ import java.util.logging.Level;
 import eu.ggnet.saft.experimental.auth.Guardian;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.ggnet.saft.core.Ui;
-import eu.ggnet.saft.core.UiCore;
+import eu.ggnet.saft.core.*;
 
 /**
  *
@@ -157,7 +155,7 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
         view.setVisible(true);
         if ( view.isLoginOk() ) {
             try {
-                Lookup.getDefault().lookup(Guardian.class).login(view.getUsername(), view.getPassword());
+                Dl.local().lookup(Guardian.class).login(view.getUsername(), view.getPassword());
                 this.dispose();
             } catch (AuthenticationException ex) {
                 Ui.build(this).alert(ex.getMessage());
@@ -174,10 +172,10 @@ public class AutoLogoutDialog extends javax.swing.JDialog {
         } else if ( typed.length() == 4 ) {
             try {
                 int id = Integer.parseInt(typed.substring(1));
-                Lookup.getDefault().lookup(Guardian.class).quickAuthenticate(id);
+                Dl.local().lookup(Guardian.class).quickAuthenticate(id);
                 // TODO: Stupid use boolean return.
-                if ( Lookup.getDefault().lookup(Guardian.class).getUsername() != null
-                        && !Lookup.getDefault().lookup(Guardian.class).getUsername().trim().equals("") ) {
+                if ( Dl.local().lookup(Guardian.class).getUsername() != null
+                        && !Dl.local().lookup(Guardian.class).getUsername().trim().equals("") ) {
                     this.dispose();
                 } else {
                     typed = "";

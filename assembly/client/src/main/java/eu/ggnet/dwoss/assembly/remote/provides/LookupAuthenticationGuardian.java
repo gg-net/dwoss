@@ -26,6 +26,7 @@ import eu.ggnet.dwoss.rights.ee.entity.Operator;
 import eu.ggnet.dwoss.rights.ee.op.Authentication;
 import eu.ggnet.dwoss.core.common.UserInfoException;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.LocalSingleton;
 import eu.ggnet.saft.experimental.auth.AuthenticationException;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
@@ -33,7 +34,7 @@ import eu.ggnet.saft.experimental.auth.Guardian;
  * Implementation of an IAuthenticator using the GG-Net Imap Server
  */
 @ServiceProvider(service = Guardian.class)
-public class LookupAuthenticationGuardian extends AbstractGuardian implements Guardian {
+public class LookupAuthenticationGuardian extends AbstractGuardian implements Guardian, LocalSingleton {
 
     @Override
     public void login(String user, char[] pass) throws AuthenticationException {

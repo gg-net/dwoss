@@ -24,10 +24,9 @@ import java.text.DateFormat;
 
 import javax.swing.*;
 
-import org.openide.util.Lookup;
-
 import eu.ggnet.dwoss.stock.ee.entity.*;
 import eu.ggnet.dwoss.stock.ui.cap.RemoveUnitFromTransactionAction;
+import eu.ggnet.saft.core.Dl;
 import eu.ggnet.saft.experimental.auth.Guardian;
 
 import static eu.ggnet.dwoss.rights.api.AtomicRight.UPDATE_TRANSACTION_TO_CANCLE;
@@ -84,7 +83,7 @@ public class StockTransactionManagerView extends javax.swing.JDialog {
         statusComboBox.setModel(new DefaultComboBoxModel(StockTransactionStatusType.values()));
         transactionList.setCellRenderer(new StockTransactionRenderer());
 
-        Guardian accessCos = Lookup.getDefault().lookup(Guardian.class);
+        Guardian accessCos = Dl.local().lookup(Guardian.class);
         if ( accessCos != null ) {
             accessCos.add(cancelTransactionButton, UPDATE_TRANSACTION_TO_CANCLE);
             accessCos.add(removeUnitFromTransactionButton, UPDATE_TRANSACTION_TO_REMOVE_UNIT);

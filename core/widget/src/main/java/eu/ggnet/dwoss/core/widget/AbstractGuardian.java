@@ -21,6 +21,8 @@ import java.util.*;
 import javax.swing.Action;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.ggnet.dwoss.rights.api.AtomicRight;
 import eu.ggnet.dwoss.rights.api.Operator;
@@ -35,7 +37,9 @@ import eu.ggnet.saft.experimental.auth.*;
  */
 // Todo: I think all the hard dependecies to the rights api could be moved to the final implementation in the LookupAuthenctionGuardian.
 public abstract class AbstractGuardian implements Guardian {
-
+    
+    private final Logger L = LoggerFactory.getLogger(AbstractGuardian.class);
+    
     private final List<UserChangeListener> userChangeListeners = new ArrayList<>();
 
     private final Set<Accessable> accessables = new HashSet<>();
@@ -47,6 +51,12 @@ public abstract class AbstractGuardian implements Guardian {
     private final Map<Integer, Operator> quickRights = new HashMap<>();
 
     private final Set<String> allUsers = new HashSet<>();
+
+    public AbstractGuardian() {
+        L.debug("New instance of {}", this);
+    }
+    
+    
 
     @Override
     public Set<String> getOnceLoggedInUsernames() {
@@ -103,6 +113,8 @@ public abstract class AbstractGuardian implements Guardian {
      * @param dto is a {@link Operator} that will be setted.
      */
     protected void setRights(Operator dto) {
+        L.debug("setRights({})",dto);
+        L.debug("setRights(): accessables.size = {}, userChangeListeners.size = {}",accessables.size(), userChangeListeners.size());
         operator = dto;
         quickRights.put(dto.quickLoginKey, dto);
         for (Accessable accessable : accessables) {
@@ -120,7 +132,7 @@ public abstract class AbstractGuardian implements Guardian {
             for (UserChangeListener listener : userChangeListeners) {
                 listener.loggedIn(dto.username);
             }
-        }
+        }        
     }
 
     /**

@@ -126,7 +126,7 @@ public class StockTransactionManagerController {
         String comment = JOptionPane.showInputDialog(view, "Grund für Transaktionsabbruch:", "Transaktionsabbruch", JOptionPane.QUESTION_MESSAGE);
         if ( comment == null || comment.trim().equals("") ) return;
         try {
-            stp.cancel(transaction, Lookup.getDefault().lookup(Guardian.class).getUsername(), comment);
+            stp.cancel(transaction, Dl.local().lookup(Guardian.class).getUsername(), comment);
             JOptionPane.showMessageDialog(UiCore.getMainFrame(), "Transaktion (" + transaction.getId() + " wurde abgebrochen");
             model.remove(transaction);
         } catch (Exception ex) {

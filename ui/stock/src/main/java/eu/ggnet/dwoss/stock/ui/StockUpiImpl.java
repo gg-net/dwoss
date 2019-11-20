@@ -20,13 +20,14 @@ import org.openide.util.lookup.ServiceProvider;
 
 import eu.ggnet.dwoss.stock.api.PicoStock;
 import eu.ggnet.dwoss.stock.spi.ActiveStock;
+import eu.ggnet.saft.core.dl.LocalSingleton;
 
 /**
  *
  * @author oliver.guenther
  */
 @ServiceProvider(service = ActiveStock.class)
-public class StockUpiImpl implements ActiveStock {
+public class StockUpiImpl implements ActiveStock, LocalSingleton {
 
     private PicoStock activeStock;
 

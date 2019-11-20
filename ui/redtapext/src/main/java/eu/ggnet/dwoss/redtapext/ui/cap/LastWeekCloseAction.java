@@ -20,7 +20,6 @@ import java.awt.event.ActionEvent;
 
 import javafx.scene.control.Alert;
 
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +49,7 @@ public class LastWeekCloseAction extends AccessableAction {
     public void actionPerformed(ActionEvent e) {
         Ui.build().dialog().eval(() -> new Alert(CONFIRMATION, "Möchten Sie den manuellen Wochen/Tagesabschluss durchführen ?"))
                 .cf().
-                thenAcceptAsync(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Lookup.getDefault().lookup(Guardian.class).getUsername())).run(), UiCore.getExecutor())
+                thenAcceptAsync(f -> Ui.progress().wrap(() -> Dl.remote().lookup(RedTapeCloserManual.class).executeManual(Dl.local().lookup(Guardian.class).getUsername())).run(), UiCore.getExecutor())
                 .handle(Ui.handler());
     }
 }

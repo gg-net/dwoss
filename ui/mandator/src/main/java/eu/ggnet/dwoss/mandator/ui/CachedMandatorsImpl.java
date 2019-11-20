@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import eu.ggnet.dwoss.mandator.api.Mandators;
 import eu.ggnet.dwoss.mandator.spi.CachedMandators;
 import eu.ggnet.saft.core.Dl;
+import eu.ggnet.saft.core.dl.LocalSingleton;
 
 /**
  * Implementation of the Mandators with Cache.
@@ -37,7 +38,7 @@ import eu.ggnet.saft.core.Dl;
  * @author oliver.guenther
  */
 @ServiceProvider(service = CachedMandators.class)
-public class CachedMandatorsImpl implements CachedMandators {
+public class CachedMandatorsImpl implements CachedMandators, LocalSingleton {
 
     private final static Logger L = LoggerFactory.getLogger(CachedMandatorsImpl.class);
 
